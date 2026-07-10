@@ -1,0 +1,462 @@
+---
+title: Raizes
+---
+
+# Raizes
+
+## Contexto
+
+Na secao anterior, potencia apareceu como uma forma de seguir para frente:
+quando conhecemos a base e o expoente, calculamos o resultado.
+
+Por exemplo:
+
+$$
+7^2 = 49
+$$
+
+Isso responde:
+
+> Qual e o resultado de multiplicar 7 por ele mesmo?
+
+Raiz faz a pergunta inversa. Se conhecemos o resultado 49 e sabemos que ele
+veio de um quadrado, perguntamos:
+
+> Que numero, multiplicado por ele mesmo, produziu 49?
+
+Entao raiz nao e um simbolo isolado. Ela aparece quando precisamos desfazer uma
+potencia.
+
+## Problema motivador
+
+Um quadrado tem area 49. Qual e o tamanho do lado?
+
+Se conhecemos o lado, encontrar a area e direto:
+
+$$
+\text{lado}^2 = \text{area}
+$$
+
+Mas agora o problema veio ao contrario. Conhecemos a area e queremos recuperar
+o lado.
+
+Vamos testar alguns lados:
+
+| Lado | Area do quadrado |
+| --- | --- |
+| 5 | $5^2 = 25$ |
+| 6 | $6^2 = 36$ |
+| 7 | $7^2 = 49$ |
+
+O lado que produz area 49 e 7. Por isso escrevemos:
+
+$$
+\sqrt{49} = 7
+$$
+
+Essa escrita registra a pergunta:
+
+> qual numero nao negativo, elevado ao quadrado, da 49?
+
+Raiz quadrada desfaz o quadrado quando estamos procurando uma medida de lado.
+
+## Uso
+
+Raizes aparecem em:
+
+- descobrir lados a partir de areas;
+- descobrir arestas a partir de volumes;
+- Teorema de Pitagoras;
+- distancia entre pontos;
+- escalas e ampliacoes;
+- formulas da fisica e da engenharia;
+- estatistica, como desvio padrao;
+- computacao grafica e jogos.
+
+O uso comum por tras desses exemplos e o mesmo: recuperar uma medida escondida
+dentro de uma potencia.
+
+## Intuicao
+
+Potencia e raiz caminham em sentidos opostos.
+
+```text
+7  -- elevar ao quadrado -->  49
+7  <-- raiz quadrada -----   49
+```
+
+Quando escrevemos:
+
+$$
+\sqrt{49}
+$$
+
+nao estamos pedindo "metade de 49". Estamos perguntando qual numero gera 49
+quando entra duas vezes na multiplicacao.
+
+Exemplo:
+
+$$
+\sqrt{25} = 5
+$$
+
+porque:
+
+$$
+5^2 = 25
+$$
+
+Outro exemplo:
+
+$$
+\sqrt{81} = 9
+$$
+
+porque:
+
+$$
+9^2 = 81
+$$
+
+O raciocinio sempre volta para a potencia:
+
+$$
+\sqrt{a} = b
+$$
+
+quer dizer:
+
+$$
+b^2 = a
+$$
+
+com $b$ escolhido como o valor nao negativo.
+
+## Modelo visual
+
+Imagine um quadrado com area 36:
+
+```text
+* * * * * *
+* * * * * *
+* * * * * *
+* * * * * *
+* * * * * *
+* * * * * *
+```
+
+Para formar esse quadrado, precisamos de 6 unidades em cada lado. Entao:
+
+$$
+\sqrt{36} = 6
+$$
+
+O desenho mostra por que a raiz quadrada recupera o lado: ela procura o tamanho
+que, repetido em duas direcoes, forma a area.
+
+Para raiz cubica, a ideia e parecida, mas com volume. Um cubo com aresta 3 tem:
+
+$$
+3^3 = 3 \times 3 \times 3 = 27
+$$
+
+Entao, se conhecemos o volume 27 e queremos recuperar a aresta, usamos raiz
+cubica:
+
+$$
+\sqrt[3]{27} = 3
+$$
+
+Aqui a raiz cubica desfaz uma potencia de expoente 3.
+
+## Formalizacao
+
+### Raiz quadrada principal
+
+A raiz quadrada principal de um numero nao negativo $a$ e o numero nao negativo
+$b$ tal que:
+
+$$
+b^2 = a
+$$
+
+Escrevemos:
+
+$$
+\sqrt{a} = b
+$$
+
+As duas informacoes importam:
+
+- $b^2 = a$, porque a raiz precisa desfazer o quadrado;
+- $b \ge 0$, porque o simbolo $\sqrt{a}$ representa a raiz principal.
+
+Exemplo:
+
+$$
+\sqrt{64} = 8
+$$
+
+porque:
+
+$$
+8^2 = 64
+$$
+
+### Raiz quadrada e equacao quadratica
+
+Aqui aparece um cuidado importante. A escrita:
+
+$$
+\sqrt{49}
+$$
+
+tem valor 7, porque o simbolo de raiz quadrada principal devolve o resultado
+nao negativo:
+
+$$
+\sqrt{49} = 7
+$$
+
+Mas a equacao:
+
+$$
+x^2 = 49
+$$
+
+tem duas solucoes:
+
+$$
+x = 7
+$$
+
+e:
+
+$$
+x = -7
+$$
+
+porque:
+
+$$
+7^2 = 49
+$$
+
+e:
+
+$$
+(-7)^2 = 49
+$$
+
+Entao:
+
+- $\sqrt{49}$ e o valor principal, 7;
+- resolver $x^2 = 49$ pede todos os numeros cujo quadrado e 49, entao aparecem
+  $7$ e $-7$.
+
+Essa diferenca evita um erro comum:
+
+$$
+\sqrt{49} \ne \pm 7
+$$
+
+O sinal $\pm$ aparece na solucao da equacao $x^2 = 49$, nao no valor da raiz
+principal.
+
+### Raizes de outros indices
+
+A raiz quadrada desfaz uma potencia de expoente 2. A raiz cubica desfaz uma
+potencia de expoente 3. A raiz quarta desfaz uma potencia de expoente 4, e
+assim por diante.
+
+De modo geral:
+
+$$
+\sqrt[n]{a} = b
+$$
+
+quer dizer:
+
+$$
+b^n = a
+$$
+
+Exemplos:
+
+$$
+\sqrt[3]{8} = 2
+$$
+
+porque:
+
+$$
+2^3 = 8
+$$
+
+E:
+
+$$
+\sqrt[4]{81} = 3
+$$
+
+porque:
+
+$$
+3^4 = 81
+$$
+
+O indice da raiz indica qual potencia estamos desfazendo:
+
+| Escrita | Pergunta feita | Resposta |
+| --- | --- | --- |
+| $\sqrt{36}$ | que numero ao quadrado da 36? | 6 |
+| $\sqrt[3]{27}$ | que numero ao cubo da 27? | 3 |
+| $\sqrt[4]{81}$ | que numero elevado a 4 da 81? | 3 |
+
+### Quando a raiz nao e exata
+
+Algumas raizes dao numeros inteiros:
+
+$$
+\sqrt{49} = 7
+$$
+
+Outras nao. Por exemplo:
+
+$$
+\sqrt{50}
+$$
+
+nao e um numero inteiro, porque:
+
+$$
+7^2 = 49
+$$
+
+e:
+
+$$
+8^2 = 64
+$$
+
+Entao $\sqrt{50}$ esta entre 7 e 8. Em muitos problemas, podemos deixar a
+resposta como $\sqrt{50}$ ou aproximar com calculadora, dependendo do objetivo.
+
+Como $50 = 25 \times 2$, tambem podemos simplificar:
+
+$$
+\sqrt{50} = \sqrt{25 \times 2}
+$$
+
+Como $25$ e um quadrado perfeito:
+
+$$
+\sqrt{50} = 5\sqrt{2}
+$$
+
+Essa simplificacao nao muda o valor. Ela apenas escreve a raiz de um jeito mais
+organizado.
+
+## Exemplos resolvidos
+
+### Exemplo 1: recuperar o lado de um quadrado
+
+Um terreno quadrado tem area de 100 metros quadrados. Qual e o comprimento de
+cada lado?
+
+Se o lado e `l`, entao:
+
+$$
+l^2 = 100
+$$
+
+Tomamos a raiz quadrada:
+
+$$
+l = \sqrt{100} = 10
+$$
+
+Cada lado mede 10 metros.
+
+### Exemplo 2: recuperar a aresta de um cubo
+
+Um cubo tem volume de 64 unidades cubicas. Qual e o comprimento da aresta?
+
+Se a aresta e $a$, entao:
+
+$$
+a^3 = 64
+$$
+
+Agora precisamos desfazer uma potencia de expoente 3:
+
+$$
+a = \sqrt[3]{64}
+$$
+
+Como:
+
+$$
+4^3 = 64
+$$
+
+temos:
+
+$$
+\sqrt[3]{64} = 4
+$$
+
+A aresta mede 4 unidades.
+
+### Exemplo 3: resolver uma equacao com quadrado
+
+Resolva:
+
+$$
+x^2 = 25
+$$
+
+Os numeros cujo quadrado e 25 sao 5 e -5:
+
+$$
+5^2 = 25
+$$
+
+e:
+
+$$
+(-5)^2 = 25
+$$
+
+Logo:
+
+$$
+x = \pm 5
+$$
+
+Aqui aparece o $\pm$ porque estamos resolvendo uma equacao. Se a pergunta fosse
+apenas $\sqrt{25}$, a resposta seria 5.
+
+## Perguntas de verificacao
+
+- Por que raiz quadrada esta ligada a area de quadrados?
+- Qual pergunta a expressao $\sqrt{49}$ esta fazendo?
+- Por que $\sqrt{64} = 8$?
+- Qual e a diferenca entre $\sqrt{49}$ e resolver $x^2 = 49$?
+- Que potencia a raiz cubica desfaz?
+- Por que $\sqrt{50}$ esta entre 7 e 8?
+
+## Exercicios de dominio
+
+1. Explique por que $\sqrt{36} = 6$ usando a ideia de area.
+2. Calcule $\sqrt[3]{125}$ e justifique com uma potencia.
+3. Resolva $x^2 = 81$ e explique por que ha duas solucoes.
+4. Explique a diferenca entre $\sqrt{81}$ e $x^2 = 81$.
+
+## Revisao curta
+
+Raiz desfaz potencia. A raiz quadrada recupera o numero que foi elevado ao
+quadrado; a raiz cubica recupera o numero que foi elevado ao cubo; e
+$\sqrt[n]{a}$ recupera o numero que, elevado a $n$, produz $a$. A raiz quadrada
+principal sempre devolve o valor nao negativo. Por isso, $\sqrt{49} = 7$, mas a
+equacao $x^2 = 49$ tem duas solucoes: $7$ e $-7$.

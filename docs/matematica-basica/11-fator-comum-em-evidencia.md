@@ -1,0 +1,622 @@
+---
+title: Fator comum em evidencia
+---
+
+# Fator comum em evidencia
+
+Colocar fator comum em evidencia e reescrever uma soma como uma multiplicacao.
+Fazemos isso quando todos os termos de uma expressao possuem uma mesma parte
+multiplicando.
+
+A ideia central e:
+
+> Se a mesma parte aparece multiplicando todos os termos, podemos escrever essa
+> parte uma unica vez, fora dos parenteses.
+
+Isso nao muda o valor da expressao. Apenas mostra sua estrutura de outro jeito.
+
+## 1. Problema motivador
+
+Imagine que uma escola comprou lapis para duas turmas.
+
+- A turma A recebeu 6 caixas.
+- A turma B recebeu 4 caixas.
+- Cada caixa tem $x$ lapis.
+
+O total de lapis e:
+
+$$
+6x + 4x
+$$
+
+Essa expressao tem duas partes:
+
+- $6x$: seis caixas com $x$ lapis;
+- $4x$: quatro caixas com $x$ lapis.
+
+Como cada termo fala de caixas com a mesma quantidade $x$, a parte $x$ aparece
+nos dois termos. Podemos mostrar isso assim:
+
+$$
+6x + 4x = x(6 + 4)
+$$
+
+O $x$ foi colocado em evidencia porque ele era a parte comum. O parenteses
+guarda o que sobrou: 6 caixas de um lado e 4 caixas do outro.
+
+Se o objetivo fosse apenas calcular a quantidade total de caixas, poderiamos ir
+mais longe:
+
+$$
+x(6 + 4) = 10x
+$$
+
+Mas a ideia importante deste estudo nao e apenas somar $6x + 4x$. A ideia e
+perceber que havia uma multiplicacao repetida escondida dentro da soma.
+
+## 2. Uso: para que isso serve?
+
+Fator comum em evidencia serve para revelar uma parte repetida da expressao.
+Isso ajuda a:
+
+- simplificar expressoes;
+- resolver equacoes;
+- fatorar polinomios;
+- comparar areas, custos e quantidades;
+- preparar expressoes para cancelamentos em fracoes algebricas;
+- organizar codigo ou formulas quando uma parte do calculo se repete.
+
+Por exemplo, se uma taxa $t$ e cobrada sobre dois valores, $300$ e $500$, o
+total cobrado pode ser escrito como:
+
+$$
+300t + 500t
+$$
+
+ou como:
+
+$$
+t(300 + 500)
+$$
+
+A segunda forma deixa claro que a mesma taxa $t$ foi aplicada aos dois valores.
+Ela mostra a estrutura do calculo, nao apenas o resultado.
+
+## 3. Intuicao: o que significa "colocar em evidencia"?
+
+Colocar em evidencia significa "mostrar do lado de fora" a parte que todos os
+termos tem em comum.
+
+Veja:
+
+$$
+3 \cdot 2 + 3 \cdot 5
+$$
+
+O numero 3 aparece multiplicando as duas parcelas:
+
+```text
+3 vezes 2   +   3 vezes 5
+```
+
+Em vez de escrever o 3 duas vezes, podemos escrever:
+
+$$
+3(2 + 5)
+$$
+
+O parenteses nao aparece por acaso. Ele mostra que o 3 multiplica tudo o que
+esta dentro:
+
+$$
+3(2 + 5) = 3 \cdot 2 + 3 \cdot 5
+$$
+
+Entao fatorar por fator comum e usar a propriedade distributiva no sentido
+contrario:
+
+$$
+3 \cdot 2 + 3 \cdot 5 = 3(2 + 5)
+$$
+
+Na algebra, a mesma ideia funciona com letras:
+
+$$
+2x + 5x = x(2 + 5)
+$$
+
+O fator comum e $x$ porque $x$ aparece multiplicando os dois termos.
+
+## 4. Modelo visual
+
+Uma boa forma de enxergar fator comum e pensar em area.
+
+Considere:
+
+$$
+3x + 2x
+$$
+
+Isso pode representar duas partes de um retangulo:
+
+- uma parte com altura $x$ e largura 3;
+- outra parte com altura $x$ e largura 2.
+
+```text
+altura x
+
+|--- 3 ---|--- 2 ---|
++---------+---------+
+|         |         |
+|   3x    |   2x    |
+|         |         |
++---------+---------+
+```
+
+As duas partes tem a mesma altura $x$. Essa altura comum pode ser colocada em
+evidencia:
+
+$$
+3x + 2x = x(3 + 2)
+$$
+
+O $x$ e a medida comum. O parenteses soma as larguras.
+
+Se depois quisermos simplificar:
+
+$$
+x(3 + 2) = 5x
+$$
+
+Assim, a fatoracao mostra de onde vem o $5x$: sao 5 unidades de largura, todas
+com a mesma altura $x$.
+
+## 5. Formalizacao
+
+A propriedade distributiva diz que:
+
+$$
+a(b + c) = ab + ac
+$$
+
+Isso significa que o fator $a$ multiplica cada termo dentro dos parenteses.
+
+Fatorar por fator comum e ler a mesma igualdade da direita para a esquerda:
+
+$$
+ab + ac = a(b + c)
+$$
+
+Aqui:
+
+- $ab$ e $ac$ sao os termos da soma;
+- $a$ e o fator comum;
+- $b$ e $c$ sao as partes que sobram depois que retiramos o fator comum.
+
+O raciocinio pratico e:
+
+1. Encontre uma parte que aparece multiplicando todos os termos.
+2. Escreva essa parte fora dos parenteses.
+3. Dentro dos parenteses, escreva o que sobra de cada termo.
+4. Confira distribuindo de volta.
+
+Essa ultima conferencia e essencial:
+
+$$
+a(b + c) = ab + ac
+$$
+
+Se a distribuicao retorna a expressao inicial, a fatoracao esta correta.
+
+## 6. Como encontrar o maior fator comum
+
+Quando ha numeros e letras, separamos o problema em duas perguntas.
+
+### Parte numerica
+
+Nos coeficientes, procuramos o maior numero que divide todos eles.
+
+Exemplo:
+
+$$
+12x + 18
+$$
+
+Os coeficientes sao 12 e 18. O maior numero que divide os dois e 6.
+
+Entao podemos colocar 6 em evidencia:
+
+$$
+12x + 18 = 6(2x + 3)
+$$
+
+Por que sobra $2x + 3$?
+
+Porque:
+
+$$
+12x \div 6 = 2x
+$$
+
+e:
+
+$$
+18 \div 6 = 3
+$$
+
+### Parte literal
+
+Nas letras, so podemos retirar uma letra se ela aparece em todos os termos.
+Quando a mesma letra aparece com potencias diferentes, retiramos a menor
+potencia comum.
+
+Exemplo:
+
+$$
+8x^3 + 12x^2
+$$
+
+Nos numeros:
+
+$$
+8 \quad \text{e} \quad 12
+$$
+
+o maior fator comum e 4.
+
+Nas letras:
+
+$$
+x^3 \quad \text{e} \quad x^2
+$$
+
+os dois termos tem pelo menos $x^2$. Entao a parte literal comum e $x^2$.
+
+Juntando a parte numerica e a parte literal, o maior fator comum e:
+
+$$
+4x^2
+$$
+
+Agora dividimos cada termo por $4x^2$:
+
+$$
+8x^3 \div 4x^2 = 2x
+$$
+
+$$
+12x^2 \div 4x^2 = 3
+$$
+
+Logo:
+
+$$
+8x^3 + 12x^2 = 4x^2(2x + 3)
+$$
+
+## 7. Exemplos resolvidos
+
+### Exemplo 1: fator comum apenas numerico
+
+Fatore:
+
+$$
+6x + 9
+$$
+
+Os coeficientes 6 e 9 tem fator comum 3.
+
+Nao podemos colocar $x$ em evidencia, porque o termo 9 nao tem $x$.
+
+Entao:
+
+$$
+6x + 9 = 3(2x + 3)
+$$
+
+Conferencia:
+
+$$
+3(2x + 3) = 6x + 9
+$$
+
+### Exemplo 2: fator comum literal
+
+Fatore:
+
+$$
+2x + 5x
+$$
+
+Os dois termos tem $x$ como fator comum:
+
+$$
+2x = x \cdot 2
+$$
+
+$$
+5x = x \cdot 5
+$$
+
+Entao:
+
+$$
+2x + 5x = x(2 + 5)
+$$
+
+Se simplificarmos o parenteses:
+
+$$
+x(2 + 5) = 7x
+$$
+
+Aqui aparece a ligacao com termos semelhantes. Somar $2x + 5x$ e possivel
+porque os dois termos tem a mesma parte literal $x$.
+
+### Exemplo 3: fator comum numerico e literal
+
+Fatore:
+
+$$
+5x^2 + 25x
+$$
+
+Nos numeros, 5 e 25 tem fator comum 5.
+
+Nas letras, $x^2$ e $x$ tem fator comum $x$.
+
+Entao o maior fator comum e:
+
+$$
+5x
+$$
+
+Dividindo cada termo por $5x$:
+
+$$
+5x^2 \div 5x = x
+$$
+
+$$
+25x \div 5x = 5
+$$
+
+Logo:
+
+$$
+5x^2 + 25x = 5x(x + 5)
+$$
+
+### Exemplo 4: duas letras
+
+Fatore:
+
+$$
+12a^3b + 18a^2b^2
+$$
+
+Parte numerica:
+
+$$
+12 \quad \text{e} \quad 18
+$$
+
+O maior fator comum numerico e 6.
+
+Parte literal:
+
+- entre $a^3$ e $a^2$, a menor potencia comum e $a^2$;
+- entre $b$ e $b^2$, a menor potencia comum e $b$.
+
+Entao o maior fator comum e:
+
+$$
+6a^2b
+$$
+
+Dividindo:
+
+$$
+12a^3b \div 6a^2b = 2a
+$$
+
+$$
+18a^2b^2 \div 6a^2b = 3b
+$$
+
+Portanto:
+
+$$
+12a^3b + 18a^2b^2 = 6a^2b(2a + 3b)
+$$
+
+### Exemplo 5: subtracao
+
+Fatore:
+
+$$
+15y^3 - 5y
+$$
+
+O maior fator comum e $5y$.
+
+Agora dividimos cada termo por $5y$:
+
+$$
+15y^3 \div 5y = 3y^2
+$$
+
+$$
+-5y \div 5y = -1
+$$
+
+Logo:
+
+$$
+15y^3 - 5y = 5y(3y^2 - 1)
+$$
+
+O termo $-1$ precisa aparecer. Ele nao desaparece, porque $-5y \div 5y = -1$.
+
+## 8. Erros comuns
+
+### Erro 1: retirar uma letra que nao aparece em todos os termos
+
+Em:
+
+$$
+6x + 9
+$$
+
+nao podemos colocar $x$ em evidencia. O termo 9 nao tem $x$.
+
+O correto e:
+
+$$
+6x + 9 = 3(2x + 3)
+$$
+
+### Erro 2: esquecer o 1 dentro dos parenteses
+
+Fatore:
+
+$$
+7x + 7
+$$
+
+O fator comum e 7.
+
+Ao dividir:
+
+$$
+7x \div 7 = x
+$$
+
+e:
+
+$$
+7 \div 7 = 1
+$$
+
+Entao:
+
+$$
+7x + 7 = 7(x + 1)
+$$
+
+Nao escrevemos $7(x)$. O segundo termo vira 1, porque todo numero diferente de
+zero dividido por ele mesmo e 1.
+
+### Erro 3: parar antes de retirar o maior fator comum
+
+Em:
+
+$$
+8x^3 + 12x^2
+$$
+
+seria possivel retirar apenas $2x^2$:
+
+$$
+8x^3 + 12x^2 = 2x^2(4x + 6)
+$$
+
+Mas ainda existe fator comum dentro dos parenteses:
+
+$$
+4x + 6 = 2(2x + 3)
+$$
+
+Por isso a fatoracao completa usa $4x^2$:
+
+$$
+8x^3 + 12x^2 = 4x^2(2x + 3)
+$$
+
+## 9. Perguntas de verificacao
+
+Responda antes de olhar os exercicios.
+
+1. O que significa dizer que um fator esta "em comum"?
+2. Por que colocar um fator em evidencia nao muda o valor da expressao?
+3. Qual propriedade esta sendo usada ao contrario?
+4. Em $10x^2 + 15x$, por que o fator comum e $5x$ e nao $5x^2$?
+5. Em $7x + 7$, por que o segundo termo dentro dos parenteses vira 1?
+
+## 10. Exercicios
+
+Fatore colocando o fator comum em evidencia.
+
+1. $4x + 8$
+2. $9a + 12$
+3. $6x^2 + 10x$
+4. $15y^3 - 5y$
+5. $12ab + 18ac$
+6. $8m^2n + 20mn^2$
+7. $14p^2q - 21pq^2$
+8. $5r + 5$
+
+Agora explique o raciocinio, nao apenas a resposta:
+
+1. Qual foi o fator comum em cada item?
+2. Como voce conferiria se a fatoracao esta correta?
+3. Em quais exercicios havia fator comum numerico e literal ao mesmo tempo?
+4. Em quais exercicios apareceu o termo 1 dentro dos parenteses?
+
+## 11. Gabarito comentado
+
+1. $4x + 8 = 4(x + 2)$
+
+   O fator comum e 4. Nao retiramos $x$ porque 8 nao tem $x$.
+
+2. $9a + 12 = 3(3a + 4)$
+
+   O fator comum e 3. Nao podemos colocar $a$ em evidencia porque 12 nao tem
+   $a$.
+
+3. $6x^2 + 10x = 2x(3x + 5)$
+
+   O fator comum e $2x$: o 2 divide 6 e 10, e o $x$ aparece nos dois termos.
+
+4. $15y^3 - 5y = 5y(3y^2 - 1)$
+
+   O fator comum e $5y$. O segundo termo vira $-1$, nao desaparece.
+
+5. $12ab + 18ac = 6a(2b + 3c)$
+
+   O fator comum e $6a$. A letra $a$ aparece nos dois termos; $b$ e $c$ nao
+   aparecem em todos os termos.
+
+6. $8m^2n + 20mn^2 = 4mn(2m + 5n)$
+
+   O fator comum e $4mn$.
+
+7. $14p^2q - 21pq^2 = 7pq(2p - 3q)$
+
+   O fator comum e $7pq$. A subtracao permanece dentro dos parenteses.
+
+8. $5r + 5 = 5(r + 1)$
+
+   O fator comum e 5. O segundo termo vira 1.
+
+## 12. Revisao curta
+
+Fator comum em evidencia e a propriedade distributiva vista ao contrario.
+
+Distribuir faz este caminho:
+
+$$
+a(b + c) = ab + ac
+$$
+
+Fatorar faz o caminho inverso:
+
+$$
+ab + ac = a(b + c)
+$$
+
+Use essa tecnica quando todos os termos tiverem uma parte repetida. Essa parte
+repetida pode ser um numero, uma letra ou uma combinacao dos dois.
+
+O que fica dentro dos parenteses e sempre o resultado de dividir cada termo pelo
+fator comum. Por isso a conferencia final e multiplicar de volta.
