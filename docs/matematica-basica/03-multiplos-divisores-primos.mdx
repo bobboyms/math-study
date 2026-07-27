@@ -2,6 +2,10 @@
 title: Múltiplos, divisores e números primos
 ---
 
+import NumberLine from '@site/src/components/NumberLine';
+import DotArray from '@site/src/components/DotArray';
+import FactorTree from '@site/src/components/FactorTree';
+
 # Múltiplos, divisores e números primos: MMC e MDC
 
 ## Problema motivador: ciclos e agrupamentos
@@ -35,7 +39,7 @@ Antes de desenvolver cada conceito, este é o significado essencial dos termos
 que estudaremos:
 
 - **múltiplo de um número** é um resultado obtido ao multiplicar esse número
-  por um número natural;
+  por um número natural — um valor que aparece na tabuada dele;
 - **divisor de um número** é um número que consegue dividi-lo exatamente, sem
   deixar resto;
 - **número primo** é um número natural maior que 1 que possui exatamente dois
@@ -93,8 +97,22 @@ relação, vistas de lados opostos**.
 
 ## Múltiplos: resultados de uma contagem em saltos iguais
 
-Imagine caixas com 6 garrafas cada. A quantidade total de garrafas depende da
-quantidade de caixas:
+Você já conhece a tabuada do 6:
+
+$$
+6 \times 0 = 0,\quad
+6 \times 1 = 6,\quad
+6 \times 2 = 12,\quad
+6 \times 3 = 18,\quad
+\ldots
+$$
+
+Os **múltiplos de 6** são exatamente os resultados dessa tabuada, continuada
+para sempre: $0, 6, 12, 18, 24, 30, \ldots$ Múltiplo de um número é qualquer
+valor que aparece na tabuada dele.
+
+Uma imagem concreta: caixas com 6 garrafas cada. A quantidade total de
+garrafas depende da quantidade de caixas:
 
 | Caixas | Cálculo | Garrafas |
 |---:|---:|---:|
@@ -104,14 +122,29 @@ quantidade de caixas:
 | 3 | $3 \times 6$ | 18 |
 | 4 | $4 \times 6$ | 24 |
 
-Os totais $0, 6, 12, 18, 24, \ldots$ são **múltiplos de 6**. Cada um resulta
-da multiplicação de 6 por um número natural.
+Só é possível formar totais que estejam nessa lista. Nenhuma quantidade
+inteira de caixas produz 20 garrafas: 3 caixas dão 18, e 4 caixas já dão 24.
+O 20 fica “no meio”, inalcançável — ele **não** é múltiplo de 6.
 
-Na reta numérica, isso corresponde a caminhar com saltos de tamanho 6:
+Na reta numérica, pense em um sapo que parte do 0 e só dá saltos de tamanho
+6. Os múltiplos de 6 são os lugares onde o sapo pisa:
 
-```text
-0------6------12------18------24------30------36 ...
-```
+<NumberLine
+  min={0}
+  max={36}
+  step={6}
+  unit={12}
+  jumps={[
+    {from: 0, to: 6, label: '+6', tone: 1},
+    {from: 6, to: 12, tone: 1},
+    {from: 12, to: 18, tone: 1},
+    {from: 18, to: 24, tone: 1},
+    {from: 24, to: 30, tone: 1},
+    {from: 30, to: 36, tone: 1},
+  ]}
+  marks={[{at: 20, label: '20', tone: 2}]}
+  caption="Os saltos do sapo caem sempre em múltiplos de 6. O 20 fica entre 18 e 24 — o sapo nunca pisa nele."
+/>
 
 De modo geral, um número $m$ é múltiplo de $a$ quando existe um número natural
 $k$ tal que
@@ -126,16 +159,34 @@ $$
 35 = 5 \times 7.
 $$
 
-Já 37 não é múltiplo de 5: não existe número natural que, multiplicado por 5,
-produza 37.
+Pense em notas de R\$ 5: com 7 notas formamos exatamente R\$ 35. Já 37 não é
+múltiplo de 5: com 7 notas chegamos a 35, e com 8 notas passamos direto para
+40. Nenhuma quantidade inteira de notas atinge 37 — não existe número natural
+que, multiplicado por 5, produza 37.
+
+### Como testar se um número é múltiplo?
+
+Para números grandes, não é preciso percorrer a lista salto por salto: usamos
+a divisão, que é a operação inversa da multiplicação. Quer saber se 84 é
+múltiplo de 6?
+
+$$
+84 \div 6 = 14, \text{ com resto } 0.
+$$
+
+Resto zero significa que 84 é alcançado por exatamente 14 saltos de tamanho
+6, ou seja, $84 = 6 \times 14$. Se o resto não fosse zero, o 84 cairia entre
+dois saltos. Guarde essa ideia: ela reaparece nos divisores e nos critérios
+de divisibilidade.
 
 ### Observações importantes sobre múltiplos
 
 - Todo número natural é múltiplo de 1, pois $n = 1 \times n$.
 - Todo número natural é múltiplo de si mesmo, pois $n = n \times 1$.
-- Zero é múltiplo de todo número natural não nulo, pois $0 = n \times 0$.
-- Um número não nulo tem infinitos múltiplos: basta continuar multiplicando-o
-  por $0, 1, 2, 3, \ldots$
+- Zero é múltiplo de todo número natural não nulo, pois $0 = n \times 0$ —
+  é o ponto de partida do sapo, alcançado com zero saltos.
+- Um número não nulo tem infinitos múltiplos: sempre é possível dar mais um
+  salto.
 
 Não faz sentido procurar o “maior múltiplo” de um número natural não nulo,
 porque a lista nunca termina.
@@ -210,6 +261,11 @@ concluir ao mesmo tempo:
 Não confunda as direções:
 
 > 6 é divisor de 24, enquanto 24 é múltiplo de 6.
+
+É a mesma relação descrita de lados opostos, como no parentesco: “Ana é
+filha de Bia” e “Bia é mãe de Ana” falam do mesmo laço. Na igualdade
+$24 = 6 \times 4$, o múltiplo é o resultado (24) e o divisor é o tamanho do
+grupo (6).
 
 ## Como encontrar todos os divisores
 
@@ -345,10 +401,19 @@ por 3 (soma 6), mas não por 9.
 
 Compare as possibilidades de organizar 12 e 13 pontos em retângulos:
 
-```text
-12 pontos:  1 x 12, 2 x 6 ou 3 x 4
-13 pontos:  1 x 13 apenas
-```
+<DotArray
+  rows={3}
+  cols={4}
+  tone={1}
+  caption="12 pontos aceitam retângulos “gordos”: além de 1 × 12, também 2 × 6 e 3 × 4."
+/>
+
+<DotArray
+  rows={1}
+  cols={13}
+  tone={2}
+  caption="13 pontos só formam uma fila. Não há como agrupá-los em linhas iguais com mais de uma linha — é isso que torna 13 primo."
+/>
 
 O 12 possui vários pares de fatores. O 13 só pode ser formado, com fatores
 naturais, por $1 \times 13$.
@@ -419,27 +484,24 @@ $$
 
 Uma árvore de fatores mostra a mesma construção:
 
-```text
-          60
-         /  \
-        2   30
-           /  \
-          2   15
-             /  \
-            3    5
-```
+<FactorTree
+  n={60}
+  caption="A cada nível, o menor primo se destaca à esquerda e o quociente continua descendo. As folhas coloridas são a decomposição: 2, 2, 3 e 5."
+/>
 
 Outra forma de organizar o mesmo trabalho, prática para números maiores, é a
 tabela de divisões sucessivas: dividimos sempre pelo menor primo possível,
 até chegar a 1. Os fatores primos ficam na coluna da direita:
 
-```text
-60 | 2
-30 | 2
-15 | 3
- 5 | 5
- 1 |
-```
+$$
+\begin{array}{r|l}
+60 & 2 \\
+30 & 2 \\
+15 & 3 \\
+5 & 5 \\
+1 &
+\end{array}
+$$
 
 Podemos conferir multiplicando de volta:
 
@@ -450,86 +512,214 @@ $$
 O que mudou foi a escrita de 60. A quantidade não mudou. A nova escrita revela
 quais fatores constroem o número e quantas vezes cada um aparece.
 
+### A fatoração mostra quem divide quem
+
+Antes de seguir para o MMC e o MDC, vale isolar a ideia que sustenta os dois —
+sem ela, as duas regras parecem arbitrárias. Continuemos com o 60:
+
+$$
+60 = 2 \times 2 \times 3 \times 5.
+$$
+
+Para dividir 60 por 12 sem sobra, precisamos separar, dentro dessa escrita, um
+pedaço que valha exatamente 12. Como $12 = 2 \times 2 \times 3$, isso é
+possível:
+
+$$
+60 = \underbrace{(2 \times 2 \times 3)}_{12} \times 5,
+$$
+
+e o que sobra é o próprio quociente: $60 \div 12 = 5$. Tente agora o mesmo com
+8. Como $8 = 2 \times 2 \times 2$, seria preciso encontrar **três** fatores 2
+dentro de 60 — mas ele tem apenas dois. Não existe pedaço que valha 8, e de fato
+$60 \div 8 = 7$ deixa resto 4.
+
+> Um número $d$ divide $n$ exatamente quando **a fatoração de $d$ cabe dentro da
+> fatoração de $n$**: cada primo de $d$ aparece em $n$ pelo menos a mesma
+> quantidade de vezes.
+
+Guarde essa frase — ela é a chave das duas próximas seções. A partir dela, as
+duas relações da página ganham uma leitura em termos de fatores:
+
+- **ser múltiplo de 12** é conter $2 \times 2 \times 3$ na própria fatoração;
+- **ser divisor de 60** é estar contido em $2 \times 2 \times 3 \times 5$.
+
+Múltiplo é quem **contém**; divisor é quem **cabe dentro**. É essa diferença de
+direção que separa o MMC do MDC.
+
 ## MMC: o primeiro encontro entre múltiplos
 
-Retomemos os ônibus que voltam ao terminal a cada 12 e 18 minutos.
+Retomemos os ônibus que saem juntos do terminal às 8h00. Um retorna ao terminal
+a cada 12 minutos; o outro, a cada 18 minutos. Vamos separar a solução em duas
+ideias: primeiro, entender o que os ciclos dizem; depois, ver por que a
+fatoração prima encontra o mesmo instante.
+
+### O problema dos ônibus: quando os ciclos coincidem?
+
+Dizer que o primeiro ônibus retorna **a cada 12 minutos** significa que, após
+sair às 8h00, ele volta depois de 12 minutos, depois de mais 12 minutos, e
+assim por diante:
+
+| Número de ciclos completos | Tempo depois das 8h00 | Horário de retorno |
+|---:|---:|---:|
+| 1 | 12 minutos | 8h12 |
+| 2 | 24 minutos | 8h24 |
+| 3 | 36 minutos | 8h36 |
+| 4 | 48 minutos | 8h48 |
+| 5 | 60 minutos | 9h00 |
+
+Esses tempos são os múltiplos de 12: cada um é obtido por um número inteiro de
+ciclos de 12 minutos.
 
 Os múltiplos positivos de 12 começam assim:
 
 $$
-12,\ 24,\ \mathbf{36},\ 48,\ 60,\ \mathbf{72},\ldots
+12,\ 24,\ 36,\ 48,\ 60,\ldots
 $$
 
-Os múltiplos positivos de 18 começam assim:
+O segundo ônibus também parte às 8h00, mas seus ciclos têm 18 minutos:
+
+| Número de ciclos completos | Tempo depois das 8h00 | Horário de retorno |
+|---:|---:|---:|
+| 1 | 18 minutos | 8h18 |
+| 2 | 36 minutos | 8h36 |
+| 3 | 54 minutos | 8h54 |
+| 4 | 72 minutos | 9h12 |
+
+Portanto, os tempos em que ele retorna são os múltiplos de 18:
 
 $$
-18,\ \mathbf{36},\ 54,\ \mathbf{72},\ 90,\ldots
+18,\ 36,\ 54,\ 72,\ldots
 $$
 
-Os múltiplos comuns — destacados nas duas listas — incluem 36, 72 e outros. O
-menor múltiplo comum positivo é 36. Escrevemos:
+O primeiro tempo que aparece nas duas listas é 36. Ele tem dois significados
+ao mesmo tempo:
+
+$$
+36 = 12 \times 3
+$$
+
+$$
+36 = 18 \times 2.
+$$
+
+Em 36 minutos, o primeiro ônibus completou 3 ciclos, enquanto o segundo
+completou 2 ciclos. Por isso, os dois voltam a estar juntos no terminal às
+8h36.
+
+### Por que esse número recebe o nome de MMC?
+
+O número 36 é múltiplo de 12 e de 18; por isso, é um **múltiplo comum** aos
+dois números. Existem outros encontros, como 72, 108 e 144 minutos, mas 36 é
+o primeiro depois da partida. Assim, ele é o **menor múltiplo comum**:
 
 $$
 \operatorname{mmc}(12,18)=36.
 $$
 
-Logo, os ônibus estarão juntos novamente depois de 36 minutos, às 8h36.
-
-### Por que procuramos múltiplos?
-
 Cada lista representa todos os instantes em que um ônibus retorna. Um encontro
-só ocorre em um instante presente nas duas listas. Procuramos o menor valor
-positivo porque a pergunta pede o **primeiro** novo encontro.
+só ocorre em um instante presente nas duas listas, e procuramos o menor valor
+positivo porque a pergunta pede o primeiro novo encontro.
 
-### MMC por fatoração prima
+### A mesma resposta pela fatoração prima
 
-Para números maiores, listar múltiplos pode ficar demorado. A fatoração mostra
-a estrutura de cada ciclo:
-
-$$
-12 = 2^2 \times 3
-$$
+Listar múltiplos permite enxergar o significado do MMC. Para números maiores,
+porém, a lista pode ficar longa. A fatoração chega ao mesmo resultado sem lista
+nenhuma, apoiada na frase que acabamos de guardar: ser múltiplo de 12 é conter
+a fatoração de 12 dentro da própria fatoração.
 
 $$
-18 = 2 \times 3^2.
+12 = 2 \times 2 \times 3 = 2^2 \times 3^1
 $$
 
-Escrevendo os fatores alinhados em colunas, as exigências de cada número
-ficam visíveis:
+$$
+18 = 2 \times 3 \times 3 = 2^1 \times 3^2.
+$$
 
-```text
-12 = 2 × 2 × 3
-18 = 2     × 3 × 3
+Um múltiplo comum de 12 e de 18 precisa atender às duas exigências ao mesmo
+tempo: conter $2 \times 2 \times 3$ **e** conter $2 \times 3 \times 3$. A
+pergunta vira, então: qual é o menor estoque de fatores que dá conta das duas?
 
-mmc = 2 × 2 × 3 × 3 = 36
-```
+Aqui está o ponto que costuma escapar: as duas exigências **compartilham**
+fatores, em vez de se somarem. O 12 pede um fator 3 e o 18 pede dois; um número
+que tenha dois fatores 3 atende aos dois pedidos de uma vez, porque o 3 exigido
+pelo 12 já está entre eles. Com o fator 2 acontece o mesmo. Basta então ter, de
+cada primo, a **maior** quantidade pedida por algum dos dois números:
 
-Um múltiplo comum precisa conter fatores suficientes para ser divisível por 12
-e por 18 ao mesmo tempo.
+$$
+\begin{array}{r@{\;}c@{\;}c@{\;}c@{\;}c@{\;}c@{\;}c@{\;}c}
+12 \text{ precisa de:} & 2 & \times & 2 & \times & 3 &        &   \\
+18 \text{ precisa de:} & 2 &        &   & \times & 3 & \times & 3 \\[4pt]
+\hline
+36 \text{ contém:}     & 2 & \times & 2 & \times & 3 & \times & 3
+\end{array}
+$$
 
-- Para conter 12, precisamos de dois fatores 2 e um fator 3.
-- Para conter 18, precisamos de um fator 2 e dois fatores 3.
-- Para atender às duas exigências sem acrescentar fatores desnecessários,
-  usamos a maior quantidade pedida de cada primo: $2^2$ e $3^2$.
+Nesse alinhamento, o fator 2 da esquerda e o primeiro fator 3 servem aos dois
+números ao mesmo tempo. Só o segundo 2 (exigido apenas pelo 12) e o segundo 3
+(exigido apenas pelo 18) precisam ser acrescentados.
 
-Assim,
+De fato,
+
+$$
+36 = 2 \times 2 \times 3 \times 3.
+$$
+
+Dentro dessa escrita, podemos separar $2 \times 2 \times 3=12$; sobra um
+fator 3, então $36 \div 12=3$. Também podemos separar
+$2 \times 3 \times 3=18$; sobra um fator 2, então $36 \div 18=2$. A escrita
+mudou de forma, mas a quantidade continua sendo 36 — e ela confirma os mesmos
+3 e 2 ciclos vistos no problema dos ônibus.
+
+### Por que o *menor* múltiplo usa o *maior* expoente?
+
+Essa é a parte que mais confunde: o nome do resultado fala em mínimo, mas a
+regra manda escolher o máximo. Os dois superlativos não brigam — eles falam de
+coisas diferentes. Compare as exigências:
+
+| Fator primo | 12 exige | 18 exige | O MMC precisa conter |
+|---:|---:|---:|---:|
+| 2 | $2^2$ | $2^1$ | $2^2$ |
+| 3 | $3^1$ | $3^2$ | $3^2$ |
+
+Olhe a coluna da direita como um **piso**, não como um exagero. Para o fator 2,
+qualquer coisa abaixo de $2^2$ derruba a exigência do 12; então $2^2$ é o menor
+expoente que ainda serve. Para o fator 3, quem impõe o piso é o 18: menos que
+$3^2$ e a divisão por 18 falha. O maior dos dois expoentes é, portanto, o
+**menor expoente admissível** para aquele primo.
+
+Como cada primo entra no seu piso, e nenhum primo a mais é acrescentado, o
+número que sai é o menor de todos os múltiplos comuns:
 
 $$
 \operatorname{mmc}(12,18)=2^2 \times 3^2=4 \times 9=36.
 $$
 
-Essa escolha não é uma regra arbitrária. Usamos o maior expoente porque o MMC
-precisa carregar todos os fatores exigidos por cada número. Usar menos faria a
-divisão por um deles falhar; usar mais produziria um múltiplo comum, mas não o
-menor.
+Vale testar os dois desvios. Usar menos — digamos $2^1 \times 3^1 = 6$ — dá um
+número que nem sequer é múltiplo de 12. Usar mais — $2^3 \times 3^2 = 72$ — dá
+um múltiplo comum legítimo, mas não o primeiro: os ônibus já teriam se
+encontrado às 8h36.
+
+> **Erro comum:** multiplicar os dois números e parar por aí. De fato,
+> $12 \times 18 = 216$ é um múltiplo comum, mas está longe de ser o menor:
+> $216 = 36 \times 6$, ou seja, é o **sexto** encontro dos ônibus, não o
+> primeiro. O produto conta duas vezes os fatores que os dois números
+> compartilham; o MMC os conta uma vez só. O produto só coincide com o MMC
+> quando não há fator compartilhado nenhum, como em
+> $\operatorname{mmc}(4,9)=36$.
 
 ## MDC: o maior agrupamento compartilhado
 
 Agora retomemos os 24 lápis azuis e 36 lápis vermelhos. Queremos montar o maior
 número possível de kits iguais, sem sobras.
 
-O número de kits precisa dividir 24 e 36 exatamente. Portanto, procuramos um
-divisor comum.
+Antes de calcular, vale entender por que este problema é sobre divisores.
+Suponha que tentemos montar 5 kits. Os 24 lápis azuis teriam de se repartir
+igualmente entre eles, mas $24 \div 5 = 4$ deixa resto 4: cada kit ficaria com
+4 lápis azuis e sobrariam 4 na mesa. O enunciado proíbe sobra, então 5 está
+descartado. O mesmo teste vale para qualquer quantidade de kits — ela só serve
+se dividir 24 **e** 36 exatamente. Procuramos, portanto, um divisor comum; e
+como queremos o maior número de kits, procuramos o maior deles.
 
 $$
 D(24)=\{1,2,3,4,6,8,12,24\}
@@ -559,68 +749,104 @@ $$
 
 lápis vermelhos.
 
-### Por que procuramos divisores?
+### O MDC responde “12”, mas 12 do quê?
 
-O número de kits deve “caber” exatamente nas duas quantidades. Procuramos o
-maior divisor comum porque queremos o maior número de kits iguais possível.
+Um detalhe que confunde: o mesmo cálculo serve a perguntas diferentes, e a
+unidade da resposta vem do enunciado, não da conta.
 
-Em outro tipo de problema, podemos querer o maior **tamanho** de cada pedaço.
-Por exemplo, para cortar fitas de 24 cm e 36 cm em pedaços iguais, tão longos
-quanto possível e sem sobras, o comprimento também será 12 cm. A interpretação
-da resposta depende do que está sendo dividido, mas a estrutura é a mesma.
+Nos kits, o 12 contou **grupos**: 12 kits, cada um com 2 lápis azuis e 3
+vermelhos. Agora troque o contexto e mantenha os números: para cortar uma fita
+de 24 cm e outra de 36 cm em pedaços iguais, tão longos quanto possível e sem
+sobras, o MDC continua sendo 12 — mas agora ele é o **tamanho** de cada pedaço,
+12 cm, e saem 2 pedaços da primeira fita e 3 da segunda.
+
+Repare na simetria: o 12 e o par 2 e 3 trocaram de papel entre os dois
+problemas. A estrutura é a mesma — um número que cabe exato nas duas
+quantidades —, mas quem diz se ele conta grupos ou mede tamanho é o enunciado.
+Depois de calcular, pergunte sempre: 12 o quê?
 
 ### MDC por fatoração prima
 
-Fatoramos os dois números:
+Listar todos os divisores funciona com números pequenos, mas fica pesado
+rapidamente. A fatoração dá o mesmo resultado direto, e agora com a exigência
+invertida em relação ao MMC: no MMC, o número procurado precisava **conter** os
+dois; no MDC, ele precisa **caber dentro** dos dois.
 
 $$
-24 = 2^3 \times 3
+24 = 2 \times 2 \times 2 \times 3 = 2^3 \times 3^1
 $$
 
 $$
-36 = 2^2 \times 3^2.
+36 = 2 \times 2 \times 3 \times 3 = 2^2 \times 3^2.
 $$
 
-Um divisor comum só pode usar fatores presentes nos dois números. No
-alinhamento em colunas, sobrevivem apenas as colunas preenchidas nas duas
-linhas:
+Como um divisor comum tem de caber nas duas fatorações, ele só pode usar
+fatores que estejam disponíveis nas duas. No alinhamento em colunas,
+sobrevivem apenas as colunas preenchidas nas duas linhas:
 
-```text
-24 = 2 × 2 × 2 × 3
-36 = 2 × 2     × 3 × 3
+$$
+\begin{array}{r@{\;}c@{\;}c@{\;}c@{\;}c@{\;}c@{\;}c@{\;}c}
+24 = & 2 & \times & 2 & \times & 2 & \times & 3 \\
+36 = & 2 & \times & 2 &        &   & \times & 3 \times 3 \\[4pt]
+\hline
+\operatorname{mdc} = & 2 & \times & 2 &        &   & \times & 3
+\end{array}
+$$
 
-mdc = 2 × 2 × 3 = 12
-```
+- Ambos têm pelo menos dois fatores 2 — então $2^2$ pode entrar.
+- Ambos têm pelo menos um fator 3 — então $3^1$ pode entrar.
+- Um terceiro fator 2 não caberia em 36, que só tem dois.
+- Um segundo fator 3 não caberia em 24, que só tem um.
 
-- Ambos possuem pelo menos dois fatores 2.
-- Ambos possuem pelo menos um fator 3.
-- Um terceiro fator 2 não cabe em 36.
-- Um segundo fator 3 não cabe em 24.
-
-Logo, usamos a menor quantidade compartilhada de cada primo:
+De cada primo, então, levamos a **menor** quantidade disponível:
 
 $$
 \operatorname{mdc}(24,36)=2^2 \times 3=12.
 $$
 
-Usamos o menor expoente porque o divisor precisa caber nos dois números. Um
-expoente maior pediria um fator que um deles não possui.
+### Por que o *maior* divisor usa o *menor* expoente?
+
+É a mesma aparente contradição do MMC, espelhada — e a saída também é a mesma.
+Aqui o menor expoente não é escolhido por timidez: ele é o **teto**, o maior
+expoente que ainda cabe nos dois números. Para o fator 2, subir para $2^3$
+estouraria o 36; $2^2$ é o máximo permitido. Para o fator 3, subir para $3^2$
+estouraria o 24. Como cada primo é levado até o seu teto, o resultado é o maior
+divisor comum possível.
+
+Em uma frase: **o MMC precisa ser grande o bastante para conter os dois; o MDC
+precisa ser pequeno o bastante para caber nos dois.** É essa direção que
+inverte os expoentes.
+
+> **Erro comum:** aplicar ao MDC a regra do MMC e escolher o maior expoente de
+> cada primo. Isso daria $2^3 \times 3^2 = 72$ — um número que não divide 24
+> nem 36; pelo contrário, é múltiplo dos dois. Se o seu “MDC” saiu **maior** que
+> os números do problema, você calculou um MMC.
 
 ## MMC e MDC lado a lado
 
 | Ideia | MMC | MDC |
 |---|---|---|
 | O que buscamos? | menor múltiplo positivo compartilhado | maior divisor positivo compartilhado |
+| Direção | o resultado **contém** os dois números | o resultado **cabe dentro** dos dois |
 | Palavra-chave conceitual | encontro de ciclos | agrupamento ou medida comum |
 | Na fatoração | reúne todos os fatores necessários | conserva apenas os fatores compartilhados |
 | Expoentes | maior expoente de cada primo | menor expoente dos primos comuns |
+| Tamanho da resposta | maior ou igual ao maior dos números | menor ou igual ao menor dos números |
 
-Não decida apenas por palavras como “juntos”, “maior” ou “menor”. Pergunte:
+Não decida apenas por palavras como “juntos”, “maior” ou “menor” — elas
+aparecem nos dois tipos de problema. Pergunte:
 
 1. Estou procurando um total ou instante que os números conseguem alcançar?
    Então observo múltiplos.
 2. Estou repartindo as quantidades em grupos ou pedaços iguais, sem sobra?
    Então observo divisores.
+
+> **Erro comum:** trocar uma ferramenta pela outra e não perceber. A última
+> linha da tabela é uma verificação barata. No problema dos ônibus, o MDC de 12
+> e 18 é 6 — e 6 minutos não é horário de retorno de nenhum dos dois ônibus. No
+> problema dos kits, o MMC de 24 e 36 é 72 — e não há como montar 72 kits com
+> apenas 24 lápis azuis. Antes de dar a resposta, compare-a com os dados: um
+> MMC menor que os números do problema, ou um MDC maior, denuncia a troca.
 
 ## Método alternativo para o MDC: algoritmo de Euclides
 
@@ -635,14 +861,23 @@ $$
 252 = 2 \times 105 + 42.
 $$
 
-Isso mostra que qualquer número que divide 252 e 105 também divide o resto 42,
-pois
+Essa única linha carrega o passo decisivo do método, e ele vale desdobrar:
+**todo número que divide 252 e 105 também divide o resto 42**. Acompanhe com
+$d=3$.
+Os 252 se organizam em 84 blocos de 3, e os 105, em 35 blocos de 3. Tirar
+$2 \times 105$ é tirar 70 blocos inteiros; sobram $84-70=14$ blocos de 3, isto
+é, 42. Nenhum bloco precisou ser quebrado. O mesmo vale para qualquer divisor
+comum $d$, porque a igualdade
 
 $$
-42 = 252 - 2 \times 105.
+42 = 252 - 2 \times 105
 $$
 
-Não mudamos os divisores comuns ao trocar o par $(252,105)$ por $(105,42)$.
+subtrai de uma quantidade de blocos de tamanho $d$ um número inteiro de blocos
+do mesmo tamanho — o que sobra continua sendo um número inteiro de blocos.
+
+Logo, os divisores comuns de $(252,105)$ são exatamente os divisores comuns de
+$(105,42)$: trocamos o par por outro menor sem mudar a resposta procurada.
 Continuamos:
 
 $$
@@ -655,14 +890,22 @@ $$
 42 = 2 \times 21 + 0.
 $$
 
-Quando o resto chega a zero, o último resto não nulo é o MDC:
+O resto chegou a zero, e é isso que encerra a busca: a última linha diz que 21
+divide 42 exatamente. No par $(42,21)$, portanto, o 21 divide os dois números —
+e nenhum número maior que 21 pode dividir o próprio 21. O MDC desse par é o
+próprio 21. Como nenhuma das trocas alterou os divisores comuns, esse também é
+o MDC do par original:
 
 $$
 \operatorname{mdc}(252,105)=21.
 $$
 
+Conferindo: $252 \div 21=12$ e $105 \div 21=5$, as duas divisões exatas.
+
 A ponte do método é sempre a mesma: subtrair um múltiplo de um número do outro
-não altera os divisores que ambos compartilham.
+não altera os divisores que ambos compartilham. A vantagem prática aparece com
+números grandes — o algoritmo chega ao MDC sem fatorar ninguém, e fatorar
+números grandes é justamente a parte cara do trabalho.
 
 ## Conexão com frações
 
@@ -820,18 +1063,55 @@ Verificação: 180 é divisível pelos três números, e 6 divide os três núme
 
 ## Perguntas de verificação
 
-- Na igualdade $7 \times 8=56$, quais números são divisores e qual número é
-  múltiplo dos outros?
-- Por que o resto zero é a evidência de que um número é divisor de outro?
-- Por que o critério de divisibilidade do 2 olha apenas o último algarismo,
-  enquanto o do 3 precisa somar todos?
-- Por que 1 não é primo? Por que 2 é o único primo par?
-- Ao fatorar um número, o que muda na escrita e o que permanece igual?
-- Por que o MMC usa os maiores expoentes da fatoração?
-- Por que o MDC só pode usar fatores presentes em todos os números?
-- Em um problema, que pergunta ajuda a decidir entre múltiplos e divisores?
-- Como você verificaria concretamente um resultado de MMC? E um resultado de
-  MDC?
+Responda com suas palavras antes de abrir as respostas.
+
+1. Na igualdade $7 \times 8=56$, quais números são divisores e qual número é
+   múltiplo dos outros?
+2. Por que o resto zero é a evidência de que um número é divisor de outro?
+3. Por que o critério de divisibilidade do 2 olha apenas o último algarismo,
+   enquanto o do 3 precisa somar todos?
+4. Por que 1 não é primo? Por que 2 é o único primo par?
+5. Ao fatorar um número, o que muda na escrita e o que permanece igual?
+6. Por que o MMC usa os maiores expoentes da fatoração?
+7. Por que o MDC só pode usar fatores presentes em todos os números?
+8. Em um problema, que pergunta ajuda a decidir entre múltiplos e divisores?
+9. Como você verificaria concretamente um resultado de MMC? E um resultado de
+   MDC?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. 7 e 8 são divisores de 56, e 56 é múltiplo de 7 e de 8. É a mesma relação
+   lida nas duas direções.
+2. O resto é o que sobra depois de formar todos os grupos completos possíveis.
+   Resto zero significa que a quantidade se esgotou em grupos inteiros, sem
+   nenhum pedaço fora — exatamente o que define divisão exata.
+3. Porque 10 é múltiplo de 2: tudo o que está acima das unidades já é múltiplo
+   de 2, então só o último algarismo pode decidir. Já 10 não é múltiplo de 3 —
+   sobra 1 em cada 10, em cada 100 e assim por diante —, e é a soma dessas
+   sobras, uma por algarismo, que a soma dos algarismos contabiliza.
+4. O 1 tem um único divisor positivo, e a definição de primo exige exatamente
+   dois; além disso, aceitar o 1 destruiria a unicidade da fatoração. O 2 é
+   primo porque só tem os divisores 1 e 2; qualquer outro número par tem o 2
+   como um terceiro divisor, além de 1 e dele mesmo.
+5. Muda a escrita: o número passa a aparecer como produto de primos, revelando
+   de que blocos ele é feito e quantos de cada. Permanece igual a quantidade —
+   60 e $2^2 \times 3 \times 5$ são o mesmo número.
+6. Porque o expoente de cada primo precisa ser grande o bastante para atender à
+   exigência de todos os números ao mesmo tempo. O maior expoente é justamente
+   o menor que ainda serve; abaixo dele, a divisão por um dos números falha.
+7. Porque o divisor precisa caber dentro da fatoração de cada número. Um primo
+   ausente em um deles não tem onde caber ali, e usá-lo tornaria aquela divisão
+   inexata.
+8. “O que procuro é algo que os números alcançam (maior ou igual a eles, logo
+   múltiplos) ou algo que cabe dentro deles sem sobra (menor ou igual a eles,
+   logo divisores)?”
+9. Para o MMC, divida o resultado por cada número dado e confira que todas as
+   divisões são exatas — e que nenhum valor menor faz o mesmo. Para o MDC,
+   divida cada número dado pelo resultado e confira as divisões exatas; no
+   contexto do problema, monte os grupos e veja que não sobra nada.
+
+</details>
 
 ## Exercícios
 
@@ -891,9 +1171,14 @@ Verificação: 180 é divisível pelos três números, e 6 divide os três núme
 7. O primeiro contém pelo menos os dois fatores 2 e o fator 3 exigidos pelo
    segundo; o segundo não contém três fatores 2 nem dois fatores 3.
 8. $72=2^3\times3^2$ e $90=2\times3^2\times5$.
-9. $\operatorname{mmc}(15,20)=60$.
-10. $\operatorname{mdc}(48,60)=12$.
-11. $\operatorname{mmc}(6,8,10)=120$ segundos.
+9. $15=3\times5$ e $20=2^2\times5$, logo
+    $\operatorname{mmc}(15,20)=2^2\times3\times5=60$. Se você encontrou 300,
+    multiplicou os dois números e contou o fator 5 duas vezes.
+10. $48=2^4\times3$ e $60=2^2\times3\times5$, logo
+    $\operatorname{mdc}(48,60)=2^2\times3=12$. Se você encontrou 240, usou os
+    maiores expoentes — isso é o MMC, e ele é maior que os dois números.
+11. $\operatorname{mmc}(6,8,10)=120$ segundos. Se você encontrou 480,
+    multiplicou os três números em vez de reaproveitar os fatores repetidos.
 12. 6 caixas, com 7 brigadeiros e 5 beijinhos em cada uma.
 13. 24 cm; 4 pedaços da primeira corda e 3 da segunda, totalizando 7.
 14. $391=1\times299+92$, $299=3\times92+23$ e
@@ -920,6 +1205,9 @@ Verificação: 180 é divisível pelos três números, e 6 divide os três núme
 - O **MDC** encontra o maior fator que divide todas as quantidades sem sobra.
 - Na fatoração, o MMC reúne tudo o que é necessário; o MDC conserva apenas o
   que todos compartilham.
+- O MMC precisa ser grande o bastante para **conter** os números — daí os
+  maiores expoentes; o MDC precisa ser pequeno o bastante para **caber** neles
+  — daí os menores.
 - O MMC prepara denominadores comuns, e o MDC prepara a simplificação de
   frações.
 

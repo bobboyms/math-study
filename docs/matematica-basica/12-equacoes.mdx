@@ -2,37 +2,57 @@
 title: Equacoes
 ---
 
+import Balance from '@site/src/components/Balance';
+
 # Equacoes
 
-## Contexto
+## Da expressao para a equacao
 
-Na secao anterior, uma expressao algebrica representava uma regra ou uma
-quantidade, como:
+Na secao de expressoes algebricas, usamos letras para representar valores que
+podem variar ou que ainda nao conhecemos. Por exemplo:
 
 $$
 8 + 3x
 $$
 
-Essa expressao so diz como calcular algo. Ela ainda nao afirma que o resultado
-tem um valor especifico.
+Essa expressao e uma regra de calculo: somar 8 ao triplo de um numero. So com
+ela, nao sabemos qual e o numero nem qual sera o resultado.
 
-Uma equacao aparece quando colocamos uma igualdade:
+Se recebemos a informacao de que o resultado dessa regra foi 23, registramos:
 
 $$
 8 + 3x = 23
 $$
 
-Agora a pergunta muda. Nao queremos apenas representar uma regra. Queremos
-descobrir qual valor de $x$ torna a igualdade verdadeira.
+O sinal de igualdade nao e apenas um pedido para calcular. Ele afirma que a
+expressao da esquerda e a expressao da direita representam a **mesma
+quantidade**.
 
-Por isso, equacao e uma afirmacao de igualdade entre duas expressoes. Resolver
-uma equacao significa encontrar o valor que faz os dois lados terem o mesmo
-resultado.
+Agora temos uma **equacao**: uma igualdade entre duas expressoes que contem um
+ou mais valores desconhecidos. O valor desconhecido que queremos descobrir e
+chamado de **incognita**. Neste exemplo, usamos $x$ como nome temporario para
+ela.
+
+> O $x$ nao e um objeto especial nem significa sempre a mesma coisa. Ele pode
+> representar uma quantidade, um preco, uma distancia, um tempo ou qualquer
+> outra informacao que esteja faltando.
+
+Resolver a equacao significa descobrir qual valor pode ocupar o lugar de $x$
+sem tornar falsa a igualdade.
+
+| Escrita | O que ela faz |
+| --- | --- |
+| $8+3x$ | descreve como uma quantidade e calculada |
+| $8+3x=23$ | informa que essa quantidade vale 23 e permite procurar $x$ |
+
+Assim, normalmente nao transformamos uma equacao em expressao para descobrir a
+incognita. Fazemos o caminho contrario: construimos uma expressao para a regra
+do problema e usamos uma informacao conhecida para formar a equacao.
 
 ## Problema motivador
 
-Uma compra custou R$ 23. Voce comprou um caderno de R$ 8 e algumas canetas de
-R$ 3 cada. Quantas canetas comprou?
+Uma compra custou R\$ 23. Voce comprou um caderno de R\$ 8 e algumas canetas de
+R\$ 3 cada. Quantas canetas comprou?
 
 Primeiro escrevemos a expressao do custo.
 
@@ -77,8 +97,13 @@ Entao $x = 5$ resolve a equacao.
 
 ## Uso
 
-Equacoes aparecem quando sabemos uma relacao e um resultado, mas falta descobrir
-um valor:
+Na vida real, raramente chamamos a informacao desconhecida de $x$. Perguntamos
+"quantas canetas?", "quantos quilometros?" ou "quanto tempo?". A letra serve
+para dar um nome curto a essa pergunta, permitindo organizar as informacoes em
+uma conta.
+
+Equacoes aparecem quando conhecemos uma relacao e alguns valores, mas falta
+descobrir outro:
 
 - descobrir quantidade comprada;
 - calcular tempo de viagem;
@@ -86,6 +111,10 @@ um valor:
 - resolver problemas de idade;
 - ajustar orcamentos;
 - encontrar pontos de equilibrio em modelos.
+
+Elas permitem fazer o caminho inverso de uma conta. Se conhecemos a quantidade
+de canetas, calculamos diretamente o preco. Se conhecemos o preco final, uma
+equacao permite reconstruir a quantidade de canetas.
 
 Elas transformam uma regra geral em uma pergunta especifica. A expressao
 $8 + 3x$ descreve o custo para qualquer quantidade de canetas. A equacao
@@ -96,9 +125,10 @@ $8 + 3x = 23$ pergunta qual quantidade produz custo 23.
 Uma equacao e uma balanca. O lado esquerdo e o lado direito precisam ter o
 mesmo valor.
 
-```text
-8 + 3x   =   23
-```
+<Balance
+  states={[{left: '8 + 3x', right: '23'}]}
+  caption="Os dois lados precisam ter o mesmo valor. Resolver é descobrir qual x mantém o equilíbrio."
+/>
 
 Resolver a equacao significa descobrir qual valor de $x$ deixa a balanca
 equilibrada.
@@ -141,32 +171,36 @@ desfazemos as operacoes que estavam prendendo o $x$.
 
 ## Modelo visual
 
-```text
-[8 + 3x]  =  [23]
-```
+<Balance
+  states={[{left: '8 + 3x', right: '23'}]}
+  caption="Estado inicial: o 8 ainda acompanha o 3x no prato da esquerda."
+/>
 
 Para deixar $3x$ sozinho, retiramos 8 dos dois lados:
 
-```text
-[3x]  =  [15]
-```
+<Balance
+  states={[{left: '3x', right: '15'}]}
+  caption="Tirar 8 dos dois pratos ao mesmo tempo: cada lado perdeu a mesma quantidade, e o equilíbrio continua."
+/>
 
 Agora queremos saber quanto vale um $x$. Como $3x$ significa tres grupos de
 $x$, dividimos os dois lados por 3:
 
-```text
-[x]  =  [5]
-```
+<Balance
+  states={[{left: 'x', right: '5'}]}
+  caption="Dividir os dois pratos por 3 deixa um único x de um lado — e o valor procurado do outro."
+/>
 
 O caminho visual e:
 
-```text
-[8 + 3x] = [23]
-    tira 8 dos dois lados
-[3x]     = [15]
-    divide os dois lados por 3
-[x]      = [5]
-```
+<Balance
+  states={[
+    {left: '8 + 3x', right: '23'},
+    {left: '3x', right: '15', op: '\\text{tira } 8 \\text{ dos dois lados}'},
+    {left: 'x', right: '5', op: '\\text{divide os dois lados por } 3'},
+  ]}
+  caption="O caminho inteiro. Cada seta é uma operação aplicada aos dois lados — por isso a igualdade sobrevive a todas as etapas."
+/>
 
 Cada etapa deixa a igualdade mais simples sem mudar a solucao.
 
@@ -186,6 +220,16 @@ temos:
 - lado direito: $23$;
 - variavel ou incognita: $x$;
 - solucao: o valor que torna a igualdade verdadeira.
+
+Neste curso, trabalharemos principalmente com equacoes que possuem uma
+incognita. Uma equacao tambem pode ter mais de uma, como $x+y=10$. Nesse caso,
+uma unica igualdade admite varios pares, como $x=3$, $y=7$ e $x=6$, $y=4$.
+Para determinar um unico par, normalmente precisamos de outra informacao.
+
+Uma igualdade numerica como $2+3=5$ nao traz uma incognita para descobrir. Por
+isso, no uso escolar mais comum, chamamos isso simplesmente de igualdade
+verdadeira e reservamos a palavra equacao para igualdades com valores
+desconhecidos.
 
 ### Resolver usando operacoes inversas
 
@@ -257,13 +301,25 @@ O $x$ foi multiplicado por 2 e depois subtraimos 4. Para desfazer, primeiro
 somamos 4 aos dois lados:
 
 $$
-2x = 14
+2x-4+4=10+4
+$$
+
+No lado esquerdo, $-4+4=0$. Somar zero nao altera $2x$. Assim:
+
+$$
+2x=14
 $$
 
 Agora desfazemos a multiplicacao por 2, dividindo os dois lados por 2:
 
 $$
-x = 7
+\frac{2x}{2}=\frac{14}{2}
+$$
+
+Como $2/2=1$ e $1x=x$:
+
+$$
+x=7
 $$
 
 Conferindo:
@@ -288,19 +344,34 @@ um lado e os numeros fixos do outro.
 Subtraimos $2x$ dos dois lados:
 
 $$
-3x + 2 = 14
+5x+2-2x=2x+14-2x
+$$
+
+Pela propriedade distributiva, $5x-2x=(5-2)x=3x$. No lado direito,
+$2x-2x=0$. Portanto:
+
+$$
+3x+2=14
 $$
 
 Subtraimos 2 dos dois lados:
 
 $$
-3x = 12
+3x+2-2=14-2
+$$
+
+$$
+3x=12
 $$
 
 Dividimos por 3:
 
 $$
-x = 4
+\frac{3x}{3}=\frac{12}{3}
+$$
+
+$$
+x=4
 $$
 
 Verificacao:
@@ -381,10 +452,12 @@ realmente funciona na equacao original.
 ## Perguntas de verificacao
 
 - Qual e a diferenca entre expressao e equacao?
+- O que o $x$ representa no problema das canetas?
 - O que significa dizer que $x = 5$ e solucao de $8 + 3x = 23$?
 - Por que podemos subtrair 8 dos dois lados de uma equacao?
 - Por que nao podemos alterar apenas um lado da igualdade?
 - Como verificar se uma resposta realmente resolve a equacao?
+- Crie uma situacao real em que a incognita represente tempo ou distancia.
 
 ## Exercicios de dominio
 
@@ -393,12 +466,19 @@ realmente funciona na equacao original.
 3. Resolva $4x - 5 = 27$.
 4. Resolva $6x + 2 = 3x + 20$.
 5. Transforme em equacao e resolva: "o triplo de um numero mais 4 da 22".
+6. Um aplicativo cobra R\$ 5 fixos mais R\$ 2 por quilometro. Uma viagem custou
+   R\$ 21. Explique o que $x$ representa, construa a equacao, resolva e confira
+   a resposta na situacao original.
 
 ## Revisao curta
 
-Equacao e uma igualdade entre duas expressoes. Resolver uma equacao significa
-encontrar o valor que torna a igualdade verdadeira. A ideia central e equilibrio:
-podemos simplificar a equacao, desde que facamos a mesma operacao nos dois
-lados. As etapas de resolucao usam operacoes inversas para isolar a variavel.
-Depois de encontrar uma resposta, substituimos na equacao original para
-verificar se ela realmente funciona.
+Uma expressao descreve uma quantidade ou uma regra de calculo. Quando sabemos
+que essa quantidade e igual a outra, formamos uma equacao. A incognita e a
+informacao que falta, e a letra apenas lhe da um nome temporario. Resolver uma
+equacao significa encontrar o valor que torna a igualdade verdadeira.
+
+A ideia central e equilibrio: podemos escrever a equacao de uma forma mais
+simples desde que facamos a mesma operacao nos dois lados. As operacoes inversas
+desfazem o caminho da conta e ajudam a isolar a incognita. No final,
+substituimos a resposta na equacao original para verificar se ela preserva a
+igualdade e faz sentido na situacao real.

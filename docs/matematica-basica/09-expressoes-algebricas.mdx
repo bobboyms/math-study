@@ -1,0 +1,1023 @@
+---
+title: Expressões algébricas
+---
+
+import FunctionMachine from '@site/src/components/FunctionMachine';
+import AreaModel from '@site/src/components/AreaModel';
+
+# Expressões algébricas: escrever a regra, não apenas o caso
+
+## Problema motivador: qual aplicativo é mais barato?
+
+Dois aplicativos de transporte cobram de formas diferentes:
+
+- o **App A** cobra R\$ 5 fixos mais R\$ 2 por quilômetro;
+- o **App B** cobra R\$ 11 fixos mais R\$ 1 por quilômetro.
+
+Qual dos dois é mais barato? A pergunta parece simples, mas a aritmética
+sozinha não a responde. Ela responde uma corrida de cada vez:
+
+| Distância | App A | App B | Mais barato |
+|---:|---:|---:|---|
+| 2 km | R\$ 9 | R\$ 13 | A |
+| 4 km | R\$ 13 | R\$ 15 | A |
+| 6 km | R\$ 17 | R\$ 17 | empate |
+| 10 km | R\$ 25 | R\$ 21 | B |
+| 20 km | R\$ 45 | R\$ 31 | B |
+
+Duas coisas ficam claras na tabela e nenhuma delas aparece em uma conta
+isolada: a resposta **depende da distância**, e existe um ponto de virada por
+volta de 6 km. Para enxergar isso, tivemos que calcular cinco vezes cada
+aplicativo — e ainda assim só sabemos o que acontece nessas cinco distâncias.
+
+O que falta é uma forma de escrever **a regra de cobrança inteira**, de uma vez,
+sem escolher a distância. É isso que as expressões algébricas fazem, e é a essa
+tabela que a página volta no fim.
+
+## Mapa das ideias
+
+Este é o significado essencial dos termos que a página vai construir:
+
+- **variável** — uma letra que guarda o lugar de um número que pode variar ou
+  que ainda não conhecemos;
+- **expressão algébrica** — combinação de números, variáveis e operações que
+  representa uma quantidade ou uma regra de cálculo;
+- **termo** — cada parcela da expressão, separada pelos sinais de $+$ e $-$;
+- **coeficiente** — o número que multiplica a parte com letras de um termo;
+- **parte literal** — as letras do termo, com seus expoentes;
+- **termos semelhantes** — termos com exatamente a mesma parte literal;
+- **grau** — o maior expoente da variável na expressão;
+- **avaliar** — trocar a letra por um número e calcular;
+- **simplificar** — reescrever a expressão de forma mais curta, sem escolher
+  valor para a letra.
+
+## Para que isso serve?
+
+Expressões algébricas aparecem sempre que uma regra vale para muitos casos:
+
+- preço com parte fixa e parte variável — frete, assinatura, plano de dados;
+- salário com base mais comissão, ou custo com taxa mais consumo;
+- fórmulas de perímetro, área e volume, válidas para qualquer medida;
+- fórmulas de planilha, em que a célula descreve o cálculo e não o resultado;
+- funções em programação: o parâmetro é exatamente uma variável.
+
+Dentro da própria matemática, elas são o passo que separa a aritmética de tudo
+o que vem depois. Sem escrever a regra em letras, não há como estudar
+[produtos notáveis](./produtos-notaveis), [fatoração](./fator-comum-em-evidencia),
+[equações](./equacoes) nem [funções](./funcoes).
+
+## Ideias anteriores que voltam aqui
+
+Álgebra não substitui a aritmética: ela a reutiliza inteira, com letras no
+lugar de alguns números. Estas são as ideias que voltam, e vale trazê-las à
+memória antes de seguir.
+
+Das [operações básicas](./operacoes-basicas):
+
+- a **ordem das operações** — potências antes de multiplicações, que vêm antes
+  de somas;
+- a **propriedade distributiva**, $a \times (b + c) = a \times b + a \times c$
+  — é ela que sustenta quase tudo nesta página;
+- as propriedades **comutativa** e **associativa**, que permitem reorganizar
+  uma soma;
+- o **elemento neutro** da multiplicação: $1 \times a = a$.
+
+Dos [números negativos](./numeros-negativos): subtrair é somar o oposto, e o
+produto de dois negativos é positivo.
+
+Das [potências](./potencias): $x^2$ significa $x \times x$, e potências de
+mesma base se multiplicam somando expoentes.
+
+Antes de continuar, responda mentalmente:
+
+1. Quanto é $4 \times (10 + 3)$, resolvido pela distributiva?
+2. Quanto é $(-3)^2$? E quanto é $-3^2$?
+3. Quanto é $x^2 \times x^3$, escrito como uma potência só?
+
+As respostas são $40 + 12 = 52$; $9$ e $-9$ (os parênteses mudam quem é
+elevado ao quadrado); e $x^5$. Se alguma escapou, vale reler a página
+correspondente — as três serão usadas o tempo todo daqui em diante.
+
+## Intuição: a letra guarda um lugar
+
+Volte ao App A: R\$ 5 fixos mais R\$ 2 por quilômetro. A estrutura da conta é
+sempre a mesma:
+
+$$
+5 + 2 \times \text{distância}
+$$
+
+Escrever a palavra "distância" dentro da conta é desconfortável. Trocamos por
+uma letra:
+
+$$
+5 + 2x
+$$
+
+Essa é uma **expressão algébrica**. A letra $x$ não é um mistério nem um
+símbolo especial: é apenas o **lugar guardado** de um número que ainda não foi
+escolhido. Cada parte tem um papel:
+
+- o $5$ é a taxa fixa — não depende de nada;
+- o $2x$ é a parte que cresce com a distância.
+
+Pense na expressão como uma receita de cálculo:
+
+> pegue o valor de $x$, multiplique por 2 e depois some 5.
+
+Escolhido um valor, a expressão algébrica volta a ser uma expressão
+aritmética comum. Se $x = 4$:
+
+$$
+5 + 2(4) = 5 + 8 = 13
+$$
+
+Se $x = 10$:
+
+$$
+5 + 2(10) = 5 + 20 = 25
+$$
+
+A expressão é a mesma nos dois casos. O que mudou foi o número colocado no
+lugar da letra. Uma expressão algébrica **não afirma que duas coisas são
+iguais** e **não se resolve sozinha** — ela representa uma quantidade ou uma
+regra.
+
+| Expressão | Tipo | Por quê? |
+| --- | --- | --- |
+| $8 - 3$ | aritmética | todos os valores são conhecidos |
+| $2(5 + 1)$ | aritmética | há apenas números e operações |
+| $8 - x$ | algébrica | $x$ representa um número qualquer |
+| $2(a + 1)$ | algébrica | $a$ representa um número qualquer |
+
+## Modelo visual
+
+### A máquina de calcular
+
+A expressão $2x + 5$ pode ser desenhada como uma máquina com entrada e saída:
+
+<FunctionMachine
+  input="x"
+  steps={[
+    {op: '\\text{dobrar}', value: '2x'},
+    {op: '\\text{somar } 5', value: '2x + 5'},
+  ]}
+  caption="A entrada é um número qualquer; cada seta é uma operação. A saída é a expressão."
+/>
+
+Com $x = 4$:
+
+<FunctionMachine
+  input="4"
+  steps={[
+    {op: '\\text{dobrar}', value: '8'},
+    {op: '\\text{somar } 5', value: '13'},
+  ]}
+/>
+
+Com $x = 7$:
+
+<FunctionMachine
+  input="7"
+  steps={[
+    {op: '\\text{dobrar}', value: '14'},
+    {op: '\\text{somar } 5', value: '19'},
+  ]}
+/>
+
+A máquina é a mesma; o que muda é o que entra. É essa imagem que, mais
+adiante, vira a ideia de [função](./funcoes).
+
+### Blocos de tamanho desconhecido
+
+A segunda imagem é ainda mais útil para simplificar. Imagine que $x$ seja o
+comprimento de um bloco cujo tamanho ninguém mediu, e que $1$ seja um
+quadradinho de tamanho conhecido:
+
+<AreaModel
+  rows={[{size: 1, label: ''}]}
+  cols={[
+    {size: 3, label: 'x'},
+    {size: 3, label: 'x'},
+    {size: 3, label: 'x'},
+  ]}
+  cells={[['x', 'x', 'x']]}
+  unit={34}
+  caption="3x — três blocos de tamanho x, um tamanho que ninguém mediu."
+/>
+
+<AreaModel
+  rows={[{size: 1, label: ''}]}
+  cols={[
+    {size: 1, label: '1'},
+    {size: 1, label: '1'},
+    {size: 1, label: '1'},
+    {size: 1, label: '1'},
+    {size: 1, label: '1'},
+  ]}
+  cells={[[{math: '1', tone: 2}, {math: '1', tone: 2}, {math: '1', tone: 2}, {math: '1', tone: 2}, {math: '1', tone: 2}]]}
+  unit={34}
+  caption="5 — cinco quadradinhos de tamanho conhecido. Peças de tamanhos diferentes não se somam numa contagem só."
+/>
+
+Três blocos de tamanho $x$ mais cinco quadradinhos de tamanho 1. Você pode
+contar quantos blocos há e quantos quadradinhos há, mas **não pode dizer que
+tem 8 de alguma coisa** — as peças têm tamanhos diferentes. É exatamente por
+isso que $3x + 5$ não vira $8x$, e essa imagem vai justificar toda a regra de
+termos semelhantes.
+
+### O retângulo
+
+A terceira imagem é o retângulo de área, o mesmo das
+[operações básicas](./operacoes-basicas). Um retângulo de lados $3$ e $x$ tem
+área $3x$:
+
+<AreaModel
+  rows={[{size: 3, label: '3'}]}
+  cols={[{size: 5, label: 'x'}]}
+  cells={[['3x']]}
+  unit={38}
+  caption="Um retângulo de lados 3 e x tem área 3x — a mesma leitura de área das operações básicas, agora com uma letra."
+/>
+
+Guarde este desenho: é ele que vai tornar visível a distributiva com letras, e
+é ele que reaparece nos [produtos notáveis](./produtos-notaveis).
+
+## Anatomia de uma expressão
+
+Antes de manipular expressões, é preciso saber nomear as peças. Tome:
+
+$$
+3x^2 - 5x + 7
+$$
+
+Os sinais de $+$ e $-$ separam a expressão em **termos**. Como subtrair é somar
+o oposto, o sinal pertence ao termo que vem depois dele:
+
+| Termo | Coeficiente | Parte literal | Grau do termo |
+|---|---:|---|---:|
+| $3x^2$ | 3 | $x^2$ | 2 |
+| $-5x$ | $-5$ | $x$ | 1 |
+| $+7$ | 7 | nenhuma | 0 |
+
+- O **coeficiente** é a parte numérica do termo.
+- A **parte literal** são as letras com seus expoentes.
+- O **grau de um termo** é o expoente da variável nele.
+- O **grau da expressão** é o maior grau entre seus termos — aqui, 2.
+
+O termo $7$ é chamado de **termo constante**: ele não tem letra nenhuma e, por
+isso, não muda quando $x$ muda. Já $3x^2$ e $-5x$ dependem do valor de $x$.
+
+Uma expressão com um só termo, como $3x^2$, chama-se **monômio**. Uma soma de
+vários termos, como $3x^2 - 5x + 7$, chama-se **polinômio**. Os dois nomes vão
+aparecer nas próximas páginas; por ora, basta reconhecê-los.
+
+### Convenções de escrita
+
+A álgebra economiza símbolos, e cada economia tem um motivo. Vale conhecer
+todas, porque a maioria dos erros de iniciante vem de ler a escrita curta de
+forma errada:
+
+| Escrita | Significa | Por quê |
+|---|---|---|
+| $2x$ | $2 \times x$ | o $\times$ é omitido para não se confundir com a letra $x$ |
+| $x$ | $1x$ | multiplicar por 1 não muda nada — o coeficiente 1 fica subentendido |
+| $-x$ | $-1x$ | mesmo motivo, com o coeficiente $-1$ |
+| $x^2$ | $x \times x$ | notação de potência |
+| $3x^2$ | $3 \times (x^2)$ | o expoente pega só o $x$, não o 3 |
+| $(3x)^2$ | $3x \times 3x = 9x^2$ | aqui o parêntese faz o expoente pegar tudo |
+| $\dfrac{x}{2}$ | $\dfrac{1}{2}x$ | dividir por 2 é multiplicar por meio |
+| $2(8)$ | $2 \times 8$ | os parênteses evitam que se leia "28" |
+
+As duas linhas do meio merecem atenção: $3x^2$ e $(3x)^2$ são expressões
+diferentes. Teste com $x = 2$: a primeira dá $3 \times 4 = 12$; a segunda dá
+$6^2 = 36$.
+
+## Avaliar uma expressão
+
+**Avaliar** é trocar a variável por um número e calcular o resultado. Responde
+à pergunta:
+
+> Quanto vale a expressão para este valor específico da variável?
+
+Avalie $3x + 2$ para $x = 5$:
+
+$$
+3(5) + 2 = 15 + 2 = 17
+$$
+
+Avalie $x^2 + 4x$ para $x = 3$:
+
+$$
+3^2 + 4(3) = 9 + 12 = 21
+$$
+
+A álgebra respeita exatamente a mesma ordem das operações dos números:
+primeiro a potência ($3^2$), depois a multiplicação ($4 \times 3$) e só então a
+soma.
+
+### Cuidado ao avaliar com números negativos
+
+Quando o valor substituído é negativo, os parênteses deixam de ser
+opcionais. Avalie $x^2 - 4x$ para $x = -3$:
+
+$$
+(-3)^2 - 4(-3) = 9 - (-12) = 9 + 12 = 21
+$$
+
+Repare em dois pontos. Primeiro, $(-3)^2 = 9$, e não $-9$: o parêntese diz que
+o sinal faz parte do número elevado ao quadrado. Escrever $-3^2$ significaria
+"o oposto de $3^2$", ou seja, $-9$ — outra conta. Segundo, subtrair $-12$
+aumenta o resultado, como visto nos
+[números negativos](./numeros-negativos).
+
+A regra prática é simples: **ao substituir, coloque o valor entre parênteses**.
+Isso preserva o sinal e a ordem das operações sem que você precise pensar no
+assunto.
+
+## Termos semelhantes: quando dá para juntar
+
+**Simplificar** é reescrever a mesma quantidade de forma mais curta, sem
+escolher valor para a variável. A ferramenta principal é juntar termos
+semelhantes.
+
+> Dois termos são **semelhantes** quando têm exatamente a mesma parte literal —
+> as mesmas letras, com os mesmos expoentes. Só os coeficientes podem diferir.
+
+Exemplo e contraexemplo, lado a lado: $4x$ e $7x$ são semelhantes, porque
+ambos têm parte literal $x$. Já $4x^2$ e $7x$ **não** são, porque $x^2$ e $x$
+são partes literais diferentes — um é um bloco quadrado, o outro é um bloco de
+comprimento.
+
+| Par | Semelhantes? | Motivo |
+|---|---|---|
+| $3x$ e $8x$ | sim | mesma parte literal, $x$ |
+| $3x^2$ e $8x^2$ | sim | mesma parte literal, $x^2$ |
+| $3x^2$ e $8x$ | não | $x^2$ e $x$ são tipos diferentes |
+| $-7ab$ e $2ba$ | sim | $ab$ e $ba$ são a mesma parte literal (comutativa) |
+| $5$ e $9$ | sim | ambos são constantes |
+| $4x$ e $2$ | não | um depende de $x$, o outro é fixo |
+
+### Por que juntar é legítimo
+
+Não é uma regra nova: é a **distributiva lida ao contrário**. Em $3x + 5x$, o
+$x$ multiplica os dois termos, então pode ser posto em evidência:
+
+$$
+3x + 5x = (3 + 5)x = 8x
+$$
+
+A imagem dos blocos diz a mesma coisa: três blocos de tamanho $x$ mais cinco
+blocos de tamanho $x$ são oito blocos de tamanho $x$. O tamanho do bloco não
+precisou ser conhecido para a contagem funcionar.
+
+<AreaModel
+  rows={[{size: 1, label: '3x'}]}
+  cols={[
+    {size: 2, label: 'x'},
+    {size: 2, label: 'x'},
+    {size: 2, label: 'x'},
+  ]}
+  cells={[['x', 'x', 'x']]}
+  unit={30}
+  labelWidth={40}
+/>
+
+<AreaModel
+  rows={[{size: 1, label: '5x'}]}
+  cols={[
+    {size: 2, label: 'x'},
+    {size: 2, label: 'x'},
+    {size: 2, label: 'x'},
+    {size: 2, label: 'x'},
+    {size: 2, label: 'x'},
+  ]}
+  cells={[['x', 'x', 'x', 'x', 'x']]}
+  unit={30}
+  labelWidth={40}
+/>
+
+<AreaModel
+  rows={[{size: 1, label: '8x'}]}
+  cols={[
+    {size: 2, label: 'x'},
+    {size: 2, label: 'x'},
+    {size: 2, label: 'x'},
+    {size: 2, label: 'x'},
+    {size: 2, label: 'x'},
+    {size: 2, label: 'x'},
+    {size: 2, label: 'x'},
+    {size: 2, label: 'x'},
+  ]}
+  cells={[[{math: 'x', tone: 3}, {math: 'x', tone: 3}, {math: 'x', tone: 3}, {math: 'x', tone: 3}, {math: 'x', tone: 3}, {math: 'x', tone: 3}, {math: 'x', tone: 3}, {math: 'x', tone: 3}]]}
+  unit={30}
+  labelWidth={40}
+  caption="Oito blocos, todos de tamanho x. Juntar só foi possível porque as peças tinham o mesmo tamanho."
+/>
+
+Agora compare com $3x + 5$. Os blocos têm tamanhos diferentes: três de tamanho
+$x$ e cinco de tamanho 1. Não há como fatorar o $x$, porque ele não aparece no
+segundo termo. A soma fica como está.
+
+### Simplificando na prática
+
+Simplifique $4x + 3 + 2x - 1$.
+
+Primeiro reorganizamos usando as propriedades **comutativa** e **associativa**
+da adição, que permitem trocar a ordem e o agrupamento das parcelas sem alterar
+o total:
+
+$$
+4x + 2x + 3 - 1
+$$
+
+Agora juntamos cada grupo de semelhantes:
+
+$$
+4x + 2x = 6x
+\qquad\text{e}\qquad
+3 - 1 = 2
+$$
+
+$$
+4x + 3 + 2x - 1 = 6x + 2
+$$
+
+**Confira com um número.** Se a simplificação está correta, as duas escritas
+têm de dar o mesmo resultado para qualquer valor de $x$. Com $x = 10$:
+
+$$
+4(10) + 3 + 2(10) - 1 = 40 + 3 + 20 - 1 = 62
+$$
+
+$$
+6(10) + 2 = 60 + 2 = 62 \quad \checkmark
+$$
+
+Essa verificação é gratuita e pega quase todo erro de simplificação. Use-a
+sempre que tiver dúvida.
+
+## Multiplicar termos
+
+Somar termos exige que sejam semelhantes. **Multiplicar não exige nada disso** —
+quaisquer dois termos podem ser multiplicados. Isso confunde no começo, e a
+razão da diferença é justamente a imagem dos blocos: somar exige peças do mesmo
+tipo, multiplicar apenas constrói uma peça nova.
+
+Para multiplicar, reorganizamos com a comutativa e a associativa, separando
+números de letras:
+
+$$
+2x \times 3x = 2 \times 3 \times x \times x = 6x^2
+$$
+
+O $x \times x$ virou $x^2$ pela definição de potência. Confira com $x = 5$:
+$2(5) = 10$ e $3(5) = 15$, e $10 \times 15 = 150$; pela expressão simplificada,
+$6(5)^2 = 6 \times 25 = 150$. ✓
+
+Quando há expoentes, vale a propriedade das [potências](./potencias) de mesma
+base — multiplicar soma os expoentes:
+
+$$
+4x^2 \times 3x^3 = 12x^{2+3} = 12x^5
+$$
+
+Note o contraste que vale guardar:
+
+$$
+x + x = 2x
+\qquad\text{mas}\qquad
+x \times x = x^2
+$$
+
+Somar dois blocos de tamanho $x$ dá um comprimento de $2x$; multiplicá-los dá
+a **área** de um quadrado de lado $x$. São operações diferentes, com resultados
+de natureza diferente.
+
+## Distributiva com letras: abrindo parênteses
+
+Esta seção é a mais reaproveitada da página. Ela é a distributiva das
+[operações básicas](./operacoes-basicas), com uma letra em lugar de um número.
+
+Quanto vale $3(x + 2)$? O retângulo responde. Um retângulo de altura 3 e base
+$x + 2$ pode ser cortado em duas partes:
+
+<AreaModel
+  rows={[{size: 3, label: '3'}]}
+  cols={[{size: 5, label: 'x'}, {size: 2, label: '2'}]}
+  cells={[['3x', '6']]}
+  baseLabel="x + 2"
+  unit={36}
+  caption="O corte separa a base em x e 2, mas a altura 3 vale para os dois pedaços."
+/>
+
+O corte não cria nem destrói área: apenas conta a mesma região em dois pedaços.
+Logo:
+
+$$
+3(x + 2) = 3x + 6
+$$
+
+O fator externo multiplica **cada** termo de dentro — inclusive o segundo.
+Confira com $x = 4$: à esquerda, $3(6) = 18$; à direita, $12 + 6 = 18$. ✓
+
+O mesmo vale quando o fator externo é uma letra. Em $x(x + 5)$, o retângulo tem
+altura $x$:
+
+$$
+x(x + 5) = x \times x + x \times 5 = x^2 + 5x
+$$
+
+Com $x = 3$: à esquerda, $3(8) = 24$; à direita, $9 + 15 = 24$. ✓
+
+E quando o fator é negativo, a regra de sinais dos
+[números negativos](./numeros-negativos) age em cada termo:
+
+$$
+-2(x - 3) = -2x + 6
+$$
+
+O $-2$ multiplicado por $-3$ dá $+6$. Confira com $x = 5$: à esquerda,
+$-2(2) = -4$; à direita, $-10 + 6 = -4$. ✓
+
+### O sinal de menos na frente do parêntese
+
+Este caso derruba muita gente, e vale isolá-lo. Considere:
+
+$$
+10 - (x + 3)
+$$
+
+O sinal de menos não se aplica só ao $x$: ele se aplica ao **parêntese
+inteiro**. Isso fica claro ao lembrar que $-(x+3)$ é o mesmo que $-1(x+3)$, e
+aí é só distributiva:
+
+$$
+10 - 1(x + 3) = 10 - x - 3 = 7 - x
+$$
+
+Confira com $x = 2$: à esquerda, $10 - 5 = 5$; à direita, $7 - 2 = 5$. ✓ A
+conta errada — $10 - x + 3$ — daria 11.
+
+Quando dentro do parêntese há uma subtração, o efeito é o oposto:
+
+$$
+10 - (x - 3) = 10 - x + 3 = 13 - x
+$$
+
+Com $x = 2$: à esquerda, $10 - (-1) = 11$; à direita, $13 - 2 = 11$. ✓
+
+> Um sinal de menos antes do parêntese **troca o sinal de todos os termos de
+> dentro**. Não é uma regra decorada: é o $-1$ sendo distribuído.
+
+## Expressão não é equação
+
+Uma expressão representa uma quantidade:
+
+$$
+5 + 2x
+$$
+
+Ela não pergunta nada e não tem resposta. Uma **equação** aparece quando
+afirmamos que essa quantidade é igual a algum valor:
+
+$$
+5 + 2x = 21
+$$
+
+Agora existe uma pergunta nova:
+
+> Qual valor de $x$ torna essa igualdade verdadeira?
+
+Essa pergunta pertence à página de [equações](./equacoes). O sinal de igual é a
+fronteira: sem ele, há uma regra a ser descrita; com ele, há um valor a ser
+descoberto. Antes de resolver equações, é preciso saber escrever e manipular a
+expressão que aparece dentro delas — que é o assunto desta página.
+
+## Erros comuns
+
+Os cinco erros abaixo respondem por quase toda confusão inicial com álgebra.
+Cada um vem com o teste numérico que o desmonta.
+
+> **Juntar termos que não são semelhantes.** $4x + 2$ **não** é $6x$. Teste com
+> $x = 10$: $4(10) + 2 = 42$, mas $6(10) = 60$. São três blocos de tamanho
+> desconhecido mais duas unidades fixas — peças de tipos diferentes não se
+> somam em uma contagem só.
+
+> **Distribuir só no primeiro termo.** $3(x + 2)$ **não** é $3x + 2$. Teste com
+> $x = 4$: à esquerda, $3(6) = 18$; a conta errada dá $12 + 2 = 14$. O fator
+> externo é a altura do retângulo inteiro, então multiplica as duas partes da
+> base.
+
+> **Esquecer que o menos alcança o parêntese todo.** $10 - (x + 3)$ **não** é
+> $10 - x + 3$. Teste com $x = 2$: à esquerda, $10 - 5 = 5$; a conta errada dá
+> 11. O sinal de menos é um $-1$ multiplicando tudo o que está dentro.
+
+> **Confundir $3x^2$ com $(3x)^2$.** Teste com $x = 2$: $3x^2 = 3 \times 4 = 12$,
+> mas $(3x)^2 = 6^2 = 36$. Sem parênteses, o expoente pega apenas a letra
+> imediatamente à sua esquerda.
+
+> **Perder o sinal ao avaliar um valor negativo.** Para $x = -3$, $x^2$ vale
+> $(-3)^2 = 9$, e não $-9$. Substitua sempre entre parênteses; sem eles,
+> $-3^2$ é lido como "o oposto de $3^2$".
+
+## Exemplos resolvidos
+
+### Exemplo 1: avaliar com valor negativo
+
+Avalie $2x^2 - 5x + 1$ para $x = -2$.
+
+Substituindo, com o valor entre parênteses:
+
+$$
+2(-2)^2 - 5(-2) + 1
+$$
+
+Pela ordem das operações, a potência primeiro:
+
+$$
+2(4) - 5(-2) + 1 = 8 + 10 + 1 = 19
+$$
+
+O termo do meio virou $+10$ porque $-5 \times (-2) = +10$. A expressão vale
+**19**.
+
+### Exemplo 2: simplificar com parênteses
+
+Simplifique $5x + 3(x - 4) - 2$.
+
+**Pause e tente antes de ler a solução.** O primeiro passo é sempre abrir os
+parênteses; só depois faz sentido procurar termos semelhantes.
+
+Distribuindo o 3:
+
+$$
+3(x - 4) = 3x - 12
+$$
+
+A expressão fica:
+
+$$
+5x + 3x - 12 - 2
+$$
+
+Juntando os semelhantes — os termos em $x$ de um lado, as constantes do outro:
+
+$$
+8x - 14
+$$
+
+Conferindo com $x = 3$: na original, $5(3) + 3(-1) - 2 = 15 - 3 - 2 = 10$; na
+simplificada, $8(3) - 14 = 24 - 14 = 10$. ✓
+
+### Exemplo 3: área e perímetro de um retângulo
+
+Um retângulo tem base $x$ e altura $x + 3$. Escreva expressões para sua área e
+seu perímetro.
+
+**Pause e tente.**
+
+A área é base vezes altura, e aí entra a distributiva:
+
+$$
+A = x(x + 3) = x^2 + 3x
+$$
+
+O perímetro é a soma dos quatro lados — dois de medida $x$ e dois de medida
+$x + 3$:
+
+$$
+P = 2x + 2(x + 3) = 2x + 2x + 6 = 4x + 6
+$$
+
+Conferindo com $x = 5$, ou seja, um retângulo de 5 por 8: a área é
+$5 \times 8 = 40$, e a expressão dá $25 + 15 = 40$ ✓; o perímetro é
+$10 + 16 = 26$, e a expressão dá $20 + 6 = 26$ ✓.
+
+Repare que área e perímetro têm **graus diferentes**: a área é de grau 2 e o
+perímetro é de grau 1. Isso não é coincidência — área multiplica duas medidas,
+perímetro apenas as soma.
+
+### Exemplo 4: voltando aos dois aplicativos
+
+Agora dá para responder à pergunta da abertura sem calcular caso a caso. As
+duas regras de cobrança, escritas por inteiro:
+
+$$
+\text{App A: } 5 + 2x
+\qquad\qquad
+\text{App B: } 11 + x
+$$
+
+Uma expressão por aplicativo substitui a tabela toda. Para saber quanto custa
+qualquer corrida, basta avaliar. Para 15 km, por exemplo: o App A cobra
+$5 + 30 = 35$ e o App B cobra $11 + 15 = 26$.
+
+Melhor ainda: dá para comparar as duas regras diretamente. A diferença de preço
+entre elas é
+
+$$
+(5 + 2x) - (11 + x) = 5 + 2x - 11 - x = x - 6,
+$$
+
+usando o sinal de menos distribuído sobre o segundo parêntese. Essa única
+expressão explica a tabela inteira:
+
+- quando $x$ é menor que 6, $x - 6$ é negativo — o App A custa **menos**;
+- quando $x = 6$, a diferença é zero — os dois **empatam**, em R\$ 17;
+- quando $x$ é maior que 6, a diferença é positiva — o App A custa **mais**.
+
+Uma expressão de grau 1 respondeu o que cinco linhas de tabela só sugeriam. A
+pergunta "para qual distância os preços empatam?" é uma
+[equação](./equacoes) — $5 + 2x = 11 + x$ — e é o assunto da próxima página.
+
+## Perguntas de verificação
+
+Responda com suas palavras antes de abrir cada resposta.
+
+**1. Em $5 + 2x$, o que o $x$ pode representar?**
+
+<details>
+<summary>Resposta</summary>
+
+Qualquer número que faça sentido no problema — no caso do aplicativo, qualquer
+distância. A letra guarda o lugar de um valor que ainda não foi escolhido, e é
+por isso que a expressão descreve todas as corridas de uma vez, em vez de uma
+só.
+
+</details>
+
+**2. Qual é a diferença entre avaliar e simplificar uma expressão?**
+
+<details>
+<summary>Resposta</summary>
+
+Avaliar escolhe um número para a variável e produz um **resultado numérico**;
+responde "quanto vale neste caso?". Simplificar reescreve a expressão de forma
+mais curta e produz **outra expressão**, equivalente à primeira; responde "qual
+é a forma mais econômica desta mesma regra?". Simplificar não escolhe valor
+nenhum.
+
+</details>
+
+**3. Por que $4x + 2x = 6x$, mas $4x + 2$ não vira $6x$?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque $4x$ e $2x$ têm a mesma parte literal, então o $x$ pode ser posto em
+evidência: $(4 + 2)x = 6x$. Já em $4x + 2$ o segundo termo não tem $x$ nenhum
+para fatorar — são quatro blocos de tamanho desconhecido mais duas unidades
+fixas. Teste com $x = 10$: 42, não 60.
+
+</details>
+
+**4. Por que $x + x = 2x$ enquanto $x \times x = x^2$?**
+
+<details>
+<summary>Resposta</summary>
+
+Somar dois blocos de mesmo tamanho dá dois blocos — um comprimento de $2x$.
+Multiplicá-los constrói um quadrado de lado $x$, cuja área é $x^2$. Soma conta
+peças do mesmo tipo; multiplicação cria uma grandeza nova, de grau maior.
+
+</details>
+
+**5. Por que $3(x + 2)$ não é $3x + 2$?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque o 3 é a altura do retângulo inteiro, de base $x + 2$, e portanto
+multiplica as duas partes da base: $3x + 6$. Deixar o 2 sem multiplicar seria
+esquecer um pedaço da área. Teste com $x = 4$: 18, não 14.
+
+</details>
+
+**6. Ao simplificar $4x + 3 + 2x - 1$ para $6x + 2$, o que muda e o que
+permanece igual?**
+
+<details>
+<summary>Resposta</summary>
+
+Muda a **escrita**: quatro termos viram dois. Permanece igual a **quantidade**
+representada, para qualquer valor de $x$ — as duas expressões são apenas
+formas diferentes da mesma regra. É por isso que substituir um número nas duas
+tem de dar o mesmo resultado, e é assim que se confere a simplificação.
+
+</details>
+
+**7. Qual é a diferença entre $5 + 2x$ e $5 + 2x = 21$?**
+
+<details>
+<summary>Resposta</summary>
+
+A primeira é uma **expressão**: descreve uma quantidade, vale para qualquer $x$
+e não pede resposta. A segunda é uma **equação**: afirma uma igualdade e
+pergunta para qual valor de $x$ ela é verdadeira. O sinal de igual é o que
+transforma uma descrição em uma pergunta.
+
+</details>
+
+**8. Em $3x^2 + 4x + 7$, quais termos dependem de $x$, qual é fixo e qual é o
+grau da expressão?**
+
+<details>
+<summary>Resposta</summary>
+
+$3x^2$ e $4x$ dependem de $x$; o termo constante 7 é fixo e não muda quando $x$
+muda. O grau da expressão é 2, o maior expoente presente. O grau importa porque
+é ele que indica o tipo de comportamento — de grau 2, essa expressão cresce bem
+mais rápido que uma de grau 1.
+
+</details>
+
+## Exercícios
+
+### 1. Reconhecimento
+
+1. Classifique cada expressão como aritmética ou algébrica:
+   a) $7 \times 4 - 2$
+   b) $7a - 2$
+   c) $\frac{12}{3}$
+   d) $\frac{12}{y}$
+
+2. Em $6x^3 - x + 9$, identifique os termos, o coeficiente de cada um, a parte
+   literal de cada um e o grau da expressão.
+
+3. Quais pares são termos semelhantes?
+   a) $3x$ e $3x^2$
+   b) $-7ab$ e $2ba$
+   c) $5y$ e $y$
+   d) $4$ e $x$
+
+### 2. Explicação
+
+4. Explique por que $x + x = 2x$ mas $x \times x = x^2$.
+
+5. Mostre com $x = 2$ que $3x^2$ e $(3x)^2$ não são a mesma expressão, e
+   explique qual é a diferença na leitura das duas.
+
+6. Por que a expressão $5 + 2x$ não pode ser "resolvida", enquanto
+   $5 + 2x = 21$ pode?
+
+### 3. Aplicação direta
+
+7. Avalie:
+   a) $2x + 9$ para $x = 4$
+   b) $x^2 + 3x$ para $x = 5$
+   c) $x^2 - 4x$ para $x = -3$
+   d) $\frac{x}{2} + 7$ para $x = 10$
+
+8. Simplifique:
+   a) $7x + 2 + 3x - 5$
+   b) $4a - 9 - a + 2$
+   c) $5y^2 + 2y - 3y^2$
+
+9. Multiplique:
+   a) $4x \times 5x$
+   b) $3a^2 \times 2a^3$
+   c) $2(x + 7)$
+   d) $x(x - 4)$
+
+### 4. Variação
+
+10. Abra os parênteses:
+    a) $-3(x + 5)$
+    b) $8 - (x + 2)$
+    c) $8 - (x - 2)$
+
+11. Simplifique $6x + 2(x - 3) - 4$ e confira o resultado avaliando as duas
+    escritas em $x = 2$.
+
+12. Um retângulo tem base $x + 2$ e altura 3. Escreva as expressões da área e
+    do perímetro, já simplificadas.
+
+### 5. Problema misto
+
+13. Um serviço de armazenamento em nuvem cobra R\$ 40 fixos por mês mais R\$ 3
+    por gigabyte usado.
+    a) Escreva a expressão do custo mensal para $g$ gigabytes.
+    b) Quanto custa um mês com 25 GB?
+    c) Um concorrente cobra R\$ 70 fixos, sem cobrança por gigabyte. Para
+    quantos gigabytes os dois planos custam o mesmo?
+
+14. Uma loja vende camisetas a R\$ 45 cada. Ela tem um custo fixo mensal de
+    R\$ 800 e gasta R\$ 18 para produzir cada camiseta.
+    a) Escreva a expressão do lucro para $n$ camisetas vendidas, já
+    simplificada.
+    b) Qual é o lucro com 50 camisetas?
+
+<details>
+<summary>Dica para o exercício 14</summary>
+
+Lucro é receita menos custo total. Escreva as duas expressões separadamente e
+subtraia a segunda **inteira** — ou seja, entre parênteses. O custo tem duas
+partes: a fixa e a que depende de $n$.
+
+</details>
+
+15. Verifique se $3(2x + 4) - 5x$ é igual a $x + 12$, primeiro testando
+    $x = 2$ e $x = 7$, depois simplificando a expressão da esquerda.
+
+### 6. Justificativa
+
+16. Por que avaliar a expressão original e a expressão simplificada com o mesmo
+    valor de $x$ tem de dar o mesmo resultado? O que isso diz sobre o que a
+    simplificação faz?
+
+17. Explique, usando o modelo de área, por que $x(x + 5) = x^2 + 5x$.
+
+18. Por que $8 - (x - 2)$ vira $10 - x$, e não $6 - x$?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Aritméticas: a e c, porque só têm números. Algébricas: b e d, porque contêm
+   uma letra representando um número.
+2. Termos: $6x^3$, $-x$ e $+9$. Coeficientes: 6, $-1$ e 9 — o coeficiente de
+   $-x$ é $-1$, subentendido. Partes literais: $x^3$, $x$ e nenhuma (o 9 é o
+   termo constante). O grau da expressão é 3.
+3. Semelhantes: b, porque $ab$ e $ba$ são a mesma parte literal pela
+   comutativa; e c, porque $y$ é o mesmo que $1y$. Não são semelhantes: a
+   ($x$ e $x^2$ são partes literais diferentes) nem d (um é constante, o outro
+   depende de $x$).
+4. $x + x$ soma dois blocos de mesmo tamanho e dá dois blocos, $2x$ — um
+   comprimento. $x \times x$ constrói um quadrado de lado $x$ e dá $x^2$ — uma
+   área. Somar conta peças do mesmo tipo; multiplicar cria uma grandeza de grau
+   maior.
+5. Com $x = 2$: $3x^2 = 3 \times 4 = 12$, enquanto $(3x)^2 = 6^2 = 36$. Sem
+   parênteses, o expoente se aplica só ao $x$; com parênteses, ele se aplica ao
+   produto $3x$ inteiro.
+6. Porque $5 + 2x$ apenas descreve uma quantidade e vale para qualquer $x$ — não
+   há pergunta a responder. $5 + 2x = 21$ afirma uma igualdade e pergunta qual
+   valor de $x$ a torna verdadeira; nesse caso, $x = 8$.
+7. a) $2(4) + 9 = 17$. b) $5^2 + 3(5) = 25 + 15 = 40$. c)
+   $(-3)^2 - 4(-3) = 9 + 12 = 21$ — se você encontrou $-3$, provavelmente
+   escreveu $-3^2 = -9$ em vez de $(-3)^2 = 9$. d) $\frac{10}{2} + 7 = 12$.
+8. a) $10x - 3$. b) $3a - 7$ — lembre que $-a$ vale $-1a$. c) $2y^2 + 2y$; os
+   termos $2y$ e $y^2$ não se juntam, por terem partes literais diferentes.
+9. a) $20x^2$. b) $6a^5$, somando os expoentes $2 + 3$. c) $2x + 14$. d)
+   $x^2 - 4x$.
+10. a) $-3x - 15$; o $-3$ multiplica os dois termos. b) $8 - x - 2 = 6 - x$. c)
+    $8 - x + 2 = 10 - x$; o menos troca o sinal do $-2$, que vira $+2$.
+11. $6x + 2x - 6 - 4 = 8x - 10$. Conferindo em $x = 2$: na original,
+    $12 + 2(-1) - 4 = 6$; na simplificada, $16 - 10 = 6$.
+12. Área: $3(x + 2) = 3x + 6$. Perímetro: $2(x + 2) + 2(3) = 2x + 10$.
+    Conferindo em $x = 4$, um retângulo de 6 por 3: área $18$ e perímetro $18$,
+    valores que as duas expressões reproduzem.
+13. a) $40 + 3g$. b) $40 + 3(25) = 40 + 75 = 115$, ou seja, R\$ 115. c) Os
+    planos empatam quando $40 + 3g = 70$, ou seja, quando $3g = 30$ e $g = 10$
+    gigabytes. Abaixo disso o primeiro plano é mais barato; acima, o segundo.
+14. a) A receita é $45n$ e o custo total é $800 + 18n$. O lucro é
+    $45n - (800 + 18n) = 45n - 800 - 18n = 27n - 800$. Se você encontrou
+    $27n + 800$, o sinal de menos não alcançou o custo fixo. b)
+    $27(50) - 800 = 1\,350 - 800 = 550$, ou seja, R\$ 550.
+15. Em $x = 2$: $3(8) - 10 = 14$, e $2 + 12 = 14$. Em $x = 7$:
+    $3(18) - 35 = 19$, e $7 + 12 = 19$. Simplificando:
+    $3(2x + 4) - 5x = 6x + 12 - 5x = x + 12$. As duas escritas são a mesma
+    expressão. Os testes numéricos dão confiança, mas é a simplificação que
+    prova a igualdade para todo $x$.
+16. Porque simplificar muda apenas a **escrita**, nunca a quantidade
+    representada: cada passo usa uma propriedade que preserva o valor
+    (comutativa, associativa, distributiva). As duas expressões são a mesma
+    regra em formas diferentes, então produzem o mesmo resultado para qualquer
+    valor da variável. Um resultado diferente é prova de que houve erro na
+    simplificação.
+17. Um retângulo de altura $x$ e base $x + 5$ pode ser cortado por uma linha
+    vertical em duas partes: uma de área $x \times x = x^2$ e outra de área
+    $x \times 5 = 5x$. O corte não cria nem destrói área, então a soma das
+    partes é igual ao total.
+18. Porque o sinal de menos vale para o parêntese inteiro, ou seja, é um $-1$
+    multiplicando cada termo de dentro: $-1 \times x = -x$ e
+    $-1 \times (-2) = +2$. Assim, $8 - x + 2 = 10 - x$. A resposta $6 - x$
+    viria de subtrair o 2 em vez de somá-lo, esquecendo que ele já estava
+    negativo dentro do parêntese.
+
+</details>
+
+## Revisão curta
+
+- Uma **expressão algébrica** é uma regra de cálculo escrita com números,
+  letras e operações. A letra guarda o lugar de um valor que pode variar ou
+  ainda não ser conhecido.
+- Uma expressão é composta de **termos**; cada termo tem um **coeficiente** e
+  uma **parte literal**, e o **grau** é o maior expoente presente.
+- **Avaliar** é trocar a letra por um número e calcular — sempre substituindo
+  entre parênteses, para não perder sinais.
+- **Simplificar** é reescrever a mesma regra de forma mais curta, sem escolher
+  valor para a letra. A verificação é gratuita: as duas escritas têm de dar o
+  mesmo resultado para qualquer número testado.
+- Só se juntam **termos semelhantes**, isto é, de mesma parte literal — e o
+  que autoriza juntá-los é a distributiva ao contrário: $3x + 5x = (3+5)x$.
+- Multiplicar não exige semelhança: $2x \times 3x = 6x^2$. Somar peças iguais
+  dá mais peças; multiplicá-las cria uma grandeza de grau maior.
+- Abrir parênteses é aplicar a **distributiva**, e o fator externo alcança
+  **todos** os termos de dentro. Um sinal de menos antes do parêntese troca o
+  sinal de tudo o que está dentro.
+- Uma expressão **não é** uma equação: sem sinal de igual, há uma regra a
+  descrever; com ele, há um valor a descobrir.
+
+Antes de avançar, verifique se você consegue explicar **por que** $3x + 5$ não
+pode ser simplificado e **por que** $3(x+2)$ vale $3x + 6$. Essas duas
+justificativas sustentam as páginas de produtos notáveis, fatoração e equações.

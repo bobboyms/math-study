@@ -35,7 +35,7 @@ const sidebars = {
         {
           type: 'doc',
           id: 'matematica-basica/operacoes-basicas',
-          label: '2.2 Operacoes basicas',
+          label: '2.2 Operações básicas',
         },
         {
           type: 'doc',
@@ -75,7 +75,7 @@ const sidebars = {
         {
           type: 'doc',
           id: 'matematica-basica/expressoes-algebricas',
-          label: '2.10 Expressoes algebricas',
+          label: '2.10 Expressões algébricas',
         },
         {
           type: 'doc',

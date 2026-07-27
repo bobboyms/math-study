@@ -1,0 +1,1126 @@
+---
+title: Operações básicas
+---
+
+import DistributiveArea from '@site/src/components/DistributiveArea';
+import NumberLine from '@site/src/components/NumberLine';
+import DotArray from '@site/src/components/DotArray';
+import AreaModel from '@site/src/components/AreaModel';
+
+# Operações básicas: as quatro ações sobre quantidades
+
+## Problema motivador: o fechamento do dia
+
+Você administra uma pequena loja. No começo do dia havia 40 unidades de um
+produto no estoque. Durante o dia:
+
+- chegaram 3 caixas com 12 unidades cada;
+- foram vendidas 25 unidades, a R\$ 18 cada.
+
+Duas perguntas precisam de resposta no fim do expediente: **quantas unidades
+sobraram** e **quanto dinheiro entrou**.
+
+A primeira pergunta se escreve assim:
+
+$$
+40 + 3 \times 12 - 25
+$$
+
+Aqui aparece uma armadilha real. Se alguém resolver essa conta na ordem em que
+ela está escrita — primeiro $40 + 3$, depois multiplicar por 12, depois
+subtrair 25 — chega a 491 unidades. O estoque nunca teve tanta coisa. A conta
+certa dá 51.
+
+Duas pessoas, os mesmos números, respostas que diferem em quase 450 unidades.
+Isso mostra que não basta saber somar e multiplicar: é preciso saber **em que
+ordem** as operações agem e **por quê**. Esta página constrói as quatro
+operações, as regras que dizem o que pode ser reorganizado sem alterar o
+resultado, e volta para fechar o caixa desta loja.
+
+## Mapa das ideias
+
+Este é o significado essencial dos termos que a página vai construir. Uma
+linha por termo, como referência inicial:
+
+- **adição** — juntar quantidades; o resultado é a **soma**, e cada valor
+  somado é uma **parcela**;
+- **subtração** — retirar ou comparar quantidades; o resultado é a
+  **diferença**;
+- **multiplicação** — contar vários grupos iguais de uma vez; os valores
+  multiplicados são os **fatores**, e o resultado é o **produto**;
+- **divisão** — repartir em partes iguais ou descobrir quantos grupos cabem; o
+  resultado é o **quociente**, e o que não coube é o **resto**;
+- **operações inversas** — pares de operações em que uma desfaz a outra;
+- **elemento neutro** — o número que participa da operação sem alterar a
+  quantidade;
+- **propriedades comutativa, associativa e distributiva** — as três regras que
+  dizem o que se pode reorganizar numa conta sem mudar o resultado;
+- **ordem das operações** — a convenção que faz uma expressão ter uma única
+  leitura possível.
+
+## Para que isso serve?
+
+As quatro operações aparecem sempre que uma quantidade precisa ser controlada,
+comparada ou prevista:
+
+- conferir saldo, estoque, folha de pagamento e orçamento;
+- calcular preço total, desconto, troco e custo por unidade;
+- dividir uma despesa entre pessoas ou uma carga de trabalho entre máquinas;
+- montar fórmulas de planilha e escrever código que soma, conta e reparte;
+- converter medidas, calcular velocidade média e consumo.
+
+Dentro da própria matemática, elas são o alicerce de tudo o que vem depois. As
+frações vão reaproveitar a divisão; as potências, a multiplicação repetida; as
+equações, as operações inversas; a fatoração, a propriedade distributiva. Cada
+página seguinte deste curso apoia-se em algo construído aqui.
+
+## O que você já traz para esta página
+
+Esta é a primeira página do curso, então não há nada anterior aqui dentro para
+retomar. O que existe é o que você já traz da escola — provavelmente
+enferrujado, e não ausente. Antes de seguir, responda mentalmente:
+
+1. Quanto é $7 \times 8$?
+2. Uma conta de R\$ 20 dividida igualmente entre 4 pessoas: quanto cabe a cada
+   uma?
+3. Quanto é $100 - 37$?
+
+As respostas são 56, R\$ 5 e 63. Se alguma delas demorou ou saiu errada, não
+há problema nenhum: as três serão reconstruídas nas próximas seções a partir
+do significado, não da memória. A tabuada é conveniente, mas nada nesta página
+depende de tê-la decorada.
+
+## Intuição: quatro perguntas diferentes
+
+Antes de serem símbolos no papel, as operações são **ações**: juntar, retirar,
+repetir grupos e repartir. A conta escrita apenas registra essas ações de um
+jeito rápido e preciso.
+
+Cada operação responde a uma pergunta diferente:
+
+| Operação | Pergunta que ela responde | Situação típica |
+|---|---|---|
+| adição | quanto há depois de juntar? | entraram mais 8 peças no estoque |
+| subtração | quanto sobra, ou qual é a diferença? | saíram 15 peças; quanto restou? |
+| multiplicação | quanto há em vários grupos iguais? | 3 caixas com 12 peças cada |
+| divisão | quanto cabe em cada grupo, ou quantos grupos cabem? | repartir 1 350 entre 3 sócios |
+
+Multiplicação não é "decorar tabuada". Ela é uma forma compacta de escrever
+uma adição de parcelas iguais:
+
+$$
+4 \times 6 = 6 + 6 + 6 + 6 = 24
+$$
+
+Somar 6 quatro vezes e escrever $4 \times 6$ são a mesma ação; muda só o
+tamanho do registro. Isso importa porque a conta escrita continua funcionando
+quando os grupos são 400, e ninguém somaria 400 parcelas à mão.
+
+A divisão desfaz esse caminho. Se
+
+$$
+4 \times 6 = 24,
+$$
+
+então
+
+$$
+24 \div 4 = 6
+\qquad\text{e}\qquad
+24 \div 6 = 4.
+$$
+
+## Modelo visual
+
+### A reta numérica: adição e subtração como deslocamento
+
+Coloque os números em fila, igualmente espaçados. Somar é andar para a
+direita; subtrair é andar para a esquerda. O número de partida é onde você
+está; a operação é o movimento.
+
+<NumberLine
+  min={0}
+  max={12}
+  unit={34}
+  jumps={[
+    {from: 6, to: 10, label: '+4', tone: 1},
+    {from: 6, to: 3, label: '-3', tone: 2, level: 1},
+  ]}
+  caption="Partindo do 6: quatro passos para a direita chegam a 10; três para a esquerda chegam a 3."
+/>
+
+Essa imagem — a **reta numérica** — vai ser usada muitas vezes daqui em
+diante, e ela é o que torna possível, na [próxima página](./numeros-negativos),
+continuar andando para a esquerda depois de passar do zero.
+
+### O retângulo: multiplicação como grupos iguais
+
+Veja $4 \times 6$ como quatro caixas com seis unidades cada:
+
+<DotArray
+  rows={4}
+  cols={6}
+  rowLabels={['\\text{caixa 1}', '\\text{caixa 2}', '\\text{caixa 3}', '\\text{caixa 4}']}
+  caption="Quatro caixas com seis unidades cada: 24 unidades ao todo."
+/>
+
+Ao todo, 24 unidades. Guarde este desenho: ele é um retângulo de lados 4 e 6,
+e a quantidade de unidades dentro dele é a **área**. Essa leitura vai voltar
+nos [produtos notáveis](./produtos-notaveis) e é o que dá sentido geométrico à
+multiplicação.
+
+### Divisão: o mesmo retângulo, lido de trás para frente
+
+A divisão parte das 24 unidades e pergunta por um dos lados do retângulo. Há
+duas perguntas possíveis, e ambas se escrevem $24 \div 4$:
+
+> **Repartição:** 24 unidades separadas em 4 caixas iguais — quantas ficam em
+> cada caixa?
+
+<DotArray
+  groups={4}
+  perGroup={6}
+  groupLabels={['\\text{caixa 1}', '\\text{caixa 2}', '\\text{caixa 3}', '\\text{caixa 4}']}
+  caption="Repartição: o número de caixas é dado, e a pergunta é quantas unidades ficam em cada uma."
+/>
+
+Cada caixa fica com 6.
+
+> **Medida:** 24 unidades separadas em caixas de 4 — quantas caixas dá?
+
+<DotArray
+  groups={6}
+  perGroup={4}
+  tone={2}
+  caption="Medida: o tamanho da caixa é dado, e a pergunta é quantas caixas dá."
+/>
+
+Dá 6 caixas.
+
+As duas perguntas soam diferentes e dão o mesmo número. Não é coincidência: as
+duas descrevem o mesmo retângulo, uma perguntando pela altura e a outra pela
+largura. Reconhecer as duas leituras é o que permite usar a divisão em
+situações que não parecem "repartir": calcular quantas viagens de caminhão são
+necessárias, quantas parcelas cabem num orçamento, quantos ciclos completos
+existem num intervalo de tempo.
+
+## Da ação ao símbolo: o vocabulário das operações
+
+Até aqui as operações foram ações e desenhos. Escrever com símbolos serve para
+duas coisas que o desenho não faz: registrar quantidades grandes e falar sobre
+a operação em geral, sem depender do caso.
+
+Cada parte da conta tem um nome. Eles serão usados no resto do curso, e vale
+mais reconhecê-los do que decorá-los:
+
+| Operação | Escrita | Nomes das partes |
+|---|---|---|
+| adição | $8 + 15 = 23$ | 8 e 15 são **parcelas**; 23 é a **soma** |
+| subtração | $23 - 15 = 8$ | 23 é o **minuendo**; 15, o **subtraendo**; 8, a **diferença** |
+| multiplicação | $8 \times 15 = 120$ | 8 e 15 são **fatores**; 120 é o **produto** |
+| divisão | $120 \div 8 = 15$ | 120 é o **dividendo**; 8, o **divisor**; 15, o **quociente** |
+
+Uma observação de escrita: a divisão aparece de três formas equivalentes neste
+curso — $120 \div 8$, $120/8$ e $\frac{120}{8}$. São a mesma operação. A forma
+de fração passa a ser a preferida a partir da página de
+[frações](./fracoes), porque ela permite manipular a divisão como um objeto
+único.
+
+## Operações inversas: desfazer é tão útil quanto fazer
+
+Some 15 a um número e depois subtraia 15: você volta ao ponto de partida. Na
+reta numérica isso é óbvio — quatro passos à direita e quatro à esquerda
+deixam você onde estava.
+
+$$
+8 + 15 = 23
+\qquad\text{e}\qquad
+23 - 15 = 8
+$$
+
+O mesmo vale para multiplicação e divisão:
+
+$$
+8 \times 15 = 120
+\qquad\text{e}\qquad
+120 \div 8 = 15
+$$
+
+Dizemos que a subtração é a **operação inversa** da adição, e a divisão, a
+inversa da multiplicação. Cada par forma um caminho de ida e volta.
+
+Isso não é curiosidade: é a ferramenta central para resolver
+[equações](./equacoes). Quando você não conhece uma quantidade e sabe apenas o
+que aconteceu com ela, o inverso é o que desfaz a ação e revela o valor
+original. Se um preço subiu R\$ 15 e agora é R\$ 23, o preço antigo se obtém
+subtraindo: R\$ 8.
+
+Também é a razão pela qual toda divisão pode ser conferida por uma
+multiplicação. $120 \div 8 = 15$ está certo porque $8 \times 15 = 120$. Essa
+verificação é gratuita e elimina a maior parte dos erros de conta.
+
+## Divisão exata e divisão com resto
+
+Nem toda divisão fecha redondo. Você tem 47 metros de cabo e precisa cortar
+pedaços de 6 metros:
+
+<NumberLine
+  min={0}
+  max={47}
+  step={6}
+  unit={9}
+  spans={[
+    {from: 0, to: 42, tone: 1},
+    {from: 42, to: 47, tone: 2},
+  ]}
+  caption="Sete pedaços inteiros de 6 metros cobrem 42; o trecho final, de 5 metros, é curto demais para virar mais um pedaço."
+/>
+
+Saem 7 pedaços inteiros e sobram 5 metros — um trecho curto demais para virar
+mais um pedaço. Escrevemos:
+
+$$
+47 \div 6 = 7, \text{ com resto } 5.
+$$
+
+O **quociente** (7) diz quantos grupos completos couberam; o **resto** (5) diz
+o que ficou de fora. Os quatro números se relacionam sempre da mesma forma:
+
+$$
+\text{dividendo} = \text{divisor} \times \text{quociente} + \text{resto}
+$$
+
+$$
+47 = 6 \times 7 + 5
+$$
+
+Essa igualdade é a maneira de conferir qualquer divisão com resto. E há uma
+condição que o resto precisa obedecer:
+
+> O resto é sempre menor que o divisor.
+
+Se sobrassem 8 metros, ainda daria para tirar mais um pedaço de 6 — o
+quociente estaria errado, não o resto.
+
+Quando o resto é **zero**, a divisão é **exata**: tudo coube, nada sobrou.
+
+$$
+48 \div 6 = 8, \text{ com resto } 0
+\qquad\text{ou seja}\qquad
+48 = 6 \times 8.
+$$
+
+Compare os dois casos: 48 é alcançado por um número inteiro de grupos de 6; 47
+não é. Essa distinção — resto zero ou resto diferente de zero — é exatamente o
+que separa múltiplos de não múltiplos, e é a base da página de
+[múltiplos, divisores e primos](./multiplos-divisores-primos).
+
+Um detalhe prático: o resto não some quando o problema é do mundo real, ele
+muda de significado. Se os 47 metros fossem 47 pessoas e cada van levasse 6, a
+resposta não seria 7 vans — seriam 8, porque as 5 pessoas restantes também
+precisam ir. O quociente é a mesma conta; a decisão sobre o resto depende da
+pergunta.
+
+## Por que não se divide por zero
+
+Escreva $12 \div 0$ numa planilha e ela responde `#DIV/0!`. Em código, a
+operação lança um erro ou devolve infinito. Isso não é uma limitação da
+ferramenta: a operação realmente não tem resposta, e dá para ver por quê.
+
+Dividir é perguntar pelo fator que falta. $12 \div 4 = 3$ porque
+$4 \times 3 = 12$. Então $12 \div 0$ pergunta:
+
+> Qual número, multiplicado por 0, dá 12?
+
+Nenhum. Todo número multiplicado por 0 dá 0, jamais 12. Na leitura de medida a
+resposta é igualmente clara: quantos grupos de **zero** unidades são
+necessários para formar 12 unidades? Nem um milhão de grupos vazios chega a
+12.
+
+O caso $0 \div 0$ falha por motivo oposto: qual número multiplicado por 0 dá
+0? Todos. Como não existe uma única resposta, também não há resultado
+definido.
+
+Por isso a regra: **o divisor nunca pode ser zero**. Não é uma proibição
+arbitrária — é o reconhecimento de que a pergunta não tem resposta.
+
+## Propriedade comutativa: a ordem importa?
+
+Pense em duas caixas, uma com 8 parafusos e outra com 15. O total não depende
+de qual você conta primeiro:
+
+$$
+8 + 15 = 23
+\qquad\text{e}\qquad
+15 + 8 = 23
+$$
+
+Na multiplicação acontece o mesmo, e o retângulo mostra por quê: girar o
+desenho 90 graus não cria nem destrói nenhuma unidade.
+
+<DotArray
+  rows={4}
+  cols={6}
+  tone={1}
+  caption="Quatro linhas de seis: 4 × 6 = 24."
+/>
+
+<DotArray
+  rows={6}
+  cols={4}
+  tone={2}
+  caption="O mesmo desenho girado — seis linhas de quatro: 6 × 4 = 24. Girar não cria nem destrói unidade nenhuma."
+/>
+
+Chamamos isso de **propriedade comutativa**: em uma adição ou em uma
+multiplicação, trocar a ordem dos termos não muda o resultado.
+
+$$
+a + b = b + a
+\qquad\text{e}\qquad
+a \times b = b \times a
+$$
+
+**A propriedade não vale para subtração nem para divisão**, e o contraexemplo
+é imediato. Uma dívida de R\$ 200 paga com R\$ 850 deixa R\$ 650 de sobra:
+
+$$
+850 - 200 = 650.
+$$
+
+Já $200 - 850$ descreve outra situação — faltam 650, e o resultado é negativo,
+assunto da [próxima página](./numeros-negativos). Não é o mesmo número. Na
+divisão, $12 \div 4 = 3$, mas $4 \div 12$ é menor que 1: repartir 4 entre 12
+pessoas dá menos de uma unidade para cada.
+
+## Propriedade associativa: onde colocar os parênteses?
+
+Some três parcelas, agrupando de duas maneiras:
+
+$$
+(27 + 73) + 45 = 100 + 45 = 145
+$$
+
+$$
+27 + (73 + 45) = 27 + 118 = 145
+$$
+
+O total é o mesmo. Essa é a **propriedade associativa**: quando a conta só tem
+adições (ou só multiplicações), o agrupamento não altera o resultado.
+
+$$
+(a + b) + c = a + (b + c)
+\qquad\text{e}\qquad
+(a \times b) \times c = a \times (b \times c)
+$$
+
+Comutativa e associativa juntas dão liberdade real: numa coluna de números para
+somar, você pode escolher a ordem que facilita a conta. Somar 27 com 73
+primeiro, porque dá 100 redondo, é usar as duas propriedades ao mesmo tempo — e
+o resultado é garantidamente o mesmo, não uma aposta.
+
+**De novo, subtração e divisão ficam de fora.** Compare:
+
+$$
+(20 - 8) - 3 = 12 - 3 = 9
+$$
+
+$$
+20 - (8 - 3) = 20 - 5 = 15
+$$
+
+Nove e quinze são respostas diferentes para a mesma sequência de números. É por
+isso que existe uma regra de leitura da esquerda para a direita, que veremos
+adiante: sem ela, $20 - 8 - 3$ seria ambíguo.
+
+## Propriedade distributiva: quebrar um fator em partes
+
+Esta é a propriedade mais importante da página. Ela reaparece nos
+[números negativos](./numeros-negativos), nos critérios de divisibilidade, nas
+[expressões algébricas](./expressoes-algebricas), nos
+[produtos notáveis](./produtos-notaveis) e na
+[fatoração](./fator-comum-em-evidencia). Vale investir tempo aqui.
+
+Quanto é $7 \times 13$? Suponha que a tabuada do 13 não esteja na ponta da
+língua. O 13 pode ser quebrado em $10 + 3$, e ninguém tem dificuldade com a
+tabuada do 10 nem com a do 3. A pergunta é: **quebrar assim é legítimo?**
+
+O retângulo responde. Um retângulo de 7 por 13 pode ser cortado por uma linha
+vertical, separando 10 colunas de um lado e 3 do outro:
+
+<AreaModel
+  rows={[{size: 7, label: '7'}]}
+  cols={[{size: 10, label: '10'}, {size: 3, label: '3'}]}
+  cells={[['7 \\times 10 = 70', '7 \\times 3 = 21']]}
+  baseLabel="13"
+  caption="O corte vertical separa 10 colunas de 3. A área total não muda — passa a ser contada em dois pedaços."
+/>
+
+O corte não adiciona nem remove nenhuma unidade: **a área total é a mesma
+antes e depois**. Ela apenas passou a ser contada em dois pedaços:
+
+$$
+7 \times 13 = 7 \times (10 + 3) = 7 \times 10 + 7 \times 3 = 70 + 21 = 91.
+$$
+
+O que mudou foi a escrita — de um produto para uma soma de dois produtos. O que
+permaneceu igual foi a quantidade. Confira pela conta direta: $7 \times 13 = 91$.
+
+Essa é a **propriedade distributiva** da multiplicação em relação à adição:
+
+$$
+a \times (b + c) = a \times b + a \times c
+$$
+
+Antes de seguir, vale mexer no desenho. Nos controles abaixo, $a$ é a altura que
+os dois pedaços dividem, e $b$ e $c$ são as duas partes em que a base foi
+cortada. Mude os três e observe uma coisa só: **as duas linhas de conta terminam
+sempre no mesmo número**. Não é coincidência de um exemplo bem escolhido — é o
+que a igualdade afirma.
+
+<DistributiveArea />
+
+Dois testes que valem a pena. Primeiro, deixe $b = 1$: o pedaço azul vira uma
+faixa de largura 1, e a leitura fica $a \times (1 + c) = a + a \times c$. Depois,
+aumente só o $a$: os dois pedaços crescem juntos, porque a altura é
+compartilhada — é exatamente por isso que o fator externo precisa multiplicar as
+duas partes, e não só uma.
+
+Ela vale também quando o corte é feito por subtração:
+
+$$
+a \times (b - c) = a \times b - a \times c
+$$
+
+O que torna isso útil na prática: 7 itens a R\$ 19 é uma conta chata, mas 19 é
+$20 - 1$, e aí ela vira fácil:
+
+$$
+7 \times 19 = 7 \times (20 - 1) = 140 - 7 = 133.
+$$
+
+Repare no detalhe que quase todo mundo erra: o fator 7 multiplica **as duas
+partes**, inclusive a que está sendo subtraída. Não é $140 - 1$.
+
+## Elemento neutro: operar sem mudar
+
+Depois de entender as operações como ações, aparece uma pergunta natural:
+
+> Existe algum número que participa da operação sem mudar a quantidade
+> original?
+
+Esse número é chamado de **elemento neutro**.
+
+Na adição, o elemento neutro é 0:
+
+$$
+8 + 0 = 8
+$$
+
+Faz sentido no concreto: se o estoque tem 8 unidades e nenhuma unidade entra,
+continuam 8. O zero representa "nenhuma quantidade adicionada" — na reta
+numérica, é um deslocamento de zero passos.
+
+Na multiplicação, o elemento neutro é 1:
+
+$$
+8 \times 1 = 8
+$$
+
+Também faz sentido: 1 caixa com 8 unidades dá 8 unidades. O 1 representa "uma
+vez a mesma quantidade".
+
+O ponto essencial é que **o elemento neutro depende da operação**. O 0 é neutro
+na adição, mas não é neutro na multiplicação:
+
+$$
+8 \times 0 = 0
+$$
+
+Multiplicar por 0 não preserva o 8; elimina a quantidade — zero caixas contêm
+zero unidades. Por isso o neutro da multiplicação não pode ser 0. Precisa ser 1.
+
+De forma geral, se uma operação é representada por $*$, o elemento neutro $e$
+obedece a esta ideia:
+
+$$
+a * e = a
+\qquad\text{e}\qquad
+e * a = a.
+$$
+
+Ou seja, operar com o neutro devolve o próprio valor.
+
+Nem toda operação tem elemento neutro dos dois lados. Na subtração,
+
+$$
+a - 0 = a,
+$$
+
+mas
+
+$$
+0 - a \neq a.
+$$
+
+Por exemplo, $0 - 8 = -8$. Então 0 não é elemento neutro completo da
+subtração: ele preserva o valor apenas quando aparece do lado direito.
+
+### Onde o neutro faz diferença: equações
+
+Essa ideia é importante porque é ela que justifica cada passo na resolução de
+uma [equação](./equacoes). Veja:
+
+$$
+x + 5 = 12
+$$
+
+Queremos deixar o $x$ sozinho. Para isso, desfazemos o $+5$ subtraindo 5 dos
+dois lados:
+
+$$
+x + 5 - 5 = 12 - 5
+$$
+
+Como $5 - 5 = 0$, fica:
+
+$$
+x + 0 = 7
+$$
+
+E como 0 é neutro da adição, o $+0$ pode sair sem alterar nada:
+
+$$
+x = 7
+$$
+
+Na multiplicação acontece o mesmo, com o outro neutro:
+
+$$
+3x = 15
+$$
+
+Dividimos os dois lados por 3, para transformar o fator 3 em 1:
+
+$$
+\frac{3x}{3} = \frac{15}{3}
+$$
+
+Como $\frac{3}{3} = 1$, fica:
+
+$$
+1x = 5
+$$
+
+E como 1 é neutro da multiplicação:
+
+$$
+x = 5
+$$
+
+Note o padrão nos dois casos: usamos a **operação inversa** para produzir o
+**elemento neutro**, e então o neutro desaparece de graça. É esse par de ideias
+que faz equações funcionarem.
+
+### Onde o neutro faz diferença: programação
+
+Para somar vários valores, começamos com o total em 0, porque 0 não altera a
+soma:
+
+```js
+let total = 0;
+
+total = total + 5;
+total = total + 8;
+total = total + 2;
+```
+
+Para multiplicar vários valores, começamos com o produto em 1, porque 1 não
+altera a multiplicação:
+
+```js
+let produto = 1;
+
+produto = produto * 5;
+produto = produto * 8;
+produto = produto * 2;
+```
+
+Se o produto começasse em 0, qualquer multiplicação continuaria dando 0 — o
+valor inicial contaminaria o resultado inteiro. O ponto de partida correto é
+sempre o neutro da operação usada.
+
+## Ordem das operações
+
+Voltemos à armadilha da abertura. A expressão
+
+$$
+40 + 3 \times 12 - 25
+$$
+
+só tem uma resposta certa porque existe uma convenção sobre quem age primeiro.
+A ordem é:
+
+1. **parênteses**, de dentro para fora;
+2. **potências e raízes** (estudadas nas páginas de
+   [potências](./potencias) e [raízes](./raizes));
+3. **multiplicações e divisões**, da esquerda para a direita;
+4. **adições e subtrações**, da esquerda para a direita.
+
+A razão dessa convenção não é sorteio. Multiplicação é adição de grupos
+iguais: o $3 \times 12$ é **um bloco só** — as 36 unidades que chegaram — e não
+faria sentido partir esse bloco ao meio para somar o 3 com o 40. A ordem
+respeita o fato de que a multiplicação já é uma soma condensada, então ela
+precisa ser desfeita antes de entrar na soma maior.
+
+### Resolvendo o problema do começo
+
+Primeiro a multiplicação, que representa as caixas recebidas:
+
+$$
+3 \times 12 = 36
+$$
+
+Depois as somas e subtrações, da esquerda para a direita:
+
+$$
+40 + 36 - 25 = 76 - 25 = 51
+$$
+
+Sobraram **51 unidades** no estoque. E o caixa do dia:
+
+$$
+25 \times 18 = 450,
+$$
+
+ou seja, **R\$ 450** de vendas. Confira que o 51 faz sentido: entraram 36,
+saíram 25, então o estoque cresceu 11 em relação às 40 iniciais. Bate.
+
+Se você quisesse mesmo somar antes, precisaria dizer isso por escrito, com
+parênteses:
+
+$$
+(40 + 3) \times 12 - 25 = 43 \times 12 - 25 = 516 - 25 = 491.
+$$
+
+Os parênteses não são enfeite: eles mudam a estrutura do cálculo e, portanto, a
+situação descrita.
+
+### Mesma prioridade: da esquerda para a direita
+
+Quando duas operações têm a mesma prioridade, resolvemos na ordem da leitura.
+Isso é necessário justamente porque subtração e divisão não são associativas —
+sem a regra, a expressão teria dois resultados possíveis:
+
+$$
+20 - 8 - 3 = 12 - 3 = 9
+$$
+
+$$
+100 \div 10 \div 5 = 10 \div 5 = 2
+$$
+
+Repare que não é "resolver as subtrações juntas": $20 - 5$ daria 15, resposta
+errada. Cada operação age sobre o resultado acumulado até ali. Duas retiradas
+sucessivas de 8 e de 3 tiram 11 no total, não 5.
+
+## Erros comuns
+
+Os quatro erros abaixo respondem por quase todo engano de aritmética na vida
+adulta. Vale reconhecê-los pelo nome.
+
+> **Somar antes de multiplicar.** $2 + 3 \times 4$ **não** é 20. A
+> multiplicação age primeiro: $2 + 12 = 14$. O resultado 20 corresponde a
+> $(2 + 3) \times 4$, que é outra expressão.
+
+> **Tratar operações de mesma prioridade como um bloco.** $20 - 8 - 3$ **não**
+> é $20 - 5$. Teste concreto: um saldo de 20 do qual saem 8 e depois 3 fica em
+> 9, não em 15. Duas retiradas somam 11 de saída.
+
+> **Distribuir só na primeira parcela.** $5 \times (8 - 3)$ **não** é
+> $5 \times 8 - 3$. Confira: dentro dos parênteses, $8 - 3 = 5$, e
+> $5 \times 5 = 25$. Pela distributiva, $40 - 15 = 25$ — bate. Já a conta
+> errada daria 37. O fator externo multiplica **cada** termo de dentro.
+
+> **Achar que divisão é comutativa.** $12 \div 4$ **não** é $4 \div 12$.
+> Repartir R\$ 12 entre 4 pessoas dá R\$ 3 para cada; repartir R\$ 4 entre 12
+> pessoas dá menos de R\$ 1. A ordem carrega o significado: o dividendo é o que
+> se reparte, o divisor é entre quantos.
+
+## Exemplos resolvidos
+
+### Exemplo 1: fechamento de caixa de um freelancer
+
+No mês, você entregou 3 projetos a R\$ 850 cada e 2 projetos a R\$ 1 200 cada.
+Os custos fixos do mês foram R\$ 400. Qual foi o resultado líquido?
+
+Escrevendo em uma linha:
+
+$$
+3 \times 850 + 2 \times 1\,200 - 400
+$$
+
+As multiplicações vêm primeiro, porque cada uma é um bloco — a receita de um
+tipo de projeto:
+
+$$
+3 \times 850 = 2\,550
+\qquad\text{e}\qquad
+2 \times 1\,200 = 2\,400
+$$
+
+Agora a soma e a subtração, da esquerda para a direita:
+
+$$
+2\,550 + 2\,400 - 400 = 4\,950 - 400 = 4\,550
+$$
+
+O resultado líquido foi **R\$ 4 550**.
+
+### Exemplo 2: caixas e sobra
+
+Uma transportadora precisa enviar 250 peças. Cada caixa comporta 18 peças.
+Quantas caixas completas serão formadas, quantas peças sobram e quantas caixas
+serão de fato despachadas?
+
+**Pause e tente antes de ler a solução.** Pergunte-se primeiro qual é a
+operação: estamos repartindo em grupos de tamanho conhecido, então é divisão na
+leitura de medida.
+
+$$
+250 \div 18 = 13, \text{ com resto } 16.
+$$
+
+Conferindo pela relação fundamental:
+
+$$
+18 \times 13 + 16 = 234 + 16 = 250. \checkmark
+$$
+
+São 13 caixas completas e sobram 16 peças. Mas a pergunta prática tem outra
+resposta: as 16 peças restantes também precisam viajar, então serão
+despachadas **14 caixas** — a última indo parcialmente vazia. O quociente
+responde à conta; a situação responde ao que fazer com o resto.
+
+### Exemplo 3: distributiva como atalho mental
+
+Quanto custa um lote de 12 unidades a R\$ 25 cada, sem calculadora?
+
+**Pause e tente.** A ideia é quebrar um dos fatores em partes fáceis.
+
+Quebrando o 25 em $20 + 5$:
+
+$$
+12 \times 25 = 12 \times (20 + 5) = 12 \times 20 + 12 \times 5 = 240 + 60 = 300.
+$$
+
+O total é **R\$ 300**. Poderíamos ter quebrado o outro fator, $12 = 10 + 2$:
+
+$$
+12 \times 25 = 10 \times 25 + 2 \times 25 = 250 + 50 = 300.
+$$
+
+Mesmo resultado, como tinha de ser: a distributiva reorganiza a contagem da
+área do retângulo, e a área não depende de onde passa o corte. Entre os dois
+caminhos, escolha o que produz números que você calcula de cabeça.
+
+### Exemplo 4: dividindo uma despesa
+
+Seis sócios vão repartir igualmente uma despesa de R\$ 4 730. Quanto cabe a
+cada um?
+
+**Pause e tente.**
+
+$$
+4\,730 \div 6 = 788, \text{ com resto } 2.
+$$
+
+Conferindo: $6 \times 788 + 2 = 4\,728 + 2 = 4\,730$. ✓
+
+Cada sócio paga R\$ 788, e sobram R\$ 2 que não se dividem em valores inteiros
+de real. Na prática, alguém arredonda — ou se usa uma
+[fração](./fracoes) para dizer exatamente quanto vale a sobra por pessoa. Esse
+incômodo com a sobra é uma das razões pelas quais os números inteiros não bastam,
+e é justamente o que motiva as próximas páginas do curso.
+
+## Perguntas de verificação
+
+Responda com suas palavras antes de abrir cada resposta.
+
+**1. Por que $3 \times 5$ pode ser lido como "três grupos de cinco"?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque multiplicação é adição de parcelas iguais: $3 \times 5 = 5 + 5 + 5$. O
+primeiro fator diz quantos grupos existem e o segundo, o tamanho de cada
+grupo. Pela propriedade comutativa, a leitura "cinco grupos de três" também
+dá 15 — o retângulo é o mesmo, girado.
+
+</details>
+
+**2. Qual é a diferença entre as duas leituras da divisão $24 \div 4$?**
+
+<details>
+<summary>Resposta</summary>
+
+Na leitura de **repartição**, 4 é a quantidade de grupos e a resposta 6 é o
+tamanho de cada grupo. Na leitura de **medida**, 4 é o tamanho de cada grupo e
+a resposta 6 é a quantidade de grupos. O número é o mesmo porque as duas
+descrevem o mesmo retângulo; o que muda é o significado da resposta no
+problema.
+
+</details>
+
+**3. Por que $2 + 3 \times 4$ não dá o mesmo que $(2 + 3) \times 4$?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque a multiplicação tem prioridade: $3 \times 4$ é um bloco só, e vale 12,
+então a primeira expressão é $2 + 12 = 14$. Os parênteses da segunda forçam a
+soma primeiro, criando um bloco diferente: $5 \times 4 = 20$. São duas
+situações distintas, não duas maneiras de escrever a mesma.
+
+</details>
+
+**4. Por que 0 é neutro da adição, mas não da multiplicação?**
+
+<details>
+<summary>Resposta</summary>
+
+Somar 0 é não deslocar nada na reta numérica, então a quantidade se conserva.
+Multiplicar por 0 é formar zero grupos, o que zera qualquer quantidade — em vez
+de preservar o valor, ele o elimina. Como o neutro precisa devolver o próprio
+valor, o neutro da multiplicação tem de ser 1: uma vez a mesma quantidade.
+
+</details>
+
+**5. Por que 1 é o ponto de partida correto para multiplicar vários números?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque o valor inicial precisa ser aquele que não interfere no resultado, e
+$1 \times a = a$. Começar em 0 faria todo produto valer 0, já que 0 é
+absorvente na multiplicação. É o mesmo motivo pelo qual uma soma acumulada
+começa em 0 e não em 1.
+
+</details>
+
+**6. Ao escrever $7 \times 13$ como $7 \times 10 + 7 \times 3$, o que muda e o
+que permanece igual?**
+
+<details>
+<summary>Resposta</summary>
+
+Muda a **escrita**: um produto vira uma soma de dois produtos. Permanece igual
+a **quantidade**: o retângulo de 7 por 13 foi cortado, mas nenhuma unidade foi
+criada ou destruída, então a área continua sendo 91. É por isso que a
+distributiva é uma igualdade, e não um procedimento aproximado.
+
+</details>
+
+**7. Por que a divisão por zero não tem resultado, enquanto $0 \div 12$ tem?**
+
+<details>
+<summary>Resposta</summary>
+
+$12 \div 0$ pergunta qual número multiplicado por 0 dá 12 — nenhum, porque todo
+produto por 0 é 0. Já $0 \div 12$ pergunta qual número multiplicado por 12 dá 0,
+e a resposta existe e é única: 0. Repartir nada entre 12 pessoas dá nada para
+cada uma; repartir 12 entre nenhum grupo é uma pergunta sem sentido.
+
+</details>
+
+**8. Em $47 = 6 \times 7 + 5$, por que o resto não pode ser 8?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque um resto de 8 ainda comportaria mais um grupo completo de 6. O resto
+representa o que **não** dá para agrupar, então precisa ser menor que o divisor.
+Se aparecer um resto maior ou igual ao divisor, o erro está no quociente.
+
+</details>
+
+## Exercícios
+
+### 1. Reconhecimento
+
+1. Diga qual operação responde cada pergunta e calcule:
+   a) 6 caixas com 24 parafusos cada — quantos parafusos ao todo?
+   b) R\$ 1 350 divididos igualmente entre 3 sócios — quanto para cada um?
+   c) O saldo era R\$ 820 e entraram R\$ 175 — qual o saldo agora?
+   d) Um pedido de 500 peças, das quais 318 já foram entregues — quantas faltam?
+
+2. Em $8 \times 15 = 120$, nomeie os fatores e o produto. Em $120 \div 8 = 15$,
+   nomeie o dividendo, o divisor e o quociente.
+
+3. Quais igualdades são verdadeiras? Corrija as falsas.
+   a) $25 + 0 = 25$
+   b) $25 \times 0 = 25$
+   c) $25 \times 1 = 25$
+   d) $25 \div 1 = 25$
+   e) $0 \div 25 = 25$
+
+### 2. Explicação
+
+4. Explique, usando a ideia de grupos, por que $12 \div 4$ e $4 \div 12$ não
+   podem dar o mesmo resultado.
+
+5. Um programador precisa somar uma lista de preços e, em outro trecho,
+   multiplicar uma lista de fatores. Por que o acumulador da soma começa em 0 e
+   o do produto começa em 1?
+
+6. Explique com palavras por que $7 \times 19$ pode ser calculado como
+   $7 \times 20 - 7$, e por que **não** pode ser calculado como
+   $7 \times 20 - 1$.
+
+### 3. Aplicação direta
+
+7. Calcule, respeitando a ordem das operações:
+   a) $2 + 5 \times 6$
+   b) $(2 + 5) \times 6$
+   c) $100 - 20 - 30$
+   d) $100 \div 10 \div 5$
+   e) $48 \div 6 + 3 \times 4$
+   f) $60 \div (2 + 4) \times 5$
+
+8. Calcule $173 \div 12$, indicando quociente e resto, e confira o resultado
+   pela relação $\text{dividendo} = \text{divisor} \times \text{quociente} +
+   \text{resto}$.
+
+9. Use a propriedade distributiva para calcular de cabeça, mostrando a quebra
+   que você escolheu:
+   a) $6 \times 34$
+   b) $9 \times 48$
+
+### 4. Variação
+
+10. Coloque parênteses em $8 + 4 \times 2$ de modo que o resultado seja 24.
+
+11. Escreva duas expressões que usem exatamente os números 36, 4 e 2, com as
+    mesmas operações, mas que deem resultados diferentes por causa dos
+    parênteses. Calcule as duas.
+
+12. Uma oficina tinha 45 filtros em estoque no início da semana. Chegaram 3
+    caixas com 12 filtros e 2 caixas com 20 filtros; ao longo da semana, 31
+    filtros foram usados. Escreva a expressão do estoque final e calcule.
+
+### 5. Problema misto
+
+13. Uma oficina comprou 5 caixas com 24 filtros cada, pagando R\$ 9 por filtro.
+    a) Quanto ela gastou?
+    b) Revendendo cada filtro a R\$ 15, qual é o lucro total?
+
+14. Um servidor precisa processar 2 400 registros, divididos igualmente em 16
+    lotes.
+    a) Quantos registros há em cada lote?
+    b) Se cada lote leva 45 segundos, quantos minutos leva o processamento
+    completo?
+
+15. Seis sócios repartem igualmente uma despesa de R\$ 4 730. Quanto paga cada
+    um e quanto sobra?
+
+<details>
+<summary>Dica para o exercício 15</summary>
+
+A divisão não é exata. Escreva a resposta na forma "quociente e resto" e
+confira multiplicando de volta antes de interpretar a sobra.
+
+</details>
+
+### 6. Justificativa
+
+16. Por que $20 - 8 - 3$ não é o mesmo que $20 - 5$? Use a ideia de saldo para
+    explicar.
+
+17. Verifique com números que $5 \times (8 - 3) = 5 \times 8 - 5 \times 3$ e
+    explique, pelo desenho do retângulo, por que a igualdade tem de valer.
+
+18. Explique por que nenhuma resposta pode ser atribuída a $12 \div 0$, usando
+    a relação entre divisão e multiplicação.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) multiplicação: $6 \times 24 = 144$ parafusos. b) divisão:
+   $1\,350 \div 3 = 450$, ou seja, R\$ 450 para cada sócio. c) adição:
+   $820 + 175 = 995$, saldo de R\$ 995. d) subtração: $500 - 318 = 182$ peças.
+2. Em $8 \times 15 = 120$, os fatores são 8 e 15, e o produto é 120. Em
+   $120 \div 8 = 15$, o dividendo é 120, o divisor é 8 e o quociente é 15.
+3. Verdadeiras: a, c, d. Falsas: b, pois $25 \times 0 = 0$ (zero grupos não
+   contêm nada); e, pois $0 \div 25 = 0$ (nada repartido continua sendo nada).
+4. $12 \div 4$ reparte 12 unidades em 4 grupos, dando 3 por grupo.
+   $4 \div 12$ reparte 4 unidades entre 12 grupos, e cada grupo recebe menos de
+   uma unidade. O dividendo é o que se reparte e o divisor é entre quantos; se
+   trocam, o problema muda.
+5. Porque cada acumulador precisa começar no elemento neutro da sua operação:
+   somar 0 não altera a soma, e multiplicar por 1 não altera o produto. Se o
+   acumulador do produto começasse em 0, todo resultado seria 0.
+6. Porque $19 = 20 - 1$, e a distributiva exige que o fator 7 multiplique as
+   duas partes: $7 \times 20 - 7 \times 1 = 140 - 7 = 133$. Subtrair apenas 1
+   descontaria uma unidade em vez de sete, dando 139, que está errado.
+7. a) 32; b) 42; c) 50; d) 2; e) $8 + 12 = 20$; f) $60 \div 6 \times 5 = 50$.
+   Se em (f) você encontrou 2, provavelmente multiplicou antes de dividir —
+   operações de mesma prioridade seguem da esquerda para a direita.
+8. $173 \div 12 = 14$, com resto 5. Conferindo:
+   $12 \times 14 + 5 = 168 + 5 = 173$.
+9. a) $6 \times 30 + 6 \times 4 = 180 + 24 = 204$. b) $9 \times 50 - 9 \times 2
+   = 450 - 18 = 432$ (também vale $9 \times 40 + 9 \times 8$).
+10. $(8 + 4) \times 2 = 24$.
+11. Por exemplo, $36 \div 4 + 2 = 9 + 2 = 11$ e $36 \div (4 + 2) = 36 \div 6 =
+    6$. Os parênteses mudam quem é o divisor.
+12. $45 + 3 \times 12 + 2 \times 20 - 31 = 45 + 36 + 40 - 31 = 90$ filtros.
+13. a) $5 \times 24 = 120$ filtros, e $120 \times 9 = 1\,080$, ou seja,
+    R\$ 1 080. b) A receita é $120 \times 15 = 1\,800$, então o lucro é
+    $1\,800 - 1\,080 = 720$, ou seja, R\$ 720.
+14. a) $2\,400 \div 16 = 150$ registros por lote. b) $16 \times 45 = 720$
+    segundos, e $720 \div 60 = 12$ minutos.
+15. $4\,730 \div 6 = 788$, com resto 2. Cada sócio paga R\$ 788 e sobram R\$ 2.
+    Conferindo: $6 \times 788 + 2 = 4\,728 + 2 = 4\,730$.
+16. Porque cada subtração age sobre o resultado acumulado até ali:
+    $20 - 8 = 12$ e depois $12 - 3 = 9$. Um saldo de 20 do qual saem 8 e depois
+    3 sofre duas retiradas que somam 11, não 5. O valor 15 corresponderia a
+    $20 - (8 - 3)$, que descreve outra situação.
+17. Pelo lado esquerdo, $8 - 3 = 5$ e $5 \times 5 = 25$. Pelo lado direito,
+    $40 - 15 = 25$. A igualdade vale porque um retângulo de 5 por 8 do qual se
+    remove uma faixa de 5 por 3 tem exatamente a área de 5 por 5: o fator 5
+    acompanha tudo o que é removido. Se você encontrou 37, aplicou o fator só na
+    primeira parcela.
+18. Porque $12 \div 0$ pergunta qual número multiplicado por 0 resulta em 12.
+    Todo número multiplicado por 0 dá 0, então nenhum candidato serve — a
+    pergunta não tem resposta, e por isso a operação fica indefinida.
+
+</details>
+
+## Revisão curta
+
+- As quatro operações são **ações sobre quantidades**: juntar, retirar, repetir
+  grupos iguais e repartir. Os símbolos apenas registram essas ações.
+- **Multiplicação é adição de parcelas iguais**, e o retângulo é sua imagem: os
+  lados são os fatores e a área é o produto.
+- **Divisão tem duas leituras** — repartir em grupos ou medir quantos grupos
+  cabem — e desfaz a multiplicação, o que permite conferir toda divisão
+  multiplicando de volta.
+- Quando a divisão não é exata, vale
+  $\text{dividendo} = \text{divisor} \times \text{quociente} + \text{resto}$,
+  com o **resto sempre menor que o divisor**.
+- **Não se divide por zero**: a pergunta "qual número vezes 0 dá 12?" não tem
+  resposta.
+- **Comutativa** e **associativa** valem para adição e multiplicação, e não
+  valem para subtração e divisão.
+- A **distributiva**, $a \times (b + c) = a \times b + a \times c$, permite
+  quebrar um fator em partes; o corte muda a escrita e conserva a quantidade. É
+  a propriedade mais reutilizada do curso.
+- O **elemento neutro** é 0 na adição e 1 na multiplicação; junto com as
+  operações inversas, ele é o mecanismo que resolve equações.
+- A **ordem das operações** — parênteses, potências e raízes, multiplicações e
+  divisões, adições e subtrações, sempre da esquerda para a direita dentro de
+  cada nível — existe para que uma expressão tenha uma única leitura.
+
+Antes de avançar, verifique se você consegue explicar **por que** a
+multiplicação age antes da adição e **por que** a distributiva não altera a
+quantidade. Essas duas justificativas sustentam boa parte do que vem pela
+frente.

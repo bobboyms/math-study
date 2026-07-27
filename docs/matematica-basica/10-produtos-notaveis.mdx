@@ -1,0 +1,1361 @@
+---
+title: Produtos notáveis
+---
+
+import AreaModel from '@site/src/components/AreaModel';
+
+# Produtos notáveis
+
+Produtos notáveis são multiplicações algébricas que aparecem tantas vezes que
+ganham nomes próprios. Eles não são fórmulas mágicas. São formas curtas de
+registrar uma distributiva que já conhecemos.
+
+A ideia central é:
+
+> Um produto notável é uma multiplicação com uma estrutura especial. Quando
+> reconhecemos essa estrutura, conseguimos expandir ou fatorar sem perder
+> partes do cálculo.
+
+Nesta página, vamos construir os padrões em uma ordem conectada: primeiro o
+problema que os torna necessários, depois a distributiva que os sustenta, em
+seguida os produtos de grau 2 e, por fim, os de grau 3.
+
+O objetivo não é decorar sete fórmulas de uma vez. O objetivo é enxergar de
+onde elas vêm.
+
+## 1. Problema motivador
+
+Imagine um terreno quadrado.
+
+O lado antigo mede 10 metros. A área antiga é:
+
+$$
+10^2 = 100
+$$
+
+Agora o lado aumenta 2 metros. O novo lado é:
+
+$$
+10 + 2
+$$
+
+Então a nova área é:
+
+$$
+(10 + 2)^2
+$$
+
+Como $10 + 2 = 12$, a área nova é:
+
+$$
+12^2 = 144
+$$
+
+Mas queremos entender **o que aconteceu com a área**, não apenas calcular o
+resultado final. O novo quadrado não tem apenas a área antiga e um quadradinho
+de lado 2. Ele também ganhou duas faixas retangulares.
+
+<AreaModel
+  rows={[{size: 10, label: '10'}, {size: 2, label: '2'}]}
+  cols={[{size: 10, label: '10'}, {size: 2, label: '2'}]}
+  cells={[
+    ['100', '20'],
+    ['20', '4'],
+  ]}
+  unit={19}
+  baseLabel="10 + 2"
+  caption="O quadrado de lado 12 não é só a área antiga mais um quadradinho: ganhou também duas faixas de 20."
+/>
+
+Somando as partes:
+
+$$
+100 + 20 + 20 + 4 = 144
+$$
+
+Esse exemplo mostra o erro mais comum de todos:
+
+$$
+(10 + 2)^2 \neq 10^2 + 2^2
+$$
+
+Se escrevêssemos apenas $10^2 + 2^2$, obteríamos:
+
+$$
+100 + 4 = 104
+$$
+
+Faltariam as duas faixas de área 20. É justamente essas faixas que a conta
+ingênua esquece — e a lição inteira gira em torno de nunca mais esquecê-las.
+
+Em álgebra, o mesmo problema aparece quando o lado é desconhecido:
+
+$$
+(x + 2)^2
+$$
+
+Não podemos escrever apenas:
+
+$$
+x^2 + 2^2
+$$
+
+Precisamos contar também as partes misturadas entre $x$ e $2$. Ao longo da
+página, vamos descobrir exatamente quanto valem essas partes.
+
+## 2. Mapa das ideias
+
+Antes de construir, vale ter à mão o significado de quatro palavras que vão
+reaparecer o tempo todo:
+
+- **Produto notável** — uma multiplicação com estrutura reconhecível, que por
+  isso ganha uma forma curta.
+- **Expandir** — tirar os parênteses, transformando um produto em soma:
+  $(x+2)^2 \to x^2 + 4x + 4$.
+- **Fatorar** — o caminho inverso, transformando uma soma ou diferença em
+  produto: $x^2 - 25 \to (x+5)(x-5)$.
+- **Termo cruzado** — a parte que nasce da mistura entre os dois termos (o
+  $2ab$, por exemplo). É quase sempre ele que a conta apressada perde.
+- **Trinômio quadrado perfeito** — uma soma de três termos que é exatamente o
+  quadrado de alguma coisa, como $x^2 + 6x + 9$, que é $(x+3)^2$.
+
+## 3. Para que serve
+
+A mesma quantidade pode ser escrita de mais de um jeito, e cada jeito revela
+uma informação diferente. Já vimos isso com números: $12^2$ e $100 + 20 + 20 +
+4$ valem os mesmos $144$, mas a segunda forma mostra **de que partes** a área é
+feita.
+
+Com letras acontece o mesmo. Mais adiante vamos provar que:
+
+$$
+(x + 3)^2 \quad\text{e}\quad x^2 + 6x + 9
+$$
+
+representam exatamente a mesma quantidade. A primeira forma deixa visível que
+uma quantidade inteira está sendo elevada ao quadrado; a segunda separa o
+resultado em partes e mostra como ele depende de $x$. Nenhuma é sempre melhor —
+a forma mais útil depende da pergunta.
+
+Isso lembra escrever $\frac{1}{2} = 0{,}5 = 50\%$: o valor permanece igual,
+só a representação muda. Produtos notáveis fazem essa troca de representação
+com expressões algébricas, e ela aparece quando precisamos:
+
+- multiplicar expressões algébricas com rapidez e segurança;
+- fatorar polinômios;
+- resolver equações;
+- simplificar frações algébricas;
+- estudar funções quadráticas e cúbicas;
+- calcular áreas, volumes e variações de medidas;
+- reconhecer padrões em física, economia, engenharia e programação.
+
+Aprender produtos notáveis é aprender a transitar entre essas formas — e cada
+padrão desta página vem acompanhado de uma aplicação concreta, colocada logo
+depois de a fórmula ser deduzida, para que nada seja usado antes de nascer.
+
+## 4. Ideias anteriores que voltam aqui
+
+Esta lição não parte do zero. Ela se apoia em três blocos já estudados. Vale
+trazer cada um de volta à memória agora — respondendo às perguntas antes de ler
+a resposta — para descobrir já, e não no meio da página, se algum deles precisa
+de uma releitura.
+
+**Termos semelhantes** (de [Expressões algébricas](./expressoes-algebricas)).
+
+> Por que $3x + 5x = 8x$, mas $3x + 5$ não vira $8x$?
+
+Porque $3x$ e $5x$ são o **mesmo tipo** de coisa — grupos de $x$ —, então
+contam juntos: três grupos de $x$ mais cinco grupos de $x$ são oito grupos de
+$x$. Já $3x$ e $5$ são tipos diferentes (um varia com $x$, o outro é fixo) e não
+se juntam. **Guarde isto:** só somamos termos do mesmo tipo. É essa regra que,
+daqui a pouco, explica o termo do meio do quadrado da soma.
+
+**Potência como multiplicação repetida** (de [Potências](./potencias)).
+
+> O que significa $(a + b)^2$? E $a^2$?
+
+Elevar ao quadrado é multiplicar a coisa por ela mesma. Então $a^2 = a \times
+a$ e, do mesmo modo, $(a + b)^2 = (a + b) \times (a + b)$. **Guarde isto:** o
+quadrado age sobre a expressão **inteira**; ele não se distribui sobre cada
+parcela, e é por isso que $(a+b)^2$ não é $a^2 + b^2$.
+
+**Regra de sinais do produto** (de [Números negativos](./numeros-negativos)).
+
+> Quanto é $(-b)(-b)$? E $(-b)(a)$?
+
+Menos com menos dá mais, então $(-b)(-b) = +b^2$. E menos com mais dá menos,
+então $(-b)(a) = -ab$. **Guarde isto:** são esses dois fatos que decidem os
+sinais do quadrado da diferença.
+
+## 5. A base de tudo: a distributiva
+
+Antes de qualquer fórmula, vem a distributiva:
+
+$$
+a(b + c) = ab + ac
+$$
+
+Ela diz:
+
+> Se uma quantidade multiplica uma soma, ela multiplica cada parte da soma.
+
+Quando temos dois parênteses, a ideia é a mesma. Cada termo do primeiro
+parêntese multiplica cada termo do segundo:
+
+$$
+(a + b)(c + d)
+$$
+
+<AreaModel
+  rows={[{size: 3, label: 'a'}, {size: 2, label: 'b'}]}
+  cols={[{size: 3, label: 'c'}, {size: 3, label: 'd'}]}
+  cells={[
+    ['ac', 'ad'],
+    ['bc', 'bd'],
+  ]}
+  unit={44}
+  caption="Cada parte de um fator encontra cada parte do outro: quatro produtos, nenhum a mais nem a menos."
+/>
+
+Logo:
+
+$$
+(a + b)(c + d) = ac + ad + bc + bd
+$$
+
+Todos os produtos notáveis desta página nascem dessa ideia. O que muda de um
+padrão para outro é o que acontece **depois** de distribuir:
+
+- alguns termos iguais se juntam (são termos semelhantes);
+- alguns termos opostos se cancelam;
+- alguns sinais mudam por causa de fatores negativos.
+
+Essa é a conexão principal. Guarde-a: sempre que uma fórmula parecer surgir do
+nada, é porque distribuímos e depois arrumamos os termos.
+
+## 6. Quadrado da soma
+
+O primeiro produto notável é o quadrado da soma:
+
+$$
+(a + b)^2
+$$
+
+Como elevar ao quadrado é multiplicar a expressão por ela mesma, isso significa:
+
+$$
+(a + b)(a + b)
+$$
+
+Agora usamos a distributiva:
+
+$$
+(a + b)(a + b) = a(a + b) + b(a + b)
+$$
+
+Distribuindo de novo:
+
+$$
+a(a + b) + b(a + b) = a^2 + ab + ab + b^2
+$$
+
+Como $ab + ab = 2ab$, temos:
+
+$$
+(a + b)^2 = a^2 + 2ab + b^2
+$$
+
+### De onde vem o termo $2ab$
+
+Esse é o passo mais importante da página, então vale ir devagar. A distributiva
+gerou **quatro** pedaços:
+
+$$
+a^2, \quad ab, \quad ab, \quad b^2
+$$
+
+Os dois do meio, $ab$ e $ba$, são **termos semelhantes** — exatamente no mesmo
+sentido em que $3x$ e $5x$ eram grupos de $x$ na lição de
+[Expressões algébricas](./expressoes-algebricas). E eles são iguais entre si
+porque a ordem não muda a multiplicação:
+
+$$
+a \times b = b \times a
+$$
+
+Sendo do mesmo tipo, os dois se juntam, do mesmíssimo jeito que $3x + 5x = 8x$:
+
+$$
+ab + ab = 2ab
+$$
+
+Por isso o quadrado da soma **não** é $a^2 + b^2$. Escrever só $a^2 + b^2$
+seria jogar fora esses dois termos do meio — as duas faixas de área que o
+terreno da abertura ganhou. O $2ab$ é o nome algébrico daquelas faixas.
+
+### Modelo visual
+
+Veja $(a + b)^2$ como a área de um quadrado de lado $a + b$.
+
+<AreaModel
+  rows={[{size: 4, label: 'a'}, {size: 2, label: 'b'}]}
+  cols={[{size: 4, label: 'a'}, {size: 2, label: 'b'}]}
+  cells={[
+    ['a^2', 'ab'],
+    ['ab', 'b^2'],
+  ]}
+  unit={42}
+  baseLabel="a + b"
+  caption="Os dois retângulos ab têm a mesma cor porque são a mesma quantidade, contada duas vezes — é daí que vem o 2ab."
+/>
+
+As quatro partes são:
+
+- um quadrado de área $a^2$;
+- dois retângulos de área $ab$ (as duas faixas);
+- um quadrado de área $b^2$.
+
+Por isso:
+
+$$
+(a + b)^2 = a^2 + 2ab + b^2
+$$
+
+### Voltando ao terreno da abertura
+
+A página abriu com uma dívida: descobrir quanto valem as partes misturadas em
+$(x + 2)^2$. Com a fórmula em mãos, dá para pagá-la. Aqui $a = x$ e $b = 2$:
+
+$$
+(x + 2)^2 = x^2 + 2 \times x \times 2 + 2^2 = x^2 + 4x + 4
+$$
+
+O $4x$ são as duas faixas — cada uma com área $2x$ — e o $4$ é o quadradinho do
+canto. A conta ingênua $x^2 + 4$ perde exatamente as faixas.
+
+E dá para conferir com o terreno concreto do começo, onde o lado antigo media 10
+metros. Fazendo $x = 10$:
+
+$$
+10^2 + 4(10) + 4 = 100 + 40 + 4 = 144
+$$
+
+que é o mesmo $12^2 = 144$ calculado lá atrás. O $40$ das faixas é a soma dos
+dois retângulos de área 20 do desenho. A fórmula com letras não descreve outra
+coisa: descreve aquele desenho para um lado qualquer.
+
+### Exemplo 1
+
+Expanda $(x + 5)^2$.
+
+Aqui $a = x$ e $b = 5$. Aplicando o padrão:
+
+$$
+(x + 5)^2 = x^2 + 2 \times x \times 5 + 5^2
+$$
+
+Logo:
+
+$$
+(x + 5)^2 = x^2 + 10x + 25
+$$
+
+### Exemplo 2
+
+Expanda $(2x + 3)^2$.
+
+**Pause e tente antes de ler a solução.** A única sutileza é enxergar quem é
+$a$ e quem é $b$: como o primeiro termo inteiro é $2x$, temos $a = 2x$ e
+$b = 3$. Aplique o padrão você mesmo e só depois confira.
+
+Aplicando o padrão:
+
+$$
+(2x + 3)^2 = (2x)^2 + 2(2x)(3) + 3^2
+$$
+
+Calculando cada parte:
+
+$$
+(2x)^2 = 4x^2, \qquad 2(2x)(3) = 12x, \qquad 3^2 = 9
+$$
+
+Portanto:
+
+$$
+(2x + 3)^2 = 4x^2 + 12x + 9
+$$
+
+O erro comum aqui é escrever $(2x)^2 = 2x^2$. Como o quadrado age sobre o termo
+inteiro, tanto o $2$ quanto o $x$ são elevados ao quadrado: $(2x)^2 = 2^2 \times
+x^2 = 4x^2$.
+
+### Aplicação: cálculo mental
+
+Agora que temos a fórmula, ela vira um atalho para contas de cabeça. Para
+calcular $103^2$, enxergamos $103$ como $100 + 3$:
+
+$$
+103^2 = (100 + 3)^2
+$$
+
+O quadrado representa a área de um quadrado de lado 103. Ao separar cada lado
+em 100 e 3, a área fica dividida em um quadrado grande, duas faixas e um
+quadrado pequeno — o mesmo desenho de antes:
+
+$$
+(100 + 3)^2 = 100^2 + 2(100)(3) + 3^2
+$$
+
+$$
+= 10\,000 + 600 + 9 = 10\,609
+$$
+
+A multiplicação $103 \times 103$ foi trocada por três contas mais simples.
+
+## 7. Quadrado da diferença
+
+Agora mudamos apenas uma coisa: em vez de somar $b$, subtraímos $b$.
+
+$$
+(a - b)^2
+$$
+
+Isso significa:
+
+$$
+(a - b)(a - b)
+$$
+
+Aplicando a distributiva:
+
+$$
+(a - b)(a - b) = a(a - b) - b(a - b)
+$$
+
+Distribuindo:
+
+$$
+a(a - b) - b(a - b) = a^2 - ab - ab + b^2
+$$
+
+Como $-ab - ab = -2ab$, temos:
+
+$$
+(a - b)^2 = a^2 - 2ab + b^2
+$$
+
+Repare em dois sinais, e volte à regra que você reativou na seção 4:
+
+- o termo do meio ficou **negativo**, $-2ab$, porque cada faixa cruzada vem de
+  $a \times (-b) = -ab$;
+- o último termo ficou **positivo**, $+b^2$, porque $(-b)(-b) = +b^2$ (menos
+  com menos dá mais).
+
+### Intuição visual
+
+Pense em um quadrado de lado $a$, de área $a^2$. Queremos ficar com o quadrado
+menor, de lado $a - b$. Para isso, retiramos duas faixas de largura $b$: uma
+vertical, que percorre toda a altura $a$, e uma horizontal, que percorre toda a
+largura $a$. Cada faixa tem área $a \times b = ab$.
+
+<AreaModel
+  rows={[{size: 5, label: 'a - b'}, {size: 2, label: 'b'}]}
+  cols={[{size: 5, label: 'a - b'}, {size: 2, label: 'b'}]}
+  cells={[
+    ['(a-b)^2', '(a-b)b'],
+    ['(a-b)b', 'b^2'],
+  ]}
+  unit={40}
+  baseLabel="a"
+  labelWidth={64}
+  caption="A faixa vertical é a coluna da direita inteira; a horizontal é a linha de baixo inteira. Cada uma vale ab — e as duas se encontram no canto b², que por isso é retirado duas vezes."
+/>
+
+O canto marcado com `X` está dentro da faixa vertical **e** dentro da faixa
+horizontal. Ao tirar as duas faixas, ele é retirado **duas vezes** — mas só
+devia sair uma. Por isso precisa voltar uma vez:
+
+$$
+(a - b)^2 = a^2 \underbrace{- ab - ab}_{\text{as duas faixas}} \underbrace{+\ b^2}_{\text{o canto que voltou}}
+$$
+
+ou, juntando as faixas:
+
+$$
+(a - b)^2 = a^2 - 2ab + b^2
+$$
+
+### Exemplo
+
+Expanda $(x - 4)^2$.
+
+Aqui $a = x$ e $b = 4$. Então:
+
+$$
+(x - 4)^2 = x^2 - 2 \times x \times 4 + 4^2
+$$
+
+Logo:
+
+$$
+(x - 4)^2 = x^2 - 8x + 16
+$$
+
+### Cuidado importante
+
+O quadrado da diferença **não** é a diferença de quadrados. Estas duas
+expressões são diferentes:
+
+$$
+(a - b)^2 \qquad\text{e}\qquad a^2 - b^2
+$$
+
+No quadrado da diferença, a subtração está dentro do parêntese **antes** de
+elevar ao quadrado. Na diferença de quadrados, os quadrados já estão prontos e
+depois são subtraídos. É a diferença que vamos estudar agora.
+
+## 8. Diferença de quadrados
+
+Agora aparece uma estrutura diferente:
+
+$$
+(a + b)(a - b)
+$$
+
+Não é uma soma ao quadrado nem uma diferença ao quadrado. É uma soma
+multiplicando uma diferença **com os mesmos termos**. Vamos distribuir:
+
+$$
+(a + b)(a - b) = a(a - b) + b(a - b)
+$$
+
+Então:
+
+$$
+a(a - b) + b(a - b) = a^2 - ab + ab - b^2
+$$
+
+Aqui está a novidade em relação ao quadrado da soma. Lá, os dois termos do meio
+tinham o mesmo sinal e **se somavam** ($ab + ab = 2ab$). Aqui eles têm sinais
+opostos e **se cancelam**:
+
+$$
+-ab + ab = 0
+$$
+
+Sobra:
+
+$$
+(a + b)(a - b) = a^2 - b^2
+$$
+
+Lendo ao contrário, temos uma **fatoração**:
+
+$$
+a^2 - b^2 = (a + b)(a - b)
+$$
+
+Essa leitura ao contrário é importante, e é o primeiro exemplo forte de
+fatorar nesta página:
+
+- expandir é transformar produto em soma;
+- fatorar é transformar soma ou diferença em produto.
+
+### Modelo visual
+
+A diferença $a^2 - b^2$ pode ser vista de forma geométrica: pegue um quadrado
+grande de área $a^2$ e recorte um quadrado menor de área $b^2$ de um dos cantos.
+O que sobra é uma figura em formato de "L".
+
+Se você cortar essa figura em "L" e rearranjar as peças, elas formam exatamente
+um único retângulo. As dimensões desse novo retângulo são a base $(a + b)$ e a
+altura $(a - b)$.
+
+Como a área total não mudou (apenas mudamos as peças de lugar), ela também pode
+ser calculada multiplicando base por altura:
+
+$$
+(a + b)(a - b)
+$$
+
+Isso confirma visualmente a igualdade:
+
+$$
+a^2 - b^2 = (a + b)(a - b)
+$$
+
+### Exemplo 1
+
+Fatore $x^2 - 25$.
+
+Reconhecemos dois quadrados: $x^2$ já é um quadrado, e $25 = 5^2$. Então:
+
+$$
+x^2 - 25 = x^2 - 5^2
+$$
+
+Aplicando o padrão:
+
+$$
+x^2 - 25 = (x + 5)(x - 5)
+$$
+
+### Exemplo 2
+
+Fatore $9x^2 - 16$.
+
+**Pause e tente.** O passo novo é escrever cada termo como um quadrado antes de
+aplicar o padrão. Tente identificar quem elevado ao quadrado dá $9x^2$ e quem
+dá $16$.
+
+Escrevendo cada termo como quadrado:
+
+$$
+9x^2 = (3x)^2, \qquad 16 = 4^2
+$$
+
+Logo:
+
+$$
+9x^2 - 16 = (3x)^2 - 4^2
+$$
+
+Portanto:
+
+$$
+9x^2 - 16 = (3x + 4)(3x - 4)
+$$
+
+### O sinal de menos não é decoração
+
+> **Erro comum:** aplicar o mesmo padrão a uma **soma** de quadrados. Não existe
+> fatoração aqui: $x^2 + 25$ não é $(x + 5)(x - 5)$ nem $(x + 5)^2$. Teste com
+> $x = 1$: a expressão vale $1 + 25 = 26$, enquanto $(1 + 5)(1 - 5) = -24$ e
+> $(1 + 5)^2 = 36$. Três valores diferentes.
+
+Vale entender por que o menos é indispensável, e não apenas decorar a exceção.
+Toda a fatoração $a^2 - b^2 = (a+b)(a-b)$ depende de os termos cruzados se
+cancelarem, e eles só se cancelam porque têm sinais opostos. Multiplicando duas
+somas, os cruzados se somam e sobra um termo do meio:
+
+$$
+(x + 5)(x + 5) = x^2 + 10x + 25
+$$
+
+Esse $10x$ não tem para onde ir — e a expressão $x^2 + 25$ não o tem. Por isso
+nenhum par de fatores desse tipo a produz.
+
+### Aplicação: cálculo mental
+
+A diferença de quadrados também encurta contas. Para calcular $102 \times 98$,
+observamos que os dois fatores estão à mesma distância de 100:
+
+$$
+102 \times 98 = (100 + 2)(100 - 2)
+$$
+
+Pela distributiva, os produtos cruzados $-200$ e $+200$ se cancelam — é o mesmo
+cancelamento que acabamos de ver. Assim:
+
+$$
+(100 + 2)(100 - 2) = 100^2 - 2^2 = 10\,000 - 4 = 9\,996
+$$
+
+## 9. Como escolher entre os padrões de grau 2
+
+Antes de usar uma fórmula, olhe para a **estrutura externa** da expressão.
+
+| Expressão | O que perguntar | Padrão |
+| --- | --- | --- |
+| $(a + b)^2$ | Uma soma inteira está ao quadrado? | Quadrado da soma |
+| $(a - b)^2$ | Uma diferença inteira está ao quadrado? | Quadrado da diferença |
+| $a^2 - b^2$ | Dois quadrados estão sendo subtraídos? | Diferença de quadrados |
+| $a^2 + 2ab + b^2$ | As pontas são quadrados e o meio é o dobro do produto? | Trinômio quadrado perfeito |
+
+O sinal sozinho não basta. Compare $(x - 3)^2$ com $x^2 - 9$:
+
+$$
+(x - 3)^2 = x^2 - 6x + 9
+$$
+
+$$
+x^2 - 9 = (x + 3)(x - 3)
+$$
+
+A estrutura é diferente, então o padrão também é. No primeiro, uma diferença
+está ao quadrado; no segundo, dois quadrados prontos estão sendo subtraídos.
+
+### O caminho de volta: reconhecer um quadrado perfeito
+
+A diferença de quadrados foi apresentada nas duas direções: expandir e fatorar.
+O quadrado da soma também pode ser lido ao contrário, e essa leitura tem nome
+próprio:
+
+$$
+a^2 + 2ab + b^2 = (a + b)^2
+$$
+
+Uma soma de três termos com essa estrutura é um **trinômio quadrado perfeito** —
+perfeito porque é exatamente o quadrado de alguma coisa, sem sobra. Para
+reconhecê-lo, três perguntas:
+
+1. o primeiro termo é um quadrado? quem é $a$?
+2. o último termo é um quadrado? quem é $b$?
+3. o termo do meio é o dobro do produto $a \times b$?
+
+Se as três respostas forem sim, o trinômio é $(a + b)^2$ — ou $(a - b)^2$, se o
+termo do meio vier com sinal negativo.
+
+**Exemplo.** Fatore $x^2 + 10x + 25$.
+
+- $x^2$ é o quadrado de $x$, então $a = x$;
+- $25$ é o quadrado de 5, então $b = 5$;
+- o dobro do produto é $2 \times x \times 5 = 10x$, que é justamente o termo do
+  meio.
+
+As três condições valem, logo:
+
+$$
+x^2 + 10x + 25 = (x + 5)^2
+$$
+
+**Contraexemplo.** $x^2 + 7x + 25$ tem os mesmos quadrados nas pontas, mas o
+dobro do produto daria $10x$, e o termo do meio é $7x$. Não é quadrado perfeito,
+e escrever $(x + 5)^2$ aqui seria errado. Teste com $x = 1$: o trinômio vale
+$1 + 7 + 25 = 33$, enquanto $(1 + 5)^2 = 36$.
+
+É o terceiro teste que decide, e ele é a pergunta da abertura da página feita de
+trás para frente: as faixas estão aí, na quantidade certa?
+
+## 10. Pequenas variações: a ponte para o cálculo
+
+Aqui os padrões de grau 2 já rendem uma ideia que reaparece no cálculo. Suponha
+que uma placa quadrada tenha lado $x$ e que cada lado aumente uma pequena
+medida $h$. A área passa de $x^2$ para:
+
+$$
+(x + h)^2 = x^2 + 2xh + h^2
+$$
+
+Para descobrir **somente o aumento**, tiramos a área antiga:
+
+$$
+(x + h)^2 - x^2 = 2xh + h^2
+$$
+
+Reconheça as partes no modelo visual do quadrado da soma: o termo $2xh$ são as
+duas faixas novas (uma de cada lado, cada uma $x$ por $h$), e $h^2$ é o pequeno
+quadrado do canto, onde as duas faixas se encontram.
+
+Se $x = 100$ cm e $h = 0{,}1$ cm:
+
+$$
+2xh = 2(100)(0{,}1) = 20\text{ cm}^2, \qquad h^2 = (0{,}1)^2 = 0{,}01\text{ cm}^2
+$$
+
+O aumento exato é $20{,}01\text{ cm}^2$. Como $h^2$ é muito pequeno nesse caso,
+$20\text{ cm}^2$ já é uma ótima estimativa. Esse raciocínio sobre pequenas
+variações — separar o efeito grande ($2xh$) do efeito minúsculo ($h^2$) —
+reaparece mais tarde no cálculo diferencial.
+
+## 11. Cubo da soma
+
+Os produtos de grau 3 seguem a mesma ideia, mas agora multiplicamos três
+fatores.
+
+$$
+(a + b)^3
+$$
+
+Isso significa:
+
+$$
+(a + b)(a + b)(a + b)
+$$
+
+Podemos aproveitar o que já sabemos do quadrado da soma:
+
+$$
+(a + b)^3 = (a + b)^2(a + b)
+$$
+
+Como $(a + b)^2 = a^2 + 2ab + b^2$:
+
+$$
+(a + b)^3 = (a^2 + 2ab + b^2)(a + b)
+$$
+
+Distribuindo:
+
+$$
+(a^2 + 2ab + b^2)(a + b) = a^3 + a^2b + 2a^2b + 2ab^2 + ab^2 + b^3
+$$
+
+Agrupando os termos semelhantes ($a^2b + 2a^2b = 3a^2b$ e $2ab^2 + ab^2 =
+3ab^2$):
+
+$$
+(a + b)^3 = a^3 + 3a^2b + 3ab^2 + b^3
+$$
+
+### Por que aparecem os números 3 e 3?
+
+Eles contam de quantos jeitos cada mistura aparece. Em $(a + b)(a + b)(a + b)$,
+cada termo do resultado vem de escolher $a$ ou $b$ em cada um dos três
+parênteses:
+
+- $a^3$: um único jeito, escolher $a$ nos três;
+- $a^2b$: três jeitos, pois o $b$ pode vir de qualquer um dos três parênteses;
+- $ab^2$: três jeitos, pela mesma razão;
+- $b^3$: um único jeito, escolher $b$ nos três.
+
+Por isso as quantidades são:
+
+$$
+1,\ 3,\ 3,\ 1
+$$
+
+### Exemplo
+
+Expanda $(x + 2)^3$.
+
+**Pause e tente** com $a = x$ e $b = 2$, aplicando o padrão $a^3 + 3a^2b +
+3ab^2 + b^3$.
+
+$$
+(x + 2)^3 = x^3 + 3x^2(2) + 3x(2^2) + 2^3
+$$
+
+Logo:
+
+$$
+(x + 2)^3 = x^3 + 6x^2 + 12x + 8
+$$
+
+## 12. Cubo da diferença
+
+O cubo da diferença troca $b$ por $-b$:
+
+$$
+(a - b)^3 = (a + (-b))^3
+$$
+
+Usando o cubo da soma:
+
+$$
+(a + (-b))^3 = a^3 + 3a^2(-b) + 3a(-b)^2 + (-b)^3
+$$
+
+Agora analisamos os sinais, de novo com a regra de sinais da seção 4:
+
+$$
+3a^2(-b) = -3a^2b, \qquad 3a(-b)^2 = 3ab^2, \qquad (-b)^3 = -b^3
+$$
+
+Portanto:
+
+$$
+(a - b)^3 = a^3 - 3a^2b + 3ab^2 - b^3
+$$
+
+Os sinais alternam porque as potências de $-b$ alternam:
+
+- potência ímpar de $-b$ fica negativa;
+- potência par de $-b$ fica positiva.
+
+### Exemplo
+
+Expanda $(x - 3)^3$.
+
+Aqui $a = x$ e $b = 3$. Aplicando o padrão:
+
+$$
+(x - 3)^3 = x^3 - 3x^2(3) + 3x(3^2) - 3^3
+$$
+
+Logo:
+
+$$
+(x - 3)^3 = x^3 - 9x^2 + 27x - 27
+$$
+
+## 13. Soma e diferença de cubos
+
+Agora mudamos de novo o tipo de problema. Compare:
+
+$$
+(a + b)^3 \qquad\text{e}\qquad a^3 + b^3
+$$
+
+A primeira é o **cubo de uma soma**. A segunda é uma **soma de cubos**. Elas não
+são a mesma coisa:
+
+$$
+(a + b)^3 \neq a^3 + b^3
+$$
+
+O mesmo cuidado vale para $(a - b)^3$ e $a^3 - b^3$.
+
+### Soma de cubos
+
+A soma de cubos fatorada é:
+
+$$
+a^3 + b^3 = (a + b)(a^2 - ab + b^2)
+$$
+
+Antes de conferir, repare no contraste com o que vimos há pouco: a **soma** de
+quadrados não fatora, mas a soma de cubos fatora. Não há incoerência. Lá, o
+segundo fator só podia ser outro binômio, e nenhum deles dava conta de sumir com
+o termo do meio. Aqui há mais espaço: o segundo fator tem três termos, e é essa
+folga que permite escolher sinais que cancelem tudo o que sobra no meio.
+
+Por que o segundo fator tem esses sinais? Porque eles foram escolhidos para
+fazer os termos do meio se cancelarem — a mesma estratégia da diferença de
+quadrados. Conferindo pela multiplicação:
+
+$$
+(a + b)(a^2 - ab + b^2) = a(a^2 - ab + b^2) + b(a^2 - ab + b^2)
+$$
+
+$$
+= a^3 - a^2b + ab^2 + a^2b - ab^2 + b^3
+$$
+
+Os termos do meio se anulam ($-a^2b + a^2b = 0$ e $ab^2 - ab^2 = 0$), sobrando:
+
+$$
+a^3 + b^3
+$$
+
+#### Exemplo
+
+Fatore $x^3 + 8$.
+
+Reconhecemos os cubos: $x^3$ já é um cubo, e $8 = 2^3$. Então:
+
+$$
+x^3 + 8 = x^3 + 2^3
+$$
+
+Aplicando o padrão com $a = x$ e $b = 2$:
+
+$$
+x^3 + 8 = (x + 2)(x^2 - 2x + 4)
+$$
+
+### Diferença de cubos
+
+A diferença de cubos fatorada é:
+
+$$
+a^3 - b^3 = (a - b)(a^2 + ab + b^2)
+$$
+
+Conferindo pela multiplicação:
+
+$$
+(a - b)(a^2 + ab + b^2) = a(a^2 + ab + b^2) - b(a^2 + ab + b^2)
+$$
+
+$$
+= a^3 + a^2b + ab^2 - a^2b - ab^2 - b^3
+$$
+
+Os termos do meio se anulam ($a^2b - a^2b = 0$ e $ab^2 - ab^2 = 0$), sobrando:
+
+$$
+a^3 - b^3
+$$
+
+#### Exemplo
+
+Fatore $27x^3 - 64$.
+
+**Pause e tente** escrever cada termo como cubo antes de aplicar o padrão.
+
+$$
+27x^3 = (3x)^3, \qquad 64 = 4^3
+$$
+
+Então:
+
+$$
+27x^3 - 64 = (3x)^3 - 4^3
+$$
+
+Aplicando o padrão com $a = 3x$ e $b = 4$:
+
+$$
+27x^3 - 64 = (3x - 4)\big((3x)^2 + (3x)(4) + 4^2\big)
+$$
+
+Simplificando:
+
+$$
+27x^3 - 64 = (3x - 4)(9x^2 + 12x + 16)
+$$
+
+## 14. Mapa dos padrões
+
+Use esta tabela como mapa, não como substituto do raciocínio.
+
+| Estrutura | Resultado | Ideia que explica |
+| --- | --- | --- |
+| $(a + b)^2$ | $a^2 + 2ab + b^2$ | As partes cruzadas se somam |
+| $(a - b)^2$ | $a^2 - 2ab + b^2$ | As partes cruzadas ficam negativas |
+| $a^2 - b^2$ | $(a + b)(a - b)$ | As partes cruzadas se cancelam |
+| $(a + b)^3$ | $a^3 + 3a^2b + 3ab^2 + b^3$ | Três fatores geram misturas repetidas |
+| $(a - b)^3$ | $a^3 - 3a^2b + 3ab^2 - b^3$ | Os sinais alternam por causa de $-b$ |
+| $a^3 + b^3$ | $(a + b)(a^2 - ab + b^2)$ | O segundo fator cancela os termos do meio |
+| $a^3 - b^3$ | $(a - b)(a^2 + ab + b^2)$ | O segundo fator cancela os termos do meio |
+
+Toda linha vale nos dois sentidos: lida da esquerda para a direita, expande;
+lida da direita para a esquerda, fatora. É assim que as duas primeiras linhas
+viram o reconhecimento do trinômio quadrado perfeito.
+
+Uma pergunta ajuda a escolher:
+
+> A expressão está pedindo para expandir um produto ou para fatorar uma soma ou
+> diferença?
+
+Se há parênteses multiplicando, geralmente queremos expandir. Se há uma soma ou
+diferença com potências reconhecíveis, talvez seja possível fatorar.
+
+## 15. Perguntas de verificação
+
+Tente responder cada uma com suas palavras antes de abrir a resposta. São
+perguntas sobre o **porquê**, não sobre o procedimento.
+
+**1. Por que $(a + b)^2$ possui o termo $2ab$?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque $(a + b)^2 = (a + b)(a + b)$, e a distributiva gera quatro pedaços:
+$a^2$, $ab$, $ba$ e $b^2$. Os dois do meio, $ab$ e $ba$, são iguais
+($a \times b = b \times a$) e são termos semelhantes, então se juntam em $2ab$
+— assim como $3x + 5x = 8x$. No modelo de área, são as duas faixas retangulares
+entre o quadrado $a^2$ e o quadrado $b^2$.
+
+</details>
+
+**2. Por que $(a - b)^2$ termina com $+b^2$, e não com $-b^2$?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque o último termo vem de $(-b)(-b)$, e menos com menos dá mais:
+$(-b)(-b) = +b^2$. O sinal negativo aparece apenas no termo do meio, $-2ab$,
+que vem de $a \times (-b)$.
+
+</details>
+
+**3. Qual é a diferença entre $(a - b)^2$ e $a^2 - b^2$?**
+
+<details>
+<summary>Resposta</summary>
+
+Em $(a - b)^2$ primeiro subtraímos e depois elevamos ao quadrado, o que dá
+$a^2 - 2ab + b^2$ (com termo do meio). Em $a^2 - b^2$ são dois quadrados prontos
+sendo subtraídos, que fatoram como $(a + b)(a - b)$. Estruturas diferentes,
+resultados diferentes.
+
+</details>
+
+**4. No produto $(a + b)(a - b)$, por que os termos do meio desaparecem?**
+
+<details>
+<summary>Resposta</summary>
+
+A distributiva dá $a^2 - ab + ab - b^2$. Os termos do meio são $-ab$ e $+ab$:
+opostos, somam zero. Compare com o quadrado da soma, onde os dois do meio têm
+o mesmo sinal e por isso se somam em $2ab$; aqui os sinais são opostos e se
+cancelam.
+
+</details>
+
+**5. Por que $(a + b)^3$ tem coeficientes $1, 3, 3, 1$?**
+
+<details>
+<summary>Resposta</summary>
+
+Cada coeficiente conta de quantos jeitos aquele termo aparece ao escolher $a$
+ou $b$ em cada um dos três parênteses. $a^3$: um jeito. $a^2b$: três jeitos (o
+$b$ pode vir de qualquer um dos três parênteses). $ab^2$: três jeitos. $b^3$:
+um jeito. Daí $1, 3, 3, 1$.
+
+</details>
+
+**6. Como você reconhece que $x^3 + 27$ é uma soma de cubos?**
+
+<details>
+<summary>Resposta</summary>
+
+Os dois termos são cubos perfeitos: $x^3 = x^3$ e $27 = 3^3$; e estão sendo
+somados. Então cabe o padrão $a^3 + b^3$ com $a = x$ e $b = 3$, o que dá
+$(x + 3)(x^2 - 3x + 9)$.
+
+</details>
+
+**7. Qual é a diferença entre expandir e fatorar?**
+
+<details>
+<summary>Resposta</summary>
+
+Expandir transforma um produto em soma, tirando os parênteses:
+$(x + 2)^2 \to x^2 + 4x + 4$. Fatorar faz o caminho inverso, transformando uma
+soma ou diferença em produto: $x^2 - 25 \to (x + 5)(x - 5)$. É a mesma
+igualdade lida em direções opostas.
+
+</details>
+
+**8. Por que um matemático pode preferir $(x + 3)^2$ em um problema e
+$x^2 + 6x + 9$ em outro, sendo expressões equivalentes?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque cada forma revela uma informação diferente da mesma quantidade.
+$(x + 3)^2$ mostra a estrutura — uma coisa elevada ao quadrado —, útil para
+reconhecer um quadrado perfeito ou resolver uma equação. $x^2 + 6x + 9$ mostra
+as partes separadas, útil para somar com outra expressão ou ver como o valor
+depende de $x$. A forma boa é a que responde à pergunta em mãos.
+
+</details>
+
+**9. No aumento de uma placa de lado $x$ para $x + h$, que regiões geométricas
+correspondem a $2xh$ e a $h^2$?**
+
+<details>
+<summary>Resposta</summary>
+
+$2xh$ são as duas faixas retangulares acrescentadas nos dois lados do quadrado
+original (cada uma medindo $x$ por $h$). $h^2$ é o quadradinho do canto, onde
+as duas faixas se encontram.
+
+</details>
+
+## 16. Exercícios
+
+### Reconhecimento
+
+Identifique o padrão em cada expressão.
+
+1. $(x + 7)^2$
+2. $x^2 - 49$
+3. $(2x - 5)^2$
+4. $x^3 + 64$
+5. $(x - 1)^3$
+6. $8x^3 - 27$
+7. $x^2 + 12x + 36$
+8. $x^2 + 16$
+
+### Aplicação direta
+
+Expanda ou fatore.
+
+1. $(x + 4)^2$
+2. $(x - 6)^2$
+3. $x^2 - 81$
+4. $(x + 1)^3$
+5. $(x - 2)^3$
+6. $x^3 + 125$
+7. $64x^3 - 1$
+8. $x^2 + 14x + 49$
+9. $x^2 - 20x + 100$
+
+### Variações
+
+1. Expanda: $(3x + 2)^2$
+2. Expanda: $(2x - 5)^3$
+3. Fatore: $25x^2 - 36$
+4. Fatore: $8x^3 + 27$
+5. Fatore: $125x^3 - 64$
+6. Fatore: $4x^2 + 12x + 9$
+
+<details>
+<summary>Dica para os itens 2 e 6</summary>
+
+No item 2, o $a$ do padrão é o termo **inteiro** $2x$, e ele vai ao cubo:
+$(2x)^3 = 8x^3$. No item 6, teste as três condições do quadrado perfeito — quem
+elevado ao quadrado dá $4x^2$? e $9$? o dobro do produto bate com $12x$?
+
+</details>
+
+### Problemas mistos
+
+Estes combinam produtos notáveis com ideias de lições anteriores.
+
+1. Expanda $(x^2 + 3)^2$.
+2. Calcule $(\sqrt{7} + \sqrt{3})(\sqrt{7} - \sqrt{3})$.
+3. Simplifique $\dfrac{x^2 - 49}{x + 7}$, indicando para qual valor de $x$ a
+   expressão original não faz sentido.
+
+<details>
+<summary>Dica para os itens 2 e 3</summary>
+
+No item 2, lembre de [Raízes](./raizes) que $(\sqrt{7})^2 = 7$ — a raiz desfaz o
+quadrado. No item 3, fatore o numerador antes de tentar cortar qualquer coisa:
+em uma fração só é permitido cancelar **fatores**, nunca parcelas de uma soma.
+
+</details>
+
+### Justificação
+
+1. Explique, com suas palavras, por que $(x + 3)^2$ não é igual a $x^2 + 9$.
+2. Mostre, distribuindo, que $(a + b)(a - b) = a^2 - b^2$.
+3. Verifique, multiplicando, que $x^3 + 8 = (x + 2)(x^2 - 2x + 4)$.
+
+### Aplicação prática
+
+1. Calcule $98^2$ escrevendo $98$ como $100 - 2$. Mostre de onde vem cada termo.
+2. Calcule $104 \times 96$ usando a diferença de quadrados e explique por que os
+   termos cruzados se cancelam.
+3. Uma placa quadrada de lado 50 cm recebe um aumento de 0,2 cm em cada lado.
+   Use $(x + h)^2 - x^2$ para calcular o aumento exato da área. Depois compare
+   com a estimativa $2xh$.
+
+## 17. Gabarito comentado
+
+Confira um grupo de cada vez, logo depois de resolvê-lo.
+
+<details>
+<summary>Respostas — Reconhecimento</summary>
+
+1. $(x + 7)^2$: quadrado da soma.
+2. $x^2 - 49$: diferença de quadrados, pois $49 = 7^2$.
+3. $(2x - 5)^2$: quadrado da diferença.
+4. $x^3 + 64$: soma de cubos, pois $64 = 4^3$.
+5. $(x - 1)^3$: cubo da diferença.
+6. $8x^3 - 27$: diferença de cubos, pois $8x^3 = (2x)^3$ e $27 = 3^3$.
+7. $x^2 + 12x + 36$: trinômio quadrado perfeito. As pontas são quadrados
+   ($x^2$ e $6^2$) e o meio é o dobro do produto, $2 \times x \times 6 = 12x$.
+   Fatorado, é $(x + 6)^2$.
+8. $x^2 + 16$: **nenhum padrão** desta página. É uma soma de quadrados, e ela
+   não fatora. Se você respondeu $(x + 4)(x - 4)$, esse produto vale
+   $x^2 - 16$ — a diferença de quadrados exige o sinal de menos.
+
+</details>
+
+<details>
+<summary>Respostas — Aplicação direta</summary>
+
+1. $(x + 4)^2 = x^2 + 8x + 16$
+2. $(x - 6)^2 = x^2 - 12x + 36$
+3. $x^2 - 81 = (x + 9)(x - 9)$
+4. $(x + 1)^3 = x^3 + 3x^2 + 3x + 1$
+5. $(x - 2)^3 = x^3 - 6x^2 + 12x - 8$
+6. $x^3 + 125 = (x + 5)(x^2 - 5x + 25)$
+7. $64x^3 - 1 = (4x - 1)(16x^2 + 4x + 1)$
+8. $x^2 + 14x + 49 = (x + 7)^2$
+9. $x^2 - 20x + 100 = (x - 10)^2$
+
+Nos itens 4 e 5, se a resposta saiu com dois termos ($x^3 + 1$ ou $x^3 - 8$),
+os termos do meio se perderam — são eles que o cubo da soma e o cubo da
+diferença acrescentam. No item 9, o sinal negativo fica dentro do parêntese, no
+$-10$; o último termo, $+100$, é positivo porque $(-10)(-10) = +100$.
+
+</details>
+
+<details>
+<summary>Respostas — Variações</summary>
+
+1. $(3x + 2)^2 = 9x^2 + 12x + 4$. Se você encontrou $9x^2 + 4$, faltou o termo
+   do meio $2ab = 2(3x)(2) = 12x$.
+2. $(2x - 5)^3 = 8x^3 - 60x^2 + 150x - 125$. Confira os sinais alternando:
+   $+, -, +, -$.
+3. $25x^2 - 36 = (5x + 6)(5x - 6)$
+4. $8x^3 + 27 = (2x + 3)(4x^2 - 6x + 9)$
+5. $125x^3 - 64 = (5x - 4)(25x^2 + 20x + 16)$
+6. $4x^2 + 12x + 9 = (2x + 3)^2$. As três condições valem: $4x^2 = (2x)^2$,
+   $9 = 3^2$ e $2 \times 2x \times 3 = 12x$.
+
+Nos itens 4 e 5, o segundo fator **não** é um quadrado perfeito: em
+$4x^2 - 6x + 9$ o termo do meio é $-6x$, e o dobro do produto seria $-12x$. Ele
+é assim de propósito, para cancelar os termos intermediários.
+
+</details>
+
+<details>
+<summary>Respostas — Problemas mistos</summary>
+
+1. $(x^2 + 3)^2 = (x^2)^2 + 2(x^2)(3) + 3^2 = x^4 + 6x^2 + 9$. O $a$ do padrão
+   é o termo inteiro $x^2$, e $(x^2)^2 = x^2 \times x^2 = x^4$.
+2. $(\sqrt{7} + \sqrt{3})(\sqrt{7} - \sqrt{3}) = (\sqrt{7})^2 - (\sqrt{3})^2 =
+   7 - 3 = 4$. Os termos cruzados $-\sqrt{7}\sqrt{3}$ e $+\sqrt{7}\sqrt{3}$ se
+   cancelam, e o que sobra não tem raiz nenhuma — é esse desaparecimento que
+   torna o padrão útil com radicais.
+3. $\dfrac{x^2 - 49}{x + 7} = \dfrac{(x + 7)(x - 7)}{x + 7} = x - 7$. O corte é
+   permitido porque, depois de fatorar, $(x + 7)$ é um **fator** do numerador e
+   do denominador. A expressão original não faz sentido em $x = -7$, pois ali o
+   denominador vale zero. Se você cortou o $x^2$ com o $x$ direto na fração
+   inicial, cancelou uma parcela em vez de um fator: teste com $x = 1$, onde a
+   expressão vale $\frac{-48}{8} = -6$, e de fato $1 - 7 = -6$.
+
+</details>
+
+<details>
+<summary>Respostas — Justificação</summary>
+
+1. $(x + 3)^2 = (x + 3)(x + 3) = x^2 + 3x + 3x + 9 = x^2 + 6x + 9$. Escrever só
+   $x^2 + 9$ joga fora o termo do meio $6x$, que é o dobro do produto
+   $2 \times x \times 3$. Se você encontrou $x^2 + 9$, foi exatamente esse termo
+   que sumiu. Teste com $x = 1$: $(1 + 3)^2 = 16$, mas $1^2 + 9 = 10$; a
+   diferença $6$ é justamente $6x = 6 \times 1$.
+2. $(a + b)(a - b) = a(a - b) + b(a - b) = a^2 - ab + ab - b^2$. Os termos
+   $-ab$ e $+ab$ são opostos e se cancelam, sobrando $a^2 - b^2$.
+3. $(x + 2)(x^2 - 2x + 4) = x(x^2 - 2x + 4) + 2(x^2 - 2x + 4) = x^3 - 2x^2 + 4x
+   + 2x^2 - 4x + 8$. Os termos $-2x^2$ e $+2x^2$ se cancelam, e $+4x$ e $-4x$
+   também, sobrando $x^3 + 8$.
+
+</details>
+
+<details>
+<summary>Respostas — Aplicação prática</summary>
+
+1. $98^2 = (100 - 2)^2 = 100^2 - 2 \times 100 \times 2 + 2^2 = 10\,000 - 400 + 4
+   = 9\,604$. O $100^2$ é o quadrado grande, $-2 \times 100 \times 2 = -400$ são
+   as duas faixas retiradas, e $+2^2 = 4$ é o canto que, tirado duas vezes,
+   volta uma.
+2. $104 \times 96 = (100 + 4)(100 - 4) = 100^2 - 4^2 = 10\,000 - 16 = 9\,984$.
+   Os termos cruzados são $-4 \times 100 = -400$ e $+4 \times 100 = +400$:
+   opostos, somam zero. É por eles se cancelarem que sobra só
+   $100^2 - 4^2$.
+3. Com $x = 50$ e $h = 0{,}2$: $(x + h)^2 - x^2 = 2xh + h^2 = 2(50)(0{,}2) +
+   (0{,}2)^2 = 20 + 0{,}04 = 20{,}04\text{ cm}^2$. A estimativa $2xh = 20\text{
+   cm}^2$ erra por apenas $h^2 = 0{,}04\text{ cm}^2$ — o quadradinho do canto,
+   pequeno porque $h$ é pequeno.
+
+</details>
+
+## 18. Revisão curta
+
+Produtos notáveis são padrões de multiplicação e fatoração. Eles funcionam
+porque seguem a distributiva — nenhum é uma regra à parte.
+
+Eles aparecem no trabalho matemático como mudanças de representação. A forma
+compacta pode revelar a estrutura; a forma expandida pode revelar as partes,
+os cancelamentos ou a maneira como uma quantidade varia. O valor não muda
+durante essa passagem.
+
+O fio condutor é este:
+
+- no quadrado da soma, as partes cruzadas se somam (o $2ab$, dois termos
+  semelhantes se juntando);
+- no quadrado da diferença, as partes cruzadas ficam negativas;
+- na diferença de quadrados, as partes cruzadas se cancelam — e é o sinal de
+  menos que faz isso, por isso a **soma** de quadrados não fatora;
+- lido ao contrário, o quadrado da soma vira o reconhecimento do trinômio
+  quadrado perfeito, em que o termo do meio precisa ser o dobro do produto;
+- nos cubos, as misturas aparecem mais vezes;
+- na soma e na diferença de cubos, fatoramos escolhendo um segundo fator que
+  cancela os termos intermediários.
+
+A pergunta principal não deve ser "qual fórmula decorei?". A pergunta deve ser:
+
+> Que estrutura está aparecendo nesta expressão?
+
+Quando você reconhece a estrutura, a fórmula vira apenas uma forma curta de
+registrar o raciocínio.
