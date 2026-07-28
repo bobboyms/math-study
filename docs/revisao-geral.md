@@ -17,7 +17,9 @@ operacoes
   -> raizes
   -> expoentes fracionarios
   -> expressoes
-  -> equacoes
+  -> produtos notaveis e fatoracao
+  -> equacoes do 1o grau
+  -> equacoes do 2o grau
   -> funcoes
 ```
 
@@ -33,6 +35,12 @@ linguagem simbolica. Equacoes permitem descobrir valores desconhecidos. Funcoes
 descrevem relacoes completas entre grandezas variaveis.
 
 ## Exercicios de dominio
+
+Os exercícios abaixo vão até as equações do 1º grau. As equações do 2º grau têm
+listas próprias nas páginas do capítulo 4:
+[resolver por fatoração](./equacoes/equacoes-do-segundo-grau),
+[completar o quadrado](./equacoes/completar-o-quadrado) e
+[a fórmula de Bhaskara](./equacoes/formula-de-bhaskara).
 
 Faca poucos exercicios, mas justifique cada resposta. O objetivo nao e apenas
 calcular: e explicar por que o procedimento faz sentido.

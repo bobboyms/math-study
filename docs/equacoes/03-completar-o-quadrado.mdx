@@ -1,0 +1,942 @@
+---
+title: Completar o quadrado
+---
+
+import AreaModel from '@site/src/components/AreaModel';
+import FunctionMachine from '@site/src/components/FunctionMachine';
+
+# Completar o quadrado: fabricar o pedaço que falta
+
+## Problema motivador: a horta comprida
+
+Você tem uma faixa de terra junto ao muro e quer fazer ali uma horta
+retangular. Duas coisas estão decididas: a área precisa ser de 8 m², que é o
+suficiente para o que você planeja plantar, e o comprimento precisa ter 4 metros
+a mais do que a largura, por causa do formato da faixa.
+
+Quais são as medidas?
+
+Chamando a largura de $x$, o comprimento é $x + 4$, e a área é o produto dos
+lados:
+
+$$
+x(x + 4) = 8
+$$
+
+<AreaModel
+  rows={[{size: 4, label: 'x'}]}
+  cols={[{size: 4, label: 'x'}, {size: 3, label: '4'}]}
+  cells={[['x^2', '4x']]}
+  unit={36}
+  baseLabel="x + 4"
+  caption="A área total é x² + 4x, e o problema diz que ela vale 8."
+/>
+
+Abrindo o produto e passando tudo para um lado:
+
+$$
+x^2 + 4x - 8 = 0
+$$
+
+A página anterior deu o caminho: com zero de um lado, é só fatorar. Procuramos
+dois números inteiros de produto $-8$ e soma $4$. Como o produto é negativo, os
+sinais são diferentes, e a lista de pares é curta:
+
+| par | produto | soma |
+| --- | --- | --- |
+| $1$ e $-8$ | $-8$ | $-7$ |
+| $-1$ e $8$ | $-8$ | $7$ |
+| $2$ e $-4$ | $-8$ | $-2$ |
+| $-2$ e $4$ | $-8$ | $2$ |
+
+Nenhum par soma 4. A fatoração com inteiros não existe.
+
+E agora repare no incômodo: **a horta existe**. A faixa de terra está lá, as
+medidas que dão 8 m² com 4 metros de diferença existem e podem ser marcadas no
+chão com uma trena. O que não existe é a fatoração inteira — que é uma
+propriedade dos números 4 e $-8$, não do problema.
+
+Foi exatamente essa a dívida deixada na página anterior, quando
+$x^2 + 3x + 1 = 0$ resistiu à fatoração: as raízes existiam, mas o método não as
+alcançava. Esta página paga essa dívida.
+
+> A pergunta central: como resolver uma equação do 2º grau **sem depender** de a
+> fatoração com números inteiros existir?
+
+## Mapa das ideias
+
+- **completar o quadrado** — somar a uma expressão o número exato que falta para
+  ela virar um quadrado perfeito;
+- **trinômio quadrado perfeito** — soma de três termos que é exatamente o
+  quadrado de alguma coisa, como $x^2 + 4x + 4 = (x+2)^2$;
+- **forma reduzida** — a equação reescrita como $(x + p)^2 = q$, com um único
+  $x$ à vista;
+- **extração de raiz com $\pm$** — o passo que desfaz o quadrado e devolve duas
+  equações do 1º grau;
+- **solução exata e solução aproximada** — $2\sqrt{3} - 2$ é o valor exato;
+  $1{,}46$ é uma aproximação dele.
+
+## Para que isso serve?
+
+O motivo mais imediato é o da abertura: **medidas reais quase nunca dão números
+inteiros**. Um problema de área, de tempo de frenagem ou de ponto de equilíbrio
+não tem obrigação nenhuma de fatorar bonito, e um método que só funciona quando
+os números colaboram não serve para o mundo.
+
+Além disso:
+
+- é a única técnica desta parte do curso que resolve **toda** equação do 2º
+  grau, sem exceção;
+- é a dedução da [fórmula de Bhaskara](./formula-de-bhaskara), da próxima
+  página. Quem entende esta página não precisa decorar aquela fórmula;
+- reaparece em [funções](../funcoes/funcao-quadratica): escrever uma expressão
+  como $(x + p)^2 + k$ é o que revela o **vértice** da parábola, isto é, o ponto
+  de lucro máximo ou de custo mínimo.
+
+## Ideias anteriores que voltam aqui
+
+Esta página é quase inteiramente feita de peças já estudadas. Vale nomear cada
+uma antes de usá-la.
+
+Dos [produtos notáveis](../algebra/produtos-notaveis), o **quadrado da soma**:
+
+$$
+(x + p)^2 = x^2 + 2px + p^2
+$$
+
+Esta é a peça central. Repare no termo do meio: ele é o **dobro** de $p$. A
+página inteira sai dessa observação.
+
+Ainda dos produtos notáveis, o **trinômio quadrado perfeito** — a leitura da
+mesma fórmula de trás para frente, que permite reconhecer $x^2 + 10x + 25$ como
+$(x+5)^2$.
+
+De [raízes](../numeros-e-operacoes/raizes), a distinção que decide o passo mais
+delicado desta página: $\sqrt{25}$ vale 5, mas a **equação** $x^2 = 25$ tem duas
+soluções, $5$ e $-5$. Também volta a simplificação $\sqrt{50} = 5\sqrt{2}$.
+
+De [equações do 1º grau](./equacoes-do-primeiro-grau), a balança: a mesma
+operação aplicada aos dois membros preserva a igualdade.
+
+E de [equações do 2º grau](./equacoes-do-segundo-grau), a fatoração — que
+continua valendo. Este método **não substitui** aquele: quando a fatoração
+existe, ela é mais rápida.
+
+Antes de continuar, responda mentalmente:
+
+1. Expanda $(x + 5)^2$.
+2. $x^2 + 14x + 49$ é o quadrado de quê?
+3. Quais são os valores de $x$ que satisfazem $x^2 = 9$?
+
+As respostas são $x^2 + 10x + 25$; $(x + 7)^2$; e $3$ e $-3$ — os dois. Se
+alguma escapou, vale reler a página correspondente antes de seguir, porque as
+três aparecem em cada exemplo daqui para a frente.
+
+## Intuição: o problema é o $x$ aparecer duas vezes
+
+Volte ao motivo pelo qual isolar o $x$ falhou. Em $8 + 3x = 23$, o $x$ passou
+por uma sequência de operações e podia ser desfeito na ordem inversa:
+
+<FunctionMachine
+  input="x"
+  steps={[
+    {op: '\\times 3', value: '3x'},
+    {op: '+\\,8', value: '8 + 3x'},
+  ]}
+  back="\text{dividir por 3, depois tirar 8}"
+  caption="Um único caminho de ida, um único caminho de volta."
+/>
+
+Em $x^2 + 4x = 8$ não há caminho único: o $x$ aparece duas vezes, em graus
+diferentes, e desfazer uma das ocorrências deixa a outra intacta.
+
+Agora olhe para esta equação:
+
+$$
+(x + 2)^2 = 12
+$$
+
+Ela também é do 2º grau — abrindo o parêntese aparecem $x^2$ e $4x$. Mas do
+jeito que está **escrita**, o $x$ aparece uma vez só, e o caminho de ida volta a
+ser uma sequência:
+
+<FunctionMachine
+  input="x"
+  steps={[
+    {op: '+\\,2', value: 'x + 2'},
+    {op: '\\text{ao quadrado}', value: '(x+2)^2'},
+  ]}
+  back="\text{extrair a raiz, depois tirar 2}"
+  caption="Com um único x escrito, a máquina volta a ter volta: a raiz desfaz o quadrado, e a subtração desfaz a soma."
+/>
+
+Aí está a ideia inteira desta página. Não vamos inventar um método novo para
+$x^2 + 4x = 8$: vamos **reescrever** essa equação na forma $(x + p)^2 = q$, onde
+o método antigo funciona.
+
+O nome do procedimento é literal. O lado esquerdo é um quadrado ao qual falta um
+pedaço, e nós vamos fabricar esse pedaço.
+
+## Modelo visual: o quadrado a que falta um canto
+
+Pense em $x^2 + 4x$ como área. O $x^2$ é um quadrado de lado $x$. O $4x$ é um
+retângulo de lados $4$ e $x$.
+
+Se colarmos o retângulo inteiro de um lado só, o resultado é o retângulo $x$ por
+$x+4$ do começo da página — que é a horta, e não ajuda em nada, porque continua
+não sendo um quadrado.
+
+A ideia é outra: **partir o retângulo ao meio**, em duas faixas de área $2x$
+cada, e colar uma faixa em cada lado do quadrado.
+
+<AreaModel
+  rows={[{size: 5, label: 'x'}, {size: 2, label: '2'}]}
+  cols={[{size: 5, label: 'x'}, {size: 2, label: '2'}]}
+  cells={[
+    ['x^2', '2x'],
+    ['2x', null],
+  ]}
+  unit={38}
+  baseLabel="x + 2"
+  caption="As duas faixas 2x têm a mesma cor porque são as duas metades do mesmo 4x. Sobra um buraco quadrado no canto."
+/>
+
+A figura quase é um quadrado de lado $x + 2$ — falta o canto. E o canto tem
+tamanho conhecido: seus dois lados medem 2, porque 2 é a largura das faixas, que
+por sua vez é a **metade** de 4. Sua área é $2^2 = 4$.
+
+Preenchendo o buraco:
+
+<AreaModel
+  rows={[{size: 5, label: 'x'}, {size: 2, label: '2'}]}
+  cols={[{size: 5, label: 'x'}, {size: 2, label: '2'}]}
+  cells={[
+    ['x^2', '2x'],
+    ['2x', {math: '2^2 = 4', tone: 3}],
+  ]}
+  unit={38}
+  baseLabel="x + 2"
+  caption="Com o canto no lugar, a figura é um quadrado inteiro de lado x + 2 — e sua área é (x + 2)²."
+/>
+
+Lendo a figura completa de duas maneiras — somando as quatro partes, ou tomando
+o lado ao quadrado:
+
+$$
+x^2 + 4x + 4 = (x + 2)^2
+$$
+
+Note que o número que completou o quadrado não foi escolhido por tentativa: ele
+é o **quadrado da metade** do coeficiente de $x$. A metade de 4 é 2, e
+$2^2 = 4$.
+
+## Ponte para a formalização: por que a metade
+
+Vale insistir neste ponto, porque é o único lugar onde o método pode parecer
+arbitrário. Por que a metade de $b$, e não o próprio $b$?
+
+A resposta está na fórmula do quadrado da soma, sem nenhum passo escondido:
+
+$$
+(x + p)^2 = x^2 + \underbrace{2p}_{\text{o dobro de } p}\,x + p^2
+$$
+
+Queremos que esse desenvolvimento tenha o mesmo termo do meio da nossa equação,
+que é $bx$. Comparando os dois:
+
+$$
+2p = b \;\longrightarrow\; p = \frac{b}{2}
+$$
+
+E o termo que fecha o quadrado é $p^2$, ou seja:
+
+$$
+p^2 = \left(\frac{b}{2}\right)^2
+$$
+
+É a mesma coisa que o desenho diz: cortar $bx$ em duas faixas iguais dá faixas
+de largura $\frac{b}{2}$, e o canto que falta é um quadrado de lado
+$\frac{b}{2}$.
+
+**Contraexemplo, para fixar.** Somar $b^2$ em vez de
+$\left(\frac{b}{2}\right)^2$ não completa quadrado nenhum. Em $x^2 + 4x$, somar
+$4^2 = 16$ dá $x^2 + 4x + 16$, que **não** é $(x+4)^2$ — porque
+$(x+4)^2 = x^2 + 8x + 16$, com o termo do meio errado. Teste com $x = 1$:
+$1 + 4 + 16 = 21$, enquanto $(1+4)^2 = 25$.
+
+Falta uma última justificativa, e ela é a balança. Somar 4 ao lado esquerdo
+mudaria a equação; somar 4 **aos dois lados** não muda:
+
+$$
+x^2 + 4x = 8 \;\longrightarrow\; x^2 + 4x + 4 = 8 + 4
+$$
+
+O que **muda** é a escrita: o lado esquerdo vira um quadrado fechado. O que
+**permanece** é a solução: qualquer $x$ que equilibre a primeira linha equilibra
+a segunda, porque os dois pratos ganharam a mesma quantidade.
+
+## Formalização
+
+### O procedimento
+
+Para uma equação com o coeficiente de $x^2$ igual a 1:
+
+1. deixe os termos com $x$ de um lado e o número puro do outro;
+2. some $\left(\frac{b}{2}\right)^2$ **aos dois lados**;
+3. reescreva o lado esquerdo como $\left(x + \frac{b}{2}\right)^2$;
+4. extraia a raiz quadrada dos dois lados, escrevendo $\pm$ do lado do número;
+5. isole o $x$ — sobram duas equações do 1º grau.
+
+O passo 3 não é uma conta: é reconhecer o trinômio quadrado perfeito que o passo
+2 fabricou. E o passo 5 devolve o problema à página das equações do 1º grau — de
+novo, um problema novo convertido num problema antigo.
+
+### O passo do mais-ou-menos, com cuidado
+
+Este é o passo em que mais se perde raiz, então ele merece parágrafo próprio.
+
+De $(x + 2)^2 = 12$, a pergunta é: que número, elevado ao quadrado, dá 12? Há
+dois, porque o quadrado de um negativo também é positivo:
+
+$$
+\left(\sqrt{12}\right)^2 = 12 \qquad\text{e}\qquad \left(-\sqrt{12}\right)^2 = 12
+$$
+
+Então:
+
+$$
+x + 2 = \pm\sqrt{12}
+$$
+
+Cuidado com a leitura: isso **não** quer dizer que $\sqrt{12}$ tenha dois
+valores. Como a página de [raízes](../numeros-e-operacoes/raizes) estabeleceu,
+$\sqrt{12}$ é um número só, positivo, aproximadamente $3{,}46$. O $\pm$ não é
+uma propriedade do símbolo de raiz — é o registro de que a **equação** admite
+duas soluções, e escrevê-lo é o que impede de perder uma delas.
+
+### Quando o coeficiente de $x^2$ não é 1
+
+Todo o raciocínio acima supõe que o primeiro termo seja $x^2$ sozinho — é isso
+que faz dele o quadrado de lado $x$ no desenho. Com $ax^2$, o primeiro passo é
+dividir a equação inteira por $a$:
+
+$$
+2x^2 - 8x + 2 = 0 \;\longrightarrow\; x^2 - 4x + 1 = 0
+$$
+
+Dividir os dois lados pelo mesmo número não muda as soluções — é a balança de
+novo — e a divisão é sempre possível, porque a definição de equação do 2º grau
+exige $a \neq 0$.
+
+**Todos** os termos precisam ser divididos, não só o primeiro. Dividir apenas o
+$2x^2$ produziria outra equação, com outras raízes.
+
+### Voltando à horta
+
+A equação era $x^2 + 4x = 8$. A metade de 4 é 2, e $2^2 = 4$, então somamos 4
+aos dois lados:
+
+$$
+x^2 + 4x + 4 = 8 + 4
+$$
+
+O lado esquerdo é o quadrado perfeito do desenho, e o direito é uma soma comum:
+
+$$
+(x + 2)^2 = 12
+$$
+
+Extraindo a raiz dos dois lados, com o $\pm$:
+
+$$
+x + 2 = \pm\sqrt{12}
+$$
+
+Antes de continuar, simplificamos o radical como na página de raízes, já que
+$12 = 4 \times 3$ e 4 é quadrado perfeito:
+
+$$
+\sqrt{12} = \sqrt{4 \times 3} = 2\sqrt{3}
+$$
+
+Tirando 2 dos dois lados:
+
+$$
+x = -2 \pm 2\sqrt{3}
+$$
+
+São as duas raízes:
+
+$$
+x_1 = 2\sqrt{3} - 2 \approx 1{,}46
+\qquad
+x_2 = -2\sqrt{3} - 2 \approx -5{,}46
+$$
+
+A segunda é uma solução legítima da equação, mas não da pergunta: largura de
+horta não é negativa. O contexto descarta $x_2$ — descartar é interpretar o
+resultado, não corrigi-lo.
+
+Então a largura é $2\sqrt{3} - 2$ e o comprimento é $x + 4 = 2\sqrt{3} + 2$.
+
+### A conferência sai exata
+
+Aqui acontece uma coisa bonita. Poderíamos conferir com os valores aproximados,
+$1{,}46 \times 5{,}46 \approx 7{,}97$ — o que já sugere que está certo, mas
+deixa a dúvida do arredondamento. Só que os dois lados formam exatamente a
+**diferença de quadrados** dos produtos notáveis:
+
+$$
+(2\sqrt{3} - 2)(2\sqrt{3} + 2) = (2\sqrt{3})^2 - 2^2 = 12 - 4 = 8
+$$
+
+Área de 8 m², sem nenhum arredondamento. ✓
+
+Guarde as duas escritas e a diferença entre elas: $2\sqrt{3} - 2$ é o valor
+**exato**, e é com ele que se continua qualquer conta; $1{,}46$ é uma
+**aproximação**, e é com ela que se marca a terra com a trena.
+
+**A horta mede aproximadamente 1,46 m por 5,46 m** — e nenhuma fatoração com
+inteiros chegaria lá.
+
+## Quantas soluções? O número sob a raiz decide
+
+Depois do passo 3, toda equação chega à mesma forma:
+
+$$
+(x + p)^2 = q
+$$
+
+E daí o número de soluções fica decidido pelo sinal de $q$, sem precisar
+terminar a conta:
+
+| $q$ | quantas soluções reais | por quê |
+| --- | --- | --- |
+| $q > 0$ | duas | há dois números cujo quadrado é $q$: $\sqrt{q}$ e $-\sqrt{q}$ |
+| $q = 0$ | uma | só o zero tem quadrado zero, então $x = -p$ |
+| $q < 0$ | nenhuma | nenhum número real elevado ao quadrado dá negativo |
+
+Três exemplos com o mesmo lado esquerdo tornam isso concreto:
+
+- $(x-3)^2 = 25$ dá $x - 3 = \pm 5$, ou seja, $8$ e $-2$;
+- $(x-3)^2 = 0$ dá $x - 3 = 0$, só $x = 3$;
+- $(x-3)^2 = -25$ não tem solução real, porque um quadrado nunca é negativo.
+
+Esse $q$ é a semente do **discriminante** da próxima página. Guarde a ideia: o
+número que sobra do lado direito, sozinho, já responde quantas raízes existem.
+
+## Exemplos resolvidos
+
+### Exemplo 1: conferindo o método novo contra o antigo
+
+Resolva $x^2 + 6x = 7$.
+
+A metade de 6 é 3, e $3^2 = 9$. Somando 9 aos dois lados:
+
+$$
+x^2 + 6x + 9 = 7 + 9 \;\longrightarrow\; (x + 3)^2 = 16
+$$
+
+$$
+x + 3 = \pm 4 \;\longrightarrow\; x = 1 \text{ ou } x = -7
+$$
+
+Esta equação também fatora: $x^2 + 6x - 7 = (x + 7)(x - 1)$, com raízes $-7$ e
+$1$. **As mesmas.** É importante ver isso pelo menos uma vez: o método novo não
+compete com o antigo nem o contradiz — ele funciona também onde o antigo
+funciona, e continua funcionando onde o antigo para.
+
+### Exemplo 2: a dívida da página anterior
+
+Resolva $x^2 + 3x + 1 = 0$. **Pause e tente antes de ler.**
+
+Esta é a equação que a página anterior não conseguiu fatorar. Passando o 1 para
+o outro lado:
+
+$$
+x^2 + 3x = -1
+$$
+
+A metade de 3 é $\frac{3}{2}$ — sim, uma fração, e não há problema nenhum nisso.
+Seu quadrado é $\frac{9}{4}$. Somando aos dois lados:
+
+$$
+x^2 + 3x + \frac{9}{4} = -1 + \frac{9}{4} = \frac{5}{4}
+$$
+
+$$
+\left(x + \frac{3}{2}\right)^2 = \frac{5}{4}
+$$
+
+Extraindo a raiz, e lembrando que a raiz de uma fração é a raiz de cima sobre a
+raiz de baixo, com $\sqrt{4} = 2$:
+
+$$
+x + \frac{3}{2} = \pm\frac{\sqrt{5}}{2}
+$$
+
+$$
+x = \frac{-3 \pm \sqrt{5}}{2}
+$$
+
+Numericamente, $\sqrt{5} \approx 2{,}236$, então as raízes são aproximadamente
+$-0{,}38$ e $-2{,}62$.
+
+Conferindo a primeira de forma exata, com $x = \frac{-3 + \sqrt{5}}{2}$:
+
+$$
+x^2 = \frac{9 - 6\sqrt{5} + 5}{4} = \frac{14 - 6\sqrt{5}}{4} = \frac{7 - 3\sqrt{5}}{2}
+$$
+
+$$
+3x = \frac{-9 + 3\sqrt{5}}{2}
+$$
+
+$$
+x^2 + 3x + 1 = \frac{7 - 3\sqrt{5} - 9 + 3\sqrt{5}}{2} + 1 = \frac{-2}{2} + 1 = 0 \quad \checkmark
+$$
+
+Os termos com $\sqrt{5}$ se cancelam — é assim que se confere uma raiz
+irracional sem calculadora. E a dívida está paga: a página anterior estava certa
+ao dizer que as raízes existiam.
+
+### Exemplo 3: coeficiente do meio negativo
+
+Resolva $x^2 - 10x + 18 = 0$. **Pause e tente.**
+
+$$
+x^2 - 10x = -18
+$$
+
+Aqui $b = -10$, então a metade é $-5$, e o quadrado é $(-5)^2 = 25$ — positivo,
+como todo quadrado. Somando 25 aos dois lados:
+
+$$
+x^2 - 10x + 25 = -18 + 25 = 7
+$$
+
+O trinômio é o quadrado da **diferença**, porque $p$ é negativo:
+
+$$
+(x - 5)^2 = 7
+$$
+
+$$
+x - 5 = \pm\sqrt{7} \;\longrightarrow\; x = 5 \pm \sqrt{7}
+$$
+
+Com $\sqrt{7} \approx 2{,}646$: as raízes são aproximadamente $7{,}65$ e
+$2{,}35$. Conferindo a primeira exatamente:
+
+$$
+(5 + \sqrt{7})^2 - 10(5 + \sqrt{7}) + 18 = 25 + 10\sqrt{7} + 7 - 50 - 10\sqrt{7} + 18 = 0 \quad \checkmark
+$$
+
+### Exemplo 4: coeficiente de $x^2$ diferente de 1
+
+Resolva $2x^2 - 8x + 2 = 0$. **Pause e tente.**
+
+O primeiro termo não é $x^2$ sozinho, então dividimos a equação **inteira** por
+2 — os três termos:
+
+$$
+x^2 - 4x + 1 = 0
+$$
+
+$$
+x^2 - 4x = -1
+$$
+
+Metade de $-4$ é $-2$; seu quadrado é 4:
+
+$$
+x^2 - 4x + 4 = -1 + 4 = 3 \;\longrightarrow\; (x - 2)^2 = 3
+$$
+
+$$
+x = 2 \pm \sqrt{3}
+$$
+
+Aproximadamente $3{,}73$ e $0{,}27$. Conferindo na equação **original**, com
+$x = 2 + \sqrt{3}$:
+
+$$
+2(2 + \sqrt{3})^2 = 2(4 + 4\sqrt{3} + 3) = 14 + 8\sqrt{3}
+$$
+
+$$
+14 + 8\sqrt{3} - 8(2 + \sqrt{3}) + 2 = 14 + 8\sqrt{3} - 16 - 8\sqrt{3} + 2 = 0 \quad \checkmark
+$$
+
+### Exemplo 5: quando não há solução real
+
+Resolva $x^2 + 2x + 5 = 0$.
+
+$$
+x^2 + 2x = -5
+$$
+
+Metade de 2 é 1, e $1^2 = 1$:
+
+$$
+x^2 + 2x + 1 = -5 + 1 = -4 \;\longrightarrow\; (x + 1)^2 = -4
+$$
+
+Nenhum número real elevado ao quadrado dá $-4$. A equação **não tem solução
+real**, e isso é uma resposta completa — diferente do "não fatora com inteiros"
+da página anterior, que era uma limitação do método. Aqui não há limitação: o
+método chegou até o fim e mostrou que não existe raiz real.
+
+Em [funções](../funcoes/funcao-quadratica) isso vai ganhar uma imagem: a
+parábola correspondente flutua inteiramente acima do eixo horizontal, sem nunca
+tocá-lo.
+
+## Erros comuns
+
+### Somar o número só de um lado
+
+Este apaga a igualdade. Em $x^2 + 4x = 8$, somar 4 apenas à esquerda produz
+$(x+2)^2 = 8$, cujas raízes são $-2 \pm 2\sqrt{2}$, ou aproximadamente $0{,}83$
+e $-4{,}83$. Testando $0{,}83$ na equação original: $0{,}69 + 3{,}31 = 4$, e não
+8. Está errado, e o erro é de balança, não de álgebra.
+
+### Usar o quadrado de $b$ em vez do quadrado da metade
+
+Em $x^2 + 6x$, somar 36 dá $x^2 + 6x + 36$, que não é quadrado de nada: o
+quadrado de $x + 6$ é $x^2 + 12x + 36$, com o dobro do termo do meio. O número
+certo é $3^2 = 9$. A regra sai da fórmula, não do hábito: o termo do meio é
+$2p$, logo $p$ é a **metade**.
+
+### Esquecer o mais-ou-menos
+
+De $(x+2)^2 = 12$, escrever apenas $x + 2 = \sqrt{12}$ entrega uma raiz e perde
+a outra — exatamente o mesmo erro de responder só $7$ para $x^2 = 49$. Toda
+extração de raiz numa equação abre **duas** possibilidades.
+
+### Errar o sinal de $p$ quando $b$ é negativo
+
+Em $x^2 - 10x + 25$, o quadrado é $(x - 5)^2$, não $(x + 5)^2$. O sinal de $p$
+acompanha o sinal de $b$, porque $p = \frac{b}{2}$. Confira sempre expandindo de
+volta: $(x+5)^2 = x^2 + 10x + 25$, com o sinal do meio trocado.
+
+### Dividir só o primeiro termo por $a$
+
+Em $2x^2 - 8x + 2 = 0$, escrever $x^2 - 8x + 2 = 0$ é trocar a equação por
+outra. Dividir os dois lados por 2 significa dividir **cada termo**:
+$x^2 - 4x + 1 = 0$.
+
+### Confundir valor exato com valor arredondado
+
+$x = 2\sqrt{3} - 2$ é a resposta; $1{,}46$ é uma aproximação dela. Se o
+resultado ainda vai entrar em outra conta, use a forma exata — arredondamentos
+se acumulam. A aproximação é para o mundo físico, onde ninguém corta madeira em
+$2\sqrt{3}$ metros.
+
+## Perguntas de verificação
+
+Responda com suas palavras antes de abrir cada resposta.
+
+**1. Por que o número que completa o quadrado é $\left(\frac{b}{2}\right)^2$, e
+não $b^2$?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque no desenvolvimento $(x + p)^2 = x^2 + 2px + p^2$ o termo do meio é
+$2p$ — o **dobro** de $p$, não $p$. Para que esse termo do meio seja o nosso
+$bx$, é preciso $2p = b$, ou seja $p = \frac{b}{2}$; e o termo que fecha o
+quadrado é $p^2 = \left(\frac{b}{2}\right)^2$. No desenho é a mesma coisa: o
+retângulo $bx$ é cortado em duas faixas iguais para caber uma de cada lado do
+quadrado, e cada faixa tem largura $\frac{b}{2}$, então o canto que falta é um
+quadrado de lado $\frac{b}{2}$.
+
+</details>
+
+**2. Por que somar esse número não muda as soluções da equação?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque ele é somado **aos dois lados**. É a regra da balança: os dois pratos
+ganham a mesma quantidade, então continuam equilibrados exatamente para os
+mesmos valores de $x$. O que muda é a escrita — o lado esquerdo passa a ser um
+quadrado fechado, que é a forma em que sabemos trabalhar. Somar de um lado só
+produziria outra equação, com outras raízes.
+
+</details>
+
+**3. Por que aparece $\pm$ na extração da raiz, se $\sqrt{q}$ devolve apenas o
+valor não negativo?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque são duas perguntas diferentes. $\sqrt{12}$ é um símbolo que designa
+**um** número, positivo. Já $(x+2)^2 = 12$ pergunta quais números, elevados ao
+quadrado, dão 12 — e há dois, $\sqrt{12}$ e $-\sqrt{12}$, porque o quadrado de
+um negativo é positivo. O $\pm$ não é uma propriedade do símbolo de raiz; é o
+registro de que a equação tem duas soluções.
+
+</details>
+
+**4. Por que este método funciona sempre, enquanto a fatoração da página
+anterior só funciona às vezes?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque a fatoração com inteiros depende de **encontrar** dois números inteiros
+com soma e produto dados, e esses números podem simplesmente não existir — como
+em $x^2 + 4x - 8 = 0$. Já completar o quadrado não procura nada: o número que se
+soma é calculado direto de $b$, pela fórmula $\left(\frac{b}{2}\right)^2$, e
+sempre existe. O método não depende de os coeficientes colaborarem.
+
+</details>
+
+**5. Em $(x + p)^2 = q$, o que decide o número de soluções? Por que $q$ negativo
+não dá solução real?**
+
+<details>
+<summary>Resposta</summary>
+
+O sinal de $q$. Se $q > 0$, há dois números cujo quadrado é $q$, e portanto duas
+soluções; se $q = 0$, só o zero tem quadrado zero, e sobra uma solução,
+$x = -p$; se $q < 0$, não há solução real, porque o quadrado de um número real é
+sempre positivo ou zero — o quadrado de um positivo é positivo, o de um negativo
+também, e o de zero é zero. Nada sobra para produzir um resultado negativo.
+
+</details>
+
+**6. Por que, quando o coeficiente de $x^2$ não é 1, é preciso dividir a equação
+inteira por $a$ antes de completar o quadrado?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque todo o método se apoia em ler $x^2$ como o quadrado de lado $x$ — e a
+fórmula $(x+p)^2 = x^2 + 2px + p^2$ começa com $x^2$ sozinho, sem coeficiente.
+Com $2x^2$ na frente, a comparação com essa fórmula não vale, e a conta da
+metade não se aplica. Dividir por $a$ é legítimo porque é a mesma operação nos
+dois membros, e é sempre possível porque a definição de equação do 2º grau exige
+$a \neq 0$. O cuidado é dividir **todos** os termos.
+
+</details>
+
+## Exercícios
+
+### 1. Reconhecimento
+
+1. Que número completa o quadrado em cada caso?
+   a) $x^2 + 8x + \underline{\phantom{00}}$
+   b) $x^2 - 6x + \underline{\phantom{00}}$
+   c) $x^2 + 5x + \underline{\phantom{00}}$
+   d) $x^2 - x + \underline{\phantom{00}}$
+
+2. Escreva cada trinômio como um quadrado:
+   a) $x^2 + 12x + 36$
+   b) $x^2 - 14x + 49$
+   c) $x^2 + x + \frac{1}{4}$
+
+3. Sem resolver, diga quantas soluções reais cada equação tem:
+   a) $(x - 3)^2 = 25$
+   b) $(x + 1)^2 = 0$
+   c) $(x - 2)^2 = -9$
+
+### 2. Explicação
+
+4. Explique, usando o desenho do quadrado, por que o número somado é o quadrado
+   da **metade** do coeficiente de $x$.
+
+5. Por que somar $\left(\frac{b}{2}\right)^2$ aos dois lados não altera as
+   soluções, enquanto somar só de um lado altera?
+
+6. Qual é a diferença entre $\sqrt{16}$ e as soluções de $x^2 = 16$? Por que
+   essa diferença importa no passo 4 do procedimento?
+
+### 3. Aplicação direta
+
+7. Resolva completando o quadrado:
+   a) $x^2 + 6x = 16$
+   b) $x^2 - 8x + 12 = 0$
+   c) $x^2 + 2x - 5 = 0$
+
+8. Resolva, deixando a resposta na forma exata e depois aproximada:
+   a) $x^2 - 4x - 3 = 0$
+   b) $x^2 + 10x + 13 = 0$
+
+### 4. Variação
+
+9. Resolva $x^2 + 5x + 3 = 0$. O coeficiente do meio é ímpar — não fuja da
+   fração.
+
+10. Resolva $3x^2 - 6x - 9 = 0$.
+
+11. Resolva $2x^2 + 4x - 3 = 0$.
+
+12. Resolva $x^2 - 6x + 11 = 0$ e interprete o resultado.
+
+<details>
+<summary>Dica para o exercício 11</summary>
+
+Depois de dividir tudo por 2, o termo sem letra vira uma fração. Isso não
+atrapalha nada: passe-o para o outro lado e some $\left(\frac{b}{2}\right)^2$
+normalmente. Ao final, use $\sqrt{\frac{5}{2}} = \frac{\sqrt{10}}{2}$ para
+deixar a resposta arrumada.
+
+</details>
+
+### 5. Problema misto
+
+13. Um canteiro retangular deve ter 6 metros a mais de comprimento do que de
+    largura e área de 15 m². Monte a equação, resolva completando o quadrado,
+    diga qual raiz o contexto descarta e **confira a resposta de forma exata**,
+    sem arredondar.
+
+14. O lucro mensal de uma banca, em reais, é $L = -x^2 + 20x - 91$, onde $x$ é o
+    número de unidades vendidas. Para quantas unidades o lucro é zero?
+
+15. Mostre, sem calculadora, que $(\sqrt{12} - 2)(\sqrt{12} + 2) = 8$. Que
+    produto notável você usou?
+
+### 6. Justificativa
+
+16. Por que completar o quadrado resolve **toda** equação do 2º grau, enquanto a
+    fatoração com inteiros resolve apenas algumas? Sua resposta deve explicar o
+    que, no método, não depende dos coeficientes.
+
+17. Resolva $x^2 + 6x - 7 = 0$ das duas maneiras — fatorando e completando o
+    quadrado — e explique por que os resultados têm de coincidir.
+
+18. Em $(x + p)^2 = q$, explique o que o sinal de $q$ informa e relacione isso
+    com o desenho do quadrado: o que significaria uma área negativa?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) $\left(\frac{8}{2}\right)^2 = 16$. b) $\left(\frac{-6}{2}\right)^2 = 9$ —
+   positivo, porque todo quadrado é. c)
+   $\left(\frac{5}{2}\right)^2 = \frac{25}{4}$. d) aqui $b = -1$, então
+   $\left(\frac{-1}{2}\right)^2 = \frac{1}{4}$.
+2. a) $(x + 6)^2$. b) $(x - 7)^2$. c) $\left(x + \frac{1}{2}\right)^2$ — confira
+   pelo termo do meio: $2 \times x \times \frac{1}{2} = x$. ✓
+3. a) duas, porque 25 é positivo. b) uma, $x = -1$. c) nenhuma real, porque um
+   quadrado nunca vale $-9$.
+4. O $x^2$ é um quadrado de lado $x$, e o $bx$ é um retângulo. Para o conjunto
+   virar um quadrado maior, o retângulo precisa ser colado de dois lados do
+   quadrado original — e para isso é cortado em duas faixas iguais, cada uma de
+   largura $\frac{b}{2}$. O buraco que sobra no canto tem os dois lados iguais a
+   essa largura, logo área $\left(\frac{b}{2}\right)^2$. Em símbolos é a mesma
+   conclusão: em $(x+p)^2 = x^2 + 2px + p^2$, o termo do meio é o dobro de $p$.
+5. Porque a equação é uma igualdade entre dois lados. Somar a mesma quantidade
+   aos dois pratos preserva o equilíbrio, então o conjunto de valores de $x$ que
+   resolvem continua o mesmo. Somar a um lado só produz uma equação diferente —
+   em $x^2 + 4x = 8$, somar 4 apenas à esquerda leva a raízes aproximadas
+   $0{,}83$ e $-4{,}83$, e testando $0{,}83$ na original obtém-se 4, não 8.
+6. $\sqrt{16}$ é um número só, 4, por definição de raiz principal. Já $x^2 = 16$
+   tem duas soluções, $4$ e $-4$, porque o quadrado de $-4$ também é 16. Importa
+   no passo 4 porque é ali que se decide se a equação vai devolver as duas
+   raízes ou só uma: sem o $\pm$, metade da resposta se perde.
+7. a) $x^2 + 6x + 9 = 16 + 9$, logo $(x+3)^2 = 25$ e $x + 3 = \pm 5$: as raízes
+   são $2$ e $-8$. Confere: $4 + 12 = 16$ e $64 - 48 = 16$. ✓
+   b) $x^2 - 8x = -12$; metade de $-8$ é $-4$, e $(-4)^2 = 16$; então
+   $(x - 4)^2 = 4$ e $x - 4 = \pm 2$: as raízes são $6$ e $2$. Confere:
+   $36 - 48 + 12 = 0$ e $4 - 16 + 12 = 0$. ✓
+   c) $x^2 + 2x = 5$; somando 1, $(x+1)^2 = 6$; então $x = -1 \pm \sqrt{6}$, ou
+   aproximadamente $1{,}45$ e $-3{,}45$.
+8. a) $x^2 - 4x = 3$; somando 4, $(x - 2)^2 = 7$; então $x = 2 \pm \sqrt{7}$,
+   aproximadamente $4{,}65$ e $-0{,}65$.
+   b) $x^2 + 10x = -13$; somando 25, $(x + 5)^2 = 12$; como
+   $\sqrt{12} = 2\sqrt{3}$, temos $x = -5 \pm 2\sqrt{3}$, aproximadamente
+   $-1{,}54$ e $-8{,}46$.
+9. $x^2 + 5x = -3$; a metade de 5 é $\frac{5}{2}$, cujo quadrado é
+   $\frac{25}{4}$; somando aos dois lados,
+   $\left(x + \frac{5}{2}\right)^2 = -3 + \frac{25}{4} = \frac{13}{4}$; então
+   $x + \frac{5}{2} = \pm\frac{\sqrt{13}}{2}$ e
+   $x = \frac{-5 \pm \sqrt{13}}{2}$, aproximadamente $-0{,}70$ e $-4{,}30$.
+10. Dividindo tudo por 3: $x^2 - 2x - 3 = 0$, logo $x^2 - 2x = 3$. Somando 1,
+    $(x - 1)^2 = 4$ e $x - 1 = \pm 2$: as raízes são $3$ e $-1$. Confere na
+    original: $27 - 18 - 9 = 0$ e $3 + 6 - 9 = 0$. ✓ (Esta também fatorava:
+    $3(x-3)(x+1)$.)
+11. Dividindo tudo por 2: $x^2 + 2x - \frac{3}{2} = 0$, ou
+    $x^2 + 2x = \frac{3}{2}$. Somando 1:
+    $(x + 1)^2 = \frac{3}{2} + 1 = \frac{5}{2}$. Então
+    $x = -1 \pm \sqrt{\frac{5}{2}} = -1 \pm \frac{\sqrt{10}}{2}$, ou
+    aproximadamente $0{,}58$ e $-2{,}58$. Se você obteve
+    $x^2 + 4x - 3 = 0$ no primeiro passo, dividiu só o primeiro termo.
+12. $x^2 - 6x = -11$; somando 9, $(x - 3)^2 = -2$. Não há solução real, porque
+    nenhum número real elevado ao quadrado dá $-2$. Note que a conclusão é mais
+    forte que "não fatora": aqui o método chegou ao fim e provou a inexistência
+    de raiz real.
+13. Sendo $x$ a largura, o comprimento é $x + 6$ e a área é $x(x+6) = 15$, ou
+    $x^2 + 6x - 15 = 0$. Completando: $x^2 + 6x + 9 = 15 + 9$, logo
+    $(x+3)^2 = 24$. Como $\sqrt{24} = 2\sqrt{6}$, temos $x = -3 \pm 2\sqrt{6}$,
+    ou aproximadamente $1{,}90$ e $-7{,}90$. O contexto descarta a raiz
+    negativa, porque largura não é negativa. A largura é $2\sqrt{6} - 3$ e o
+    comprimento é $2\sqrt{6} + 3$; a conferência exata usa a diferença de
+    quadrados: $(2\sqrt{6})^2 - 3^2 = 24 - 9 = 15$ m². ✓ Em números
+    aproximados, $1{,}90 \times 7{,}90 \approx 15$.
+14. Lucro zero: $-x^2 + 20x - 91 = 0$. Multiplicando os dois lados por $-1$ para
+    o coeficiente de $x^2$ ficar positivo — mesma operação nos dois membros,
+    então as raízes não mudam: $x^2 - 20x + 91 = 0$. Logo $x^2 - 20x = -91$;
+    metade de $-20$ é $-10$, e $(-10)^2 = 100$; então $(x - 10)^2 = 9$ e
+    $x - 10 = \pm 3$: as raízes são $13$ e $7$. Confere: $-49 + 140 - 91 = 0$ e
+    $-169 + 260 - 91 = 0$. ✓ As duas servem, porque as duas são quantidades
+    possíveis de unidades: abaixo de 7 e acima de 13 a banca tem prejuízo, entre
+    elas tem lucro.
+15. É a diferença de quadrados, $(a - b)(a + b) = a^2 - b^2$, com
+    $a = \sqrt{12}$ e $b = 2$. Então o produto vale
+    $(\sqrt{12})^2 - 2^2 = 12 - 4 = 8$, sem precisar saber o valor decimal de
+    $\sqrt{12}$ — porque elevar ao quadrado desfaz a raiz, por definição.
+16. Porque a fatoração com inteiros exige **encontrar** dois inteiros com soma
+    $b$ e produto $c$, e esse par pode não existir: é uma propriedade dos
+    números da equação, não do método. Completar o quadrado não procura nada. O
+    número somado é **calculado** a partir de $b$, por
+    $\left(\frac{b}{2}\right)^2$, e essa conta sempre pode ser feita — com
+    inteiro, com fração, com o que for. Por isso o método chega sempre à forma
+    $(x+p)^2 = q$, e a partir daí só resta ler o sinal de $q$.
+17. Fatorando: produto $-7$ e soma 6, o par é 7 e $-1$, então
+    $(x + 7)(x - 1) = 0$ e as raízes são $-7$ e $1$. Completando:
+    $x^2 + 6x = 7$, somando 9 vem $(x + 3)^2 = 16$, então $x + 3 = \pm 4$ e as
+    raízes são $1$ e $-7$. Os resultados coincidem porque os dois métodos
+    respondem à **mesma pergunta** sobre a **mesma equação** — qual valor de $x$
+    torna a igualdade verdadeira — e cada passo dos dois caminhos produz uma
+    equação equivalente à anterior. Métodos diferentes não podem dar soluções
+    diferentes; se derem, um deles tem erro.
+18. O sinal de $q$ diz quantas raízes reais existem: duas se $q > 0$, uma se
+    $q = 0$, nenhuma se $q < 0$. No desenho, $(x+p)^2$ é a área de um quadrado
+    de lado $x + p$, e $q$ é o valor dessa área. Um $q$ negativo pediria um
+    quadrado de área negativa, que não existe — nenhum lado real produz isso. É
+    a mesma impossibilidade vista de outro jeito: geometricamente não há
+    quadrado, algebricamente não há número real cujo quadrado seja negativo.
+
+</details>
+
+## Revisão curta
+
+- Quando a fatoração com inteiros não existe, o problema **não** deixa de ter
+  solução. A limitação é do método, e completar o quadrado a remove.
+- A ideia é reescrever a equação como $(x + p)^2 = q$, porque nessa forma o $x$
+  aparece **uma vez só** — e o que aparece uma vez só pode ser desfeito na ordem
+  inversa, como nas equações do 1º grau.
+- O número que completa o quadrado é $\left(\frac{b}{2}\right)^2$, a **metade**
+  de $b$ ao quadrado. Isso não é regra decorada: em $(x+p)^2 = x^2 + 2px + p^2$
+  o termo do meio é o **dobro** de $p$. No desenho, é o canto que falta quando o
+  retângulo $bx$ é cortado em duas faixas.
+- Some sempre **aos dois lados** — é a balança que garante que as soluções não
+  mudam.
+- Ao extrair a raiz, escreva o $\pm$. Sem ele, uma das raízes se perde. E lembre
+  que $\sqrt{q}$ continua sendo um número só: o $\pm$ pertence à equação, não ao
+  símbolo.
+- Se o coeficiente de $x^2$ não for 1, divida a equação **inteira** por ele
+  antes de começar.
+- O sinal de $q$ decide tudo: positivo dá duas raízes, zero dá uma, negativo não
+  dá nenhuma raiz real.
+- Prefira a forma exata ($2\sqrt{3} - 2$) para continuar contas e a aproximada
+  ($1{,}46$) para o mundo físico. E confira exatamente quando der — a diferença
+  de quadrados costuma tornar a conferência limpa.
+
+Antes de avançar, verifique se você consegue explicar **por que** é a metade de
+$b$, e **por que** o $\pm$ é obrigatório. A próxima página,
+[a fórmula de Bhaskara](./formula-de-bhaskara), não traz método novo: ela faz
+exatamente estes cinco passos uma única vez, com letras no lugar dos números, e
+guarda o resultado.

@@ -1,0 +1,811 @@
+---
+title: A fórmula de Bhaskara
+---
+
+# A fórmula de Bhaskara: o método anterior, resolvido de uma vez
+
+## Problema motivador: o mesmo trabalho, três vezes
+
+Suponha que você cuide dos orçamentos de uma marcenaria pequena. Numa tarde,
+três perguntas diferentes chegam à sua mesa:
+
+- um tampo retangular precisa ter 8 m² e 4 metros a mais de comprimento do que
+  de largura — quais são as medidas?
+- o lucro de um item é $L = -2x^2 + 24x - 54$, onde $x$ é o número de peças
+  vendidas. A partir de quantas peças a oficina para de ter prejuízo?
+- uma bancada quadrada vai ganhar uma faixa de 1 metro de largura em dois lados
+  adjacentes, e a área final precisa ser de 5 m² — quanto mede a bancada hoje?
+
+Nada além do assunto liga as três situações. Mas todas viram equações do 2º
+grau, e resolver as três pela página anterior significa executar **exatamente**
+os mesmos cinco passos, três vezes:
+
+$$
+x^2 + 4x - 8 = 0 \qquad -2x^2 + 24x - 54 = 0 \qquad x^2 + 2x - 4 = 0
+$$
+
+Divide por $a$, passa o termo sem letra, soma o quadrado da metade, fatora o
+quadrado perfeito, extrai a raiz com $\pm$. Sempre a mesma sequência. O que muda
+de uma para outra são só os três números.
+
+Quando um procedimento se repete assim, sem variação de estrutura, a matemática
+tem um hábito antigo:
+
+> A pergunta central: e se executássemos esses cinco passos **uma única vez**,
+> com letras no lugar dos números, e guardássemos o resultado?
+
+É isso, e só isso, que a fórmula de Bhaskara é.
+
+## Mapa das ideias
+
+- **fórmula resolutiva** — o resultado de completar o quadrado no caso geral
+  $ax^2 + bx + c = 0$, guardado para não ser refeito;
+- **discriminante** ($\Delta$) — o número $b^2 - 4ac$, que fica sob a raiz e
+  decide quantas raízes reais existem;
+- **raiz dupla** — o caso $\Delta = 0$, em que as duas raízes coincidem;
+- **coeficientes** $a$, $b$ e $c$ — os três números lidos da equação **depois**
+  de ela estar na forma $ax^2 + bx + c = 0$.
+
+## Para que isso serve?
+
+- resolver qualquer equação do 2º grau em uma linha, sem repetir os cinco
+  passos;
+- responder **quantas** raízes existem sem resolver a equação, só olhando o
+  sinal de $\Delta$ — útil quando a pergunta é "existe solução?", e não "qual
+  é";
+- programar. Numa planilha ou em código, a fórmula vira uma expressão que roda
+  para milhares de casos, o que um procedimento manual não faz;
+- e, em [funções](../funcoes/funcao-quadratica), localizar onde a parábola cruza
+  o eixo horizontal, que é a mesma pergunta escrita de outro jeito.
+
+Uma ressalva desde já: a fórmula é uma **conveniência**, não um método
+independente. Quem a decora sem entender de onde veio fica sem chão no primeiro
+caso em que ela é aplicada errada — e a lista de erros comuns desta página é
+quase inteira feita disso.
+
+## Ideias anteriores que voltam aqui
+
+Esta página tem uma dependência dominante: [completar o
+quadrado](./completar-o-quadrado). A dedução abaixo é aquele procedimento,
+passo por passo, sem nenhum acréscimo. Se aquela página não estiver firme, esta
+vira decoreba — que é exatamente o que o curso está tentando evitar.
+
+Além dela:
+
+- de [frações](../numeros-e-operacoes/fracoes), somar duas frações exige um
+  **denominador comum**. É o passo que produz o $b^2 - 4ac$;
+- de [potências](../numeros-e-operacoes/potencias),
+  $\left(\frac{b}{2a}\right)^2 = \frac{b^2}{4a^2}$ — o expoente vale para o
+  numerador e para o denominador;
+- de [raízes](../numeros-e-operacoes/raizes), o $\pm$ e a simplificação de
+  radicais;
+- de [expressões algébricas](../algebra/expressoes-algebricas), a ideia de
+  escrever com letras o que vale para qualquer número.
+
+Antes de continuar, responda mentalmente:
+
+1. Que número completa o quadrado em $x^2 + bx$?
+2. Quanto é $\frac{1}{2} + \frac{3}{4}$?
+3. De $(x + p)^2 = q$ com $q > 0$, quais são os dois valores de $x$?
+
+As respostas são $\left(\frac{b}{2}\right)^2$; $\frac{5}{4}$, depois de escrever
+$\frac{1}{2}$ como $\frac{2}{4}$; e $x = -p \pm \sqrt{q}$. As três reaparecem
+literalmente na dedução.
+
+## Intuição: uma fórmula é um procedimento congelado
+
+Ninguém recalcula, toda vez, que a área de um retângulo é o produto dos lados.
+Alguém fez esse raciocínio uma vez, guardou o resultado como
+$\text{área} = \text{base} \times \text{altura}$, e desde então a conta é lida,
+não refeita.
+
+Uma fórmula é isso: **um raciocínio que já foi feito**. O que a torna confiável
+não é a autoridade de quem a escreveu, é o fato de o raciocínio estar
+disponível — quem quiser pode refazê-lo.
+
+A diferença entre decorar e entender uma fórmula é essa. Quem entende sabe que a
+fórmula de Bhaskara é a página anterior executada com letras, e por isso sabe
+**quando ela vale** ($a \neq 0$, e a equação precisa estar igualada a zero) e o
+que fazer quando ela dá um resultado estranho. Quem decora só tem a linha.
+
+## Modelo visual: os mesmos passos, duas colunas
+
+A melhor imagem aqui não é um desenho, é um alinhamento. À esquerda, a horta da
+página anterior, com números. À direita, exatamente os mesmos passos, com
+letras. Leia linha por linha e compare:
+
+| Com números: $x^2 + 4x - 8 = 0$ | Com letras: $ax^2 + bx + c = 0$ |
+| --- | --- |
+| o coeficiente de $x^2$ já é 1 | $x^2 + \frac{b}{a}x + \frac{c}{a} = 0$ |
+| $x^2 + 4x = 8$ | $x^2 + \frac{b}{a}x = -\frac{c}{a}$ |
+| metade de 4 é 2; somar $2^2 = 4$ | metade de $\frac{b}{a}$ é $\frac{b}{2a}$; somar $\frac{b^2}{4a^2}$ |
+| $x^2 + 4x + 4 = 8 + 4$ | $x^2 + \frac{b}{a}x + \frac{b^2}{4a^2} = -\frac{c}{a} + \frac{b^2}{4a^2}$ |
+| $(x+2)^2 = 12$ | $\left(x + \frac{b}{2a}\right)^2 = \frac{b^2 - 4ac}{4a^2}$ |
+| $x + 2 = \pm\sqrt{12}$ | $x + \frac{b}{2a} = \pm\frac{\sqrt{b^2 - 4ac}}{2a}$ |
+| $x = -2 \pm 2\sqrt{3}$ | $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$ |
+
+Não há um único passo à direita que não esteja à esquerda. A coluna da direita é
+mais difícil de ler apenas porque letras cansam mais que números — o raciocínio
+é o mesmo.
+
+## A dedução, passo a passo
+
+Agora a coluna da direita devagar, com a justificativa de cada linha. Partimos
+da forma geral, com $a \neq 0$:
+
+$$
+ax^2 + bx + c = 0
+$$
+
+**Passo 1 — dividir tudo por $a$.** O método precisa de $x^2$ sozinho, porque é
+disso que a fórmula do quadrado da soma trata. Dividir os dois membros pelo
+mesmo número não muda as soluções, e é possível porque $a \neq 0$:
+
+$$
+x^2 + \frac{b}{a}x + \frac{c}{a} = 0
+$$
+
+**Passo 2 — isolar os termos com $x$.** Subtraindo $\frac{c}{a}$ dos dois lados:
+
+$$
+x^2 + \frac{b}{a}x = -\frac{c}{a}
+$$
+
+**Passo 3 — completar o quadrado.** Aqui o coeficiente de $x$ é $\frac{b}{a}$.
+Sua metade é $\frac{b}{2a}$, e o quadrado dessa metade é:
+
+$$
+\left(\frac{b}{2a}\right)^2 = \frac{b^2}{4a^2}
+$$
+
+Somando esse valor **aos dois lados**:
+
+$$
+x^2 + \frac{b}{a}x + \frac{b^2}{4a^2} = -\frac{c}{a} + \frac{b^2}{4a^2}
+$$
+
+**Passo 4 — fechar o quadrado à esquerda e somar as frações à direita.** À
+esquerda está o trinômio quadrado perfeito que o passo 3 fabricou:
+
+$$
+x^2 + \frac{b}{a}x + \frac{b^2}{4a^2} = \left(x + \frac{b}{2a}\right)^2
+$$
+
+À direita há uma soma de frações de denominadores diferentes, $a$ e $4a^2$. O
+denominador comum é $4a^2$, e para escrever $-\frac{c}{a}$ com ele multiplicamos
+numerador e denominador por $4a$ — que é multiplicar por 1 escrito de outro
+jeito, então a quantidade não muda:
+
+$$
+-\frac{c}{a} = -\frac{4ac}{4a^2}
+$$
+
+Agora as duas frações têm a mesma unidade e podem ser somadas:
+
+$$
+-\frac{4ac}{4a^2} + \frac{b^2}{4a^2} = \frac{b^2 - 4ac}{4a^2}
+$$
+
+E a equação inteira ficou:
+
+$$
+\left(x + \frac{b}{2a}\right)^2 = \frac{b^2 - 4ac}{4a^2}
+$$
+
+Repare que chegamos exatamente à forma $(x + p)^2 = q$ da página anterior. Todo
+o resto é o desfecho já conhecido.
+
+**Passo 5 — extrair a raiz, com $\pm$.** A raiz de uma fração é a raiz do
+numerador sobre a raiz do denominador, e $\sqrt{4a^2} = 2a$:
+
+$$
+x + \frac{b}{2a} = \pm\frac{\sqrt{b^2 - 4ac}}{2a}
+$$
+
+**Passo 6 — isolar o $x$**, subtraindo $\frac{b}{2a}$ dos dois lados. Como os
+dois termos já têm o mesmo denominador $2a$, eles se juntam numa fração só:
+
+$$
+x = -\frac{b}{2a} \pm \frac{\sqrt{b^2 - 4ac}}{2a} = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
+$$
+
+E está pronto:
+
+> **Fórmula resolutiva.** Para $ax^2 + bx + c = 0$, com $a \neq 0$:
+>
+> $$
+> x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
+> $$
+
+### Uma observação de precisão sobre o denominador
+
+No passo 5 escrevemos $\sqrt{4a^2} = 2a$. Isso é exato quando $a$ é positivo;
+quando $a$ é negativo, o valor da raiz é $-2a$, porque a raiz principal devolve
+sempre o número não negativo.
+
+A boa notícia é que isso não muda nada, e vale entender por quê. O $\pm$ já
+coloca os dois sinais em jogo: trocar $2a$ por $-2a$ apenas troca as duas raízes
+de lugar, e o **conjunto** das soluções continua o mesmo. Por isso a fórmula é
+escrita com $2a$ e funciona para $a$ de qualquer sinal — o Exemplo 4 mostra um
+caso com $a$ negativo, resolvido direto pela fórmula.
+
+## O discriminante: o sinal decide antes da conta
+
+O número que ficou sob a raiz tem nome próprio:
+
+$$
+\Delta = b^2 - 4ac
+$$
+
+Ele é chamado de **discriminante** porque discrimina — separa — os três casos
+possíveis. E ele não é novidade nenhuma: é o mesmo $q$ da página anterior,
+disfarçado. Compare:
+
+$$
+q = \frac{b^2 - 4ac}{4a^2} = \frac{\Delta}{4a^2}
+$$
+
+Como $4a^2$ é um quadrado multiplicado por 4, ele é **sempre positivo** (lembre
+que $a \neq 0$). Dividir por um número positivo não muda sinal, então o sinal de
+$q$ e o sinal de $\Delta$ são sempre o mesmo. A tabela da página anterior vale
+igual, agora escrita com $\Delta$:
+
+| $\Delta$ | raízes reais | por quê |
+| --- | --- | --- |
+| $\Delta > 0$ | duas | há dois números cujo quadrado é $\Delta$, e o $\pm$ produz dois valores diferentes |
+| $\Delta = 0$ | uma (raiz dupla) | a raiz vale 0, e $\pm 0$ não separa nada: sobra $x = -\frac{b}{2a}$ |
+| $\Delta < 0$ | nenhuma | não existe número real cujo quadrado seja negativo |
+
+Isso responde "quantas soluções?" com uma conta só, sem resolver a equação. Em
+$x^2 + x + 1 = 0$, por exemplo, $\Delta = 1 - 4 = -3$: não há raiz real, e nem
+foi preciso começar.
+
+## Conferindo a fórmula contra a página anterior
+
+Uma fórmula nova precisa concordar com o que já sabíamos, senão há erro em algum
+lugar. Duas conferências.
+
+**A horta** — que é também, número por número, o tampo da abertura desta página.
+De $x^2 + 4x - 8 = 0$ lemos $a = 1$, $b = 4$, $c = -8$:
+
+$$
+\Delta = 4^2 - 4(1)(-8) = 16 + 32 = 48
+$$
+
+$$
+x = \frac{-4 \pm \sqrt{48}}{2}
+$$
+
+Como $48 = 16 \times 3$, temos $\sqrt{48} = 4\sqrt{3}$, e as duas parcelas do
+numerador são divisíveis por 2:
+
+$$
+x = \frac{-4 \pm 4\sqrt{3}}{2} = -2 \pm 2\sqrt{3}
+$$
+
+É exatamente o resultado da página anterior. ✓
+
+**A dívida antiga.** $x^2 + 3x + 1 = 0$ dá $a = 1$, $b = 3$, $c = 1$:
+
+$$
+\Delta = 3^2 - 4(1)(1) = 5
+\qquad
+x = \frac{-3 \pm \sqrt{5}}{2}
+$$
+
+Também idêntico ao que completar o quadrado devolveu. ✓ Não poderia ser
+diferente: a fórmula **é** aquele procedimento.
+
+## De onde vem o nome
+
+Vale saber, porque o nome sugere uma história que não é bem essa.
+
+Resolver o que hoje chamamos de equação do 2º grau é muito antigo: tabletes
+babilônicos de cerca de 1800 a.C. já traziam problemas equivalentes, resolvidos
+por receitas numéricas. No século IX, o matemático persa **al-Khwārizmī** — de
+cujo nome vem a palavra "algoritmo", e do título de cujo livro vem a palavra
+"álgebra" — descreveu de forma sistemática a solução por completar o quadrado,
+justificada com desenhos de áreas muito parecidos com o da página anterior.
+**Bhāskara II**, matemático indiano do século XII, também tratou dessas equações
+e reconheceu que elas têm duas raízes.
+
+O que nenhum deles escreveu foi a fórmula como a vemos hoje: a notação com
+letras para coeficientes só se consolidou séculos depois. E o nome "fórmula de
+Bhaskara" é uma convenção praticamente restrita ao Brasil — em inglês ela é
+chamada apenas de *quadratic formula*, a fórmula quadrática.
+
+Nada disso muda a matemática. Serve para lembrar que a fórmula não caiu do céu
+nem foi inventada por um gênio isolado: ela é o registro final de um método que
+levou séculos para ser escrito de forma geral.
+
+## Qual método usar, afinal?
+
+Agora há três ferramentas para a mesma equação, e vale saber escolher.
+
+| Situação | Melhor caminho |
+| --- | --- |
+| dá para ver dois inteiros de soma $b$ e produto $c$ | **fatorar** — é mais rápido e mostra as raízes direto |
+| há fator comum, como em $x^2 = 4x$ | **fator comum** — e cuidado para não perder a raiz zero |
+| a fatoração não aparece em poucos segundos | **Bhaskara** |
+| você quer só saber **quantas** raízes existem | calcular **$\Delta$** e parar aí |
+| você precisa da forma $(x+p)^2 + k$, para achar o vértice | **completar o quadrado** |
+
+A fórmula não aposentou os outros métodos. Em $x^2 - 5x + 6 = 0$, ver que 2 e 3
+somam 5 e multiplicam 6 é mais rápido que calcular $\Delta$. E completar o
+quadrado continua sendo o único caminho quando o que se quer não é a raiz, e sim
+a forma da expressão — como no estudo da parábola.
+
+## Exemplos resolvidos
+
+### Exemplo 1: aplicação direta
+
+Resolva $2x^2 - 7x + 3 = 0$.
+
+Lendo os coeficientes: $a = 2$, $b = -7$, $c = 3$. Cuidado com o sinal de $b$ —
+ele é $-7$, com o menos incluído.
+
+$$
+\Delta = (-7)^2 - 4(2)(3) = 49 - 24 = 25
+$$
+
+$$
+x = \frac{-(-7) \pm \sqrt{25}}{2 \times 2} = \frac{7 \pm 5}{4}
+$$
+
+Duas raízes:
+
+$$
+x_1 = \frac{7 + 5}{4} = 3
+\qquad
+x_2 = \frac{7 - 5}{4} = \frac{1}{2}
+$$
+
+Verificando na equação original: $2(9) - 7(3) + 3 = 18 - 21 + 3 = 0$ ✓ e
+$2\left(\frac{1}{4}\right) - \frac{7}{2} + 3 = \frac{1}{2} - \frac{7}{2} + 3 = 0$ ✓
+
+### Exemplo 2: raiz dupla
+
+Resolva $x^2 - 6x + 9 = 0$. **Pause e tente antes de ler.**
+
+$a = 1$, $b = -6$, $c = 9$:
+
+$$
+\Delta = 36 - 36 = 0
+\qquad
+x = \frac{6 \pm 0}{2} = 3
+$$
+
+O $\pm$ não separa nada quando a raiz vale zero, então há uma única raiz,
+$x = 3$. E isso concorda com a fatoração: $x^2 - 6x + 9 = (x - 3)^2$, um
+quadrado perfeito cujos dois fatores zeram no mesmo ponto.
+
+### Exemplo 3: quando não há raiz real
+
+Resolva $3x^2 + 2x + 5 = 0$.
+
+$$
+\Delta = 2^2 - 4(3)(5) = 4 - 60 = -56
+$$
+
+Como $\Delta$ é negativo, não há raiz real, e a conta para aqui. Não se escreve
+$\sqrt{-56}$: no conjunto dos números reais esse símbolo não representa nada.
+
+### Exemplo 4: coeficiente $a$ negativo
+
+Resolva $-2x^2 + 4x + 6 = 0$. **Pause e tente.**
+
+Aqui $a = -2$, $b = 4$, $c = 6$. Não é preciso arrumar sinal nenhum antes — a
+fórmula aceita $a$ negativo:
+
+$$
+\Delta = 4^2 - 4(-2)(6) = 16 + 48 = 64
+$$
+
+Atenção ao denominador, que fica negativo: $2a = -4$.
+
+$$
+x = \frac{-4 \pm 8}{-4}
+$$
+
+$$
+x_1 = \frac{-4 + 8}{-4} = \frac{4}{-4} = -1
+\qquad
+x_2 = \frac{-4 - 8}{-4} = \frac{-12}{-4} = 3
+$$
+
+Verificando: $-2(1) + 4(-1) + 6 = -2 - 4 + 6 = 0$ ✓ e
+$-2(9) + 4(3) + 6 = -18 + 12 + 6 = 0$ ✓
+
+Se preferir, dá para multiplicar a equação inteira por $-1$ antes
+($2x^2 - 4x - 6 = 0$) e trabalhar com $a$ positivo — mesma operação nos dois
+membros, mesmas raízes. Os dois caminhos valem; o que não vale é trocar o sinal
+de um termo só.
+
+### Exemplo 5: raiz irracional e a simplificação final
+
+Resolva $x^2 - 4x - 3 = 0$. **Pause e tente.**
+
+$a = 1$, $b = -4$, $c = -3$. Cuidado duplo com sinais: $-4ac = -4(1)(-3) = +12$.
+
+$$
+\Delta = 16 + 12 = 28
+\qquad
+x = \frac{4 \pm \sqrt{28}}{2}
+$$
+
+Como $28 = 4 \times 7$, temos $\sqrt{28} = 2\sqrt{7}$:
+
+$$
+x = \frac{4 \pm 2\sqrt{7}}{2}
+$$
+
+Agora o passo em que muita gente escorrega. Para simplificar, o 2 precisa
+dividir **todas** as parcelas do numerador — e aqui divide, porque tanto 4
+quanto $2\sqrt{7}$ são pares:
+
+$$
+x = 2 \pm \sqrt{7}
+$$
+
+Aproximadamente $4{,}65$ e $-0{,}65$. Conferindo a primeira exatamente:
+
+$$
+(2 + \sqrt{7})^2 - 4(2 + \sqrt{7}) - 3 = 4 + 4\sqrt{7} + 7 - 8 - 4\sqrt{7} - 3 = 0 \quad \checkmark
+$$
+
+## Erros comuns
+
+### Ler os coeficientes antes de zerar um lado
+
+Em $x^2 = 2x + 15$, ler $a = 1$, $b = 2$, $c = 15$ é o erro mais caro da página,
+porque produz uma resposta com cara de certa. A fórmula só vale para
+$ax^2 + bx + c = 0$, com **zero de um lado**. Reorganizando primeiro:
+$x^2 - 2x - 15 = 0$, e aí $b = -2$ e $c = -15$, o que dá as raízes 5 e $-3$.
+
+### Esquecer que o sinal faz parte do coeficiente
+
+Em $2x^2 - 7x + 3 = 0$, o $b$ é $-7$, não 7. E $-b$ é então $+7$. Escrever $-7$
+no lugar de $-b$ inverte as duas raízes de sinal e leva a um resultado que não
+verifica.
+
+### Dividir só o $-b$ por $2a$
+
+A fórmula tem uma barra de fração longa: **todo** o numerador,
+$-b \pm \sqrt{\Delta}$, é dividido por $2a$. Escrever
+$x = -b \pm \frac{\sqrt{\Delta}}{2a}$ é outra conta. Em $2x^2 - 7x + 3 = 0$ isso
+daria $7 \pm \frac{5}{4}$, ou seja $8{,}25$ e $5{,}75$ — e nenhum dos dois
+resolve a equação.
+
+### Errar o sinal dentro do discriminante quando $c$ é negativo
+
+Em $x^2 - 4x - 3 = 0$, $-4ac = -4(1)(-3) = +12$, e $\Delta = 16 + 12 = 28$.
+Quem trata o $c$ como $3$ obtém $\Delta = 4$ e duas raízes inteiras erradas.
+Regra prática: quando $a$ e $c$ têm sinais opostos, $-4ac$ é positivo e
+**aumenta** o discriminante.
+
+### Simplificar cancelando só uma parcela
+
+De $x = \frac{4 \pm 2\sqrt{7}}{2}$, a simplificação correta é $2 \pm \sqrt{7}$.
+Escrever $4 \pm \sqrt{7}$ (dividindo só a segunda parcela) ou $2 \pm 2\sqrt{7}$
+(dividindo só a primeira) é cancelar parcela, e não fator — o mesmo erro que
+aparece em frações algébricas. Teste rápido: $2 + \sqrt{7} \approx 4{,}65$
+resolve a equação; $4 + \sqrt{7} \approx 6{,}65$ não.
+
+### Escrever raiz de número negativo
+
+Com $\Delta < 0$, a resposta é "não há raiz real" — ponto. Escrever
+$\sqrt{-56}$ e seguir a conta produz um símbolo sem significado dentro dos
+números que este curso usa.
+
+### Usar a fórmula por reflexo
+
+Para $x^2 - 9 = 0$, a diferença de quadrados dá $x = \pm 3$ em dois segundos. A
+fórmula chega ao mesmo lugar, mas por um caminho mais longo. Ferramenta certa
+para o problema certo.
+
+## Perguntas de verificação
+
+Responda com suas palavras antes de abrir cada resposta.
+
+**1. Por que a fórmula de Bhaskara não é um método novo?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque ela é o resultado de aplicar **completar o quadrado** à equação geral
+$ax^2 + bx + c = 0$. Cada passo da dedução — dividir por $a$, passar o termo sem
+letra, somar o quadrado da metade, fechar o quadrado perfeito, extrair a raiz
+com $\pm$ — é um passo da página anterior, com letras no lugar dos números. A
+fórmula é esse trabalho feito uma única vez e guardado, para não ser repetido a
+cada equação.
+
+</details>
+
+**2. Por que $\Delta$ decide o número de raízes?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque $\Delta$ é o número que fica sob a raiz quadrada. Se for positivo, há
+dois números cujo quadrado é $\Delta$, e o $\pm$ gera dois valores diferentes de
+$x$; se for zero, o $\pm$ não separa nada, e sobra uma raiz só; se for negativo,
+não existe número real cujo quadrado seja $\Delta$, e a conta não tem como
+continuar. É a mesma tabela do $q$ da página anterior — e não por acaso:
+$q = \frac{\Delta}{4a^2}$, e $4a^2$ é sempre positivo, então os dois têm sempre
+o mesmo sinal.
+
+</details>
+
+**3. Por que a fórmula exige $a \neq 0$?**
+
+<details>
+<summary>Resposta</summary>
+
+Por dois motivos que apontam para o mesmo lugar. Primeiro, com $a = 0$ não há
+termo em $x^2$, e a equação nem é do 2º grau: vira $bx + c = 0$, do 1º grau, com
+uma solução só. Segundo, dentro da fórmula $a$ aparece no denominador $2a$, e
+dividir por zero não é definido. Além disso, o passo 1 da dedução divide a
+equação inteira por $a$ — operação que só é legítima com $a \neq 0$.
+
+</details>
+
+**4. Por que é obrigatório deixar zero de um lado antes de ler $a$, $b$ e $c$?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque a fórmula foi deduzida a partir de $ax^2 + bx + c = 0$, e o zero do lado
+direito está embutido em cada passo — foi ele que permitiu passar $\frac{c}{a}$
+para o outro lado e chegar em $-\frac{c}{a}$. Numa equação como $x^2 = 2x + 15$,
+os números 1, 2 e 15 não são os coeficientes de nenhuma equação igualada a zero,
+então aplicá-los à fórmula responde a outra pergunta. É a mesma exigência da
+propriedade do produto nulo, duas páginas atrás: o zero não é decoração.
+
+</details>
+
+**5. Se $a$ e $c$ têm sinais opostos, o que dá para afirmar sem calcular nada?**
+
+<details>
+<summary>Resposta</summary>
+
+Que a equação tem duas raízes reais. Se $a$ e $c$ têm sinais opostos, o produto
+$ac$ é negativo, então $-4ac$ é **positivo**. Como $b^2$ nunca é negativo, a soma
+$b^2 - 4ac$ é positiva, e $\Delta > 0$ garante duas raízes. Exemplo:
+$2x^2 + x - 3 = 0$ tem $a = 2$ e $c = -3$, e de fato $\Delta = 1 + 24 = 25$, com
+raízes 1 e $-\frac{3}{2}$.
+
+</details>
+
+**6. Se a fórmula resolve tudo, por que ainda estudar fatoração?**
+
+<details>
+<summary>Resposta</summary>
+
+Por três motivos. Primeiro, velocidade: em $x^2 - 5x + 6 = 0$, enxergar 2 e 3 é
+mais rápido que calcular $\Delta$. Segundo, a fatoração dá informação que a
+fórmula não dá — a forma $(x-2)(x-3)$ mostra a estrutura da expressão, e é ela
+que permite simplificar frações algébricas. Terceiro, e mais importante, foi a
+fatoração que tornou possível **deduzir** a fórmula: o passo 4 da dedução
+depende de reconhecer um trinômio quadrado perfeito. Sem ela, a fórmula seria
+uma linha para decorar.
+
+</details>
+
+## Exercícios
+
+### 1. Reconhecimento
+
+1. Identifique $a$, $b$ e $c$ em cada equação, reorganizando quando preciso:
+   a) $3x^2 - 5x + 2 = 0$
+   b) $x^2 - 9 = 0$
+   c) $2x^2 + x = 0$
+   d) $x^2 = 4x - 1$
+
+2. Calcule $\Delta$ e diga quantas raízes reais existem, **sem** resolver:
+   a) $x^2 + 2x + 1 = 0$
+   b) $x^2 + x + 1 = 0$
+   c) $2x^2 - 3x - 2 = 0$
+
+3. Em $x = \frac{-b \pm \sqrt{\Delta}}{2a}$, o que exatamente está sendo
+   dividido por $2a$?
+
+### 2. Explicação
+
+4. Explique por que a fórmula tem $-b$ no numerador, ligando isso a um passo
+   específico da dedução.
+
+5. Por que o denominador é $2a$, e não $a$? De onde vem o 2?
+
+6. Explique, sem contas, por que $\Delta = 0$ produz uma raiz só.
+
+### 3. Aplicação direta
+
+7. Resolva pela fórmula:
+   a) $x^2 - 5x + 6 = 0$
+   b) $2x^2 + 5x - 3 = 0$
+   c) $x^2 + 4x + 4 = 0$
+   d) $x^2 + x + 3 = 0$
+
+8. Resolva e simplifique a resposta:
+   a) $3x^2 - 2x - 1 = 0$
+   b) $x^2 - 2x - 4 = 0$
+
+### 4. Variação
+
+9. Resolva $-x^2 + 6x - 5 = 0$ de duas maneiras: aplicando a fórmula direto com
+   $a = -1$, e multiplicando a equação por $-1$ antes. Compare os resultados.
+
+10. Resolva $2x^2 = 6x - 1$.
+
+11. Resolva $5x^2 + 2x + 1 = 0$.
+
+12. Resolva $x(x + 2) = 5$.
+
+<details>
+<summary>Dica para o exercício 10</summary>
+
+O primeiro passo não é calcular nada: é reorganizar. A fórmula precisa de zero
+de um lado, e enquanto houver $x$ dos dois lados os coeficientes que você ler
+não serão os certos.
+
+</details>
+
+### 5. Problema misto
+
+13. Um terreno retangular tem perímetro de 26 m e área de 40 m². Encontre as
+    medidas. (Sugestão: se um lado mede $x$, o outro mede $13 - x$ — explique
+    por quê antes de montar a equação.)
+
+14. O lucro de uma oficina, em reais, é $L = -2x^2 + 24x - 54$, onde $x$ é o
+    número de peças vendidas. Para quantas peças o lucro é zero? O que acontece
+    entre esses dois valores?
+
+15. Uma sala retangular tem 2 metros a mais de comprimento do que de largura e
+    área de 20 m². Encontre as medidas na forma exata e depois aproximada, e
+    confira o resultado sem arredondar.
+
+### 6. Justificativa
+
+16. Refaça a dedução da fórmula do começo ao fim, escrevendo ao lado de cada
+    passo qual propriedade o autoriza.
+
+17. Mostre que o sinal de $\Delta$ é sempre igual ao sinal do $q$ da página
+    anterior, e explique por que isso significa que as duas tabelas dizem a
+    mesma coisa.
+
+18. Por que uma equação com $a$ e $c$ de sinais opostos tem sempre duas raízes
+    reais? Dê um exemplo e confirme calculando.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) $a = 3$, $b = -5$, $c = 2$. b) $a = 1$, $b = 0$, $c = -9$ — quando um
+   termo não aparece, seu coeficiente é zero. c) $a = 2$, $b = 1$, $c = 0$.
+   d) reorganizando para $x^2 - 4x + 1 = 0$: $a = 1$, $b = -4$, $c = 1$. Ler
+   $b = 4$ e $c = -1$ na forma original é o erro que a lição chama de "ler os
+   coeficientes antes de zerar um lado".
+2. a) $\Delta = 4 - 4 = 0$: uma raiz (dupla). b) $\Delta = 1 - 4 = -3$: nenhuma
+   raiz real. c) $\Delta = 9 + 16 = 25$: duas raízes.
+3. Todo o numerador, $-b \pm \sqrt{\Delta}$ — as duas parcelas juntas, não só a
+   raiz. A barra de fração é longa justamente para deixar isso explícito.
+4. Porque no passo 6 isolamos o $x$ subtraindo $\frac{b}{2a}$ dos dois lados. O
+   $-b$ é o registro dessa subtração, e não uma troca de sinal arbitrária. Se o
+   passo 3 tivesse somado outra coisa, o numerador seria outro.
+5. O 2 vem da **metade**. No passo 3, o coeficiente de $x$ é $\frac{b}{a}$, e o
+   método manda somar o quadrado da metade dele — e a metade de $\frac{b}{a}$ é
+   $\frac{b}{2a}$. Esse $2a$ atravessa a dedução inteira e chega ao denominador
+   final. Ou seja: o 2 do denominador é o mesmo 2 do "quadrado da metade".
+6. Porque as duas raízes só diferem pelo que o $\pm$ soma e subtrai, e o que ele
+   soma e subtrai é $\sqrt{\Delta}$. Com $\Delta = 0$, essa quantidade é zero:
+   somar zero e subtrair zero dão o mesmo resultado, $x = -\frac{b}{2a}$. É a
+   mesma coisa que a fatoração mostra em $(x-3)^2 = 0$, onde os dois fatores
+   zeram no mesmo ponto.
+7. a) $\Delta = 25 - 24 = 1$, $x = \frac{5 \pm 1}{2}$: raízes 3 e 2. Confere:
+   $9 - 15 + 6 = 0$ e $4 - 10 + 6 = 0$. ✓
+   b) $\Delta = 25 + 24 = 49$, $x = \frac{-5 \pm 7}{4}$: raízes $\frac{1}{2}$ e
+   $-3$. Confere: $2\left(\frac{1}{4}\right) + \frac{5}{2} - 3 = 0$ e
+   $18 - 15 - 3 = 0$. ✓
+   c) $\Delta = 16 - 16 = 0$, $x = \frac{-4}{2} = -2$: raiz dupla. Confere:
+   $4 - 8 + 4 = 0$. ✓
+   d) $\Delta = 1 - 12 = -11$: nenhuma raiz real.
+8. a) $\Delta = 4 + 12 = 16$, $x = \frac{2 \pm 4}{6}$: raízes $1$ e
+   $-\frac{1}{3}$. Confere: $3 - 2 - 1 = 0$ e
+   $3\left(\frac{1}{9}\right) + \frac{2}{3} - 1 = \frac{1}{3} + \frac{2}{3} - 1 = 0$. ✓
+   b) $\Delta = 4 + 16 = 20$, e $\sqrt{20} = 2\sqrt{5}$, então
+   $x = \frac{2 \pm 2\sqrt{5}}{2} = 1 \pm \sqrt{5}$ — as duas parcelas do
+   numerador são divisíveis por 2. Aproximadamente $3{,}24$ e $-1{,}24$.
+9. Direto: $a = -1$, $b = 6$, $c = -5$, $\Delta = 36 - 20 = 16$, e
+   $x = \frac{-6 \pm 4}{-2}$, o que dá $\frac{-2}{-2} = 1$ e
+   $\frac{-10}{-2} = 5$. Multiplicando antes por $-1$: $x^2 - 6x + 5 = 0$,
+   $\Delta = 36 - 20 = 16$, $x = \frac{6 \pm 4}{2}$, o que dá 5 e 1. **As
+   mesmas raízes**, como tinha de ser: multiplicar os dois membros por $-1$ é
+   uma operação legítima de balança, e o zero do outro lado não muda ao ser
+   multiplicado por $-1$.
+10. Reorganizando: $2x^2 - 6x + 1 = 0$. $\Delta = 36 - 8 = 28$, e
+    $\sqrt{28} = 2\sqrt{7}$, então
+    $x = \frac{6 \pm 2\sqrt{7}}{4} = \frac{3 \pm \sqrt{7}}{2}$ — dividindo
+    numerador e denominador por 2. Aproximadamente $2{,}82$ e $0{,}18$. Se você
+    leu os coeficientes como $a = 2$, $b = -6$, $c = 0$ sem passar o 1, faltou
+    reorganizar.
+11. $\Delta = 4 - 20 = -16$: nenhuma raiz real.
+12. Abrindo e reorganizando: $x^2 + 2x - 5 = 0$. $\Delta = 4 + 20 = 24$, e
+    $\sqrt{24} = 2\sqrt{6}$, então
+    $x = \frac{-2 \pm 2\sqrt{6}}{2} = -1 \pm \sqrt{6}$, ou aproximadamente
+    $1{,}45$ e $-3{,}45$.
+13. O perímetro é a soma dos quatro lados, $2(\text{largura} + \text{comprimento}) = 26$,
+    logo os dois lados somam 13 — por isso, se um mede $x$, o outro mede
+    $13 - x$. A área dá $x(13 - x) = 40$, ou $x^2 - 13x + 40 = 0$.
+    $\Delta = 169 - 160 = 9$, e $x = \frac{13 \pm 3}{2}$: as raízes são 8 e 5.
+    As duas servem, e não são dois terrenos diferentes — são os dois lados do
+    mesmo terreno. O terreno mede **8 m por 5 m**: perímetro $2(13) = 26$ m ✓ e
+    área $40$ m². ✓
+14. Lucro zero: $-2x^2 + 24x - 54 = 0$. Com $a = -2$, $b = 24$, $c = -54$:
+    $\Delta = 576 - 432 = 144$, e $x = \frac{-24 \pm 12}{-4}$, o que dá 3 e 9.
+    Confere: $-18 + 72 - 54 = 0$ e $-162 + 216 - 54 = 0$. ✓ Entre 3 e 9 peças o
+    lucro é positivo — em $x = 6$, por exemplo, vale
+    $-72 + 144 - 54 = 18$ reais. Abaixo de 3 e acima de 9 há prejuízo, o que faz
+    sentido: produzir demais também custa.
+15. Sendo $x$ a largura, o comprimento é $x + 2$ e $x(x+2) = 20$, ou
+    $x^2 + 2x - 20 = 0$. $\Delta = 4 + 80 = 84$, e $\sqrt{84} = 2\sqrt{21}$,
+    então $x = \frac{-2 \pm 2\sqrt{21}}{2} = -1 \pm \sqrt{21}$. A raiz negativa
+    é descartada pelo contexto. A largura é $\sqrt{21} - 1$ e o comprimento é
+    $\sqrt{21} + 1$, ou aproximadamente $3{,}58$ m e $5{,}58$ m. Conferência
+    exata pela diferença de quadrados:
+    $(\sqrt{21} - 1)(\sqrt{21} + 1) = 21 - 1 = 20$ m². ✓
+16. Roteiro esperado: (1) dividir por $a$ — legítimo porque $a \neq 0$, e é a
+    mesma operação nos dois membros; (2) subtrair $\frac{c}{a}$ dos dois lados —
+    balança; (3) somar $\left(\frac{b}{2a}\right)^2 = \frac{b^2}{4a^2}$ aos dois
+    lados — completar o quadrado, com o número saindo da fórmula
+    $(x+p)^2 = x^2 + 2px + p^2$, em que o termo do meio é o dobro de $p$;
+    (4) reescrever a esquerda como $\left(x + \frac{b}{2a}\right)^2$
+    (trinômio quadrado perfeito) e somar as frações da direita com denominador
+    comum $4a^2$, usando $-\frac{c}{a} = -\frac{4ac}{4a^2}$ — multiplicar
+    numerador e denominador pelo mesmo número é multiplicar por 1; (5) extrair a
+    raiz dos dois lados com $\pm$, porque a equação admite os dois sinais;
+    (6) subtrair $\frac{b}{2a}$ dos dois lados e juntar as frações de mesmo
+    denominador.
+17. Da dedução, $q = \frac{b^2 - 4ac}{4a^2} = \frac{\Delta}{4a^2}$. Como
+    $a \neq 0$, $a^2$ é positivo, e $4a^2$ também. Dividir por um número
+    positivo não muda o sinal, então $q$ e $\Delta$ têm sempre o mesmo sinal.
+    Por isso as duas tabelas coincidem: onde uma diz "$q > 0$ dá duas raízes", a
+    outra diz "$\Delta > 0$ dá duas raízes", e as duas condições são a mesma
+    condição escrita de formas diferentes.
+18. Se $a$ e $c$ têm sinais opostos, o produto $ac$ é negativo; logo $-4ac$ é
+    positivo. Como $b^2$ é sempre positivo ou zero, a soma $b^2 - 4ac$ é
+    positiva, então $\Delta > 0$ e há duas raízes reais — e isso vale mesmo com
+    $b = 0$. Exemplo: $2x^2 + x - 3 = 0$, com $a = 2$ e $c = -3$. De fato
+    $\Delta = 1 + 24 = 25$, e $x = \frac{-1 \pm 5}{4}$, com raízes 1 e
+    $-\frac{3}{2}$. Confere: $2 + 1 - 3 = 0$ e
+    $2\left(\frac{9}{4}\right) - \frac{3}{2} - 3 = \frac{9}{2} - \frac{9}{2} = 0$. ✓
+
+</details>
+
+## Revisão curta
+
+- A fórmula não é um método novo: é **completar o quadrado executado uma vez**,
+  com letras no lugar dos números. Quem sabe deduzi-la não precisa decorá-la.
+
+$$
+x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}, \qquad a \neq 0
+$$
+
+- Antes de ler $a$, $b$ e $c$, a equação precisa estar na forma
+  $ax^2 + bx + c = 0$, com **zero de um lado**. O sinal faz parte do
+  coeficiente.
+- O **discriminante** $\Delta = b^2 - 4ac$ responde quantas raízes existem antes
+  de qualquer outra conta: positivo dá duas, zero dá uma (dupla), negativo não
+  dá nenhuma real. Ele é o $q$ da página anterior multiplicado por $4a^2$, que é
+  sempre positivo — por isso os sinais coincidem.
+- **Todo** o numerador é dividido por $2a$, não só o $-b$. E, ao simplificar,
+  divida todas as parcelas: de $\frac{4 \pm 2\sqrt{7}}{2}$ vem $2 \pm \sqrt{7}$.
+- A fórmula não aposenta a fatoração. Quando dois inteiros aparecem de imediato,
+  fatorar é mais rápido; e completar o quadrado continua sendo o caminho quando
+  o que se quer é a forma $(x+p)^2 + k$.
+- Verifique sempre na equação original, e deixe o contexto decidir quais raízes
+  respondem à pergunta feita.
+
+Com isto, o capítulo de equações está fechado: qualquer equação do 1º ou do 2º
+grau tem agora um caminho garantido até a resposta. O capítulo de
+[funções](../funcoes/) faz a pergunta seguinte — não mais "qual é o valor", e
+sim "como o valor muda" —, e as raízes calculadas aqui reaparecem lá como os
+pontos em que a curva cruza o eixo horizontal.
