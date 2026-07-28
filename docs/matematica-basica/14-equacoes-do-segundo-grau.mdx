@@ -1,0 +1,654 @@
+---
+title: Equações do 2º grau por fatoração
+sidebar_label: Equações do 2º grau
+---
+
+import AreaModel from '@site/src/components/AreaModel';
+
+# Equações do 2º grau: resolver por fatoração
+
+## Problema motivador: as medidas do jardim
+
+Um jardim retangular tem 3 metros a mais de comprimento do que de largura, e sua
+área é de 40 m². Quais são as duas medidas?
+
+Chamando a largura de $x$, o comprimento é $x + 3$, e a área é o produto dos
+lados:
+
+$$
+x(x + 3) = 40
+$$
+
+<AreaModel
+  rows={[{size: 5, label: 'x'}]}
+  cols={[{size: 5, label: 'x'}, {size: 3, label: '3'}]}
+  cells={[['x^2', '3x']]}
+  baseLabel="x + 3"
+  caption="A área total é x² + 3x, e o problema diz que ela vale 40. O x aparece elevado ao quadrado — e é isso que muda tudo."
+/>
+
+Abrindo o produto, a equação fica:
+
+$$
+x^2 + 3x = 40
+$$
+
+Aqui o método da página anterior trava. Na balança, desfazíamos as operações
+feitas com o $x$ até isolá-lo. Mas agora o $x$ aparece **duas vezes, em graus
+diferentes**: uma vez ao quadrado e outra multiplicado por 3. Não existe uma
+operação única que desfaça as duas ao mesmo tempo — tirar $3x$ dos dois lados
+deixa $x^2 = 40 - 3x$, e o $x$ continua dos dois lados.
+
+> A pergunta central: quando a incógnita aparece ao quadrado, o que substitui a
+> estratégia de isolar?
+
+A resposta usa a fatoração da página anterior e uma propriedade do número zero
+que ainda não foi enunciada.
+
+## Mapa das ideias
+
+- **equação do 2º grau** — equação em que a maior potência da incógnita é 2;
+- **forma geral** — a equação escrita como $ax^2 + bx + c = 0$, com tudo de um
+  lado e zero do outro;
+- **propriedade do produto nulo** — se um produto vale zero, pelo menos um dos
+  fatores vale zero;
+- **raiz** (ou **zero**) — cada solução da equação; é o valor que anula a
+  expressão;
+- **forma fatorada** — a expressão escrita como produto, $(x - 3)(x + 5)$, em
+  oposição à **forma somada**, $x^2 + 2x - 15$.
+
+## Para que isso serve?
+
+Sempre que uma grandeza depende do **quadrado** de outra, a pergunta inversa
+vira uma equação do 2º grau:
+
+- medidas a partir de uma área — terrenos, cômodos, embalagens;
+- **ponto de equilíbrio** de um lucro que cresce e depois cai, porque o preço
+  alto afasta clientes;
+- tempo de queda ou de frenagem, que dependem do quadrado da velocidade;
+- qualquer modelo com crescimento acelerado, e não constante.
+
+Dentro da matemática, esta página entrega o que a [fatoração de
+trinômios](./agrupamento-e-trinomios) prometeu: saber **onde uma expressão vale
+zero**. É exatamente isso que a página de [funções](./funcoes) e o estudo da
+função quadrática vão precisar, porque os zeros são os pontos em que o gráfico
+cruza o eixo horizontal.
+
+## Ideias anteriores que voltam aqui
+
+Esta página não traz técnica nova de cálculo: ela combina duas já estudadas com
+uma propriedade do zero.
+
+Da página de [equações](./equacoes):
+
+- a **balança** — a mesma operação nos dois membros produz uma equação
+  equivalente. É ela que permite mover tudo para um lado;
+- **verificar** substituindo na equação original;
+- e a lição de que o **contexto** decide se uma solução serve.
+
+De [agrupamento e trinômios](./agrupamento-e-trinomios): fatorar
+$x^2 + bx + c$ procurando dois números cuja **soma** é $b$ e cujo **produto** é
+$c$.
+
+De [fator comum em evidência](./fator-comum-em-evidencia): quando todos os
+termos têm um fator igual, ele sai na frente — inclusive quando esse fator é o
+próprio $x$.
+
+Dos [produtos notáveis](./produtos-notaveis): a diferença de quadrados,
+$a^2 - b^2 = (a+b)(a-b)$.
+
+Antes de continuar, responda mentalmente:
+
+1. Fatore $x^2 + 7x + 12$.
+2. Fatore $x^2 - 25$.
+3. Coloque o fator comum em evidência em $x^2 - 4x$.
+
+As respostas são $(x+3)(x+4)$; $(x-5)(x+5)$; e $x(x - 4)$. Se alguma escapou,
+vale reler a página correspondente — sem fatorar, nada nesta página funciona.
+
+## Intuição: o zero é o único resultado que entrega os fatores
+
+Suponha que o produto de dois números seja 12. O que dá para afirmar sobre eles?
+
+| $a$ | $b$ | $a \times b$ |
+| --- | --- | --- |
+| 3 | 4 | 12 |
+| 2 | 6 | 12 |
+| 12 | 1 | 12 |
+| $-3$ | $-4$ | 12 |
+
+Nada. Há infinitas possibilidades, e conhecer o produto não identifica nenhum
+dos dois fatores.
+
+Agora suponha que o produto seja **zero**:
+
+| $a$ | $b$ | $a \times b$ |
+| --- | --- | --- |
+| 0 | 7 | 0 |
+| 5 | 0 | 0 |
+| 0 | 0 | 0 |
+
+O quadro muda completamente. Não há como multiplicar dois números diferentes de
+zero e obter zero — o produto só zera se um dos fatores já for zero.
+
+> **Propriedade do produto nulo:** se $a \times b = 0$, então $a = 0$ ou
+> $b = 0$ (ou ambos).
+
+Essa é a única informação que um produto pode entregar sobre seus fatores, e é
+por isso que o zero tem um papel que nenhum outro número tem. A estratégia
+inteira desta página sai daí:
+
+1. reescrever a equação com **zero de um lado**;
+2. **fatorar** o outro lado, transformando a soma num produto;
+3. igualar **cada fator** a zero, o que devolve equações do 1º grau — que a
+   página anterior já ensinou a resolver.
+
+Repare no que aconteceu: o problema não foi resolvido por uma técnica nova, foi
+**convertido** em dois problemas antigos.
+
+## Ponte para a formalização
+
+Por que insistir tanto no zero do outro lado? Porque o método depende
+inteiramente dele. Veja o que acontece com qualquer outro número.
+
+A equação $(x+2)(x+3) = 12$ **não** permite concluir que $x + 2 = 12$ ou
+$x + 3 = 12$. Se fosse assim, $x$ seria 10 ou 9 — e nenhum dos dois resolve:
+com $x = 10$, o produto é $12 \times 13 = 156$.
+
+As soluções verdadeiras aparecem só depois de zerar um lado:
+
+$$
+x^2 + 5x + 6 = 12 \;\longrightarrow\; x^2 + 5x - 6 = 0 \;\longrightarrow\;
+(x + 6)(x - 1) = 0
+$$
+
+o que dá $x = -6$ ou $x = 1$. Conferindo com $x = 1$ na equação original:
+$(1+2)(1+3) = 3 \times 4 = 12$. ✓
+
+Guarde o contraste: **produto igual a 12 não informa nada; produto igual a zero
+informa tudo.**
+
+## Formalização
+
+### A forma geral
+
+Uma **equação do 2º grau** é toda equação que pode ser escrita como:
+
+$$
+ax^2 + bx + c = 0, \qquad \text{com } a \neq 0
+$$
+
+A exigência $a \neq 0$ é o que a torna de 2º grau: se $a$ fosse zero, sobraria
+$bx + c = 0$, que é do 1º grau. São exemplos $x^2 - 9 = 0$ (com $b = 0$) e
+$x^2 + 3x = 0$ (com $c = 0$). Não é do 2º grau $2x + 5 = 11$, porque não há
+termo com $x^2$.
+
+### O procedimento
+
+1. levar tudo para um lado, deixando **zero** do outro;
+2. fatorar a expressão obtida — começando sempre pelo fator comum;
+3. igualar cada fator a zero;
+4. resolver cada equação do 1º grau resultante;
+5. verificar cada raiz na equação original e descartar as que o contexto rejeita.
+
+### Voltando ao jardim
+
+A equação era $x^2 + 3x = 40$. Passo 1, tirando 40 dos dois lados — a mesma
+balança de sempre:
+
+$$
+x^2 + 3x - 40 = 0
+$$
+
+Passo 2, fatorar: procuramos dois números de produto $-40$ e soma $3$. Como o
+produto é negativo, os sinais são diferentes; o par é $8$ e $-5$:
+
+$$
+(x + 8)(x - 5) = 0
+$$
+
+Passo 3 e 4, igualar cada fator a zero:
+
+$$
+x + 8 = 0 \;\longrightarrow\; x = -8
+\qquad\text{ou}\qquad
+x - 5 = 0 \;\longrightarrow\; x = 5
+$$
+
+Passo 5, verificar. As duas raízes satisfazem a equação: $(-8)^2 + 3(-8) = 64 - 24 = 40$
+e $5^2 + 3(5) = 25 + 15 = 40$. ✓ Mas $x$ é a **largura de um jardim**, e não
+existe largura de $-8$ metros. O contexto descarta essa raiz.
+
+O jardim tem **5 m de largura por 8 m de comprimento** — e, conferindo,
+$5 \times 8 = 40$ m². Note que a matemática ofereceu duas respostas e o problema
+ficou com uma: descartar não é corrigir um erro, é ler o resultado.
+
+### Ler as raízes na forma fatorada
+
+Uma vez fatorada, a equação entrega as raízes quase sem conta. Em
+$(x + 8)(x - 5) = 0$, cada fator zera quando $x$ é o **oposto** do número que
+aparece nele: $x + 8$ zera em $-8$; $x - 5$ zera em $5$.
+
+É aqui que mora o erro mais comum da página, e vale fixar o padrão:
+
+$$
+(x + 2)(x + 3) = 0 \;\longrightarrow\; x = -2 \text{ ou } x = -3
+$$
+
+Sinal de mais no parêntese, raiz negativa. Sinal de menos, raiz positiva.
+
+## Quantas raízes uma equação do 2º grau tem?
+
+A página anterior tratou só de equações com uma solução. Aqui aparecem três
+situações, e reconhecê-las evita a sensação de ter errado.
+
+**Duas raízes** — o caso comum. $x^2 - 7x + 12 = 0$ fatora como
+$(x-3)(x-4) = 0$, com raízes 3 e 4.
+
+**Uma raiz só**, quando os dois fatores são iguais. $x^2 - 6x + 9 = 0$ é o
+quadrado perfeito $(x-3)^2 = 0$: os dois fatores zeram no mesmo ponto, e a única
+raiz é $x = 3$.
+
+**Nenhuma raiz**, quando nenhum par de números serve. Em $x^2 + 3x + 1 = 0$,
+procuramos dois números de produto 1 e soma 3. Os únicos pares inteiros de
+produto 1 são $1$ e $1$ (soma 2) e $-1$ e $-1$ (soma $-2$). Nenhum dá 3, e a
+fatoração com inteiros não existe.
+
+Cuidado com a leitura deste terceiro caso: ele significa que **este método** não
+resolve essa equação, não que ela não tenha solução. $x^2 + 3x + 1 = 0$ tem duas
+raízes, mas irracionais, e encontrá-las exige uma ferramenta que virá adiante.
+Concluir "não fatora com inteiros" é uma resposta legítima e honesta, do mesmo
+jeito que era na página de trinômios.
+
+## Exemplos resolvidos
+
+### Exemplo 1: trinômio simples
+
+Resolva $x^2 + 5x + 6 = 0$.
+
+O zero já está de um lado. Procuramos dois números de produto 6 e soma 5: são 2
+e 3.
+
+$$
+(x + 2)(x + 3) = 0
+$$
+
+Cada fator zera em seu oposto: $x = -2$ ou $x = -3$.
+
+Verificando: $(-2)^2 + 5(-2) + 6 = 4 - 10 + 6 = 0$ ✓ e
+$(-3)^2 + 5(-3) + 6 = 9 - 15 + 6 = 0$ ✓
+
+### Exemplo 2: a equação precisa ser reorganizada
+
+Resolva $x^2 = 2x + 15$. **Pause e tente antes de ler.**
+
+O zero não está isolado, então nada de fatorar ainda. Tirando $2x$ e 15 dos dois
+lados:
+
+$$
+x^2 - 2x - 15 = 0
+$$
+
+Produto $-15$, soma $-2$: como o produto é negativo, os sinais são diferentes; o
+par é $-5$ e $3$.
+
+$$
+(x - 5)(x + 3) = 0 \;\longrightarrow\; x = 5 \text{ ou } x = -3
+$$
+
+Verificando na **original**: $5^2 = 25$ e $2(5) + 15 = 25$ ✓;
+$(-3)^2 = 9$ e $2(-3) + 15 = 9$ ✓
+
+### Exemplo 3: fator comum, e a raiz que quase se perde
+
+Resolva $x^2 = 4x$. **Pause e tente.**
+
+A tentação é dividir os dois lados por $x$ e concluir $x = 4$. **Não faça isso** —
+o motivo vem logo abaixo. Passando tudo para um lado:
+
+$$
+x^2 - 4x = 0
+$$
+
+Não há trinômio aqui: os dois termos têm $x$ em comum, então o fator comum
+resolve.
+
+$$
+x(x - 4) = 0 \;\longrightarrow\; x = 0 \text{ ou } x = 4
+$$
+
+Verificando: $0^2 = 0$ e $4(0) = 0$ ✓; $4^2 = 16$ e $4(4) = 16$ ✓
+
+São **duas** raízes. Quem dividiu por $x$ encontrou só a segunda e perdeu a
+primeira — o assunto do primeiro erro comum.
+
+### Exemplo 4: diferença de quadrados
+
+Resolva $x^2 - 9 = 0$.
+
+Não há termo em $x$, e $x^2 - 9$ é a diferença de quadrados $x^2 - 3^2$:
+
+$$
+(x - 3)(x + 3) = 0 \;\longrightarrow\; x = 3 \text{ ou } x = -3
+$$
+
+Verificando: $3^2 - 9 = 0$ ✓ e $(-3)^2 - 9 = 9 - 9 = 0$ ✓
+
+### Exemplo 5: coeficiente de $x^2$ diferente de 1
+
+Resolva $2x^2 + 7x + 3 = 0$. **Pause e tente.**
+
+Como na página de trinômios, o produto procurado é $a \times c = 2 \times 3 = 6$,
+e a soma é $b = 7$. O par é 1 e 6. Partindo o termo do meio e agrupando:
+
+$$
+2x^2 + x + 6x + 3 = x(2x + 1) + 3(2x + 1) = (2x + 1)(x + 3)
+$$
+
+Igualando cada fator a zero:
+
+$$
+2x + 1 = 0 \;\longrightarrow\; x = -\frac{1}{2}
+\qquad\text{ou}\qquad
+x + 3 = 0 \;\longrightarrow\; x = -3
+$$
+
+O primeiro fator não é do tipo $x + k$, então a raiz não é a leitura direta do
+oposto — é preciso resolver a equação do 1º grau. Verificando:
+$2\left(-\frac{1}{2}\right)^2 + 7\left(-\frac{1}{2}\right) + 3 = \frac{1}{2} - \frac{7}{2} + 3 = 0$ ✓
+e $2(9) + 7(-3) + 3 = 18 - 21 + 3 = 0$ ✓
+
+## Erros comuns
+
+### Dividir os dois lados por $x$
+
+Em $x^2 = 4x$, dividir por $x$ produz $x = 4$ e **apaga a raiz $x = 0$**.
+
+O motivo é preciso: dividir os dois lados só é permitido quando o divisor não é
+zero, e $x$ é justamente o valor que estamos procurando — não dá para garantir
+que ele não seja zero. A regra prática: nunca divida por uma expressão que
+contém a incógnita. Fatore, que nada se perde.
+
+### Fatorar antes de zerar um lado
+
+Em $(x+2)(x+3) = 12$, escrever $x + 2 = 12$ ou $x + 3 = 12$ dá 10 e 9, e nenhum
+dos dois resolve — com $x = 10$, o produto é 156. O produto nulo vale para o
+zero e só para ele.
+
+### Trocar o sinal das raízes
+
+De $(x+2)(x+3) = 0$, as raízes são $-2$ e $-3$, não 2 e 3. Teste com $x = 2$:
+$(4)(5) = 20$, não zero. Cada fator zera no **oposto** do número que ele carrega.
+
+### Dar só uma resposta
+
+Uma equação do 2º grau costuma ter duas raízes, e parar na primeira é resposta
+pela metade. Depois de fatorar, há sempre dois fatores a igualar a zero — mesmo
+quando os dois levam ao mesmo valor, como em $(x-3)^2 = 0$.
+
+### Descartar a raiz negativa por reflexo
+
+No jardim, $-8$ foi descartada porque largura não é negativa. Mas se $x$ fosse
+uma temperatura, um saldo ou uma coordenada, $-8$ seria uma resposta perfeitamente
+boa. Quem descarta é o **contexto**, não o sinal.
+
+## Perguntas de verificação
+
+Responda com suas palavras antes de abrir cada resposta.
+
+**1. Por que o zero é o único número que permite concluir algo sobre os fatores
+de um produto?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque não existe maneira de multiplicar dois números diferentes de zero e obter
+zero. Para qualquer outro resultado há infinitas combinações — um produto igual
+a 12 pode vir de $3 \times 4$, de $2 \times 6$, de $(-3) \times (-4)$ e assim
+por diante, e nenhuma delas fica identificada. O zero é o único resultado que
+força um dos fatores a ser um valor conhecido.
+
+</details>
+
+**2. Por que $x^2 + 3x = 40$ não pode ser resolvida isolando o $x$, como na
+página anterior?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque o $x$ aparece em dois graus diferentes: elevado ao quadrado e
+multiplicado por 3. Isolar funciona quando existe uma sequência de operações
+aplicadas a uma única ocorrência da incógnita, que se pode desfazer na ordem
+inversa. Aqui não há essa sequência — desfazer o $3x$ deixa o $x^2$ do outro
+lado, e o problema volta. A saída é converter a equação num produto igual a
+zero.
+
+</details>
+
+**3. Por que é proibido dividir os dois lados de $x^2 = 4x$ por $x$?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque dividir por uma quantidade só é legítimo quando ela não é zero, e $x$ é
+exatamente o valor desconhecido — pode muito bem ser zero, e de fato é numa das
+raízes. Dividir por $x$ elimina silenciosamente a raiz $x = 0$. Fatorar preserva
+as duas: $x(x-4) = 0$.
+
+</details>
+
+**4. Toda equação do 2º grau tem duas raízes?**
+
+<details>
+<summary>Resposta</summary>
+
+Não. Pode ter duas ($x^2 - 7x + 12 = 0$, com 3 e 4), uma só quando os fatores
+são iguais ($x^2 - 6x + 9 = (x-3)^2$, com raiz 3), ou nenhuma que a fatoração
+com inteiros alcance ($x^2 + 3x + 1 = 0$). Neste último caso, a equação ainda
+tem raízes — só não são inteiras, e encontrá-las exige outra ferramenta.
+
+</details>
+
+**5. O que a forma fatorada mostra que a forma somada esconde?**
+
+<details>
+<summary>Resposta</summary>
+
+As raízes. Em $x^2 + 2x - 15$ não há nada visível sobre onde a expressão vale
+zero; na forma $(x-3)(x+5)$, as raízes 3 e $-5$ se leem direto, porque cada
+fator anuncia onde ele próprio zera. As duas escritas representam a mesma
+quantidade para qualquer $x$ — muda o que elas deixam à vista.
+
+</details>
+
+**6. No jardim, por que descartar $x = -8$ não é o mesmo que corrigir um erro?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque $-8$ **é** solução da equação: substituindo, os dois lados batem. O que
+ela não é é uma resposta possível para a pergunta feita, já que largura não pode
+ser negativa. A equação é um modelo da situação, e um modelo pode admitir mais
+casos do que a realidade que ele descreve. Descartar é interpretar o resultado,
+não consertá-lo.
+
+</details>
+
+## Exercícios
+
+### 1. Reconhecimento
+
+1. Quais destas são equações do 2º grau?
+   a) $3x + 5 = 11$
+   b) $x^2 - 4 = 0$
+   c) $x^2 + 2x$
+   d) $5x^2 - 3x + 1 = 0$
+
+2. Sem fazer conta nenhuma, dê as raízes de $(x - 2)(x + 7) = 0$.
+
+3. Sem resolver, verifique se $x = 3$ é raiz de $x^2 - x - 6 = 0$.
+
+### 2. Explicação
+
+4. Por que $a \times b = 0$ obriga um dos fatores a ser zero, enquanto
+   $a \times b = 12$ não obriga nada?
+
+5. Por que $(x + 2)(x + 3) = 0$ dá $-2$ e $-3$, e não 2 e 3?
+
+6. Explique por que não se pode dividir os dois lados de $x^2 = 4x$ por $x$, e
+   diga o que se perde ao fazer isso.
+
+### 3. Aplicação direta
+
+7. Resolva:
+   a) $x^2 + 5x + 6 = 0$
+   b) $x^2 - 7x + 12 = 0$
+   c) $x^2 - 9 = 0$
+   d) $x^2 + 4x = 0$
+
+8. Resolva:
+   a) $x^2 - x - 20 = 0$
+   b) $x^2 + 9x + 20 = 0$
+
+### 4. Variação
+
+9. Reorganize antes de fatorar e resolva:
+   a) $x^2 = 6x - 8$
+   b) $x^2 + 10 = 7x$
+   c) $2x^2 + 7x + 3 = 0$
+
+10. Alguém resolveu $x^2 = 5x$ dividindo os dois lados por $x$ e respondeu
+    $x = 5$. Qual raiz se perdeu, e por quê?
+
+11. Tente fatorar $x^2 + 3x + 1$ com números inteiros. Liste os pares possíveis,
+    explique por que nenhum serve e diga o que isso significa — e o que **não**
+    significa — sobre as raízes.
+
+### 5. Problema misto
+
+12. Um terreno retangular tem 5 metros a mais de comprimento do que de largura e
+    área de 84 m². Encontre as duas medidas, monte a equação explicitamente e
+    diga qual raiz o contexto descarta.
+
+13. O lucro mensal de uma banca, em reais, é dado por $L = -n^2 + 30n - 200$,
+    onde $n$ é o número de unidades vendidas. Para quantas unidades o lucro é
+    zero?
+
+<details>
+<summary>Dica para o exercício 13</summary>
+
+Lucro zero significa $L = 0$. Depois de igualar, você terá uma equação com o
+termo $-n^2$; multiplicar os dois lados por $-1$ deixa o coeficiente positivo e
+a fatoração mais fácil — e, como é a mesma operação nos dois membros, as raízes
+não mudam. Ao terminar, teste um valor entre as duas raízes e veja o que
+acontece com o lucro.
+
+</details>
+
+### 6. Justificativa
+
+14. Por que é obrigatório deixar zero de um lado **antes** de fatorar? Mostre com
+    $(x+2)(x+3) = 12$ o que acontece quando essa ordem é ignorada.
+
+15. Por que uma equação do 2º grau pode ter duas soluções, enquanto as do 1º grau
+    da página anterior tinham uma só?
+
+16. Verifique que $(x-3)(x+5)$ e $x^2 + 2x - 15$ são a mesma expressão. Em
+    seguida, explique por que só uma das duas escritas responde de imediato
+    "onde isso vale zero?".
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. São do 2º grau: b e d, porque a maior potência da incógnita é 2. a) é do 1º
+   grau. c) não é equação nenhuma — é uma expressão, não tem sinal de igual.
+2. $x = 2$ e $x = -7$. Cada fator zera no oposto do número que carrega.
+3. $3^2 - 3 - 6 = 9 - 9 = 0$ — sim, é raiz.
+4. Porque não existe par de números, ambos diferentes de zero, cujo produto seja
+   zero: o zero absorve qualquer multiplicação. Já 12 pode ser escrito como
+   $3 \times 4$, $2 \times 6$, $12 \times 1$, $(-3) \times (-4)$ e infinitos
+   outros pares, então conhecer o produto não identifica os fatores.
+5. Porque cada fator precisa **valer zero**, e $x + 2$ vale zero em $x = -2$, não
+   em $x = 2$. Testando $x = 2$: $(4)(5) = 20$, não zero. O sinal de mais no
+   parêntese corresponde a uma raiz negativa.
+6. Porque dividir por uma quantidade exige que ela não seja zero, e $x$ é o valor
+   procurado — pode ser zero. Ao dividir, perde-se a raiz $x = 0$, que é solução:
+   $0^2 = 4(0)$. Fatorando, $x(x-4) = 0$ preserva as duas raízes, 0 e 4.
+7. a) $(x+2)(x+3) = 0$, raízes $-2$ e $-3$. b) $(x-3)(x-4) = 0$, raízes 3 e 4.
+   c) diferença de quadrados: $(x-3)(x+3) = 0$, raízes 3 e $-3$. d) fator comum:
+   $x(x+4) = 0$, raízes 0 e $-4$ — se você respondeu só $-4$, a raiz zero se
+   perdeu.
+8. a) produto $-20$, soma $-1$: o par é $-5$ e 4, então $(x-5)(x+4) = 0$ e as
+   raízes são 5 e $-4$. Confere: $25 - 5 - 20 = 0$ e $16 + 4 - 20 = 0$. b)
+   produto 20, soma 9: o par é 4 e 5, então $(x+4)(x+5) = 0$ e as raízes são
+   $-4$ e $-5$. Confere: $16 - 36 + 20 = 0$ e $25 - 45 + 20 = 0$.
+9. a) $x^2 - 6x + 8 = 0$, que fatora como $(x-2)(x-4) = 0$: raízes 2 e 4.
+   Confere na original: $4 = 12 - 8$ e $16 = 24 - 8$. b) $x^2 - 7x + 10 = 0$,
+   ou $(x-2)(x-5) = 0$: raízes 2 e 5. Confere: $4 + 10 = 14 = 7(2)$ e
+   $25 + 10 = 35 = 7(5)$. c) produto $2 \times 3 = 6$ e soma 7, par 1 e 6:
+   $2x^2 + x + 6x + 3 = x(2x+1) + 3(2x+1) = (2x+1)(x+3) = 0$. De $2x + 1 = 0$
+   vem $x = -\frac{1}{2}$; de $x + 3 = 0$ vem $x = -3$.
+10. Perdeu-se $x = 0$, que é raiz: $0^2 = 5(0)$. Dividir por $x$ supõe que $x$ não
+    é zero, e essa suposição é justamente o que não se pode fazer quando $x$ é a
+    incógnita. O caminho correto é $x^2 - 5x = 0$, logo $x(x - 5) = 0$, com
+    raízes 0 e 5.
+11. Precisamos de dois inteiros de produto 1 e soma 3. Os únicos pares de produto
+    1 são $(1, 1)$, de soma 2, e $(-1, -1)$, de soma $-2$. Nenhum soma 3, então
+    não há fatoração com inteiros. Isso significa que **este método** não resolve
+    a equação; **não** significa que ela não tenha raízes — ela tem duas, mas
+    irracionais, e alcançá-las exige outra ferramenta.
+12. Seja $x$ a largura. O comprimento é $x + 5$ e a área é
+    $x(x + 5) = 84$, ou seja, $x^2 + 5x - 84 = 0$. Produto $-84$ e soma 5: o par
+    é 12 e $-7$, então $(x + 12)(x - 7) = 0$ e as raízes são $-12$ e 7. O
+    contexto descarta $-12$, porque largura não é negativa. O terreno tem
+    **7 m por 12 m**, e $7 \times 12 = 84$ m². ✓
+13. Lucro zero: $-n^2 + 30n - 200 = 0$. Multiplicando os dois lados por $-1$:
+    $n^2 - 30n + 200 = 0$. Produto 200 e soma 30: o par é 10 e 20, então
+    $(n - 10)(n - 20) = 0$ e as raízes são $n = 10$ e $n = 20$. Confere:
+    $-100 + 300 - 200 = 0$ e $-400 + 600 - 200 = 0$. Aqui **as duas raízes
+    servem**, porque as duas são quantidades possíveis de unidades: abaixo de 10
+    e acima de 20 a banca tem prejuízo, e entre elas tem lucro — em $n = 15$, por
+    exemplo, o lucro é $-225 + 450 - 200 = 25$ reais.
+14. Porque a conclusão "um dos fatores é zero" só é válida quando o produto é
+    zero. Em $(x+2)(x+3) = 12$, escrever $x + 2 = 12$ ou $x + 3 = 12$ leva a 10 e
+    9, e nenhum resolve: com $x = 10$, o produto é $12 \times 13 = 156$. O
+    caminho correto é $x^2 + 5x + 6 = 12$, então $x^2 + 5x - 6 = 0$ e
+    $(x+6)(x-1) = 0$, com raízes $-6$ e 1. Conferindo com $x = 1$:
+    $3 \times 4 = 12$. ✓
+15. Porque a forma fatorada tem **dois** fatores, e cada um zera em um ponto
+    próprio — logo há dois valores capazes de anular o produto. Uma equação do 1º
+    grau corresponde a um único fator e, portanto, a um único ponto onde ele
+    zera. É a presença do $x^2$ que abre espaço para a segunda raiz.
+16. Multiplicando: $(x-3)(x+5) = x^2 + 5x - 3x - 15 = x^2 + 2x - 15$ — são a
+    mesma expressão, e testar um número qualquer confirma (em $x = 1$, as duas
+    dão $-12$). Só a forma fatorada responde de imediato onde a expressão vale
+    zero, porque um produto zera quando um fator zera, e cada fator anuncia seu
+    ponto: 3 e $-5$. Na forma somada não há produto nenhum à vista, e nenhum dos
+    números 2 ou $-15$ é raiz.
+
+</details>
+
+## Revisão curta
+
+- Uma **equação do 2º grau** tem a incógnita elevada ao quadrado. Isolar o $x$
+  não funciona, porque ele aparece em dois graus diferentes.
+- A saída é a **propriedade do produto nulo**: se um produto vale zero, algum
+  fator vale zero. É a única conclusão que um produto permite tirar sobre seus
+  fatores, e vale exclusivamente para o zero.
+- O procedimento: **zerar um lado**, **fatorar**, igualar **cada fator** a zero e
+  resolver as equações do 1º grau que sobram. Um problema novo convertido em dois
+  problemas antigos.
+- Comece a fatoração sempre pelo **fator comum**. Em $x^2 = 4x$ é ele que
+  preserva a raiz $x = 0$ — dividir por $x$ a apagaria.
+- Cada fator zera no **oposto** do número que carrega: $(x+2)$ zera em $-2$.
+- Uma equação do 2º grau pode ter duas raízes, uma só (fatores iguais) ou nenhuma
+  alcançável por fatoração com inteiros — e este último caso não significa que
+  ela não tenha raízes.
+- **Verifique sempre na equação original** e deixe o **contexto** decidir quais
+  raízes servem. Descartar uma solução é interpretar, não corrigir.
+
+Antes de avançar, verifique se você consegue explicar **por que** o zero é
+indispensável no método e **por que** dividir por $x$ perde uma raiz. A forma
+fatorada mostra onde uma expressão vale zero — e é exatamente essa informação que
+a página de [funções](./funcoes) usa para saber onde um gráfico cruza o eixo
+horizontal.

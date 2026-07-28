@@ -4,7 +4,7 @@ title: Matematica basica
 
 # Matematica basica: dos numeros as funcoes
 
-Este capitulo organiza treze ideias fundamentais:
+Este capitulo organiza quinze ideias fundamentais:
 
 1. operacoes basicas;
 2. numeros negativos;
@@ -16,9 +16,11 @@ Este capitulo organiza treze ideias fundamentais:
 8. expoentes fracionarios;
 9. expressoes algebricas;
 10. produtos notaveis;
-11. fator comum em evidencia;
-12. equacoes;
-13. funcoes.
+11. fator comum em evidência;
+12. agrupamento e trinômios do 2º grau;
+13. equacoes;
+14. equacoes do 2º grau;
+15. funcoes.
 
 A ordem nao e acidental. Primeiro aprendemos a operar com quantidades. Depois
 ampliamos o tipo de numero que aceitamos: negativos, fracoes e decimais. Em
@@ -41,7 +43,7 @@ Pela manha, havia 20 cadernos no estoque. Durante o dia:
 
 - chegaram 8 cadernos novos;
 - foram vendidos 15 cadernos;
-- cada caderno vendido custou R$ 12,50;
+- cada caderno vendido custou R\$ 12,50;
 - a loja deu 10% de desconto para um cliente;
 - no fim do mes, o dono quer prever quanto ganhara se vender a mesma quantidade
   todos os dias.
@@ -97,7 +99,9 @@ para o proximo.
 8. [Expoentes fracionarios](./expoentes-fracionarios)
 9. [Expressoes algebricas](./expressoes-algebricas)
 10. [Produtos notaveis](./produtos-notaveis)
-11. [Fator comum em evidencia](./fator-comum-em-evidencia)
-12. [Equacoes](./equacoes)
-13. [Funcoes](./funcoes)
-14. [Revisao geral](./revisao-geral)
+11. [Fator comum em evidência](./fator-comum-em-evidencia)
+12. [Agrupamento e trinômios do 2º grau](./agrupamento-e-trinomios)
+13. [Equacoes](./equacoes)
+14. [Equacoes do 2º grau](./equacoes-do-segundo-grau)
+15. [Funcoes](./funcoes)
+16. [Revisao geral](./revisao-geral)

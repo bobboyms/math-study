@@ -80,27 +80,37 @@ const sidebars = {
         {
           type: 'doc',
           id: 'matematica-basica/produtos-notaveis',
-          label: '2.11 Produtos notaveis',
+          label: '2.11 Produtos notáveis',
         },
         {
           type: 'doc',
           id: 'matematica-basica/fator-comum-em-evidencia',
-          label: '2.12 Fator comum em evidencia',
+          label: '2.12 Fator comum em evidência',
+        },
+        {
+          type: 'doc',
+          id: 'matematica-basica/agrupamento-e-trinomios',
+          label: '2.13 Agrupamento e trinômios',
         },
         {
           type: 'doc',
           id: 'matematica-basica/equacoes',
-          label: '2.13 Equacoes',
+          label: '2.14 Equações',
+        },
+        {
+          type: 'doc',
+          id: 'matematica-basica/equacoes-do-segundo-grau',
+          label: '2.15 Equações do 2º grau',
         },
         {
           type: 'doc',
           id: 'matematica-basica/funcoes',
-          label: '2.14 Funcoes',
+          label: '2.16 Funções',
         },
         {
           type: 'doc',
           id: 'matematica-basica/revisao-geral',
-          label: '2.15 Revisao geral',
+          label: '2.17 Revisão geral',
         },
       ],
     },
