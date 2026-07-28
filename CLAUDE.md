@@ -148,6 +148,27 @@ símbolos diferentes significam a mesma coisa:
 - continuação: `\ldots`;
 - texto dentro de fórmula: `\text{área} = \text{lado} \times \text{lado}`.
 
+### Trigonometria: nomes em português
+
+O KaTeX só traz os nomes em inglês (`\sin`, `\tan`, `\arcsin`). As macros do
+site, em `src/katexMacros.js`, acrescentam os equivalentes em português:
+
+| Escreva | Sai como | Já existia no KaTeX |
+|---|---|---|
+| `\sen` | sen | `\cos`, `\sec` |
+| `\tg` | tg | `\arccos` |
+| `\cotg` | cotg | |
+| `\cossec` | cossec | |
+| `\arcsen` | arcsen | |
+| `\arctg` | arctg | |
+
+O arquivo é lido em **dois lugares** — `docusaurus.config.js`, para as fórmulas
+do corpo do texto, e `mathviz/SvgMath.jsx`, para os rótulos dentro dos desenhos.
+Se as listas divergirem, um rótulo de figura quebra sem que nenhuma fórmula do
+texto quebre — erro difícil de achar. Por isso, uma lista só.
+
+Ao acrescentar uma macro, basta editar `src/katexMacros.js`.
+
 ## Corretude numérica
 
 Uma resposta errada no gabarito é a pior falha possível neste repositório — o

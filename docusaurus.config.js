@@ -2,6 +2,7 @@
 
 const remarkMath = require('remark-math').default;
 const rehypeKatex = require('rehype-katex').default;
+const katexMacros = require('./src/katexMacros');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -36,7 +37,7 @@ const config = {
           sidebarPath: require.resolve('./sidebars.js'),
           routeBasePath: '/',
           remarkPlugins: [remarkMath],
-          rehypePlugins: [rehypeKatex],
+          rehypePlugins: [[rehypeKatex, {macros: katexMacros}]],
         },
         blog: false,
         theme: {

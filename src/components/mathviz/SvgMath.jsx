@@ -1,5 +1,6 @@
 import React from 'react';
 import katex from 'katex';
+import macros from '@site/src/katexMacros';
 
 // Rótulo em LaTeX dentro de um SVG.
 //
@@ -71,7 +72,12 @@ export default function SvgMath({
               : undefined
           }
           dangerouslySetInnerHTML={{
-            __html: katex.renderToString(String(math), {throwOnError: false}),
+            __html: katex.renderToString(String(math), {
+              throwOnError: false,
+              // As mesmas macros das fórmulas do corpo do texto: sem elas,
+              // \sen num rótulo de figura sairia em vermelho.
+              macros: {...macros},
+            }),
           }}
         />
       </div>
