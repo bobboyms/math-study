@@ -1,0 +1,663 @@
+---
+title: Seno, cosseno e tangente
+---
+
+import GeoFigure from '@site/src/components/GeoFigure';
+
+# Seno, cosseno e tangente: três razões que só dependem do ângulo
+
+## Problema motivador: a altura da torre
+
+Uma torre de telefonia está no terreno ao lado. Você quer saber a altura dela e
+não tem como subir nem como encostar uma trena no topo.
+
+O que você consegue fazer, com uma trena e um aplicativo de nível do celular:
+
+- medir a distância da base da torre até o ponto onde você está: **30 m**;
+- medir o ângulo com que você enxerga o topo, a partir da horizontal: **40°**.
+
+<GeoFigure
+  unit={40}
+  padding={54}
+  polygons={[{points: [[0, 0], [4, 0], [4, 3.36]], tone: 1}]}
+  angles={[
+    {at: [4, 0], from: [0, 0], to: [4, 3.36], right: true, tone: 1},
+    {at: [0, 0], from: [4, 0], to: [4, 3.36], label: '40^\\circ', tone: 2, radius: 40, labelRadius: 64},
+  ]}
+  labels={[
+    {at: [2, -0.42], math: '30\\text{ m}', tone: 1, fontSize: 13},
+    {at: [4.45, 1.7], math: 'h = ?', tone: 3, fontSize: 14},
+  ]}
+  caption="Distância e ângulo conhecidos; altura desconhecida. Um triângulo retângulo com dois dados e uma incógnita."
+/>
+
+> Qual é a altura da torre?
+
+Pela [semelhança](./semelhanca), sabemos que esse triângulo está determinado:
+todos os triângulos retângulos com um ângulo de 40° têm a mesma forma, e
+portanto a razão entre a altura e a base é sempre a mesma.
+
+O que ainda não temos é **o número**. Saber que a razão é fixa não diz quanto
+ela vale. Esta página resolve isso: dá nome, notação e valor a essas razões.
+
+## Mapa das ideias
+
+Fixado um dos ângulos agudos de um triângulo retângulo:
+
+- **cateto oposto** — o lado que está de frente para esse ângulo;
+- **cateto adjacente** — o lado que forma esse ângulo (junto com a hipotenusa);
+- **seno** — $\sen \alpha = \dfrac{\text{cateto oposto}}{\text{hipotenusa}}$;
+- **cosseno** — $\cos \alpha = \dfrac{\text{cateto adjacente}}{\text{hipotenusa}}$;
+- **tangente** — $\tg \alpha = \dfrac{\text{cateto oposto}}{\text{cateto adjacente}}$.
+
+Exemplo: num triângulo de catetos 3 e 4 e hipotenusa 5, para o ângulo oposto ao
+cateto 3 temos $\sen = \frac{3}{5} = 0{,}6$ e $\cos = \frac{4}{5} = 0{,}8$.
+Contraexemplo: $\sen$ desse mesmo ângulo **não** é $\frac{3}{4}$ — essa é a
+tangente. O denominador do seno é sempre a hipotenusa.
+
+## Para que isso serve?
+
+- medir alturas e distâncias inacessíveis: torres, prédios, montanhas, largura
+  de rios;
+- topografia, navegação e astronomia;
+- calcular componentes de forças e velocidades em física — decompor um vetor é
+  aplicar seno e cosseno;
+- rampas, telhados, escadas e inclinações em geral;
+- em computação gráfica e robótica, converter entre ângulo e deslocamento;
+- e, dentro da matemática, é a porta de entrada das funções periódicas, que
+  descrevem tudo o que se repete.
+
+## Ideias anteriores que voltam aqui
+
+**1. Semelhança e a razão que não muda** (de [Semelhança](./semelhanca)). Por
+que a razão entre dois lados de um triângulo não muda quando ele é ampliado?
+
+<details>
+<summary>Conferir</summary>
+
+Porque a ampliação multiplica os dois lados pelo mesmo $k$, e na razão
+$\frac{ka}{kb}$ o $k$ se cancela. Este é o fato que torna a página inteira
+possível: sem ele, cada triângulo teria o seu “seno”.
+
+</details>
+
+**2. Vocabulário do triângulo retângulo** (de [Triângulos](./triangulos)). O que
+são hipotenusa e catetos?
+
+<details>
+<summary>Conferir</summary>
+
+A hipotenusa é o lado oposto ao ângulo reto — o maior dos três. Os catetos são
+os dois lados que formam o ângulo reto.
+
+</details>
+
+**3. Ângulos complementares** (de [Ângulos](./angulos) e
+[Triângulos](./triangulos)). Quanto somam os dois ângulos agudos de um
+triângulo retângulo?
+
+<details>
+<summary>Conferir</summary>
+
+90°. Isso vai explicar, no fim da página, por que “cosseno” tem esse nome.
+
+</details>
+
+**4. Razão como divisão** (de [Frações](../numeros-e-operacoes/fracoes)). O que
+significa uma razão valer 0,6?
+
+<details>
+<summary>Conferir</summary>
+
+Que o primeiro valor é 0,6 vez o segundo — 60% dele. Uma razão é uma
+**comparação por divisão**, e todo seno, cosseno e tangente é isso.
+
+</details>
+
+## Intuição: um número que descreve a inclinação
+
+Pense de novo na rampa. Duas rampas com a mesma inclinação, uma curta e outra
+longa, têm a mesma “cara”: para cada metro avançado, sobem a mesma altura.
+
+Essa é a ideia da tangente. E o seno e o cosseno são variações do mesmo tema,
+comparando cada cateto com a hipotenusa em vez de comparar os catetos entre si.
+
+Por que três razões, e não uma? Porque num triângulo há três lados, e portanto
+três pares possíveis para comparar. Cada par responde a uma pergunta diferente:
+
+| Razão | Pergunta que ela responde |
+|---|---|
+| $\sen$ | que fração da distância percorrida virou **subida**? |
+| $\cos$ | que fração da distância percorrida virou **avanço horizontal**? |
+| $\tg$ | quanto se sobe para cada unidade avançada? |
+
+Num carro subindo uma serra: o seno diz quanto do trajeto do velocímetro virou
+altitude; o cosseno diz quanto virou deslocamento no mapa; a tangente é a
+inclinação que aparece na placa de trânsito.
+
+## Modelo visual: os três pares de lados
+
+<GeoFigure
+  unit={54}
+  padding={60}
+  polygons={[{points: [[0, 0], [3, 0], [3, 2.25]], tone: 0, fill: false}]}
+  angles={[
+    {at: [3, 0], from: [0, 0], to: [3, 2.25], right: true},
+    {at: [0, 0], from: [3, 0], to: [3, 2.25], label: '\\alpha', tone: 2, radius: 34, labelRadius: 56},
+  ]}
+  labels={[
+    {at: [1.5, -0.4], math: '\\text{adjacente a } \\alpha', tone: 3, fontSize: 12, halo: false},
+    {at: [3.9, 1.12], math: '\\text{oposto a } \\alpha', tone: 1, fontSize: 12},
+    {at: [1.3, 1.35], math: '\\text{hipotenusa}', fontSize: 12},
+  ]}
+  caption="Os nomes dos catetos são relativos ao ângulo escolhido. Aqui, em relação a α."
+/>
+
+Fixado o ângulo $\alpha$:
+
+- **oposto** é o cateto que está do outro lado da figura, de frente para
+  $\alpha$;
+- **adjacente** é o cateto que encosta em $\alpha$ — o que forma o ângulo junto
+  com a hipotenusa.
+
+> **Atenção — a fonte de metade dos erros do assunto:** “oposto” e “adjacente”
+> **não são propriedades do lado**. São propriedades do par *lado + ângulo
+> escolhido*. O mesmo cateto é oposto a um ângulo agudo e adjacente ao outro.
+
+<GeoFigure
+  unit={48}
+  padding={58}
+  polygons={[{points: [[0, 0], [3, 0], [3, 2.25]], tone: 0, fill: false}]}
+  angles={[
+    {at: [3, 0], from: [0, 0], to: [3, 2.25], right: true},
+    {at: [0, 0], from: [3, 0], to: [3, 2.25], label: '\\alpha', tone: 2, radius: 30, labelRadius: 50},
+    {at: [3, 2.25], from: [3, 0], to: [0, 0], label: '\\beta', tone: 3, radius: 30, labelRadius: 50},
+  ]}
+  labels={[
+    {at: [1.5, -0.4], math: 'b = 3', fontSize: 13, halo: false},
+    {at: [3.32, 1.12], math: 'a = 2{,}25', fontSize: 13},
+    {at: [1.3, 1.35], math: 'c = 3{,}75', fontSize: 13},
+  ]}
+  caption="O mesmo triângulo, com os dois ângulos agudos nomeados."
+/>
+
+Para $\alpha$, o cateto $a$ é oposto e $b$ é adjacente. Para $\beta$, é o
+contrário. As razões ficam:
+
+| | $\alpha$ | $\beta$ |
+|---|---|---|
+| seno | $\frac{a}{c} = \frac{2{,}25}{3{,}75} = 0{,}6$ | $\frac{b}{c} = \frac{3}{3{,}75} = 0{,}8$ |
+| cosseno | $\frac{b}{c} = 0{,}8$ | $\frac{a}{c} = 0{,}6$ |
+| tangente | $\frac{a}{b} = 0{,}75$ | $\frac{b}{a} \approx 1{,}333$ |
+
+Note que $\sen\alpha = \cos\beta$ e $\cos\alpha = \sen\beta$. Isso não é
+coincidência, e será explicado adiante.
+
+## Formalização
+
+> Num triângulo retângulo, para um ângulo agudo $\alpha$:
+> $$\sen \alpha = \frac{\text{cateto oposto}}{\text{hipotenusa}}, \qquad
+> \cos \alpha = \frac{\text{cateto adjacente}}{\text{hipotenusa}}, \qquad
+> \tg \alpha = \frac{\text{cateto oposto}}{\text{cateto adjacente}}.$$
+
+O apoio de memória tradicional junta as três iniciais:
+
+$$
+\underbrace{\text{SOH}}_{\text{Seno} = \frac{\text{Oposto}}{\text{Hipotenusa}}}
+\quad
+\underbrace{\text{CAH}}_{\text{Cosseno} = \frac{\text{Adjacente}}{\text{Hipotenusa}}}
+\quad
+\underbrace{\text{TOA}}_{\text{Tangente} = \frac{\text{Oposto}}{\text{Adjacente}}}
+$$
+
+### Uma relação que sai de graça
+
+Divida o seno pelo cosseno:
+
+$$
+\frac{\sen\alpha}{\cos\alpha}
+= \frac{\ \frac{\text{op}}{\text{hip}}\ }{\ \frac{\text{adj}}{\text{hip}}\ }
+= \frac{\text{op}}{\text{hip}} \times \frac{\text{hip}}{\text{adj}}
+= \frac{\text{op}}{\text{adj}}
+= \tg\alpha.
+$$
+
+> $$\tg \alpha = \frac{\sen \alpha}{\cos \alpha}.$$
+
+A hipotenusa se cancela — o mesmo mecanismo de sempre. Isso significa que a
+tangente **não é uma quarta informação**: ela é consequência das outras duas.
+Guardar seno e cosseno basta.
+
+Conferindo com os números da tabela acima:
+$\frac{0{,}6}{0{,}8} = 0{,}75$ ✓.
+
+### Por que seno e cosseno ficam entre 0 e 1
+
+Em qualquer triângulo retângulo, cada cateto é **menor** que a hipotenusa — ela
+é o maior lado. Como seno e cosseno têm a hipotenusa no denominador, as duas
+razões são sempre menores que 1 (e maiores que 0, já que são comprimentos).
+
+$$
+0 < \sen\alpha < 1
+\qquad
+0 < \cos\alpha < 1
+\qquad (0^\circ < \alpha < 90^\circ)
+$$
+
+> **Erro comum:** obter $\sen\alpha = 1{,}4$ e seguir em frente. É impossível.
+> Um seno maior que 1 significa que você dividiu pelo lado errado — provavelmente
+> usou um cateto como denominador. **Todo resultado de seno ou cosseno deve ser
+> conferido contra o limite 1.**
+
+A tangente, por sua vez, não tem esse teto: ela compara dois catetos, e o
+oposto pode ser muito maior que o adjacente. Em 45° ela vale exatamente 1; acima
+disso, passa de 1 e cresce sem limite conforme o ângulo se aproxima de 90°.
+
+### Por que “cosseno”? A relação com o complementar
+
+Volte ao triângulo com $\alpha$ e $\beta$. O que é oposto a $\alpha$ é adjacente
+a $\beta$, e vice-versa. Trocando os papéis nas definições:
+
+$$
+\sen \alpha = \cos \beta
+\qquad\text{e}\qquad
+\cos \alpha = \sen \beta.
+$$
+
+E como os dois ângulos agudos são [complementares](./triangulos), $\beta =
+90^\circ - \alpha$:
+
+> $$\sen \alpha = \cos(90^\circ - \alpha) \qquad \cos\alpha = \sen(90^\circ - \alpha).$$
+
+Aí está a origem do nome: **cosseno** é a abreviação de “seno do
+**co**mplementar”. Não é um conceito novo — é o seno do outro ângulo.
+
+Exemplo: $\sen 30^\circ = \cos 60^\circ = 0{,}5$. Contraexemplo:
+$\sen 30^\circ$ **não** é $\cos 30^\circ$; esse vale cerca de 0,866.
+
+## De onde vêm os valores
+
+As definições dizem o que as razões significam, mas não entregam números. Como
+saber que $\tg 40^\circ \approx 0{,}8391$?
+
+Historicamente, os valores foram calculados uma vez e tabelados — tabelas
+trigonométricas existem há mais de dois mil anos, e foram construídas com
+geometria e muito trabalho manual. Hoje, qualquer calculadora traz as três
+funções. Alguns valores são exatos e serão deduzidos na
+[próxima página](./angulos-notaveis).
+
+Tabela de referência para os exercícios desta página:
+
+| Ângulo | $\sen$ | $\cos$ | $\tg$ |
+|---:|---:|---:|---:|
+| 10° | 0,1736 | 0,9848 | 0,1763 |
+| 15° | 0,2588 | 0,9659 | 0,2679 |
+| 20° | 0,3420 | 0,9397 | 0,3640 |
+| 25° | 0,4226 | 0,9063 | 0,4663 |
+| 30° | 0,5000 | 0,8660 | 0,5774 |
+| 35° | 0,5736 | 0,8192 | 0,7002 |
+| 40° | 0,6428 | 0,7660 | 0,8391 |
+| 45° | 0,7071 | 0,7071 | 1,0000 |
+| 50° | 0,7660 | 0,6428 | 1,1918 |
+| 55° | 0,8192 | 0,5736 | 1,4281 |
+| 60° | 0,8660 | 0,5000 | 1,7321 |
+| 65° | 0,9063 | 0,4226 | 2,1445 |
+| 70° | 0,9397 | 0,3420 | 2,7475 |
+| 75° | 0,9659 | 0,2588 | 3,7321 |
+| 80° | 0,9848 | 0,1736 | 5,6713 |
+
+Repare na simetria da tabela: a coluna do cosseno é a do seno lida de baixo para
+cima. É a relação $\sen\alpha = \cos(90^\circ-\alpha)$ aparecendo como
+propriedade visível dos números.
+
+> **Atenção prática — o modo da calculadora.** Toda calculadora científica opera
+> em **DEG** (graus), **RAD** (radianos) ou **GRAD**. Se o visor mostra RAD e
+> você digita $\sen 30$, o resultado é $-0{,}988$ em vez de $0{,}5$: a máquina
+> entendeu 30 radianos. Antes de qualquer conta desta página, confirme que está
+> em **DEG**. Quando os [radianos](./radianos) forem estudados, esse aviso ganha
+> sentido completo.
+
+> **Nota de notação.** Em português escreve-se $\sen$; em inglês, e na maioria
+> das calculadoras e linguagens de programação, `sin`. A tangente aparece como
+> $\tg$ aqui e como `tan` nas máquinas. São a mesma função.
+
+## Resolvendo a altura da torre
+
+Organize os dados antes de escolher a razão — este é o passo que evita a maior
+parte dos erros:
+
+- ângulo conhecido: 40°;
+- lado **conhecido**: 30 m, que é o cateto **adjacente** ao ângulo de 40°;
+- lado **procurado**: $h$, que é o cateto **oposto** ao ângulo de 40°.
+
+Qual das três razões liga oposto e adjacente? A **tangente**.
+
+$$
+\tg 40^\circ = \frac{h}{30}.
+$$
+
+Multiplicando os dois lados por 30:
+
+$$
+h = 30 \times \tg 40^\circ = 30 \times 0{,}8391 \approx 25{,}17 \text{ m}.
+$$
+
+A torre tem cerca de **25 metros**.
+
+**Sanidade.** O ângulo de 40° é menor que 45°, e em 45° a tangente vale 1 —
+altura igual à distância, 30 m. Como 40° é menos inclinado, a altura tinha de
+sair **menor** que 30 m. ✓ Se a resposta tivesse dado 35 m, a razão estaria
+invertida.
+
+Repare no roteiro que apareceu, e que serve para qualquer problema deste tipo:
+
+1. marque o ângulo de referência;
+2. classifique os dois lados envolvidos como oposto, adjacente ou hipotenusa;
+3. escolha a razão que contém exatamente esses dois;
+4. monte a equação e isole a incógnita;
+5. confira o resultado contra um valor de referência (45°, ou o limite 1 no
+   seno).
+
+## Exemplos resolvidos
+
+### Exemplo 1: calcular as três razões
+
+Um triângulo retângulo tem catetos 5 e 12 e hipotenusa 13. Calcule seno,
+cosseno e tangente do ângulo oposto ao cateto 5.
+
+$$
+\sen = \frac{5}{13} \approx 0{,}3846
+\qquad
+\cos = \frac{12}{13} \approx 0{,}9231
+\qquad
+\tg = \frac{5}{12} \approx 0{,}4167.
+$$
+
+Conferência: $\frac{\sen}{\cos} = \frac{0{,}3846}{0{,}9231} \approx 0{,}4167$
+✓, e os dois primeiros ficaram abaixo de 1 ✓.
+
+### Exemplo 2: a rampa
+
+*Pause e tente antes de ler.* Uma rampa tem 6 m de comprimento (a parte
+inclinada) e forma 10° com o chão. Que altura ela vence? Que espaço horizontal
+ocupa?
+
+O comprimento inclinado é a **hipotenusa**.
+
+Altura (cateto oposto a 10°):
+
+$$
+\sen 10^\circ = \frac{h}{6}
+\Longrightarrow
+h = 6 \times 0{,}1736 \approx 1{,}04 \text{ m}.
+$$
+
+Espaço horizontal (cateto adjacente):
+
+$$
+\cos 10^\circ = \frac{d}{6}
+\Longrightarrow
+d = 6 \times 0{,}9848 \approx 5{,}91 \text{ m}.
+$$
+
+Faz sentido: com ângulo pequeno, quase todo o comprimento vira avanço
+horizontal, e a subida é pequena. Confira também com
+[Pitágoras](./teorema-de-pitagoras):
+$1{,}04^2 + 5{,}91^2 = 1{,}08 + 34{,}93 = 36{,}01 \approx 6^2$ ✓.
+
+### Exemplo 3: achar a hipotenusa
+
+*Pause e tente antes de ler.* Um cabo sai do topo de um poste e chega ao chão
+formando 55° com a horizontal. O ponto de fixação no chão está a 4 m da base do
+poste. Qual é o comprimento do cabo?
+
+Dados: ângulo 55°; lado conhecido 4 m, **adjacente** a ele; lado procurado, a
+**hipotenusa** (o cabo). A razão que liga adjacente e hipotenusa é o cosseno:
+
+$$
+\cos 55^\circ = \frac{4}{c}
+\Longrightarrow
+c = \frac{4}{\cos 55^\circ} = \frac{4}{0{,}5736} \approx 6{,}97 \text{ m}.
+$$
+
+> **Cuidado com a posição da incógnita.** Aqui ela estava no **denominador**, e
+> por isso a operação final foi uma divisão, não uma multiplicação. Isolar
+> corretamente é uma aplicação direta de
+> [equações do 1º grau](../equacoes/equacoes-do-primeiro-grau): multiplique os
+> dois lados por $c$ e depois divida por $\cos 55^\circ$.
+
+### Exemplo 4: usar a relação com o complementar
+
+*Pause e tente antes de ler.* Sabendo que $\sen 25^\circ = 0{,}4226$, quanto
+vale $\cos 65^\circ$? E $\cos 25^\circ$?
+
+Como $25 + 65 = 90$, os ângulos são complementares:
+
+$$
+\cos 65^\circ = \sen 25^\circ = 0{,}4226.
+$$
+
+Já $\cos 25^\circ$ é outra coisa — vale 0,9063, como a tabela mostra. O erro de
+supor que $\cos 25^\circ = 1 - \sen 25^\circ$ daria 0,5774, que está errado (e é,
+por coincidência, a tangente de 30°).
+
+### Exemplo 5: decompor um deslocamento
+
+*Pause e tente antes de ler.* Um drone voa 200 m numa direção que faz 35° com o
+leste. Quanto ele avançou para o leste e quanto para o norte?
+
+O deslocamento total é a hipotenusa; as duas componentes são os catetos.
+
+$$
+\text{leste} = 200 \cos 35^\circ = 200 \times 0{,}8192 = 163{,}8 \text{ m}
+$$
+
+$$
+\text{norte} = 200 \sen 35^\circ = 200 \times 0{,}5736 = 114{,}7 \text{ m}.
+$$
+
+Este exemplo é a base de toda a física de vetores: **cosseno para a componente
+alinhada com o ângulo de referência, seno para a perpendicular a ela**.
+
+## Erros comuns
+
+> **Erro 1: confundir oposto com adjacente.** Marque o ângulo no desenho antes
+> de nomear os lados, todas as vezes. O mesmo cateto muda de nome conforme o
+> ângulo escolhido.
+
+> **Erro 2: usar a hipotenusa na tangente.** A tangente compara os dois
+> **catetos**. Se a hipotenusa apareceu na conta da tangente, algo saiu errado.
+
+> **Erro 3: aceitar seno maior que 1.** Impossível para ângulo agudo. Reveja
+> qual lado ficou no denominador.
+
+> **Erro 4: calculadora em RAD.** $\sen 30$ deve dar 0,5. Se der outro número,
+> troque o modo.
+
+> **Erro 5: aplicar as razões a um triângulo que não é retângulo.** Todas as
+> definições desta página pressupõem o ângulo de 90°. Sem ele, valem outras
+> relações (leis dos senos e dos cossenos), que este capítulo não cobre.
+
+## Perguntas de verificação
+
+1. Por que faz sentido falar em “o seno de 40°” sem dizer de que triângulo?
+2. Por que um mesmo cateto pode ser chamado de oposto e de adjacente?
+3. Por que seno e cosseno de um ângulo agudo são sempre menores que 1, mas a
+   tangente não tem limite?
+4. Por que $\tg\alpha = \frac{\sen\alpha}{\cos\alpha}$ não é uma definição nova?
+5. De onde vem o nome “cosseno”?
+6. Num problema, como decidir qual das três razões usar?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque todos os triângulos retângulos com um ângulo de 40° são
+   **semelhantes** entre si, e numa semelhança a razão entre dois lados
+   correspondentes é a mesma. O valor depende só do ângulo, não do tamanho do
+   triângulo.
+2. Porque os nomes são relativos ao ângulo escolhido. Num triângulo retângulo há
+   dois ângulos agudos; o cateto que está de frente para um deles encosta no
+   outro.
+3. Porque seno e cosseno dividem um cateto pela **hipotenusa**, que é o maior
+   lado — a fração é sempre menor que 1. A tangente divide um cateto pelo outro,
+   e não há restrição de qual é maior: quando o oposto supera o adjacente, ela
+   passa de 1.
+4. Porque ela é obtida dividindo as duas definições anteriores: a hipotenusa
+   aparece nos dois denominadores e se cancela, restando oposto sobre adjacente
+   — que é exatamente a definição de tangente.
+5. De “seno do **co**mplementar”. Como os ângulos agudos de um triângulo
+   retângulo somam 90°, o cosseno de um é o seno do outro:
+   $\cos\alpha = \sen(90^\circ-\alpha)$.
+6. Identificando **quais dois lados** aparecem no problema (o conhecido e o
+   procurado) e classificando-os em relação ao ângulo dado. Oposto e hipotenusa
+   pedem seno; adjacente e hipotenusa pedem cosseno; os dois catetos pedem
+   tangente.
+
+</details>
+
+## Exercícios
+
+Use a tabela da página quando precisar de valores.
+
+### 1. Reconhecimento
+
+1. Num triângulo retângulo de catetos 8 e 15 e hipotenusa 17, calcule seno,
+   cosseno e tangente do ângulo oposto ao cateto 8.
+2. No mesmo triângulo, calcule as três razões do outro ângulo agudo e compare
+   com o item anterior.
+3. Complete: se $\sen 20^\circ = 0{,}3420$, então $\cos 70^\circ = $ ?
+
+### 2. Explicação
+
+4. Explique por que o valor de $\sen 40^\circ$ é o mesmo em um triângulo
+   pequeno e em um enorme.
+5. Um colega calculou $\cos\alpha = 1{,}25$. Explique por que isso é impossível
+   e diga qual erro provável ele cometeu.
+6. Explique, sem calcular, por que $\tg 60^\circ$ tem de ser maior que 1.
+
+### 3. Aplicação direta
+
+7. Num triângulo retângulo, um ângulo agudo mede 35° e a hipotenusa mede 20 cm.
+   Calcule os dois catetos.
+8. Uma escada de 5 m encosta na parede formando 70° com o chão. A que altura ela
+   toca a parede? A que distância o pé dela está da parede?
+9. Um cabo de 12 m sai do topo de um mastro e faz 50° com o chão. Qual é a altura
+   do mastro?
+
+### 4. Variação
+
+10. Uma torre projeta 18 m de sombra quando o sol está a 55° acima do horizonte.
+    Qual é a altura da torre?
+11. Um telhado tem inclinação de 25°. Se a distância horizontal do beiral à
+    cumeeira é 4 m, qual é o comprimento da água do telhado e qual é o desnível?
+12. Um avião decola com ângulo de 10° e percorre 3 km de trajetória. Que
+    altitude atingiu, e que distância percorreu sobre o solo?
+
+<details>
+<summary>Dica para o 10</summary>
+
+A sombra é o cateto adjacente ao ângulo do sol; a torre é o oposto. Qual razão
+liga esses dois?
+
+</details>
+
+### 5. Problema misto
+
+13. Uma rampa deve vencer um desnível de 60 cm. A norma de acessibilidade
+    brasileira limita a inclinação a 8,33%, ou seja, tangente de no máximo
+    0,0833. Qual é o comprimento horizontal mínimo da rampa? E o comprimento
+    inclinado, por Pitágoras?
+14. De um ponto no chão, o topo de um prédio é visto a 40°. Andando 15 m em
+    direção ao prédio, o ângulo passa a 55°. Escreva as duas equações que
+    relacionam a altura $h$ e a distância inicial $d$, e resolva o sistema para
+    achar $h$.
+
+<details>
+<summary>Dica para o 14</summary>
+
+Nas duas posições, a altura do prédio é a **mesma**. Escreva $h$ em função de
+$d$ pelo primeiro ângulo e em função de $d-15$ pelo segundo, e iguale.
+
+</details>
+
+### 6. Justificativa
+
+15. Mostre que $\sen\alpha = \cos(90^\circ - \alpha)$ usando apenas a definição
+    das razões e a soma dos ângulos de um triângulo.
+16. Um triângulo retângulo tem catetos $a$ e $b$ e hipotenusa $c$. Mostre que
+    $(\sen\alpha)^2 + (\cos\alpha)^2 = 1$ para qualquer ângulo agudo $\alpha$
+    desse triângulo, usando o teorema de Pitágoras.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. $\sen = \frac{8}{17} \approx 0{,}4706$;
+   $\cos = \frac{15}{17} \approx 0{,}8824$;
+   $\tg = \frac{8}{15} \approx 0{,}5333$.
+2. $\sen = \frac{15}{17} \approx 0{,}8824$;
+   $\cos = \frac{8}{17} \approx 0{,}4706$;
+   $\tg = \frac{15}{8} = 1{,}875$. O seno de um é o cosseno do outro, e as
+   tangentes são inversas uma da outra.
+3. $0{,}3420$ — os ângulos são complementares.
+4. Porque os dois triângulos são semelhantes, e a razão entre lados
+   correspondentes não depende do fator de ampliação: ele se cancela.
+5. Cosseno de ângulo agudo é um cateto dividido pela hipotenusa, e o cateto é
+   sempre menor — a razão não pode passar de 1. Provavelmente ele colocou a
+   hipotenusa no numerador, ou usou o cateto errado como denominador.
+6. Porque $\tg 45^\circ = 1$, e a tangente cresce à medida que o ângulo aumenta:
+   com o ângulo maior, o cateto oposto passa a ser maior que o adjacente. Como
+   $60^\circ > 45^\circ$, a tangente supera 1. (De fato, vale 1,7321.)
+7. Cateto oposto: $20 \times 0{,}5736 = 11{,}47$ cm. Cateto adjacente:
+   $20 \times 0{,}8192 = 16{,}38$ cm.
+8. Altura: $5 \times \sen 70^\circ = 5 \times 0{,}9397 = 4{,}70$ m. Distância:
+   $5 \times \cos 70^\circ = 5 \times 0{,}3420 = 1{,}71$ m.
+9. $12 \times \sen 50^\circ = 12 \times 0{,}7660 = 9{,}19$ m.
+10. $h = 18 \times \tg 55^\circ = 18 \times 1{,}4281 \approx 25{,}7$ m.
+11. Comprimento da água: $\frac{4}{\cos 25^\circ} = \frac{4}{0{,}9063}
+    \approx 4{,}41$ m. Desnível: $4 \times \tg 25^\circ = 4 \times 0{,}4663
+    \approx 1{,}87$ m.
+12. Altitude: $3 \times \sen 10^\circ = 3 \times 0{,}1736 \approx 0{,}521$ km.
+    Distância no solo: $3 \times \cos 10^\circ \approx 2{,}954$ km.
+13. Comprimento horizontal: $\tg\theta = \frac{0{,}60}{d} \le 0{,}0833
+    \Rightarrow d \ge \frac{0{,}60}{0{,}0833} \approx 7{,}20$ m. Comprimento
+    inclinado: $\sqrt{7{,}20^2 + 0{,}60^2} = \sqrt{51{,}84+0{,}36} =
+    \sqrt{52{,}2} \approx 7{,}22$ m.
+14. Do primeiro ponto: $h = d \tg 40^\circ = 0{,}8391 d$. Do segundo:
+    $h = (d-15)\tg 55^\circ = 1{,}4281(d-15)$. Igualando:
+    $0{,}8391d = 1{,}4281d - 21{,}42 \Rightarrow 0{,}5890d = 21{,}42
+    \Rightarrow d \approx 36{,}37$ m. Então
+    $h \approx 0{,}8391 \times 36{,}37 \approx 30{,}5$ m.
+15. Chame os ângulos agudos de $\alpha$ e $\beta$. Como a soma dos três ângulos
+    é 180° e um deles é 90°, tem-se $\beta = 90^\circ - \alpha$. O cateto oposto
+    a $\alpha$ é o adjacente a $\beta$, e a hipotenusa é a mesma. Então
+    $\sen\alpha = \frac{\text{op}_\alpha}{c} = \frac{\text{adj}_\beta}{c} =
+    \cos\beta = \cos(90^\circ - \alpha)$.
+16. $\sen\alpha = \frac{a}{c}$ e $\cos\alpha = \frac{b}{c}$. Então
+    $(\sen\alpha)^2 + (\cos\alpha)^2 = \frac{a^2}{c^2} + \frac{b^2}{c^2}
+    = \frac{a^2+b^2}{c^2}$. Por Pitágoras, $a^2+b^2 = c^2$, e a fração vale
+    $\frac{c^2}{c^2} = 1$. (Esta é a identidade mais importante da
+    trigonometria, e será retomada em
+    [Relações fundamentais](./relacoes-fundamentais).)
+
+</details>
+
+## Revisão curta
+
+- Num triângulo retângulo e para um ângulo agudo $\alpha$:
+  $\sen\alpha = \frac{\text{op}}{\text{hip}}$,
+  $\cos\alpha = \frac{\text{adj}}{\text{hip}}$,
+  $\tg\alpha = \frac{\text{op}}{\text{adj}}$ (SOH-CAH-TOA).
+- As razões dependem **só do ângulo**, por causa da semelhança — é isso que
+  permite tabelá-las.
+- “Oposto” e “adjacente” são relativos ao ângulo escolhido, não ao lado.
+- $\tg\alpha = \frac{\sen\alpha}{\cos\alpha}$, porque a hipotenusa se cancela.
+- Para ângulo agudo, seno e cosseno ficam **entre 0 e 1**; a tangente não tem
+  teto e vale 1 em 45°.
+- $\sen\alpha = \cos(90^\circ-\alpha)$ — daí o nome cosseno.
+- Roteiro de problema: marque o ângulo, classifique os dois lados, escolha a
+  razão que contém os dois, isole e confira.
+- Calculadora em **DEG**.
+
+Falta responder de onde saem os números da tabela. Para três ângulos —
+[30°, 45° e 60°](./angulos-notaveis) — eles podem ser deduzidos exatamente, com
+duas figuras que este capítulo já construiu.

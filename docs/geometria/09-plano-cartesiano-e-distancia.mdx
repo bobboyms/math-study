@@ -1,0 +1,571 @@
+---
+title: Plano cartesiano e distância
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Plano cartesiano: endereço de um ponto e distância entre dois
+
+## Problema motivador: qual restaurante está mais perto?
+
+Um aplicativo de entrega precisa decidir, em milissegundos, qual de dois
+restaurantes despacha o pedido. Ele não “olha o mapa”: ele tem apenas números.
+
+O cliente está na posição $(6, 5)$. Os restaurantes estão em $(2, 2)$ e
+$(11, 7)$ — as unidades são quilômetros a partir de um marco zero da cidade.
+
+<CartesianPlane
+  xMin={0} xMax={13} yMin={0} yMax={8}
+  xUnit={26} xStep={1} yStep={1} xLabelEvery={2}
+  points={[
+    {at: [6, 5], label: 'C(6,5)', tone: 2, dy: -20},
+    {at: [2, 2], label: 'A(2,2)', tone: 1, dy: -20},
+    {at: [11, 7], label: 'B(11,7)', tone: 3, dy: -20},
+  ]}
+  segments={[
+    {from: [2, 2], to: [6, 5], tone: 1},
+    {from: [6, 5], to: [11, 7], tone: 3},
+  ]}
+  caption="Cliente C e dois restaurantes. A olho nu, as duas distâncias parecem próximas — e é por isso que a conta é necessária."
+/>
+
+> Qual restaurante está mais perto do cliente?
+
+A olho, os dois parecem quase equidistantes. Chutar é inaceitável quando a
+resposta define a rota de milhares de entregas por dia. E o aplicativo não pode
+esticar uma trena: ele precisa de uma **fórmula** que transforme quatro números
+em uma distância.
+
+Essa fórmula existe, e — a boa notícia — ela não é nova: é o
+[teorema de Pitágoras](./teorema-de-pitagoras) escrito com coordenadas.
+
+## Mapa das ideias
+
+- **plano cartesiano** — dois eixos numerados perpendiculares, que dão a cada
+  ponto do plano um endereço numérico;
+- **origem** — o ponto $(0,0)$, onde os eixos se cruzam;
+- **abscissa** ($x$) — a primeira coordenada, medida na horizontal;
+- **ordenada** ($y$) — a segunda coordenada, medida na vertical;
+- **par ordenado** — $(x, y)$; a ordem importa, e $(3,5)$ é outro ponto que
+  $(5,3)$;
+- **quadrante** — cada uma das quatro regiões em que os eixos dividem o plano;
+- **ponto médio** — o ponto exatamente no meio de um segmento.
+
+Exemplo: o ponto $(-3, 4)$ está três unidades à esquerda e quatro acima da
+origem — no segundo quadrante. Contraexemplo: $(4, -3)$ **não** é o mesmo ponto:
+ele está quatro à direita e três abaixo, no quarto quadrante. Trocar a ordem
+muda o lugar.
+
+## Para que isso serve?
+
+- GPS, mapas, geolocalização e cálculo de rotas;
+- computação gráfica, jogos e detecção de colisão — tudo ali é ponto e
+  distância;
+- planilhas e gráficos: cada dado plotado é um par ordenado;
+- projeto e desenho técnico, onde peças são descritas por coordenadas;
+- e, dentro da matemática, é a ponte entre **geometria** e **álgebra**: a partir
+  daqui, uma reta terá equação, uma circunferência terá equação, e resolver um
+  sistema passará a significar “achar onde duas curvas se cruzam”.
+
+## Ideias anteriores que voltam aqui
+
+**1. Reta numérica e números negativos** (de
+[Números negativos](../numeros-e-operacoes/numeros-negativos)). O que significa
+o sinal de um número na reta numérica?
+
+<details>
+<summary>Conferir</summary>
+
+O lado: positivos à direita do zero, negativos à esquerda. O plano cartesiano
+é feito de **duas** dessas retas, cruzadas — e por isso ele acomoda pontos em
+quatro combinações de sinais.
+
+</details>
+
+**2. Leitura de gráfico** (de [Funções](../funcoes/funcoes)). Num gráfico de
+$f(x)$, o que representam a posição horizontal e a vertical de um ponto?
+
+<details>
+<summary>Conferir</summary>
+
+A horizontal é a entrada $x$; a vertical é a saída $f(x)$. O plano já foi usado
+lá como suporte de gráficos; aqui ele passa a ser o objeto de estudo em si.
+
+</details>
+
+**3. Teorema de Pitágoras** (de [Pitágoras](./teorema-de-pitagoras)). Num
+triângulo retângulo de catetos $a$ e $b$, quanto vale a hipotenusa?
+
+<details>
+<summary>Conferir</summary>
+
+$c = \sqrt{a^2+b^2}$. Toda a segunda metade desta página é essa fórmula, com
+catetos escritos como diferenças de coordenadas.
+
+</details>
+
+**4. Módulo e quadrado** (de [Potências](../numeros-e-operacoes/potencias)).
+Quanto vale $(-5)^2$?
+
+<details>
+<summary>Conferir</summary>
+
+25. Elevar ao quadrado apaga o sinal — e é exatamente por isso que a fórmula da
+distância funciona mesmo quando a diferença de coordenadas dá negativo.
+
+</details>
+
+## Intuição: duas réguas cruzadas
+
+Uma reta numérica localiza um ponto **numa linha**: basta um número. Para
+localizar um ponto **num plano**, um número não basta — “estou a 5 km do centro”
+descreve um círculo inteiro de possibilidades.
+
+A solução de Descartes foi simples e decisiva: use **duas** réguas, cruzadas em
+ângulo reto. Cada ponto passa a precisar de dois números, e cada par de números
+passa a corresponder a exatamente um ponto.
+
+<CartesianPlane
+  xMin={-5} xMax={5} yMin={-4} yMax={4}
+  xUnit={30}
+  points={[
+    {at: [3, 2], label: '(3,\\,2)', tone: 1, dy: -20},
+    {at: [-4, 3], label: '(-4,\\,3)', tone: 2, dy: -20},
+    {at: [-2, -3], label: '(-2,-3)', tone: 3, dy: 22},
+    {at: [4, -2], label: '(4,-2)', tone: 1, dy: 22},
+  ]}
+  labels={[
+    {at: [2.4, 3.4], math: '\\text{I}', fontSize: 13},
+    {at: [-2.4, 3.4], math: '\\text{II}', fontSize: 13},
+    {at: [-2.4, -3.5], math: '\\text{III}', fontSize: 13},
+    {at: [2.4, -3.5], math: '\\text{IV}', fontSize: 13},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Os quatro quadrantes, numerados no sentido anti-horário a partir do canto superior direito."
+/>
+
+A convenção é fixa e vale a pena verbalizar, porque erros de ordem são comuns:
+
+> Primeiro o deslocamento **horizontal**, depois o **vertical**. Como se lê um
+> texto: primeiro anda-se ao longo da linha, depois muda-se de linha.
+
+Os sinais seguem a reta numérica de cada eixo: à direita e para cima, positivo;
+à esquerda e para baixo, negativo. Daí os quadrantes:
+
+| Quadrante | $x$ | $y$ | Exemplo |
+|---|:---:|:---:|---|
+| I | $+$ | $+$ | $(3,2)$ |
+| II | $-$ | $+$ | $(-4,3)$ |
+| III | $-$ | $-$ | $(-2,-3)$ |
+| IV | $+$ | $-$ | $(4,-2)$ |
+
+Pontos sobre um eixo não pertencem a quadrante nenhum: $(5,0)$ está sobre o eixo
+horizontal, e $(0,-2)$ sobre o vertical.
+
+> **Erro comum:** trocar a ordem do par. $(2,7)$ e $(7,2)$ são pontos bem
+> distantes um do outro. Uma frase que resolve: **“x vem antes no alfabeto e vem
+> antes no par”**.
+
+## Distância entre dois pontos
+
+Comece pelo caso fácil, o que já dá para resolver sem fórmula nova.
+
+**Dois pontos na mesma horizontal.** De $(2,3)$ a $(9,3)$, a distância é
+$9 - 2 = 7$: só o deslocamento na régua horizontal. **Dois pontos na mesma
+vertical.** De $(4,1)$ a $(4,6)$, a distância é $6 - 1 = 5$.
+
+Agora o caso geral. Os dois pontos não estão alinhados com eixo nenhum — e é
+aqui que a figura resolve tudo:
+
+<CartesianPlane
+  xMin={0} xMax={9} yMin={0} yMax={7}
+  xUnit={34}
+  points={[
+    {at: [2, 2], label: 'A(x_1,\\,y_1)', tone: 1, dy: 22},
+    {at: [7, 6], label: 'B(x_2,\\,y_2)', tone: 3, dy: -20},
+    {at: [7, 2], tone: 0, r: 4},
+  ]}
+  segments={[
+    {from: [2, 2], to: [7, 6], tone: 2, label: 'd', dx: -14, dy: -12},
+    {from: [2, 2], to: [7, 2], tone: 1, dashed: true, label: 'x_2 - x_1', dy: 20},
+    {from: [7, 2], to: [7, 6], tone: 3, dashed: true, label: 'y_2 - y_1', dx: 42, dy: 0},
+  ]}
+  caption="O segmento AB é a hipotenusa de um triângulo retângulo cujos catetos são paralelos aos eixos."
+/>
+
+Complete o retângulo: trace uma horizontal a partir de $A$ e uma vertical a
+partir de $B$. Elas se cruzam num terceiro ponto, e o triângulo formado é
+**retângulo** — porque os eixos são perpendiculares, e os dois catetos são
+paralelos a eles.
+
+Os catetos são exatamente os deslocamentos que já sabemos medir:
+
+- cateto horizontal: $x_2 - x_1$;
+- cateto vertical: $y_2 - y_1$.
+
+E a distância procurada é a hipotenusa. Aplicando Pitágoras:
+
+> $$d = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}.$$
+
+### Por que a ordem da subtração não importa
+
+Uma dúvida legítima: e se eu subtrair ao contrário, $x_1 - x_2$? Aí a diferença
+troca de sinal.
+
+Não faz diferença nenhuma, e o motivo é o quadrado. Compare com $x_1 = 2$ e
+$x_2 = 7$:
+
+$$
+(7 - 2)^2 = 5^2 = 25
+\qquad\text{e}\qquad
+(2 - 7)^2 = (-5)^2 = 25.
+$$
+
+Elevar ao quadrado apaga o sinal. Faz sentido geometricamente: o cateto tem
+comprimento 5 seja qual for o sentido em que você o percorre. Distância não tem
+direção.
+
+> **Erro comum:** somar as diferenças antes de elevar ao quadrado, escrevendo
+> $\sqrt{(x_2-x_1+y_2-y_1)^2}$, ou simplesmente somar os deslocamentos.
+> Com $A(2,2)$ e $B(7,6)$: os deslocamentos são 5 e 4, e a soma daria 9 — mas
+> essa é a distância andando **em L**, pelas ruas. Em linha reta são
+> $\sqrt{41} \approx 6{,}4$. É o mesmo contraste entre a hipotenusa e a soma dos
+> catetos.
+
+## Resolvendo o problema das entregas
+
+Cliente em $C(6,5)$.
+
+**Restaurante A**, em $(2,2)$:
+
+$$
+d_A = \sqrt{(6-2)^2 + (5-2)^2} = \sqrt{4^2 + 3^2} = \sqrt{16+9} = \sqrt{25}
+= 5 \text{ km}.
+$$
+
+**Restaurante B**, em $(11,7)$:
+
+$$
+d_B = \sqrt{(11-6)^2 + (7-5)^2} = \sqrt{5^2 + 2^2} = \sqrt{25+4} = \sqrt{29}
+\approx 5{,}39 \text{ km}.
+$$
+
+O **restaurante A** está mais perto, por cerca de 390 metros. A diferença é
+pequena o bastante para justificar a desconfiança inicial: olhar a figura não
+resolveria.
+
+Repare em duas coisas sobre o método:
+
+- ele funcionaria igual se algum ponto tivesse coordenada negativa, porque os
+  quadrados apagam sinais;
+- ele não precisou de desenho. Foi só aritmética sobre quatro números — que é
+  exatamente o que um programa consegue fazer.
+
+Essa é a virada de método deste módulo: **problemas de geometria viram
+problemas de conta**.
+
+## Ponto médio
+
+Um segundo resultado, curto e muito usado: onde fica o meio do caminho entre
+dois pontos?
+
+Na horizontal, o meio entre $x_1$ e $x_2$ é a média dos dois. Na vertical, a
+média das ordenadas. Como os dois eixos são independentes, basta fazer as duas
+médias separadamente:
+
+> $$M = \left(\frac{x_1+x_2}{2},\ \frac{y_1+y_2}{2}\right).$$
+
+Exemplo: o meio entre $(2,2)$ e $(11,7)$ é
+$\left(\frac{13}{2}, \frac{9}{2}\right) = (6{,}5,\ 4{,}5)$.
+
+Contraexemplo: o meio **não** é $\left(\frac{11-2}{2}, \frac{7-2}{2}\right) =
+(4{,}5,\ 2{,}5)$. Esse ponto nem está entre os dois — a diferença mede o
+deslocamento, não a posição. Um teste barato: a coordenada do ponto médio tem de
+ficar **entre** as duas originais.
+
+> **Erro comum:** usar subtração no ponto médio e soma na distância — a troca
+> exata. Uma forma de lembrar: **distância compara** (diferença), **ponto médio
+> equilibra** (média).
+
+## Aplicações imediatas
+
+Com distância e ponto médio, várias perguntas de geometria viram contas.
+
+**Verificar se um triângulo é retângulo.** Calcule os três lados e teste a
+recíproca de Pitágoras. Exemplo: $A(1,1)$, $B(5,1)$, $C(5,4)$ dão lados
+$\overline{AB} = 4$, $\overline{BC} = 3$ e $\overline{AC} = \sqrt{16+9} = 5$.
+Como $9 + 16 = 25$, o triângulo é retângulo em $B$.
+
+**Verificar se um triângulo é isósceles.** Basta ver se dois lados dão o mesmo
+número.
+
+**Achar o perímetro de um polígono** dado por vértices: some as distâncias
+consecutivas.
+
+## Exemplos resolvidos
+
+### Exemplo 1: distância simples
+
+Calcule a distância entre $P(-3, 2)$ e $Q(1, -1)$.
+
+$$
+d = \sqrt{(1-(-3))^2 + (-1-2)^2} = \sqrt{4^2 + (-3)^2} = \sqrt{16+9} = 5.
+$$
+
+Repare no cuidado com o sinal duplo: $1 - (-3) = 1 + 3 = 4$. Subtrair um
+negativo é somar — regra de
+[Números negativos](../numeros-e-operacoes/numeros-negativos).
+
+### Exemplo 2: classificar o triângulo
+
+*Pause e tente antes de ler.* Os pontos $A(0,0)$, $B(4,0)$ e $C(2,3)$ formam que
+tipo de triângulo?
+
+$$
+\overline{AB} = \sqrt{16+0} = 4
+$$
+
+$$
+\overline{AC} = \sqrt{4+9} = \sqrt{13} \approx 3{,}606
+$$
+
+$$
+\overline{BC} = \sqrt{(2-4)^2+9} = \sqrt{4+9} = \sqrt{13} \approx 3{,}606.
+$$
+
+Dois lados iguais: o triângulo é **isósceles**. É retângulo? Testando o maior
+lado como hipotenusa: $13 + 13 = 26$, e $4^2 = 16$. Não bate, então **não** é
+retângulo — é acutângulo.
+
+### Exemplo 3: achar a coordenada que falta
+
+*Pause e tente antes de ler.* O ponto $P(x, 3)$ está a 5 unidades de $Q(1, -1)$.
+Quais são os valores possíveis de $x$?
+
+$$
+\sqrt{(x-1)^2 + (3-(-1))^2} = 5
+$$
+
+$$
+(x-1)^2 + 16 = 25
+$$
+
+$$
+(x-1)^2 = 9
+$$
+
+$$
+x - 1 = 3 \quad\text{ou}\quad x - 1 = -3.
+$$
+
+Logo $x = 4$ ou $x = -2$. **Duas** respostas, e isso é geometricamente
+esperado: há dois pontos na horizontal $y = 3$ à mesma distância de $Q$, um de
+cada lado. Se você encontrou só um, esqueceu a raiz negativa — o mesmo cuidado
+das [equações do 2º grau](../equacoes/equacoes-do-segundo-grau).
+
+### Exemplo 4: o ponto médio como centro
+
+*Pause e tente antes de ler.* Um retângulo tem vértices opostos em $(1,2)$ e
+$(7,10)$. Onde fica o centro, e qual é o comprimento da diagonal?
+
+O centro é o ponto médio da diagonal:
+
+$$
+M = \left(\frac{1+7}{2}, \frac{2+10}{2}\right) = (4,\ 6).
+$$
+
+A diagonal:
+
+$$
+d = \sqrt{(7-1)^2 + (10-2)^2} = \sqrt{36+64} = \sqrt{100} = 10.
+$$
+
+Verificação de coerência: a distância de $M$ a cada vértice deve ser metade da
+diagonal, 5. De $(4,6)$ a $(1,2)$: $\sqrt{9+16} = 5$ ✓.
+
+### Exemplo 5: distância em linha reta versus pelas ruas
+
+*Pause e tente antes de ler.* Um entregador vai de $(2,1)$ a $(10,7)$. As ruas
+formam uma malha quadriculada, então ele só anda na horizontal e na vertical.
+Quanto ele percorre? E quanto seria em linha reta?
+
+Pelas ruas: $|10-2| + |7-1| = 8 + 6 = 14$ unidades.
+
+Em linha reta: $\sqrt{64+36} = \sqrt{100} = 10$ unidades.
+
+A diferença de 4 unidades é o preço de não poder atravessar os quarteirões — e
+mostra por que aplicativos de entrega calculam as duas coisas: a linha reta é
+rápida de computar e serve para **ordenar** candidatos; o trajeto real é o que
+vai na conta do tempo.
+
+## Erros comuns
+
+> **Erro 1: inverter as coordenadas.** $(a,b)$ e $(b,a)$ são pontos diferentes,
+> a menos que $a = b$.
+
+> **Erro 2: esquecer o quadrado ou a raiz.** A fórmula tem os dois: os quadrados
+> vêm de Pitágoras, e a raiz desfaz o quadrado da hipotenusa. Parar em
+> $d^2 = 25$ e responder 25 é o erro mais frequente.
+
+> **Erro 3: errar sinal com coordenada negativa.** $1 - (-3)$ é 4, não $-2$.
+> Escreva os parênteses antes de calcular.
+
+> **Erro 4: confundir distância com deslocamento.** A distância é sempre
+> positiva; o deslocamento tem sinal e direção.
+
+## Perguntas de verificação
+
+1. Por que um único número não basta para localizar um ponto no plano?
+2. Por que a ordem no par $(x,y)$ importa?
+3. Por que a fórmula da distância não é uma fórmula nova, mas Pitágoras
+   reescrito?
+4. Por que tanto faz subtrair $x_2 - x_1$ ou $x_1 - x_2$?
+5. Por que a fórmula do ponto médio usa média e a da distância usa diferença?
+6. No exemplo do ponto a 5 unidades, por que apareceram duas respostas?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque um número localiza numa **linha**. No plano há duas direções
+   independentes de deslocamento, e cada uma exige um número. Com um só, o que
+   se descreve é um conjunto de pontos, não um ponto.
+2. Porque a primeira coordenada é lida no eixo horizontal e a segunda no
+   vertical. Trocá-las é trocar as instruções “ande 2 para a direita e 7 para
+   cima” por “ande 7 para a direita e 2 para cima” — outro lugar.
+3. Porque os dois pontos, mais o vértice do retângulo que os liga, formam um
+   triângulo retângulo com catetos paralelos aos eixos. Os catetos são as
+   diferenças de coordenadas, e a distância é a hipotenusa.
+4. Porque a diferença é elevada ao quadrado, e o quadrado apaga o sinal.
+   Geometricamente, o cateto tem o mesmo comprimento nos dois sentidos.
+5. Porque medem coisas diferentes: a distância compara duas posições (o quanto
+   uma difere da outra), e o ponto médio equilibra duas posições (o valor no
+   meio delas). Média é o valor central; diferença é a separação.
+6. Porque a equação envolvia um quadrado, e todo número positivo é quadrado de
+   dois valores opostos. Geometricamente, existem dois pontos na reta $y=3$ à
+   distância 5 de $Q$ — um à esquerda e outro à direita.
+
+</details>
+
+## Exercícios
+
+### 1. Reconhecimento
+
+1. Em que quadrante (ou eixo) está cada ponto? $(3,5)$, $(-2,7)$, $(-1,-6)$,
+   $(4,-3)$, $(0,5)$, $(-3,0)$.
+2. Calcule a distância entre: (a) $(0,0)$ e $(3,4)$; (b) $(1,2)$ e $(4,6)$;
+   (c) $(-2,1)$ e $(-2,9)$.
+3. Determine o ponto médio entre $(2,4)$ e $(8,10)$.
+
+### 2. Explicação
+
+4. Explique por que a distância entre dois pontos nunca é negativa, mesmo
+   quando as coordenadas são.
+5. Um colega afirma que a distância entre $(1,1)$ e $(4,5)$ é 7. Que erro ele
+   cometeu, e por que 7 não pode ser a resposta?
+6. Explique por que $(0,0)$ não pertence a nenhum quadrante.
+
+### 3. Aplicação direta
+
+7. Calcule a distância entre $(-3,-4)$ e $(5,2)$.
+8. Determine o ponto médio entre $(-6, 3)$ e $(2, -7)$.
+9. Os pontos $A(1,1)$, $B(7,1)$ e $C(7,9)$ formam um triângulo. Calcule os três
+   lados e classifique-o.
+
+### 4. Variação
+
+10. O ponto $(x, 5)$ dista 10 unidades de $(2, -3)$. Determine $x$.
+11. Um segmento tem uma extremidade em $(3,4)$ e ponto médio em $(6,1)$. Onde
+    está a outra extremidade?
+12. Verifique se os pontos $A(0,0)$, $B(6,0)$, $C(6,8)$ e $D(0,8)$ formam um
+    retângulo, calculando os quatro lados e as duas diagonais.
+
+<details>
+<summary>Dica para o 11</summary>
+
+Escreva a fórmula do ponto médio com a extremidade desconhecida como
+$(x_2, y_2)$ e resolva as duas equações que ela produz — uma para cada
+coordenada.
+
+</details>
+
+### 5. Problema misto
+
+13. Uma antena deve ser instalada equidistante de três torres, em $(0,0)$,
+    $(8,0)$ e $(4,6)$. Verifique se o ponto $(4, 1{,}667)$ serve, calculando as
+    três distâncias com duas casas decimais.
+14. Um drone parte de $(0,0)$, vai até $(6,8)$, depois até $(6,20)$, e volta em
+    linha reta ao ponto de partida. Qual é a distância total percorrida?
+
+### 6. Justificativa
+
+15. Justifique geometricamente por que o ponto médio tem coordenadas iguais às
+    médias das coordenadas das extremidades. (Sugestão: pense separadamente na
+    projeção sobre cada eixo.)
+16. Mostre que a distância de um ponto $(x,y)$ à origem é $\sqrt{x^2+y^2}$, e
+    explique por que essa expressão vai reaparecer com força na página do
+    [ciclo trigonométrico](./ciclo-trigonometrico).
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. I; II; III; IV; sobre o eixo vertical; sobre o eixo horizontal.
+2. (a) 5; (b) $\sqrt{9+16} = 5$; (c) 8 (mesma abscissa, então basta a diferença
+   das ordenadas).
+3. $\left(\frac{2+8}{2}, \frac{4+10}{2}\right) = (5, 7)$.
+4. Porque ela é uma raiz quadrada de uma soma de quadrados, e quadrados nunca
+   são negativos. Além disso, o significado é comprimento — e comprimento
+   negativo não existe.
+5. Ele somou os deslocamentos ($3 + 4$) em vez de aplicar Pitágoras. O valor
+   certo é $\sqrt{9+16} = 5$. E 7 não pode ser a resposta porque é a soma dos
+   catetos, ou seja, o caminho em L; a linha reta é sempre mais curta.
+6. Porque é a origem, o cruzamento dos eixos. Quadrantes são as quatro regiões
+   **abertas** delimitadas pelos eixos; pontos sobre os eixos, inclusive a
+   origem, não estão dentro de nenhuma delas.
+7. $\sqrt{(5-(-3))^2 + (2-(-4))^2} = \sqrt{64+36} = \sqrt{100} = 10$.
+8. $\left(\frac{-6+2}{2}, \frac{3-7}{2}\right) = (-2, -2)$.
+9. $\overline{AB} = 6$, $\overline{BC} = 8$, $\overline{AC} =
+   \sqrt{36+64} = 10$. Como $36+64 = 100$, é **retângulo** em $B$ — e escaleno.
+10. $(x-2)^2 + 8^2 = 100 \Rightarrow (x-2)^2 = 36 \Rightarrow x = 8$ ou
+    $x = -4$.
+11. $\frac{3 + x_2}{2} = 6 \Rightarrow x_2 = 9$;
+    $\frac{4 + y_2}{2} = 1 \Rightarrow y_2 = -2$. A outra extremidade é
+    $(9, -2)$.
+12. Lados: $\overline{AB} = 6$, $\overline{BC} = 8$, $\overline{CD} = 6$,
+    $\overline{DA} = 8$ — opostos iguais. Diagonais:
+    $\overline{AC} = \overline{BD} = 10$ — iguais. Lados opostos iguais e
+    diagonais iguais caracterizam um retângulo. ✓
+13. $d_1 = \sqrt{16 + 2{,}78} = \sqrt{18{,}78} \approx 4{,}33$;
+    $d_2 = \sqrt{16 + 2{,}78} \approx 4{,}33$;
+    $d_3 = \sqrt{0 + (6-1{,}667)^2} = 4{,}333 \approx 4{,}33$. As três
+    coincidem, então o ponto serve.
+14. $\sqrt{36+64} = 10$; depois $|20-8| = 12$; a volta,
+    $\sqrt{36+400} = \sqrt{436} \approx 20{,}88$. Total $\approx 42{,}88$.
+15. Projete o segmento sobre o eixo horizontal: as projeções das extremidades
+    são $x_1$ e $x_2$, e a projeção do ponto médio cai no meio delas, que é a
+    média $\frac{x_1+x_2}{2}$. O mesmo vale na vertical. Como as duas
+    coordenadas são medidas de forma independente, cada uma recebe a sua média.
+16. Basta aplicar a fórmula com $(x_1,y_1) = (0,0)$:
+    $d = \sqrt{(x-0)^2 + (y-0)^2} = \sqrt{x^2+y^2}$. Ela reaparecerá porque o
+    ciclo trigonométrico é definido pelos pontos que estão à **distância 1** da
+    origem — ou seja, pelos $(x,y)$ com $x^2+y^2 = 1$, que é a relação
+    fundamental da trigonometria.
+
+</details>
+
+## Revisão curta
+
+- O **plano cartesiano** dá a cada ponto um par ordenado $(x,y)$: primeiro o
+  horizontal, depois o vertical. A ordem importa.
+- Os eixos dividem o plano em quatro **quadrantes**, numerados no sentido
+  anti-horário a partir do superior direito.
+- **Distância:** $d = \sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}$ — é Pitágoras, com os
+  catetos escritos como diferenças de coordenadas. A ordem da subtração é
+  irrelevante porque o quadrado apaga o sinal.
+- **Ponto médio:** $M = \left(\frac{x_1+x_2}{2}, \frac{y_1+y_2}{2}\right)$ — a
+  média coordenada a coordenada.
+- Distância **compara** (diferença); ponto médio **equilibra** (média).
+- Com essas duas fórmulas, questões de geometria (é retângulo? é isósceles? qual
+  o perímetro?) viram aritmética sobre números.
+
+Um ponto já tem endereço. O próximo passo é dar endereço a uma figura inteira —
+começando pela mais simples de todas, a [reta](./equacao-da-reta).

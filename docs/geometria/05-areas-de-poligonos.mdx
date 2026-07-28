@@ -1,0 +1,666 @@
+---
+title: Áreas de polígonos
+---
+
+import GeoFigure from '@site/src/components/GeoFigure';
+import AreaModel from '@site/src/components/AreaModel';
+
+# Áreas: retângulo, quadrado, triângulo e trapézio
+
+## Problema motivador: quanto piso comprar
+
+Você vai instalar piso vinílico num quarto retangular de 3,20 m por 4,50 m.
+A loja vende em caixas: cada caixa cobre 2,5 m² e custa R\$ 89. A recomendação
+do instalador é comprar 10% a mais, para perdas de corte.
+
+> Quantas caixas comprar, e quanto isso vai custar?
+
+E não é só o piso. A parede do sótão, sob o telhado de duas águas, tem formato
+de **triângulo**, e a lateral do mesmo sótão tem formato de **trapézio** — uma
+parede que começa baixa e termina alta. As duas precisam de tinta, e o rendimento
+da lata também é dado em metros quadrados.
+
+<GeoFigure
+  unit={34}
+  padding={46}
+  polygons={[
+    {points: [[0, 0], [4.5, 0], [4.5, 3.2], [0, 3.2]], tone: 1},
+    {points: [[6.2, 0], [10.2, 0], [8.2, 2]], tone: 2},
+    {points: [[11.9, 0], [15.4, 0], [15.4, 2.6], [11.9, 1.4]], tone: 3},
+  ]}
+  labels={[
+    {at: [2.25, -0.46], math: '\\text{piso}', fontSize: 12, halo: false},
+    {at: [8.2, -0.46], math: '\\text{empena}', fontSize: 12, halo: false},
+    {at: [13.65, -0.46], math: '\\text{lateral}', fontSize: 12, halo: false},
+  ]}
+  caption="Três formatos, três fórmulas — mas, como veremos, uma ideia só."
+/>
+
+Três formas diferentes, e a tentação é decorar três fórmulas soltas. Esta página
+faz o contrário: constrói **uma** ideia de área e mostra que as outras fórmulas
+saem dela por recorte e encaixe.
+
+## Mapa das ideias
+
+- **área** — a quantidade de superfície que uma figura ocupa, medida em
+  quadrados de lado 1;
+- **metro quadrado (m²)** — a área de um quadrado de 1 m de lado;
+- **base e altura** — dois comprimentos perpendiculares entre si; a altura é
+  sempre medida **em ângulo reto** com a base;
+- **paralelogramo** — quadrilátero com os lados opostos paralelos;
+- **trapézio** — quadrilátero com **um** par de lados paralelos, chamados bases.
+
+Exemplo: um retângulo de 5 m por 3 m tem área 15 m². Contraexemplo: um retângulo
+de 5 m por 3 m **não** tem área 16 m — nem o número, nem a unidade. Área não é
+perímetro, e a unidade traz um expoente 2 justamente porque dois comprimentos
+foram multiplicados.
+
+## Para que isso serve?
+
+- comprar piso, azulejo, grama, tinta, papel de parede, telha, manta;
+- calcular aluguel e valor de imóveis, cobrados por metro quadrado;
+- dimensionar painéis solares, hortas, canteiros e coberturas;
+- em programação, calcular colisão, ocupação de tela e distribuição de espaço;
+- e, dentro da matemática, a área é o modelo visual da multiplicação e do
+  [produto notável](../algebra/produtos-notaveis) — e será a ideia central do
+  cálculo integral, adiante.
+
+## Ideias anteriores que voltam aqui
+
+**1. Multiplicação como área** (de
+[Operações básicas](../numeros-e-operacoes/operacoes-basicas) e
+[Expressões algébricas](../algebra/expressoes-algebricas)). O que representa
+$4 \times 6$ num retângulo?
+
+<details>
+<summary>Conferir</summary>
+
+Um retângulo de 4 por 6, com 24 quadradinhos de lado 1 dentro. Multiplicar é
+contar uma grade sem contar um por um.
+
+</details>
+
+**2. Potência de expoente 2** (de
+[Potências](../numeros-e-operacoes/potencias)). Por que a unidade de área se
+escreve m², com um expoente?
+
+<details>
+<summary>Conferir</summary>
+
+Porque m² é literalmente $\text{m} \times \text{m}$: a área nasce de multiplicar
+dois comprimentos. O expoente conta **quantos comprimentos** foram
+multiplicados — um para comprimento, dois para área, três para volume.
+
+</details>
+
+**3. Semelhança e o fator $k^2$** (de [Semelhança](./semelhanca)). Se todos os
+lados de uma figura dobram, o que acontece com a área?
+
+<details>
+<summary>Conferir</summary>
+
+Quadruplica. A área é um produto de dois comprimentos, e cada um foi
+multiplicado por 2: $2 \times 2 = 4$.
+
+</details>
+
+## Intuição: área é contagem de quadradinhos
+
+Antes de qualquer fórmula: medir área é escolher um quadrado como unidade e
+perguntar **quantos deles cabem**.
+
+Se a unidade é o quadrado de 1 m de lado, a resposta vem em metros quadrados.
+
+<GeoFigure
+  unit={38}
+  padding={44}
+  polygons={[{points: [[0, 0], [5, 0], [5, 3], [0, 3]], tone: 1}]}
+  segments={[
+    {from: [1, 0], to: [1, 3], tone: 1},
+    {from: [2, 0], to: [2, 3], tone: 1},
+    {from: [3, 0], to: [3, 3], tone: 1},
+    {from: [4, 0], to: [4, 3], tone: 1},
+    {from: [0, 1], to: [5, 1], tone: 1},
+    {from: [0, 2], to: [5, 2], tone: 1},
+  ]}
+  dims={[
+    {from: [0, 0], to: [5, 0], label: '5', offset: 22, tone: 0},
+    {from: [5, 3], to: [5, 0], label: '3', offset: 22, tone: 0},
+  ]}
+  caption="Cinco colunas de três quadradinhos: 15 no total. Não é preciso contar um a um — a multiplicação já faz isso."
+/>
+
+Contar um a um funciona, mas é lento. A grade tem 3 fileiras de 5, então
+
+$$
+3 \times 5 = 15.
+$$
+
+É a mesma leitura de multiplicação que o curso usou desde o começo. A novidade é
+o nome do resultado: **área**.
+
+Um detalhe que a figura resolve de graça: por que a unidade é “quadrado”, e não
+qualquer outra forma? Porque quadrados se encaixam sem sobra e sem sobreposição,
+em qualquer quantidade, formando fileiras iguais. Círculos deixariam buracos;
+triângulos serviriam, mas a contagem em linhas e colunas ficaria torta.
+
+## Retângulo e quadrado
+
+> **Área do retângulo:** $A = b \times h$, onde $b$ é a base e $h$ é a altura.
+
+<AreaModel
+  rows={[{size: 3, label: 'h = 3'}]}
+  cols={[{size: 5, label: 'b = 5'}]}
+  cells={[['A = 15']]}
+  caption="A área do retângulo é o produto dos dois lados."
+/>
+
+O quadrado é o retângulo com os dois lados iguais, então a fórmula é a mesma com
+$b = h = \ell$:
+
+> **Área do quadrado:** $A = \ell \times \ell = \ell^2$.
+
+Exemplo: um quadrado de 7 cm de lado tem área $7^2 = 49$ cm².
+Contraexemplo: um quadrado de área 49 cm² **não** tem lado 24,5 cm — dividir por
+2 seria desfazer uma soma, e aqui houve uma multiplicação. O lado é
+$\sqrt{49} = 7$ cm.
+
+### Um cuidado com unidades
+
+Esta conversão erra com muita frequência:
+
+$$
+1 \text{ m}^2 = 100 \text{ cm} \times 100 \text{ cm} = 10\,000 \text{ cm}^2.
+$$
+
+Não são 100 cm². O fator entre as unidades de **comprimento** é 100, então entre
+as de **área** é $100^2$. É a regra do $k^2$ da [semelhança](./semelhanca)
+aparecendo como conversão de unidade.
+
+| Conversão | Comprimento | Área |
+|---|---|---|
+| m → cm | $\times 100$ | $\times 10\,000$ |
+| km → m | $\times 1\,000$ | $\times 1\,000\,000$ |
+| m → mm | $\times 1\,000$ | $\times 1\,000\,000$ |
+
+## Do retângulo ao paralelogramo: recortar e deslizar
+
+Um **paralelogramo** é um quadrilátero com os lados opostos paralelos — um
+retângulo “empurrado de lado”. Sua área não é o produto dos dois lados: é o
+produto da base pela **altura**, e altura significa a distância perpendicular
+entre as duas bases paralelas.
+
+<GeoFigure
+  unit={40}
+  padding={50}
+  polygons={[{points: [[0, 0], [4, 0], [5.4, 2.4], [1.4, 2.4]], tone: 2}]}
+  segments={[{from: [1.4, 0], to: [1.4, 2.4], tone: 3, dashed: true}]}
+  angles={[{at: [1.4, 0], from: [4, 0], to: [1.4, 2.4], right: true, tone: 3}]}
+  labels={[
+    {at: [2, -0.42], math: 'b', tone: 2, fontSize: 14},
+    {at: [1.14, 1.2], math: 'h', tone: 3, fontSize: 14},
+    {at: [0.45, 1.4], math: '\\ell', tone: 2, fontSize: 14},
+  ]}
+  caption="O lado inclinado ℓ é maior que a altura h. Quem entra na fórmula da área é h, não ℓ."
+/>
+
+Por que $A = b \times h$, e não $b \times \ell$? Recorte o triângulo que sobra à
+esquerda e deslize-o para a direita: ele encaixa exatamente no vão do outro lado,
+e o que sobra é um **retângulo** de base $b$ e altura $h$.
+
+A área não mudou — nada foi acrescentado nem retirado, só mudou de lugar. Mas
+agora a figura é um retângulo, e para retângulo já sabemos a resposta.
+
+> **Área do paralelogramo:** $A = b \times h$.
+
+> **Erro comum:** usar o lado inclinado como altura. Empurre um paralelogramo
+> cada vez mais: o lado inclinado continua com o mesmo comprimento, mas a figura
+> vai ficando achatada, e a área vai a zero. Se o lado inclinado decidisse a
+> área, ela não mudaria — e claramente muda.
+
+## Triângulo: metade de um paralelogramo
+
+Aqui está a construção mais rentável da página. Tome um triângulo qualquer e
+faça uma **cópia** dele, girada meia volta. As duas peças encaixam formando um
+paralelogramo:
+
+<GeoFigure
+  unit={40}
+  padding={50}
+  polygons={[
+    {points: [[0, 0], [4, 0], [1.4, 2.4]], tone: 1},
+    {points: [[4, 0], [5.4, 2.4], [1.4, 2.4]], tone: 2},
+  ]}
+  segments={[{from: [1.4, 0], to: [1.4, 2.4], tone: 3, dashed: true}]}
+  angles={[{at: [1.4, 0], from: [4, 0], to: [1.4, 2.4], right: true, tone: 3}]}
+  labels={[
+    {at: [2, -0.42], math: 'b', tone: 1, fontSize: 14},
+    {at: [1.12, 1.2], math: 'h', tone: 3, fontSize: 14},
+  ]}
+  caption="O triângulo azul e sua cópia girada formam um paralelogramo de base b e altura h. Cada triângulo é metade dele."
+/>
+
+O paralelogramo tem base $b$, altura $h$ e área $b \times h$. As duas metades
+são cópias idênticas, então cada uma vale metade:
+
+> **Área do triângulo:** $A = \dfrac{b \times h}{2}$.
+
+Repare no que a construção fez: ela transformou um problema **novo** (área do
+triângulo) num problema **já resolvido** (área do paralelogramo, que por sua vez
+virou retângulo). É a mesma estratégia da demonstração de
+[Pitágoras](./teorema-de-pitagoras): não medir de novo, e sim reorganizar até
+cair em algo conhecido.
+
+### A altura é perpendicular — sempre
+
+Este é o ponto que mais custa caro em prova e em obra.
+
+<GeoFigure
+  unit={38}
+  padding={52}
+  polygons={[
+    {points: [[0, 0], [3.5, 0], [2.2, 2.6]], tone: 1, fill: false},
+    {points: [[5.6, 0], [9.1, 0], [10.4, 2.6]], tone: 2, fill: false},
+  ]}
+  segments={[
+    {from: [2.2, 0], to: [2.2, 2.6], tone: 3, dashed: true},
+    {from: [10.4, 0], to: [10.4, 2.6], tone: 3, dashed: true},
+    {from: [9.1, 0], to: [10.4, 0], tone: 3, dashed: true},
+  ]}
+  angles={[
+    {at: [2.2, 0], from: [3.5, 0], to: [2.2, 2.6], right: true, tone: 3},
+    {at: [10.4, 0], from: [5.6, 0], to: [10.4, 2.6], right: true, tone: 3},
+  ]}
+  labels={[
+    {at: [1.94, 1.3], math: 'h', tone: 3, fontSize: 13},
+    {at: [10.14, 1.3], math: 'h', tone: 3, fontSize: 13},
+    {at: [1.75, -0.44], math: 'b', tone: 1, fontSize: 13},
+    {at: [7.35, -0.44], math: 'b', tone: 2, fontSize: 13},
+  ]}
+  caption="À direita, a altura cai fora do triângulo — e mesmo assim é ela que entra na fórmula. A base é prolongada só para receber o pé da perpendicular."
+/>
+
+Em triângulos obtusângulos, a altura pode cair **fora** da figura. Isso não é uma
+exceção nem um caso especial: a altura é, por definição, a distância
+perpendicular do vértice até a reta que contém a base. Se o pé dessa
+perpendicular cai fora do segmento, tudo bem — a fórmula continua valendo, porque
+a construção do paralelogramo continua funcionando.
+
+> **Erro comum:** usar um dos lados inclinados como altura. Num triângulo de
+> lados 5, 6 e 7, nenhum desses números é altura de nada. Só num triângulo
+> **retângulo** um lado é altura do outro — os dois catetos são perpendiculares
+> entre si, e por isso a área do triângulo retângulo é
+> $\frac{\text{cateto} \times \text{cateto}}{2}$.
+
+## Trapézio: a média das bases
+
+Um **trapézio** tem um par de lados paralelos, de comprimentos diferentes: a
+base maior $B$ e a base menor $b$. A altura $h$ é a distância perpendicular
+entre elas.
+
+O mesmo truque do triângulo resolve: duplique e gire.
+
+<GeoFigure
+  unit={40}
+  padding={50}
+  polygons={[
+    {points: [[0, 0], [4, 0], [3.2, 2.2], [1.2, 2.2]], tone: 1},
+    {points: [[4, 0], [3.2, 2.2], [7.2, 2.2], [5.2, 0]], tone: 2},
+  ]}
+  segments={[{from: [1.2, 0], to: [1.2, 2.2], tone: 3, dashed: true}]}
+  angles={[{at: [1.2, 0], from: [4, 0], to: [1.2, 2.2], right: true, tone: 3}]}
+  labels={[
+    {at: [2, -0.42], math: 'B', tone: 1, fontSize: 14},
+    {at: [2.2, 2.62], math: 'b', tone: 1, fontSize: 14},
+    {at: [0.94, 1.1], math: 'h', tone: 3, fontSize: 14},
+    {at: [5.6, 1.1], math: '\\text{cópia}', tone: 2, fontSize: 12},
+  ]}
+  caption="Duas cópias do trapézio formam um paralelogramo de base B + b e altura h."
+/>
+
+O paralelogramo resultante tem base $B + b$ (a base maior de um encostada na
+base menor do outro) e altura $h$. Sua área é $(B+b) \times h$. Como ele é feito
+de dois trapézios iguais:
+
+> **Área do trapézio:** $A = \dfrac{(B + b) \times h}{2}$.
+
+Há uma leitura dessa fórmula que vale mais do que a fórmula: reescreva-a como
+
+$$
+A = \underbrace{\frac{B+b}{2}}_{\text{m\'edia das bases}} \times h.
+$$
+
+Ou seja: **o trapézio tem a área de um retângulo cuja base é a média das duas
+bases**. Um lado sobra, o outro falta, e as duas compensações se anulam
+exatamente na metade da altura.
+
+Isso dá um teste de sanidade barato: a área do trapézio tem de ficar **entre** a
+do retângulo com a base menor e a do retângulo com a base maior.
+
+### As três fórmulas são uma só
+
+Vale ver quanto isso é econômico. A fórmula do trapézio contém as outras:
+
+| Se… | a fórmula vira | que é a área do |
+|---|---|---|
+| $B = b$ | $\frac{2b \cdot h}{2} = b h$ | retângulo (ou paralelogramo) |
+| $b = 0$ | $\frac{B \cdot h}{2}$ | triângulo |
+
+Fazer a base menor encolher até zero é literalmente transformar o trapézio num
+triângulo, e a fórmula acompanha a transformação. Isso não é coincidência: as
+três saíram do mesmo recorte-e-encaixe.
+
+## Resolvendo o problema do piso
+
+**O quarto.** Área do retângulo:
+
+$$
+A = 3{,}20 \times 4{,}50 = 14{,}4 \text{ m}^2.
+$$
+
+Com 10% a mais para perdas:
+
+$$
+14{,}4 \times 1{,}10 = 15{,}84 \text{ m}^2.
+$$
+
+Cada caixa cobre 2,5 m²:
+
+$$
+15{,}84 \div 2{,}5 = 6{,}336.
+$$
+
+Não existe fração de caixa, e arredondar para baixo deixaria o serviço
+incompleto — então são **7 caixas**. O custo:
+
+$$
+7 \times 89 = 623.
+$$
+
+O piso sai por **R\$ 623**, cobrindo $7 \times 2{,}5 = 17{,}5$ m² — sobra
+$17{,}5 - 14{,}4 = 3{,}1$ m² de folga, um pouco acima dos 10% pedidos, que é o
+preço de a caixa ser indivisível.
+
+**A empena.** A parede triangular sob o telhado tem 6 m de largura na base e 2 m
+de altura no ponto mais alto:
+
+$$
+A = \frac{6 \times 2}{2} = 6 \text{ m}^2.
+$$
+
+**A lateral.** A parede em trapézio começa com 2,5 m de altura de um lado,
+termina com 4 m do outro, e tem 3 m de comprimento. Aqui é preciso identificar
+quem é quem: as duas alturas são as **bases paralelas** ($B = 4$ e $b = 2{,}5$),
+e o comprimento da parede é a **altura** do trapézio ($h = 3$):
+
+$$
+A = \frac{(4 + 2{,}5) \times 3}{2} = \frac{6{,}5 \times 3}{2}
+= \frac{19{,}5}{2} = 9{,}75 \text{ m}^2.
+$$
+
+Teste de sanidade pela média das bases: uma parede retangular de 2,5 m por 3 m
+teria 7,5 m², e uma de 4 m por 3 m teria 12 m². O trapézio deu 9,75 m² —
+exatamente entre os dois, e mais perto do meio, como esperado. ✓
+
+## Exemplos resolvidos
+
+### Exemplo 1: área do triângulo retângulo
+
+Um triângulo retângulo tem catetos 9 cm e 12 cm. Qual é sua área?
+
+Os catetos são perpendiculares, então um serve de base e o outro de altura:
+
+$$
+A = \frac{9 \times 12}{2} = \frac{108}{2} = 54 \text{ cm}^2.
+$$
+
+Repare que a hipotenusa (15 cm, pelo terno $(9,12,15)$) **não entra na conta**.
+
+### Exemplo 2: da área para o lado
+
+*Pause e tente antes de ler.* Um terreno quadrado tem 400 m² de área. Quanto
+mede o lado? E quanto de cerca é preciso para contorná-lo?
+
+$$
+\ell^2 = 400 \quad\Longrightarrow\quad \ell = \sqrt{400} = 20 \text{ m}.
+$$
+
+O perímetro é a soma dos quatro lados: $4 \times 20 = 80$ m de cerca.
+
+Repare na diferença de natureza entre as duas respostas: a área veio em m², a
+cerca em m. Perímetro é comprimento; área é comprimento ao quadrado.
+
+### Exemplo 3: altura desconhecida
+
+*Pause e tente antes de ler.* Um triângulo tem área 84 cm² e base 14 cm. Qual é
+sua altura?
+
+Partindo da fórmula e isolando $h$, como em uma
+[equação do 1º grau](../equacoes/equacoes-do-primeiro-grau):
+
+$$
+84 = \frac{14 \times h}{2}
+$$
+
+$$
+168 = 14h
+$$
+
+$$
+h = 12 \text{ cm}.
+$$
+
+Verificação: $\frac{14 \times 12}{2} = 84$ ✓.
+
+### Exemplo 4: o canteiro em trapézio
+
+*Pause e tente antes de ler.* Um canteiro em trapézio tem bases de 8 m e 5 m e
+altura 4 m. Quantos sacos de terra são necessários, se cada saco cobre 2 m²?
+
+$$
+A = \frac{(8+5) \times 4}{2} = \frac{13 \times 4}{2} = 26 \text{ m}^2.
+$$
+
+$$
+26 \div 2 = 13 \text{ sacos.}
+$$
+
+Sanidade: a média das bases é 6,5 m, e $6{,}5 \times 4 = 26$ ✓ — o mesmo número
+por outro caminho.
+
+### Exemplo 5: o efeito de ampliar
+
+*Pause e tente antes de ler.* Um retângulo de 3 m por 5 m será ampliado com
+razão $k = 4$. Qual é a nova área?
+
+Pelo caminho direto: os lados viram 12 m e 20 m, e a área é 240 m².
+
+Pela regra do $k^2$: a área original é 15 m², e
+$15 \times 4^2 = 15 \times 16 = 240$ m². ✓
+
+O segundo caminho não precisou calcular os lados novos — e é o único viável
+quando a figura é irregular.
+
+## Erros comuns
+
+> **Erro 1: confundir área com perímetro.** Perímetro é o contorno (soma dos
+> lados, em metros); área é o preenchimento (em metros quadrados). Cerca e tinta
+> são perímetro e área, respectivamente — e não crescem juntos: dois terrenos com
+> o mesmo perímetro podem ter áreas muito diferentes. Um retângulo $1 \times 9$
+> e um $5 \times 5$ têm ambos perímetro 20, mas áreas 9 e 25.
+
+> **Erro 2: esquecer o $\div 2$ no triângulo.** O resultado sai exatamente ao
+> dobro. Se a resposta parecer grande demais para a figura, confira essa
+> divisão primeiro.
+
+> **Erro 3: usar o lado inclinado como altura.** Vale para paralelogramo,
+> triângulo e trapézio. A altura é **perpendicular** à base; o lado inclinado é
+> sempre maior que ela.
+
+> **Erro 4: converter unidades de área com o fator do comprimento.** De m² para
+> cm², multiplique por 10 000, não por 100.
+
+## Perguntas de verificação
+
+1. Por que a unidade de área tem expoente 2?
+2. Na dedução da área do paralelogramo, o que exatamente foi preservado quando o
+   triângulo foi recortado e deslizado?
+3. Por que a fórmula do triângulo tem uma divisão por 2, e a do retângulo não?
+4. Em que sentido a fórmula do trapézio “contém” as outras duas?
+5. Dois terrenos têm o mesmo perímetro. Eles têm necessariamente a mesma área?
+6. Se você dobra a base de um triângulo e mantém a altura, o que acontece com a
+   área? E se dobra as duas?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque a área nasce da multiplicação de **dois** comprimentos. O expoente
+   registra quantos comprimentos foram multiplicados: 1 para comprimento, 2 para
+   área, 3 para volume. É também o que faz o fator de conversão ser elevado ao
+   quadrado.
+2. A **quantidade de superfície**. O pedaço recortado não foi ampliado nem
+   encolhido, apenas mudou de posição — então a área total do paralelogramo é
+   igual à do retângulo que se formou. O que mudou foi só a forma, que passou a
+   ser uma cuja área já sabíamos calcular.
+3. Porque o triângulo é exatamente **metade** de um paralelogramo de mesma base
+   e mesma altura. A divisão por 2 não é uma correção arbitrária: é a segunda
+   cópia que foi retirada.
+4. Fazendo $B = b$, o trapézio vira paralelogramo e a fórmula devolve $bh$.
+   Fazendo $b = 0$, ele vira triângulo e a fórmula devolve $\frac{Bh}{2}$. As
+   três são a mesma construção, com um parâmetro diferente.
+5. Não. Um retângulo $1 \times 9$ e um $5 \times 5$ têm perímetro 20 e áreas 9 e
+   25. Entre todos os retângulos de mesmo perímetro, o quadrado é o de maior
+   área.
+6. Dobrar só a base dobra a área — ela é proporcional à base. Dobrar as duas
+   quadruplica, porque a área é o produto das duas: $2 \times 2 = 4$. É a regra
+   do $k^2$.
+
+</details>
+
+## Exercícios
+
+### 1. Reconhecimento
+
+1. Calcule a área: (a) retângulo 7 m × 4 m; (b) quadrado de lado 9 cm;
+   (c) triângulo de base 10 cm e altura 6 cm; (d) trapézio de bases 7 m e 3 m e
+   altura 5 m.
+2. Converta: (a) 3 m² para cm²; (b) 25 000 cm² para m²; (c) 2 km² para m².
+3. Num triângulo de lados 6, 8 e 10, qual par de lados serve diretamente como
+   base e altura? Por quê?
+
+### 2. Explicação
+
+4. Explique por que dois retângulos de mesmo perímetro podem ter áreas
+   diferentes, dando um exemplo numérico.
+5. Explique por que a altura de um triângulo obtusângulo pode cair fora da
+   figura sem que a fórmula deixe de valer.
+6. Um colega calculou a área de um paralelogramo de lados 6 e 10 como 60. O que
+   está faltando na informação que ele usou?
+
+### 3. Aplicação direta
+
+7. Um triângulo tem área 96 cm² e altura 12 cm. Qual é a base?
+8. Um trapézio tem área 45 m², bases 6 m e 9 m. Qual é a altura?
+9. Um quarto de 3,5 m por 4 m será revestido com piso vendido em caixas de
+   1,8 m². Quantas caixas comprar, considerando 10% de perda?
+
+### 4. Variação
+
+10. Um terreno retangular de 12 m por 30 m será dividido ao meio por uma
+    diagonal. Qual é a área de cada metade? Que fórmula você usou?
+11. Uma parede trapezoidal tem bases 2,2 m e 3,8 m e comprimento 4,5 m. Uma lata
+    de tinta rende 12 m² por demão. Quantas latas para duas demãos?
+12. Uma horta quadrada de 36 m² será ampliada de modo que cada lado aumente 50%.
+    Qual será a nova área? Resolva pelos dois caminhos (lado novo e regra do
+    $k^2$).
+
+<details>
+<summary>Dica para o 11</summary>
+
+Duas demãos dobram a área a ser coberta, não o rendimento da lata. Calcule
+primeiro a área da parede, depois multiplique por 2, e só então divida pelo
+rendimento.
+
+</details>
+
+### 5. Problema misto
+
+13. Uma empena triangular tem 7 m de base. O telhado sobe 1,5 m do beiral até a
+    cumeeira. Calcule a área da empena e, usando
+    [Pitágoras](./teorema-de-pitagoras), o comprimento de cada uma das duas
+    águas do telhado (do beiral até a cumeeira).
+14. Um piso quadrado de 5 m de lado será coberto com ladrilhos quadrados de
+    25 cm de lado. Quantos ladrilhos são necessários? Resolva de duas maneiras:
+    pela contagem em fileiras e pela divisão de áreas.
+
+### 6. Justificativa
+
+15. Justifique, sem usar a fórmula pronta, por que a área de um triângulo
+    retângulo de catetos $a$ e $b$ é $\frac{ab}{2}$.
+16. Explique por que a fórmula do trapézio pode ser lida como “um retângulo de
+    base igual à média das bases”. Onde vai parar o pedaço que sobra da base
+    maior?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. (a) 28 m²; (b) 81 cm²; (c) 30 cm²; (d) $\frac{(7+3)\times5}{2} = 25$ m².
+2. (a) 30 000 cm²; (b) 2,5 m²; (c) 2 000 000 m².
+3. Os lados 6 e 8. O triângulo é retângulo ($36+64=100$), e os catetos são
+   perpendiculares entre si — portanto um é altura relativa ao outro. A área é
+   $\frac{6 \times 8}{2} = 24$.
+4. Porque perímetro e área medem coisas diferentes. Retângulos $2 \times 8$ e
+   $4 \times 6$ têm perímetro 20; as áreas são 16 e 24.
+5. Porque a altura é definida como a distância perpendicular do vértice à
+   **reta** que contém a base, e não ao segmento. A construção do paralelogramo
+   com a cópia girada continua funcionando, então a área continua sendo metade
+   de $b \times h$.
+6. Falta a **altura**. Os lados 6 e 10 não são perpendiculares entre si num
+   paralelogramo qualquer; o 60 só valeria se a figura fosse um retângulo. A
+   área verdadeira é menor.
+7. $96 = \frac{b \times 12}{2} \Rightarrow 192 = 12b \Rightarrow b = 16$ cm.
+8. $45 = \frac{(6+9)h}{2} \Rightarrow 90 = 15h \Rightarrow h = 6$ m.
+9. Área $= 14$ m²; com 10%, 15,4 m²; $15{,}4 \div 1{,}8 \approx 8{,}56$, logo
+   **9 caixas**.
+10. Cada metade é um triângulo de catetos 12 e 30:
+    $\frac{12 \times 30}{2} = 180$ m². (Também dá para ver como metade dos
+    360 m² do retângulo.)
+11. Área $= \frac{(2{,}2+3{,}8) \times 4{,}5}{2} = \frac{6 \times 4{,}5}{2} =
+    13{,}5$ m². Duas demãos: 27 m². $27 \div 12 = 2{,}25$, logo **3 latas**.
+12. Lado original $\sqrt{36} = 6$ m; novo lado $6 \times 1{,}5 = 9$ m; nova área
+    $81$ m². Pela regra: $36 \times 1{,}5^2 = 36 \times 2{,}25 = 81$ m² ✓.
+13. Área $= \frac{7 \times 1{,}5}{2} = 5{,}25$ m². Cada água é a hipotenusa de um
+    triângulo de catetos 3,5 (metade da base) e 1,5:
+    $\sqrt{3{,}5^2 + 1{,}5^2} = \sqrt{12{,}25 + 2{,}25} = \sqrt{14{,}5}
+    \approx 3{,}81$ m.
+14. Por fileiras: $5 \text{ m} = 500$ cm, e $500 \div 25 = 20$ ladrilhos por
+    fileira, em 20 fileiras — $20 \times 20 = 400$. Por áreas: piso $= 25$ m²
+    $= 250\,000$ cm²; ladrilho $= 625$ cm²; $250\,000 \div 625 = 400$ ✓.
+15. Duas cópias do triângulo retângulo, uma girada meia volta, encaixam formando
+    um retângulo de lados $a$ e $b$ — os dois ângulos agudos, que somam 90°,
+    completam os cantos. A área do retângulo é $ab$, e o triângulo é metade
+    dele.
+16. Porque $\frac{(B+b)h}{2}$ pode ser reagrupado como $\frac{B+b}{2} \times h$,
+    e $\frac{B+b}{2}$ é a média das bases. Geometricamente, o excesso da base
+    maior em relação à média é exatamente igual à falta da base menor; ao subir
+    da base para o topo, o que sobra de um lado preenche o que falta do outro, e
+    a compensação é exata na metade da altura.
+
+</details>
+
+## Revisão curta
+
+- **Área** é a contagem de quadrados unitários que cabem na figura; a unidade
+  traz expoente 2 porque dois comprimentos foram multiplicados.
+- Retângulo: $A = b h$. Quadrado: $A = \ell^2$.
+- Paralelogramo: $A = b h$, com $h$ **perpendicular** à base — nunca o lado
+  inclinado.
+- Triângulo: $A = \frac{b h}{2}$, porque duas cópias formam um paralelogramo.
+- Trapézio: $A = \frac{(B+b)h}{2}$, que é a **média das bases** vezes a altura.
+  Ela contém as outras duas fórmulas como casos particulares.
+- Toda a página é uma estratégia só: **recortar e reencaixar até cair no
+  retângulo**, sem alterar a quantidade de superfície.
+- Conversão de unidade de área usa o fator ao quadrado: $1$ m² $= 10\,000$ cm².
+
+Falta o caso em que nenhum recorte em retângulos resolve — porque a figura é
+curva. É o [círculo](./circulo), e a saída lá é um pouco mais engenhosa.

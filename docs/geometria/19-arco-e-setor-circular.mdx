@@ -1,0 +1,575 @@
+---
+title: Arco e setor circular
+---
+
+import GeoFigure from '@site/src/components/GeoFigure';
+
+# Arco e setor circular: $s = r\theta$ e $A = \frac{1}{2}r^2\theta$
+
+## Problema motivador: a área regada pelo aspersor
+
+Um aspersor de jardim gira em vaivém cobrindo **120°** e alcança **8 metros** de
+distância.
+
+<GeoFigure
+  unit={26}
+  padding={50}
+  arcs={[
+    {at: [0, 0], r: 8, from: 0, to: 360, tone: 0},
+    {at: [0, 0], r: 8, from: 30, to: 150, sector: true, tone: 1},
+  ]}
+  segments={[
+    {from: [0, 0], to: [6.93, 4], tone: 1},
+    {from: [0, 0], to: [-6.93, 4], tone: 1},
+  ]}
+  labels={[
+    {at: [0, 4.6], math: '120^\\circ', tone: 1, fontSize: 14},
+    {at: [4.2, 1.6], math: '8\\text{ m}', tone: 1, fontSize: 13},
+  ]}
+  caption="O aspersor cobre uma fatia do círculo — um setor circular de raio 8 m e ângulo 120°."
+/>
+
+Duas perguntas do dono do jardim:
+
+> **Que área o aspersor rega?** E, se ele quiser cercar exatamente essa região
+> com uma borda, **quantos metros de borda precisa?**
+
+A área é um pedaço de círculo; a borda tem uma parte curva e duas retas. As duas
+respostas saem de fórmulas curtas — e, se o ângulo estiver em radianos, elas
+ficam curtas de verdade.
+
+## Mapa das ideias
+
+- **arco** ($s$) — o pedaço da circunferência determinado pelo ângulo central;
+- **setor circular** — a região limitada por dois raios e pelo arco (a “fatia de
+  pizza”);
+- **coroa circular** — a região entre duas circunferências de mesmo centro;
+- **setor de coroa** — a fatia de uma coroa; é o formato varrido por um limpador
+  de para-brisa.
+
+Exemplo: num círculo de raio 3 e ângulo de 2 rad, o arco mede 6 e o setor tem
+área 9. Contraexemplo: um ângulo de 2 **graus** nesse mesmo círculo não dá arco
+6 — dá cerca de 0,105. As fórmulas desta página exigem radianos.
+
+## Para que isso serve?
+
+- irrigação, iluminação, alcance de câmeras e sensores com ângulo de abertura;
+- área varrida por limpador de para-brisa, guindaste, radar, farol;
+- corte e dobra de chapa: uma peça cônica planificada é um setor circular;
+- gráficos de pizza, em que cada fatia é um setor proporcional ao dado;
+- em movimento circular, o arco é a distância realmente percorrida.
+
+## Ideias anteriores que voltam aqui
+
+**1. Comprimento de arco em radianos** (de [Radianos](./radianos)). Qual é o
+arco correspondente a $\theta$ radianos num círculo de raio $r$?
+
+<details>
+<summary>Conferir</summary>
+
+$s = r\theta$ — a definição de radiano, isolada. Meia página já está pronta.
+
+</details>
+
+**2. Área do círculo** (de [O círculo](./circulo)). Qual é a área de um círculo
+de raio $r$, e como ela foi deduzida?
+
+<details>
+<summary>Conferir</summary>
+
+$A = \pi r^2$, deduzida cortando o círculo em fatias finas e remontando-as num
+quase retângulo de base $\pi r$ (meio contorno) e altura $r$. As fatias eram
+setores — os mesmos desta página.
+
+</details>
+
+**3. Fração de um todo** (de [O círculo](./circulo)). Como se calculava a área
+de um setor em graus?
+
+<details>
+<summary>Conferir</summary>
+
+$A = \frac{\theta}{360^\circ} \times \pi r^2$ — a fração da volta aplicada à
+área total. Vamos reescrever isso em radianos e ver o que sobra.
+
+</details>
+
+## Comprimento do arco
+
+Esta parte já foi construída. A definição de radiano é
+
+$$
+\theta = \frac{s}{r},
+$$
+
+e isolar $s$ dá:
+
+> $$s = r\theta \qquad (\theta \text{ em radianos}).$$
+
+**Exemplo.** Raio 8 m, ângulo 120°. Convertendo primeiro:
+
+$$
+120^\circ = 120 \times \frac{\pi}{180} = \frac{2\pi}{3} \approx 2{,}0944
+\text{ rad}.
+$$
+
+$$
+s = 8 \times 2{,}0944 \approx 16{,}76 \text{ m}.
+$$
+
+Sanidade: a circunferência inteira mede $2\pi \times 8 \approx 50{,}3$ m, e 120°
+é um terço da volta — logo, cerca de 16,8 m ✓.
+
+## Área do setor
+
+A dedução é uma linha, partindo da fórmula em graus e trocando a unidade.
+
+O setor é a fração $\frac{\theta}{2\pi}$ da volta (em radianos, a volta inteira
+vale $2\pi$). Aplicando essa fração à área total:
+
+$$
+A = \frac{\theta}{2\pi} \times \pi r^2.
+$$
+
+Agora simplifique. O $\pi$ do numerador cancela com o do denominador:
+
+$$
+A = \frac{\theta}{2} \times r^2.
+$$
+
+> $$A = \frac{1}{2} r^2 \theta \qquad (\theta \text{ em radianos}).$$
+
+O $\pi$ **desapareceu**. Não foi truque: ele estava presente duas vezes — uma na
+área do círculo e outra na medida da volta em radianos — e se cancelou. É o
+mesmo tipo de simplificação que fez $s = r\theta$ ficar limpa.
+
+### Uma segunda leitura: o setor como triângulo
+
+Há uma forma alternativa da mesma fórmula que ilumina a construção:
+
+$$
+A = \frac{1}{2} r^2 \theta = \frac{1}{2} \times r \times \underbrace{(r\theta)}_{s}
+= \frac{1}{2} \times r \times s.
+$$
+
+Compare com a área do triângulo, $\frac{1}{2} \times \text{base} \times
+\text{altura}$:
+
+> O setor tem a área de um triângulo de **base igual ao arco** e **altura igual
+> ao raio**.
+
+Isso não é coincidência. É exatamente o que a dedução da área do círculo em
+[O círculo](./circulo) usou: cada fatia fina foi tratada como um triângulo de
+base igual ao pedacinho de arco e altura $r$. Aqui a mesma ideia aparece
+fechada, sem aproximação — porque agora a fatia não precisa ser fina.
+
+<GeoFigure
+  unit={34}
+  padding={48}
+  arcs={[{at: [0, 0], r: 3, from: 0, to: 65, sector: true, tone: 1}]}
+  segments={[
+    {from: [0, 0], to: [3, 0], tone: 2},
+  ]}
+  labels={[
+    {at: [1.5, -0.36], math: 'r', tone: 2, fontSize: 14},
+    {at: [2.6, 1.85], math: 's', tone: 3, fontSize: 14},
+    {at: [1.15, 0.6], math: '\\theta', tone: 1, fontSize: 14},
+  ]}
+  caption="Área do setor: meio raio vezes arco — a mesma estrutura da área do triângulo."
+/>
+
+### Comparação entre as duas escritas
+
+| | Em graus | Em radianos |
+|---|---|---|
+| arco | $s = \frac{\theta}{360} \cdot 2\pi r$ | $s = r\theta$ |
+| área do setor | $A = \frac{\theta}{360} \cdot \pi r^2$ | $A = \frac{1}{2}r^2\theta$ |
+
+As da direita não têm $\pi$, não têm 360 e não têm fração de conversão. Este é o
+argumento prático mais direto a favor dos radianos — e é por isso que a página
+de [Radianos](./radianos) prometeu voltar aqui.
+
+> **Erro comum:** usar as fórmulas da direita com o ângulo em graus. Com
+> $\theta = 120$ (graus) e $r = 8$, a fórmula $s = r\theta$ daria 960 m —
+> absurdo para um círculo de 8 m de raio. **Converta antes.** Um sinal de alerta:
+> se o arco sair maior que a circunferência inteira, o ângulo está na unidade
+> errada.
+
+## Resolvendo o problema do aspersor
+
+Raio $r = 8$ m, ângulo $\theta = 120^\circ = \frac{2\pi}{3}$ rad.
+
+**Área regada:**
+
+$$
+A = \frac{1}{2} \times 8^2 \times \frac{2\pi}{3}
+= \frac{1}{2} \times 64 \times 2{,}0944
+\approx 67{,}0 \text{ m}^2.
+$$
+
+Sanidade: o círculo completo teria $\pi \times 64 \approx 201$ m², e um terço
+disso é cerca de 67 m² ✓.
+
+**Borda da região.** Aqui mora um erro clássico: a borda **não** é só o arco. A
+região é uma fatia, e o contorno dela inclui os **dois raios**:
+
+$$
+P = 2r + s = 2 \times 8 + 16{,}76 = 32{,}76 \text{ m}.
+$$
+
+<GeoFigure
+  unit={30}
+  padding={46}
+  arcs={[{at: [0, 0], r: 4, from: 30, to: 150, tone: 2}]}
+  segments={[
+    {from: [0, 0], to: [3.46, 2], tone: 2},
+    {from: [0, 0], to: [-3.46, 2], tone: 2},
+  ]}
+  labels={[
+    {at: [0, 4.5], math: 's', tone: 2, fontSize: 14},
+    {at: [2.1, 0.85], math: 'r', tone: 2, fontSize: 13},
+    {at: [-2.1, 0.85], math: 'r', tone: 2, fontSize: 13},
+  ]}
+  caption="O contorno do setor tem três partes: o arco e os dois raios."
+/>
+
+> **Erro comum:** responder 16,76 m para a borda, esquecendo os dois raios. É a
+> mesma armadilha das [figuras compostas](./figuras-compostas): perímetro se
+> obtém **percorrendo o contorno**, e aqui o contorno passa pelo centro.
+
+## Setor de coroa: o limpador de para-brisa
+
+Um caso muito comum: a região varrida não começa no centro.
+
+Uma palheta de limpador tem 45 cm de comprimento e está montada de forma que sua
+extremidade interna fica a 15 cm do eixo de rotação. O braço varre 110°.
+
+<GeoFigure
+  unit={2.4}
+  padding={46}
+  arcs={[
+    {at: [0, 0], r: 60, from: 35, to: 145, sector: true, tone: 1},
+    {at: [0, 0], r: 15, from: 35, to: 145, sector: true, tone: 0},
+  ]}
+  labels={[
+    {at: [0, 45], math: '110^\\circ', tone: 1, fontSize: 13},
+    {at: [30, 20], math: '60', tone: 1, fontSize: 12},
+  ]}
+  caption="A área varrida é o setor grande menos o setor pequeno — a mesma estratégia da diferença das figuras compostas."
+/>
+
+O raio externo é $15 + 45 = 60$ cm; o interno é 15 cm. E
+$110^\circ = 110 \times \frac{\pi}{180} \approx 1{,}9199$ rad.
+
+Área varrida — o setor grande menos o pequeno:
+
+$$
+A = \frac{1}{2}\theta\left(R^2 - r^2\right)
+= \frac{1}{2} \times 1{,}9199 \times (3\,600 - 225)
+$$
+
+$$
+A = \frac{1}{2} \times 1{,}9199 \times 3\,375 \approx 3\,239 \text{ cm}^2,
+$$
+
+ou cerca de **0,32 m²**.
+
+Repare que fatorar $\frac{1}{2}\theta$ antes de calcular — colocando
+[o fator comum em evidência](../algebra/fator-comum-em-evidencia) — evitou
+calcular duas áreas e subtrair, e reduziu o arredondamento.
+
+> **Erro comum aqui:** usar 45 cm (o comprimento da palheta) como raio, obtendo
+> $\frac{1}{2} \times 1{,}9199 \times 45^2 \approx 1\,944$ cm². Isso seria a
+> área de um setor que **começa no eixo**, e não é a região varrida. O
+> comprimento da palheta é a **diferença** dos raios, não um raio.
+
+## Exemplos resolvidos
+
+### Exemplo 1: arco e área
+
+Um setor tem raio 5 cm e ângulo $\frac{\pi}{4}$ rad. Calcule o arco e a área.
+
+$$
+s = 5 \times \frac{\pi}{4} = \frac{5\pi}{4} \approx 3{,}93 \text{ cm}
+$$
+
+$$
+A = \frac{1}{2} \times 25 \times \frac{\pi}{4} = \frac{25\pi}{8}
+\approx 9{,}82 \text{ cm}^2.
+$$
+
+Conferência pela forma alternativa:
+$A = \frac{1}{2} \times r \times s = \frac{1}{2} \times 5 \times 3{,}93 =
+9{,}82$ ✓.
+
+### Exemplo 2: achar o ângulo
+
+*Pause e tente antes de ler.* Um setor de raio 12 m tem área 60 m². Qual é seu
+ângulo, em radianos e em graus?
+
+$$
+60 = \frac{1}{2} \times 144 \times \theta = 72\theta
+\Longrightarrow
+\theta = \frac{60}{72} = \frac{5}{6} \approx 0{,}833 \text{ rad}.
+$$
+
+Em graus: $0{,}833 \times \frac{180}{\pi} \approx 47{,}7^\circ$.
+
+Sanidade: 0,833 rad é menos que $\frac{\pi}{2} \approx 1{,}571$, então o ângulo
+tem de ser menor que 90° ✓.
+
+### Exemplo 3: do arco para o raio
+
+*Pause e tente antes de ler.* Um arco de 30 cm corresponde a um ângulo de 1,5
+rad. Qual é o raio? E a área do setor?
+
+$$
+r = \frac{s}{\theta} = \frac{30}{1{,}5} = 20 \text{ cm}.
+$$
+
+$$
+A = \frac{1}{2} \times 20 \times 30 = 300 \text{ cm}^2.
+$$
+
+Usar a forma $A = \frac{1}{2}rs$ evitou elevar o raio ao quadrado.
+
+### Exemplo 4: a planificação do cone
+
+*Pause e tente antes de ler.* Um cone tem raio de base 5 cm e geratriz 13 cm.
+Sua superfície lateral, planificada, é um setor circular de raio 13 cm. Qual é o
+ângulo desse setor?
+
+O arco do setor tem de ter o mesmo comprimento que o contorno da base do cone —
+é ele que se enrola em volta dela:
+
+$$
+s = 2\pi \times 5 = 10\pi \text{ cm}.
+$$
+
+E o raio do setor é a geratriz, 13 cm:
+
+$$
+\theta = \frac{s}{r} = \frac{10\pi}{13} \approx 2{,}417 \text{ rad}
+\approx 138{,}5^\circ.
+$$
+
+Conferência: a área do setor deve ser a área lateral do cone,
+$\pi r g = \pi \times 5 \times 13 = 65\pi \approx 204{,}2$ cm². Pela fórmula do
+setor: $\frac{1}{2} \times 13^2 \times 2{,}417 \approx 204{,}2$ ✓.
+
+Este exemplo fecha uma promessa de [Volumes e superfícies](./volumes-e-superficies):
+lá, a fórmula $A_{\text{lateral}} = \pi r g$ foi apresentada sem dedução. Ela sai
+daqui.
+
+### Exemplo 5: gráfico de pizza
+
+*Pause e tente antes de ler.* Num gráfico de pizza de raio 4 cm, uma categoria
+representa 35% do total. Qual é o ângulo da fatia, e qual é sua área?
+
+35% da volta:
+
+$$
+\theta = 0{,}35 \times 2\pi = 0{,}7\pi \approx 2{,}199 \text{ rad}
+\qquad (\text{ou } 0{,}35 \times 360^\circ = 126^\circ).
+$$
+
+$$
+A = \frac{1}{2} \times 16 \times 2{,}199 \approx 17{,}59 \text{ cm}^2.
+$$
+
+Confira: a pizza inteira tem $\pi \times 16 \approx 50{,}27$ cm², e 35% disso
+é 17,59 ✓. Note que a área da fatia é proporcional ao dado — é isso que torna o
+gráfico de pizza honesto.
+
+## Erros comuns
+
+> **Erro 1: usar graus nas fórmulas $s = r\theta$ e
+> $A = \frac{1}{2}r^2\theta$.** Converta primeiro. Um arco maior que a
+> circunferência denuncia o erro.
+
+> **Erro 2: esquecer os dois raios no perímetro do setor.** $P = 2r + s$.
+
+> **Erro 3: confundir arco com área.** Arco é comprimento (m); área é
+> superfície (m²). A unidade do resultado é o primeiro teste.
+
+> **Erro 4: no setor de coroa, usar a largura da faixa como raio.** Os raios são
+> o interno e o externo; a largura é a diferença entre eles.
+
+> **Erro 5: esquecer o $\frac{1}{2}$.** O resultado sai o dobro. Compare
+> mentalmente com a área total: um setor de meia volta tem de dar metade do
+> círculo.
+
+## Perguntas de verificação
+
+1. Por que o $\pi$ desaparece na fórmula da área do setor em radianos?
+2. Em que sentido o setor “tem a área de um triângulo”?
+3. Por que o perímetro de um setor não é só o arco?
+4. Por que a fórmula $s = r\theta$ falha com o ângulo em graus?
+5. Como a fórmula do setor explica a área lateral do cone?
+6. Que verificação rápida detecta uma resposta em unidade errada?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque ele aparece duas vezes e se cancela: a área total do círculo tem
+   $\pi r^2$, e a fração da volta é $\frac{\theta}{2\pi}$, com $\pi$ no
+   denominador. O produto elimina os dois.
+2. A fórmula pode ser escrita como $A = \frac{1}{2} \times r \times s$, que tem
+   a forma “meia base vezes altura” com o **arco** no papel de base e o **raio**
+   no papel de altura. É a mesma leitura usada na dedução da área do círculo por
+   fatias.
+3. Porque a região é limitada por três partes: o arco e os **dois raios**. Quem
+   contorna a fatia passa pelo centro. O perímetro é $2r + s$.
+4. Porque ela vem da definição $\theta = \frac{s}{r}$, que só vale em radianos.
+   Em graus, o mesmo ângulo é representado por um número cerca de 57 vezes
+   maior, e a igualdade se perde.
+5. A superfície lateral planificada **é** um setor circular, de raio igual à
+   geratriz $g$ e arco igual ao contorno da base, $2\pi r$. Aplicando
+   $A = \frac{1}{2} \times (\text{raio}) \times (\text{arco})$, vem
+   $A = \frac{1}{2} \times g \times 2\pi r = \pi r g$ — exatamente a fórmula
+   apresentada antes.
+6. Olhar a unidade: comprimento de arco sai em metros, área em metros
+   quadrados. Se a conta de área não produziu uma unidade ao quadrado, a fórmula
+   usada estava errada.
+
+</details>
+
+## Exercícios
+
+### 1. Reconhecimento
+
+1. Calcule o arco: (a) $r = 6$, $\theta = 2$ rad; (b) $r = 10$,
+   $\theta = \frac{\pi}{3}$; (c) $r = 4$, $\theta = 90^\circ$.
+2. Calcule a área do setor: (a) $r = 3$, $\theta = 1$ rad; (b) $r = 6$,
+   $\theta = \frac{\pi}{2}$; (c) $r = 5$, $\theta = 60^\circ$.
+3. Um setor tem raio 7 e arco 14. Qual é seu ângulo?
+
+### 2. Explicação
+
+4. Explique por que a área de um setor de $\pi$ radianos é metade da área do
+   círculo, usando a fórmula.
+5. Um colega calculou o arco de um setor de raio 5 m e ângulo 60° como
+   $5 \times 60 = 300$ m. Explique o erro e mostre como detectá-lo sem refazer
+   a conta.
+6. Explique por que a fórmula $A = \frac{1}{2}rs$ é equivalente a
+   $A = \frac{1}{2}r^2\theta$.
+
+### 3. Aplicação direta
+
+7. Um aspersor cobre 90° e alcança 6 m. Calcule a área regada e o perímetro da
+   região.
+8. Um setor de raio 15 cm tem área 150 cm². Determine o ângulo em radianos e em
+   graus.
+9. Um pêndulo de 1,2 m oscila 25° para cada lado da vertical. Que distância a
+   massa percorre de um extremo ao outro?
+
+### 4. Variação
+
+10. Uma pista circular tem 40 m de raio interno e 8 m de largura. Qual é a área
+    de um trecho que corresponde a 45° da volta?
+11. Um limpador de para-brisa tem palheta de 50 cm, começando a 20 cm do eixo, e
+    varre 130°. Qual é a área limpa?
+12. Um cone tem raio de base 6 cm e altura 8 cm. Determine a geratriz e o ângulo
+    do setor obtido ao planificar sua superfície lateral.
+
+<details>
+<summary>Dica para o 12</summary>
+
+A geratriz sai por Pitágoras. Depois, o arco do setor precisa ter o mesmo
+comprimento que o contorno da base.
+
+</details>
+
+### 5. Problema misto
+
+13. Uma peça metálica tem formato de setor de raio 20 cm e ângulo 75°. Calcule
+    sua área e o comprimento total do contorno, para orçar o corte a laser
+    (cobrado por centímetro cortado).
+14. Um radar cobre um setor de 60° com alcance 30 km. Se o alcance for reduzido
+    para 20 km, mas o ângulo aumentado para 120°, a área coberta aumenta ou
+    diminui? Em quanto?
+
+### 6. Justificativa
+
+15. Deduza $A = \frac{1}{2}r^2\theta$ a partir da fórmula em graus, explicando o
+    cancelamento do $\pi$.
+16. Mostre que a área lateral de um cone, $\pi r g$, decorre da fórmula da área
+    do setor aplicada à planificação.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. (a) 12; (b) $\frac{10\pi}{3} \approx 10{,}47$; (c)
+   $90^\circ = \frac{\pi}{2}$, logo $4 \times \frac{\pi}{2} = 2\pi \approx
+   6{,}28$.
+2. (a) $\frac{1}{2} \times 9 \times 1 = 4{,}5$; (b)
+   $\frac{1}{2} \times 36 \times \frac{\pi}{2} = 9\pi \approx 28{,}27$;
+   (c) $60^\circ = \frac{\pi}{3}$, logo
+   $\frac{1}{2} \times 25 \times \frac{\pi}{3} \approx 13{,}09$.
+3. $\theta = \frac{14}{7} = 2$ rad.
+4. $A = \frac{1}{2}r^2\pi = \frac{\pi r^2}{2}$, que é metade de $\pi r^2$. Faz
+   sentido: $\pi$ radianos são meia volta.
+5. Ele usou o ângulo em **graus** numa fórmula que exige radianos. Detecção sem
+   refazer: a circunferência inteira mede $2\pi \times 5 \approx 31{,}4$ m, e
+   nenhum arco pode ser maior que isso — 300 m é dez vezes a volta completa.
+6. Porque $s = r\theta$. Substituindo em $A = \frac{1}{2}rs$, vem
+   $A = \frac{1}{2}r(r\theta) = \frac{1}{2}r^2\theta$. São a mesma fórmula, com
+   o arco escrito de duas maneiras.
+7. $90^\circ = \frac{\pi}{2}$. Área:
+   $\frac{1}{2} \times 36 \times \frac{\pi}{2} = 9\pi \approx 28{,}3$ m².
+   Arco: $6 \times \frac{\pi}{2} = 3\pi \approx 9{,}42$ m. Perímetro:
+   $12 + 9{,}42 = 21{,}42$ m.
+8. $150 = \frac{1}{2} \times 225 \times \theta \Rightarrow \theta =
+   \frac{300}{225} = \frac{4}{3} \approx 1{,}333$ rad, ou cerca de
+   $76{,}4^\circ$.
+9. De um extremo ao outro são 50°, isto é,
+   $50 \times \frac{\pi}{180} \approx 0{,}8727$ rad. Então
+   $s = 1{,}2 \times 0{,}8727 \approx 1{,}047$ m.
+10. Raios 40 e 48; $45^\circ = \frac{\pi}{4} \approx 0{,}7854$ rad.
+    $A = \frac{1}{2} \times 0{,}7854 \times (48^2 - 40^2) =
+    \frac{1}{2} \times 0{,}7854 \times 704 \approx 276{,}5$ m².
+11. Raios 20 e 70; $130^\circ \approx 2{,}2689$ rad.
+    $A = \frac{1}{2} \times 2{,}2689 \times (4\,900 - 400) =
+    \frac{1}{2} \times 2{,}2689 \times 4\,500 \approx 5\,105$ cm², ou cerca de
+    0,51 m².
+12. $g = \sqrt{36+64} = 10$ cm. O arco do setor é
+    $2\pi \times 6 = 12\pi$, e o raio do setor é 10, então
+    $\theta = \frac{12\pi}{10} = 1{,}2\pi \approx 3{,}770$ rad, ou 216°.
+13. $75^\circ \approx 1{,}3090$ rad. Área:
+    $\frac{1}{2} \times 400 \times 1{,}3090 \approx 261{,}8$ cm². Contorno:
+    arco $= 20 \times 1{,}3090 \approx 26{,}18$ cm, mais dois raios de 20 cm:
+    total $\approx 66{,}18$ cm.
+14. Antes: $\frac{1}{2} \times 900 \times \frac{\pi}{3} = 150\pi \approx 471{,}2$
+    km². Depois: $\frac{1}{2} \times 400 \times \frac{2\pi}{3} =
+    \frac{400\pi}{3} \approx 418{,}9$ km². **Diminui** cerca de 52,4 km², ou
+    11%. O alcance conta ao quadrado; o ângulo, só linearmente — dobrar o ângulo
+    não compensa reduzir o alcance a dois terços.
+15. Em graus, $A = \frac{\theta_{\text{graus}}}{360} \times \pi r^2$. Trocando
+    para radianos, a volta passa a valer $2\pi$ em vez de 360, então a fração da
+    volta é $\frac{\theta}{2\pi}$ e
+    $A = \frac{\theta}{2\pi} \times \pi r^2$. O $\pi$ do numerador cancela com o
+    do denominador, restando $A = \frac{\theta r^2}{2}$.
+16. A superfície lateral planificada é um setor de raio $g$ (a geratriz) cujo
+    arco tem o comprimento do contorno da base, $2\pi r$ — porque é esse contorno
+    que a superfície envolve. Usando $A = \frac{1}{2} \times \text{raio} \times
+    \text{arco}$: $A = \frac{1}{2} \times g \times 2\pi r = \pi r g$.
+
+</details>
+
+## Revisão curta
+
+- **Arco:** $s = r\theta$. **Área do setor:** $A = \frac{1}{2}r^2\theta$. As
+  duas com $\theta$ em **radianos**.
+- O $\pi$ some da fórmula da área porque aparece duas vezes e se cancela.
+- Forma alternativa: $A = \frac{1}{2} r s$ — meio raio vezes arco, com a mesma
+  estrutura da área do triângulo.
+- **Perímetro do setor:** $P = 2r + s$ — o arco **mais os dois raios**.
+- **Setor de coroa:** $A = \frac{1}{2}\theta(R^2 - r^2)$; a largura da faixa é a
+  diferença dos raios, não um raio.
+- A planificação da lateral do cone é um setor, e daí sai $A = \pi r g$.
+- Arco é comprimento; área é superfície. A unidade denuncia a fórmula errada.
+
+Encerra-se o módulo do ciclo. Até aqui, seno e cosseno foram tratados como
+**valores** associados a ângulos. O próximo passo é olhá-los como
+[funções](./graficos-seno-e-cosseno): desenhar o que acontece quando o ângulo
+varia continuamente, e reconhecer a onda que aparece.

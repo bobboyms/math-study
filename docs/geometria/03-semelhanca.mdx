@@ -1,0 +1,684 @@
+---
+title: Semelhança de triângulos
+---
+
+import GeoFigure from '@site/src/components/GeoFigure';
+
+# Semelhança: mesmos ângulos obrigam lados proporcionais
+
+## Problema motivador: a altura do prédio pela sombra
+
+Você quer saber a altura de um prédio à sua frente. Não dá para subir com uma
+trena, não dá para medir de baixo.
+
+Mas duas coisas dão para medir, com passos e uma fita métrica:
+
+- a **sombra do prédio** no chão: 10,5 m;
+- um **bastão de 1,2 m**, fincado no chão ao lado, cuja sombra mede 0,9 m.
+
+<GeoFigure
+  unit={32}
+  padding={58}
+  polygons={[
+    {points: [[0, 0], [3, 0], [0, 4]], tone: 1},
+    {points: [[5, 0], [8.5, 0], [5, 4.67]], tone: 2},
+  ]}
+  angles={[
+    {at: [0, 0], from: [3, 0], to: [0, 4], right: true, tone: 1},
+    {at: [3, 0], from: [0, 0], to: [0, 4], label: '\\theta', tone: 3, radius: 24, labelRadius: 44},
+    {at: [5, 0], from: [8.5, 0], to: [5, 4.67], right: true, tone: 2},
+    {at: [8.5, 0], from: [5, 0], to: [5, 4.67], label: '\\theta', tone: 3, radius: 24, labelRadius: 44},
+  ]}
+  labels={[
+    {at: [-0.62, 2], math: '1{,}2', tone: 1, fontSize: 13},
+    {at: [1.5, -0.42], math: '0{,}9', tone: 1, fontSize: 13},
+    {at: [4.34, 2.3], math: 'h', tone: 2, fontSize: 14},
+    {at: [6.75, -0.42], math: '10{,}5', tone: 2, fontSize: 13},
+    {at: [1.9, 3.6], math: '\\text{bastão}', fontSize: 12, halo: false},
+    {at: [7.4, 4.4], math: '\\text{prédio}', fontSize: 12, halo: false},
+  ]}
+  caption="Bastão e prédio, com suas sombras. Os dois triângulos têm os mesmos ângulos: o reto do chão e o θ dos raios de sol."
+/>
+
+> Como a sombra de um bastão de 1,2 m pode revelar a altura de um prédio?
+
+A ponte é geométrica. O bastão com sua sombra forma um triângulo retângulo; o
+prédio com a sua forma outro. Os raios de sol chegam **paralelos** aos dois — o
+Sol está longe demais para que a inclinação mude entre um ponto e outro do
+terreno —, então o ângulo $\theta$ é o mesmo nos dois triângulos. E os dois têm
+um ângulo reto, porque bastão e prédio estão em pé.
+
+Dois triângulos com os mesmos ângulos: é exatamente esse o objeto desta página.
+Voltaremos ao prédio com a conta pronta.
+
+## Mapa das ideias
+
+- **figuras semelhantes** — têm a mesma forma, podendo ter tamanhos diferentes;
+- **razão de semelhança** ($k$) — o número pelo qual todos os comprimentos de
+  uma figura são multiplicados para virar a outra;
+- **lados correspondentes** — os lados que ocupam a mesma posição nas duas
+  figuras, identificados pelos ângulos, não pela aparência;
+- **proporção** — uma igualdade entre duas razões, como
+  $\frac{a}{b} = \frac{c}{d}$;
+- **caso AA** — dois ângulos iguais já garantem semelhança.
+
+Exemplo: os triângulos de lados $3, 4, 5$ e $6, 8, 10$ são semelhantes, com
+$k = 2$. Contraexemplo: os de lados $3, 4, 5$ e $4, 5, 6$ **não** são — de um
+para o outro, cada lado aumentou 1 unidade, mas as razões
+$\frac{4}{3}$, $\frac{5}{4}$ e $\frac{6}{5}$ são diferentes. Somar não é o
+mesmo que multiplicar, e essa distinção é o coração da página.
+
+## Para que isso serve?
+
+- medir o inacessível: altura de prédios, árvores, torres e montanhas;
+- mapas e plantas baixas — uma escala 1:100 é uma semelhança com
+  $k = \frac{1}{100}$;
+- maquetes, miniaturas, redimensionamento de imagens e de fontes;
+- fotografia e projeção: a imagem na tela é semelhante ao objeto;
+- e, dentro da matemática, a semelhança é o que **torna a trigonometria
+  possível**. Sem ela, falar em “o seno de 30°” não faria sentido — cada
+  triângulo teria o seu.
+
+## Ideias anteriores que voltam aqui
+
+**1. Razão e fração** (de [Frações](../numeros-e-operacoes/fracoes)). O que
+significa dizer que dois números estão na razão $\frac{3}{2}$?
+
+<details>
+<summary>Conferir</summary>
+
+Que o primeiro é uma vez e meia o segundo: dividindo um pelo outro dá 1,5. A
+razão compara por **divisão**, não por subtração. Os pares $(3,2)$, $(6,4)$ e
+$(15,10)$ têm todos a mesma razão.
+
+</details>
+
+**2. Frações equivalentes e multiplicação cruzada.** Se
+$\frac{x}{6} = \frac{10}{4}$, quanto vale $x$?
+
+<details>
+<summary>Conferir</summary>
+
+Multiplicando cruzado, $4x = 60$, logo $x = 15$. Isso é legítimo porque
+multiplicar os dois lados da igualdade pelo mesmo número não altera a igualdade
+— é a mesma regra de
+[equações do 1º grau](../equacoes/equacoes-do-primeiro-grau).
+
+</details>
+
+**3. Soma dos ângulos** (de [Triângulos](./triangulos)). Se dois triângulos têm
+dois ângulos iguais entre si, o que se pode dizer do terceiro?
+
+<details>
+<summary>Conferir</summary>
+
+Também é igual. Os três somam 180° em ambos; se dois pares coincidem, o que
+resta para completar o total é o mesmo número nos dois. Essa observação é o
+motivo de o caso AA existir.
+
+</details>
+
+## Intuição: a fotocópia ampliada
+
+Coloque um desenho na fotocopiadora e amplie para 150%. O que sai é
+reconhecidamente o **mesmo desenho**: os cantos têm a mesma abertura, as
+proporções internas não mudaram, nada entortou. O que mudou foi só o tamanho —
+e mudou de um jeito específico:
+
+> Todos os comprimentos foram multiplicados pelo **mesmo** número.
+
+Não “aumentados em 2 cm”. Multiplicados por 1,5. É por isso que um traço de
+4 cm virou 6 cm e um de 10 cm virou 15 cm: o acréscimo foi diferente (2 cm e
+5 cm), mas o fator foi o mesmo.
+
+Duas figuras nessa relação são **semelhantes**, e o fator é a **razão de
+semelhança**, que chamaremos de $k$.
+
+Vale insistir no contraste, porque ele é a origem do erro mais comum do assunto:
+
+| | Somar 2 a cada lado | Multiplicar cada lado por 1,5 |
+|---|---|---|
+| O triângulo 4, 6, 8 vira | 6, 8, 10 | 6, 9, 12 |
+| Razão entre os dois primeiros lados | $\frac{6}{8} = 0{,}75$ (era $\frac{4}{6} \approx 0{,}67$) | $\frac{6}{9} \approx 0{,}67$, igual à original |
+| Forma | mudou — ficou mais “equilátero” | idêntica |
+
+Somar mexe mais nos lados pequenos, proporcionalmente, do que nos grandes.
+Multiplicar trata todos igual. Só a multiplicação preserva a forma.
+
+## Modelo visual: dois triângulos com os mesmos ângulos
+
+<GeoFigure
+  unit={40}
+  padding={58}
+  polygons={[
+    {points: [[0, 0], [2, 0], [0, 1.5]], tone: 1},
+    {points: [[3.6, 0], [6.6, 0], [3.6, 2.25]], tone: 2},
+  ]}
+  angles={[
+    {at: [0, 0], from: [2, 0], to: [0, 1.5], right: true, tone: 1},
+    {at: [2, 0], from: [0, 0], to: [0, 1.5], label: '\\alpha', tone: 3, radius: 20, labelRadius: 40},
+    {at: [3.6, 0], from: [6.6, 0], to: [3.6, 2.25], right: true, tone: 2},
+    {at: [6.6, 0], from: [3.6, 0], to: [3.6, 2.25], label: '\\alpha', tone: 3, radius: 20, labelRadius: 40},
+  ]}
+  labels={[
+    {at: [1, -0.4], math: '4', tone: 1, fontSize: 13},
+    {at: [-0.34, 0.75], math: '3', tone: 1, fontSize: 13},
+    {at: [1.34, 0.95], math: '5', tone: 1, fontSize: 13},
+    {at: [5.1, -0.4], math: '6', tone: 2, fontSize: 13},
+    {at: [3.24, 1.12], math: '4{,}5', tone: 2, fontSize: 13},
+    {at: [5.4, 1.42], math: '7{,}5', tone: 2, fontSize: 13},
+  ]}
+  caption="Mesmos ângulos, tamanhos diferentes. Cada lado do segundo triângulo é 1,5 vez o lado correspondente do primeiro."
+/>
+
+Confira lado a lado:
+
+$$
+\frac{6}{4} = 1{,}5,
+\qquad
+\frac{4{,}5}{3} = 1{,}5,
+\qquad
+\frac{7{,}5}{5} = 1{,}5.
+$$
+
+As três razões dão o mesmo número. Esse número é $k$.
+
+Há uma segunda leitura da mesma figura, e ela será decisiva: em vez de comparar
+**um triângulo com o outro**, compare **dois lados dentro do mesmo triângulo**.
+
+$$
+\underbrace{\frac{3}{4} = 0{,}75}_{\text{triângulo pequeno}}
+\qquad
+\underbrace{\frac{4{,}5}{6} = 0{,}75}_{\text{triângulo grande}}
+$$
+
+Também bate. E aqui está o fato que sustenta a trigonometria inteira: **a razão
+entre dois lados de um triângulo depende só dos ângulos**. Amplie o triângulo à
+vontade; a razão vertical-sobre-horizontal continua 0,75. Guarde isso: em
+[Seno, cosseno e tangente](./razoes-trigonometricas), essa razão fixa vai ganhar
+nome.
+
+## Ponte para a formalização
+
+O desenho mostrou dois triângulos com ângulos iguais e lados proporcionais.
+Falta separar o que é **definição** do que é **consequência** — e essa separação
+é o que dá poder prático ao assunto.
+
+A definição vai exigir as duas coisas: ângulos iguais **e** lados
+proporcionais. Mas em triângulos, verificar tudo isso seria trabalho perdido,
+porque uma condição arrasta a outra. Pense em construir um triângulo: se você
+fixa os três ângulos, quanta liberdade sobra? Só a de escolher o comprimento de
+**um** lado — feito isso, os outros dois estão obrigados, porque os lados só
+podem sair nas direções que os ângulos permitem, até se encontrarem.
+
+Essa falta de liberdade é justamente a proporcionalidade: escolher o primeiro
+lado é escolher $k$, e todo o resto acompanha.
+
+## Formalização
+
+> Dois triângulos são **semelhantes** quando têm os três ângulos iguais, um a
+> um, e os lados correspondentes proporcionais. A constante dessa proporção é a
+> **razão de semelhança** $k$.
+
+Escreve-se $\triangle ABC \sim \triangle DEF$, e a ordem das letras **carrega
+informação**: $A$ corresponde a $D$, $B$ a $E$, $C$ a $F$. Com essa
+correspondência,
+
+$$
+\frac{\overline{DE}}{\overline{AB}}
+= \frac{\overline{EF}}{\overline{BC}}
+= \frac{\overline{DF}}{\overline{AC}}
+= k.
+$$
+
+### Caso AA: dois ângulos bastam
+
+> Se dois triângulos têm **dois** ângulos iguais, um a um, então são
+> semelhantes.
+
+A justificativa já foi reativada acima: o terceiro ângulo é o que falta para
+180° em cada triângulo, e como os dois primeiros coincidem, o terceiro também
+coincide. Com os três ângulos iguais, a forma está determinada, e os lados só
+podem ser proporcionais.
+
+É o caso mais usado na prática, porque ângulos costumam ser fáceis de
+identificar — dois triângulos retângulos, por exemplo, já vêm com um ângulo
+igual de graça: basta mais um.
+
+Exemplo: um triângulo com ângulos 40° e 60° é semelhante a outro com ângulos
+60° e 80°? Sim — o primeiro tem terceiro ângulo $180 - 40 - 60 = 80^\circ$, e o
+segundo tem $180 - 60 - 80 = 40^\circ$. Os dois conjuntos são
+$\{40^\circ, 60^\circ, 80^\circ\}$. ✓
+
+Contraexemplo: um triângulo de ângulos 40° e 60° **não** é semelhante a outro
+de ângulos 40° e 70°. Os conjuntos são $\{40, 60, 80\}$ e $\{40, 70, 70\}$ —
+compartilham um ângulo, e um só não basta.
+
+> **Cuidado:** um ângulo igual nunca é suficiente. Dois triângulos retângulos
+> bem diferentes — um quase simétrico, outro bem achatado — compartilham o
+> ângulo de 90° e não têm nada mais em comum.
+
+## Como montar a proporção sem errar
+
+Esta é a parte que decide o resultado, e onde a maioria dos erros acontece. Uma
+proporção montada com os lados trocados dá um número que parece razoável e está
+errado.
+
+Duas regras bastam:
+
+**Regra 1 — a correspondência vem dos ângulos, não da posição no desenho.** O
+lado que está de frente para o ângulo de 30° em um triângulo corresponde ao lado
+de frente para o ângulo de 30° no outro. Se as figuras estiverem giradas ou
+espelhadas, a aparência engana; o ângulo, não.
+
+**Regra 2 — escolha um sentido e mantenha.** Ou você escreve todas as razões
+como “grande sobre pequeno”, ou todas como “pequeno sobre grande”. Misturar os
+dois sentidos numa mesma proporção é o erro clássico.
+
+Um jeito prático de organizar, que evita os dois erros de uma vez, é montar uma
+tabela antes de escrever qualquer fração:
+
+| | lado horizontal | lado vertical | lado inclinado |
+|---|---:|---:|---:|
+| triângulo pequeno | 4 | 3 | 5 |
+| triângulo grande | 6 | 4,5 | 7,5 |
+
+Cada coluna é um par correspondente. A proporção sai lendo colunas:
+
+$$
+\frac{6}{4} = \frac{4{,}5}{3} = \frac{7{,}5}{5}.
+$$
+
+Todas as razões são “linha de baixo sobre linha de cima”. Nenhuma inverteu.
+
+> **Erro comum:** montar $\frac{6}{4} = \frac{3}{4{,}5}$, invertendo a segunda
+> fração. Dá para pegar sem calcular nada: à esquerda o resultado é maior que 1,
+> à direita é menor que 1 — duas razões iguais não podem ficar em lados opostos
+> do 1. **Antes de resolver, compare os dois lados com 1.**
+
+## Resolvendo a altura do prédio
+
+Agora a conta. Os dois triângulos são semelhantes pelo caso AA: ambos têm um
+ângulo reto e o mesmo ângulo $\theta$ dos raios de sol.
+
+A correspondência: a **altura** do bastão corresponde à altura do prédio; a
+**sombra** do bastão corresponde à sombra do prédio.
+
+| | altura | sombra |
+|---|---:|---:|
+| bastão | 1,2 m | 0,9 m |
+| prédio | $h$ | 10,5 m |
+
+Lendo colunas, com o sentido “prédio sobre bastão” nas duas:
+
+$$
+\frac{h}{1{,}2} = \frac{10{,}5}{0{,}9}.
+$$
+
+O lado direito é a razão de semelhança, aproximadamente 11,67. Multiplicando os
+dois lados por 1,2:
+
+$$
+h = 1{,}2 \times \frac{10{,}5}{0{,}9} = \frac{12{,}6}{0{,}9} = 14.
+$$
+
+O prédio tem **14 metros**.
+
+Vale conferir pelo outro caminho — a razão dentro de cada triângulo:
+
+$$
+\frac{\text{altura}}{\text{sombra}}:
+\qquad
+\frac{1{,}2}{0{,}9} = 1{,}33\ldots
+\qquad\text{e}\qquad
+\frac{14}{10{,}5} = 1{,}33\ldots
+$$
+
+As duas leituras concordam, como tinham de concordar.
+
+E o teste de sanidade: a sombra do prédio é cerca de 11,7 vezes a do bastão,
+então a altura tinha de ser cerca de 11,7 vezes 1,2 m — algo perto de 14 m. Se a
+resposta tivesse dado 8 m ou 40 m, alguma fração estaria invertida.
+
+## Semelhança dentro de um mesmo triângulo
+
+Um caso aparece com muita frequência e vale reconhecer de imediato: traçar,
+dentro de um triângulo, uma reta **paralela** a um dos lados.
+
+<GeoFigure
+  unit={48}
+  padding={58}
+  polygons={[{points: [[0, 0], [4, 0], [1.2, 3]], tone: 1, fill: false}]}
+  segments={[{from: [1.867, 1.6], to: [0.64, 1.6], tone: 2}]}
+  labels={[
+    {at: [0.13, 0.75], math: '9', tone: 1, fontSize: 13},
+    {at: [0.68, 2.35], math: '3', tone: 1, fontSize: 13},
+    {at: [1.25, 1.9], math: '4', tone: 2, fontSize: 13},
+    {at: [2, -0.36], math: '16', tone: 1, fontSize: 13},
+  ]}
+  caption="A reta laranja é paralela ao lado de baixo. Ela recorta, no topo, um triângulo semelhante ao inteiro."
+/>
+
+Por que o triângulo de cima é semelhante ao todo? Porque a paralela cria
+**ângulos correspondentes iguais** — o resultado da página de
+[Ângulos](./angulos). O ângulo do topo é compartilhado pelos dois triângulos, e
+mais um ângulo igual fecha o caso AA.
+
+Com os números da figura: o lado esquerdo do triângulo pequeno mede 3 e o do
+grande mede $3 + 9 = 12$, então
+
+$$
+k = \frac{12}{3} = 4,
+$$
+
+e o segmento recortado no topo deve valer um quarto do lado de baixo:
+$16 \div 4 = 4$. ✓
+
+> **Erro comum:** usar 9 (o pedaço de baixo) no lugar de 12 (o lado inteiro).
+> O triângulo grande tem como lado o **segmento completo**, não a parte que
+> sobra. Com 9 no lugar de 12, a razão sairia $\frac{9}{3} = 3$ e o segmento
+> daria $16 \div 3 \approx 5{,}33$ — errado, e sem nenhum sinal óbvio de que
+> está errado. É por isso que vale conferir a soma dos pedaços antes de dividir.
+
+## O que a semelhança faz com áreas e volumes
+
+Um ponto que costuma surpreender, e que a página de
+[Áreas](./areas-de-poligonos) vai aprofundar: quando os comprimentos são
+multiplicados por $k$, as áreas **não** são multiplicadas por $k$.
+
+Pense num quadrado de lado 2, com área 4. Dobre o lado: agora é 4, e a área é
+16 — quatro vezes maior, não duas.
+
+O motivo é direto: a área é um produto de **dois** comprimentos, e cada um deles
+foi multiplicado por $k$:
+
+$$
+(k \times a) \times (k \times b) = k^2 \times (a \times b).
+$$
+
+Pelo mesmo argumento, o volume envolve três comprimentos e é multiplicado por
+$k^3$.
+
+| Grandeza | Multiplicada por |
+|---|---|
+| comprimento, perímetro | $k$ |
+| área, área de superfície | $k^2$ |
+| volume | $k^3$ |
+
+Exemplo prático: uma maquete na escala 1:50 tem paredes 50 vezes menores, mas
+precisa de $50^2 = 2\,500$ vezes menos tinta e $50^3 = 125\,000$ vezes menos
+material de preenchimento.
+
+## Exemplos resolvidos
+
+### Exemplo 1: encontrar o lado que falta
+
+Dois triângulos são semelhantes. No primeiro, os lados medem 8, 12 e 16. No
+segundo, o lado correspondente ao 8 mede 20. Quanto medem os outros dois?
+
+A razão de semelhança é
+
+$$
+k = \frac{20}{8} = 2{,}5.
+$$
+
+Logo, os outros lados medem $12 \times 2{,}5 = 30$ e $16 \times 2{,}5 = 40$.
+
+Verificação: $\frac{30}{12} = 2{,}5$ ✓ e $\frac{40}{16} = 2{,}5$ ✓.
+
+### Exemplo 2: escala de planta
+
+*Pause e tente antes de ler.* Numa planta em escala 1:100, uma sala aparece como
+um retângulo de 4,5 cm por 3 cm. Quais são as dimensões reais, e qual é a área
+real?
+
+Escala 1:100 significa $k = 100$ da planta para a realidade. Então:
+
+$$
+4{,}5 \text{ cm} \times 100 = 450 \text{ cm} = 4{,}5 \text{ m},
+$$
+
+$$
+3 \text{ cm} \times 100 = 300 \text{ cm} = 3 \text{ m}.
+$$
+
+A área real é $4{,}5 \times 3 = 13{,}5$ m².
+
+Confira pela regra do $k^2$: a área na planta é
+$4{,}5 \times 3 = 13{,}5$ cm², e $13{,}5 \times 100^2 = 135\,000$ cm². Como
+$1 \text{ m}^2 = 10\,000 \text{ cm}^2$, isso dá
+$135\,000 \div 10\,000 = 13{,}5$ m² ✓. As duas contas fecham.
+
+### Exemplo 3: a árvore e o espelho
+
+*Pause e tente antes de ler.* Um espelho é colocado no chão a 6 m de uma árvore.
+Uma pessoa de 1,7 m de altura recua até enxergar o topo da árvore refletido, e
+isso acontece quando ela está a 2,4 m do espelho. Qual é a altura da árvore?
+
+A luz reflete formando ângulos iguais com o chão dos dois lados do espelho.
+Somando o ângulo reto que pessoa e árvore fazem com o solo, os dois triângulos
+são semelhantes pelo caso AA.
+
+| | altura | distância ao espelho |
+|---|---:|---:|
+| pessoa | 1,7 | 2,4 |
+| árvore | $H$ | 6 |
+
+$$
+\frac{H}{1{,}7} = \frac{6}{2{,}4} = 2{,}5
+$$
+
+$$
+H = 1{,}7 \times 2{,}5 = 4{,}25 \text{ m}.
+$$
+
+Verificação pela razão interna: $\frac{1{,}7}{2{,}4} \approx 0{,}708$ e
+$\frac{4{,}25}{6} \approx 0{,}708$ ✓.
+
+### Exemplo 4: a razão que não muda
+
+*Pause e tente antes de ler.* Um triângulo retângulo tem um ângulo de 30°, com
+cateto oposto 5 e hipotenusa 10. Outro triângulo retângulo, também com um ângulo
+de 30°, tem hipotenusa 24. Quanto mede seu cateto oposto aos 30°?
+
+Os dois são semelhantes (caso AA: 90° e 30°). A razão
+$\frac{\text{cateto oposto}}{\text{hipotenusa}}$ é a mesma nos dois:
+
+$$
+\frac{5}{10} = 0{,}5
+\qquad\Longrightarrow\qquad
+\frac{x}{24} = 0{,}5
+\qquad\Longrightarrow\qquad
+x = 12.
+$$
+
+Repare no que acabou de acontecer. Não foi preciso conhecer nenhum outro dado do
+segundo triângulo: bastou saber que o ângulo era 30°, porque **a razão só depende
+do ângulo**. Esse número, 0,5, é o que a próxima etapa do capítulo chamará de
+$\sen 30^\circ$.
+
+## Erros comuns
+
+> **Erro 1: comparar por diferença em vez de razão.** “O triângulo grande tem
+> lados 2 cm maiores” não descreve semelhança nenhuma. Teste com 4, 6, 8 → 6, 8,
+> 10: as razões $\frac{6}{4} = 1{,}5$ e $\frac{8}{6} \approx 1{,}33$ já
+> discordam, e a forma mudou.
+
+> **Erro 2: parear lados pela posição no papel.** Se um dos triângulos estiver
+> desenhado de cabeça para baixo, “o lado de cima” de um não corresponde ao
+> “lado de cima” do outro. Identifique os pares pelos ângulos opostos.
+
+> **Erro 3: aplicar $k$ à área.** Ampliar uma figura em $k = 3$ multiplica a
+> área por 9, não por 3. Se um problema fala em área e você usou $k$, o
+> resultado está errado por um fator $k$.
+
+> **Erro 4: achar que semelhante é o mesmo que congruente.** Figuras
+> **congruentes** são idênticas, com $k = 1$. Toda congruente é semelhante; a
+> recíproca é falsa.
+
+## Perguntas de verificação
+
+1. Por que dois ângulos iguais bastam para garantir semelhança de triângulos,
+   mas um só não basta?
+2. Qual é a diferença entre comparar dois triângulos por razão e compará-los por
+   diferença? Por que só a primeira preserva a forma?
+3. No problema da sombra, por que foi essencial que os raios de sol chegassem
+   paralelos aos dois objetos?
+4. A razão entre dois lados **de um mesmo triângulo** muda quando o triângulo é
+   ampliado? Por quê?
+5. Se dois triângulos semelhantes têm razão $k = 4$, qual é a razão entre suas
+   áreas? E entre os perímetros?
+6. Por que dizer $\triangle ABC \sim \triangle DEF$ é mais informativo do que
+   dizer apenas “esses dois triângulos são semelhantes”?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque o terceiro ângulo é obrigado: ele é $180^\circ$ menos a soma dos dois
+   primeiros, que já coincidem. Com um ângulo só, os outros dois ficam livres —
+   dois triângulos retângulos, por exemplo, podem ter formatos completamente
+   diferentes.
+2. A razão compara por divisão e trata todos os lados com o mesmo fator; a
+   diferença acrescenta a mesma quantidade a lados desiguais, o que pesa mais
+   sobre os curtos. Só o fator constante preserva os ângulos e, portanto, a
+   forma.
+3. Porque é isso que garante que o ângulo $\theta$ seja **o mesmo** nos dois
+   triângulos. Se os raios chegassem com inclinações diferentes, os triângulos
+   não teriam ângulos iguais e a proporção não valeria.
+4. Não muda. Se os dois lados foram multiplicados pelo mesmo $k$, a razão entre
+   eles é $\frac{k a}{k b} = \frac{a}{b}$ — o $k$ se cancela. É exatamente esse
+   cancelamento que permite definir seno e cosseno.
+5. As áreas estão na razão $k^2 = 16$; os perímetros, sendo somas de
+   comprimentos, estão na razão $k = 4$.
+6. Porque a ordem das letras informa **qual vértice corresponde a qual**. Sem
+   isso, ainda seria preciso descobrir os pares antes de montar qualquer
+   proporção — e é aí que os erros aparecem.
+
+</details>
+
+## Exercícios
+
+### 1. Reconhecimento
+
+1. Quais pares de triângulos são semelhantes? (a) ângulos 30°, 60°, 90° e 30°,
+   60°, 90°; (b) ângulos 50°, 60°, 70° e 50°, 50°, 80°; (c) um com ângulos 45°,
+   45° e 90°, outro com 90° e 45°.
+2. Os lados de dois triângulos são $5, 12, 13$ e $10, 24, 26$. Eles são
+   semelhantes? Qual é $k$?
+3. Numa planta em escala 1:50, quanto mede na planta uma parede real de 6 m?
+
+### 2. Explicação
+
+4. Explique por que dois triângulos equiláteros quaisquer são sempre
+   semelhantes.
+5. Um colega afirma: “se dois retângulos têm os quatro ângulos iguais, então são
+   semelhantes”. Ele está certo? (Cuidado: retângulos não são triângulos.)
+6. Explique por que a razão $\frac{\text{cateto oposto}}{\text{hipotenusa}}$ é a
+   mesma em todos os triângulos retângulos com um ângulo de 40°.
+
+### 3. Aplicação direta
+
+7. $\triangle ABC \sim \triangle DEF$ com $k = 3$. Se $\overline{AB} = 7$,
+   quanto mede $\overline{DE}$?
+8. Dois triângulos semelhantes têm lados 6, 9, 12 e o menor lado do segundo mede
+   10. Determine os outros dois lados do segundo.
+9. Uma pessoa de 1,8 m projeta uma sombra de 1,2 m. No mesmo instante, um poste
+   projeta uma sombra de 5 m. Qual é a altura do poste?
+
+### 4. Variação
+
+10. Dentro de um triângulo, uma reta paralela ao lado de baixo divide o lado
+    esquerdo em pedaços de 3 (em cima) e 9 (embaixo). Se o lado de baixo mede
+    16, quanto mede o segmento paralelo recortado no topo?
+11. Dois triângulos semelhantes têm áreas de 45 cm² e 180 cm². Qual é a razão
+    de semelhança entre eles?
+12. Uma foto de 10 cm por 15 cm será ampliada de modo que o lado maior fique com
+    24 cm. Qual será o lado menor? A ampliação preserva a forma?
+
+<details>
+<summary>Dica para o 11</summary>
+
+A razão entre as áreas é $k^2$, não $k$. Comece dividindo uma área pela outra e
+pergunte de que número esse resultado é o quadrado.
+
+</details>
+
+### 5. Problema misto
+
+13. Um topógrafo quer a largura de um rio. Ele monta duas visadas que produzem
+    triângulos semelhantes, um na margem e outro atravessando o rio, com razão
+    de semelhança 3 do menor para o maior. O lado do triângulo menor
+    correspondente à largura do rio mede 12 m. Qual é a largura?
+14. Uma pizza de 30 cm de diâmetro custa R\$ 45. Uma de 45 cm de diâmetro custa
+    R\$ 90. Qual das duas oferece mais pizza por real? (Use a regra do $k^2$;
+    não é preciso calcular área nenhuma.)
+
+### 6. Justificativa
+
+15. Explique por que, num triângulo, uma reta paralela a um dos lados sempre
+    recorta um triângulo semelhante ao original. Que resultado da página de
+    ângulos você usou?
+16. Um colega diz que ampliar um mapa ao dobro dobra as distâncias e dobra as
+    áreas. Mostre com um exemplo numérico simples por que a segunda parte está
+    errada.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. (a) semelhantes (mesmos três ângulos); (b) **não** — os conjuntos
+   $\{50, 60, 70\}$ e $\{50, 50, 80\}$ diferem; (c) semelhantes — o segundo, com
+   90° e 45°, tem terceiro ângulo $180 - 90 - 45 = 45^\circ$.
+2. São semelhantes, com $k = 2$: $\frac{10}{5} = \frac{24}{12} =
+   \frac{26}{13} = 2$.
+3. $6 \text{ m} = 600 \text{ cm}$, e $600 \div 50 = 12$ cm.
+4. Porque todo equilátero tem os três ângulos iguais a 60°. Dois deles
+   coincidem automaticamente em dois ângulos — caso AA satisfeito.
+5. Não necessariamente. Um retângulo 2×3 e um 2×10 têm os quatro ângulos retos e
+   não têm a mesma forma. Em triângulos os ângulos determinam a forma; em
+   quadriláteros, não — é preciso verificar também a proporção dos lados.
+6. Porque todos esses triângulos são semelhantes entre si (caso AA: 90° e 40°).
+   Numa semelhança, cada lado é multiplicado pelo mesmo $k$, e na razão entre
+   dois lados esse $k$ se cancela.
+7. $\overline{DE} = 7 \times 3 = 21$.
+8. $k = \frac{10}{6} = \frac{5}{3}$; os lados são $9 \times \frac{5}{3} = 15$ e
+   $12 \times \frac{5}{3} = 20$.
+9. $\frac{H}{1{,}8} = \frac{5}{1{,}2}$, logo
+   $H = 1{,}8 \times \frac{5}{1{,}2} = 7{,}5$ m.
+10. O lado esquerdo inteiro mede $3 + 9 = 12$, e o do triângulo pequeno mede 3,
+    então $k = \frac{12}{3} = 4$ do pequeno para o grande. O segmento no topo é
+    $16 \div 4 = 4$. (Se você respondeu $16 \times \frac{3}{9} \approx 5{,}33$,
+    usou o pedaço de baixo em vez do lado inteiro.)
+11. $\frac{180}{45} = 4 = k^2$, logo $k = 2$.
+12. $k = \frac{24}{15} = 1{,}6$, então o lado menor fica
+    $10 \times 1{,}6 = 16$ cm. Sim, preserva a forma: os dois lados foram
+    multiplicados pelo mesmo fator.
+13. $12 \times 3 = 36$ m.
+14. A segunda pizza tem $k = \frac{45}{30} = 1{,}5$, logo $k^2 = 2{,}25$ vezes
+    mais área. O preço apenas dobrou. A pizza grande rende mais: 2,25 vezes mais
+    comida por 2 vezes o preço.
+15. Usei os **ângulos correspondentes** formados por paralelas cortadas por uma
+    transversal. Os dois lados do triângulo original funcionam como
+    transversais, e cada um transporta o seu ângulo para o triângulo recortado.
+    Com o ângulo do topo em comum, já são dois ângulos iguais — caso AA.
+16. Um mapa que mostra um terreno quadrado de 3 cm de lado tem ali 9 cm². Ao
+    dobrar, o lado vira 6 cm e a área vira 36 cm² — quatro vezes, não duas. O
+    fator da área é $k^2 = 4$.
+
+</details>
+
+## Revisão curta
+
+- Figuras **semelhantes** têm a mesma forma: todos os comprimentos multiplicados
+  pelo **mesmo** fator $k$. Multiplicar preserva a forma; somar, não.
+- Em triângulos, **dois ângulos iguais bastam** (caso AA), porque o terceiro é
+  obrigado pela soma 180°.
+- A correspondência entre lados vem dos **ângulos opostos**, não da posição no
+  desenho. Monte a tabela antes de escrever a proporção, e mantenha um único
+  sentido em todas as razões.
+- A razão entre **dois lados do mesmo triângulo** não muda com a ampliação — o
+  $k$ se cancela. Esse é o fato que torna a trigonometria possível.
+- Comprimento escala com $k$, área com $k^2$, volume com $k^3$.
+
+Falta uma peça antes de entrar na trigonometria: com dois lados de um triângulo
+retângulo, dá para calcular o terceiro sem medir nada. É o
+[teorema de Pitágoras](./teorema-de-pitagoras).

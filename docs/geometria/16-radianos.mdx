@@ -1,0 +1,640 @@
+---
+title: Radianos
+---
+
+import GeoFigure from '@site/src/components/GeoFigure';
+import NumberLine from '@site/src/components/NumberLine';
+
+# Radianos: a medida de ângulo que o próprio círculo sugere
+
+## Problema motivador: quanto de cabo o guincho enrola
+
+Um guincho tem um tambor de **25 cm de raio**. O cabo se enrola nele, e a carga
+sobe exatamente o mesmo tanto que o cabo enrolado.
+
+O painel de controle mostra o quanto o tambor girou.
+
+> Se o tambor girou 80°, quanto de cabo foi enrolado — ou seja, quanto a carga
+> subiu?
+
+Com o que já sabemos, dá para responder. O ângulo de 80° é uma fração da volta,
+e o cabo enrolado é a mesma fração do contorno:
+
+$$
+s = \frac{80}{360} \times 2\pi \times 0{,}25 \approx 0{,}349 \text{ m}.
+$$
+
+Funciona. Mas olhe para a conta: para uma relação tão simples — “o cabo enrolado
+é proporcional ao giro” —, a fórmula carrega um 360, um 2 e um $\pi$, e nenhum
+deles diz nada sobre o guincho. São puro atrito de unidade.
+
+> E se existisse uma unidade de ângulo em que essa fórmula fosse simplesmente
+> $s = r\theta$?
+
+Existe. Chama-se **radiano**, e esta página constrói a ideia.
+
+## Mapa das ideias
+
+- **radiano (rad)** — o ângulo cujo arco tem comprimento igual ao raio;
+- **arco** ($s$) — o pedaço de circunferência determinado pelo ângulo;
+- **volta completa** — $2\pi$ radianos, ou 360°;
+- **conversão** — $180^\circ = \pi$ rad.
+
+Exemplo: um ângulo de 2 rad determina, num círculo de raio 5 cm, um arco de
+10 cm. Contraexemplo: um ângulo de 2 rad **não** é “2 vezes maior que 1°” nem
+tem relação com o número 2 em graus — ele vale aproximadamente 114,6°.
+
+## Para que isso serve?
+
+- movimento circular: velocidade angular, rotações de motores, engrenagens;
+- comprimento de arco e área de setor, sem fatores de conversão;
+- programação: praticamente **toda** biblioteca de matemática (Python,
+  JavaScript, C) espera ângulos em radianos, não em graus;
+- física: oscilações, ondas, corrente alternada;
+- e, decisivamente, no **cálculo**: as fórmulas de derivada do seno e do cosseno
+  só ficam simples com o ângulo em radianos. É essa a razão profunda de a
+  unidade existir, e ela será citada honestamente no fim da página.
+
+## Ideias anteriores que voltam aqui
+
+**1. Comprimento da circunferência** (de [O círculo](./circulo)). Qual é o
+contorno de um círculo de raio $r$?
+
+<details>
+<summary>Conferir</summary>
+
+$C = 2\pi r$. Isto é, o contorno é sempre pouco mais de 6 vezes o raio, já que
+$2\pi \approx 6{,}28$.
+
+</details>
+
+**2. Arco como fração da volta** (de [O círculo](./circulo)). Qual é o
+comprimento do arco de 90° num círculo de raio 4?
+
+<details>
+<summary>Conferir</summary>
+
+Um quarto do contorno: $\frac{1}{4} \times 2\pi \times 4 = 2\pi \approx 6{,}28$.
+
+</details>
+
+**3. Semelhança** (de [Semelhança](./semelhanca)). Se dois círculos têm raios
+diferentes, a razão entre arco e raio muda?
+
+<details>
+<summary>Conferir</summary>
+
+Não. Todos os círculos são semelhantes, e um mesmo ângulo central recorta arcos
+proporcionais aos raios — o fator se cancela na razão. Esse fato é o que torna a
+definição de radiano possível.
+
+</details>
+
+**4. O grau** (de [Ângulos](./angulos)). Por que uma volta tem 360 graus?
+
+<details>
+<summary>Conferir</summary>
+
+Por escolha humana: 360 tem muitos divisores, o que faz as frações usuais da
+volta caírem em números inteiros. É uma convenção conveniente — mas nada no
+círculo aponta para o 360.
+
+</details>
+
+## Intuição: medir o giro com o próprio raio
+
+O grau é uma unidade **imposta de fora**: alguém decidiu partir a volta em 360
+pedaços. Nada na geometria do círculo sugere esse número.
+
+O radiano faz o contrário. Ele mede o ângulo usando uma régua que o próprio
+círculo fornece: **o raio**.
+
+> Pegue um barbante do tamanho exato do raio. Assente-o sobre a borda do
+> círculo, curvando-o. O ângulo central que ele cobre é **1 radiano**.
+
+<GeoFigure
+  unit={54}
+  padding={54}
+  arcs={[
+    {at: [0, 0], r: 2, from: 0, to: 360, tone: 0},
+    {at: [0, 0], r: 2, from: 0, to: 57.2958, tone: 2},
+  ]}
+  segments={[
+    {from: [0, 0], to: [2, 0], tone: 1},
+    {from: [0, 0], to: [1.0806, 1.6829], tone: 1},
+  ]}
+  angles={[{at: [0, 0], from: [2, 0], to: [1.0806, 1.6829], label: '1\\text{ rad}', tone: 1, radius: 36, labelRadius: 62}]}
+  labels={[
+    {at: [1, -0.3], math: 'r', tone: 1, fontSize: 14},
+    {at: [2.05, 0.85], math: 's = r', tone: 2, fontSize: 13},
+  ]}
+  caption="Um radiano: o ângulo cujo arco tem exatamente o comprimento do raio."
+/>
+
+Essa definição tem uma consequência imediata e importante: ela **não depende do
+tamanho do círculo**. Num círculo grande, o raio é maior — mas o arco de mesmo
+comprimento também precisa ser maior, e o ângulo resultante é o mesmo. É a
+[semelhança](./semelhanca) de novo: dobrar o círculo dobra raio e arco juntos, e
+a razão entre eles não muda.
+
+> $$\theta \ (\text{em radianos}) = \frac{\text{comprimento do arco}}{\text{raio}} = \frac{s}{r}.$$
+
+Repare no que essa fórmula diz: **o radiano é uma razão entre dois
+comprimentos**. Metro dividido por metro. Ou seja, é um número puro, sem
+unidade física — por isso “rad” pode ser omitido nas contas sem prejuízo, e é
+por isso que ele se combina tão bem com o resto da matemática.
+
+E daí sai, isolando $s$, exatamente a fórmula que o problema do guincho pedia:
+
+$$
+s = r\theta.
+$$
+
+Sem 360, sem 2, sem $\pi$ à vista.
+
+## Quantos radianos tem uma volta?
+
+Uma volta completa percorre o contorno inteiro, $2\pi r$. Dividindo pelo raio:
+
+$$
+\theta_{\text{volta}} = \frac{2\pi r}{r} = 2\pi.
+$$
+
+> **Uma volta completa vale $2\pi$ radianos**, ou seja, cerca de 6,283.
+
+Faz sentido pelo barbante: cabem pouco mais de 6 raios em volta da
+circunferência, e a “sobra” é o 0,283.
+
+Daí, imediatamente:
+
+$$
+\underbrace{360^\circ = 2\pi \text{ rad}}_{\text{volta}}
+\qquad
+\underbrace{180^\circ = \pi \text{ rad}}_{\text{meia volta}}
+\qquad
+\underbrace{90^\circ = \frac{\pi}{2} \text{ rad}}_{\text{quarto de volta}}
+$$
+
+A igualdade que vale a pena guardar como âncora é a do meio:
+
+> $$180^\circ = \pi \text{ rad}.$$
+
+Todas as outras saem dela.
+
+## O modelo visual decisivo: a reta enrolada
+
+Há uma segunda leitura do radiano que será a espinha dorsal do módulo inteiro, e
+vale instalá-la agora.
+
+Tome a **circunferência de raio 1** — o chamado **círculo unitário**. Nela,
+$r = 1$, então $s = r\theta$ vira
+
+$$
+s = \theta.
+$$
+
+Ou seja: **no círculo de raio 1, o ângulo em radianos é literalmente o
+comprimento do arco percorrido**. Medir ângulo e medir distância sobre a curva
+passam a ser a mesma coisa.
+
+Imagine então uma reta numérica de barbante, deitada, e enrole-a sobre essa
+circunferência a partir do ponto $(1,0)$, no sentido anti-horário:
+
+<NumberLine
+  min={0}
+  max={7}
+  step={1}
+  unit={52}
+  marks={[
+    {at: 0, label: '0', tone: 1},
+    {at: 3.1416, label: '\\pi', tone: 2},
+    {at: 6.2832, label: '2\\pi', tone: 3},
+  ]}
+  caption="A reta numérica que será enrolada na circunferência de raio 1: o 0 encosta em (1,0), o π chega ao lado oposto e o 2π fecha a volta."
+/>
+
+- o número **0** encosta no ponto de partida;
+- o número $\frac{\pi}{2} \approx 1{,}571$ chega ao topo (quarto de volta);
+- o número $\pi \approx 3{,}142$ chega ao lado oposto (meia volta);
+- o número $2\pi \approx 6{,}283$ fecha a volta e retorna ao ponto de partida.
+
+E o barbante não acaba ali. Continuar enrolando leva $7$, $8$, $10$ a darem uma
+segunda volta; enrolar para o outro lado acomoda os números negativos.
+
+> Essa imagem é a ponte entre **ângulo** e **número real**. É ela que vai
+> permitir, na [próxima página](./ciclo-trigonometrico), falar em seno de 5, de
+> $-2$ ou de 100 — coisas que não cabem em nenhum triângulo.
+
+## Conversão entre graus e radianos
+
+Da igualdade $180^\circ = \pi$ rad saem os dois fatores:
+
+> **De graus para radianos:** multiplique por $\dfrac{\pi}{180}$.
+>
+> **De radianos para graus:** multiplique por $\dfrac{180}{\pi}$.
+
+Não é preciso decorar qual é qual. Monte a proporção e resolva:
+
+$$
+\frac{\text{ângulo em graus}}{180} = \frac{\text{ângulo em radianos}}{\pi}.
+$$
+
+**Exemplo 1.** Converter 60° para radianos.
+
+$$
+\frac{60}{180} = \frac{x}{\pi}
+\Longrightarrow
+x = \frac{60\pi}{180} = \frac{\pi}{3}.
+$$
+
+**Exemplo 2.** Converter $\frac{3\pi}{4}$ rad para graus.
+
+$$
+\frac{y}{180} = \frac{3\pi/4}{\pi} = \frac{3}{4}
+\Longrightarrow
+y = 135^\circ.
+$$
+
+> **Atalho de leitura:** numa expressão como $\frac{3\pi}{4}$, leia o $\pi$ como
+> “180°”. Então $\frac{3\pi}{4} = \frac{3 \times 180^\circ}{4} = 135^\circ$, de
+> cabeça. E $\frac{5\pi}{6} = \frac{5 \times 180}{6} = 150^\circ$.
+
+### Tabela de referência
+
+| Graus | Radianos | Valor aproximado |
+|---:|:---:|---:|
+| 0° | $0$ | 0 |
+| 30° | $\frac{\pi}{6}$ | 0,524 |
+| 45° | $\frac{\pi}{4}$ | 0,785 |
+| 60° | $\frac{\pi}{3}$ | 1,047 |
+| 90° | $\frac{\pi}{2}$ | 1,571 |
+| 120° | $\frac{2\pi}{3}$ | 2,094 |
+| 135° | $\frac{3\pi}{4}$ | 2,356 |
+| 150° | $\frac{5\pi}{6}$ | 2,618 |
+| 180° | $\pi$ | 3,142 |
+| 270° | $\frac{3\pi}{2}$ | 4,712 |
+| 360° | $2\pi$ | 6,283 |
+
+Repare no padrão: **denominador maior significa ângulo menor**.
+$\frac{\pi}{6}$ é um sexto de meia volta, ou seja, 30°. Essa leitura evita
+consultar a tabela toda hora.
+
+E, para ter uma noção de tamanho:
+
+$$
+1 \text{ rad} = \frac{180^\circ}{\pi} \approx 57{,}3^\circ.
+$$
+
+Um radiano é um pouco menos que 60°.
+
+> **Erro comum 1: tratar $\pi$ como unidade.** Escrever “o ângulo mede $\pi$”
+> não significa “3,14 graus”; significa 180°. O $\pi$ está ali como **número**,
+> não como símbolo de unidade.
+
+> **Erro comum 2: converter na direção errada.** Se você converteu 90° e obteve
+> um número maior que 90, a direção está trocada — radianos são “maiores” como
+> unidade, então o **número** que os expressa é sempre **menor**. Uma volta tem
+> 360 graus, mas só 6,28 radianos.
+
+> **Erro comum 3: calculadora no modo errado.** Agora o aviso das páginas
+> anteriores ganha sentido completo: $\sen(\pi/6)$ vale 0,5 **se** a máquina
+> estiver em RAD. Em DEG, ela entenderia 0,5236 graus e devolveria 0,0091.
+> Regra: se o ângulo aparece com $\pi$, o modo é **RAD**; se aparece com o
+> símbolo °, o modo é **DEG**.
+
+## Resolvendo o problema do guincho
+
+Tambor de raio $r = 0{,}25$ m, giro de 80°.
+
+**Passo 1 — converter para radianos:**
+
+$$
+\theta = 80 \times \frac{\pi}{180} = \frac{4\pi}{9} \approx 1{,}396 \text{ rad}.
+$$
+
+**Passo 2 — aplicar $s = r\theta$:**
+
+$$
+s = 0{,}25 \times 1{,}396 \approx 0{,}349 \text{ m}.
+$$
+
+Mesmo resultado da conta do começo da página — como tinha de ser, já que é a
+mesma geometria. O que mudou foi a **estrutura** da fórmula.
+
+E a diferença aparece quando o problema muda de direção. **Quantos radianos o
+tambor precisa girar para levantar a carga em 3 metros?**
+
+$$
+\theta = \frac{s}{r} = \frac{3}{0{,}25} = 12 \text{ rad}.
+$$
+
+Uma divisão, e acabou. Em número de voltas:
+
+$$
+\frac{12}{2\pi} \approx 1{,}91 \text{ voltas}.
+$$
+
+Compare com o caminho em graus: seria preciso resolver
+$3 = \frac{\theta}{360} \times 2\pi \times 0{,}25$, isolando $\theta$ no meio de
+três fatores. Dá o mesmo, com mais chance de erro.
+
+> **A ideia central da página, em uma frase:** o radiano não é uma unidade
+> exótica; é a unidade em que **ângulo e comprimento de arco viram a mesma
+> grandeza**, a menos do fator $r$.
+
+## Por que o cálculo insiste em radianos
+
+Vale antecipar, com honestidade, a razão mais forte de a unidade existir —
+mesmo que a demonstração fique para o cálculo.
+
+Compare o crescimento do seno perto de zero. Com o ângulo **em radianos**:
+
+| $x$ (rad) | $\sen x$ | razão $\frac{\sen x}{x}$ |
+|---:|---:|---:|
+| 0,5 | 0,4794 | 0,9589 |
+| 0,1 | 0,0998 | 0,9983 |
+| 0,01 | 0,0100 | 0,99998 |
+
+A razão $\frac{\sen x}{x}$ tende a **1**. Ou seja: para ângulos pequenos em
+radianos, $\sen x \approx x$ — o seno e o próprio ângulo praticamente coincidem.
+
+Com o ângulo em graus, isso não acontece: $\sen(0{,}01^\circ) \approx
+0{,}000175$, e a razão daria 0,0175, não 1. Apareceria um fator de conversão
+sobrando em todas as fórmulas de derivada.
+
+É essa coincidência — possível só em radianos — que torna as fórmulas
+$(\sen x)' = \cos x$ e $(\cos x)' = -\sen x$ verdadeiras sem constantes
+penduradas. Em graus, elas ganhariam um fator $\frac{\pi}{180}$ em cada
+derivação.
+
+Guarde isso como a resposta a “por que radianos?”: **é a única unidade em que a
+trigonometria e o cálculo se encaixam sem atrito**.
+
+## Exemplos resolvidos
+
+### Exemplo 1: conversões
+
+Converta 225° para radianos e $\frac{7\pi}{6}$ rad para graus.
+
+$$
+225 \times \frac{\pi}{180} = \frac{225\pi}{180} = \frac{5\pi}{4}.
+$$
+
+$$
+\frac{7\pi}{6} \to \frac{7 \times 180^\circ}{6} = 210^\circ.
+$$
+
+### Exemplo 2: comprimento de arco
+
+*Pause e tente antes de ler.* Num círculo de raio 8 cm, qual é o comprimento do
+arco correspondente a $\frac{\pi}{3}$ rad? E a 45°?
+
+$$
+s = 8 \times \frac{\pi}{3} = \frac{8\pi}{3} \approx 8{,}38 \text{ cm}.
+$$
+
+Para 45°, converta primeiro: $45^\circ = \frac{\pi}{4}$ rad.
+
+$$
+s = 8 \times \frac{\pi}{4} = 2\pi \approx 6{,}28 \text{ cm}.
+$$
+
+Sanidade: 45° é menos que 60°, então o arco tinha de sair menor ✓.
+
+### Exemplo 3: quantos radianos?
+
+*Pause e tente antes de ler.* Um arco de 15 cm é recortado num círculo de raio
+6 cm. Qual é o ângulo central, em radianos e em graus?
+
+$$
+\theta = \frac{s}{r} = \frac{15}{6} = 2{,}5 \text{ rad}.
+$$
+
+$$
+2{,}5 \times \frac{180}{\pi} \approx 143{,}2^\circ.
+$$
+
+Sanidade: 2,5 rad está entre $\frac{\pi}{2} \approx 1{,}571$ e
+$\pi \approx 3{,}142$, então o ângulo tem de estar entre 90° e 180° ✓.
+
+### Exemplo 4: roda de bicicleta
+
+*Pause e tente antes de ler.* Uma roda de 35 cm de raio dá 3 voltas completas.
+Que distância o ciclista percorreu?
+
+Três voltas são $3 \times 2\pi = 6\pi$ rad.
+
+$$
+s = 0{,}35 \times 6\pi \approx 6{,}60 \text{ m}.
+$$
+
+Conferindo pelo contorno: uma volta avança $2\pi \times 0{,}35 \approx 2{,}199$
+m, e três voltas dão 6,60 m ✓.
+
+### Exemplo 5: velocidade angular
+
+*Pause e tente antes de ler.* Um motor gira a 1 800 rotações por minuto (rpm).
+Qual é a velocidade angular em radianos por segundo? Se o eixo tem 4 cm de raio,
+qual é a velocidade de um ponto da borda?
+
+$$
+1\,800 \text{ rpm} = \frac{1\,800}{60} = 30 \text{ voltas por segundo}
+$$
+
+$$
+\omega = 30 \times 2\pi = 60\pi \approx 188{,}5 \text{ rad/s}.
+$$
+
+Velocidade do ponto da borda — de novo $s = r\theta$, agora por unidade de
+tempo:
+
+$$
+v = r\omega = 0{,}04 \times 188{,}5 \approx 7{,}54 \text{ m/s}.
+$$
+
+Repare que $v = r\omega$ é a mesma fórmula $s = r\theta$ dividida pelo tempo. É
+esse tipo de encadeamento direto que os radianos permitem.
+
+## Erros comuns
+
+> **Erro 1: achar que $\pi$ é uma unidade.** $\pi$ rad são 180°, não “3,14 de
+> alguma coisa”.
+
+> **Erro 2: usar $s = r\theta$ com $\theta$ em graus.** A fórmula só vale em
+> radianos. Em graus, seria
+> $s = \frac{\theta}{360} \times 2\pi r$.
+
+> **Erro 3: modo da calculadora.** Ângulo com $\pi$ pede RAD; ângulo com ° pede
+> DEG.
+
+> **Erro 4: converter na direção errada.** Radiano é uma unidade “grande”, então
+> o número que expressa um mesmo ângulo é **menor** em radianos que em graus.
+
+> **Erro 5: arredondar $\pi$ cedo.** Prefira deixar a resposta como
+> $\frac{5\pi}{4}$ ou $\frac{8\pi}{3}$; converta para decimal só no fim.
+
+## Perguntas de verificação
+
+1. Por que a definição de radiano não depende do tamanho do círculo?
+2. Por que o radiano é considerado um número puro, sem unidade física?
+3. Por que $s = r\theta$ é mais simples que a fórmula em graus? O que
+   desapareceu?
+4. Por que uma volta completa vale $2\pi$ radianos e não algum outro número?
+5. Na imagem da reta enrolada, o que representa o número 4 sobre a
+   circunferência de raio 1?
+6. Qual é a razão mais profunda para o cálculo exigir radianos?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque ela é uma **razão** entre arco e raio, e os dois crescem juntos quando
+   o círculo é ampliado. Pela semelhança, o fator de ampliação aparece no
+   numerador e no denominador e se cancela.
+2. Porque é comprimento dividido por comprimento — metro por metro. As unidades
+   se cancelam, e o que sobra é um número. Por isso “rad” pode ser omitido em
+   contas sem provocar erro dimensional.
+3. Porque o ângulo em radianos **já é** a razão $\frac{s}{r}$. Na fórmula em
+   graus, o fator $\frac{2\pi}{360}$ é exatamente a conversão de grau para
+   radiano, escondida dentro da conta. Ele desapareceu porque a unidade passou a
+   ser a natural para o problema.
+4. Porque o contorno inteiro mede $2\pi r$, e o ângulo em radianos é o contorno
+   dividido pelo raio: $\frac{2\pi r}{r} = 2\pi$. O número vem da geometria do
+   círculo, não de uma convenção.
+5. Um ponto da circunferência a **4 unidades de arco** do ponto de partida,
+   medidas sobre a curva no sentido anti-horário. Como $\pi \approx 3{,}14$ e
+   $\frac{3\pi}{2} \approx 4{,}71$, esse ponto está no terceiro quadrante.
+6. Porque só em radianos vale $\sen x \approx x$ para $x$ pequeno — isto é,
+   $\frac{\sen x}{x} \to 1$. É essa propriedade que faz a derivada do seno ser
+   exatamente o cosseno, sem constantes de conversão penduradas nas fórmulas.
+
+</details>
+
+## Exercícios
+
+### 1. Reconhecimento
+
+1. Converta para radianos: (a) 30°; (b) 90°; (c) 120°; (d) 300°.
+2. Converta para graus: (a) $\frac{\pi}{4}$; (b) $\frac{5\pi}{6}$;
+   (c) $\frac{7\pi}{4}$; (d) $3\pi$.
+3. Quantos radianos, aproximadamente, tem um ângulo de 1°?
+
+### 2. Explicação
+
+4. Explique com suas palavras o que é 1 radiano, sem usar fórmula.
+5. Um colega diz que “$\pi$ radianos são 3,14 graus”. Corrija-o.
+6. Explique por que a fórmula $s = r\theta$ falha se $\theta$ estiver em graus.
+
+### 3. Aplicação direta
+
+7. Num círculo de raio 12 cm, calcule o arco correspondente a: (a)
+   $\frac{\pi}{6}$ rad; (b) 2 rad; (c) 150°.
+8. Um arco de 21 cm foi recortado num círculo de raio 7 cm. Qual é o ângulo
+   central em radianos?
+9. Um pêndulo de 80 cm de comprimento oscila 0,3 rad para cada lado. Qual é o
+   comprimento do arco percorrido em uma oscilação completa (de um extremo ao
+   outro)?
+
+### 4. Variação
+
+10. Uma roda de 30 cm de raio percorre 100 m. Quantos radianos ela girou?
+    Quantas voltas?
+11. Um ponteiro de minutos de 12 cm avança de 12h00 até 12h20. Que ângulo
+    percorreu, em radianos, e que distância a ponta percorreu?
+12. Um disco gira a 45 rotações por minuto. Determine a velocidade angular em
+    rad/s e a velocidade de um ponto a 12 cm do centro.
+
+<details>
+<summary>Dica para o 11</summary>
+
+Vinte minutos são um terço de uma volta completa do ponteiro. Qual fração de
+$2\pi$ é isso?
+
+</details>
+
+### 5. Problema misto
+
+13. Um guincho tem tambor de raio 0,4 m. Determine (a) quantos radianos ele
+    gira para levantar uma carga em 5 m; (b) quantas voltas isso representa;
+    (c) o ângulo equivalente em graus.
+14. Duas engrenagens estão acopladas: a menor tem raio 3 cm e a maior, 8 cm.
+    Quando a menor gira 4 rad, quantos radianos gira a maior? (O comprimento de
+    arco percorrido no ponto de contato é o mesmo nas duas.)
+
+### 6. Justificativa
+
+15. Deduza a fórmula $s = r\theta$ a partir da definição de radiano, explicando
+    cada passo.
+16. Mostre que a fórmula em graus,
+    $s = \frac{\theta}{360} \times 2\pi r$, é exatamente $s = r\theta$ com a
+    conversão de unidade embutida.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. (a) $\frac{\pi}{6}$; (b) $\frac{\pi}{2}$; (c) $\frac{2\pi}{3}$;
+   (d) $\frac{5\pi}{3}$.
+2. (a) 45°; (b) 150°; (c) 315°; (d) 540° (uma volta e meia).
+3. $\frac{\pi}{180} \approx 0{,}01745$ rad.
+4. É o ângulo que se obtém deitando o raio sobre a própria borda do círculo:
+   quando o pedaço de circunferência tem o mesmo comprimento que o raio, o
+   ângulo central correspondente vale 1 radiano.
+5. $\pi$ radianos são **180°**. O $\pi$ ali é o número 3,14159 medindo uma
+   quantidade de radianos, e cada radiano vale cerca de 57,3° — o produto dá
+   180°.
+6. Porque a fórmula vem da definição $\theta = \frac{s}{r}$, que só é verdadeira
+   quando o ângulo é medido em radianos. Em graus, o mesmo ângulo é expresso por
+   outro número (57,3 vezes maior), e a igualdade se perde.
+7. (a) $12 \times \frac{\pi}{6} = 2\pi \approx 6{,}28$ cm; (b)
+   $12 \times 2 = 24$ cm; (c) $150^\circ = \frac{5\pi}{6}$, logo
+   $12 \times \frac{5\pi}{6} = 10\pi \approx 31{,}4$ cm.
+8. $\theta = \frac{21}{7} = 3$ rad.
+9. De um extremo ao outro são $0{,}6$ rad no total. $s = 0{,}80 \times 0{,}6 =
+   0{,}48$ m.
+10. $\theta = \frac{100}{0{,}30} \approx 333{,}3$ rad; em voltas,
+    $\frac{333{,}3}{2\pi} \approx 53{,}1$.
+11. Vinte minutos são $\frac{1}{3}$ de volta:
+    $\frac{2\pi}{3} \approx 2{,}094$ rad. A ponta percorre
+    $s = 12 \times \frac{2\pi}{3} = 8\pi \approx 25{,}1$ cm.
+12. $45$ rpm $= 0{,}75$ volta/s, logo
+    $\omega = 0{,}75 \times 2\pi = 1{,}5\pi \approx 4{,}712$ rad/s. E
+    $v = 0{,}12 \times 4{,}712 \approx 0{,}565$ m/s.
+13. (a) $\theta = \frac{5}{0{,}4} = 12{,}5$ rad; (b)
+    $\frac{12{,}5}{2\pi} \approx 1{,}99$ volta; (c)
+    $12{,}5 \times \frac{180}{\pi} \approx 716{,}2^\circ$.
+14. O arco no ponto de contato é o mesmo:
+    $s = 3 \times 4 = 12$ cm. Na maior,
+    $\theta = \frac{12}{8} = 1{,}5$ rad. Faz sentido: a engrenagem maior gira
+    **menos** para percorrer o mesmo arco.
+15. Por definição, um ângulo de $\theta$ radianos é aquele em que o arco mede
+    $\theta$ vezes o raio — pois 1 radiano corresponde a um arco de exatamente
+    um raio, e o arco é proporcional ao ângulo. Escrevendo essa proporção:
+    $\theta = \frac{s}{r}$. Multiplicando os dois lados por $r$, obtém-se
+    $s = r\theta$.
+16. Reescreva $\frac{\theta}{360} \times 2\pi r$ como
+    $r \times \left(\theta \times \frac{2\pi}{360}\right) =
+    r \times \left(\theta \times \frac{\pi}{180}\right)$. O fator entre
+    parênteses é exatamente a conversão de graus para radianos. Ou seja, a
+    fórmula em graus é $s = r \times (\text{ângulo convertido em radianos})$ —
+    a mesma $s = r\theta$, com a conversão feita dentro dela.
+
+</details>
+
+## Revisão curta
+
+- **1 radiano** é o ângulo cujo arco tem o comprimento do raio. A definição não
+  depende do tamanho do círculo, por semelhança.
+- $\theta = \frac{s}{r}$, e portanto $s = r\theta$ — a fórmula que motiva a
+  unidade.
+- O radiano é uma **razão entre comprimentos**: um número puro, sem unidade
+  física.
+- **Volta completa:** $2\pi$ rad. **Âncora para tudo:** $180^\circ = \pi$ rad.
+- Converter: $\times \frac{\pi}{180}$ para ir a radianos,
+  $\times \frac{180}{\pi}$ para voltar. Ou leia $\pi$ como “180°”.
+- $1$ rad $\approx 57{,}3^\circ$; denominador maior significa ângulo menor.
+- Na **circunferência de raio 1**, ângulo em radianos e comprimento de arco são
+  o mesmo número — é o que permite enrolar a reta numérica no círculo.
+- O cálculo exige radianos porque só neles $\sen x \approx x$ para $x$ pequeno.
+
+Com a reta numérica enrolada na circunferência de raio 1, o próximo passo é
+natural: definir seno e cosseno **para qualquer número**, e não só para ângulos
+de triângulo. É o [ciclo trigonométrico](./ciclo-trigonometrico).

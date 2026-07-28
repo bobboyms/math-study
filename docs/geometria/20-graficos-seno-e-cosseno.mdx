@@ -1,0 +1,623 @@
+---
+title: Gráficos do seno e do cosseno
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Gráficos do seno e do cosseno: a onda
+
+## Problema motivador: o registro da roda-gigante
+
+Volte à roda-gigante de [O ciclo trigonométrico](./ciclo-trigonometrico): raio
+20 m, centro a 22 m do chão, cadeirinha embarcando à direita. A altura era
+
+$$
+h(\theta) = 22 + 20\sen\theta.
+$$
+
+Um operador anotou a altura a cada 30° de giro:
+
+| Giro | 0° | 30° | 60° | 90° | 120° | 150° | 180° | 210° | 240° | 270° | 300° | 330° | 360° |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Altura (m) | 22 | 32 | 39,3 | 42 | 39,3 | 32 | 22 | 12 | 4,7 | 2 | 4,7 | 12 | 22 |
+
+> Que curva esses pontos desenham? E o que acontece se a roda continuar girando?
+
+Até aqui, seno e cosseno foram **valores** associados a ângulos: uma tabela, um
+ponto no ciclo. Esta página muda o olhar — passa a tratá-los como
+[funções](../funcoes/funcoes) e a desenhar o que acontece quando o ângulo varia
+**continuamente**.
+
+O resultado é uma das curvas mais reconhecíveis da matemática, e ela descreve
+tudo o que se repete: som, corrente elétrica, maré, batimento cardíaco,
+sazonalidade de vendas.
+
+## Mapa das ideias
+
+- **função seno** — $f(x) = \sen x$, com $x$ percorrendo todos os números reais;
+- **senoide** — o nome da curva do seno (e do cosseno, que tem a mesma forma);
+- **período** — o comprimento do trecho que se repete; para $\sen$ e $\cos$,
+  vale $2\pi$;
+- **amplitude** — metade da distância entre o valor máximo e o mínimo; vale 1
+  nas funções básicas;
+- **domínio** — todos os valores de entrada aceitos: $\mathbb{R}$;
+- **imagem** — todos os valores de saída possíveis: $[-1, 1]$.
+
+Exemplo: $\sen\frac{\pi}{2} = 1$ é o valor máximo da função. Contraexemplo: não
+existe $x$ com $\sen x = 1{,}5$ — esse valor está fora da imagem, e nenhum
+ponto do gráfico chega lá.
+
+## Para que isso serve?
+
+- descrever qualquer fenômeno periódico: som, luz, rádio, corrente alternada,
+  vibração, marés, ciclos sazonais;
+- em áudio, uma nota pura **é** uma senoide; timbre é a soma de várias;
+- em engenharia elétrica, tensão e corrente da rede são senoides de 60 Hz;
+- em análise de dados, separar tendência de sazonalidade;
+- e, dentro da matemática, seno e cosseno são o primeiro par de funções em que
+  a derivada de uma é a outra — o exemplo que torna o cálculo visual.
+
+## Ideias anteriores que voltam aqui
+
+**1. Gráfico de função** (de [Funções](../funcoes/funcoes)). O que representa
+cada ponto do gráfico de $f$?
+
+<details>
+<summary>Conferir</summary>
+
+Um par $(x, f(x))$: a entrada na horizontal, a saída na vertical. Aqui a entrada
+será o **ângulo** e a saída, o **seno** dele.
+
+</details>
+
+**2. Seno como coordenada** (de
+[Ciclo trigonométrico](./ciclo-trigonometrico)). O que é $\sen\theta$,
+geometricamente?
+
+<details>
+<summary>Conferir</summary>
+
+A **altura** (ordenada) do ponto do ciclo associado a $\theta$. Esta página vai
+transportar essa altura para o eixo vertical de um gráfico.
+
+</details>
+
+**3. Radianos** (de [Radianos](./radianos)). Quanto valem
+$\frac{\pi}{2}$, $\pi$ e $2\pi$ em graus?
+
+<details>
+<summary>Conferir</summary>
+
+90°, 180° e 360°. O eixo horizontal do gráfico será marcado em radianos, por
+uma razão que a página explica.
+
+</details>
+
+**4. Simetrias** (de
+[Redução ao primeiro quadrante](./reducao-ao-primeiro-quadrante)). Por que
+$\sen(180^\circ - x) = \sen x$?
+
+<details>
+<summary>Conferir</summary>
+
+Porque os dois pontos estão à mesma altura no ciclo, refletidos no eixo
+vertical. Essa simetria vai aparecer no gráfico como um espelho.
+
+</details>
+
+## Intuição: desenrolar o ciclo
+
+Imagine o ciclo trigonométrico à esquerda e um par de eixos à direita. Um ponto
+percorre o ciclo; a cada instante, sua **altura** é transportada para a direita
+e marcada como a ordenada de um novo ponto, cuja abscissa é o ângulo já
+percorrido.
+
+Acompanhe o que acontece na primeira volta:
+
+| Trecho | O ponto no ciclo | A altura |
+|---|---|---|
+| 0 a $\frac{\pi}{2}$ | sobe da direita ao topo | cresce de 0 a 1 |
+| $\frac{\pi}{2}$ a $\pi$ | vai do topo à esquerda | decresce de 1 a 0 |
+| $\pi$ a $\frac{3\pi}{2}$ | desce da esquerda ao fundo | decresce de 0 a $-1$ |
+| $\frac{3\pi}{2}$ a $2\pi$ | volta do fundo à direita | cresce de $-1$ a 0 |
+
+E, ao completar a volta, tudo recomeça — porque o ponto voltou ao lugar de
+partida.
+
+<CartesianPlane
+  xMin={-0.4} xMax={6.9} yMin={-1.5} yMax={1.5}
+  xUnit={50} yUnit={54}
+  xStep={1.5707963} yStep={0.5}
+  xTicks={[
+    {at: 1.5707963, label: '\\frac{\\pi}{2}'},
+    {at: 3.1415927, label: '\\pi'},
+    {at: 4.712389, label: '\\frac{3\\pi}{2}'},
+    {at: 6.2831853, label: '2\\pi'},
+  ]}
+  yTicks={[{at: 1, label: '1'}, {at: -1, label: '-1'}]}
+  functions={[{f: (x) => Math.sin(x), tone: 1, domain: [0, 6.2831853]}]}
+  points={[
+    {at: [1.5707963, 1], tone: 2},
+    {at: [3.1415927, 0], tone: 2},
+    {at: [4.712389, -1], tone: 2},
+    {at: [6.2831853, 0], tone: 2},
+  ]}
+  caption="Uma volta completa do ciclo, desenrolada: o gráfico de sen x para x de 0 a 2π."
+/>
+
+O nome dessa curva é **senoide**. Ela sobe, chega a 1, desce até $-1$ e volta —
+sem bicos, sem saltos, sem partes retas.
+
+## O gráfico completo do seno
+
+A roda não para na primeira volta, e a função também não. Como
+$\sen(x + 2\pi) = \sen x$, o trecho desenhado acima se **repete**
+indefinidamente para a direita e para a esquerda:
+
+<CartesianPlane
+  xMin={-6.6} xMax={6.9} yMin={-1.6} yMax={1.6}
+  xUnit={27} yUnit={48}
+  xStep={1.5707963} yStep={0.5}
+  xTicks={[
+    {at: -6.2831853, label: '-2\\pi'},
+    {at: -3.1415927, label: '-\\pi'},
+    {at: 3.1415927, label: '\\pi'},
+    {at: 6.2831853, label: '2\\pi'},
+  ]}
+  yTicks={[{at: 1, label: '1'}, {at: -1, label: '-1'}]}
+  functions={[{f: (x) => Math.sin(x), tone: 1}]}
+  caption="f(x) = sen x. O padrão de largura 2π se repete para sempre, nos dois sentidos."
+/>
+
+Leitura completa da função:
+
+| Característica | Valor | Por quê |
+|---|---|---|
+| **domínio** | $\mathbb{R}$ | qualquer giro é possível, inclusive negativo e maior que uma volta |
+| **imagem** | $[-1,\ 1]$ | o seno é a altura de um ponto do ciclo de raio 1 |
+| **período** | $2\pi$ | uma volta completa devolve o ponto ao lugar de partida |
+| **amplitude** | 1 | metade da distância entre $1$ e $-1$ |
+| **zeros** | $x = k\pi$ | o ponto está sobre o eixo horizontal: à direita ou à esquerda |
+| **máximos** | $x = \frac{\pi}{2} + 2k\pi$, valor 1 | ponto no topo do ciclo |
+| **mínimos** | $x = \frac{3\pi}{2} + 2k\pi$, valor $-1$ | ponto no fundo do ciclo |
+
+(Em todas as linhas, $k$ é um inteiro qualquer.)
+
+Repare que **nenhuma dessas informações precisa ser decorada**: todas são
+leituras do ciclo. Se esquecer onde estão os zeros, pergunte “em que ângulos a
+altura do ponto é zero?” — e a resposta, 0, $\pi$, $2\pi$, …, é imediata.
+
+### A simetria do seno
+
+O gráfico é simétrico em relação à **origem**: girar a curva meia volta em torno
+de $(0,0)$ devolve a mesma curva. Isso é a expressão gráfica de
+
+$$
+\sen(-x) = -\sen x,
+$$
+
+a propriedade vista no ciclo — refletir no eixo horizontal troca o sinal da
+altura. Funções com essa simetria são chamadas de **ímpares**.
+
+## O gráfico do cosseno
+
+O cosseno é a **abscissa** do ponto do ciclo. Percorrendo a mesma volta:
+
+| Trecho | A abscissa |
+|---|---|
+| 0 a $\frac{\pi}{2}$ | decresce de 1 a 0 |
+| $\frac{\pi}{2}$ a $\pi$ | decresce de 0 a $-1$ |
+| $\pi$ a $\frac{3\pi}{2}$ | cresce de $-1$ a 0 |
+| $\frac{3\pi}{2}$ a $2\pi$ | cresce de 0 a 1 |
+
+<CartesianPlane
+  xMin={-6.6} xMax={6.9} yMin={-1.6} yMax={1.6}
+  xUnit={27} yUnit={48}
+  xStep={1.5707963} yStep={0.5}
+  xTicks={[
+    {at: -6.2831853, label: '-2\\pi'},
+    {at: -3.1415927, label: '-\\pi'},
+    {at: 3.1415927, label: '\\pi'},
+    {at: 6.2831853, label: '2\\pi'},
+  ]}
+  yTicks={[{at: 1, label: '1'}, {at: -1, label: '-1'}]}
+  functions={[{f: (x) => Math.cos(x), tone: 2}]}
+  caption="f(x) = cos x. Mesma forma, mesma altura, mesmo período — começando no topo."
+/>
+
+Domínio, imagem, período e amplitude são **idênticos** aos do seno. O que muda é
+onde a curva começa:
+
+- o seno parte de 0 e sobe;
+- o cosseno parte de 1, seu valor máximo.
+
+| | $\sen$ | $\cos$ |
+|---|---|---|
+| valor em $x=0$ | 0 | 1 |
+| zeros | $k\pi$ | $\frac{\pi}{2} + k\pi$ |
+| máximos | $\frac{\pi}{2} + 2k\pi$ | $2k\pi$ |
+| mínimos | $\frac{3\pi}{2} + 2k\pi$ | $\pi + 2k\pi$ |
+| simetria | ímpar (origem) | par (eixo vertical) |
+
+### As duas curvas são a mesma, deslocada
+
+Sobrepondo os dois gráficos, o parentesco fica evidente:
+
+<CartesianPlane
+  xMin={-0.5} xMax={6.9} yMin={-1.6} yMax={1.6}
+  xUnit={47} yUnit={48}
+  xStep={1.5707963} yStep={0.5}
+  xTicks={[
+    {at: 1.5707963, label: '\\frac{\\pi}{2}'},
+    {at: 3.1415927, label: '\\pi'},
+    {at: 4.712389, label: '\\frac{3\\pi}{2}'},
+    {at: 6.2831853, label: '2\\pi'},
+  ]}
+  yTicks={[{at: 1, label: '1'}, {at: -1, label: '-1'}]}
+  functions={[
+    {f: (x) => Math.sin(x), tone: 1},
+    {f: (x) => Math.cos(x), tone: 2, dashed: true},
+  ]}
+  caption="Seno (cheio) e cosseno (tracejado). O cosseno é o seno adiantado em π/2."
+/>
+
+Em fórmula:
+
+$$
+\cos x = \sen\left(x + \frac{\pi}{2}\right).
+$$
+
+Ou seja: o gráfico do cosseno é o do seno **deslocado $\frac{\pi}{2}$ para a
+esquerda**. Faz sentido pelo ciclo — o cosseno de um ângulo é a altura do ponto
+que está um quarto de volta adiante.
+
+Vale conferir com um valor: $\cos 0 = 1$ e
+$\sen\left(0 + \frac{\pi}{2}\right) = \sen\frac{\pi}{2} = 1$ ✓.
+
+> **Erro comum:** achar que “o cosseno é o seno ao contrário” ou “de cabeça para
+> baixo”. O gráfico de $-\sen x$ é que está de cabeça para baixo; o cosseno é a
+> mesma onda **deslocada horizontalmente**.
+
+## Por que o eixo horizontal usa radianos
+
+Uma escolha que parece detalhe e não é.
+
+Se o eixo fosse marcado em graus, o período seria 360 e a amplitude 1: uma curva
+360 vezes mais larga que alta, achatada a ponto de parecer uma reta. Pior, os
+dois eixos teriam **unidades incompatíveis** — graus na horizontal, número puro
+na vertical.
+
+Com radianos, o ângulo também é um número puro (é uma razão entre
+comprimentos, como visto em [Radianos](./radianos)). Os dois eixos passam a
+medir a mesma coisa, e a curva ganha proporções naturais: período $2\pi \approx
+6{,}28$ contra amplitude 1.
+
+E há a razão decisiva, já anunciada: só em radianos vale $\sen x \approx x$ para
+$x$ pequeno. No gráfico, isso aparece como um fato visual — **perto da origem, a
+senoide é quase a reta $y = x$**:
+
+<CartesianPlane
+  xMin={-1.2} xMax={1.2} yMin={-1.2} yMax={1.2}
+  xUnit={110} yUnit={110}
+  xStep={0.5} yStep={0.5}
+  functions={[{f: (x) => Math.sin(x), tone: 1}]}
+  lines={[{m: 1, n: 0, tone: 2, dashed: true}]}
+  caption="Perto da origem, sen x (cheio) e a reta y = x (tracejada) quase se confundem."
+/>
+
+Essa coincidência é a base da fórmula da derivada do seno, e é o motivo de toda
+a física usar radianos.
+
+## Resolvendo o registro da roda-gigante
+
+Os pontos anotados pelo operador desenham exatamente uma senoide — deslocada
+para cima e esticada verticalmente:
+
+<CartesianPlane
+  xMin={-0.4} xMax={13} yMin={-2} yMax={46}
+  xUnit={26} yUnit={2.6}
+  xStep={1.5707963} yStep={10}
+  xTicks={[
+    {at: 3.1415927, label: '\\pi'},
+    {at: 6.2831853, label: '2\\pi'},
+    {at: 9.424778, label: '3\\pi'},
+    {at: 12.566371, label: '4\\pi'},
+  ]}
+  yTicks={[{at: 22, label: '22'}, {at: 42, label: '42'}, {at: 2, label: '2'}]}
+  functions={[{f: (x) => 22 + 20 * Math.sin(x), tone: 1}]}
+  lines={[{m: 0, n: 22, tone: 0, dashed: true}]}
+  caption="h(θ) = 22 + 20 sen θ, para duas voltas da roda. A linha tracejada é a altura do centro."
+/>
+
+A curva responde às duas perguntas do início:
+
+- **Que curva os pontos desenham?** Uma senoide, oscilando entre 2 m e 42 m em
+  torno de 22 m.
+- **O que acontece se a roda continuar girando?** O padrão se repete a cada
+  volta, sem fim — que é exatamente o que uma roda-gigante faz.
+
+Repare no que os números 22 e 20 fazem com o desenho:
+
+- o **22** ergueu a curva inteira: ela oscila em torno de 22 em vez de em torno
+  de 0;
+- o **20** esticou a curva verticalmente: a amplitude passou de 1 para 20,
+  cobrindo de $22-20 = 2$ até $22+20 = 42$.
+
+Esses dois efeitos — deslocamento vertical e amplitude — são os primeiros dos
+parâmetros que a [próxima página](./parametros-das-funcoes-trigonometricas) vai
+tratar sistematicamente.
+
+## Exemplos resolvidos
+
+### Exemplo 1: ler o gráfico
+
+Para $f(x) = \sen x$, determine $f\left(\frac{\pi}{6}\right)$,
+$f(\pi)$ e $f\left(\frac{5\pi}{4}\right)$.
+
+$$
+\sen\frac{\pi}{6} = \frac{1}{2},
+\qquad
+\sen\pi = 0,
+\qquad
+\sen\frac{5\pi}{4} = -\frac{\sqrt{2}}{2}.
+$$
+
+O último usa [redução](./reducao-ao-primeiro-quadrante): $\frac{5\pi}{4} =
+225^\circ$, terceiro quadrante, referência 45°, seno negativo.
+
+### Exemplo 2: onde a função vale zero
+
+*Pause e tente antes de ler.* Determine todos os $x$ com $\cos x = 0$.
+
+O cosseno é a abscissa do ponto do ciclo; ela é zero quando o ponto está no topo
+ou no fundo — ou seja, em $\frac{\pi}{2}$ e $\frac{3\pi}{2}$. Somando voltas:
+
+$$
+x = \frac{\pi}{2} + k\pi, \qquad k \in \mathbb{Z}.
+$$
+
+(Escrever $+k\pi$, e não $+2k\pi$, já cobre os dois casos por volta, porque eles
+distam meia volta um do outro.)
+
+No gráfico, esses são exatamente os pontos em que a curva do cosseno cruza o
+eixo horizontal ✓.
+
+### Exemplo 3: comparar valores sem calcular
+
+*Pause e tente antes de ler.* Qual é maior: $\sen 2$ ou $\sen 3$? (Os ângulos
+estão em radianos.)
+
+Como $\frac{\pi}{2} \approx 1{,}57$ e $\pi \approx 3{,}14$, os dois números
+estão entre $\frac{\pi}{2}$ e $\pi$ — o trecho em que o seno **decresce** de 1
+até 0.
+
+Sendo $2 < 3$ e a função decrescente ali, $\sen 2 > \sen 3$.
+
+Conferindo: $\sen 2 \approx 0{,}909$ e $\sen 3 \approx 0{,}141$ ✓.
+
+Este é o tipo de raciocínio que o gráfico permite e a tabela não: **comparar sem
+calcular**.
+
+### Exemplo 4: quantas soluções?
+
+*Pause e tente antes de ler.* Quantas soluções tem a equação
+$\sen x = 0{,}4$ no intervalo $[0,\ 4\pi]$?
+
+Trace mentalmente a reta horizontal $y = 0{,}4$ sobre o gráfico. Em cada
+período de comprimento $2\pi$, ela corta a senoide em **dois** pontos (um na
+subida, outro na descida). O intervalo $[0, 4\pi]$ contém dois períodos
+completos.
+
+Resposta: **4 soluções**.
+
+Repare como o gráfico responde uma pergunta que a calculadora não responde
+sozinha: $\sen^{-1}(0{,}4)$ devolve **um** valor, e é o gráfico que revela
+quantos existem.
+
+### Exemplo 5: modelar uma maré
+
+*Pause e tente antes de ler.* Num porto, a maré alta atinge 4,2 m e a baixa,
+0,8 m, num ciclo de 12 horas. Determine a amplitude, o nível médio, e escreva
+uma função que descreva a altura em função do tempo, supondo maré média subindo
+em $t=0$.
+
+Nível médio: $\frac{4{,}2 + 0{,}8}{2} = 2{,}5$ m.
+
+Amplitude: $\frac{4{,}2 - 0{,}8}{2} = 1{,}7$ m.
+
+O ciclo dura 12 horas, então uma volta completa ($2\pi$) precisa corresponder a
+$t = 12$. Isso pede um fator dentro do seno:
+
+$$
+h(t) = 2{,}5 + 1{,}7\,\sen\!\left(\frac{2\pi}{12}\,t\right)
+= 2{,}5 + 1{,}7\,\sen\!\left(\frac{\pi t}{6}\right).
+$$
+
+Conferindo em $t = 3$ (um quarto de ciclo, quando deve ser maré alta):
+$\sen\frac{\pi}{2} = 1$, e $h = 2{,}5 + 1{,}7 = 4{,}2$ m ✓.
+
+O fator $\frac{\pi}{6}$ dentro do seno é o que ajusta o **período**, e é o
+próximo assunto do capítulo.
+
+## Erros comuns
+
+> **Erro 1: desenhar bicos ou cantos.** A senoide é lisa. Ela tem tangente
+> horizontal nos picos e nos vales — chega ao topo suavemente e retorna.
+
+> **Erro 2: achar que a curva termina em $2\pi$.** O domínio é todo
+> $\mathbb{R}$. O trecho de $0$ a $2\pi$ é só um período; a curva continua nos
+> dois sentidos.
+
+> **Erro 3: marcar o eixo em graus e a imagem em radianos, ou misturar.** Se o
+> eixo estiver em radianos, os zeros ficam em $\pi$, $2\pi$; se estiver em
+> graus, em 180, 360. Escolha e mantenha.
+
+> **Erro 4: confundir período com amplitude.** Período é horizontal (o quanto
+> demora para repetir); amplitude é vertical (o quanto sobe e desce).
+
+> **Erro 5: achar que $\cos x = -\sen x$.** O cosseno é o seno **deslocado**,
+> não invertido. Teste em $x=0$: $\cos 0 = 1$, mas $-\sen 0 = 0$.
+
+## Perguntas de verificação
+
+1. Por que a imagem do seno é $[-1, 1]$, argumentando pelo ciclo?
+2. Por que o período é $2\pi$ e não outro número?
+3. Por que os gráficos do seno e do cosseno têm exatamente a mesma forma?
+4. Por que o eixo horizontal é marcado em radianos?
+5. O que significa dizer que o seno é uma função ímpar, em termos do gráfico?
+6. Como o gráfico ajuda a saber quantas soluções tem $\sen x = 0{,}4$ num
+   intervalo?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque $\sen x$ é a altura de um ponto que percorre a circunferência de raio
+   1. O ponto mais alto está a altura 1 e o mais baixo a $-1$; todos os
+   intermediários são atingidos, então a imagem é o intervalo inteiro.
+2. Porque $2\pi$ é uma volta completa: depois dela, o ponto do ciclo retorna
+   exatamente ao lugar de partida, e todas as alturas se repetem na mesma ordem.
+   Nenhum valor menor faz isso — meia volta, por exemplo, leva ao ponto oposto,
+   com altura de sinal trocado.
+3. Porque as duas são leituras de coordenadas do **mesmo** ponto girando: uma na
+   vertical, outra na horizontal. A abscissa do ponto em $x$ é igual à ordenada
+   do ponto em $x + \frac{\pi}{2}$ — um quarto de volta adiante. Assim, uma
+   curva é a outra deslocada.
+4. Porque em radianos o ângulo é um número puro, e os dois eixos passam a medir
+   grandezas comparáveis. Em graus, o período seria 360 contra amplitude 1, e a
+   curva ficaria achatada. Além disso, só em radianos vale $\sen x \approx x$
+   perto de zero, que é o que dá à curva sua inclinação natural na origem.
+5. Que o gráfico é simétrico em relação à **origem**: girá-lo meia volta em
+   torno de $(0,0)$ devolve a mesma curva. É a expressão visual de
+   $\sen(-x) = -\sen x$.
+6. Traçando a reta horizontal $y = 0{,}4$ e contando os cruzamentos. Cada
+   período contribui com dois, porque a curva sobe até 1 e desce até $-1$,
+   passando pela altura 0,4 duas vezes. A calculadora, ao contrário, devolve
+   apenas um dos valores.
+
+</details>
+
+## Exercícios
+
+### 1. Reconhecimento
+
+1. Determine, para $f(x) = \sen x$: domínio, imagem, período e amplitude.
+2. Calcule: (a) $\sen\frac{\pi}{3}$; (b) $\cos\frac{2\pi}{3}$;
+   (c) $\sen\frac{3\pi}{2}$; (d) $\cos\pi$.
+3. Em que valores de $x$ entre 0 e $2\pi$ o gráfico de $\cos x$ atinge o
+   mínimo?
+
+### 2. Explicação
+
+4. Explique por que a senoide não tem bicos.
+5. Um colega diz que o gráfico do cosseno é o do seno virado de cabeça para
+   baixo. Corrija-o com um valor numérico.
+6. Explique por que $\sen x = 2$ não tem solução, usando o gráfico.
+
+### 3. Aplicação direta
+
+7. Determine todos os $x$ reais com $\sen x = 0$.
+8. Determine todos os $x$ em $[0, 2\pi]$ com $\cos x = \frac{1}{2}$.
+9. Ordene sem calculadora: $\sen 1$, $\sen 2$, $\sen 3$. (Radianos.)
+
+### 4. Variação
+
+10. Quantas soluções tem $\cos x = -0{,}3$ em $[0, 6\pi]$?
+11. Esboce, no mesmo par de eixos, $\sen x$ e $2\sen x$ para $x$ em
+    $[0, 2\pi]$. O que muda: período ou amplitude?
+12. A função $g(x) = 3 + \sen x$ tem que imagem? E que período?
+
+<details>
+<summary>Dica para o 10</summary>
+
+Quantos períodos completos cabem em $[0, 6\pi]$? Quantos cruzamentos a reta
+$y = -0{,}3$ produz em cada período?
+
+</details>
+
+### 5. Problema misto
+
+13. A temperatura média mensal de uma cidade oscila entre 12 °C em julho e 28 °C
+    em janeiro, num ciclo anual. Determine a temperatura média e a amplitude, e
+    escreva uma função do tipo $T(t) = a + b\sen(\ldots)$ que descreva o
+    fenômeno.
+14. Uma roda de raio 0,4 m gira e um ponto da borda tem altura, em relação ao
+    centro, dada por $y = 0{,}4\sen\theta$. Determine a altura máxima, a mínima
+    e os ângulos em que elas ocorrem. Depois, determine para quais ângulos da
+    primeira volta a altura é positiva.
+
+### 6. Justificativa
+
+15. Justifique, usando o ciclo, por que
+    $\cos x = \sen\left(x + \frac{\pi}{2}\right)$.
+16. Explique por que a periodicidade dos gráficos é uma consequência direta da
+    construção do ciclo, e não uma propriedade a ser verificada caso a caso.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Domínio $\mathbb{R}$; imagem $[-1,1]$; período $2\pi$; amplitude 1.
+2. (a) $\frac{\sqrt{3}}{2}$; (b) $-\frac{1}{2}$; (c) $-1$; (d) $-1$.
+3. Em $x = \pi$, onde $\cos\pi = -1$.
+4. Porque a altura do ponto no ciclo varia de forma contínua e suave: o ponto se
+   move ao longo de uma curva sem quinas, e sua altura muda gradualmente. Um
+   bico exigiria uma mudança brusca de direção, que não ocorre no movimento
+   circular.
+5. Em $x = 0$: $\cos 0 = 1$, enquanto $-\sen 0 = 0$. As duas funções não
+   coincidem. O cosseno é o seno **deslocado** $\frac{\pi}{2}$ para a esquerda.
+6. Porque o gráfico do seno está inteiramente contido na faixa entre $-1$ e 1. A
+   reta $y = 2$ passa acima de toda a curva e não a intercepta em ponto algum.
+7. $x = k\pi$, com $k$ inteiro.
+8. $x = \frac{\pi}{3}$ e $x = \frac{5\pi}{3}$ — um no primeiro quadrante, outro
+   no quarto, onde o cosseno também é positivo.
+9. $\sen 1 \approx 0{,}841$, $\sen 2 \approx 0{,}909$, $\sen 3 \approx 0{,}141$.
+   Ordem crescente: $\sen 3 < \sen 1 < \sen 2$. (Raciocínio sem calcular: 1 e 2
+   estão de lados opostos do pico em $\frac{\pi}{2} \approx 1{,}57$, e 2 está
+   mais perto dele; 3 está quase em $\pi$, onde o seno chega a zero.)
+10. Em $[0, 6\pi]$ cabem 3 períodos, e a reta $y = -0{,}3$ corta a curva duas
+    vezes por período: **6 soluções**.
+11. A **amplitude** dobra: a curva passa a oscilar entre $-2$ e 2. O período
+    continua $2\pi$ — os zeros permanecem em $0$, $\pi$ e $2\pi$.
+12. Imagem $[2, 4]$: a curva inteira sobe 3 unidades. Período continua $2\pi$ —
+    somar uma constante não altera o ritmo da repetição.
+13. Média: $\frac{28+12}{2} = 20$ °C. Amplitude: $\frac{28-12}{2} = 8$ °C. Com
+    $t$ em meses e o ciclo de 12 meses:
+    $T(t) = 20 + 8\sen\left(\frac{\pi t}{6} + \varphi\right)$, com a fase
+    $\varphi$ ajustada para que o máximo caia em janeiro. Tomando $t=0$ em
+    outubro, por exemplo, $T(t) = 20 + 8\sen\left(\frac{\pi t}{6}\right)$ já
+    coloca o máximo em $t=3$ (janeiro) e o mínimo em $t=9$ (julho).
+14. Máxima 0,4 m em $\theta = \frac{\pi}{2}$; mínima $-0{,}4$ m em
+    $\theta = \frac{3\pi}{2}$. A altura é positiva quando o seno é positivo, ou
+    seja, para $\theta$ entre 0 e $\pi$ (primeiro e segundo quadrantes).
+15. No ciclo, o ponto associado a $x + \frac{\pi}{2}$ é o ponto de $x$ girado um
+    quarto de volta no sentido anti-horário. Esse giro leva a abscissa antiga
+    para a posição da ordenada nova. Assim, a ordenada do ponto girado —
+    que é $\sen\left(x+\frac{\pi}{2}\right)$ — é igual à abscissa do ponto
+    original, que é $\cos x$.
+16. Porque o gráfico é construído transportando as coordenadas de um ponto que
+    **percorre uma circunferência**. Ao completar uma volta, esse ponto retorna
+    exatamente à posição inicial, e todas as coordenadas seguintes repetem as
+    anteriores na mesma ordem. A repetição do gráfico é, portanto, a repetição
+    do próprio movimento — não há nada a verificar caso a caso.
+
+</details>
+
+## Revisão curta
+
+- O gráfico do seno é o **ciclo desenrolado**: para cada ângulo $x$, marca-se a
+  altura do ponto correspondente.
+- $f(x) = \sen x$: domínio $\mathbb{R}$, imagem $[-1,1]$, período $2\pi$,
+  amplitude 1; zeros em $k\pi$, máximo em $\frac{\pi}{2}+2k\pi$, mínimo em
+  $\frac{3\pi}{2}+2k\pi$.
+- $f(x) = \cos x$ tem a **mesma forma**, deslocada:
+  $\cos x = \sen\left(x+\frac{\pi}{2}\right)$. Zeros em $\frac{\pi}{2}+k\pi$.
+- **Seno é ímpar** (simétrico pela origem); **cosseno é par** (simétrico pelo
+  eixo vertical).
+- O eixo horizontal usa **radianos** porque assim os dois eixos medem números
+  puros — e porque perto da origem a senoide se confunde com a reta $y = x$.
+- **Período** é horizontal; **amplitude** é vertical. Não confunda.
+- Traçar uma reta horizontal sobre o gráfico responde “quantas soluções tem esta
+  equação?”, o que a calculadora sozinha não faz.
+
+Falta a terceira curva do trio, e ela é bem diferente: a
+[tangente](./grafico-da-tangente) não é limitada, não é contínua e tem período
+$\pi$.

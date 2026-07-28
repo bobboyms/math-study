@@ -1,0 +1,630 @@
+---
+title: Paralelas e perpendiculares
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Paralelas e perpendiculares: o que os coeficientes revelam
+
+## Problema motivador: fechar o desenho do deck
+
+Você está desenhando a planta de um deck num programa de CAD. Uma das bordas já
+está traçada: ela vai de $(1, 2)$ a $(7, 5)$.
+
+Falta desenhar mais duas:
+
+- a **borda oposta**, que precisa ser paralela à primeira e passar por $(2, 7)$;
+- a **lateral**, que precisa ser perpendicular à primeira e passar por $(7, 5)$.
+
+O programa não aceita “arraste até parecer certo”. Ele pede a **equação** de
+cada reta.
+
+<CartesianPlane
+  xMin={0} xMax={10} yMin={0} yMax={9}
+  xUnit={32}
+  lines={[{through: [[1, 2], [7, 5]], tone: 1}]}
+  points={[
+    {at: [1, 2], tone: 1},
+    {at: [7, 5], label: '(7,5)', tone: 1, dy: 20},
+    {at: [2, 7], label: '(2,7)', tone: 2, dy: -18},
+  ]}
+  caption="A borda já traçada e os dois pontos por onde as novas retas precisam passar."
+/>
+
+> Que equações digitar?
+
+A resposta virá de um fato que economiza todo o trabalho: **duas retas paralelas
+ou perpendiculares têm coeficientes angulares ligados por uma relação simples**.
+Sabendo a inclinação de uma, sabe-se a da outra sem medir ângulo nenhum.
+
+## Mapa das ideias
+
+- **retas paralelas** — mesma direção; nunca se cruzam;
+- **retas perpendiculares** — cruzam-se formando 90°;
+- **retas coincidentes** — a mesma reta escrita de dois jeitos; caso extremo de
+  paralelismo;
+- **mediatriz** — a perpendicular que passa pelo ponto médio de um segmento;
+  todos os seus pontos são equidistantes das extremidades.
+
+Exemplo: $y = 2x + 1$ e $y = 2x - 5$ são paralelas — mesma inclinação, alturas
+diferentes. Contraexemplo: $y = 2x+1$ e $y = 2x+1$ **não** são paralelas no
+sentido útil da palavra: são a mesma reta, escrita duas vezes.
+
+## Para que isso serve?
+
+- desenho técnico, CAD, marcenaria e construção: garantir esquadro e paralelismo
+  sem medir ângulo;
+- programação gráfica e jogos: calcular a normal de uma superfície, refletir um
+  objeto, detectar alinhamento;
+- verificar, a partir de coordenadas, se uma figura é retângulo, losango ou
+  trapézio;
+- e, dentro da matemática, a perpendicularidade é o que define **distância de um
+  ponto a uma reta**, projeção e — mais adiante — a reta normal a uma curva.
+
+## Ideias anteriores que voltam aqui
+
+**1. Coeficiente angular** (de [Equação da reta](./equacao-da-reta)). O que
+significa $m = \frac{3}{4}$?
+
+<details>
+<summary>Conferir</summary>
+
+A reta sobe 3 a cada 4 unidades avançadas para a direita. É a razão
+$\frac{\Delta y}{\Delta x}$, e ela não depende de quais pontos da reta você
+escolhe.
+
+</details>
+
+**2. Retas paralelas** (de [Ângulos](./angulos)). O que caracteriza duas retas
+paralelas?
+
+<details>
+<summary>Conferir</summary>
+
+Elas mantêm a **mesma direção** e nunca se encontram. Uma transversal as corta
+formando ângulos correspondentes iguais.
+
+</details>
+
+**3. Inverso de um número** (de [Frações](../numeros-e-operacoes/fracoes)).
+Qual é o inverso de $\frac{2}{3}$? E o oposto?
+
+<details>
+<summary>Conferir</summary>
+
+O inverso é $\frac{3}{2}$ (troca numerador com denominador; o produto dá 1). O
+oposto é $-\frac{2}{3}$ (troca o sinal; a soma dá 0). Esta página vai usar as
+**duas** operações ao mesmo tempo, e confundi-las é o erro central do assunto.
+
+</details>
+
+## Paralelas: mesma inclinação
+
+Duas retas são paralelas quando apontam para a mesma direção. E “direção”, no
+plano cartesiano, é exatamente o que o coeficiente angular mede.
+
+<CartesianPlane
+  xMin={-1} xMax={7} yMin={-2} yMax={7}
+  xUnit={32}
+  lines={[
+    {m: 0.75, n: 0.5, tone: 1},
+    {m: 0.75, n: 3, tone: 2},
+    {m: 0.75, n: -1.5, tone: 3},
+  ]}
+  caption="Três retas com m = 0,75. Só o n muda: elas são a mesma inclinação em alturas diferentes."
+/>
+
+> Duas retas não verticais são **paralelas** se, e somente se, têm o mesmo
+> coeficiente angular: $m_1 = m_2$.
+
+A justificativa é direta, e vale enunciá-la em vez de aceitar a regra: se as duas
+sobem a mesma quantidade a cada passo horizontal, a distância vertical entre elas
+nunca muda — logo, nunca se encontram. Se subissem quantidades diferentes, a
+distância entre elas cresceria ou diminuiria a cada passo, e em algum ponto
+chegaria a zero: cruzariam.
+
+O coeficiente **linear** é que precisa ser diferente. Com $m_1 = m_2$ e
+$n_1 = n_2$, as retas são a mesma.
+
+| Situação | Coeficientes |
+|---|---|
+| paralelas distintas | $m_1 = m_2$ e $n_1 \neq n_2$ |
+| coincidentes | $m_1 = m_2$ e $n_1 = n_2$ |
+| concorrentes (cruzam-se) | $m_1 \neq m_2$ |
+
+Duas retas **verticais** também são paralelas entre si ($x = 2$ e $x = 5$, por
+exemplo), embora nenhuma tenha coeficiente angular. É o caso que a regra não
+cobre — e não é problema: basta reconhecê-lo pela forma da equação.
+
+## Perpendiculares: por que o produto dá $-1$
+
+Aqui a regra costuma ser decorada, e decorada errado. Vale construí-la.
+
+Uma reta com $m = \frac{3}{2}$ tem uma **direção de caminhada**: ande 2 para a
+direita e 3 para cima. Girar essa direção em 90° é o que produz a perpendicular
+— e girar uma seta em 90° tem um efeito previsível sobre as duas componentes.
+
+<CartesianPlane
+  xMin={-4} xMax={4} yMin={-2} yMax={5}
+  xUnit={34}
+  segments={[
+    {from: [0, 0], to: [2, 0], tone: 1, dashed: true, label: '+2', dy: 20},
+    {from: [2, 0], to: [2, 3], tone: 1, dashed: true, label: '+3', dx: 28},
+    {from: [0, 0], to: [2, 3], tone: 1},
+    {from: [0, 0], to: [0, 2], tone: 2, dashed: true},
+    {from: [0, 2], to: [-3, 2], tone: 2, dashed: true, label: '-3', dy: -16},
+    {from: [0, 0], to: [-3, 2], tone: 2},
+  ]}
+  labels={[
+    {at: [-1.1, 0.6], math: '+2', tone: 2, fontSize: 13, dx: -14},
+  ]}
+  caption="A seta azul avança 2 e sobe 3. Girada 90° no sentido anti-horário, ela sobe 2 e recua 3."
+/>
+
+Acompanhe o giro. A seta original tem componentes $(\Delta x, \Delta y) = (2,3)$.
+Ao girá-la um quarto de volta no sentido anti-horário:
+
+- o que era avanço horizontal vira **subida**: o 2 vai para a vertical;
+- o que era subida vira **recuo horizontal**: o 3 vai para a horizontal, com
+  sinal trocado.
+
+A nova direção é $(-3, 2)$. Logo, a nova inclinação é
+
+$$
+m_2 = \frac{2}{-3} = -\frac{2}{3}.
+$$
+
+Compare com a original, $m_1 = \frac{3}{2}$. A fração **inverteu** e ainda
+**trocou de sinal**. As duas operações, juntas, dão:
+
+$$
+m_1 \times m_2 = \frac{3}{2} \times \left(-\frac{2}{3}\right) = -1.
+$$
+
+> Duas retas não verticais são **perpendiculares** se, e somente se,
+> $$m_1 \times m_2 = -1, \qquad \text{ou seja,} \qquad m_2 = -\frac{1}{m_1}.$$
+
+Por que o giro troca o sinal de apenas uma das componentes? Porque girar 90°
+leva o eixo horizontal para o vertical e o eixo vertical para o horizontal
+**apontando para trás** — é o que se vê no desenho, e é o que faz a perpendicular
+descer quando a original sobe.
+
+### A exceção que a fórmula não cobre
+
+Uma reta horizontal ($m = 0$) e uma vertical (sem $m$) são perpendiculares — e
+o produto $0 \times (\text{indefinido})$ não é $-1$ nem coisa alguma.
+
+Isso não quebra a regra; apenas mostra que ela foi enunciada para retas **não
+verticais**. Na prática: se uma das retas for horizontal ou vertical, decida
+olhando as equações, não multiplicando coeficientes.
+
+> **Erro comum 1: só trocar o sinal.** A perpendicular de $y = 2x + 1$ **não**
+> tem inclinação $-2$; tem $-\frac{1}{2}$. Teste com o produto:
+> $2 \times (-2) = -4 \neq -1$, enquanto
+> $2 \times \left(-\frac{1}{2}\right) = -1$ ✓.
+
+> **Erro comum 2: só inverter.** A inclinação $\frac{1}{2}$ também não serve:
+> $2 \times \frac{1}{2} = 1$, e não $-1$. Faltou o sinal. São **duas**
+> operações — inverter e trocar o sinal —, e esquecer qualquer uma delas dá uma
+> reta que não é perpendicular.
+
+Um jeito rápido de acertar sempre: escreva $m$ como fração, vire-a de cabeça
+para baixo e troque o sinal.
+
+| $m_1$ | inverter | trocar sinal | $m_2$ |
+|---|---|---|---|
+| $3$ | $\frac{1}{3}$ | $-\frac{1}{3}$ | $-\frac{1}{3}$ |
+| $-\frac{2}{5}$ | $-\frac{5}{2}$ | $\frac{5}{2}$ | $\frac{5}{2}$ |
+| $1$ | $1$ | $-1$ | $-1$ |
+
+Repare na última linha: uma reta a 45° subindo é perpendicular a uma reta a 45°
+descendo. Faz sentido visualmente, e é o único caso em que $m_2$ parece “só a
+troca de sinal” — coincidência, porque o inverso de 1 é 1.
+
+## Resolvendo o desenho do deck
+
+A borda existente vai de $(1,2)$ a $(7,5)$:
+
+$$
+m_1 = \frac{5-2}{7-1} = \frac{3}{6} = \frac{1}{2}.
+$$
+
+**Borda oposta (paralela), passando por $(2,7)$.** Mesma inclinação:
+
+$$
+y - 7 = \tfrac{1}{2}(x - 2)
+\quad\Longrightarrow\quad
+y = \tfrac{1}{2}x + 6.
+$$
+
+**Lateral (perpendicular), passando por $(7,5)$.** Inclinação invertida e com
+sinal trocado:
+
+$$
+m_2 = -\frac{1}{\frac{1}{2}} = -2.
+$$
+
+$$
+y - 5 = -2(x - 7)
+\quad\Longrightarrow\quad
+y = -2x + 19.
+$$
+
+<CartesianPlane
+  xMin={0} xMax={11} yMin={0} yMax={10}
+  xUnit={30}
+  lines={[
+    {through: [[1, 2], [7, 5]], tone: 1},
+    {m: 0.5, n: 6, tone: 2},
+    {m: -2, n: 19, tone: 3},
+  ]}
+  points={[
+    {at: [7, 5], tone: 1},
+    {at: [2, 7], tone: 2},
+  ]}
+  caption="As três retas: a borda original (azul), a paralela (laranja) e a perpendicular (verde)."
+/>
+
+**Verificação.** O produto das inclinações da primeira com a terceira:
+
+$$
+\frac{1}{2} \times (-2) = -1. \quad ✓
+$$
+
+E a paralela: as duas têm $m = \frac{1}{2}$ com $n$ diferentes ($5{,}5$ contra
+$6$ — repare que a reta original é $y = \frac{1}{2}x + \frac{3}{2}$), então são
+paralelas distintas, como o desenho precisa. ✓
+
+## Uma aplicação: a mediatriz
+
+A **mediatriz** de um segmento é a reta perpendicular a ele que passa pelo seu
+ponto médio. Ela tem uma propriedade útil: todos os seus pontos estão à mesma
+distância das duas extremidades do segmento.
+
+É a reta que responde a perguntas como “onde instalar a antena para ficar
+igualmente distante das duas torres?”.
+
+Construí-la usa as duas ferramentas do módulo: [ponto
+médio](./plano-cartesiano-e-distancia) e perpendicularidade.
+
+**Exemplo.** Mediatriz do segmento de $A(2,1)$ a $B(8,5)$.
+
+Ponto médio:
+
+$$
+M = \left(\frac{2+8}{2}, \frac{1+5}{2}\right) = (5, 3).
+$$
+
+Inclinação do segmento:
+
+$$
+m_{AB} = \frac{5-1}{8-2} = \frac{4}{6} = \frac{2}{3}.
+$$
+
+Inclinação da mediatriz (inverter e trocar o sinal):
+
+$$
+m = -\frac{3}{2}.
+$$
+
+Equação:
+
+$$
+y - 3 = -\tfrac{3}{2}(x - 5)
+\quad\Longrightarrow\quad
+y = -\tfrac{3}{2}x + \tfrac{21}{2}.
+$$
+
+Verificação da propriedade, tomando um ponto qualquer da mediatriz — digamos
+$x = 7$, que dá $y = -\frac{21}{2} + \frac{21}{2} = 0$, ou seja, o ponto
+$(7, 0)$:
+
+$$
+d\big((7,0), A\big) = \sqrt{25 + 1} = \sqrt{26}
+\qquad
+d\big((7,0), B\big) = \sqrt{1 + 25} = \sqrt{26}. \quad ✓
+$$
+
+## Exemplos resolvidos
+
+### Exemplo 1: classificar duas retas
+
+As retas $y = 3x - 4$ e $6x - 2y + 10 = 0$ são paralelas, perpendiculares ou
+concorrentes?
+
+Coloque a segunda na forma reduzida:
+
+$$
+-2y = -6x - 10 \quad\Longrightarrow\quad y = 3x + 5.
+$$
+
+Mesmo $m = 3$, com $n$ diferente ($-4$ e $5$): são **paralelas distintas**.
+
+### Exemplo 2: achar a perpendicular
+
+*Pause e tente antes de ler.* Determine a equação da reta perpendicular a
+$y = -\frac{3}{4}x + 2$ que passa por $(6, -1)$.
+
+Inverter $-\frac{3}{4}$ dá $-\frac{4}{3}$; trocar o sinal dá $\frac{4}{3}$.
+
+$$
+y + 1 = \tfrac{4}{3}(x - 6)
+\quad\Longrightarrow\quad
+y = \tfrac{4}{3}x - 9.
+$$
+
+Verificação: $-\frac{3}{4} \times \frac{4}{3} = -1$ ✓.
+
+### Exemplo 3: é retângulo?
+
+*Pause e tente antes de ler.* Os pontos $A(0,0)$, $B(4,2)$, $C(3,4)$ e
+$D(-1,2)$ formam um retângulo?
+
+Calcule as quatro inclinações:
+
+$$
+m_{AB} = \frac{2}{4} = \frac{1}{2}
+\qquad
+m_{BC} = \frac{4-2}{3-4} = -2
+$$
+
+$$
+m_{CD} = \frac{2-4}{-1-3} = \frac{-2}{-4} = \frac{1}{2}
+\qquad
+m_{DA} = \frac{0-2}{0-(-1)} = -2.
+$$
+
+Lados opostos com a mesma inclinação ($AB \parallel CD$ e $BC \parallel DA$):
+é um paralelogramo. E lados consecutivos com produto
+$\frac{1}{2} \times (-2) = -1$: os cantos são retos.
+
+É um **retângulo**. ✓
+
+### Exemplo 4: a exceção
+
+*Pause e tente antes de ler.* Qual é a reta perpendicular a $y = 5$ que passa
+por $(3, 5)$?
+
+A reta $y = 5$ é horizontal, com $m = 0$. Tentar $-\frac{1}{0}$ não leva a
+lugar nenhum — a fórmula não se aplica.
+
+Volte ao significado: a perpendicular de uma horizontal é uma **vertical**, e a
+que passa por $(3,5)$ é
+
+$$
+x = 3.
+$$
+
+### Exemplo 5: a distância de um ponto a uma reta
+
+*Pause e tente antes de ler.* Qual é a distância do ponto $P(1, 8)$ à reta
+$y = 2x + 3$?
+
+“Distância de ponto a reta” significa a **menor** distância, e ela é medida na
+perpendicular — qualquer outro trajeto é a hipotenusa de um triângulo que tem a
+perpendicular como cateto, portanto mais longo.
+
+Passo 1 — a perpendicular por $P$: inclinação $-\frac{1}{2}$.
+
+$$
+y - 8 = -\tfrac{1}{2}(x - 1) \Longrightarrow y = -\tfrac{1}{2}x + \tfrac{17}{2}.
+$$
+
+Passo 2 — onde ela encontra a reta dada:
+
+$$
+2x + 3 = -\tfrac{1}{2}x + \tfrac{17}{2}
+\Longrightarrow
+\tfrac{5}{2}x = \tfrac{11}{2}
+\Longrightarrow
+x = 2{,}2,
+$$
+
+e $y = 2 \times 2{,}2 + 3 = 7{,}4$. O pé da perpendicular é $(2{,}2,\ 7{,}4)$.
+
+Passo 3 — a distância:
+
+$$
+d = \sqrt{(2{,}2-1)^2 + (7{,}4-8)^2} = \sqrt{1{,}44 + 0{,}36} = \sqrt{1{,}8}
+\approx 1{,}34.
+$$
+
+Três ferramentas do módulo encadeadas: perpendicularidade, interseção e
+distância.
+
+## Erros comuns
+
+> **Erro 1: perpendicular é só trocar o sinal.** Não. É inverter **e** trocar o
+> sinal. Confira sempre com o produto: tem de dar exatamente $-1$.
+
+> **Erro 2: esquecer o caso vertical/horizontal.** Quando $m = 0$ ou quando a
+> reta é vertical, a fórmula do produto não se aplica. Responda pelo
+> significado.
+
+> **Erro 3: chamar de paralelas duas retas coincidentes.** Se $m$ e $n$ forem
+> iguais, é a mesma reta. Compare os dois coeficientes, não só o angular.
+
+> **Erro 4: comparar coeficientes sem antes isolar $y$.** As equações
+> $6x - 2y + 10 = 0$ e $y = 3x - 4$ parecem ter “coeficientes” 6 e 3. Só depois
+> de colocar as duas na forma reduzida os números são comparáveis.
+
+## Perguntas de verificação
+
+1. Por que retas com o mesmo coeficiente angular nunca se cruzam?
+2. Por que a perpendicular exige inverter **e** trocar o sinal? O que cada uma
+   das duas operações faz geometricamente?
+3. Por que a regra do produto $-1$ não vale quando uma das retas é vertical?
+4. Qual é a diferença entre retas paralelas e retas coincidentes, olhando as
+   equações?
+5. Por que a distância de um ponto a uma reta é medida na perpendicular?
+6. Todos os pontos da mediatriz de $AB$ têm a mesma distância a $A$ e a $B$. Por
+   que isso a torna útil em problemas de localização?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque sobem a mesma quantidade a cada passo horizontal, então a distância
+   vertical entre elas é constante. Cruzar exigiria que essa distância chegasse
+   a zero em algum ponto, e ela nunca muda.
+2. Inverter troca os papéis das componentes horizontal e vertical do
+   deslocamento — o que era avanço vira subida. Trocar o sinal reflete a
+   direção resultante para o lado certo, de modo que o giro seja de 90° e não de
+   $-90^\circ$ combinado com uma reflexão. Juntas, as duas operações realizam
+   exatamente um quarto de volta.
+3. Porque a reta vertical não tem coeficiente angular — não existe número para
+   multiplicar. A regra foi enunciada para retas não verticais.
+4. Paralelas distintas têm o mesmo $m$ e $n$ **diferentes**. Coincidentes têm
+   $m$ e $n$ iguais: são a mesma reta, e todos os seus pontos são comuns.
+5. Porque qualquer outro segmento do ponto até a reta é a hipotenusa de um
+   triângulo retângulo cujo cateto é o segmento perpendicular. A hipotenusa é
+   sempre maior que o cateto, então a perpendicular é o trajeto mínimo.
+6. Porque transforma “quero ficar igualmente distante de dois lugares” numa
+   **equação de reta** — e a resposta deixa de ser um chute visual para virar
+   um conjunto de pontos explicitamente descrito. Cruzando duas mediatrizes,
+   acha-se o ponto equidistante de três lugares.
+
+</details>
+
+## Exercícios
+
+### 1. Reconhecimento
+
+1. Classifique cada par como paralelas, perpendiculares ou nenhuma das duas:
+   (a) $y = 4x+1$ e $y = 4x-9$; (b) $y = \frac{1}{3}x$ e $y = -3x+2$;
+   (c) $y = 2x$ e $y = -2x$.
+2. Qual é a inclinação de uma reta perpendicular a uma de inclinação
+   (a) $5$; (b) $-\frac{1}{4}$; (c) $\frac{7}{2}$?
+3. As retas $x = 4$ e $y = -1$ são perpendiculares? Justifique sem usar a regra
+   do produto.
+
+### 2. Explicação
+
+4. Explique por que duas retas paralelas precisam ter coeficientes lineares
+   diferentes para serem consideradas retas distintas.
+5. Um colega afirma que a perpendicular de $y = -5x$ é $y = 5x$. Mostre com o
+   produto que ele está errado e dê a resposta certa.
+6. Explique por que a mediatriz de um segmento é perpendicular a ele **e** passa
+   pelo ponto médio — por que as duas condições são necessárias?
+
+### 3. Aplicação direta
+
+7. Determine a reta paralela a $y = -2x+5$ que passa por $(1, 4)$.
+8. Determine a reta perpendicular a $y = \frac{2}{5}x - 1$ que passa por
+   $(4, 3)$.
+9. Coloque $3x + 4y - 8 = 0$ na forma reduzida e determine a inclinação de
+   qualquer reta perpendicular a ela.
+
+### 4. Variação
+
+10. Determine a mediatriz do segmento de extremidades $(-2, 3)$ e $(6, 7)$.
+11. Os pontos $A(1,1)$, $B(5,3)$ e $C(3,7)$ formam um triângulo. Ele é
+    retângulo? Justifique com inclinações.
+12. Uma reta passa por $(0,6)$ e é perpendicular à reta que passa por $(2,1)$ e
+    $(6,3)$. Determine sua equação e o ponto em que as duas se cruzam.
+
+<details>
+<summary>Dica para o 12</summary>
+
+São três etapas: a inclinação da reta dada, a inclinação da perpendicular e,
+para o cruzamento, a igualdade entre as duas expressões de $y$.
+
+</details>
+
+### 5. Problema misto
+
+13. Um terreno tem vértices em $(0,0)$, $(6,3)$, $(4,7)$ e $(-2,4)$. Verifique
+    se ele é um retângulo, usando inclinações; depois calcule sua área usando
+    distâncias.
+14. Uma antena deve ficar equidistante de duas torres, em $(1,2)$ e $(7,6)$, e
+    sobre a estrada de equação $y = x$. Determine a posição da antena.
+
+### 6. Justificativa
+
+15. Mostre que, se $m_1 m_2 = -1$, então uma das duas retas sobe e a outra
+    desce. O que isso significa geometricamente?
+16. Justifique por que três pontos $A$, $B$ e $C$ são colineares (estão sobre
+    uma mesma reta) exatamente quando $m_{AB} = m_{BC}$, e use isso para
+    verificar se $(1,2)$, $(4,8)$ e $(7,14)$ são colineares.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. (a) paralelas; (b) perpendiculares, pois
+   $\frac{1}{3} \times (-3) = -1$; (c) nenhuma das duas —
+   $2 \times (-2) = -4$, e as inclinações são diferentes.
+2. (a) $-\frac{1}{5}$; (b) $4$; (c) $-\frac{2}{7}$.
+3. São. $x = 4$ é vertical e $y = -1$ é horizontal, e os eixos — logo, qualquer
+   vertical com qualquer horizontal — formam 90°. A regra do produto não se
+   aplica porque a vertical não tem coeficiente angular.
+4. Porque com $m$ e $n$ iguais elas são a mesma reta: todos os pontos coincidem.
+   Paralelismo, no sentido útil, pressupõe duas retas que não se tocam — o que
+   exige alturas diferentes.
+5. $(-5) \times 5 = -25 \neq -1$. Ele só trocou o sinal, sem inverter. A
+   resposta certa é $m = \frac{1}{5}$, pois
+   $(-5) \times \frac{1}{5} = -1$.
+6. A perpendicularidade garante que os pontos da reta “se afastem igualmente”
+   dos dois lados; o ponto médio garante que o ponto de partida já seja
+   equidistante. Só uma das condições não basta: uma perpendicular deslocada
+   fica mais perto de uma extremidade, e uma reta pelo ponto médio em outra
+   direção também.
+7. $y - 4 = -2(x-1) \Rightarrow y = -2x + 6$.
+8. Perpendicular tem $m = -\frac{5}{2}$:
+   $y - 3 = -\frac{5}{2}(x-4) \Rightarrow y = -\frac{5}{2}x + 13$.
+9. $4y = -3x + 8 \Rightarrow y = -\frac{3}{4}x + 2$; perpendiculares têm
+   $m = \frac{4}{3}$.
+10. Ponto médio $(2, 5)$; $m_{AB} = \frac{7-3}{6-(-2)} = \frac{1}{2}$; mediatriz
+    tem $m = -2$: $y - 5 = -2(x-2) \Rightarrow y = -2x + 9$.
+11. $m_{AB} = \frac{3-1}{5-1} = \frac{1}{2}$;
+    $m_{BC} = \frac{7-3}{3-5} = -2$. Como
+    $\frac{1}{2} \times (-2) = -1$, o ângulo em $B$ é reto: **é retângulo**.
+12. $m$ da reta dada $= \frac{3-1}{6-2} = \frac{1}{2}$; perpendicular:
+    $m = -2$, logo $y = -2x + 6$. A reta dada é
+    $y - 1 = \frac{1}{2}(x-2) \Rightarrow y = \frac{1}{2}x$. Igualando:
+    $-2x + 6 = \frac{1}{2}x \Rightarrow 6 = \frac{5}{2}x \Rightarrow x = 2{,}4$,
+    e $y = 1{,}2$. Cruzam-se em $(2{,}4,\ 1{,}2)$.
+13. $m_{AB} = \frac{3}{6} = \frac{1}{2}$;
+    $m_{BC} = \frac{7-3}{4-6} = -2$;
+    $m_{CD} = \frac{4-7}{-2-4} = \frac{1}{2}$;
+    $m_{DA} = \frac{0-4}{0-(-2)} = -2$. Opostos paralelos e consecutivos com
+    produto $-1$: é retângulo. Lados:
+    $\overline{AB} = \sqrt{36+9} = \sqrt{45}$ e
+    $\overline{BC} = \sqrt{4+16} = \sqrt{20}$. Área
+    $= \sqrt{45}\sqrt{20} = \sqrt{900} = 30$.
+14. A antena está na mediatriz de $(1,2)$ e $(7,6)$: ponto médio $(4,4)$,
+    $m_{AB} = \frac{4}{6} = \frac{2}{3}$, mediatriz com $m = -\frac{3}{2}$:
+    $y = -\frac{3}{2}x + 10$. Cruzando com $y = x$:
+    $x = -\frac{3}{2}x + 10 \Rightarrow \frac{5}{2}x = 10 \Rightarrow x = 4$, e
+    $y = 4$. A antena fica em $(4, 4)$. (Conferindo:
+    $d$ até $(1,2) = \sqrt{9+4} = \sqrt{13}$ e até $(7,6) = \sqrt{9+4} =
+    \sqrt{13}$ ✓.)
+15. Se o produto de dois números é negativo, eles têm sinais opostos. Logo, uma
+    das retas tem $m > 0$ (sobe) e a outra $m < 0$ (desce). Geometricamente,
+    isso é obrigatório: se as duas subissem, o ângulo entre elas seria menor que
+    90°.
+16. Se $A$, $B$ e $C$ estão sobre a mesma reta, os segmentos $AB$ e $BC$ têm a
+    direção dessa reta, logo a mesma inclinação. Reciprocamente, com
+    $m_{AB} = m_{BC}$, as retas $AB$ e $BC$ têm a mesma inclinação e um ponto
+    comum ($B$) — então são coincidentes. Testando:
+    $m = \frac{8-2}{4-1} = 2$ e $m = \frac{14-8}{7-4} = 2$. São colineares.
+
+</details>
+
+## Revisão curta
+
+- **Paralelas:** $m_1 = m_2$, com $n_1 \neq n_2$. Mesmo $n$ significa retas
+  coincidentes.
+- **Perpendiculares:** $m_1 m_2 = -1$, ou seja, $m_2 = -\frac{1}{m_1}$ —
+  **inverter e trocar o sinal**, as duas coisas.
+- A regra vem de girar a direção da reta em 90°: $(\Delta x, \Delta y)$ vira
+  $(-\Delta y, \Delta x)$.
+- **Exceção:** horizontal e vertical são perpendiculares, mas a regra do produto
+  não se aplica — a vertical não tem $m$.
+- Antes de comparar coeficientes, coloque as duas equações na forma reduzida.
+- A **mediatriz** (perpendicular pelo ponto médio) é o conjunto dos pontos
+  equidistantes das duas extremidades — a ferramenta de problemas de
+  localização.
+- A **distância de um ponto a uma reta** é medida na perpendicular, porque
+  qualquer outro trajeto é hipotenusa de um triângulo que a tem como cateto.
+
+Retas são as figuras mais simples que uma equação pode descrever. As próximas
+são curvas: a [circunferência e a parábola](./circunferencia-e-parabola).

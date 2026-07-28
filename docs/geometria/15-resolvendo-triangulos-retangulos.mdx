@@ -1,0 +1,669 @@
+---
+title: Resolvendo triângulos retângulos
+---
+
+import GeoFigure from '@site/src/components/GeoFigure';
+
+# Resolvendo triângulos retângulos: achar tudo o que falta
+
+## Problema motivador: que escada comprar?
+
+A calha da sua casa está a **5,40 m** do chão e precisa ser limpa. Você vai
+comprar uma escada de extensão.
+
+A norma de segurança para escadas de apoio recomenda que ela fique entre **65° e
+75°** com o chão — mais deitada, escorrega; mais em pé, tomba para trás. O
+fabricante vende escadas de 4, 5, 6 e 7 metros.
+
+<GeoFigure
+  unit={44}
+  padding={54}
+  polygons={[{points: [[0, 0], [1.5, 0], [1.5, 4.1]], tone: 1}]}
+  angles={[
+    {at: [1.5, 0], from: [0, 0], to: [1.5, 4.1], right: true, tone: 1},
+    {at: [0, 0], from: [1.5, 0], to: [1.5, 4.1], label: '70^\\circ', tone: 2, radius: 30, labelRadius: 52},
+  ]}
+  labels={[
+    {at: [2.0, 2.05], math: '5{,}40', tone: 3, fontSize: 13},
+    {at: [0.75, -0.36], math: 'd = ?', tone: 1, fontSize: 13},
+    {at: [0.5, 1.6], math: 'L = ?', tone: 2, fontSize: 14},
+  ]}
+  caption="Altura conhecida, ângulo escolhido. Faltam o comprimento da escada e o afastamento do pé."
+/>
+
+> Que tamanho de escada comprar, e a que distância da parede apoiar o pé dela?
+
+Com um ângulo de 70° escolhido dentro da faixa e um lado conhecido, **todo o
+resto do triângulo está determinado**. Esta página trata exatamente disso:
+completar um triângulo retângulo a partir de dois dados.
+
+## Mapa das ideias
+
+- **resolver um triângulo** — determinar todos os seus lados e ângulos;
+- **função inversa** ($\sen^{-1}$, $\cos^{-1}$, $\tg^{-1}$) — a operação que vai
+  do valor da razão de volta ao ângulo;
+- **ângulo de elevação** — ângulo entre a horizontal e a linha de visada para
+  cima;
+- **ângulo de depressão** — ângulo entre a horizontal e a linha de visada para
+  baixo.
+
+Exemplo: se $\tg\alpha = 1$, então $\alpha = \tg^{-1}(1) = 45^\circ$.
+Contraexemplo: $\tg^{-1}$ **não** é $\frac{1}{\tg}$ — o expoente $-1$ aqui
+significa “função inversa”, e não “inverso multiplicativo”. Essa notação é
+infeliz e confunde muita gente; voltaremos a ela.
+
+## Para que isso serve?
+
+- topografia, agrimensura e construção;
+- navegação aérea e marítima: rumo, altitude, distância;
+- instalação de antenas, painéis solares, escadas e rampas;
+- física: decomposição de forças, planos inclinados, trajetórias;
+- e, dentro da matemática, é o treino que consolida as três razões antes de
+  elas se tornarem funções de verdade nos módulos seguintes.
+
+## Ideias anteriores que voltam aqui
+
+**1. As três razões** (de
+[Seno, cosseno e tangente](./razoes-trigonometricas)). Que razão liga o cateto
+oposto à hipotenusa?
+
+<details>
+<summary>Conferir</summary>
+
+O seno. Adjacente com hipotenusa é o cosseno; os dois catetos entre si é a
+tangente.
+
+</details>
+
+**2. Ângulos notáveis** (de [Ângulos notáveis](./angulos-notaveis)). Quanto vale
+$\tg 45^\circ$?
+
+<details>
+<summary>Conferir</summary>
+
+1. E $\sen 30^\circ = \frac{1}{2}$, $\cos 60^\circ = \frac{1}{2}$,
+$\tg 60^\circ = \sqrt{3}$.
+
+</details>
+
+**3. Soma dos ângulos** (de [Triângulos](./triangulos)). Num triângulo
+retângulo, se um ângulo agudo mede 70°, quanto mede o outro?
+
+<details>
+<summary>Conferir</summary>
+
+20°, porque os dois agudos são complementares. Isso resolve “de graça” um dos
+cinco elementos em qualquer problema.
+
+</details>
+
+**4. Pitágoras** (de [Pitágoras](./teorema-de-pitagoras)). Como achar a
+hipotenusa a partir dos catetos?
+
+<details>
+<summary>Conferir</summary>
+
+$c = \sqrt{a^2+b^2}$. Ele será a ferramenta de **conferência** de quase todo
+exercício desta página.
+
+</details>
+
+## Intuição: quantos dados bastam?
+
+Um triângulo retângulo tem seis elementos: três lados e três ângulos. Um dos
+ângulos já é conhecido — o de 90°. Sobram cinco incógnitas.
+
+Quantos dados são necessários para determinar os cinco?
+
+- **Dois ângulos não bastam.** Conhecer os dois agudos determina a **forma**,
+  mas não o tamanho: há infinitos triângulos [semelhantes](./semelhanca) com
+  aqueles ângulos. E, na verdade, um ângulo agudo já entrega o outro, então dois
+  ângulos agudos são um dado só.
+- **Um lado e um ângulo bastam.** O ângulo fixa a forma; o lado fixa a escala.
+- **Dois lados bastam.** Pitágoras dá o terceiro, e as razões dão os ângulos.
+
+> Regra prática: **dois dados independentes, com pelo menos um lado**, resolvem
+> o triângulo inteiro.
+
+Os três casos possíveis, então, são:
+
+| Dados | Ferramentas |
+|---|---|
+| um ângulo agudo e a hipotenusa | seno e cosseno |
+| um ângulo agudo e um cateto | tangente, mais seno ou cosseno |
+| dois lados | Pitágoras, mais uma função inversa |
+
+## Caso 1: ângulo e hipotenusa
+
+Quando a hipotenusa é conhecida, os dois catetos saem por multiplicação direta —
+é o caso mais simples, porque a incógnita nunca cai no denominador.
+
+De $\sen\alpha = \frac{\text{op}}{\text{hip}}$, multiplicando os dois lados pela
+hipotenusa:
+
+$$
+\text{cateto oposto} = \text{hip} \times \sen\alpha
+$$
+
+$$
+\text{cateto adjacente} = \text{hip} \times \cos\alpha.
+$$
+
+**Exemplo.** Hipotenusa 20 cm, ângulo 35°.
+
+$$
+\text{op} = 20 \times \sen 35^\circ = 20 \times 0{,}5736 = 11{,}47 \text{ cm}
+$$
+
+$$
+\text{adj} = 20 \times \cos 35^\circ = 20 \times 0{,}8192 = 16{,}38 \text{ cm}.
+$$
+
+**Conferência por Pitágoras:**
+$11{,}47^2 + 16{,}38^2 = 131{,}6 + 268{,}3 = 399{,}9 \approx 20^2$ ✓ (a
+diferença é arredondamento).
+
+## Caso 2: ângulo e um cateto
+
+Agora a incógnita pode aparecer no denominador, e é aí que os erros aparecem.
+
+**Exemplo.** Cateto adjacente a 40° vale 30 m; achar o cateto oposto e a
+hipotenusa.
+
+Cateto oposto — a tangente liga os dois catetos:
+
+$$
+\tg 40^\circ = \frac{\text{op}}{30}
+\Longrightarrow
+\text{op} = 30 \times 0{,}8391 = 25{,}17 \text{ m}.
+$$
+
+Hipotenusa — o cosseno liga adjacente e hipotenusa, e aqui a incógnita está
+embaixo:
+
+$$
+\cos 40^\circ = \frac{30}{\text{hip}}
+\Longrightarrow
+\text{hip} = \frac{30}{\cos 40^\circ} = \frac{30}{0{,}7660}
+\approx 39{,}17 \text{ m}.
+$$
+
+> **Erro comum:** multiplicar quando deveria dividir. A pergunta que resolve:
+> **a incógnita está em cima ou embaixo da fração?** Em cima, multiplique;
+> embaixo, divida. Um segundo teste, ainda mais rápido: a hipotenusa é o maior
+> lado, então ela **tem** de sair maior que 30. Se você multiplicasse
+> ($30 \times 0{,}766 = 22{,}98$), o resultado seria menor que um cateto —
+> impossível.
+
+## Caso 3: dois lados — encontrar o ângulo
+
+Este é o caminho inverso. Você calcula a razão e precisa descobrir **qual
+ângulo** a produz.
+
+Se o cateto oposto vale 3 e a hipotenusa vale 6:
+
+$$
+\sen\alpha = \frac{3}{6} = 0{,}5.
+$$
+
+Que ângulo tem seno 0,5? Pelos [notáveis](./angulos-notaveis), 30°.
+
+Quando o valor não é notável, é preciso de uma operação que “desfaça” o seno. Na
+calculadora, ela é a tecla **$\sen^{-1}$** (às vezes marcada como `asin`,
+`arcsin` ou acessada com SHIFT sobre a tecla `sin`):
+
+$$
+\alpha = \sen^{-1}(0{,}5) = 30^\circ.
+$$
+
+O mesmo vale para $\cos^{-1}$ e $\tg^{-1}$.
+
+> **Sobre a notação $\sen^{-1}$.** Ela **não** significa $\frac{1}{\sen}$. É a
+> notação de função inversa: a que devolve o ângulo a partir do valor. Para
+> evitar confusão, este curso também usa $\arcsen$, $\arccos$ e $\arctg$ —
+> “arco cujo seno é”. As duas notações significam a mesma coisa, e a página de
+> [Funções trigonométricas inversas](./funcoes-trigonometricas-inversas) trata
+> do assunto a fundo. Se você quiser mesmo $\frac{1}{\sen\alpha}$, isso se chama
+> **cossecante**, e aparece em [Relações fundamentais](./relacoes-fundamentais).
+
+Escolha da função inversa conforme os lados que você tem:
+
+| Lados conhecidos | Razão | Inversa a usar |
+|---|---|---|
+| oposto e hipotenusa | $\sen$ | $\sen^{-1}$ |
+| adjacente e hipotenusa | $\cos$ | $\cos^{-1}$ |
+| os dois catetos | $\tg$ | $\tg^{-1}$ |
+
+## Resolvendo o problema da escada
+
+**Dados:** altura 5,40 m (cateto oposto ao ângulo do chão); ângulo 70°.
+
+**Comprimento da escada** (hipotenusa). O seno liga oposto e hipotenusa, com a
+incógnita embaixo:
+
+$$
+\sen 70^\circ = \frac{5{,}40}{L}
+\Longrightarrow
+L = \frac{5{,}40}{\sen 70^\circ} = \frac{5{,}40}{0{,}9397} \approx 5{,}75
+\text{ m}.
+$$
+
+Como o fabricante vende em metros inteiros, a escolha é a de **6 metros**.
+
+**Afastamento do pé** (cateto adjacente). A tangente liga os dois catetos:
+
+$$
+\tg 70^\circ = \frac{5{,}40}{d}
+\Longrightarrow
+d = \frac{5{,}40}{2{,}7475} \approx 1{,}97 \text{ m}.
+$$
+
+O pé da escada fica a cerca de **1,97 m** da parede.
+
+**Conferências**, e vale fazer as três:
+
+- Pitágoras: $5{,}40^2 + 1{,}97^2 = 29{,}16 + 3{,}88 = 33{,}04$, e
+  $\sqrt{33{,}04} \approx 5{,}75$ ✓;
+- a hipotenusa (5,75) é maior que os dois catetos ✓;
+- o outro ângulo agudo vale $90 - 70 = 20^\circ$, e o lado oposto a ele (1,97) é
+  o menor — coerente, já que ao menor ângulo se opõe o menor lado ✓.
+
+**Um comentário sobre a escada de 6 m.** Comprada a de 6 m, ela não será usada
+com 70° exatos. Apoiando-a de modo a alcançar os mesmos 5,40 m:
+
+$$
+\sen\alpha = \frac{5{,}40}{6} = 0{,}90
+\Longrightarrow
+\alpha = \sen^{-1}(0{,}90) \approx 64{,}2^\circ,
+$$
+
+que fica logo abaixo da faixa recomendada. A saída prática é apoiar a escada com
+uma parte sobrando acima da calha — o que é, aliás, o que a norma pede: a escada
+deve ultrapassar o ponto de apoio.
+
+Repare que este último passo foi o **caso 3** em ação: dois lados conhecidos, um
+ângulo procurado.
+
+## Ângulos de elevação e depressão
+
+Dois termos aparecem em quase todo enunciado de topografia, e trocá-los inverte
+o problema.
+
+<GeoFigure
+  unit={40}
+  padding={54}
+  segments={[
+    {from: [0, 0], to: [5, 0], tone: 0, dashed: true},
+    {from: [0, 0], to: [4.4, 2.2], tone: 1},
+    {from: [0, 3.6], to: [5, 3.6], tone: 0, dashed: true},
+    {from: [0, 3.6], to: [4.4, 1.4], tone: 2},
+  ]}
+  angles={[
+    {at: [0, 0], from: [5, 0], to: [4.4, 2.2], label: '\\text{elevação}', tone: 1, radius: 44, labelRadius: 88, fontSize: 11},
+    {at: [0, 3.6], from: [5, 3.6], to: [4.4, 1.4], label: '\\text{depressão}', tone: 2, radius: 44, labelRadius: 92, fontSize: 11},
+  ]}
+  caption="Os dois ângulos são medidos a partir da horizontal — nunca da vertical."
+/>
+
+- **Elevação:** olhando **para cima**, o ângulo entre a horizontal e a linha de
+  visada.
+- **Depressão:** olhando **para baixo**, o ângulo entre a horizontal e a linha
+  de visada.
+
+Os dois são medidos a partir da **horizontal**, e é aí que mora o erro: um
+enunciado que diz “o topo é visto a 60°” quase sempre quer dizer 60° acima da
+horizontal, não 60° a partir da vertical do observador.
+
+Há uma simetria útil: se de um ponto $A$ o ponto $B$ é visto com elevação de
+25°, então de $B$ o ponto $A$ é visto com depressão de 25°. As duas horizontais
+são paralelas, e os ângulos são **alternos internos** — o resultado da página de
+[Ângulos](./angulos).
+
+## Roteiro de resolução
+
+Todo problema desta página se resolve com a mesma sequência. Vale segui-la à
+risca no começo:
+
+1. **Desenhe** o triângulo, ainda que tosco, e marque o ângulo reto.
+2. **Anote os dados** sobre a figura, com unidades.
+3. **Marque o ângulo de referência** e classifique cada lado envolvido como
+   oposto, adjacente ou hipotenusa.
+4. **Escolha a razão** que contém o lado conhecido e o procurado.
+5. **Monte a equação** e verifique se a incógnita está em cima (multiplica) ou
+   embaixo (divide).
+6. **Confira**: Pitágoras, a hipotenusa como maior lado, e a correspondência
+   entre maior ângulo e maior lado.
+
+> **Erro comum: propagar arredondamento.** Se um lado calculado for usado para
+> obter o próximo, use o valor **com todas as casas**, não o arredondado. Melhor
+> ainda: calcule cada elemento a partir dos **dados originais**, para que um erro
+> não contamine o outro.
+
+## Exemplos resolvidos
+
+### Exemplo 1: resolver o triângulo inteiro
+
+Um triângulo retângulo tem hipotenusa 25 e um ângulo agudo de 50°. Determine
+todos os elementos.
+
+Outro ângulo agudo: $90 - 50 = 40^\circ$.
+
+$$
+\text{op a } 50^\circ = 25 \times \sen 50^\circ = 25 \times 0{,}7660 = 19{,}15
+$$
+
+$$
+\text{adj a } 50^\circ = 25 \times \cos 50^\circ = 25 \times 0{,}6428 = 16{,}07.
+$$
+
+Conferência: $19{,}15^2 + 16{,}07^2 = 366{,}7 + 258{,}2 = 624{,}9 \approx 625 =
+25^2$ ✓.
+
+### Exemplo 2: dois lados, achar os ângulos
+
+*Pause e tente antes de ler.* Um triângulo retângulo tem catetos 7 e 24.
+Determine a hipotenusa e os dois ângulos agudos.
+
+$$
+c = \sqrt{49 + 576} = \sqrt{625} = 25.
+$$
+
+Para o ângulo oposto ao cateto 7:
+
+$$
+\tg\alpha = \frac{7}{24} \approx 0{,}2917
+\Longrightarrow
+\alpha = \tg^{-1}(0{,}2917) \approx 16{,}3^\circ.
+$$
+
+O outro: $90 - 16{,}3 = 73{,}7^\circ$.
+
+Sanidade: o menor ângulo se opõe ao menor lado ✓.
+
+### Exemplo 3: elevação em dois pontos
+
+*Pause e tente antes de ler.* De um ponto, o topo de um prédio é visto com
+elevação de 30°. Andando 20 m em direção ao prédio, a elevação passa a 45°. Qual
+é a altura do prédio?
+
+Chame de $d$ a distância inicial até a base e de $h$ a altura.
+
+Do primeiro ponto:
+
+$$
+\tg 30^\circ = \frac{h}{d} \Longrightarrow h = d \times \frac{\sqrt{3}}{3}.
+$$
+
+Do segundo:
+
+$$
+\tg 45^\circ = \frac{h}{d-20} \Longrightarrow h = d - 20.
+$$
+
+A altura é a mesma nos dois, então:
+
+$$
+\frac{d\sqrt{3}}{3} = d - 20.
+$$
+
+Multiplicando por 3:
+
+$$
+d\sqrt{3} = 3d - 60
+\Longrightarrow
+60 = 3d - d\sqrt{3} = d(3 - \sqrt{3})
+\Longrightarrow
+d = \frac{60}{3-\sqrt{3}} \approx \frac{60}{1{,}268} \approx 47{,}32 \text{ m}.
+$$
+
+E $h = d - 20 \approx 27{,}32$ m.
+
+Conferência pelo **primeiro** ângulo, que não foi usado no último passo:
+$47{,}32 \times 0{,}5774 \approx 27{,}32$ ✓.
+
+Note a estrutura: dois triângulos compartilhando a mesma altura desconhecida.
+Escrever $h$ de duas formas e igualar é o método padrão desses problemas.
+
+### Exemplo 4: ângulo de depressão
+
+*Pause e tente antes de ler.* Do alto de um farol de 45 m, um barco é avistado
+com ângulo de depressão de 12°. A que distância da base do farol está o barco?
+
+O ângulo de depressão, medido da horizontal do topo, é igual ao ângulo de
+elevação do barco até o topo — alternos internos entre horizontais paralelas.
+Então, no triângulo retângulo com vértice no barco, o ângulo vale 12°, o cateto
+oposto é o farol (45 m) e o adjacente é a distância procurada:
+
+$$
+\tg 12^\circ = \frac{45}{d}
+\Longrightarrow
+d = \frac{45}{0{,}2126} \approx 211{,}7 \text{ m}.
+$$
+
+Sanidade: com um ângulo pequeno, o barco tem de estar **muito** mais longe do
+que a altura do farol ✓.
+
+> **Erro comum aqui:** usar 12° como o ângulo no topo do triângulo, entre o
+> farol e a linha de visada. Esse ângulo é o **complementar**, 78°, e usá-lo
+> trocaria seno com cosseno, produzindo 9,6 m em vez de 211,7 m — uma resposta
+> absurda para um barco avistado do alto de um farol.
+
+### Exemplo 5: o ângulo da rampa
+
+*Pause e tente antes de ler.* Uma rampa sobe 40 cm ao longo de 6 m de
+comprimento horizontal. Qual é seu ângulo com o chão? Ela atende à norma, que
+exige no máximo 8,33%?
+
+Converta para a mesma unidade: 40 cm = 0,40 m.
+
+$$
+\tg\alpha = \frac{0{,}40}{6} \approx 0{,}0667.
+$$
+
+Como $0{,}0667 = 6{,}67\%$, ela está **abaixo** do limite de 8,33% — atende à
+norma. E o ângulo:
+
+$$
+\alpha = \tg^{-1}(0{,}0667) \approx 3{,}8^\circ.
+$$
+
+Repare que a “porcentagem de inclinação” usada em normas e placas de estrada é
+**exatamente a tangente** escrita em porcentagem. Não é o ângulo.
+
+## Erros comuns
+
+> **Erro 1: multiplicar quando é para dividir.** Verifique onde está a
+> incógnita na fração e confira o resultado contra a ordem dos lados.
+
+> **Erro 2: confundir $\sen^{-1}$ com $\frac{1}{\sen}$.** São coisas
+> diferentes. A tecla com expoente $-1$ devolve um ângulo.
+
+> **Erro 3: calculadora em RAD.** Um resultado de $\tg^{-1}$ igual a 0,29 em vez
+> de 16,3 é o sinal clássico: a máquina respondeu em radianos.
+
+> **Erro 4: medir elevação a partir da vertical.** Sempre da horizontal.
+
+> **Erro 5: propagar arredondamento.** Prefira recalcular a partir dos dados
+> originais; quando não der, guarde mais casas nos passos intermediários.
+
+> **Erro 6: aplicar as razões a triângulo não retângulo.** Sem o ângulo de 90°,
+> nada nesta página vale.
+
+## Perguntas de verificação
+
+1. Por que dois ângulos não bastam para resolver um triângulo retângulo?
+2. Como decidir, olhando a equação montada, se a operação final é multiplicação
+   ou divisão?
+3. Por que $\sen^{-1}$ não é o inverso multiplicativo do seno?
+4. Por que o ângulo de depressão de $A$ para $B$ é igual ao de elevação de $B$
+   para $A$?
+5. Que verificações rápidas revelam um resultado impossível antes de qualquer
+   recálculo?
+6. Por que é melhor calcular cada elemento a partir dos dados originais, e não a
+   partir de valores já calculados?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque os ângulos determinam apenas a **forma**, não o tamanho: todos os
+   triângulos com aqueles ângulos são semelhantes entre si, e existem infinitos.
+   É preciso pelo menos um lado para fixar a escala. (Além disso, num triângulo
+   retângulo um ângulo agudo já determina o outro, então os dois não são dados
+   independentes.)
+2. Olhando onde está a incógnita: se ela está no numerador, isole-a
+   multiplicando; se está no denominador, a operação final é uma divisão. Um
+   apoio extra: comparar o resultado com a ordem esperada dos lados.
+3. Porque o expoente $-1$, aplicado a uma **função**, indica a função inversa —
+   a que desfaz a operação. $\sen^{-1}(0{,}5)$ pergunta “qual ângulo tem seno
+   0,5?”, ao passo que $\frac{1}{\sen 30^\circ} = 2$ é outra coisa
+   completamente.
+4. Porque as duas horizontais (a do observador em $A$ e a do observador em $B$)
+   são paralelas, e a linha de visada é uma transversal. Os dois ângulos são
+   **alternos internos**, portanto iguais.
+5. A hipotenusa tem de ser o maior lado; seno e cosseno de ângulo agudo têm de
+   ficar entre 0 e 1; o maior lado se opõe ao maior ângulo; e a soma dos dois
+   ângulos agudos tem de dar 90°.
+6. Porque cada arredondamento introduz um pequeno erro, e usar um valor
+   arredondado como entrada da conta seguinte faz esse erro crescer. Partindo
+   sempre dos dados originais, os erros ficam independentes — e a conferência
+   final (Pitágoras) passa a testar de verdade o resultado.
+
+</details>
+
+## Exercícios
+
+Use a tabela de [Seno, cosseno e tangente](./razoes-trigonometricas) ou uma
+calculadora em modo DEG.
+
+### 1. Reconhecimento
+
+1. Num triângulo retângulo com um ângulo de 25°, quanto mede o outro ângulo
+   agudo?
+2. Que razão usar para achar a hipotenusa a partir do cateto adjacente e de um
+   ângulo?
+3. Se $\cos\alpha = 0{,}8660$, quanto vale $\alpha$?
+
+### 2. Explicação
+
+4. Explique por que um ângulo e um lado bastam para resolver o triângulo, mas
+   dois ângulos não.
+5. Um colega escreveu $\text{hip} = 12 \times \cos 30^\circ$ tendo como dado o
+   cateto adjacente 12. Explique o erro e escreva a conta certa.
+6. Explique a diferença entre inclinação em porcentagem e inclinação em graus.
+
+### 3. Aplicação direta
+
+7. Hipotenusa 40 e ângulo 20°: calcule os dois catetos.
+8. Cateto oposto 15 e ângulo 55°: calcule o cateto adjacente e a hipotenusa.
+9. Catetos 9 e 12: calcule a hipotenusa e os dois ângulos agudos.
+
+### 4. Variação
+
+10. Uma escada de 4 m é apoiada formando 65° com o chão. A que altura ela chega,
+    e a que distância da parede está o pé?
+11. Um avião a 2 000 m de altitude avista a pista com ângulo de depressão de 8°.
+    Qual é a distância horizontal até a pista? E a distância em linha reta?
+12. Uma rampa deve vencer 1,2 m de desnível com no máximo 8,33% de inclinação.
+    Qual é o comprimento horizontal mínimo, e qual ângulo isso corresponde?
+
+<details>
+<summary>Dica para o 11</summary>
+
+Faça o desenho e identifique o triângulo retângulo: o cateto vertical é a
+altitude, o horizontal é a distância no solo, e a hipotenusa é a linha de
+visada. O ângulo de 8° fica no vértice da pista.
+
+</details>
+
+### 5. Problema misto
+
+13. De um ponto, o topo de uma torre é visto a 25°. Andando 30 m em direção à
+    torre, o ângulo passa a 40°. Determine a altura da torre e a distância
+    inicial.
+14. Um poste de 8 m projeta uma sombra de 5,5 m. Qual é o ângulo de elevação do
+    sol? Se, uma hora depois, esse ângulo cair para 40°, qual será o comprimento
+    da sombra?
+
+### 6. Justificativa
+
+15. Mostre por que, conhecendo a hipotenusa e um ângulo agudo, os dois catetos
+    saem sempre por multiplicação, sem divisão nenhuma.
+16. Explique por que a conferência por Pitágoras é um teste **independente** do
+    caminho usado para resolver o triângulo — e por que isso a torna valiosa.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. 65°.
+2. O cosseno: $\cos\alpha = \frac{\text{adj}}{\text{hip}}$, e a hipotenusa sai
+   por divisão.
+3. $\alpha = 30^\circ$.
+4. Um ângulo agudo já determina o outro (são complementares), então dois ângulos
+   trazem uma informação só: a **forma**. Todos os triângulos com essa forma são
+   semelhantes, com tamanhos variando livremente. O lado é o que fixa a escala.
+5. Com o cateto adjacente conhecido, a relação é
+   $\cos 30^\circ = \frac{12}{\text{hip}}$, e a incógnita está no denominador —
+   logo, a conta é $\text{hip} = \frac{12}{\cos 30^\circ} \approx 13{,}86$.
+   Multiplicar daria 10,39, menor que o próprio cateto, o que é impossível.
+6. A porcentagem é a **tangente** do ângulo escrita em porcentagem: 8,33%
+   significa $\tg\alpha = 0{,}0833$. O ângulo correspondente é
+   $\tg^{-1}(0{,}0833) \approx 4{,}76^\circ$. Os dois números descrevem a mesma
+   inclinação em escalas diferentes, e não são intercambiáveis.
+7. $40 \times \sen 20^\circ = 13{,}68$ e
+   $40 \times \cos 20^\circ = 37{,}59$.
+8. Adjacente: $\frac{15}{\tg 55^\circ} = \frac{15}{1{,}4281} \approx 10{,}50$.
+   Hipotenusa: $\frac{15}{\sen 55^\circ} = \frac{15}{0{,}8192} \approx 18{,}31$.
+9. Hipotenusa $\sqrt{81+144} = 15$. Ângulos:
+   $\tg^{-1}\left(\frac{9}{12}\right) = \tg^{-1}(0{,}75) \approx 36{,}9^\circ$ e
+   $90 - 36{,}9 = 53{,}1^\circ$.
+10. Altura: $4 \times \sen 65^\circ = 4 \times 0{,}9063 \approx 3{,}63$ m.
+    Distância: $4 \times \cos 65^\circ = 4 \times 0{,}4226 \approx 1{,}69$ m.
+11. Distância horizontal:
+    $\frac{2\,000}{\tg 8^\circ} = \frac{2\,000}{0{,}1405} \approx 14\,235$ m.
+    Em linha reta: $\frac{2\,000}{\sen 8^\circ} = \frac{2\,000}{0{,}1392}
+    \approx 14\,375$ m.
+12. $\frac{1{,}2}{d} \le 0{,}0833 \Rightarrow d \ge 14{,}4$ m. O ângulo é
+    $\tg^{-1}(0{,}0833) \approx 4{,}76^\circ$.
+13. $h = d\,\tg 25^\circ = 0{,}4663d$ e $h = (d-30)\tg 40^\circ =
+    0{,}8391(d-30)$. Igualando: $0{,}4663d = 0{,}8391d - 25{,}17
+    \Rightarrow 0{,}3728d = 25{,}17 \Rightarrow d \approx 67{,}5$ m. Altura:
+    $h \approx 0{,}4663 \times 67{,}5 \approx 31{,}5$ m.
+14. $\tg\alpha = \frac{8}{5{,}5} \approx 1{,}4545 \Rightarrow
+    \alpha \approx 55{,}5^\circ$. Com 40°: sombra
+    $= \frac{8}{\tg 40^\circ} = \frac{8}{0{,}8391} \approx 9{,}53$ m — mais
+    longa, como esperado com o sol mais baixo.
+15. Porque nas duas relações a hipotenusa está no **denominador** da definição:
+    $\sen\alpha = \frac{\text{op}}{\text{hip}}$ e
+    $\cos\alpha = \frac{\text{adj}}{\text{hip}}$. Sendo a hipotenusa conhecida,
+    isolar o cateto exige multiplicar os dois lados por ela — a incógnita nunca
+    fica embaixo.
+16. Porque Pitágoras usa apenas os **três lados**, sem envolver ângulos nem as
+    razões trigonométricas. Se o triângulo foi resolvido usando seno e cosseno,
+    um erro na escolha da razão, no modo da calculadora ou na direção da divisão
+    não se propaga para o teste — ele apareceria como uma desigualdade. Um teste
+    que compartilha o método do cálculo confirmaria o próprio erro.
+
+</details>
+
+## Revisão curta
+
+- Um triângulo retângulo se resolve com **dois dados independentes, sendo pelo
+  menos um lado**. Dois ângulos determinam só a forma.
+- Com **ângulo e hipotenusa**, os catetos saem por multiplicação:
+  $\text{hip} \times \sen$ e $\text{hip} \times \cos$.
+- Com **ângulo e cateto**, atenção à posição da incógnita: em cima multiplica,
+  embaixo divide.
+- Com **dois lados**, use Pitágoras para o terceiro e uma função inversa
+  ($\sen^{-1}$, $\cos^{-1}$, $\tg^{-1}$) para os ângulos.
+- $\sen^{-1}$ significa **função inversa**, não $\frac{1}{\sen}$.
+- **Elevação e depressão** são medidas a partir da horizontal, e são iguais
+  entre si nos dois sentidos da mesma visada (alternos internos).
+- Problemas com duas observações se resolvem escrevendo a **mesma altura** de
+  duas formas e igualando.
+- Confira sempre: Pitágoras, hipotenusa como maior lado, maior ângulo oposto ao
+  maior lado.
+
+Até aqui, ângulo significou algo entre 0° e 90° — é só isso que cabe num
+triângulo retângulo. Mas giros existem além disso: 120°, 270°, uma volta inteira,
+giros para trás. O próximo módulo reconstrói seno e cosseno para **qualquer**
+ângulo, e começa trocando a unidade de medida: os [radianos](./radianos).

@@ -1,0 +1,652 @@
+---
+title: Equação da reta
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+import GeoFigure from '@site/src/components/GeoFigure';
+
+# A reta: coeficiente angular, equação e esboço
+
+## Problema motivador: descobrir a tabela de preços
+
+Você chamou um guincho duas vezes este ano e guardou os recibos:
+
+| Distância | Valor pago |
+|---:|---:|
+| 4 km | R\$ 110 |
+| 12 km | R\$ 190 |
+
+A empresa não publica a tabela. Mas o padrão de cobrança é o usual do setor:
+uma **taxa fixa** de saída mais um valor **por quilômetro** rodado.
+
+> Qual é a taxa fixa? Quanto custa o quilômetro? E quanto custaria um reboque de
+> 20 km?
+
+Dois recibos, três perguntas. A informação parece insuficiente — e não é. Dois
+pontos determinam uma reta, e a reta carrega as três respostas.
+
+## Mapa das ideias
+
+- **coeficiente angular** ($m$) — quanto a reta sobe (ou desce) a cada unidade
+  andada para a direita; é a inclinação;
+- **coeficiente linear** ($n$) — o valor de $y$ quando $x = 0$; é onde a reta
+  cruza o eixo vertical;
+- **equação reduzida** — $y = mx + n$;
+- **equação ponto-inclinação** — $y - y_0 = m(x - x_0)$, útil quando se conhece
+  um ponto e a inclinação;
+- **raiz (ou zero)** — o valor de $x$ em que a reta cruza o eixo horizontal.
+
+Exemplo: em $y = 3x - 6$, temos $m = 3$ e $n = -6$; a reta cruza o eixo vertical
+em $-6$ e o horizontal em $x = 2$. Contraexemplo: $n = -6$ **não** é onde a reta
+cruza o eixo horizontal — confundir os dois é o erro mais comum do assunto.
+
+## Para que isso serve?
+
+- qualquer cobrança com parte fixa mais parte variável: guincho, táxi, conta de
+  luz, plano de dados, frete;
+- taxa de variação: velocidade constante, consumo por quilômetro, produção por
+  hora;
+- ajuste de dados em planilhas — a “linha de tendência” é exatamente isso;
+- conversões lineares: Celsius para Fahrenheit, câmbio, escalas de medida;
+- e, dentro da matemática, a reta é a aproximação local de **qualquer** curva
+  suave. É por isso que o cálculo começa procurando a reta tangente: perto de um
+  ponto, toda curva parece uma reta.
+
+## Ideias anteriores que voltam aqui
+
+**1. Função afim** (de [Funções](../funcoes/funcoes)). Na função
+$f(x) = 50 + 10x$ da academia, o que significavam o 50 e o 10?
+
+<details>
+<summary>Conferir</summary>
+
+50 é o custo fixo da mensalidade, pago mesmo com zero aulas; 10 é o custo de
+**cada** aula avulsa. Esta página mostra o que cada um desses dois números faz
+com o **desenho** da função.
+
+</details>
+
+**2. Coordenadas** (de
+[Plano cartesiano](./plano-cartesiano-e-distancia)). Como se lê o ponto
+$(3, 7)$?
+
+<details>
+<summary>Conferir</summary>
+
+Três unidades na horizontal, sete na vertical. Primeiro $x$, depois $y$.
+
+</details>
+
+**3. Semelhança de triângulos** (de [Semelhança](./semelhanca)). Se dois
+triângulos retângulos têm o mesmo ângulo agudo, o que se pode afirmar sobre a
+razão entre seus catetos?
+
+<details>
+<summary>Conferir</summary>
+
+Que é a mesma nos dois — o fator de semelhança se cancela na razão. Esse fato é
+o que vai garantir, daqui a pouco, que a inclinação de uma reta não depende de
+quais dois pontos dela você escolher.
+
+</details>
+
+**4. Isolar uma variável** (de
+[Equações do 1º grau](../equacoes/equacoes-do-primeiro-grau)). Isole $y$ em
+$2x + 3y = 12$.
+
+<details>
+<summary>Conferir</summary>
+
+$3y = 12 - 2x$, logo $y = 4 - \frac{2}{3}x$. Passar de uma forma para a outra é
+exatamente o que se faz para ler os coeficientes de uma reta.
+
+</details>
+
+## Intuição: inclinação é “quanto sobe por passo”
+
+Pense numa rampa. Como descrever o quanto ela é íngreme com um número?
+
+A resposta prática, usada em placas de estrada e em normas de acessibilidade, é
+uma razão: **o quanto sobe dividido pelo quanto avança**. Uma rampa que sobe
+1 m a cada 12 m de avanço tem inclinação $\frac{1}{12} \approx 8{,}3\%$ — o
+limite da norma brasileira de acessibilidade.
+
+No plano cartesiano, a mesma ideia:
+
+> $$m = \frac{\text{variação vertical}}{\text{variação horizontal}} = \frac{\Delta y}{\Delta x}.$$
+
+<CartesianPlane
+  xMin={-1} xMax={8} yMin={-1} yMax={7}
+  xUnit={34}
+  lines={[{m: 0.75, n: 1, tone: 1}]}
+  points={[
+    {at: [0, 1], label: 'P', tone: 2, dy: -18},
+    {at: [4, 4], label: 'Q', tone: 2, dy: -18},
+  ]}
+  segments={[
+    {from: [0, 1], to: [4, 1], tone: 3, dashed: true, label: '\\Delta x = 4', dy: 20},
+    {from: [4, 1], to: [4, 4], tone: 3, dashed: true, label: '\\Delta y = 3', dx: 40},
+  ]}
+  caption="De P a Q, a reta avança 4 e sobe 3. O coeficiente angular é 3/4 = 0,75."
+/>
+
+Repare que $m$ é uma **taxa**: “0,75 de subida por unidade de avanço”. Se o eixo
+horizontal for quilômetros e o vertical for reais, $m$ está em reais por
+quilômetro. É sempre assim — a unidade de $m$ é a do eixo vertical dividida pela
+do horizontal.
+
+### Por que a inclinação não depende dos pontos escolhidos
+
+Esta é a pergunta que torna a definição legítima. Se eu escolher outros dois
+pontos da mesma reta, encontrarei o mesmo $m$?
+
+Sim, e a razão já foi construída no capítulo. Dois pares de pontos sobre a mesma
+reta geram dois triângulos retângulos: o cateto horizontal é $\Delta x$, o
+vertical é $\Delta y$, e a hipotenusa está sobre a reta.
+
+<CartesianPlane
+  xMin={-1} xMax={9} yMin={-1} yMax={7}
+  xUnit={32}
+  lines={[{m: 0.75, n: 0.5, tone: 1}]}
+  polygons={[
+    {points: [[0, 0.5], [2, 0.5], [2, 2]], tone: 2},
+    {points: [[4, 3.5], [8, 3.5], [8, 6.5]], tone: 3},
+  ]}
+  caption="Os dois triângulos têm os mesmos ângulos: um reto e o que a reta faz com a horizontal. Logo são semelhantes, e a razão cateto vertical ÷ cateto horizontal é a mesma."
+/>
+
+Os dois triângulos têm um ângulo reto e compartilham o ângulo que a reta forma
+com a horizontal — a mesma reta, a mesma inclinação. Pelo caso **AA**, são
+[semelhantes](./semelhanca). E em triângulos semelhantes a razão entre dois
+lados correspondentes é a mesma:
+
+$$
+\frac{\Delta y_1}{\Delta x_1} = \frac{\Delta y_2}{\Delta x_2}.
+$$
+
+É por isso que a reta tem **um** coeficiente angular, e não um por par de
+pontos. A semelhança não é um detalhe decorativo aqui: sem ela, a definição de
+$m$ seria ambígua e a equação da reta não existiria.
+
+### Lendo o sinal e o tamanho de $m$
+
+<CartesianPlane
+  xMin={-4} xMax={4} yMin={-4} yMax={4}
+  xUnit={30}
+  lines={[
+    {m: 2, n: 0, tone: 1},
+    {m: 0.4, n: 0, tone: 2},
+    {m: -1, n: 0, tone: 3},
+  ]}
+  labels={[
+    {at: [2.3, 3.4], math: 'm = 2', tone: 1, fontSize: 13},
+    {at: [3.3, 1.9], math: 'm = 0{,}4', tone: 2, fontSize: 13},
+    {at: [-3.1, 2.6], math: 'm = -1', tone: 3, fontSize: 13},
+  ]}
+  caption="Quanto maior o valor absoluto de m, mais íngreme. Sinal negativo faz a reta descer."
+/>
+
+| $m$ | Comportamento |
+|---|---|
+| $m > 0$ | reta sobe da esquerda para a direita |
+| $m < 0$ | reta desce |
+| $m = 0$ | reta horizontal: $y$ não muda |
+| $m$ grande em módulo | reta íngreme |
+| $m$ pequeno em módulo | reta quase horizontal |
+
+## A equação reduzida
+
+Chame de $n$ o valor de $y$ quando $x = 0$ — o ponto onde a reta cruza o eixo
+vertical. Partindo desse ponto e andando $x$ unidades para a direita, a reta
+sobe $m$ por unidade, ou seja, $mx$ no total. Logo, a altura final é:
+
+> $$y = mx + n.$$
+
+Cada letra tem um papel visível no desenho:
+
+- **$n$** diz **onde a reta começa** (na altura do eixo vertical);
+- **$m$** diz **para onde ela vai** (o quanto sobe por passo).
+
+Exemplo: $y = 2x - 3$ cruza o eixo vertical em $-3$ e sobe 2 a cada passo.
+Contraexemplo: essa reta **não** cruza o eixo horizontal em $-3$. Para achar
+esse cruzamento, é preciso resolver $2x - 3 = 0$, o que dá $x = 1{,}5$.
+
+> **Erro comum:** ler $n$ como “onde a reta corta o eixo $x$”. Os dois
+> cruzamentos são pontos diferentes: $(0, n)$ está no eixo **vertical**, e
+> $\left(-\frac{n}{m}, 0\right)$ está no **horizontal**.
+
+### Retas verticais: a exceção
+
+Uma reta vertical, como a que passa por todos os pontos de abscissa 3, tem
+$\Delta x = 0$ entre quaisquer dois de seus pontos. A conta $\frac{\Delta y}{0}$
+não existe: **retas verticais não têm coeficiente angular**.
+
+Elas também não cabem na forma $y = mx + n$, porque nela cada $x$ produz um
+único $y$ — e numa vertical um mesmo $x$ tem infinitos $y$. A equação delas é
+simplesmente
+
+$$
+x = 3.
+$$
+
+Isso, aliás, explica por que a reta vertical não é gráfico de função: ela falha
+no critério de “uma entrada, uma saída” visto em [Funções](../funcoes/funcoes).
+
+## Achando a equação a partir dos dados
+
+### Caso 1: um ponto e a inclinação
+
+Se a reta passa por $(x_0, y_0)$ e tem inclinação $m$, então para qualquer outro
+ponto $(x,y)$ dela vale $\frac{y - y_0}{x - x_0} = m$. Multiplicando os dois
+lados por $(x - x_0)$:
+
+> $$y - y_0 = m(x - x_0).$$
+
+Exemplo: reta de inclinação 4 passando por $(2, 5)$:
+
+$$
+y - 5 = 4(x - 2) \quad\Longrightarrow\quad y = 4x - 3.
+$$
+
+Conferindo: com $x = 2$, $y = 8 - 3 = 5$ ✓.
+
+### Caso 2: dois pontos
+
+Com $(x_1,y_1)$ e $(x_2,y_2)$, calcule primeiro a inclinação e depois use o caso
+anterior:
+
+$$
+m = \frac{y_2 - y_1}{x_2 - x_1}.
+$$
+
+> **Erro comum:** inverter a fração, escrevendo $\frac{\Delta x}{\Delta y}$. O
+> resultado é o inverso do certo — e nem sempre parece absurdo. Uma checagem
+> rápida: se os pontos sobem da esquerda para a direita, $m$ tem de ser
+> **positivo**; e se a reta é bem íngreme, $|m|$ tem de ser **maior** que 1.
+
+> **Erro comum:** misturar a ordem dos pontos, como em
+> $\frac{y_2 - y_1}{x_1 - x_2}$. Isso troca o sinal de $m$. Escolha uma ordem —
+> digamos, o ponto 2 menos o ponto 1 — e use a **mesma** em cima e embaixo.
+
+## Resolvendo o problema do guincho
+
+Os dois recibos são dois pontos: $(4,\ 110)$ e $(12,\ 190)$, com $x$ em
+quilômetros e $y$ em reais.
+
+**Coeficiente angular:**
+
+$$
+m = \frac{190 - 110}{12 - 4} = \frac{80}{8} = 10.
+$$
+
+A unidade confirma o significado: reais por quilômetro. O guincho cobra
+**R\$ 10 por km**.
+
+**Coeficiente linear.** Use um dos pontos na equação:
+
+$$
+110 = 10 \times 4 + n
+\quad\Longrightarrow\quad
+110 = 40 + n
+\quad\Longrightarrow\quad
+n = 70.
+$$
+
+A **taxa fixa é R\$ 70** — o valor que seria cobrado por um reboque de 0 km, ou
+seja, só a saída do caminhão.
+
+**A regra completa:**
+
+$$
+y = 10x + 70.
+$$
+
+**O reboque de 20 km:**
+
+$$
+y = 10 \times 20 + 70 = 270.
+$$
+
+Custaria **R\$ 270**.
+
+<CartesianPlane
+  xMin={0} xMax={22} yMin={0} yMax={300}
+  xUnit={15} yUnit={0.95} xStep={2} yStep={50} xLabelEvery={2}
+  lines={[{m: 10, n: 70, tone: 1}]}
+  points={[
+    {at: [4, 110], label: '(4,110)', tone: 2, dy: -18},
+    {at: [12, 190], label: '(12,190)', tone: 2, dy: -18},
+    {at: [20, 270], label: '(20,270)', tone: 3, dy: -18},
+    {at: [0, 70], label: 'n = 70', tone: 1, dx: 40, dy: -14},
+  ]}
+  caption="Os dois recibos determinam a reta inteira. O terceiro ponto é a previsão."
+/>
+
+**Conferência com o outro recibo** — sempre faça, porque ela pega qualquer erro
+de sinal: com $x = 12$, $y = 10 \times 12 + 70 = 190$ ✓.
+
+E vale notar o que aconteceu conceitualmente: dois recibos, que são **dados**,
+produziram uma **regra** capaz de responder sobre distâncias nunca contratadas.
+É a diferença entre uma tabela e um modelo.
+
+> **Atenção honesta ao modelo:** a previsão só vale enquanto a regra de cobrança
+> for a mesma. Se a empresa cobrar um adicional acima de 30 km, ou tiver mínimo
+> de 5 km, a reta deixa de descrever a situação nessas faixas. Modelo linear é
+> uma hipótese, não um fato.
+
+## Esboçar uma reta em dez segundos
+
+Não é preciso tabela. Com $y = mx + n$:
+
+1. marque o ponto $(0, n)$ no eixo vertical;
+2. a partir dele, ande **1 para a direita e $m$ para cima** (ou para baixo, se
+   $m$ for negativo); marque o segundo ponto;
+3. ligue os dois e prolongue.
+
+Se $m$ for fração, use o denominador como passo horizontal: para
+$m = \frac{2}{3}$, ande 3 para a direita e 2 para cima — evita marcar pontos
+entre as linhas da grade.
+
+<CartesianPlane
+  xMin={-2} xMax={6} yMin={-3} yMax={5}
+  xUnit={32}
+  lines={[{m: 0.6666667, n: -1, tone: 1}]}
+  points={[
+    {at: [0, -1], label: '(0,-1)', tone: 2, dy: 22},
+    {at: [3, 1], label: '(3,1)', tone: 3, dy: -18},
+  ]}
+  segments={[
+    {from: [0, -1], to: [3, -1], tone: 0, dashed: true, label: '+3', dy: 18},
+    {from: [3, -1], to: [3, 1], tone: 0, dashed: true, label: '+2', dx: 26},
+  ]}
+  caption="Esboço de y = (2/3)x − 1: comece em −1 e ande 3 para a direita e 2 para cima."
+/>
+
+## Outras formas da equação
+
+A mesma reta pode ser escrita de vários jeitos. Reconhecer isso evita achar que
+duas equações descrevem retas diferentes quando não descrevem.
+
+| Forma | Escrita | Quando é útil |
+|---|---|---|
+| reduzida | $y = mx + n$ | ler inclinação e ponto de corte; esboçar |
+| ponto-inclinação | $y - y_0 = m(x-x_0)$ | montar a equação a partir de um ponto |
+| geral | $ax + by + c = 0$ | tratar retas verticais junto com as demais |
+
+A forma geral tem uma vantagem: ela **inclui as verticais**. Com $b = 0$, a
+equação $ax + c = 0$ descreve $x = -\frac{c}{a}$, uma reta vertical. A forma
+reduzida não consegue fazer isso.
+
+Passar da geral para a reduzida é isolar $y$, como no exercício de reativação:
+de $2x + 3y - 12 = 0$ vem $y = -\frac{2}{3}x + 4$.
+
+## Exemplos resolvidos
+
+### Exemplo 1: ler a equação
+
+Qual é a inclinação e onde a reta $y = -\frac{1}{2}x + 4$ cruza cada eixo?
+
+$m = -\frac{1}{2}$: a reta desce meia unidade por passo. Cruza o eixo vertical
+em $(0, 4)$. Para o eixo horizontal, faça $y = 0$:
+
+$$
+-\tfrac{1}{2}x + 4 = 0 \Longrightarrow x = 8,
+$$
+
+ou seja, $(8, 0)$.
+
+### Exemplo 2: dois pontos
+
+*Pause e tente antes de ler.* Determine a equação da reta que passa por
+$(-2, 5)$ e $(4, -7)$.
+
+$$
+m = \frac{-7 - 5}{4 - (-2)} = \frac{-12}{6} = -2.
+$$
+
+Usando $(-2, 5)$:
+
+$$
+y - 5 = -2(x + 2) \Longrightarrow y - 5 = -2x - 4 \Longrightarrow y = -2x + 1.
+$$
+
+Conferência com o **outro** ponto: $-2 \times 4 + 1 = -7$ ✓.
+
+### Exemplo 3: conversão de temperatura
+
+*Pause e tente antes de ler.* Sabe-se que 0 °C equivale a 32 °F e que 100 °C
+equivale a 212 °F, e que a relação é linear. Encontre a fórmula de conversão.
+
+Pontos: $(0, 32)$ e $(100, 212)$, com $x$ em Celsius e $y$ em Fahrenheit.
+
+$$
+m = \frac{212 - 32}{100 - 0} = \frac{180}{100} = 1{,}8.
+$$
+
+Como o primeiro ponto já tem $x = 0$, ele **é** o coeficiente linear: $n = 32$.
+
+$$
+F = 1{,}8\,C + 32.
+$$
+
+Verificação com um valor conhecido: 37 °C dá
+$1{,}8 \times 37 + 32 = 66{,}6 + 32 = 98{,}6$ °F — a temperatura corporal na
+escala americana. ✓
+
+### Exemplo 4: interpretar os coeficientes
+
+*Pause e tente antes de ler.* Um tanque com 500 litros perde água a uma taxa
+constante e, após 8 horas, tem 340 litros. Escreva o volume em função do tempo e
+diga quando o tanque esvazia.
+
+Pontos: $(0, 500)$ e $(8, 340)$.
+
+$$
+m = \frac{340 - 500}{8 - 0} = \frac{-160}{8} = -20.
+$$
+
+O sinal negativo é a informação principal: o tanque **perde** 20 litros por
+hora. Com $n = 500$:
+
+$$
+V(t) = -20t + 500.
+$$
+
+Esvazia quando $V = 0$:
+
+$$
+-20t + 500 = 0 \Longrightarrow t = 25 \text{ horas}.
+$$
+
+### Exemplo 5: reta horizontal e reta vertical
+
+*Pause e tente antes de ler.* Escreva a equação da reta horizontal que passa por
+$(3, -2)$ e da reta vertical que passa pelo mesmo ponto.
+
+Horizontal: todos os pontos têm a mesma ordenada, então $y = -2$. Em forma
+reduzida, $m = 0$ e $n = -2$.
+
+Vertical: todos têm a mesma abscissa, então $x = 3$. Essa não tem coeficiente
+angular e não se escreve como $y = mx+n$.
+
+## Erros comuns
+
+> **Erro 1: inverter $\Delta y$ e $\Delta x$.** A inclinação é vertical **sobre**
+> horizontal. Cheque pelo desenho: reta subindo implica $m$ positivo; reta
+> íngreme implica $|m| > 1$.
+
+> **Erro 2: confundir $n$ com a raiz.** $n$ é onde a reta corta o eixo vertical;
+> a raiz é onde corta o horizontal, e sai de resolver $mx + n = 0$.
+
+> **Erro 3: usar só um ponto para conferir.** Se você montou a equação usando o
+> ponto $A$, conferir com $A$ não testa nada — ele vai bater mesmo se $m$
+> estiver errado. Confira sempre com o **outro** ponto.
+
+> **Erro 4: tentar escrever uma reta vertical como $y = mx+n$.** Não existe.
+> Use $x = k$.
+
+> **Erro 5: extrapolar o modelo sem pensar.** A reta ajustada a dois pontos
+> descreve a situação **naquela faixa**. Prever o preço de um reboque de 500 km
+> com a mesma fórmula é uma decisão sobre o mundo, não sobre a álgebra.
+
+## Perguntas de verificação
+
+1. Por que o coeficiente angular é o mesmo para qualquer par de pontos da reta?
+2. O que a unidade de $m$ diz sobre o significado dele num problema concreto?
+3. Qual é a diferença entre o coeficiente linear e a raiz de uma reta?
+4. Por que retas verticais não têm coeficiente angular?
+5. Por que dois pontos bastam para determinar a reta, mas um só não basta?
+6. Por que conferir a equação encontrada com o ponto que você usou para montá-la
+   não prova nada?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque quaisquer dois pares de pontos da reta geram triângulos retângulos
+   **semelhantes** — eles têm o ângulo reto e o ângulo que a reta faz com a
+   horizontal em comum (caso AA). Em triângulos semelhantes, a razão entre
+   catetos correspondentes é a mesma, e essa razão é justamente $m$.
+2. Ela diz o significado físico: é a unidade do eixo vertical dividida pela do
+   horizontal. Reais por quilômetro, litros por hora, graus por minuto. É o que
+   transforma $m$ de “inclinação do desenho” em “taxa de variação da grandeza”.
+3. O coeficiente linear $n$ é o valor de $y$ quando $x = 0$ — o cruzamento com o
+   eixo **vertical**. A raiz é o valor de $x$ quando $y = 0$ — o cruzamento com
+   o **horizontal**. São pontos diferentes, em eixos diferentes.
+4. Porque entre dois pontos de uma vertical o avanço horizontal é zero, e a
+   razão $\frac{\Delta y}{0}$ não está definida. Não é que a inclinação seja
+   “infinita”: ela simplesmente não existe como número.
+5. Porque um ponto tem infinitas retas passando por ele, em todas as direções. O
+   segundo ponto fixa a direção. Duas informações, dois coeficientes ($m$ e $n$)
+   a determinar.
+6. Porque a equação foi **construída** para passar por aquele ponto: ele vai
+   bater mesmo que a inclinação esteja errada. Só o segundo ponto testa se a
+   inclinação está certa.
+
+</details>
+
+## Exercícios
+
+### 1. Reconhecimento
+
+1. Identifique $m$ e $n$: (a) $y = 5x - 2$; (b) $y = -x + 7$;
+   (c) $y = \frac{3}{4}x$; (d) $y = 6$.
+2. Calcule o coeficiente angular da reta que passa por: (a) $(1,2)$ e $(3,8)$;
+   (b) $(0,5)$ e $(4,1)$; (c) $(-2,-3)$ e $(2,-3)$.
+3. Onde a reta $y = 2x - 10$ cruza cada eixo?
+
+### 2. Explicação
+
+4. Explique por que uma reta com $m = 0{,}1$ é quase horizontal e uma com
+   $m = 10$ é quase vertical.
+5. Um colega diz que a reta $y = -3x + 12$ “corta o eixo $x$ em $-3$”. Corrija-o
+   e explique o erro.
+6. Explique por que a semelhança de triângulos é essencial para que a definição
+   de coeficiente angular faça sentido.
+
+### 3. Aplicação direta
+
+7. Escreva a equação da reta de inclinação $-2$ que passa por $(3, 1)$.
+8. Escreva a equação da reta que passa por $(-1, 4)$ e $(2, 13)$.
+9. Coloque $4x - 2y + 6 = 0$ na forma reduzida e identifique $m$ e $n$.
+
+### 4. Variação
+
+10. Uma reta passa por $(0, 8)$ e tem raiz em $x = 4$. Qual é sua equação?
+11. Um plano de celular cobra R\$ 45 fixos mais R\$ 0,80 por GB extra. Escreva a
+    função do custo, esboce-a e determine quantos GB extras foram usados numa
+    fatura de R\$ 77.
+12. Uma vela de 30 cm queima a 2 cm por hora. Escreva a altura em função do
+    tempo, determine quando ela acaba e diga o que representam $m$ e $n$.
+
+<details>
+<summary>Dica para o 10</summary>
+
+“Raiz em $x = 4$” é o mesmo que dizer que o ponto $(4, 0)$ pertence à reta.
+Agora você tem dois pontos.
+
+</details>
+
+### 5. Problema misto
+
+13. Um técnico cobra visita mais hora trabalhada. Um serviço de 2 horas custou
+    R\$ 190 e um de 5 horas custou R\$ 340. Determine a taxa de visita, o valor
+    da hora e o custo de um serviço de 8 horas. Confira sua equação com o
+    **segundo** recibo.
+14. Duas retas passam pelos pares de pontos $\{(0,1), (4,9)\}$ e
+    $\{(0,7), (4,3)\}$. Determine as duas equações e, resolvendo o sistema,
+    o ponto em que elas se cruzam.
+
+### 6. Justificativa
+
+15. Mostre algebricamente que, partindo de $y - y_0 = m(x - x_0)$, chega-se
+    sempre a uma equação da forma $y = mx + n$, e diga quanto vale $n$ em função
+    de $m$, $x_0$ e $y_0$.
+16. Explique por que uma reta vertical não pode ser gráfico de função, ligando
+    isso ao critério de “uma entrada, uma saída”.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. (a) $m=5$, $n=-2$; (b) $m=-1$, $n=7$; (c) $m=\frac{3}{4}$, $n=0$;
+   (d) $m=0$, $n=6$ (reta horizontal).
+2. (a) $\frac{8-2}{3-1} = 3$; (b) $\frac{1-5}{4-0} = -1$; (c) $0$ — os dois
+   pontos têm a mesma ordenada, então a reta é horizontal.
+3. Eixo vertical em $(0,-10)$; eixo horizontal em $(5, 0)$, pois
+   $2x - 10 = 0 \Rightarrow x = 5$.
+4. Porque $m$ é o quanto a reta sobe a cada unidade avançada. Com $m = 0{,}1$,
+   ela sobe um décimo por passo — quase nada. Com $m = 10$, sobe dez por passo,
+   ganhando altura muito mais rápido do que avança.
+5. O $-3$ é o **coeficiente angular**, não a raiz. A reta corta o eixo vertical
+   em 12 e o horizontal onde $-3x + 12 = 0$, ou seja, em $x = 4$.
+6. Porque sem ela a razão $\frac{\Delta y}{\Delta x}$ poderia mudar conforme os
+   pontos escolhidos, e não haveria “o” coeficiente angular da reta — a
+   definição seria ambígua. A semelhança dos triângulos garante um único valor.
+7. $y - 1 = -2(x-3) \Rightarrow y = -2x + 7$.
+8. $m = \frac{13-4}{2-(-1)} = 3$; $y - 4 = 3(x+1) \Rightarrow y = 3x + 7$.
+   Conferindo com $(2,13)$: $3 \times 2 + 7 = 13$ ✓.
+9. $-2y = -4x - 6 \Rightarrow y = 2x + 3$; $m = 2$, $n = 3$.
+10. Pontos $(0,8)$ e $(4,0)$: $m = \frac{0-8}{4-0} = -2$, e $n = 8$. Logo
+    $y = -2x + 8$.
+11. $C(x) = 0{,}8x + 45$. Para $C = 77$: $0{,}8x = 32 \Rightarrow x = 40$ GB
+    extras. O esboço começa em 45 no eixo vertical e sobe 0,8 por unidade.
+12. $h(t) = -2t + 30$; acaba quando $h = 0$, em $t = 15$ horas. $n = 30$ é a
+    altura inicial e $m = -2$ é a taxa de consumo, em cm por hora — o sinal
+    negativo indica que diminui.
+13. Pontos $(2,190)$ e $(5,340)$: $m = \frac{340-190}{5-2} = 50$ reais por hora;
+    $190 = 50 \times 2 + n \Rightarrow n = 90$ de visita. Equação
+    $y = 50x + 90$. Conferindo com o segundo recibo:
+    $50 \times 5 + 90 = 340$ ✓. Oito horas: $50 \times 8 + 90 = 490$ reais.
+14. Primeira: $m = \frac{9-1}{4} = 2$, $n = 1$, logo $y = 2x+1$. Segunda:
+    $m = \frac{3-7}{4} = -1$, $n = 7$, logo $y = -x+7$. Igualando:
+    $2x + 1 = -x + 7 \Rightarrow 3x = 6 \Rightarrow x = 2$, e $y = 5$. Cruzam-se
+    em $(2,5)$.
+15. $y - y_0 = m(x-x_0) \Rightarrow y = mx - mx_0 + y_0$. Comparando com
+    $y = mx + n$, tem-se $n = y_0 - m x_0$ — que é exatamente a conta feita
+    para achar o $n$ do guincho.
+16. Numa reta vertical, todos os pontos têm o mesmo $x$. Isso significa que
+    aquela entrada única está associada a infinitas saídas $y$, o que viola o
+    critério de função: cada entrada deve produzir **uma** saída. Na prática,
+    é o teste da reta vertical usado para checar gráficos.
+
+</details>
+
+## Revisão curta
+
+- **Coeficiente angular:** $m = \frac{\Delta y}{\Delta x}$ — quanto sobe por
+  unidade avançada. Ele é único para a reta porque os triângulos formados por
+  quaisquer dois pontos são **semelhantes**.
+- **Coeficiente linear** $n$: valor de $y$ em $x = 0$; é onde a reta cruza o
+  eixo vertical. A **raiz** é outro ponto, onde ela cruza o horizontal.
+- **Equação reduzida:** $y = mx + n$. **Ponto-inclinação:**
+  $y - y_0 = m(x-x_0)$. **Geral:** $ax+by+c=0$, a única que acomoda verticais.
+- Dois pontos determinam a reta: calcule $m$, depois $n$, e **confira com o
+  segundo ponto**.
+- Retas verticais ($x = k$) não têm coeficiente angular e não são gráfico de
+  função.
+- Num problema concreto, $m$ é uma **taxa** (reais por km, litros por hora) e
+  $n$ é o **valor inicial**.
+
+Com uma reta descrita por dois números, dá para responder a perguntas sobre
+**duas** retas ao mesmo tempo — quando são
+[paralelas e quando são perpendiculares](./paralelas-e-perpendiculares) — só
+olhando os coeficientes.

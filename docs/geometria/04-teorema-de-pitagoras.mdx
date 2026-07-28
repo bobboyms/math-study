@@ -1,0 +1,622 @@
+---
+title: Teorema de Pitágoras
+---
+
+import GeoFigure from '@site/src/components/GeoFigure';
+
+# Teorema de Pitágoras: o terceiro lado sem medir
+
+## Problema motivador: como garantir que o canto está reto
+
+Você vai construir um deck retangular no quintal, de 3 m por 4 m. Marcou os
+quatro cantos com estacas e esticou a linha. Falta o mais difícil: garantir que
+os cantos estejam realmente em 90°.
+
+Um esquadro de carpinteiro tem 30 cm de lado. Encostado num canto de 4 metros,
+ele não garante nada — um desvio de meio grau passa despercebido nos 30 cm e
+vira 4 centímetros de erro na outra ponta. E um retângulo torto vira um
+paralelogramo: as tábuas não encaixam, e a diferença aparece na obra pronta.
+
+Existe um truque que pedreiros usam há séculos, e ele não precisa de nenhum
+instrumento além da trena:
+
+> Meça a **diagonal** do retângulo. Se o canto estiver reto, ela vai dar
+> exatamente 5 m.
+
+Por que 5? De onde sai esse número, e como obtê-lo para um deck de outras
+medidas? É o que esta página responde.
+
+## Mapa das ideias
+
+- **hipotenusa** — o lado oposto ao ângulo reto, o maior dos três;
+- **catetos** — os dois lados que formam o ângulo reto;
+- **teorema de Pitágoras** — num triângulo retângulo, a soma dos quadrados dos
+  catetos é igual ao quadrado da hipotenusa;
+- **recíproca do teorema** — se a relação vale entre três comprimentos, então o
+  triângulo formado por eles é retângulo;
+- **terno pitagórico** — três números inteiros que satisfazem a relação, como
+  $(3,4,5)$.
+
+Exemplo: $(6, 8, 10)$ é terno pitagórico, pois $36 + 64 = 100$. Contraexemplo:
+$(4, 5, 6)$ não é, pois $16 + 25 = 41$, e $6^2 = 36$ — os números são próximos,
+mas não bate, e o triângulo correspondente **não** tem ângulo reto.
+
+## Para que isso serve?
+
+- conferir esquadro em obras, marcenaria e instalação de piso;
+- calcular a diagonal de telas, mesas, terrenos e caixas;
+- descobrir o comprimento de cabos, escadas, rampas e tirantes;
+- em programação e computação gráfica, calcular a distância entre dois pontos —
+  a fórmula de distância é literalmente Pitágoras, como veremos em
+  [Plano cartesiano e distância](./plano-cartesiano-e-distancia);
+- dentro da matemática, é a origem da relação
+  $\sen^2 x + \cos^2 x = 1$, a identidade mais usada da trigonometria.
+
+## Ideias anteriores que voltam aqui
+
+**1. Quadrado de um número** (de
+[Potências](../numeros-e-operacoes/potencias)). Por que $5^2$ se chama “cinco ao
+quadrado”?
+
+<details>
+<summary>Conferir</summary>
+
+Porque $5 \times 5$ é exatamente a área de um quadrado de lado 5. A potência de
+expoente 2 tem um significado geométrico direto: **área de quadrado**. Este é o
+ponto de partida da página.
+
+</details>
+
+**2. Raiz quadrada** (de [Raízes](../numeros-e-operacoes/raizes)). Se
+$x^2 = 49$ e $x$ é um comprimento, quanto vale $x$?
+
+<details>
+<summary>Conferir</summary>
+
+$x = \sqrt{49} = 7$. A raiz quadrada desfaz o quadrado. Em problemas de
+geometria, descartamos a solução negativa: comprimento negativo não existe.
+
+</details>
+
+**3. Quadrado da soma** (de
+[Produtos notáveis](../algebra/produtos-notaveis)). Desenvolva $(a+b)^2$.
+
+<details>
+<summary>Conferir</summary>
+
+$(a+b)^2 = a^2 + 2ab + b^2$. O termo $2ab$ é o que a conta errada esquece. Ele
+será a peça central da demonstração desta página.
+
+</details>
+
+**4. Produto como área** (de
+[Expressões algébricas](../algebra/expressoes-algebricas)). O que representa
+$a \times b$ num desenho?
+
+<details>
+<summary>Conferir</summary>
+
+A área de um retângulo de lados $a$ e $b$. Foi assim que a distributiva foi
+apresentada, com a figura sendo cortada em pedaços cujas áreas somam o todo.
+
+</details>
+
+## Intuição: quadrados construídos sobre os lados
+
+O teorema é frequentemente escrito como uma fórmula, o que esconde a ideia. Ele
+não fala de números soltos: fala de **áreas**.
+
+Tome o triângulo retângulo de catetos 3 e 4. Construa um quadrado sobre cada um
+dos três lados, para fora do triângulo:
+
+<GeoFigure
+  unit={26}
+  padding={48}
+  polygons={[
+    {points: [[0, 0], [4, 0], [0, 3]], tone: 0, fill: false},
+    {points: [[0, 0], [4, 0], [4, -4], [0, -4]], tone: 1},
+    {points: [[0, 0], [0, 3], [-3, 3], [-3, 0]], tone: 2},
+    {points: [[4, 0], [0, 3], [3, 7], [7, 4]], tone: 3},
+  ]}
+  angles={[{at: [0, 0], from: [4, 0], to: [0, 3], right: true}]}
+  labels={[
+    {at: [2, -2], math: '4^2 = 16', tone: 1, fontSize: 14},
+    {at: [-1.5, 1.5], math: '3^2 = 9', tone: 2, fontSize: 14},
+    {at: [3.5, 3.5], math: '5^2 = 25', tone: 3, fontSize: 14},
+  ]}
+  caption="Um quadrado sobre cada lado. As áreas dos dois menores somam exatamente a área do maior: 9 + 16 = 25."
+/>
+
+$$
+9 + 16 = 25.
+$$
+
+Não é aproximado. É exato — e continua exato para qualquer triângulo retângulo,
+com quaisquer medidas. **Esse** é o teorema:
+
+> A área do quadrado construído sobre a hipotenusa é igual à soma das áreas dos
+> quadrados construídos sobre os catetos.
+
+A versão em fórmula é só a mesma frase escrita com símbolos, e é aí que o
+significado costuma se perder. Ao ver $a^2$, pense “o quadrado desenhado sobre o
+cateto $a$”, não “o número $a$ multiplicado por ele mesmo”. As duas leituras dão
+o mesmo número, mas só a primeira explica por que o teorema é verdadeiro.
+
+## Ponte para a formalização: por que a soma bate?
+
+O desenho mostra que bate **naquele** triângulo. Falta o argumento geral. Há
+mais de trezentas demonstrações conhecidas; a que segue é a mais curta que usa
+apenas ferramentas que este curso já construiu.
+
+A estratégia: cobrir **duas vezes** a mesma área, de dois jeitos diferentes, e
+comparar os resultados. Se a área total é a mesma, o que sobra dos dois lados
+tem de ser igual.
+
+Tome um triângulo retângulo qualquer, de catetos $a$ e $b$ e hipotenusa $c$.
+Monte um quadrado grande de lado $a + b$ e encaixe nele quatro cópias do
+triângulo, giradas:
+
+<GeoFigure
+  unit={34}
+  padding={50}
+  polygons={[
+    {points: [[0, 0], [7, 0], [7, 7], [0, 7]], tone: 0, fill: false},
+    {points: [[0, 0], [3, 0], [0, 4]], tone: 1},
+    {points: [[3, 0], [7, 0], [7, 3]], tone: 1},
+    {points: [[7, 3], [7, 7], [4, 7]], tone: 1},
+    {points: [[4, 7], [0, 7], [0, 4]], tone: 1},
+    {points: [[3, 0], [7, 3], [4, 7], [0, 4]], tone: 3},
+  ]}
+  labels={[
+    {at: [3.5, 3.5], math: 'c^2', tone: 3, fontSize: 15},
+    {at: [1.5, -0.42], math: 'a', tone: 1, fontSize: 13},
+    {at: [5, -0.42], math: 'b', tone: 1, fontSize: 13},
+    {at: [-0.38, 2], math: 'b', tone: 1, fontSize: 13},
+    {at: [-0.38, 5.5], math: 'a', tone: 1, fontSize: 13},
+  ]}
+  caption="Quatro cópias do triângulo dentro de um quadrado de lado a + b. O buraco no meio é um quadrado de lado c."
+/>
+
+Duas verificações antes de contar áreas — sem elas, a figura seria só um desenho
+sugestivo:
+
+- **O lado do quadrado grande é mesmo $a+b$?** Sim: em cada aresta, um cateto
+  $a$ e um cateto $b$ se encostam, cobrindo o lado inteiro.
+- **O buraco do meio é mesmo um quadrado?** Seus quatro lados são hipotenusas de
+  cópias do mesmo triângulo, então todos medem $c$. E os cantos são retos: em
+  cada vértice do buraco, os dois ângulos agudos do triângulo — que
+  [somam 90°](./triangulos) — ficam ao lado do ângulo do buraco, e os três
+  juntos completam o ângulo raso da aresta. Logo, o ângulo do buraco vale
+  $180 - 90 = 90^\circ$.
+
+Agora a contagem, pelos dois caminhos.
+
+**Caminho 1 — como um quadrado inteiro.** A área é o lado ao quadrado, e o
+[produto notável](../algebra/produtos-notaveis) desenvolve:
+
+$$
+(a+b)^2 = a^2 + 2ab + b^2.
+$$
+
+**Caminho 2 — somando as peças.** Duas cópias do triângulo, encaixadas pela
+hipotenusa, formam um retângulo de lados $a$ e $b$, de área $ab$. Com quatro
+cópias, formam-se dois desses retângulos: $2ab$. Sobra o quadrado do meio, de
+área $c^2$. Total:
+
+$$
+2ab + c^2.
+$$
+
+As duas contas mediram a mesma figura, então:
+
+$$
+a^2 + 2ab + b^2 = 2ab + c^2.
+$$
+
+Subtraindo $2ab$ dos dois lados — o que é permitido porque tirar a mesma
+quantidade de lados iguais mantém a igualdade:
+
+$$
+a^2 + b^2 = c^2.
+$$
+
+Repare no que mudou e no que permaneceu. **Permaneceu** a área total do quadrado
+grande: ela foi apenas descrita de dois jeitos. **Mudou** a organização da
+contagem — e é a diferença entre as duas organizações que revela a relação. O
+termo $2ab$, que aparece nos dois lados, é exatamente a área ocupada pelos
+quatro triângulos; ele se cancela porque está presente nas duas descrições.
+
+## Formalização
+
+> **Teorema de Pitágoras.** Num triângulo retângulo de catetos $a$ e $b$ e
+> hipotenusa $c$,
+> $$a^2 + b^2 = c^2.$$
+
+Da igualdade saem as três fórmulas de uso prático:
+
+$$
+c = \sqrt{a^2 + b^2}
+\qquad
+a = \sqrt{c^2 - b^2}
+\qquad
+b = \sqrt{c^2 - a^2}.
+$$
+
+Note a diferença de sinal: para achar a **hipotenusa**, some; para achar um
+**cateto**, subtraia. E a subtração é sempre “hipotenusa ao quadrado menos
+cateto ao quadrado”, nunca o contrário — se der número negativo dentro da raiz,
+você inverteu quem é a hipotenusa.
+
+Exemplo: catetos 6 e 8 dão $c = \sqrt{36+64} = \sqrt{100} = 10$.
+Contraexemplo: com hipotenusa 6 e cateto 8, a conta $\sqrt{36-64} = \sqrt{-28}$
+não tem solução real — e não teria mesmo: a hipotenusa **não pode** ser menor
+que um cateto.
+
+> **Erro comum:** distribuir a raiz sobre a soma e escrever
+> $\sqrt{a^2+b^2} = a + b$. Teste com $a = 3$ e $b = 4$: a conta certa dá 5, e a
+> errada daria 7. Faz sentido que a errada dê mais — $a+b$ é o caminho pelos
+> dois catetos, e a hipotenusa é o atalho. Ele tem de ser **menor**. Esse mesmo
+> erro apareceu em [Raízes](../numeros-e-operacoes/raizes): a raiz não se
+> distribui sobre soma, só sobre produto.
+
+## A recíproca: é ela que resolve o deck
+
+O teorema, do jeito que foi enunciado, parte do ângulo reto e conclui a relação
+entre os lados. O problema do deck precisa do caminho **inverso**: medir os
+lados e concluir se o ângulo é reto.
+
+> **Recíproca do teorema de Pitágoras.** Se três comprimentos $a$, $b$ e $c$
+> satisfazem $a^2 + b^2 = c^2$, então o triângulo formado por eles é retângulo,
+> com o ângulo reto oposto ao lado $c$.
+
+As duas afirmações não são a mesma coisa, e vale ver por quê. “Se chove, a rua
+fica molhada” não garante “se a rua está molhada, choveu” — pode ter passado um
+caminhão-pipa. Aqui, felizmente, a recíproca também é verdadeira, e é ela que dá
+ao pedreiro um **verificador de esquadro** feito só de trena.
+
+E agora o deck. Os lados medem 3 m e 4 m. Se o canto estiver reto, a diagonal
+fecha um triângulo retângulo:
+
+$$
+d = \sqrt{3^2 + 4^2} = \sqrt{9 + 16} = \sqrt{25} = 5.
+$$
+
+Meça a diagonal esticando a trena entre os cantos opostos:
+
+- deu **exatamente 5 m** → pela recíproca, o canto está em 90°;
+- deu **mais que 5 m** → o canto está aberto demais (maior que 90°);
+- deu **menos que 5 m** → o canto está fechado demais.
+
+O ajuste é empurrar a estaca até a diagonal marcar 5.
+
+E para um deck de outras medidas? A conta é a mesma. Um deck de 2,5 m por 3,5 m
+precisa de diagonal
+
+$$
+\sqrt{2{,}5^2 + 3{,}5^2} = \sqrt{6{,}25 + 12{,}25} = \sqrt{18{,}5}
+\approx 4{,}30 \text{ m}.
+$$
+
+Não é um número redondo, e não precisa ser — a trena mede centímetros.
+
+## Ternos pitagóricos
+
+Alguns trios de inteiros satisfazem a relação exatamente. Vale reconhecê-los:
+eles aparecem em exercícios o tempo todo, e economizam a raiz quadrada.
+
+| Terno | Verificação |
+|---|---|
+| $(3, 4, 5)$ | $9 + 16 = 25$ |
+| $(5, 12, 13)$ | $25 + 144 = 169$ |
+| $(8, 15, 17)$ | $64 + 225 = 289$ |
+| $(7, 24, 25)$ | $49 + 576 = 625$ |
+| $(20, 21, 29)$ | $400 + 441 = 841$ |
+
+Qualquer múltiplo de um terno também é terno. De $(3,4,5)$ saem $(6,8,10)$,
+$(9,12,15)$, $(30,40,50)$ — e a razão é a [semelhança](./semelhanca): multiplicar
+os três lados por $k$ produz um triângulo semelhante, que tem os mesmos ângulos
+e, portanto, continua retângulo. Na álgebra, o mesmo fato aparece assim:
+
+$$
+(ka)^2 + (kb)^2 = k^2a^2 + k^2b^2 = k^2(a^2+b^2) = k^2c^2 = (kc)^2.
+$$
+
+O fator $k^2$ sai de todos os termos e não altera a igualdade.
+
+> **Erro comum:** decorar “3, 4, 5” e aplicar a qualquer triângulo com um lado 3
+> e outro 4. Se o 5 não estiver oposto ao ângulo reto — por exemplo, num
+> triângulo de catetos 3 e 5 —, a conta muda: a hipotenusa seria
+> $\sqrt{9+25} = \sqrt{34} \approx 5{,}83$. O terno só vale com os papéis
+> certos.
+
+## Exemplos resolvidos
+
+### Exemplo 1: achar a hipotenusa
+
+Um triângulo retângulo tem catetos 9 e 12. Quanto mede a hipotenusa?
+
+$$
+c = \sqrt{9^2 + 12^2} = \sqrt{81 + 144} = \sqrt{225} = 15.
+$$
+
+Repare que $(9,12,15)$ é $(3,4,5)$ multiplicado por 3 — dava para responder sem
+raiz nenhuma.
+
+### Exemplo 2: achar um cateto
+
+*Pause e tente antes de ler.* Uma escada de 5 m está apoiada numa parede, com o
+pé a 1,4 m da base. A que altura ela encosta?
+
+A escada é a hipotenusa (ela se opõe ao ângulo reto formado por chão e parede).
+O afastamento é um cateto; a altura é o outro:
+
+$$
+h = \sqrt{5^2 - 1{,}4^2} = \sqrt{25 - 1{,}96} = \sqrt{23{,}04} = 4{,}8 \text{ m}.
+$$
+
+Verificação: $4{,}8^2 + 1{,}4^2 = 23{,}04 + 1{,}96 = 25 = 5^2$ ✓.
+
+> **Erro comum aqui:** somar em vez de subtrair, obtendo
+> $\sqrt{25 + 1{,}96} \approx 5{,}19$. Um teste de sanidade pega isso na hora: a
+> altura alcançada **não pode ser maior que a própria escada**.
+
+### Exemplo 3: a diagonal do quadrado
+
+*Pause e tente antes de ler.* Qual é a diagonal de um quadrado de lado $a$?
+
+A diagonal corta o quadrado em dois triângulos retângulos de catetos $a$ e $a$:
+
+$$
+d = \sqrt{a^2 + a^2} = \sqrt{2a^2} = a\sqrt{2}.
+$$
+
+O passo $\sqrt{2a^2} = a\sqrt{2}$ é legítimo porque a raiz **se distribui sobre
+produto** (ao contrário do que acontece com soma): $\sqrt{2 \cdot a^2} =
+\sqrt{2} \cdot \sqrt{a^2} = \sqrt{2}\,a$.
+
+Com $a = 1$, a diagonal vale $\sqrt{2} \approx 1{,}414$. Guarde esse triângulo —
+ele tem ângulos 45°, 45° e 90°, e é metade do que os
+[ângulos notáveis](./angulos-notaveis) vão precisar.
+
+### Exemplo 4: a altura do triângulo equilátero
+
+*Pause e tente antes de ler.* Qual é a altura de um triângulo equilátero de lado
+$a$?
+
+<GeoFigure
+  unit={52}
+  padding={50}
+  polygons={[{points: [[0, 0], [2, 0], [1, 1.732]], tone: 1, fill: false}]}
+  segments={[{from: [1, 0], to: [1, 1.732], tone: 2, dashed: true}]}
+  angles={[{at: [1, 0], from: [2, 0], to: [1, 1.732], right: true, tone: 2}]}
+  labels={[
+    {at: [0.35, 0.95], math: 'a', tone: 1, fontSize: 14},
+    {at: [1.62, 0.95], math: 'a', tone: 1, fontSize: 14},
+    {at: [0.5, -0.32], math: '\\tfrac{a}{2}', tone: 1, fontSize: 13},
+    {at: [1.5, -0.32], math: '\\tfrac{a}{2}', tone: 1, fontSize: 13},
+    {at: [1.2, 0.9], math: 'h', tone: 2, fontSize: 14},
+  ]}
+  caption="A altura corta o equilátero em dois triângulos retângulos iguais, de hipotenusa a e cateto a/2."
+/>
+
+A altura divide a base ao meio, formando um triângulo retângulo de hipotenusa
+$a$ e cateto $\frac{a}{2}$:
+
+$$
+h = \sqrt{a^2 - \left(\frac{a}{2}\right)^2}
+= \sqrt{a^2 - \frac{a^2}{4}}
+= \sqrt{\frac{3a^2}{4}}
+= \frac{a\sqrt{3}}{2}.
+$$
+
+Com $a = 2$: $h = \sqrt{3} \approx 1{,}732$. Verificação:
+$1^2 + 1{,}732^2 = 1 + 3 = 4 = 2^2$ ✓.
+
+Este triângulo tem ângulos 30°, 60° e 90° — o segundo dos dois triângulos que os
+ângulos notáveis vão usar.
+
+### Exemplo 5: verificar se é retângulo
+
+*Pause e tente antes de ler.* Um terreno triangular tem lados 20 m, 21 m e 29 m.
+Ele tem um canto reto?
+
+Pela recíproca, basta testar o maior lado como candidato a hipotenusa:
+
+$$
+20^2 + 21^2 = 400 + 441 = 841
+\qquad\text{e}\qquad
+29^2 = 841.
+$$
+
+São iguais, então **sim**: o triângulo é retângulo, com o ângulo reto entre os
+lados de 20 m e 21 m.
+
+## Erros comuns
+
+> **Erro 1: aplicar o teorema a triângulos que não são retângulos.** Num
+> triângulo de lados 5, 6 e 7, a conta $5^2 + 6^2 = 61$ não dá $7^2 = 49$ — e
+> nem deveria. O teorema só vale com ângulo reto; sem ele, a relação entre os
+> lados é outra.
+
+> **Erro 2: trocar o papel da hipotenusa.** Num problema, identifique **primeiro**
+> o ângulo reto e só depois escreva a fórmula. A hipotenusa é o lado que não
+> encosta nele — nunca “o lado maior do enunciado” nem “o lado na diagonal do
+> desenho”.
+
+> **Erro 3: esquecer a raiz.** Encontrar $c^2 = 169$ e responder 169. O teorema
+> entrega o **quadrado** do lado; falta ainda desfazer o quadrado:
+> $c = \sqrt{169} = 13$.
+
+> **Erro 4: arredondar cedo demais.** Ao calcular $\sqrt{18{,}5} \approx 4{,}3$
+> e usar esse valor em outra conta, o erro se propaga. Guarde a raiz exata até o
+> último passo, e arredonde só na resposta.
+
+## Perguntas de verificação
+
+1. Por que faz sentido geométrico o teorema falar em $a^2$ e não simplesmente em
+   $a$?
+2. Na demonstração, por que o termo $2ab$ desaparece? O que ele representa na
+   figura?
+3. Qual é a diferença entre o teorema e sua recíproca? Qual dos dois resolve o
+   problema do deck?
+4. Por que a hipotenusa é sempre menor que a soma dos dois catetos?
+5. Se você multiplicar os três lados de um triângulo retângulo por 7, ele
+   continua retângulo? Por quê?
+6. Ao procurar um cateto, por que a conta é uma subtração?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque a relação é entre **áreas**, não entre comprimentos. Os quadrados
+   construídos sobre os lados é que se somam; escrever a soma dos comprimentos
+   ($3 + 4 = 5$?) seria falso — daria 7.
+2. O $2ab$ é a área ocupada pelas quatro cópias do triângulo, que valem dois
+   retângulos $a \times b$. Ele aparece nos dois lados da igualdade porque as
+   duas contagens incluem os mesmos quatro triângulos; subtraí-lo é remover o
+   que é comum e deixar só a diferença.
+3. O teorema parte do ângulo reto e conclui a relação entre os lados; a
+   recíproca parte da relação entre os lados e conclui o ângulo reto. O deck
+   precisa da **recíproca**: a trena mede os lados, e é da igualdade
+   $3^2+4^2=5^2$ que se conclui que o canto está em 90°.
+4. Porque ela é o caminho direto entre dois pontos, e os catetos são um desvio
+   passando pelo vértice do ângulo reto. A reta é sempre o caminho mais curto —
+   é a mesma desigualdade triangular vista em [Triângulos](./triangulos).
+5. Continua. Multiplicar todos os lados por um mesmo fator produz um triângulo
+   **semelhante**, que tem exatamente os mesmos ângulos — inclusive o de 90°.
+   Na álgebra, o fator $k^2$ sai de todos os termos da igualdade.
+6. Porque a relação é $a^2 + b^2 = c^2$, e isolar $a^2$ exige tirar $b^2$ dos
+   dois lados: $a^2 = c^2 - b^2$. O quadrado da hipotenusa é o **total**; cada
+   cateto é uma parte dele.
+
+</details>
+
+## Exercícios
+
+### 1. Reconhecimento
+
+1. Em cada triângulo retângulo, identifique a hipotenusa: (a) lados 8, 15, 17;
+   (b) lados 1, 1, $\sqrt{2}$; (c) um triângulo com ângulo reto no vértice $C$ e
+   vértices $A$, $B$, $C$.
+2. Quais trios são ternos pitagóricos? (a) $(6,8,10)$; (b) $(5,6,7)$;
+   (c) $(9,40,41)$; (d) $(2,3,4)$.
+
+### 2. Explicação
+
+3. Explique, sem fórmula, o que o teorema afirma sobre áreas.
+4. Um colega calculou a hipotenusa de um triângulo de catetos 5 e 12 e obteve
+   17. Onde ele errou, e como o resultado poderia ter sido descartado na hora?
+5. Por que a recíproca do teorema permite conferir um esquadro sem nenhum
+   instrumento além de uma trena?
+
+### 3. Aplicação direta
+
+6. Calcule a hipotenusa: (a) catetos 7 e 24; (b) catetos 1 e 1; (c) catetos
+   2,5 e 6.
+7. Calcule o cateto que falta: (a) hipotenusa 13, cateto 5; (b) hipotenusa 10,
+   cateto 6; (c) hipotenusa 2, cateto 1.
+8. Qual é a diagonal de um retângulo de 12 cm por 16 cm?
+
+### 4. Variação
+
+9. Uma antena de 12 m é presa ao chão por um cabo que sai do topo e se fixa a
+   9 m da base. Qual é o comprimento do cabo?
+10. Um monitor tem 16:9 de proporção e diagonal de 34 polegadas. Chamando de
+    $9k$ a altura e $16k$ a largura, monte a equação e determine $k$, a largura
+    e a altura, com uma casa decimal.
+11. Qual é a diagonal de um cubo de aresta 4? (Faça em dois passos: primeiro a
+    diagonal de uma face, depois a diagonal do cubo, que forma um triângulo
+    retângulo com a diagonal da face e uma aresta.)
+
+<details>
+<summary>Dica para o 11</summary>
+
+Depois de encontrar a diagonal da face, desenhe o triângulo retângulo cujos
+catetos são essa diagonal e a aresta perpendicular a ela. Você vai aplicar
+Pitágoras duas vezes.
+
+</details>
+
+### 5. Problema misto
+
+12. Um deck de 2 m por 6 m precisa ter os cantos conferidos pela diagonal.
+    Quanto deve medir a diagonal? Se a trena marcar 6,40 m, o canto está aberto
+    ou fechado demais?
+13. Um triângulo equilátero tem lado 10 cm. Calcule sua altura, e depois sua
+    área, sabendo que a área de um triângulo é
+    $\frac{\text{base} \times \text{altura}}{2}$.
+14. Dois triângulos retângulos são semelhantes, com razão $k = 2{,}5$. O menor
+    tem catetos 6 e 8. Calcule a hipotenusa do maior de duas formas: aplicando
+    Pitágoras aos catetos ampliados, e multiplicando a hipotenusa do menor por
+    $k$. Compare.
+
+### 6. Justificativa
+
+15. Na demonstração, por que foi necessário verificar que o buraco central é
+    realmente um quadrado? O que daria errado se ele fosse apenas um losango?
+16. Mostre, com um exemplo numérico, que $\sqrt{a^2+b^2}$ e $a+b$ são coisas
+    diferentes — e explique geometricamente por que o primeiro é sempre menor.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. (a) 17; (b) $\sqrt{2}$; (c) o lado $AB$, oposto ao vértice $C$.
+2. Ternos: (a), pois $36+64=100$; (c), pois $81+1600=1681=41^2$. Não são: (b),
+   pois $25+36=61 \neq 49$; (d), pois $4+9=13 \neq 16$.
+3. Que o quadrado desenhado sobre a hipotenusa tem exatamente a mesma área que
+   os dois quadrados desenhados sobre os catetos, somados.
+4. Ele somou os catetos ($5+12$) em vez de somar os quadrados. A conta certa é
+   $\sqrt{25+144} = \sqrt{169} = 13$. Dava para descartar na hora: a hipotenusa
+   é sempre **menor** que a soma dos catetos.
+5. Porque ela permite concluir o ângulo a partir de três comprimentos. Medindo
+   os dois lados e a diagonal e conferindo a igualdade, o esquadro está
+   verificado — e a verificação usa o triângulo inteiro, não um cantinho de
+   30 cm.
+6. (a) 25; (b) $\sqrt{2} \approx 1{,}414$; (c) $\sqrt{6{,}25+36} =
+   \sqrt{42{,}25} = 6{,}5$.
+7. (a) 12; (b) 8; (c) $\sqrt{3} \approx 1{,}732$.
+8. $\sqrt{144+256} = \sqrt{400} = 20$ cm.
+9. $\sqrt{144+81} = \sqrt{225} = 15$ m.
+10. $(16k)^2 + (9k)^2 = 34^2 \Rightarrow 256k^2 + 81k^2 = 1156 \Rightarrow
+    337k^2 = 1156 \Rightarrow k^2 \approx 3{,}430 \Rightarrow k \approx 1{,}852$.
+    Largura $\approx 29{,}6$ pol e altura $\approx 16{,}7$ pol.
+11. Diagonal da face: $\sqrt{16+16} = \sqrt{32}$. Diagonal do cubo:
+    $\sqrt{32 + 16} = \sqrt{48} = 4\sqrt{3} \approx 6{,}93$.
+12. $\sqrt{4+36} = \sqrt{40} \approx 6{,}32$ m. Com 6,40 m, a diagonal está
+    **maior** que o previsto, então o canto está **aberto** demais — passou de
+    90°.
+13. $h = \frac{10\sqrt{3}}{2} = 5\sqrt{3} \approx 8{,}66$ cm; a área é
+    $\frac{10 \times 8{,}66}{2} \approx 43{,}3$ cm².
+14. Catetos ampliados: $15$ e $20$, e $\sqrt{225+400} = \sqrt{625} = 25$. Pela
+    semelhança: a hipotenusa do menor é 10, e $10 \times 2{,}5 = 25$. Os dois
+    caminhos coincidem, como o fator $k^2$ da seção de ternos previa.
+15. Porque a área do buraco só vale $c^2$ se ele for quadrado. Um losango de
+    lado $c$ tem área menor que $c^2$ (a área depende também do ângulo), e a
+    igualdade entre as duas contagens deixaria de valer. Foi a soma
+    $90^\circ$ dos dois ângulos agudos que garantiu os cantos retos.
+16. Com $a=6$ e $b=8$: $\sqrt{36+64} = 10$, enquanto $6+8=14$. Geometricamente,
+    $a+b$ é o comprimento do trajeto que vai por um cateto e depois pelo outro,
+    dobrando no vértice do ângulo reto; $\sqrt{a^2+b^2}$ é o atalho em linha
+    reta entre os mesmos dois pontos. O atalho é sempre mais curto.
+
+</details>
+
+## Revisão curta
+
+- Em todo triângulo retângulo, $a^2 + b^2 = c^2$, com $c$ sendo a hipotenusa.
+- A leitura correta é sobre **áreas**: o quadrado sobre a hipotenusa equivale à
+  soma dos quadrados sobre os catetos.
+- A demonstração conta a mesma área de dois jeitos; o termo $2ab$ dos quatro
+  triângulos aparece nos dois e se cancela.
+- Para a hipotenusa, **some** os quadrados; para um cateto, **subtraia** do
+  quadrado da hipotenusa.
+- A **recíproca** permite o caminho inverso: se a relação vale, o ângulo é reto.
+  É ela que confere esquadro com uma trena.
+- $\sqrt{a^2+b^2}$ **não** é $a+b$. A hipotenusa é o atalho; a soma dos catetos
+  é o desvio.
+- Dois resultados para guardar: a diagonal do quadrado de lado $a$ é
+  $a\sqrt{2}$, e a altura do equilátero de lado $a$ é $\frac{a\sqrt{3}}{2}$.
+
+Os dois últimos resultados voltarão em [Ângulos notáveis](./angulos-notaveis),
+onde produzem os valores exatos de seno e cosseno de 30°, 45° e 60°. Antes
+disso, porém, o capítulo faz uma parada para medir o que as figuras ocupam:
+[áreas](./areas-de-poligonos).

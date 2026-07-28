@@ -1,0 +1,694 @@
+---
+title: Relações fundamentais
+---
+
+import UnitCircle from '@site/src/components/UnitCircle';
+import GeoFigure from '@site/src/components/GeoFigure';
+
+# Relações fundamentais: $\sen^2 x + \cos^2 x = 1$ e o que sai dela
+
+## Problema motivador: as componentes na rampa
+
+Um caixote está sobre uma rampa. O peso dele se decompõe em duas partes:
+
+- uma **paralela** à rampa, que tende a fazê-lo escorregar: vale
+  $P\,\sen\theta$;
+- uma **perpendicular** à rampa, que o pressiona contra a superfície: vale
+  $P\,\cos\theta$.
+
+<GeoFigure
+  unit={44}
+  padding={54}
+  polygons={[{points: [[0, 0], [4, 0], [4, 1.17]], tone: 1}]}
+  angles={[
+    {at: [0, 0], from: [4, 0], to: [4, 1.17], label: '\\theta', tone: 2, radius: 34, labelRadius: 56},
+    {at: [4, 0], from: [0, 0], to: [4, 1.17], right: true, tone: 1},
+  ]}
+  segments={[
+    {from: [2.6, 0.76], to: [2.6, -0.4], tone: 3, arrow: true},
+  ]}
+  labels={[
+    {at: [2.9, 0.1], math: 'P', tone: 3, fontSize: 14},
+  ]}
+  caption="Numa rampa de inclinação θ, o peso P se reparte em componentes que dependem de sen θ e cos θ."
+/>
+
+Um sensor de inclinação informa apenas:
+
+$$
+\sen\theta = 0{,}28.
+$$
+
+> Quanto vale $\cos\theta$ — **sem** descobrir o ângulo?
+
+Poderia-se calcular $\theta = \arcsen(0{,}28) \approx 16{,}26^\circ$ e depois
+$\cos 16{,}26^\circ$. Funciona, mas passa por um ângulo que ninguém pediu, e
+introduz dois arredondamentos.
+
+Existe um caminho direto, e ele parte de uma igualdade que já apareceu de graça
+no [ciclo trigonométrico](./ciclo-trigonometrico). Esta página desenvolve essa
+igualdade e as que saem dela.
+
+## Mapa das ideias
+
+- **identidade** — igualdade verdadeira para **todos** os valores da variável,
+  ao contrário de uma equação, que vale só para alguns;
+- **relação fundamental** — $\sen^2 x + \cos^2 x = 1$;
+- **secante** — $\sec x = \dfrac{1}{\cos x}$;
+- **cossecante** — $\cossec x = \dfrac{1}{\sen x}$;
+- **cotangente** — $\cotg x = \dfrac{1}{\tg x} = \dfrac{\cos x}{\sen x}$.
+
+Exemplo: $\sen^2 30^\circ + \cos^2 30^\circ = \frac{1}{4}+\frac{3}{4} = 1$ ✓.
+Contraexemplo: $\sen 30^\circ + \cos 30^\circ = 0{,}5 + 0{,}866 = 1{,}366$, que
+**não** é 1. A relação vale para os **quadrados**, e essa distinção é o erro
+mais frequente do assunto.
+
+## Para que isso serve?
+
+- obter um valor a partir do outro sem passar pelo ângulo;
+- simplificar expressões antes de resolver equações trigonométricas;
+- em física, decompor forças, velocidades e campos;
+- em engenharia elétrica, o **fator de potência** é $\cos\varphi$, e as
+  identidades relacionam potência ativa, reativa e aparente;
+- e, no cálculo, quase toda integral trigonométrica começa com uma dessas
+  identidades para reescrever o integrando.
+
+## Ideias anteriores que voltam aqui
+
+**1. Ponto do ciclo** (de [Ciclo trigonométrico](./ciclo-trigonometrico)). Que
+equação satisfazem as coordenadas de qualquer ponto do ciclo?
+
+<details>
+<summary>Conferir</summary>
+
+$x^2 + y^2 = 1$ — a equação da circunferência de raio 1. Como $x = \cos\theta$ e
+$y = \sen\theta$, a relação fundamental é essa equação com outros nomes.
+
+</details>
+
+**2. Sinais por quadrante** (de
+[Ciclo trigonométrico](./ciclo-trigonometrico)). Por que a relação fundamental
+sozinha não determina $\cos\theta$ a partir de $\sen\theta$?
+
+<details>
+<summary>Conferir</summary>
+
+Porque ela dá $\cos^2\theta$, e todo número positivo tem **duas** raízes
+quadradas, uma positiva e uma negativa. Quem decide o sinal é o quadrante.
+
+</details>
+
+**3. Quadrado da soma** (de
+[Produtos notáveis](../algebra/produtos-notaveis)). Desenvolva
+$(\sen x + \cos x)^2$.
+
+<details>
+<summary>Conferir</summary>
+
+$\sen^2 x + 2\sen x\cos x + \cos^2 x$. O termo do meio é o que impede
+$(\sen x + \cos x)^2$ de valer 1.
+
+</details>
+
+**4. Simplificação de frações** (de [Frações](../numeros-e-operacoes/fracoes)).
+O que se pode cancelar em $\frac{a \cdot b}{a \cdot c}$?
+
+<details>
+<summary>Conferir</summary>
+
+O fator $a$, comum ao numerador e ao denominador. **Fatores** se cancelam;
+parcelas, não. Este cuidado reaparecerá nas simplificações desta página.
+
+</details>
+
+## A relação fundamental
+
+<UnitCircle
+  scale={112}
+  padding={90}
+  angles={[{
+    deg: 55,
+    label: '\\theta',
+    showProjections: true,
+    pointLabel: 'P',
+    pointDy: -20,
+  }]}
+  caption="O triângulo formado tem catetos cos θ e sen θ e hipotenusa 1. Pitágoras faz o resto."
+/>
+
+O ponto $P = (\cos\theta,\ \sen\theta)$ está sobre a circunferência de raio 1.
+Baixando a perpendicular ao eixo horizontal, forma-se um triângulo retângulo com
+catetos $|\cos\theta|$ e $|\sen\theta|$ e hipotenusa 1. Por
+[Pitágoras](./teorema-de-pitagoras):
+
+> $$\sen^2\theta + \cos^2\theta = 1.$$
+
+Equivalentemente, é a equação $x^2+y^2=1$ com $x$ e $y$ substituídos pelo que
+eles são.
+
+Duas observações sobre a escrita e o alcance:
+
+- **Notação:** $\sen^2\theta$ significa $(\sen\theta)^2$ — primeiro calcula-se o
+  seno, depois eleva-se ao quadrado. Não é $\sen(\theta^2)$.
+- **Alcance:** vale para **qualquer** $\theta$ real, inclusive negativo, maior
+  que uma volta, ou nos eixos. Nos casos em que o triângulo degenera (0°, 90°,
+  180°, 270°), a verificação é direta: em 90°, $1^2 + 0^2 = 1$ ✓.
+
+Isso é uma **identidade**, não uma equação: não há o que resolver, ela já é
+verdadeira para todos os valores.
+
+> **Erro comum: “tirar a raiz” da identidade.** De $\sen^2 x + \cos^2 x = 1$
+> **não** decorre $\sen x + \cos x = 1$. Teste com $x = 45^\circ$:
+> $\frac{\sqrt{2}}{2}+\frac{\sqrt{2}}{2} = \sqrt{2} \approx 1{,}414 \neq 1$. A
+> raiz não se distribui sobre soma — o mesmo erro visto em
+> [Raízes](../numeros-e-operacoes/raizes) e em
+> [Pitágoras](./teorema-de-pitagoras).
+
+### Duas formas de uso
+
+Isolando cada termo:
+
+$$
+\sen^2\theta = 1 - \cos^2\theta
+\qquad\text{e}\qquad
+\cos^2\theta = 1 - \sen^2\theta.
+$$
+
+E, extraindo a raiz — com o cuidado do sinal:
+
+$$
+\cos\theta = \pm\sqrt{1-\sen^2\theta}.
+$$
+
+> O $\pm$ **não é opcional**. A identidade entrega o módulo; o quadrante entrega
+> o sinal. Uma resposta com $\pm$ e sem análise de quadrante é uma resposta
+> incompleta.
+
+## Resolvendo o problema da rampa
+
+$\sen\theta = 0{,}28$, e $\theta$ é a inclinação de uma rampa — necessariamente
+um ângulo do primeiro quadrante, entre 0° e 90°, onde o cosseno é **positivo**.
+
+$$
+\cos^2\theta = 1 - 0{,}28^2 = 1 - 0{,}0784 = 0{,}9216
+$$
+
+$$
+\cos\theta = \sqrt{0{,}9216} = 0{,}96.
+$$
+
+Direto, exato, sem passar pelo ângulo.
+
+E a tangente, se for preciso:
+
+$$
+\tg\theta = \frac{\sen\theta}{\cos\theta} = \frac{0{,}28}{0{,}96}
+= \frac{7}{24} \approx 0{,}2917.
+$$
+
+Repare no triângulo que apareceu: $0{,}28$, $0{,}96$ e $1$ são
+$\frac{7}{25}$, $\frac{24}{25}$ e $\frac{25}{25}$ — o
+[terno pitagórico](./teorema-de-pitagoras) $(7, 24, 25)$ dividido por 25. Não é
+coincidência: a relação fundamental **é** Pitágoras com hipotenusa 1, então todo
+terno pitagórico produz um par (seno, cosseno) exato.
+
+## As três funções recíprocas
+
+Além de seno, cosseno e tangente, três outras funções recebem nome — e são
+apenas os **inversos** das primeiras.
+
+> $$\sec x = \frac{1}{\cos x}, \qquad \cossec x = \frac{1}{\sen x}, \qquad \cotg x = \frac{1}{\tg x} = \frac{\cos x}{\sen x}.$$
+
+| Função | Definição | Não existe quando | Imagem |
+|---|---|---|---|
+| $\sec x$ | $\frac{1}{\cos x}$ | $\cos x = 0$, isto é, $x = \frac{\pi}{2}+k\pi$ | $(-\infty,-1] \cup [1,\infty)$ |
+| $\cossec x$ | $\frac{1}{\sen x}$ | $\sen x = 0$, isto é, $x = k\pi$ | $(-\infty,-1] \cup [1,\infty)$ |
+| $\cotg x$ | $\frac{\cos x}{\sen x}$ | $\sen x = 0$, isto é, $x = k\pi$ | $\mathbb{R}$ |
+
+> **Erro comum — o pior deles:** achar que a **sec**ante é o inverso do **sen**o,
+> pela semelhança das primeiras letras. É o contrário: **se**cante vai com
+> **co**sseno, e **co**ssecante vai com **se**no. Um apoio que funciona: o par
+> tem sempre **um** “co” — $\sec$ com $\cos$, $\cossec$ com $\sen$.
+
+Sobre a imagem: como $|\cos x| \le 1$, dividir 1 por um número de módulo menor
+ou igual a 1 dá resultado de módulo **maior ou igual a 1**. Por isso secante e
+cossecante nunca ficam entre $-1$ e 1 — exatamente o contrário do seno e do
+cosseno.
+
+Exemplo: $\sec 60^\circ = \frac{1}{\cos 60^\circ} = \frac{1}{1/2} = 2$.
+Contraexemplo: não existe ângulo com $\sec x = 0{,}5$ — isso exigiria
+$\cos x = 2$.
+
+## As identidades derivadas
+
+Duas identidades muito usadas saem da fundamental por uma única operação:
+**dividir tudo por um dos quadrados**.
+
+### $1 + \tg^2 x = \sec^2 x$
+
+Parta da relação fundamental e divida os três termos por $\cos^2 x$ (supondo
+$\cos x \neq 0$):
+
+$$
+\frac{\sen^2 x}{\cos^2 x} + \frac{\cos^2 x}{\cos^2 x}
+= \frac{1}{\cos^2 x}.
+$$
+
+Cada pedaço tem nome:
+
+$$
+\underbrace{\left(\frac{\sen x}{\cos x}\right)^2}_{\tg^2 x}
++ \underbrace{1}_{\text{o termo do meio}}
+= \underbrace{\left(\frac{1}{\cos x}\right)^2}_{\sec^2 x}.
+$$
+
+> $$\tg^2 x + 1 = \sec^2 x.$$
+
+Nada foi inventado: é a mesma identidade, reescrita. Dividir os dois lados de
+uma igualdade por uma quantidade não nula preserva a igualdade — a mesma regra
+das [equações](../equacoes/equacoes-do-primeiro-grau).
+
+Confira com $x = 45^\circ$: $\tg 45^\circ = 1$ e
+$\sec 45^\circ = \frac{1}{\sqrt{2}/2} = \sqrt{2}$. Então
+$1 + 1 = 2$ e $(\sqrt{2})^2 = 2$ ✓.
+
+### $1 + \cotg^2 x = \cossec^2 x$
+
+Mesma operação, dividindo agora por $\sen^2 x$:
+
+$$
+1 + \frac{\cos^2 x}{\sen^2 x} = \frac{1}{\sen^2 x}
+\quad\Longrightarrow\quad
+1 + \cotg^2 x = \cossec^2 x.
+$$
+
+### O quadro completo
+
+| Identidade | Como obter |
+|---|---|
+| $\sen^2 x + \cos^2 x = 1$ | Pitágoras no ciclo de raio 1 |
+| $\tg^2 x + 1 = \sec^2 x$ | dividir a primeira por $\cos^2 x$ |
+| $1 + \cotg^2 x = \cossec^2 x$ | dividir a primeira por $\sen^2 x$ |
+| $\tg x = \frac{\sen x}{\cos x}$ | definição |
+| $\cotg x = \frac{\cos x}{\sen x}$ | definição |
+
+**Há uma identidade só nesta lista.** As outras quatro são reescritas dela e das
+definições. Memorizar as cinco separadamente é trabalho desperdiçado —
+memorizar a primeira e saber dividir resolve tudo.
+
+## Usando as identidades
+
+### Uso 1: obter os demais valores
+
+**Exemplo.** Sabendo que $\cos\theta = -\frac{3}{5}$ e que $\theta$ está no
+segundo quadrante, calcule seno, tangente e as três recíprocas.
+
+$$
+\sen^2\theta = 1 - \frac{9}{25} = \frac{16}{25}
+\Longrightarrow
+\sen\theta = \pm\frac{4}{5}.
+$$
+
+No segundo quadrante o seno é **positivo**: $\sen\theta = \frac{4}{5}$.
+
+$$
+\tg\theta = \frac{4/5}{-3/5} = -\frac{4}{3},
+\qquad
+\sec\theta = -\frac{5}{3},
+\qquad
+\cossec\theta = \frac{5}{4},
+\qquad
+\cotg\theta = -\frac{3}{4}.
+$$
+
+Conferência com a identidade derivada:
+$\tg^2 + 1 = \frac{16}{9}+1 = \frac{25}{9}$, e
+$\sec^2 = \frac{25}{9}$ ✓.
+
+### Uso 2: simplificar expressões
+
+O objetivo é reduzir uma expressão complicada a uma simples, reconhecendo as
+identidades disfarçadas.
+
+**Exemplo.** Simplifique $\dfrac{\sen^2 x}{1 - \cos x}$.
+
+Substitua $\sen^2 x$ pela sua forma equivalente e reconheça a
+[diferença de quadrados](../algebra/produtos-notaveis):
+
+$$
+\frac{1-\cos^2 x}{1-\cos x}
+= \frac{(1-\cos x)(1+\cos x)}{1-\cos x}
+= 1 + \cos x.
+$$
+
+O cancelamento é legítimo porque $1-\cos x$ é um **fator** do numerador, não uma
+parcela — e supomos $\cos x \neq 1$, caso em que a expressão original nem
+existiria.
+
+Teste numérico com $x = 60^\circ$: a expressão original é
+$\frac{3/4}{1 - 1/2} = \frac{3/4}{1/2} = 1{,}5$, e a simplificada é
+$1 + 0{,}5 = 1{,}5$ ✓.
+
+**Exemplo.** Simplifique $\sec^2 x - \tg^2 x$.
+
+Direto da identidade derivada: vale **1**, para qualquer $x$ do domínio.
+
+### Uso 3: demonstrar outras identidades
+
+**Exemplo.** Mostre que $(\sen x + \cos x)^2 = 1 + 2\sen x\cos x$.
+
+$$
+(\sen x + \cos x)^2
+= \sen^2 x + 2\sen x\cos x + \cos^2 x
+$$
+
+$$
+= \underbrace{(\sen^2 x + \cos^2 x)}_{1} + 2\sen x\cos x
+= 1 + 2\sen x \cos x.
+$$
+
+Repare no método: **desenvolver, reagrupar, reconhecer**. O termo $2\sen x\cos x$
+tem, aliás, nome próprio — ele é $\sen(2x)$, como a
+[próxima página](./soma-diferenca-e-arco-duplo) mostrará.
+
+## Exemplos resolvidos
+
+### Exemplo 1: do seno ao resto
+
+Sabendo que $\sen x = \frac{5}{13}$ e que $x$ está no primeiro quadrante,
+calcule $\cos x$ e $\tg x$.
+
+$$
+\cos^2 x = 1 - \frac{25}{169} = \frac{144}{169}
+\Longrightarrow
+\cos x = \frac{12}{13}
+$$
+
+(positivo, por estar no primeiro quadrante).
+
+$$
+\tg x = \frac{5/13}{12/13} = \frac{5}{12}.
+$$
+
+Reconhece-se o terno $(5,12,13)$ ✓.
+
+### Exemplo 2: o sinal importa
+
+*Pause e tente antes de ler.* Sabendo que $\tg x = -\frac{3}{4}$ e que
+$x$ está no quarto quadrante, calcule $\sen x$ e $\cos x$.
+
+Pela identidade derivada:
+
+$$
+\sec^2 x = 1 + \tg^2 x = 1 + \frac{9}{16} = \frac{25}{16}
+\Longrightarrow
+\sec x = \pm\frac{5}{4}.
+$$
+
+No quarto quadrante o cosseno é **positivo**, logo a secante também:
+$\sec x = \frac{5}{4}$, e portanto
+
+$$
+\cos x = \frac{4}{5}.
+$$
+
+E, de $\tg x = \frac{\sen x}{\cos x}$:
+
+$$
+\sen x = \tg x \cdot \cos x = -\frac{3}{4} \times \frac{4}{5} = -\frac{3}{5},
+$$
+
+negativo, como o quarto quadrante exige ✓.
+
+Conferência final: $\left(\frac{3}{5}\right)^2 + \left(\frac{4}{5}\right)^2 =
+\frac{9+16}{25} = 1$ ✓.
+
+### Exemplo 3: simplificação com fatoração
+
+*Pause e tente antes de ler.* Simplifique
+$\dfrac{1 - \sen^2 x}{\cos x}$.
+
+$$
+\frac{1-\sen^2 x}{\cos x} = \frac{\cos^2 x}{\cos x} = \cos x
+\qquad (\cos x \neq 0).
+$$
+
+### Exemplo 4: uma demonstração
+
+*Pause e tente antes de ler.* Mostre que
+$\dfrac{1}{1+\sen x} + \dfrac{1}{1-\sen x} = 2\sec^2 x$.
+
+Some as frações usando o denominador comum, que é o produto — e o produto é uma
+diferença de quadrados:
+
+$$
+\frac{(1-\sen x) + (1+\sen x)}{(1+\sen x)(1-\sen x)}
+= \frac{2}{1 - \sen^2 x}
+= \frac{2}{\cos^2 x}
+= 2\sec^2 x.
+$$
+
+Teste com $x = 0$: o lado esquerdo é $1 + 1 = 2$, e o direito, $2 \times 1 = 2$
+✓.
+
+### Exemplo 5: fator de potência
+
+*Pause e tente antes de ler.* Num circuito de corrente alternada, a potência
+aparente é 100 kVA e a potência reativa é 60 kvar. Essas duas grandezas se
+relacionam por $\text{reativa} = \text{aparente} \times \sen\varphi$. Determine
+o **fator de potência**, que é $\cos\varphi$, e a potência ativa, que é
+$\text{aparente} \times \cos\varphi$.
+
+$$
+\sen\varphi = \frac{60}{100} = 0{,}6.
+$$
+
+$$
+\cos^2\varphi = 1 - 0{,}36 = 0{,}64 \Longrightarrow \cos\varphi = 0{,}8
+$$
+
+(positivo, pois $\varphi$ está entre 0° e 90° em circuitos usuais).
+
+Fator de potência: **0,8**. Potência ativa:
+$100 \times 0{,}8 = 80$ kW.
+
+Note o que a relação fundamental fez aqui: ela é exatamente o **triângulo de
+potências** da engenharia elétrica — aparente como hipotenusa, ativa e reativa
+como catetos, com $80^2 + 60^2 = 100^2$ ✓.
+
+### Exemplo 6: valores de secante e cossecante
+
+*Pause e tente antes de ler.* Calcule $\sec 30^\circ$, $\cossec 45^\circ$ e
+$\cotg 60^\circ$.
+
+$$
+\sec 30^\circ = \frac{1}{\cos 30^\circ} = \frac{1}{\frac{\sqrt{3}}{2}}
+= \frac{2}{\sqrt{3}} = \frac{2\sqrt{3}}{3} \approx 1{,}155
+$$
+
+$$
+\cossec 45^\circ = \frac{1}{\frac{\sqrt{2}}{2}} = \sqrt{2} \approx 1{,}414
+$$
+
+$$
+\cotg 60^\circ = \frac{1}{\sqrt{3}} = \frac{\sqrt{3}}{3} \approx 0{,}577.
+$$
+
+Todos os três saíram maiores ou iguais a 1 nos dois primeiros casos, como a
+imagem de secante e cossecante exige ✓.
+
+## Erros comuns
+
+> **Erro 1: $\sen x + \cos x = 1$.** Falso. A identidade vale para os
+> **quadrados**. Teste em 45°: a soma dá $\sqrt{2}$.
+
+> **Erro 2: trocar secante com cossecante.** $\sec$ acompanha $\cos$;
+> $\cossec$ acompanha $\sen$. Cada par tem exatamente um “co”.
+
+> **Erro 3: esquecer o $\pm$ e o quadrante.** A identidade dá o quadrado; a
+> raiz tem dois sinais; o quadrante escolhe.
+
+> **Erro 4: cancelar parcelas.** Em $\frac{1-\cos^2 x}{1-\cos x}$, não se pode
+> cortar $\cos^2 x$ com $\cos x$: é preciso **fatorar** primeiro. Só fatores se
+> cancelam.
+
+> **Erro 5: memorizar as cinco identidades como fatos independentes.** São uma
+> só, dividida por $\cos^2$ e por $\sen^2$. Saber a origem custa menos que
+> decorar.
+
+> **Erro 6: usar $\sec$, $\cossec$ ou $\cotg$ onde elas não existem.** Cada uma
+> tem um denominador que pode zerar. Antes de usar, verifique.
+
+## Perguntas de verificação
+
+1. Por que $\sen^2 x + \cos^2 x = 1$ é apenas o teorema de Pitágoras?
+2. Qual é a diferença entre uma identidade e uma equação?
+3. Por que a relação fundamental sozinha não determina o cosseno a partir do
+   seno?
+4. Como se obtém $1 + \tg^2 x = \sec^2 x$ a partir da relação fundamental?
+5. Por que a secante nunca assume valores entre $-1$ e 1?
+6. Por que não se pode simplificar $\frac{1-\cos^2 x}{1-\cos x}$ cancelando
+   diretamente?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque $\cos\theta$ e $\sen\theta$ são os catetos de um triângulo retângulo
+   cuja hipotenusa é o raio do ciclo, que vale 1. Pitágoras dá
+   $\text{cateto}^2 + \text{cateto}^2 = \text{hipotenusa}^2$, isto é,
+   $\cos^2 + \sen^2 = 1$.
+2. Uma **identidade** é verdadeira para todos os valores da variável no domínio;
+   não há o que resolver. Uma **equação** é verdadeira apenas para alguns
+   valores, e resolvê-la é encontrá-los.
+3. Porque ela fornece $\cos^2\theta$, e a raiz quadrada de um número positivo
+   tem dois valores possíveis, um positivo e um negativo. A escolha entre eles
+   depende do quadrante, que é uma informação externa à identidade.
+4. Dividindo os três termos por $\cos^2 x$: o primeiro vira
+   $\frac{\sen^2 x}{\cos^2 x} = \tg^2 x$, o segundo vira 1, e o lado direito
+   vira $\frac{1}{\cos^2 x} = \sec^2 x$. Nada de novo foi acrescentado.
+5. Porque $\sec x = \frac{1}{\cos x}$ e $|\cos x| \le 1$. Dividir 1 por um
+   número de módulo menor ou igual a 1 produz resultado de módulo maior ou igual
+   a 1.
+6. Porque cancelamento só vale entre **fatores**, e $\cos^2 x$ é uma parcela do
+   numerador, não um fator. É preciso primeiro fatorar
+   $1-\cos^2 x = (1-\cos x)(1+\cos x)$; aí sim $1-\cos x$ é fator e pode ser
+   cortado.
+
+</details>
+
+## Exercícios
+
+### 1. Reconhecimento
+
+1. Calcule: (a) $\sec 60^\circ$; (b) $\cossec 30^\circ$; (c) $\cotg 45^\circ$.
+2. Verifique numericamente a relação fundamental para $x = 60^\circ$.
+3. Complete: $\sec^2 x - \tg^2 x = $ ? e $\cossec^2 x - \cotg^2 x = $ ?
+
+### 2. Explicação
+
+4. Explique por que $\sen^2 x$ significa $(\sen x)^2$ e não $\sen(x^2)$, dando
+   um exemplo numérico da diferença.
+5. Um colega escreveu $\sec x = \frac{1}{\sen x}$. Corrija-o.
+6. Explique por que a relação fundamental vale também para ângulos do terceiro
+   quadrante, em que ambas as coordenadas são negativas.
+
+### 3. Aplicação direta
+
+7. Sabendo que $\sen x = \frac{8}{17}$ e $x$ é do primeiro quadrante, calcule
+   $\cos x$, $\tg x$ e $\sec x$.
+8. Sabendo que $\cos x = -\frac{12}{13}$ e $x$ é do terceiro quadrante, calcule
+   $\sen x$ e $\cotg x$.
+9. Sabendo que $\tg x = 2$ e $x$ é do primeiro quadrante, calcule $\sec x$,
+   $\cos x$ e $\sen x$.
+
+### 4. Variação
+
+10. Simplifique: (a) $\frac{\cos^2 x}{1 - \sen x}$; (b)
+    $\tg x \cdot \cos x$; (c) $\frac{\sen x}{\cossec x} + \frac{\cos x}{\sec x}$.
+11. Mostre que $(1 - \cos x)(1 + \cos x) = \sen^2 x$.
+12. Se $\sen x + \cos x = \frac{7}{5}$, calcule $\sen x \cdot \cos x$.
+
+<details>
+<summary>Dica para o 12</summary>
+
+Eleve os dois lados ao quadrado e use o quadrado da soma. A relação fundamental
+vai aparecer no meio do desenvolvimento.
+
+</details>
+
+### 5. Problema misto
+
+13. Um plano inclinado tem $\cos\theta = 0{,}96$. Um caixote de 50 kgf está
+    sobre ele. Calcule as componentes paralela ($P\sen\theta$) e perpendicular
+    ($P\cos\theta$) do peso, e verifique que a soma dos quadrados delas dá
+    $P^2$.
+14. Num circuito, a potência ativa é 48 kW e a aparente é 60 kVA. Determine o
+    fator de potência, o seno do ângulo e a potência reativa.
+
+### 6. Justificativa
+
+15. Deduza $1 + \cotg^2 x = \cossec^2 x$ a partir da relação fundamental,
+    justificando cada passo e dizendo onde a dedução não vale.
+16. Explique por que todo terno pitagórico $(a, b, c)$ produz um par
+    $(\sen\theta, \cos\theta)$ exato, e dê um exemplo com $(8, 15, 17)$.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. (a) $\frac{1}{1/2} = 2$; (b) $\frac{1}{1/2} = 2$; (c) $\frac{1}{1} = 1$.
+2. $\left(\frac{\sqrt{3}}{2}\right)^2 + \left(\frac{1}{2}\right)^2 =
+   \frac{3}{4}+\frac{1}{4} = 1$ ✓.
+3. Ambos valem 1.
+4. Porque a notação com expoente logo após o nome da função indica que o
+   **resultado** é elevado. Com $x = 3$ (radianos): $\sen^2 3 =
+   (0{,}1411)^2 \approx 0{,}0199$, enquanto $\sen(3^2) = \sen 9 \approx 0{,}412$
+   — números completamente diferentes.
+5. $\sec x = \frac{1}{\cos x}$. O inverso do seno é a **cossecante**. Regra:
+   cada par tem exatamente um “co” — $\sec$/$\cos$ e $\cossec$/$\sen$.
+6. Porque a identidade decorre de o ponto estar na circunferência de raio 1, o
+   que independe do quadrante. Além disso, os dois termos são **quadrados**, e
+   quadrados de números negativos são positivos — os sinais não interferem.
+7. $\cos x = \sqrt{1 - \frac{64}{289}} = \sqrt{\frac{225}{289}} =
+   \frac{15}{17}$; $\tg x = \frac{8}{15}$; $\sec x = \frac{17}{15}$.
+8. $\sen^2 x = 1 - \frac{144}{169} = \frac{25}{169}$, e no terceiro quadrante o
+   seno é negativo: $\sen x = -\frac{5}{13}$. Então
+   $\cotg x = \frac{\cos x}{\sen x} = \frac{-12/13}{-5/13} = \frac{12}{5}$.
+9. $\sec^2 x = 1 + 4 = 5$, e no primeiro quadrante a secante é positiva:
+   $\sec x = \sqrt{5}$. Logo $\cos x = \frac{1}{\sqrt{5}} =
+   \frac{\sqrt{5}}{5} \approx 0{,}447$, e
+   $\sen x = \tg x \cos x = \frac{2}{\sqrt{5}} = \frac{2\sqrt{5}}{5}
+   \approx 0{,}894$.
+10. (a) $\frac{1-\sen^2 x}{1-\sen x} = \frac{(1-\sen x)(1+\sen x)}{1-\sen x}
+    = 1 + \sen x$; (b) $\frac{\sen x}{\cos x}\cos x = \sen x$;
+    (c) $\sen^2 x + \cos^2 x = 1$, pois $\frac{\sen x}{\cossec x} =
+    \sen x \cdot \sen x$.
+11. É uma diferença de quadrados: $(1-\cos x)(1+\cos x) = 1 - \cos^2 x$, e pela
+    relação fundamental isso é $\sen^2 x$.
+12. Elevando ao quadrado:
+    $\sen^2 x + 2\sen x\cos x + \cos^2 x = \frac{49}{25}$. O que está fora do
+    termo do meio vale 1, então $1 + 2\sen x\cos x = \frac{49}{25}$, ou
+    $2\sen x\cos x = \frac{24}{25}$. Logo
+    $\sen x \cos x = \frac{12}{25} = 0{,}48$.
+13. $\sen\theta = \sqrt{1-0{,}9216} = \sqrt{0{,}0784} = 0{,}28$. Componentes:
+    paralela $= 50 \times 0{,}28 = 14$ kgf; perpendicular
+    $= 50 \times 0{,}96 = 48$ kgf. Verificação:
+    $14^2 + 48^2 = 196 + 2\,304 = 2\,500 = 50^2$ ✓.
+14. Fator de potência $\cos\varphi = \frac{48}{60} = 0{,}8$;
+    $\sen\varphi = \sqrt{1-0{,}64} = 0{,}6$; potência reativa
+    $= 60 \times 0{,}6 = 36$ kvar. (Confere:
+    $48^2+36^2 = 2\,304+1\,296 = 3\,600 = 60^2$ ✓.)
+15. Divida $\sen^2 x + \cos^2 x = 1$ por $\sen^2 x$, o que é permitido porque
+    dividir os dois lados de uma igualdade pela mesma quantidade não nula a
+    preserva. Obtém-se
+    $1 + \frac{\cos^2 x}{\sen^2 x} = \frac{1}{\sen^2 x}$, que é
+    $1 + \cotg^2 x = \cossec^2 x$. A dedução **não vale** quando
+    $\sen x = 0$, isto é, para $x = k\pi$ — e de fato nem $\cotg$ nem $\cossec$
+    existem ali.
+16. Porque a relação fundamental é Pitágoras com hipotenusa 1. Dado um terno
+    $(a,b,c)$ com $a^2+b^2=c^2$, dividir tudo por $c$ produz catetos
+    $\frac{a}{c}$ e $\frac{b}{c}$ com hipotenusa 1 — e esses são exatamente um
+    seno e um cosseno. Com $(8,15,17)$: $\sen\theta = \frac{8}{17}$ e
+    $\cos\theta = \frac{15}{17}$, e
+    $\frac{64}{289}+\frac{225}{289} = \frac{289}{289} = 1$ ✓.
+
+</details>
+
+## Revisão curta
+
+- **A identidade central:** $\sen^2 x + \cos^2 x = 1$ — é o teorema de Pitágoras
+  no triângulo de hipotenusa 1, ou a equação $x^2+y^2=1$ com outros nomes.
+- Vale para **todo** $x$ real. É identidade, não equação.
+- $\sen^2 x$ significa $(\sen x)^2$.
+- **Recíprocas:** $\sec = \frac{1}{\cos}$, $\cossec = \frac{1}{\sen}$,
+  $\cotg = \frac{\cos}{\sen}$. Cada par tem exatamente um “co”.
+- Secante e cossecante nunca ficam entre $-1$ e 1.
+- **Derivadas por divisão:** $\tg^2 + 1 = \sec^2$ (dividindo por $\cos^2$) e
+  $1 + \cotg^2 = \cossec^2$ (dividindo por $\sen^2$). Uma identidade só, em três
+  roupagens.
+- Ao extrair a raiz, o **quadrante** decide o sinal — a identidade dá só o
+  módulo.
+- Ao simplificar, **fatore antes de cancelar**: só fatores se cancelam.
+
+Falta o último bloco: o que acontece com o seno e o cosseno de uma **soma** de
+ângulos. A resposta não é a esperada, e é dela que sai o
+[arco duplo](./soma-diferenca-e-arco-duplo).

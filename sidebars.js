@@ -170,9 +170,149 @@ const sidebars = {
       ],
     },
     {
+      type: 'category',
+      label: '6. Geometria e trigonometria',
+      link: {
+        type: 'doc',
+        id: 'geometria/index',
+      },
+      items: [
+        {
+          type: 'doc',
+          id: 'geometria/index',
+          label: '6.1 Roteiro do capítulo',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/angulos',
+          label: '6.2 Ângulos',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/triangulos',
+          label: '6.3 Triângulos',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/semelhanca',
+          label: '6.4 Semelhança',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/teorema-de-pitagoras',
+          label: '6.5 Teorema de Pitágoras',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/areas-de-poligonos',
+          label: '6.6 Áreas de polígonos',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/circulo',
+          label: '6.7 O círculo',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/figuras-compostas',
+          label: '6.8 Figuras compostas',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/volumes-e-superficies',
+          label: '6.9 Volumes e superfícies',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/plano-cartesiano-e-distancia',
+          label: '6.10 Plano cartesiano e distância',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/equacao-da-reta',
+          label: '6.11 Equação da reta',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/paralelas-e-perpendiculares',
+          label: '6.12 Paralelas e perpendiculares',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/circunferencia-e-parabola',
+          label: '6.13 Circunferência e parábola',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/razoes-trigonometricas',
+          label: '6.14 Seno, cosseno e tangente',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/angulos-notaveis',
+          label: '6.15 Ângulos notáveis',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/resolvendo-triangulos-retangulos',
+          label: '6.16 Resolvendo triângulos retângulos',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/radianos',
+          label: '6.17 Radianos',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/ciclo-trigonometrico',
+          label: '6.18 O ciclo trigonométrico',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/reducao-ao-primeiro-quadrante',
+          label: '6.19 Redução ao 1º quadrante',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/arco-e-setor-circular',
+          label: '6.20 Arco e setor circular',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/graficos-seno-e-cosseno',
+          label: '6.21 Gráficos do seno e do cosseno',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/grafico-da-tangente',
+          label: '6.22 Gráfico da tangente',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/parametros-das-funcoes-trigonometricas',
+          label: '6.23 Os parâmetros da onda',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/funcoes-trigonometricas-inversas',
+          label: '6.24 Funções inversas',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/relacoes-fundamentais',
+          label: '6.25 Relações fundamentais',
+        },
+        {
+          type: 'doc',
+          id: 'geometria/soma-diferenca-e-arco-duplo',
+          label: '6.26 Soma, diferença e arco duplo',
+        },
+      ],
+    },
+    {
       type: 'doc',
       id: 'revisao-geral',
-      label: '6. Revisão geral',
+      label: '7. Revisão geral',
     },
   ],
 };

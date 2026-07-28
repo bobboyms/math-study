@@ -1,0 +1,690 @@
+---
+title: Triângulos
+---
+
+import GeoFigure from '@site/src/components/GeoFigure';
+
+# Triângulos: por que os três ângulos sempre somam 180°
+
+## Problema motivador: a mão-francesa da prateleira
+
+Você vai fixar uma prateleira na parede com um suporte em L reforçado — a
+chamada **mão-francesa**. O suporte é, literalmente, um triângulo: um braço
+encostado na parede, outro sob a prateleira e uma barra diagonal ligando as
+pontas.
+
+A parede e a prateleira formam um canto reto, 90°. O catálogo informa que a
+barra diagonal encontra o braço da parede formando 35°.
+
+> Com que ângulo a barra diagonal encontra a prateleira?
+
+<GeoFigure
+  unit={44}
+  padding={56}
+  polygons={[{points: [[0, 0], [0, 2.8], [2.8, 0]], tone: 1}]}
+  angles={[
+    {at: [0, 0], from: [0, 2.8], to: [2.8, 0], right: true, tone: 1},
+    {at: [0, 2.8], from: [0, 0], to: [2.8, 0], label: '35^\\circ', tone: 2, radius: 34, labelRadius: 58},
+    {at: [2.8, 0], from: [0, 0], to: [0, 2.8], label: '?', tone: 3, radius: 34, labelRadius: 54},
+  ]}
+  labels={[
+    {at: [-0.45, 1.4], math: '\\text{parede}', fontSize: 12, halo: false},
+    {at: [1.4, -0.38], math: '\\text{prateleira}', fontSize: 12, halo: false},
+  ]}
+  caption="A mão-francesa é um triângulo. Dois dos três ângulos são conhecidos."
+/>
+
+Não há como medir esse ângulo com uma trena — ele está no ar. Mas ele **já está
+determinado**: dois ângulos de um triângulo obrigam o terceiro. É essa obrigação
+que a página constrói, e voltaremos ao suporte assim que ela estiver pronta.
+
+## Mapa das ideias
+
+- **triângulo** — figura fechada de três lados; tem três vértices e três
+  ângulos internos;
+- **ângulo interno** — o ângulo formado por dois lados dentro da figura;
+- **ângulo externo** — o suplemento de um ângulo interno, formado prolongando
+  um lado;
+- **equilátero / isósceles / escaleno** — classificação pelos lados: três
+  iguais, pelo menos dois iguais, nenhum igual;
+- **acutângulo / retângulo / obtusângulo** — classificação pelos ângulos: todos
+  agudos, um reto, um obtuso;
+- **hipotenusa** — no triângulo retângulo, o lado oposto ao ângulo reto; é o
+  maior dos três;
+- **catetos** — no triângulo retângulo, os dois lados que formam o ângulo reto.
+
+Exemplo: um triângulo com lados 3, 4 e 5 é escaleno (nenhum lado se repete) e
+retângulo. Contraexemplo: não existe triângulo com lados 3, 4 e 9 — os dois
+lados curtos não alcançam as pontas do longo. A última seção da página explica
+por quê.
+
+## Para que isso serve?
+
+O triângulo é a figura mais usada em engenharia por um motivo estrutural: ele é
+**rígido**. Fixados os três comprimentos, a forma está travada; não há como
+deformá-la sem entortar um lado. Um quadrilátero, ao contrário, desaba num
+losango se você empurrar um canto — é por isso que portões e estruturas metálicas
+levam uma barra na diagonal, que transforma o retângulo em dois triângulos.
+
+Daí vêm as aplicações:
+
+- treliças de telhado, pontes, torres de transmissão e andaimes;
+- triangulação em GPS e topografia: medir dois ângulos e uma distância para
+  descobrir uma terceira, inacessível;
+- malhas de triângulos em computação gráfica — todo modelo 3D é feito deles;
+- e, dentro da matemática, o triângulo retângulo é o suporte físico de toda a
+  [trigonometria](./razoes-trigonometricas).
+
+## Ideias anteriores que voltam aqui
+
+Tudo o que esta página precisa vem da lição de [Ângulos](./angulos). Reative
+antes de seguir:
+
+**1. Ângulo raso.** Quanto vale a soma de vários ângulos apoiados lado a lado
+sobre uma mesma reta?
+
+<details>
+<summary>Conferir</summary>
+
+180°. A reta é meia volta, e as parcelas repartem esse total, sejam duas, três
+ou dez.
+
+</details>
+
+**2. Alternos internos.** Duas paralelas são cortadas por uma transversal. O que
+se pode dizer dos ângulos alternos internos?
+
+<details>
+<summary>Conferir</summary>
+
+São iguais. Como as duas retas apontam para a mesma direção, a transversal as
+encontra com a mesma inclinação nos dois cruzamentos.
+
+</details>
+
+**3. Isolar a incógnita** (de
+[Equações do 1º grau](../equacoes/equacoes-do-primeiro-grau)). Resolva
+$x + 90 + 35 = 180$.
+
+<details>
+<summary>Conferir</summary>
+
+$x + 125 = 180$, logo $x = 55$. Guarde o número: ele é a resposta do problema
+motivador, e daqui a pouco saberemos por quê.
+
+</details>
+
+## Intuição: rasgue os três cantos
+
+Antes de qualquer demonstração, vale fazer o experimento — ele é rápido e
+convence.
+
+Recorte um triângulo de papel, de forma qualquer. Rasgue os três cantos. Agora
+encoste os três pedaços um ao lado do outro, com os vértices se tocando num
+único ponto.
+
+Eles formam uma **linha reta**. Não quase: reta.
+
+<GeoFigure
+  unit={42}
+  padding={52}
+  polygons={[{points: [[0, 0], [4, 0], [2.37, 2.824]], tone: 0, fill: false}]}
+  angles={[
+    {at: [0, 0], from: [4, 0], to: [2.37, 2.824], label: '\\alpha', tone: 1, radius: 34, labelRadius: 56},
+    {at: [4, 0], from: [0, 0], to: [2.37, 2.824], label: '\\beta', tone: 2, radius: 34, labelRadius: 56},
+    {at: [2.37, 2.824], from: [0, 0], to: [4, 0], label: '\\gamma', tone: 3, radius: 32, labelRadius: 54},
+  ]}
+  caption="Um triângulo qualquer, com os três ângulos internos nomeados α, β e γ."
+/>
+
+<GeoFigure
+  unit={42}
+  padding={52}
+  segments={[
+    {from: [-2.6, 0], to: [2.6, 0]},
+    {from: [0, 0], to: [-1.67, 1.99], tone: 3},
+    {from: [0, 0], to: [1.29, 1.53], tone: 3},
+  ]}
+  angles={[
+    {at: [0, 0], from: [2.6, 0], to: [1.29, 1.53], label: '\\alpha', tone: 1, radius: 46, labelRadius: 68},
+    {at: [0, 0], from: [1.29, 1.53], to: [-1.67, 1.99], label: '\\gamma', tone: 3, radius: 46, labelRadius: 68},
+    {at: [0, 0], from: [-1.67, 1.99], to: [-2.6, 0], label: '\\beta', tone: 2, radius: 46, labelRadius: 68},
+  ]}
+  caption="Os mesmos três ângulos, encostados num ponto só: eles preenchem exatamente meia volta."
+/>
+
+Meia volta é 180°. Então:
+
+$$
+\alpha + \beta + \gamma = 180^\circ.
+$$
+
+O experimento mostra **que** é assim. Ele não mostra **por que** — e nem poderia,
+porque foi feito com um triângulo só, recortado com tesoura, com a imprecisão de
+qualquer recorte. A próxima seção fecha essa lacuna.
+
+## Ponte para a formalização: por que sempre 180°?
+
+O que falta é um argumento que valha para **todos** os triângulos ao mesmo
+tempo, sem medir nenhum. Ele existe, e usa exatamente a ferramenta da página
+anterior: paralelas cortadas por uma transversal.
+
+A ideia é criar, com uma reta auxiliar, um ângulo raso onde os três ângulos do
+triângulo apareçam **de verdade** — não parecidos, mas os mesmos.
+
+Trace, pelo vértice do topo, uma reta **paralela** ao lado de baixo:
+
+<GeoFigure
+  unit={48}
+  padding={58}
+  polygons={[{points: [[0, 0], [4, 0], [2.37, 2.824]], tone: 0, fill: false}]}
+  segments={[{from: [-0.6, 2.824], to: [4.6, 2.824], tone: 2, dashed: true}]}
+  angles={[
+    {at: [0, 0], from: [4, 0], to: [2.37, 2.824], label: '\\alpha', tone: 1, radius: 32, labelRadius: 52},
+    {at: [4, 0], from: [0, 0], to: [2.37, 2.824], label: '\\beta', tone: 2, radius: 32, labelRadius: 52},
+    {at: [2.37, 2.824], from: [0, 0], to: [4, 0], label: '\\gamma', tone: 3, radius: 30, labelRadius: 50},
+    {at: [2.37, 2.824], from: [-0.6, 2.824], to: [0, 0], label: '\\alpha', tone: 1, radius: 30, labelRadius: 54},
+    {at: [2.37, 2.824], from: [4, 0], to: [4.6, 2.824], label: '\\beta', tone: 2, radius: 30, labelRadius: 54},
+  ]}
+  caption="A reta tracejada é paralela ao lado de baixo. No vértice do topo reaparecem α e β, ao lado de γ."
+/>
+
+Acompanhe cada passo:
+
+1. A reta tracejada e o lado de baixo são **paralelas**.
+2. O lado esquerdo do triângulo é uma **transversal** que corta as duas. O
+   ângulo $\alpha$, embaixo, e o ângulo marcado com $\alpha$ no topo são
+   **alternos internos** — ficam entre as paralelas, em lados opostos da
+   transversal. Logo, têm a mesma medida.
+3. Pelo mesmo motivo, com o lado direito como transversal, o ângulo $\beta$
+   reaparece no topo.
+4. No vértice do topo, os três ângulos $\alpha$, $\gamma$ e $\beta$ estão
+   apoiados sobre a reta tracejada, um ao lado do outro. Eles formam um ângulo
+   raso.
+
+Portanto:
+
+$$
+\alpha + \gamma + \beta = 180^\circ.
+$$
+
+Observe o que mudou e o que permaneceu. **Mudou** o lugar: dois dos ângulos foram
+transportados para o topo. **Permaneceu** a medida — o transporte foi feito pela
+igualdade dos alternos internos, não por semelhança visual. E, porque o
+argumento não usou nenhuma medida específica, ele vale para qualquer triângulo:
+achatado, alongado, com um ângulo enorme ou três parecidos.
+
+Isso é o que o experimento do papel não conseguia dar.
+
+## Formalização
+
+> Em todo triângulo, a soma das medidas dos três ângulos internos é 180°.
+
+Três consequências imediatas — e todas as três são usadas o tempo todo:
+
+- **Dois ângulos determinam o terceiro.** Se você conhece dois, o terceiro é
+  $180^\circ$ menos a soma deles. Nunca é preciso medir os três.
+- **Um triângulo tem no máximo um ângulo reto ou obtuso.** Dois ângulos de 90°
+  já esgotam os 180°, e não sobraria nada para o terceiro — mas um ângulo de 0°
+  não existe num triângulo, pois os dois lados estariam sobrepostos.
+- **Os dois ângulos agudos de um triângulo retângulo são complementares.** Se um
+  ângulo vale 90°, sobram 90° para os outros dois repartirem.
+
+Essa última consequência é pequena na aparência e enorme no uso: ela é o motivo
+de o seno de um ângulo ser igual ao cosseno do outro, uma relação que aparecerá
+em [Seno, cosseno e tangente](./razoes-trigonometricas).
+
+## Classificação dos triângulos
+
+Dois critérios independentes convivem: pelos lados e pelos ângulos. Todo
+triângulo tem um nome em cada lista.
+
+### Pelos lados
+
+<GeoFigure
+  unit={36}
+  padding={50}
+  polygons={[
+    {points: [[0, 0], [2.4, 0], [1.2, 2.078]], tone: 1},
+    {points: [[3.8, 0], [6.2, 0], [5, 2.6]], tone: 2},
+    {points: [[7.6, 0], [10.4, 0], [8.2, 1.9]], tone: 3},
+  ]}
+  ticks={[
+    {from: [0, 0], to: [2.4, 0], count: 1, tone: 1},
+    {from: [2.4, 0], to: [1.2, 2.078], count: 1, tone: 1},
+    {from: [1.2, 2.078], to: [0, 0], count: 1, tone: 1},
+    {from: [3.8, 0], to: [5, 2.6], count: 2, tone: 2},
+    {from: [6.2, 0], to: [5, 2.6], count: 2, tone: 2},
+  ]}
+  labels={[
+    {at: [1.2, -0.55], math: '\\text{equilátero}', fontSize: 12, halo: false},
+    {at: [5, -0.55], math: '\\text{isósceles}', fontSize: 12, halo: false},
+    {at: [9, -0.55], math: '\\text{escaleno}', fontSize: 12, halo: false},
+  ]}
+  caption="Os traços marcam lados de mesmo comprimento: três iguais no equilátero, dois no isósceles, nenhum no escaleno."
+/>
+
+| Nome | Lados | Ângulos que decorrem |
+|---|---|---|
+| equilátero | os três iguais | os três iguais, valendo 60° cada |
+| isósceles | pelo menos dois iguais | os dois ângulos opostos aos lados iguais são iguais |
+| escaleno | os três diferentes | os três ângulos diferentes |
+
+A terceira coluna não é uma definição nova: ela **decorre** da primeira. No
+equilátero, os três ângulos são iguais e somam 180°, então cada um vale
+$180 \div 3 = 60^\circ$ — o triângulo equilátero tem seus ângulos determinados,
+sem nenhuma medição. Guarde esse 60°: ele é o ponto de partida dos
+[ângulos notáveis](./angulos-notaveis).
+
+Repare também que **todo equilátero é isósceles**, porque “pelo menos dois
+iguais” está satisfeito quando os três são. O contrário não vale.
+
+### Pelos ângulos
+
+<GeoFigure
+  unit={36}
+  padding={50}
+  polygons={[
+    {points: [[0, 0], [2.6, 0], [1.5, 2]], tone: 1},
+    {points: [[4.2, 0], [6.8, 0], [4.2, 2.2]], tone: 2},
+    {points: [[8.4, 0], [11.4, 0], [9.1, 1.35]], tone: 3},
+  ]}
+  angles={[
+    {at: [4.2, 0], from: [6.8, 0], to: [4.2, 2.2], right: true, tone: 2},
+    {at: [9.1, 1.35], from: [8.4, 0], to: [11.4, 0], tone: 3, radius: 22},
+  ]}
+  labels={[
+    {at: [1.3, -0.55], math: '\\text{acutângulo}', fontSize: 12, halo: false},
+    {at: [5.5, -0.55], math: '\\text{retângulo}', fontSize: 12, halo: false},
+    {at: [9.9, -0.55], math: '\\text{obtusângulo}', fontSize: 12, halo: false},
+  ]}
+  caption="No acutângulo, os três ângulos são agudos. No retângulo, um vale 90°. No obtusângulo, um passa de 90° — e o arco marcado mostra o quanto ele se abre."
+/>
+
+| Nome | Condição | Exemplo | Contraexemplo |
+|---|---|---|---|
+| acutângulo | os três ângulos agudos | 60°, 70°, 50° | 90°, 45°, 45° é retângulo |
+| retângulo | um ângulo de exatamente 90° | 90°, 30°, 60° | 89°, 45°, 46° é acutângulo |
+| obtusângulo | um ângulo maior que 90° | 120°, 40°, 20° | 90°, 60°, 30° é retângulo |
+
+> **Erro comum:** achar que “equilátero” e “acutângulo” dizem a mesma coisa, ou
+> que um triângulo isósceles não pode ser retângulo. Os dois critérios são
+> independentes: um triângulo de ângulos 90°, 45° e 45° é **isósceles e
+> retângulo** ao mesmo tempo. O único cruzamento proibido é equilátero com
+> retângulo ou obtusângulo — no equilátero todos os ângulos valem 60°, e nenhum
+> chega a 90°.
+
+## O triângulo retângulo e seu vocabulário
+
+Este caso merece nomes próprios porque será o mais usado do capítulo inteiro.
+
+<GeoFigure
+  unit={50}
+  padding={62}
+  polygons={[{points: [[0, 0], [3.2, 0], [0, 2.4]], tone: 1}]}
+  angles={[
+    {at: [0, 0], from: [3.2, 0], to: [0, 2.4], right: true, tone: 1},
+    {at: [3.2, 0], from: [0, 0], to: [0, 2.4], label: '\\alpha', tone: 2, radius: 32, labelRadius: 54},
+    {at: [0, 2.4], from: [0, 0], to: [3.2, 0], label: '\\beta', tone: 3, radius: 32, labelRadius: 52},
+  ]}
+  labels={[
+    {at: [2.05, 1.5], math: '\\text{hipotenusa}', fontSize: 12},
+    {at: [1.6, -0.38], math: '\\text{cateto}', fontSize: 12, halo: false},
+    {at: [-0.68, 1.2], math: '\\text{cateto}', fontSize: 12, halo: false},
+  ]}
+  caption="Os catetos formam o ângulo reto; a hipotenusa fica de frente para ele. Os dois ângulos agudos α e β são complementares."
+/>
+
+> Num triângulo retângulo, os dois lados que formam o ângulo reto são os
+> **catetos**. O lado oposto ao ângulo reto é a **hipotenusa**.
+
+Duas observações que evitam confusão:
+
+- A hipotenusa é sempre o **maior** dos três lados. Faz sentido: ela está de
+  frente para o maior ângulo, e num triângulo o maior lado se opõe ao maior
+  ângulo — quanto mais aberto o ângulo, mais afastados ficam os dois lados que o
+  formam, e mais longo tem de ser o lado que fecha o vão.
+- “Cateto” e “hipotenusa” **só existem em triângulo retângulo**. Num triângulo
+  qualquer, os lados não têm esses nomes; falar em “hipotenusa” de um triângulo
+  acutângulo é sinal de que algo saiu errado no enunciado.
+
+> **Erro comum:** chamar de hipotenusa o lado que está desenhado na diagonal.
+> A posição no papel não decide nada — gire a figura e a diagonal vira
+> horizontal. Quem decide é o **ângulo reto**: a hipotenusa é o lado que **não**
+> encosta nele.
+
+## Ângulo externo
+
+Prolongue um dos lados para além de um vértice. O ângulo entre esse
+prolongamento e o outro lado é o **ângulo externo** daquele vértice.
+
+<GeoFigure
+  unit={46}
+  padding={58}
+  polygons={[{points: [[0, 0], [4, 0], [2.37, 2.824]], tone: 0, fill: false}]}
+  segments={[{from: [4, 0], to: [5.6, 0], tone: 2, dashed: true}]}
+  angles={[
+    {at: [0, 0], from: [4, 0], to: [2.37, 2.824], label: '\\alpha', tone: 1, radius: 30, labelRadius: 50},
+    {at: [2.37, 2.824], from: [0, 0], to: [4, 0], label: '\\gamma', tone: 3, radius: 30, labelRadius: 50},
+    {at: [4, 0], from: [0, 0], to: [2.37, 2.824], label: '\\beta', tone: 0, radius: 30, labelRadius: 50},
+    {at: [4, 0], from: [2.37, 2.824], to: [5.6, 0], label: 'e', tone: 2, radius: 46, labelRadius: 68},
+  ]}
+  caption="O ângulo externo e é o suplemento do interno β — e vale exatamente α + γ."
+/>
+
+O ângulo externo tem duas leituras, e as duas dão o mesmo número:
+
+$$
+e = 180^\circ - \beta
+\qquad\text{(por ser suplementar de }\beta\text{)}
+$$
+
+$$
+\alpha + \beta + \gamma = 180^\circ
+\ \Longrightarrow\
+\alpha + \gamma = 180^\circ - \beta = e.
+$$
+
+> O ângulo externo de um vértice é igual à **soma dos dois ângulos internos não
+> adjacentes** a ele.
+
+Confira com números: num triângulo de ângulos 50°, 60° e 70°, o externo do
+vértice de 60° vale $180 - 60 = 120^\circ$, e também $50 + 70 = 120^\circ$. ✓
+
+## Quando três comprimentos formam um triângulo?
+
+Nem todo trio de números vira triângulo. Pegue três canudos de 3 cm, 4 cm e
+9 cm e tente fechá-los: os dois curtos, mesmo esticados em linha reta, alcançam
+$3 + 4 = 7$ cm — menos que os 9 cm que precisam vencer. As pontas não se
+encontram.
+
+> **Desigualdade triangular:** cada lado precisa ser menor que a soma dos outros
+> dois.
+
+Na prática, basta testar o maior lado. Exemplo: 6, 8 e 11 formam triângulo,
+porque $6 + 8 = 14$, maior que 11. Contraexemplo: 2, 3 e 5 **não** formam — a
+soma dos menores dá exatamente 5, e os três lados ficariam achatados sobre uma
+reta, sem área. Empatar não basta; precisa sobrar.
+
+## Voltando à mão-francesa
+
+O suporte é um triângulo com um ângulo reto (parede e prateleira) e um ângulo de
+35° (barra e parede). Chamando de $x$ o ângulo procurado:
+
+$$
+90^\circ + 35^\circ + x = 180^\circ
+$$
+
+$$
+125^\circ + x = 180^\circ
+$$
+
+$$
+x = 55^\circ.
+$$
+
+A barra encontra a prateleira formando 55°.
+
+Havia um caminho ainda mais curto, que usa a consequência destacada acima: num
+triângulo retângulo, os dois ângulos agudos são complementares. Então
+$x = 90^\circ - 35^\circ = 55^\circ$ — a mesma resposta em uma linha.
+
+Verificação de sanidade: 35° é bem fechado, 55° é mais aberto, e a soma dos dois
+fecha os 90° que sobraram. ✓
+
+## Exemplos resolvidos
+
+### Exemplo 1: o terceiro ângulo
+
+Um triângulo tem ângulos de 47° e 68°. Quanto mede o terceiro?
+
+$$
+180 - (47 + 68) = 180 - 115 = 65^\circ.
+$$
+
+Classificação: os três são agudos, então é acutângulo.
+
+### Exemplo 2: triângulo isósceles
+
+*Pause e tente antes de ler.* Num triângulo isósceles, o ângulo entre os dois
+lados iguais mede 40°. Quanto medem os outros dois?
+
+Os ângulos opostos aos lados iguais são iguais entre si. Chamando cada um de
+$x$:
+
+$$
+40 + x + x = 180
+$$
+
+$$
+2x = 140
+$$
+
+$$
+x = 70^\circ.
+$$
+
+Os outros dois medem 70° cada. Verificação: $40 + 70 + 70 = 180$ ✓.
+
+> **Erro comum aqui:** dividir os 180° por 2 e responder 90°, esquecendo de tirar
+> antes os 40° já usados. Se sua resposta der 90° num triângulo isósceles com um
+> ângulo de 40°, você pulou a subtração — e os três ângulos somariam 220°.
+
+### Exemplo 3: ângulos em razão dada
+
+*Pause e tente antes de ler.* Os três ângulos de um triângulo são
+proporcionais a 2, 3 e 4. Quanto mede cada um?
+
+“Proporcionais a 2, 3 e 4” significa que existe um mesmo valor $k$ tal que os
+ângulos são $2k$, $3k$ e $4k$. A soma continua sendo 180°:
+
+$$
+2k + 3k + 4k = 180
+$$
+
+$$
+9k = 180
+$$
+
+$$
+k = 20.
+$$
+
+Os ângulos medem $2 \times 20 = 40^\circ$, $3 \times 20 = 60^\circ$ e
+$4 \times 20 = 80^\circ$. Verificação: $40 + 60 + 80 = 180$ ✓, e a razão
+$40 : 60 : 80$ simplifica para $2 : 3 : 4$ ✓.
+
+### Exemplo 4: uma escada apoiada
+
+*Pause e tente antes de ler.* Uma escada apoiada na parede forma 62° com o chão.
+Que ângulo ela forma com a parede? E qual é o ângulo externo, do lado do chão?
+
+A parede é perpendicular ao chão, então o triângulo escada–parede–chão é
+retângulo. Os dois ângulos agudos são complementares:
+
+$$
+90 - 62 = 28^\circ \text{ com a parede.}
+$$
+
+O ângulo externo no pé da escada é o suplemento de 62°:
+
+$$
+180 - 62 = 118^\circ,
+$$
+
+e ele também vale a soma dos dois internos não adjacentes:
+$90 + 28 = 118^\circ$ ✓. As duas leituras batem.
+
+## Perguntas de verificação
+
+1. Por que o experimento de rasgar os cantos do papel **não** substitui a
+   demonstração com a reta paralela?
+2. Na demonstração, qual é o papel da reta auxiliar? Por que ela precisa ser
+   paralela ao lado de baixo, e não uma reta qualquer?
+3. Por que nenhum triângulo pode ter dois ângulos obtusos?
+4. Em que sentido “os ângulos agudos de um triângulo retângulo são
+   complementares” é apenas um caso particular da soma 180°?
+5. Um triângulo pode ser isósceles e obtusângulo ao mesmo tempo? Dê um exemplo
+   ou explique por que não.
+6. Por que a hipotenusa é sempre o maior lado?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque o experimento testou **um** triângulo, com recorte e encaixe
+   imprecisos. Ele torna a afirmação plausível, mas não garante que valha para
+   todos os triângulos — inclusive os muito achatados, onde um erro pequeno de
+   recorte passaria despercebido. A demonstração não mede nada e não depende do
+   formato.
+2. A reta auxiliar cria um ângulo raso no vértice do topo, com os três ângulos
+   do triângulo lado a lado. Ela precisa ser paralela ao lado de baixo porque é
+   o paralelismo que garante a igualdade dos alternos internos — é isso que
+   permite afirmar que os ângulos transportados são **os mesmos** $\alpha$ e
+   $\beta$, e não apenas parecidos. Com uma reta qualquer, nada seria
+   transportado.
+3. Dois ângulos obtusos já somam mais de 180°, e a soma dos três precisa ser
+   exatamente 180°. Não sobraria valor positivo para o terceiro.
+4. É a soma 180° com um dos valores já conhecido: $90 + \alpha + \beta = 180$,
+   e subtrair 90 dos dois lados dá $\alpha + \beta = 90$, que é a definição de
+   complementares.
+5. Pode. Por exemplo, ângulos de 100°, 40° e 40°: os dois de 40° são iguais, o
+   que torna o triângulo isósceles, e o de 100° é obtuso. Confere:
+   $100 + 40 + 40 = 180$ ✓.
+6. Porque ela se opõe ao maior ângulo. Num triângulo retângulo, o ângulo reto é
+   necessariamente o maior — os outros dois somam 90°, então cada um é menor que
+   90°. Ao maior ângulo corresponde o maior lado.
+
+</details>
+
+## Exercícios
+
+### 1. Reconhecimento
+
+1. Classifique quanto aos ângulos: (a) 30°, 60°, 90°; (b) 100°, 45°, 35°;
+   (c) 60°, 60°, 60°.
+2. Num triângulo retângulo, identifique quem é a hipotenusa se o ângulo reto
+   está no vértice $B$ e os outros vértices são $A$ e $C$.
+3. Quais trios formam triângulo? (a) 5, 7, 11; (b) 4, 4, 9; (c) 6, 6, 6;
+   (d) 1, 2, 3.
+
+### 2. Explicação
+
+4. Explique com suas palavras por que dois ângulos de um triângulo já determinam
+   o terceiro.
+5. Um colega diz: “se o triângulo for muito grande, os ângulos somam mais que
+   180°”. Onde está o erro?
+6. Explique por que o ângulo externo é sempre maior que cada um dos dois
+   internos não adjacentes a ele.
+
+### 3. Aplicação direta
+
+7. Calcule o ângulo que falta: (a) 25° e 95°; (b) 72° e 18°; (c) 60° e 60°.
+8. Num triângulo retângulo, um ângulo agudo mede 23°. Quanto mede o outro?
+9. Um ângulo externo de um triângulo mede 130°, e um dos internos não adjacentes
+   mede 45°. Quanto mede o outro interno não adjacente?
+
+### 4. Variação
+
+10. Os ângulos de um triângulo são proporcionais a 1, 2 e 3. Determine os três e
+    classifique o triângulo.
+11. Num triângulo isósceles, cada um dos ângulos da base mede 55°. Quanto mede o
+    ângulo do topo?
+12. Um triângulo tem um ângulo de 90° e outro que é o dobro do terceiro.
+    Determine os três.
+
+<details>
+<summary>Dica para o 12</summary>
+
+Os dois ângulos agudos somam 90°, não 180°. Chame o menor de $x$ e escreva o
+outro em função dele.
+
+</details>
+
+### 5. Problema misto
+
+13. Uma treliça de telhado é um triângulo isósceles. As duas águas fazem 28°
+    com a horizontal. Qual é o ângulo no topo da treliça? Compare sua resposta
+    com o exercício do telhado na página de [Ângulos](./angulos) — deve dar o
+    mesmo tipo de conta.
+14. Numa rampa, a superfície inclinada forma 8° com o piso. Um poste vertical é
+    fincado no piso e encosta na rampa. Determine os três ângulos do triângulo
+    formado por piso, poste e rampa.
+15. Duas retas paralelas são cortadas por duas transversais que se encontram num
+    ponto acima delas, formando um triângulo com a paralela de cima. Se os
+    ângulos que as transversais fazem com a paralela de baixo medem 40° e 65°,
+    quanto mede o ângulo no ponto de encontro?
+
+### 6. Justificativa
+
+16. Explique por que um triângulo equilátero nunca pode ser retângulo, sem
+    recorrer a desenho.
+17. Justifique a desigualdade triangular usando a ideia de caminho: por que ir
+    de um vértice ao outro passando pelo terceiro é sempre mais longo que ir
+    direto?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. (a) retângulo; (b) obtusângulo; (c) acutângulo (e equilátero).
+2. A hipotenusa é o lado $AC$ — o que **não** toca o vértice do ângulo reto.
+3. Formam: (a), pois $5 + 7 = 12$, maior que 11; (c), pois $6 + 6 = 12$, maior
+   que 6. Não formam: (b), pois $4 + 4 = 8$, menor que 9; (d), pois
+   $1 + 2 = 3$, que empata com o terceiro lado e achata a figura sobre uma reta.
+4. Porque a soma dos três é fixa em 180°. Conhecendo dois, o terceiro é o que
+   falta para completar esse total — uma única possibilidade.
+5. A soma 180° não depende do tamanho. A demonstração usou só paralelismo e
+   ângulo raso, e nenhum dos dois muda quando a figura é ampliada. (Curiosidade:
+   a afirmação do colega é verdadeira em geometrias curvas, como sobre a
+   superfície da Terra — mas ali as “retas” não são retas do plano.)
+6. Porque o externo é igual à **soma** dos dois, e ambos são positivos. Somar um
+   valor positivo a outro produz um resultado maior que qualquer uma das
+   parcelas.
+7. (a) 60°; (b) 90°; (c) 60°.
+8. $90 - 23 = 67^\circ$.
+9. $130 - 45 = 85^\circ$.
+10. $k = 180 \div 6 = 30$; os ângulos são 30°, 60° e 90°. É retângulo (e
+    escaleno).
+11. $180 - (55 + 55) = 70^\circ$.
+12. Os agudos somam 90°: $x + 2x = 90 \Rightarrow x = 30$. Os três são 90°, 30°
+    e 60°. Se você encontrou 60° e 120°, dividiu 180° em vez de 90° — e os três
+    ângulos passariam de 180°.
+13. $180 - (28 + 28) = 124^\circ$. É a mesma estrutura do exercício de ângulos:
+    lá, as duas inclinações e o ângulo do topo completavam o ângulo raso; aqui,
+    são os três ângulos internos que completam 180°. Os dois caminhos coincidem
+    porque a horizontal do topo é paralela ao piso.
+14. Piso e poste formam 90°; rampa e piso formam 8°; logo rampa e poste formam
+    $180 - 90 - 8 = 82^\circ$.
+15. $180 - (40 + 65) = 75^\circ$. Os ângulos que as transversais fazem com a
+    paralela de baixo reaparecem na paralela de cima como correspondentes, e ali
+    são dois dos ângulos do triângulo.
+16. No equilátero os três ângulos são iguais e somam 180°, então cada um vale
+    exatamente 60°. Como 60 ≠ 90, nenhum ângulo é reto — e isso vale para todo
+    equilátero, sem exceção e sem depender de figura.
+17. Os três lados são os três caminhos possíveis entre pares de vértices. Ir do
+    vértice $A$ ao vértice $B$ pelo lado $AB$ é o trajeto reto; ir passando por
+    $C$ percorre $AC$ mais $CB$. Como a reta é o caminho mais curto entre dois
+    pontos, $AB$ é menor que $AC + CB$ — que é exatamente a desigualdade. O
+    caso de igualdade só ocorreria se $C$ estivesse **sobre** o segmento $AB$,
+    e então não haveria triângulo.
+
+</details>
+
+## Revisão curta
+
+- Os três ângulos internos de qualquer triângulo somam **180°** — provado com
+  uma paralela ao lado de baixo e a igualdade dos alternos internos.
+- Dois ângulos conhecidos determinam o terceiro; nunca é preciso medir os três.
+- Pelos **lados**: equilátero, isósceles, escaleno. Pelos **ângulos**:
+  acutângulo, retângulo, obtusângulo. Os dois critérios são independentes.
+- No equilátero, cada ângulo vale 60°.
+- No triângulo retângulo, os catetos formam o ângulo reto e a **hipotenusa** se
+  opõe a ele — sendo, por isso, o maior lado. Os dois ângulos agudos são
+  **complementares**.
+- O **ângulo externo** é o suplemento do interno e vale a soma dos dois internos
+  não adjacentes.
+- Três comprimentos só formam triângulo se cada um for **menor** que a soma dos
+  outros dois.
+
+A próxima página parte de uma pergunta que esta deixou aberta: se os ângulos
+não determinam o tamanho do triângulo, o que exatamente eles determinam? A
+resposta — [semelhança](./semelhanca) — é a base de toda a trigonometria.

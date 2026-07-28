@@ -21,6 +21,7 @@ operacoes
   -> equacoes do 1o grau
   -> equacoes do 2o grau
   -> funcoes
+  -> geometria e trigonometria
 ```
 
 Cada degrau amplia o anterior.
@@ -32,7 +33,11 @@ representam repeticao multiplicativa, area, volume e crescimento. Raizes
 desfazem potencias para recuperar medidas. Expoentes fracionarios conectam
 potencia e raiz na mesma notacao. Expressoes algebricas transformam padroes em
 linguagem simbolica. Equacoes permitem descobrir valores desconhecidos. Funcoes
-descrevem relacoes completas entre grandezas variaveis.
+descrevem relacoes completas entre grandezas variaveis. E a
+[geometria](./geometria/) reaproveita tudo isso para medir forma e posição:
+razão e proporção sustentam a semelhança, potências e raízes sustentam
+Pitágoras, produtos notáveis viram a equação da circunferência, e a ideia de
+função reaparece nas curvas periódicas do seno e do cosseno.
 
 ## Exercicios de dominio
 
@@ -40,7 +45,9 @@ Os exercícios abaixo vão até as equações do 1º grau. As equações do 2º 
 listas próprias nas páginas do capítulo 4:
 [resolver por fatoração](./equacoes/equacoes-do-segundo-grau),
 [completar o quadrado](./equacoes/completar-o-quadrado) e
-[a fórmula de Bhaskara](./equacoes/formula-de-bhaskara).
+[a fórmula de Bhaskara](./equacoes/formula-de-bhaskara). O capítulo 6, de
+[geometria e trigonometria](./geometria/), também traz exercícios ao fim de cada
+página.
 
 Faca poucos exercicios, mas justifique cada resposta. O objetivo nao e apenas
 calcular: e explicar por que o procedimento faz sentido.

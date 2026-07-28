@@ -1,0 +1,657 @@
+---
+title: Circunferência e parábola
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Circunferência e parábola: curvas escritas como equação
+
+## Problema motivador: estou na área de cobertura?
+
+Uma operadora instalou uma antena na posição $(3, 4)$, com alcance de 5 km.
+Três endereços precisam ser avaliados:
+
+| Endereço | Posição |
+|---|---|
+| A | $(6, 8)$ |
+| B | $(0, 1)$ |
+| C | $(8, 7)$ |
+
+> Quais deles têm sinal?
+
+Um mapa com o círculo desenhado resolveria — se o círculo fosse desenhado, se o
+mapa estivesse em escala, e se houvesse só três endereços. Uma operadora tem
+milhões, e um sistema precisa responder por **conta**, não por inspeção visual.
+
+A pergunta “este ponto está dentro do círculo?” precisa virar uma pergunta sobre
+números. É o que a equação da circunferência faz — e a lógica dela é uma
+consequência direta da fórmula da distância.
+
+## Mapa das ideias
+
+- **circunferência** — o conjunto dos pontos que estão a uma distância fixa $r$
+  de um ponto fixo (o centro);
+- **equação reduzida da circunferência** — $(x-a)^2 + (y-b)^2 = r^2$, com centro
+  $(a,b)$;
+- **equação geral** — $x^2 + y^2 + Dx + Ey + F = 0$; é a reduzida desenvolvida;
+- **parábola** — o conjunto dos pontos equidistantes de um ponto (foco) e de uma
+  reta (diretriz); é a curva de $y = ax^2+bx+c$;
+- **forma canônica da parábola** — $y = a(x-h)^2 + k$, com vértice $(h,k)$.
+
+Exemplo: $(x-3)^2 + (y+2)^2 = 25$ tem centro $(3,-2)$ e raio 5. Contraexemplo:
+o centro **não** é $(-3, 2)$ — os sinais dentro dos parênteses aparecem
+trocados em relação às coordenadas do centro, e essa é a armadilha número um
+do assunto.
+
+## Para que isso serve?
+
+- áreas de cobertura: antenas, wi-fi, alcance de sensor, raio de entrega;
+- detecção de colisão em jogos e simulações — “estes dois círculos se
+  tocam?” é uma comparação entre distância e soma dos raios;
+- trilateração: é assim que o GPS localiza um receptor, cruzando três esferas;
+- em engenharia, a parábola é a forma de antenas, faróis, telescópios e cabos de
+  ponte;
+- e, dentro da matemática, é a primeira vez que uma **curva** ganha equação —
+  o passo que abre a geometria analítica das cônicas.
+
+## Ideias anteriores que voltam aqui
+
+**1. Distância entre dois pontos** (de
+[Plano cartesiano](./plano-cartesiano-e-distancia)). Qual é a distância de
+$(x,y)$ até $(a,b)$?
+
+<details>
+<summary>Conferir</summary>
+
+$d = \sqrt{(x-a)^2 + (y-b)^2}$. A equação da circunferência é literalmente essa
+fórmula, com $d$ fixado e a raiz eliminada.
+
+</details>
+
+**2. Quadrado da diferença** (de
+[Produtos notáveis](../algebra/produtos-notaveis)). Desenvolva $(x-3)^2$.
+
+<details>
+<summary>Conferir</summary>
+
+$(x-3)^2 = x^2 - 6x + 9$. O termo do meio, $-6x$, é o que vai permitir
+reconhecer uma circunferência escondida numa equação desenvolvida.
+
+</details>
+
+**3. Completar o quadrado** (de
+[Completar o quadrado](../equacoes/completar-o-quadrado)). Como transformar
+$x^2 - 6x$ em um quadrado perfeito?
+
+<details>
+<summary>Conferir</summary>
+
+Somando 9: $x^2 - 6x + 9 = (x-3)^2$. O número somado é o quadrado da metade do
+coeficiente de $x$: $\left(\frac{-6}{2}\right)^2 = 9$. Essa técnica é a chave
+das duas curvas desta página.
+
+</details>
+
+**4. Função quadrática** (de
+[Função quadrática](../funcoes/funcao-quadratica)). Que curva é o gráfico de
+$y = x^2 - 4x + 3$?
+
+<details>
+<summary>Conferir</summary>
+
+Uma parábola, com concavidade para cima e raízes em $x=1$ e $x=3$. Aqui essa
+curva reaparece — mas descrita por uma propriedade **geométrica**, e não apenas
+como gráfico de uma função.
+
+</details>
+
+## Circunferência: a distância fixada
+
+Comece pela definição, em palavras:
+
+> Uma **circunferência** de centro $C(a,b)$ e raio $r$ é o conjunto de todos os
+> pontos $(x,y)$ do plano cuja distância até $C$ é exatamente $r$.
+
+Traduza isso com a fórmula da distância:
+
+$$
+\sqrt{(x-a)^2 + (y-b)^2} = r.
+$$
+
+Elevando os dois lados ao quadrado — operação legítima aqui porque os dois lados
+são positivos, então nenhuma solução nova é criada:
+
+> $$(x-a)^2 + (y-b)^2 = r^2.$$
+
+<CartesianPlane
+  xMin={-2} xMax={9} yMin={-2} yMax={9}
+  xUnit={30}
+  circles={[{center: [3, 4], r: 3, tone: 1}]}
+  points={[
+    {at: [3, 4], label: 'C(a,b)', tone: 2, dy: -18},
+    {at: [6, 4], tone: 3},
+  ]}
+  segments={[{from: [3, 4], to: [6, 4], tone: 3, label: 'r', dy: -14}]}
+  caption="Todo ponto da curva está à mesma distância r do centro. A equação apenas escreve essa frase."
+/>
+
+Isso não é uma fórmula a decorar: é a definição, com a raiz retirada. Se em algum
+momento você esquecer a equação, reescreva a frase e eleve ao quadrado.
+
+### Lendo centro e raio
+
+Dado $(x-3)^2 + (y+2)^2 = 25$:
+
+- o centro é $(3, -2)$;
+- o raio é $\sqrt{25} = 5$.
+
+> **Erro comum 1: sinal do centro.** A equação padrão tem **menos**:
+> $(x - a)$ e $(y - b)$. Quando aparece $(y+2)$, leia-a como $(y - (-2))$, e a
+> coordenada é $-2$. Uma checagem: substitua o centro na equação; o resultado
+> tem de ser 0, não $r^2$.
+
+> **Erro comum 2: confundir $r$ com $r^2$.** O número do lado direito é o raio
+> **ao quadrado**. Em $= 25$, o raio é 5. Em $= 5$, o raio é $\sqrt{5} \approx
+> 2{,}24$.
+
+### Dentro, fora ou sobre a curva
+
+Aqui está o que resolve o problema da antena. Chame de $Q$ a expressão do lado
+esquerdo:
+
+$$
+Q = (x-a)^2 + (y-b)^2.
+$$
+
+$Q$ é o **quadrado da distância** do ponto ao centro. Comparando com $r^2$:
+
+| Comparação | Posição do ponto |
+|---|---|
+| $Q < r^2$ | dentro |
+| $Q = r^2$ | sobre a circunferência |
+| $Q > r^2$ | fora |
+
+Repare que a comparação é feita entre os **quadrados**, sem calcular raiz
+nenhuma. Isso não é economia de esforço apenas: em programação, evitar a raiz
+quadrada é uma otimização padrão em detecção de colisão, porque comparar
+quadrados dá a mesma resposta e custa menos.
+
+## Resolvendo a cobertura da antena
+
+Antena em $(3,4)$, alcance 5. A circunferência de cobertura é
+
+$$
+(x-3)^2 + (y-4)^2 = 25.
+$$
+
+**Endereço A, $(6,8)$:**
+
+$$
+(6-3)^2 + (8-4)^2 = 9 + 16 = 25.
+$$
+
+Igual a $r^2$: o endereço está **exatamente na borda** da cobertura — sinal
+instável, o pior caso possível.
+
+**Endereço B, $(0,1)$:**
+
+$$
+(0-3)^2 + (1-4)^2 = 9 + 9 = 18.
+$$
+
+Menor que 25: **dentro**, com folga. Tem sinal.
+
+**Endereço C, $(8,7)$:**
+
+$$
+(8-3)^2 + (7-4)^2 = 25 + 9 = 34.
+$$
+
+Maior que 25: **fora**. Sem sinal.
+
+<CartesianPlane
+  xMin={-3} xMax={10} yMin={-2} yMax={10}
+  xUnit={27}
+  circles={[{center: [3, 4], r: 5, tone: 1}]}
+  points={[
+    {at: [3, 4], tone: 1},
+    {at: [6, 8], label: 'A', tone: 2, dy: -18},
+    {at: [0, 1], label: 'B', tone: 3, dy: -18},
+    {at: [8, 7], label: 'C', tone: 2, dy: -18},
+  ]}
+  caption="A na borda, B dentro, C fora. A conta decidiu os três sem desenhar nada."
+/>
+
+Se quiser saber **quão** dentro ou fora, aí sim vale extrair a raiz: o endereço
+C está a $\sqrt{34} \approx 5{,}83$ km da antena, ou seja, 830 metros além do
+alcance.
+
+## A equação geral: reconhecer uma circunferência disfarçada
+
+Desenvolvendo a forma reduzida, os quadrados se abrem:
+
+$$
+(x-3)^2 + (y+2)^2 = 25
+$$
+
+$$
+x^2 - 6x + 9 + y^2 + 4y + 4 = 25
+$$
+
+$$
+x^2 + y^2 - 6x + 4y - 12 = 0.
+$$
+
+Essa é a **equação geral**. Ela descreve a mesma curva, mas esconde o centro e o
+raio. O caminho de volta é [completar o quadrado](../equacoes/completar-o-quadrado)
+— a mesma técnica usada para deduzir a fórmula de Bhaskara, agora aplicada duas
+vezes, uma para cada variável.
+
+**Passo a passo**, partindo de $x^2 + y^2 - 6x + 4y - 12 = 0$:
+
+1. Agrupe as variáveis e mande a constante para o outro lado:
+
+$$
+(x^2 - 6x) + (y^2 + 4y) = 12.
+$$
+
+2. Complete cada quadrado. Para $x$, metade de $-6$ é $-3$, e $(-3)^2 = 9$.
+   Para $y$, metade de $4$ é $2$, e $2^2 = 4$. **Some os dois nos dois lados** —
+   é isso que mantém a igualdade:
+
+$$
+(x^2 - 6x + 9) + (y^2 + 4y + 4) = 12 + 9 + 4.
+$$
+
+3. Fatore cada grupo com o produto notável:
+
+$$
+(x-3)^2 + (y+2)^2 = 25.
+$$
+
+Centro $(3,-2)$, raio 5.
+
+O que mudou foi só a **escrita**. A curva é a mesma; a forma reduzida é a que
+responde perguntas geométricas, e a geral é a que costuma aparecer nos
+enunciados.
+
+> **Erro comum:** somar o número só de um lado da igualdade. Somar 9 à esquerda
+> sem somar à direita muda a equação e produz um raio errado. A regra é a mesma
+> de qualquer [equação](../equacoes/equacoes-do-primeiro-grau): o que se faz de
+> um lado se faz do outro.
+
+Nem toda equação dessa forma é circunferência. Se, ao final, o lado direito der
+**negativo**, nenhum ponto satisfaz — não existe soma de quadrados negativa. Se
+der **zero**, a única solução é o próprio centro: a “circunferência” degenera
+num ponto.
+
+## Parábola: a outra curva com equação
+
+A parábola já apareceu no curso como gráfico de
+[função quadrática](../funcoes/funcao-quadratica). Aqui ela ganha uma segunda
+identidade, geométrica — e é dela que vêm as aplicações.
+
+> Uma **parábola** é o conjunto dos pontos que estão à mesma distância de um
+> ponto fixo (o **foco**) e de uma reta fixa (a **diretriz**).
+
+<CartesianPlane
+  xMin={-4} xMax={4} yMin={-2} yMax={6}
+  xUnit={34}
+  functions={[{f: (x) => x * x / 4, tone: 1}]}
+  lines={[{m: 0, n: -1, tone: 3, dashed: true}]}
+  points={[
+    {at: [0, 1], label: 'F', tone: 2, dx: 20, dy: -6},
+    {at: [3, 2.25], tone: 2},
+    {at: [3, -1], tone: 3},
+  ]}
+  segments={[
+    {from: [3, 2.25], to: [0, 1], tone: 2, dashed: true},
+    {from: [3, 2.25], to: [3, -1], tone: 3, dashed: true},
+  ]}
+  labels={[
+    {at: [-2.6, -1], math: '\\text{diretriz}', tone: 3, fontSize: 12, dy: -16},
+  ]}
+  caption="Cada ponto da curva está à mesma distância do foco F e da reta diretriz. Os dois segmentos tracejados têm o mesmo comprimento."
+/>
+
+Essa propriedade é o motivo de as antenas parabólicas existirem: um sinal que
+chega paralelo ao eixo da parábola, ao refletir na superfície, converge **todo**
+para o foco. É a mesma geometria, invertida, que faz o farol de um carro
+projetar um feixe paralelo a partir de uma lâmpada colocada no foco.
+
+### A forma canônica e o vértice
+
+Em coordenadas, a parábola de eixo vertical é
+
+$$
+y = ax^2 + bx + c,
+$$
+
+e completar o quadrado — de novo — a coloca na forma que exibe o vértice:
+
+> $$y = a(x-h)^2 + k,$$
+>
+> com vértice em $(h,k)$.
+
+**Exemplo.** Coloque $y = x^2 - 6x + 5$ na forma canônica.
+
+$$
+y = (x^2 - 6x) + 5 = (x^2 - 6x + 9) - 9 + 5 = (x-3)^2 - 4.
+$$
+
+Vértice em $(3, -4)$.
+
+Repare no detalhe que difere do caso da circunferência: aqui o 9 foi somado
+**e subtraído no mesmo lado**, porque não há outro lado para compensar — a
+igualdade é $y = \ldots$, e mexer no lado direito exigiria mexer em $y$. Somar e
+subtrair o mesmo número é somar zero, e portanto não muda nada.
+
+<CartesianPlane
+  xMin={-1} xMax={7} yMin={-5} yMax={6}
+  xUnit={32}
+  functions={[{f: (x) => x * x - 6 * x + 5, tone: 1}]}
+  points={[
+    {at: [3, -4], label: '(3,-4)', tone: 2, dy: 22},
+    {at: [1, 0], tone: 3},
+    {at: [5, 0], tone: 3},
+  ]}
+  caption="y = x² − 6x + 5 = (x−3)² − 4. O vértice fica em (3, −4) e as raízes em 1 e 5."
+/>
+
+Confira com as raízes: $x^2 - 6x + 5 = (x-1)(x-5)$, então a curva cruza o eixo
+horizontal em 1 e em 5. O vértice fica no meio delas, em $x = 3$ ✓ — resultado
+da simetria da parábola, já visto no capítulo de funções.
+
+### O paralelo entre as duas curvas
+
+Vale destacar o que se repetiu:
+
+| | Circunferência | Parábola |
+|---|---|---|
+| Definição geométrica | distância a um **ponto** é constante | distâncias a um **ponto** e a uma **reta** são iguais |
+| Forma que revela a geometria | $(x-a)^2+(y-b)^2 = r^2$ | $y = a(x-h)^2+k$ |
+| Forma que costuma vir no enunciado | $x^2+y^2+Dx+Ey+F=0$ | $y = ax^2+bx+c$ |
+| Como passar de uma para a outra | completar o quadrado | completar o quadrado |
+
+A técnica é a mesma nos dois casos porque o objetivo é o mesmo: **transformar
+uma soma de termos numa distância**, e distância só aparece na forma de
+quadrado de uma diferença.
+
+## Exemplos resolvidos
+
+### Exemplo 1: escrever a equação
+
+Escreva a equação da circunferência de centro $(-1, 5)$ e raio 4.
+
+$$
+(x+1)^2 + (y-5)^2 = 16.
+$$
+
+Note o $(x+1)$: como $a = -1$, o termo é $x - (-1) = x + 1$.
+
+### Exemplo 2: da geral para a reduzida
+
+*Pause e tente antes de ler.* Determine centro e raio de
+$x^2 + y^2 + 8x - 2y - 8 = 0$.
+
+$$
+(x^2 + 8x) + (y^2 - 2y) = 8
+$$
+
+Metade de 8 é 4, e $4^2 = 16$. Metade de $-2$ é $-1$, e $(-1)^2 = 1$:
+
+$$
+(x^2+8x+16) + (y^2-2y+1) = 8 + 16 + 1
+$$
+
+$$
+(x+4)^2 + (y-1)^2 = 25.
+$$
+
+Centro $(-4, 1)$, raio 5.
+
+Verificação: substituindo o centro no lado esquerdo, dá $0 + 0 = 0$ ✓ — e o
+ponto $(1, 1)$, que dista 5 do centro, dá $25 + 0 = 25$ ✓.
+
+### Exemplo 3: circunferência por três condições
+
+*Pause e tente antes de ler.* Uma circunferência tem centro em $(2,3)$ e passa
+por $(6,6)$. Qual é sua equação?
+
+O raio é a distância do centro ao ponto:
+
+$$
+r = \sqrt{(6-2)^2 + (6-3)^2} = \sqrt{16+9} = 5.
+$$
+
+$$
+(x-2)^2 + (y-3)^2 = 25.
+$$
+
+### Exemplo 4: duas antenas se sobrepõem?
+
+*Pause e tente antes de ler.* Uma antena em $(0,0)$ cobre 6 km; outra, em
+$(9,0)$, cobre 4 km. As áreas de cobertura se sobrepõem?
+
+A distância entre os centros é 9. A soma dos raios é $6 + 4 = 10$.
+
+Como $9 < 10$, os círculos **se cortam**: há uma faixa coberta pelas duas.
+
+A regra geral, que vale a pena guardar por ser usada em detecção de colisão:
+
+| Distância entre centros $d$ | Situação |
+|---|---|
+| maior que $r_1 + r_2$ | separados |
+| igual a $r_1 + r_2$ | tangentes externamente |
+| entre a diferença e a soma dos raios | secantes (cortam-se) |
+| menor que a diferença dos raios | um dentro do outro |
+
+### Exemplo 5: parábola pelo vértice
+
+*Pause e tente antes de ler.* Uma parábola tem vértice $(2, -5)$ e passa por
+$(4, 3)$. Qual é sua equação?
+
+Comece pela forma canônica com o vértice conhecido:
+
+$$
+y = a(x-2)^2 - 5.
+$$
+
+Use o ponto dado para achar $a$:
+
+$$
+3 = a(4-2)^2 - 5 \Longrightarrow 3 = 4a - 5 \Longrightarrow a = 2.
+$$
+
+$$
+y = 2(x-2)^2 - 5,
+$$
+
+que desenvolvida vira $y = 2x^2 - 8x + 3$.
+
+Verificação com o ponto: $2 \times 16 - 32 + 3 = 3$ ✓.
+
+## Erros comuns
+
+> **Erro 1: ler o centro com o sinal errado.** Em $(x+4)^2$, a coordenada do
+> centro é $-4$.
+
+> **Erro 2: esquecer a raiz do raio.** O lado direito é $r^2$.
+
+> **Erro 3: completar o quadrado só de um lado.** Na circunferência, o que se
+> soma à esquerda precisa ser somado à direita. Na parábola, sendo tudo o mesmo
+> lado, soma-se e subtrai-se o mesmo número.
+
+> **Erro 4: supor que toda equação com $x^2$ e $y^2$ é circunferência.** Se, ao
+> completar os quadrados, o lado direito der negativo, o conjunto é vazio; se
+> der zero, é um único ponto. E se os coeficientes de $x^2$ e $y^2$ forem
+> diferentes, a curva é outra (elipse ou hipérbole), não circunferência.
+
+## Perguntas de verificação
+
+1. Por que a equação da circunferência é a fórmula da distância elevada ao
+   quadrado?
+2. Por que elevar ao quadrado, nesse caso, não cria soluções falsas?
+3. Como decidir se um ponto está dentro de uma circunferência sem calcular
+   nenhuma raiz quadrada?
+4. Por que completar o quadrado aparece tanto na circunferência quanto na
+   parábola?
+5. Na circunferência, o número somado vai para os dois lados; na parábola, ele é
+   somado e subtraído no mesmo lado. Por que a diferença?
+6. Que propriedade geométrica da parábola explica o funcionamento de uma antena
+   parabólica?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque a circunferência é definida como “os pontos a distância $r$ do
+   centro”. Escrever isso com a fórmula da distância dá uma equação com raiz;
+   elevar ao quadrado a elimina, deixando a forma que se usa.
+2. Porque os dois lados da igualdade são não negativos: uma distância e um raio.
+   Quando os dois lados têm o mesmo sinal, elevar ao quadrado é uma operação
+   reversível, e o conjunto de soluções não muda.
+3. Comparando o **quadrado** da distância com $r^2$: calcule
+   $(x-a)^2+(y-b)^2$ e compare com $r^2$. Menor significa dentro. Como a raiz
+   quadrada preserva a ordem entre números positivos, comparar os quadrados dá
+   a mesma resposta.
+4. Porque as duas formas geométricas envolvem **distâncias**, e distância só
+   aparece na álgebra como quadrado de uma diferença. Completar o quadrado é
+   exatamente o procedimento que reconstrói essas diferenças a partir de uma
+   expressão desenvolvida.
+5. Porque na circunferência a igualdade tem dois lados independentes, e somar
+   apenas em um a destruiria. Na parábola, a equação é $y = (\text{expressão})$,
+   e mexer no lado direito mudaria a função — então se soma e se subtrai o mesmo
+   número, o que equivale a somar zero.
+6. Todo ponto da parábola está à mesma distância do foco e da diretriz. Uma
+   consequência disso é que raios que chegam paralelos ao eixo refletem todos
+   para o foco — o que concentra o sinal num único ponto, onde fica o receptor.
+
+</details>
+
+## Exercícios
+
+### 1. Reconhecimento
+
+1. Determine centro e raio: (a) $(x-2)^2+(y-7)^2 = 9$;
+   (b) $(x+5)^2 + y^2 = 49$; (c) $x^2+y^2 = 12$.
+2. Escreva a equação da circunferência de centro $(0,-3)$ e raio 6.
+3. O ponto $(5,1)$ está dentro, fora ou sobre a circunferência
+   $(x-2)^2+(y-1)^2=16$?
+
+### 2. Explicação
+
+4. Explique por que a equação $(x-1)^2+(y-2)^2 = -4$ não representa curva
+   alguma.
+5. Um colega diz que $(x+3)^2+(y-1)^2=16$ tem centro $(3,-1)$ e raio 16. Aponte
+   os dois erros.
+6. Explique por que, em detecção de colisão, comparar quadrados de distâncias é
+   preferível a comparar distâncias.
+
+### 3. Aplicação direta
+
+7. Determine centro e raio de $x^2+y^2-10x+6y+18=0$.
+8. Escreva a equação da circunferência de centro $(4,-1)$ que passa por
+   $(7, 3)$.
+9. Coloque $y = x^2 + 4x - 1$ na forma canônica e dê o vértice.
+
+### 4. Variação
+
+10. Duas antenas, em $(0,0)$ e $(12,5)$, têm alcances 8 e 4. As coberturas se
+    tocam, se cruzam ou ficam separadas?
+11. Uma circunferência tem diâmetro com extremidades $(1,2)$ e $(7,10)$.
+    Determine centro, raio e equação.
+12. Uma parábola tem vértice $(-1, 4)$ e passa por $(1, 0)$. Determine sua
+    equação nas formas canônica e desenvolvida.
+
+<details>
+<summary>Dica para o 11</summary>
+
+O centro de uma circunferência é o **ponto médio** de qualquer diâmetro, e o
+raio é metade do diâmetro.
+
+</details>
+
+### 5. Problema misto
+
+13. Uma antena em $(2,3)$ cobre 5 km. Determine em quais pontos da estrada
+    $y = 3$ a cobertura começa e termina, e qual é o comprimento do trecho
+    coberto.
+14. O cabo principal de uma ponte pênsil tem forma de parábola. Ele toca o
+    tabuleiro no meio do vão (ponto mais baixo) e sobe até 40 m de altura nas
+    duas torres, que distam 200 m uma da outra. Escreva a equação do cabo
+    tomando o ponto mais baixo como origem, e calcule a altura do cabo a 50 m
+    do centro.
+
+### 6. Justificativa
+
+15. Mostre algebricamente que a equação geral
+    $x^2+y^2+Dx+Ey+F=0$ representa uma circunferência de centro
+    $\left(-\frac{D}{2}, -\frac{E}{2}\right)$ e determine a condição sobre
+    $D$, $E$ e $F$ para que o raio exista.
+16. Explique por que, na forma canônica $y = a(x-h)^2+k$, o vértice é
+    necessariamente $(h,k)$ — sem recorrer a gráfico.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. (a) centro $(2,7)$, raio 3; (b) centro $(-5,0)$, raio 7; (c) centro $(0,0)$,
+   raio $\sqrt{12} = 2\sqrt{3} \approx 3{,}46$.
+2. $x^2 + (y+3)^2 = 36$.
+3. $(5-2)^2 + (1-1)^2 = 9$, menor que 16: está **dentro**.
+4. Porque o lado esquerdo é uma soma de quadrados, que nunca é negativa. Nenhum
+   par $(x,y)$ pode satisfazer a igualdade.
+5. O centro é $(-3, 1)$ — os sinais dentro dos parênteses aparecem trocados em
+   relação às coordenadas. E o raio é $\sqrt{16} = 4$, não 16: o lado direito é
+   $r^2$.
+6. Porque a raiz quadrada é uma operação cara e desnecessária: como ela preserva
+   a ordem entre números não negativos, comparar $d^2$ com $(r_1+r_2)^2$ dá
+   exatamente a mesma resposta que comparar $d$ com $r_1+r_2$.
+7. $(x^2-10x+25)+(y^2+6y+9) = -18+25+9 \Rightarrow (x-5)^2+(y+3)^2 = 16$.
+   Centro $(5,-3)$, raio 4.
+8. $r = \sqrt{9+16} = 5$; $(x-4)^2+(y+1)^2 = 25$.
+9. $y = (x^2+4x+4) - 4 - 1 = (x+2)^2 - 5$; vértice $(-2,-5)$.
+10. $d = \sqrt{144+25} = 13$; soma dos raios $= 12$. Como $13 > 12$, as
+    coberturas ficam **separadas**.
+11. Centro: ponto médio $(4, 6)$. Raio: metade da distância
+    $\sqrt{36+64} = 10$, logo 5. Equação: $(x-4)^2+(y-6)^2 = 25$.
+12. $y = a(x+1)^2 + 4$; com $(1,0)$: $0 = 4a + 4 \Rightarrow a = -1$. Logo
+    $y = -(x+1)^2 + 4 = -x^2 - 2x + 3$.
+13. Substituindo $y = 3$ em $(x-2)^2+(y-3)^2 = 25$: $(x-2)^2 = 25$, então
+    $x = 7$ ou $x = -3$. O trecho coberto vai de $(-3,3)$ a $(7,3)$ e mede
+    10 km — o diâmetro, como esperado, já que a estrada passa pelo centro.
+14. Com a origem no ponto mais baixo, o vértice é $(0,0)$, então $y = ax^2$. As
+    torres ficam em $x = \pm 100$ com $y = 40$: $40 = a \times 10\,000
+    \Rightarrow a = 0{,}004$. Logo $y = 0{,}004x^2$. A 50 m do centro:
+    $y = 0{,}004 \times 2\,500 = 10$ m.
+15. Completando os quadrados:
+    $\left(x+\frac{D}{2}\right)^2 + \left(y+\frac{E}{2}\right)^2 =
+    \frac{D^2}{4} + \frac{E^2}{4} - F$. O centro é
+    $\left(-\frac{D}{2}, -\frac{E}{2}\right)$, e o raio existe quando o lado
+    direito é positivo, ou seja, quando $D^2 + E^2 - 4F > 0$.
+16. O termo $a(x-h)^2$ é sempre não negativo se $a > 0$ (e não positivo se
+    $a < 0$), e vale **zero** exatamente quando $x = h$. Então, para $a>0$, o
+    menor valor possível de $y$ é $k$, atingido só em $x = h$ — o que
+    caracteriza o ponto mínimo. Para $a<0$, o mesmo raciocínio dá o ponto
+    máximo. Em ambos os casos, o vértice é $(h,k)$.
+
+</details>
+
+## Revisão curta
+
+- **Circunferência:** $(x-a)^2+(y-b)^2 = r^2$ — é a fórmula da distância com $d$
+  fixado e a raiz eliminada. Centro $(a,b)$, raio $r$.
+- Os sinais dentro dos parênteses aparecem **trocados** em relação às
+  coordenadas do centro, e o lado direito é $r^2$, não $r$.
+- Um ponto está dentro, sobre ou fora conforme
+  $(x-a)^2+(y-b)^2$ seja menor, igual ou maior que $r^2$ — sem calcular raiz.
+- A **equação geral** $x^2+y^2+Dx+Ey+F=0$ vira a reduzida **completando o
+  quadrado** duas vezes, somando nos dois lados.
+- **Parábola:** pontos equidistantes de um foco e de uma diretriz; em
+  coordenadas, $y = a(x-h)^2+k$, com vértice $(h,k)$, obtida completando o
+  quadrado — aqui somando e subtraindo no mesmo lado.
+- A propriedade do foco é o que faz antenas parabólicas e faróis funcionarem.
+
+Encerra-se a geometria analítica. O próximo módulo volta ao triângulo retângulo
+para responder à pergunta que a semelhança deixou pendente: se a razão entre dois
+lados depende só do ângulo, **que número é esse**? A resposta se chama
+[seno, cosseno e tangente](./razoes-trigonometricas).

@@ -1,0 +1,541 @@
+---
+title: Figuras compostas
+---
+
+import GeoFigure from '@site/src/components/GeoFigure';
+
+# Figuras compostas: decompor no que já se sabe calcular
+
+## Problema motivador: a sala em L
+
+Sua sala e o corredor formam um único ambiente em **L**, e você vai comprar
+piso para os dois de uma vez. As medidas, tomadas com trena:
+
+<GeoFigure
+  unit={44}
+  padding={54}
+  polygons={[{points: [[0, 0], [6, 0], [6, 2.5], [4, 2.5], [4, 4], [0, 4]], tone: 1}]}
+  dims={[
+    {from: [0, 0], to: [6, 0], label: '6\\text{ m}', offset: 24, tone: 0},
+    {from: [6, 0], to: [6, 2.5], label: '2{,}5\\text{ m}', offset: 24, tone: 0},
+    {from: [0, 4], to: [0, 0], label: '4\\text{ m}', offset: 24, tone: 0},
+    {from: [4, 4], to: [0, 4], label: '4\\text{ m}', offset: 24, tone: 0},
+  ]}
+  caption="A planta do ambiente em L. Nenhuma fórmula do capítulo se aplica a essa forma diretamente."
+/>
+
+> Quantos metros quadrados de piso comprar?
+
+Não existe “fórmula do L”. Não existe fórmula da sala em U, do terreno
+irregular, da peça vazada. E é bom que não exista — decorar uma fórmula por
+formato seria uma lista infinita.
+
+O que existe é uma **estratégia**, e ela vale para qualquer figura plana: cortar
+o problema novo em pedaços já resolvidos. Esta página é sobre essa estratégia.
+
+## Mapa das ideias
+
+- **figura composta** — figura que não tem fórmula própria, mas pode ser
+  descrita a partir de figuras que têm;
+- **decomposição por soma** — cortar a figura em pedaços conhecidos e somar as
+  áreas;
+- **decomposição por diferença** — completar a figura até um formato conhecido e
+  subtrair o que sobra;
+- **medida deduzida** — comprimento que o enunciado não dá, mas que sai de somar
+  ou subtrair os que ele dá.
+
+Exemplo: a sala em L acima é um retângulo grande **menos** um retângulo pequeno.
+Contraexemplo: ela **não** é a soma de dois retângulos de 6 m × 4 m e 4 m ×
+2,5 m — nessa leitura, o pedaço onde os dois se sobrepõem seria contado duas
+vezes.
+
+## Para que isso serve?
+
+- orçar piso, tinta, forro, grama e revestimento de ambientes reais, que quase
+  nunca são retângulos perfeitos;
+- calcular área de terrenos com formato irregular;
+- em desenho técnico e fabricação, calcular material de peças com recortes e
+  furos;
+- em programação gráfica, calcular a área de polígonos arbitrários — o método é
+  o mesmo, feito pelo computador;
+- e, como método de pensamento, é o mesmo movimento da
+  [fatoração](../algebra/fator-comum-em-evidencia) e da demonstração de
+  [Pitágoras](./teorema-de-pitagoras): transformar o desconhecido em uma
+  combinação de conhecidos.
+
+## Ideias anteriores que voltam aqui
+
+**1. As quatro fórmulas de área** (de [Áreas](./areas-de-poligonos)). Escreva de
+memória a área do retângulo, do triângulo e do trapézio.
+
+<details>
+<summary>Conferir</summary>
+
+$A_{\text{ret}} = b h$, $A_{\text{tri}} = \frac{b h}{2}$,
+$A_{\text{trap}} = \frac{(B+b)h}{2}$. Todas com a altura **perpendicular** à
+base.
+
+</details>
+
+**2. Área do círculo** (de [O círculo](./circulo)). E a de um semicírculo de
+raio $r$?
+
+<details>
+<summary>Conferir</summary>
+
+$A = \pi r^2$ para o círculo inteiro, logo $\frac{\pi r^2}{2}$ para a metade. É
+uma fração do todo, exatamente como o setor.
+
+</details>
+
+**3. A área não muda com o recorte** (de [Áreas](./areas-de-poligonos)). Por que
+foi legítimo recortar o paralelogramo e deslizar o pedaço?
+
+<details>
+<summary>Conferir</summary>
+
+Porque recortar e mover não acrescenta nem retira superfície. É esse princípio —
+e só ele — que autoriza tudo o que esta página faz.
+
+</details>
+
+## Intuição: a área é aditiva
+
+O princípio inteiro cabe em uma frase:
+
+> Se uma figura é dividida em pedaços que não se sobrepõem, a área do todo é a
+> soma das áreas dos pedaços.
+
+Parece óbvio, e é. Mas duas exigências escondidas nessa frase são exatamente
+onde os erros acontecem:
+
+- **“que não se sobrepõem”** — se dois pedaços compartilham uma região, ela
+  entra duas vezes na soma;
+- **“é dividida”** — os pedaços precisam cobrir a figura **inteira**, sem deixar
+  vão.
+
+Sobreposição e vão são os dois únicos jeitos de errar uma decomposição. Ao
+desenhar os cortes, confira os dois.
+
+Uma consequência prática e libertadora: **como a área não depende de como você
+corta, qualquer decomposição correta dá o mesmo número**. Isso transforma o
+método em seu próprio verificador — corte de dois jeitos diferentes e compare.
+
+## As duas estratégias
+
+### Estratégia da soma: cortar em pedaços
+
+<GeoFigure
+  unit={44}
+  padding={54}
+  polygons={[
+    {points: [[0, 0], [6, 0], [6, 2.5], [0, 2.5]], tone: 1},
+    {points: [[0, 2.5], [4, 2.5], [4, 4], [0, 4]], tone: 2},
+  ]}
+  labels={[
+    {at: [3, 1.25], math: '6 \\times 2{,}5 = 15', tone: 1, fontSize: 14},
+    {at: [2, 3.25], math: '4 \\times 1{,}5 = 6', tone: 2, fontSize: 14},
+  ]}
+  caption="Um corte horizontal divide o L em dois retângulos que não se sobrepõem."
+/>
+
+Um corte na altura de 2,5 m separa a figura em dois retângulos:
+
+- o de baixo, $6 \times 2{,}5 = 15$ m²;
+- o de cima, $4 \times 1{,}5 = 6$ m².
+
+A altura do retângulo de cima, 1,5 m, **não estava no enunciado**: ela foi
+deduzida de $4 - 2{,}5 = 1{,}5$. Esse é o passo que mais falta nas resoluções
+apressadas.
+
+$$
+A = 15 + 6 = 21 \text{ m}^2.
+$$
+
+### Estratégia da diferença: completar e tirar
+
+<GeoFigure
+  unit={44}
+  padding={54}
+  polygons={[
+    {points: [[0, 0], [6, 0], [6, 4], [0, 4]], tone: 1, fill: false},
+    {points: [[4, 2.5], [6, 2.5], [6, 4], [4, 4]], tone: 2},
+  ]}
+  labels={[
+    {at: [2.6, 1.4], math: '6 \\times 4 = 24', tone: 1, fontSize: 14},
+    {at: [5, 3.25], math: '2 \\times 1{,}5 = 3', tone: 2, fontSize: 13},
+  ]}
+  caption="A mesma figura, vista como um retângulo cheio menos o pedaço que falta no canto."
+/>
+
+Complete o L até virar o retângulo de $6 \times 4 = 24$ m². O que sobra no canto
+superior direito é um retângulo de $2 \times 1{,}5 = 3$ m², e os dois números
+que o descrevem também são deduzidos: $6 - 4 = 2$ e $4 - 2{,}5 = 1{,}5$.
+
+$$
+A = 24 - 3 = 21 \text{ m}^2.
+$$
+
+**Os dois caminhos deram 21 m².** Não podia ser diferente — e é exatamente essa
+concordância que serve de conferência. Se tivessem dado números diferentes, um
+dos dois teria uma sobreposição ou um vão.
+
+### Qual escolher?
+
+| Situação | Estratégia melhor |
+|---|---|
+| a figura tem um “degrau” ou entalhe | diferença — complete o retângulo |
+| a figura tem um furo (peça vazada, coroa) | diferença — obrigatoriamente |
+| a figura é uma emenda de formas distintas (retângulo + semicírculo) | soma |
+| a figura é muito irregular | soma, cortando em triângulos |
+
+Na dúvida, faça pelos dois. O tempo gasto é menor do que o de descobrir um erro
+depois da compra do material.
+
+## Voltando ao piso da sala
+
+A área é 21 m². Com os 10% de perda que o instalador recomenda:
+
+$$
+21 \times 1{,}10 = 23{,}1 \text{ m}^2.
+$$
+
+Se a caixa cobre 2,5 m²:
+
+$$
+23{,}1 \div 2{,}5 = 9{,}24 \quad\Longrightarrow\quad 10 \text{ caixas}.
+$$
+
+Repare que a fração 9,24 é arredondada **para cima**: caixa não se compra pela
+metade, e faltar material no meio da obra custa mais caro que sobrar.
+
+## Cuidado especial: o perímetro não se decompõe do mesmo jeito
+
+A área é aditiva; o **contorno não é**. Este é o erro conceitual mais comum da
+página, e vale ver por quê.
+
+Ao cortar o L em dois retângulos, apareceu um segmento novo — a linha do corte.
+Esse segmento é borda dos dois retângulos, mas **não** é borda da sala: ele está
+no meio do ambiente. Somar os perímetros dos dois pedaços conta essa linha duas
+vezes, e ela não deveria contar nenhuma.
+
+Para achar o perímetro, percorra o contorno lado a lado:
+
+$$
+6 + 2{,}5 + 2 + 1{,}5 + 4 + 4 = 20 \text{ m}.
+$$
+
+Há um detalhe curioso aqui, que vale como verificação: o retângulo completo de
+6 m × 4 m tem perímetro $2(6+4) = 20$ m — **o mesmo**. Não é coincidência.
+Recortar um entalhe retangular de um canto empurra dois lados para dentro, mas
+os trechos removidos de um lado reaparecem exatamente como os dois lados novos
+do entalhe. A área diminuiu; o contorno, não.
+
+> **Erro comum:** somar os perímetros dos pedaços. No L, isso daria
+> $2(6+2{,}5) + 2(4+1{,}5) = 17 + 11 = 28$ m — oito metros a mais que os 20
+> reais, exatamente o dobro dos 4 m da linha de corte. Se você está comprando
+> rodapé, seriam oito metros jogados fora.
+
+## Exemplos resolvidos
+
+### Exemplo 1: pista de atletismo
+
+Uma pista tem o formato de um retângulo de 100 m por 60 m com um semicírculo
+colado em cada extremidade, de diâmetro igual ao lado de 60 m. Calcule a área
+interna e o comprimento da volta.
+
+<GeoFigure
+  unit={2.2}
+  padding={44}
+  polygons={[{points: [[0, 0], [100, 0], [100, 60], [0, 60]], tone: 1}]}
+  arcs={[
+    {at: [0, 30], r: 30, from: 90, to: 270, sector: true, tone: 2},
+    {at: [100, 30], r: 30, from: 270, to: 90, sector: true, tone: 2},
+  ]}
+  labels={[
+    {at: [50, 30], math: '100 \\times 60', tone: 1, fontSize: 14},
+  ]}
+  caption="Retângulo mais dois semicírculos. Os dois semicírculos, juntos, formam um círculo inteiro."
+/>
+
+**Área.** Os dois semicírculos têm o mesmo raio $r = 30$ m, e juntos formam um
+círculo completo:
+
+$$
+A = \underbrace{100 \times 60}_{\text{retângulo}}
++ \underbrace{\pi \times 30^2}_{\text{círculo inteiro}}
+= 6\,000 + 900\pi \approx 8\,827 \text{ m}^2.
+$$
+
+**Volta.** Aqui vale a advertência da seção anterior: os dois lados de 60 m
+**não** entram, porque são linhas internas, e não contorno. O contorno é
+formado pelos dois lados de 100 m e pelos dois arcos, que juntos dão uma
+circunferência inteira:
+
+$$
+P = 2 \times 100 + 2\pi \times 30 = 200 + 60\pi \approx 388{,}5 \text{ m}.
+$$
+
+### Exemplo 2: a peça vazada
+
+*Pause e tente antes de ler.* Uma chapa quadrada de 40 cm de lado tem um furo
+circular de 12 cm de diâmetro no centro. Qual é a área da chapa restante?
+
+Aqui só a diferença funciona — não há como cortar a chapa furada em retângulos e
+triângulos.
+
+$$
+A = 40^2 - \pi \times 6^2 = 1\,600 - 36\pi \approx 1\,600 - 113{,}1
+= 1\,486{,}9 \text{ cm}^2.
+$$
+
+> **Erro comum aqui:** usar o diâmetro no lugar do raio e subtrair
+> $\pi \times 12^2 \approx 452$, quatro vezes o valor certo. O enunciado deu o
+> **diâmetro**; a fórmula pede o **raio**.
+
+### Exemplo 3: o terreno irregular
+
+*Pause e tente antes de ler.* Um terreno tem o formato de um trapézio de bases
+20 m e 30 m e altura 12 m, com um triângulo de base 30 m e altura 8 m colado na
+base maior. Qual é a área total?
+
+<GeoFigure
+  unit={9}
+  padding={48}
+  polygons={[
+    {points: [[0, 0], [30, 0], [25, 12], [5, 12]], tone: 1},
+    {points: [[0, 0], [30, 0], [18, -8]], tone: 2},
+  ]}
+  labels={[
+    {at: [15, 6], math: '\\text{trapézio}', tone: 1, fontSize: 13},
+    {at: [16, -3.2], math: '\\text{triângulo}', tone: 2, fontSize: 13},
+  ]}
+  caption="Duas peças coladas por um lado comum de 30 m — que não é contorno de nenhuma das duas na figura final."
+/>
+
+$$
+A_{\text{trap}} = \frac{(30 + 20) \times 12}{2} = \frac{50 \times 12}{2} = 300
+\text{ m}^2
+$$
+
+$$
+A_{\text{tri}} = \frac{30 \times 8}{2} = 120 \text{ m}^2
+$$
+
+$$
+A = 300 + 120 = 420 \text{ m}^2.
+$$
+
+### Exemplo 4: a mesma figura, dois cortes
+
+*Pause e tente antes de ler.* Uma figura em U tem 8 m de largura e 5 m de
+altura; o vão central, aberto por cima, tem 3 m de largura e 3 m de altura.
+Calcule a área de dois jeitos e compare.
+
+**Por diferença:** o retângulo completo menos o vão.
+
+$$
+A = 8 \times 5 - 3 \times 3 = 40 - 9 = 31 \text{ m}^2.
+$$
+
+**Por soma:** três pedaços — a base inteira, de $8 \times 2 = 16$ m² (a altura
+2 m vem de $5 - 3$), mais as duas “pernas” de $2{,}5 \times 3 = 7{,}5$ m² cada
+(a largura 2,5 m vem de $\frac{8 - 3}{2}$).
+
+$$
+A = 16 + 7{,}5 + 7{,}5 = 31 \text{ m}^2. \quad ✓
+$$
+
+Os dois caminhos concordam. Repare que o segundo exigiu **duas** medidas
+deduzidas, e é por isso que, quando existe um retângulo envolvente óbvio, a
+estratégia da diferença costuma dar menos trabalho.
+
+## Erros comuns
+
+> **Erro 1: contar uma região duas vezes.** Acontece quando os pedaços se
+> sobrepõem. Antes de somar, desenhe os cortes e confira que cada ponto da
+> figura está em exatamente um pedaço.
+
+> **Erro 2: esquecer uma medida deduzida.** Quase todo problema de figura
+> composta esconde ao menos uma medida que precisa ser obtida por subtração.
+> Anote todas as medidas na figura antes de calcular qualquer área.
+
+> **Erro 3: somar perímetros.** As linhas de corte não são contorno. Perímetro
+> se obtém **percorrendo a borda**, nunca somando os perímetros das partes.
+
+> **Erro 4: subtrair a figura errada.** Na peça vazada, o que sai é a área do
+> **furo**, não a do retângulo que o envolveria. E se o furo estiver
+> parcialmente fora da peça, só a parte de dentro conta.
+
+## Perguntas de verificação
+
+1. Por que duas decomposições diferentes da mesma figura têm de dar o mesmo
+   resultado?
+2. Quais são os dois únicos erros possíveis ao decompor uma figura por soma?
+3. Por que o perímetro não pode ser calculado somando os perímetros das partes?
+4. Em que situação a estratégia da diferença é a **única** possível?
+5. Por que recortar um entalhe retangular do canto de um retângulo não muda o
+   perímetro?
+6. Um colega decompôs uma figura e usou uma medida que o enunciado não dava, sem
+   justificar. Que pergunta você faria a ele?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque a área é uma propriedade da figura, não do jeito de cortá-la. Recortar
+   e reorganizar não acrescenta nem retira superfície — é o mesmo princípio que
+   autorizou as deduções das fórmulas de área.
+2. Sobreposição (uma região contada duas vezes) e vão (uma região não contada).
+   Se nenhum dos dois ocorre, a soma está certa.
+3. Porque as linhas de corte viram borda dos pedaços, mas não são borda da
+   figura. Somando os perímetros, cada linha de corte é contada duas vezes,
+   quando deveria ser contada zero.
+4. Quando a figura tem um **furo** interno, como a chapa vazada ou a coroa
+   circular. Não há como cobrir uma região com buraco usando peças inteiras sem
+   passar por cima do buraco.
+5. Porque os dois trechos removidos da borda externa são exatamente iguais aos
+   dois lados novos criados pelo entalhe. O que se perde num lugar reaparece em
+   outro. A área, essa sim, diminui.
+6. “De onde saiu esse número?” Toda medida deduzida precisa vir de uma soma ou
+   subtração explícita das medidas dadas. Se ela foi estimada olhando o desenho,
+   o resultado não é confiável — desenhos de enunciado raramente estão em
+   escala.
+
+</details>
+
+## Exercícios
+
+### 1. Reconhecimento
+
+1. Uma figura em L tem retângulo envolvente de 10 m × 6 m, e falta no canto um
+   retângulo de 4 m × 2 m. Qual é a área da figura?
+2. Um quadrado de 20 cm de lado tem um quadrado de 8 cm de lado recortado de um
+   canto. Qual é a área restante? E o perímetro?
+3. Um retângulo de 12 m × 5 m tem um semicírculo de raio 2,5 m colado num dos
+   lados menores. Qual é a área total?
+
+### 2. Explicação
+
+4. Explique por que o resultado de uma decomposição não depende de onde você
+   corta.
+5. Explique por que, ao calcular o perímetro de uma pista formada por retângulo
+   e dois semicírculos, os dois lados retos que tocam os semicírculos não
+   entram na conta.
+6. Um colega calculou a área de uma coroa circular como $\pi(R - r)^2$. Mostre
+   com números por que isso está errado e escreva a forma correta.
+
+### 3. Aplicação direta
+
+7. Uma sala em L tem as medidas: 7 m de largura total, 5 m de altura total, com
+   um entalhe de 3 m × 2 m num canto. Calcule área e perímetro.
+8. Uma chapa retangular de 60 cm × 40 cm tem dois furos circulares de 10 cm de
+   raio. Qual é a área de metal restante?
+9. Um jardim é um trapézio de bases 9 m e 5 m e altura 6 m, com um canteiro
+   circular de 1 m de raio no meio, que não recebe grama. Quanta grama comprar?
+
+### 4. Variação
+
+10. Uma figura em U tem 12 m de largura, 7 m de altura, e um vão central de 4 m
+    de largura por 5 m de altura, aberto por cima. Calcule a área pelos dois
+    métodos.
+11. Um terreno tem formato de retângulo de 30 m × 20 m com um triângulo de base
+    20 m e altura 9 m colado em um dos lados menores. Calcule a área e o
+    perímetro, sabendo que os dois lados do triângulo medem 13,45 m cada.
+12. Uma pista de skate tem seção transversal formada por um retângulo de 6 m ×
+    1 m com dois quartos de círculo de raio 1 m nas pontas, apoiados sobre o
+    retângulo. Calcule a área da seção.
+
+<details>
+<summary>Dica para o 12</summary>
+
+Dois quartos de círculo de mesmo raio, juntos, formam meio círculo. Não precisa
+calcular cada um separadamente.
+
+</details>
+
+### 5. Problema misto
+
+13. Uma parede de 6 m × 2,8 m tem uma porta de 0,9 m × 2,1 m e duas janelas de
+    1,2 m × 1,0 m. Uma lata de tinta rende 40 m² por demão. Quantas latas para
+    duas demãos?
+14. Um piso em L com área de 21 m² será revestido com ladrilhos quadrados de
+    30 cm de lado. Quantos ladrilhos, considerando 12% de perda por recortes?
+
+### 6. Justificativa
+
+15. Justifique, usando o princípio da aditividade, por que a área de um
+    trapézio pode ser obtida cortando-o em um retângulo e dois triângulos —
+    e mostre que o resultado coincide com $\frac{(B+b)h}{2}$ num exemplo
+    numérico.
+16. Explique por que a estratégia da diferença é apenas a estratégia da soma
+    escrita ao contrário: se $A_{\text{grande}} = A_{\text{figura}} +
+    A_{\text{falta}}$, o que se conclui?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. $10 \times 6 - 4 \times 2 = 60 - 8 = 52$ m².
+2. Área: $400 - 64 = 336$ cm². Perímetro: continua $4 \times 20 = 80$ cm — o
+   entalhe no canto não altera o contorno.
+3. $12 \times 5 + \frac{\pi \times 2{,}5^2}{2} = 60 + 9{,}82 \approx 69{,}8$ m².
+4. Porque a área é uma quantidade da figura, e cortar não acrescenta nem retira
+   superfície. Desde que os pedaços não se sobreponham e cubram tudo, a soma é a
+   mesma.
+5. Porque eles são as linhas onde o retângulo encosta nos semicírculos — estão
+   **dentro** da pista, não na borda. Quem corre a volta não passa por eles.
+6. Com $R = 5$ e $r = 3$: a conta errada dá $\pi(5-3)^2 = 4\pi \approx 12{,}6$,
+   e a certa dá $\pi(25 - 9) = 16\pi \approx 50{,}3$. A forma correta é
+   $\pi R^2 - \pi r^2 = \pi(R^2 - r^2)$; o erro é o mesmo de supor
+   $(a-b)^2 = a^2 - b^2$, desmontado em
+   [Produtos notáveis](../algebra/produtos-notaveis).
+7. Área: $7 \times 5 - 3 \times 2 = 35 - 6 = 29$ m². Perímetro:
+   $2(7+5) = 24$ m.
+8. $60 \times 40 - 2 \times \pi \times 10^2 = 2\,400 - 200\pi \approx
+   1\,771{,}7$ cm².
+9. $\frac{(9+5) \times 6}{2} - \pi \times 1^2 = 42 - 3{,}14 \approx 38{,}9$ m².
+10. Diferença: $12 \times 7 - 4 \times 5 = 84 - 20 = 64$ m². Soma: base
+    $12 \times 2 = 24$ (altura $7-5$) mais duas pernas de
+    $4 \times 5 = 20$ cada (largura $\frac{12-4}{2} = 4$):
+    $24 + 20 + 20 = 64$ m² ✓.
+11. Área: $30 \times 20 + \frac{20 \times 9}{2} = 600 + 90 = 690$ m².
+    Perímetro: os dois lados de 30 m, um lado de 20 m e os dois lados do
+    triângulo — o lado de 20 m onde o triângulo se cola é interno e não conta:
+    $30 + 30 + 20 + 13{,}45 + 13{,}45 = 106{,}9$ m.
+12. $6 \times 1 + \frac{\pi \times 1^2}{2} = 6 + 1{,}57 \approx 7{,}57$ m².
+13. Parede: $6 \times 2{,}8 = 16{,}8$ m². Descontos:
+    $0{,}9 \times 2{,}1 = 1{,}89$ e $2 \times 1{,}2 \times 1 = 2{,}4$, total
+    4,29 m². Área a pintar: $16{,}8 - 4{,}29 = 12{,}51$ m²; duas demãos:
+    25,02 m². Como uma lata rende 40 m², **uma lata** basta.
+14. Área com perda: $21 \times 1{,}12 = 23{,}52$ m². Cada ladrilho tem
+    $0{,}3 \times 0{,}3 = 0{,}09$ m². $23{,}52 \div 0{,}09 = 261{,}3$, logo
+    **262 ladrilhos**.
+15. Baixando as duas alturas a partir dos extremos da base menor, o trapézio se
+    divide em um retângulo de base $b$ e altura $h$ e dois triângulos de altura
+    $h$ cujas bases somam $B - b$. Somando:
+    $bh + \frac{(B-b)h}{2} = \frac{2bh + Bh - bh}{2} = \frac{(B+b)h}{2}$ ✓.
+    Com $B = 10$, $b = 6$ e $h = 4$: retângulo 24, triângulos somando
+    $\frac{4 \times 4}{2} = 8$, total 32; e $\frac{(10+6)4}{2} = 32$ ✓.
+16. Conclui-se que $A_{\text{figura}} = A_{\text{grande}} - A_{\text{falta}}$ —
+    a subtração é a mesma igualdade da soma, com um termo isolado. As duas
+    estratégias não são métodos distintos: são a mesma aditividade, com a
+    incógnita em posições diferentes.
+
+</details>
+
+## Revisão curta
+
+- Não existe fórmula por formato. Existe uma **estratégia**: reduzir a figura
+  nova a figuras já conhecidas.
+- **Soma:** corte em pedaços que não se sobreponham e cubram tudo.
+  **Diferença:** complete até um formato conhecido e subtraia o que sobra.
+- As duas dão o mesmo resultado — use uma para conferir a outra.
+- Quase todo problema exige ao menos uma **medida deduzida** por subtração.
+  Anote todas na figura antes de calcular.
+- **Perímetro não é aditivo**: percorra o contorno, nunca some os perímetros das
+  partes.
+- Figuras com furo só admitem a estratégia da diferença.
+
+O mesmo raciocínio funciona em três dimensões, e é assim que se calcula o
+material de um tanque ou o volume de uma peça: as
+[fórmulas de volume e superfície](./volumes-e-superficies) dos sólidos básicos
+são as próximas peças do conjunto.

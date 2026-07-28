@@ -1,0 +1,739 @@
+---
+title: Ângulos
+---
+
+import GeoFigure from '@site/src/components/GeoFigure';
+
+# Ângulos: medir um giro, não uma distância
+
+## Problema motivador: o corte do rodapé
+
+Você vai instalar rodapé em uma sala. Duas peças precisam se encontrar no canto
+formando uma junta limpa, sem fresta. A serra de esquadria não pergunta “que
+canto é esse?”; ela pergunta **um número em graus**.
+
+O manual diz: “para um canto comum, corte as duas peças a 45°”. Mas a sala é
+antiga e um dos cantos claramente não é quadrado — ele é mais aberto. Medindo,
+o canto tem 100°.
+
+A pergunta prática é direta:
+
+> Nesse canto de 100°, a que ângulo cortar cada peça?
+
+Repare que a pergunta não é sobre comprimento. As peças podem ter 2 m ou 40 cm,
+podem ser altas ou baixas: nada disso muda o corte. O que decide é **quanto o
+canto vira**. É exatamente isso que um ângulo mede — e é por isso que ele merece
+uma unidade própria.
+
+Vamos construir a ideia e voltar para responder no fim da página.
+
+## Mapa das ideias
+
+- **ângulo** — a abertura entre duas semirretas que partem de um mesmo ponto;
+  mede o quanto é preciso girar uma até chegar na outra;
+- **grau** — a unidade dessa medida: uma volta completa vale 360°;
+- **ângulo agudo** — mede menos que 90°;
+- **ângulo reto** — mede exatamente 90°, o “canto quadrado”;
+- **ângulo obtuso** — mede mais que 90° e menos que 180°;
+- **ângulo raso** — mede exatamente 180°: os dois lados formam uma reta;
+- **ângulos complementares** — dois ângulos cuja soma é 90°;
+- **ângulos suplementares** — dois ângulos cuja soma é 180°.
+
+Por exemplo, 30° e 60° são complementares, porque $30 + 60 = 90$. Já 30° e 60°
+**não** são suplementares, porque $30 + 60 = 90 \neq 180$ — o suplementar de 30°
+é 150°.
+
+## Para que isso serve?
+
+Ângulo é a unidade de qualquer coisa que envolve direção ou inclinação:
+
+- cortes de marcenaria, telhados, rampas de acessibilidade e escadas;
+- a inclinação de um painel solar ou de uma antena parabólica;
+- coordenadas de navegação: “siga a 40° a nordeste”;
+- rotação em programação e em computação gráfica — girar uma imagem, orientar
+  um objeto na tela;
+- dentro da própria matemática, é o dado de entrada da trigonometria: seno e
+  cosseno são funções que recebem um ângulo.
+
+## Ideias anteriores que voltam aqui
+
+Três blocos do curso reaparecem nesta página. Antes de seguir, traga cada um de
+volta à memória respondendo às perguntas — a resposta vem logo abaixo.
+
+**1. Fração de um todo** (de [Frações](../numeros-e-operacoes/fracoes)).
+Quanto é $\frac{1}{4}$ de 360? E $\frac{1}{8}$?
+
+<details>
+<summary>Conferir</summary>
+
+$360 \div 4 = 90$ e $360 \div 8 = 45$. Tirar $\frac{1}{4}$ de uma quantidade é
+dividi-la em 4 partes iguais e tomar uma.
+
+</details>
+
+**2. Divisores de um número** (de
+[Múltiplos, divisores e primos](../numeros-e-operacoes/multiplos-divisores-primos)).
+Liste os divisores de 360 que estão entre 1 e 12.
+
+<details>
+<summary>Conferir</summary>
+
+$1, 2, 3, 4, 5, 6, 8, 9, 10, 12$ — todos dividem 360 exatamente. O único número
+dessa faixa que **não** divide é o 7 ($360 \div 7$ deixa resto 3). Guarde essa
+lista generosa: ela vai explicar a escolha do 360.
+
+</details>
+
+**3. Isolar a incógnita** (de
+[Equações do 1º grau](../equacoes/equacoes-do-primeiro-grau)).
+Resolva $x + 37 = 90$.
+
+<details>
+<summary>Conferir</summary>
+
+Subtraindo 37 dos dois lados, $x = 53$. Praticamente todo exercício desta página
+termina numa equação assim.
+
+</details>
+
+## Intuição: ângulo é giro, não tamanho
+
+Imagine a porta de um armário. Fechada, ela está encostada na lateral. Você a
+abre um pouco: ela girou. Abre mais: girou mais. O **ângulo** de abertura mede
+esse giro.
+
+Agora troque a porta por outra, do dobro da largura, e abra-a exatamente na
+mesma posição. O giro é o mesmo — as duas portas apontam para a mesma direção —,
+embora a porta maior tenha percorrido uma distância maior na ponta.
+
+Essa é a ideia central, e ela costuma escapar na primeira leitura:
+
+> O ângulo depende só das **direções** dos dois lados. Alongar ou encurtar os
+> lados não muda o ângulo.
+
+O desenho abaixo mostra o mesmo ângulo com lados de tamanhos bem diferentes:
+
+<GeoFigure
+  unit={40}
+  segments={[
+    {from: [0, 0], to: [3.6, 0], tone: 1},
+    {from: [0, 0], to: [2.55, 2.55], tone: 1},
+    {from: [5.4, 0], to: [6.6, 0], tone: 2},
+    {from: [5.4, 0], to: [6.25, 0.85], tone: 2},
+  ]}
+  angles={[
+    {at: [0, 0], from: [3.6, 0], to: [2.55, 2.55], label: '45^\\circ', tone: 1, radius: 44, labelRadius: 68},
+    {at: [5.4, 0], from: [6.6, 0], to: [6.25, 0.85], label: '45^\\circ', tone: 2, radius: 20, labelRadius: 44},
+  ]}
+  caption="Dois ângulos de 45°. Os lados do segundo têm um terço do comprimento — e mesmo assim a abertura é idêntica."
+/>
+
+Se ângulo fosse tamanho, o segundo desenho valeria menos que o primeiro. Ele
+vale o mesmo. É por isso que a medida de ângulo precisa de uma unidade que não
+seja centímetro.
+
+## Modelo visual: a volta dividida em 360 partes
+
+A unidade nasce de uma escolha simples: pegue uma volta completa e reparta-a em
+partes iguais. Cada parte vira a unidade.
+
+Foi o que os babilônios fizeram, escolhendo repartir a volta em **360 partes
+iguais**. Cada parte é **um grau**, escrito $1^\circ$.
+
+<GeoFigure
+  unit={30}
+  padding={56}
+  arcs={[
+    {at: [0, 0], r: 2, from: 0, to: 90, tone: 1},
+    {at: [0, 0], r: 2, from: 90, to: 180, tone: 2},
+    {at: [0, 0], r: 2, from: 180, to: 270, tone: 3},
+    {at: [0, 0], r: 2, from: 270, to: 360, tone: 1},
+  ]}
+  segments={[
+    {from: [-2, 0], to: [2, 0]},
+    {from: [0, -2], to: [0, 2]},
+  ]}
+  labels={[
+    {at: [0.95, 0.95], math: '90^\\circ', tone: 1},
+    {at: [-0.95, 0.95], math: '90^\\circ', tone: 2},
+    {at: [-0.95, -0.95], math: '90^\\circ', tone: 3},
+    {at: [0.95, -0.95], math: '90^\\circ', tone: 1},
+  ]}
+  caption="A volta completa vale 360°. Os dois cortes perpendiculares a repartem em quatro ângulos retos de 90°."
+/>
+
+### Por que 360, e não 100?
+
+Não é mágica nem tradição vazia: é a lista de divisores que você acabou de
+reativar. Repartir a volta em partes iguais é dividir 360, e 360 aceita muitas
+divisões exatas:
+
+| Fração da volta | Conta | Ângulo |
+|---|---|---:|
+| metade | $360 \div 2$ | 180° |
+| um terço | $360 \div 3$ | 120° |
+| um quarto | $360 \div 4$ | 90° |
+| um quinto | $360 \div 5$ | 72° |
+| um sexto | $360 \div 6$ | 60° |
+| um oitavo | $360 \div 8$ | 45° |
+| um doze avos | $360 \div 12$ | 30° |
+
+Todas essas contas dão números inteiros. Se a volta valesse 100 unidades, um
+terço dela seria $100 \div 3 = 33{,}333\ldots$, uma dízima — e o triângulo
+equilátero, que aparece em tudo, teria ângulos de medida infinita na escrita.
+
+A escolha do 360 é, no fundo, o mesmo raciocínio do
+[MDC e do MMC](../numeros-e-operacoes/multiplos-divisores-primos): um número com
+muitos divisores reparte bem. A fatoração de 360 mostra por quê:
+
+$$
+360 = 2^3 \times 3^2 \times 5.
+$$
+
+Três primos diferentes, com expoentes sobrando, produzem 24 divisores
+positivos — contra apenas 9 divisores de 100.
+
+## Ponte para a formalização
+
+Até aqui, “ângulo” foi descrito como giro. Para medir com números, é preciso
+fixar três coisas:
+
+1. **de onde parte o giro** — de uma das semirretas;
+2. **onde termina** — na outra semirreta;
+3. **qual unidade conta o giro** — o grau, $\frac{1}{360}$ de volta.
+
+Com isso, a medida do ângulo passa a ser uma pergunta com resposta numérica
+única: *quantos graus de giro separam um lado do outro?*
+
+O instrumento que faz essa leitura é o **transferidor**: um semicírculo com a
+escala de 0° a 180° já marcada. Encoste o centro dele no vértice, alinhe o zero
+com um dos lados e leia o número onde o outro lado cruza a escala.
+
+## Formalização
+
+> Um **ângulo** é a região do plano determinada por duas semirretas de mesma
+> origem. Essa origem é o **vértice**; as semirretas são os **lados**. A medida
+> do ângulo, em graus, é a fração da volta completa que o giro de um lado até o
+> outro representa, multiplicada por 360.
+
+Notação: um ângulo de vértice $B$ com lados passando por $A$ e por $C$ escreve-se
+$\hat{B}$ ou $A\hat{B}C$. Quando não há ambiguidade, letras gregas dão nome à
+medida: $\alpha$ (alfa), $\beta$ (beta), $\theta$ (teta).
+
+<GeoFigure
+  unit={34}
+  segments={[
+    {from: [0, 0], to: [3.4, 0], tone: 1, arrow: true},
+    {from: [0, 0], to: [2.4, 2.4], tone: 1, arrow: true},
+  ]}
+  angles={[{at: [0, 0], from: [3.4, 0], to: [2.4, 2.4], label: '\\alpha', tone: 2, radius: 38, labelRadius: 58}]}
+  points={[
+    {at: [0, 0], label: 'B', place: 'below-left', tone: 1},
+    {at: [3.4, 0], label: 'C', place: 'below', tone: 1},
+    {at: [2.4, 2.4], label: 'A', place: 'above', tone: 1},
+  ]}
+  caption="O vértice é B; os lados passam por A e por C. A medida do ângulo A B̂ C é α."
+/>
+
+### Exemplo e contraexemplo
+
+Uma figura com duas semirretas de mesma origem determina um ângulo:
+$\alpha = 45^\circ$ acima. Já **dois segmentos que não se tocam** não determinam
+ângulo nenhum — sem vértice comum, não há giro de um até o outro. Da mesma
+forma, um único segmento sozinho não tem ângulo: falta o segundo lado.
+
+## Classificação pela abertura
+
+Os nomes existem porque cada faixa se comporta de um jeito nas construções.
+
+<GeoFigure
+  unit={26}
+  padding={50}
+  segments={[
+    {from: [0, 0], to: [2.6, 0], tone: 1},
+    {from: [0, 0], to: [2.25, 1.3], tone: 1},
+    {from: [5, 0], to: [7.6, 0], tone: 2},
+    {from: [5, 0], to: [5, 2.6], tone: 2},
+    {from: [10, 0], to: [12.6, 0], tone: 3},
+    {from: [10, 0], to: [8.7, 2.25], tone: 3},
+    {from: [16, 0], to: [18.6, 0], tone: 1},
+    {from: [16, 0], to: [13.4, 0], tone: 1},
+  ]}
+  angles={[
+    {at: [0, 0], from: [2.6, 0], to: [2.25, 1.3], label: '30^\\circ', tone: 1, radius: 26, labelRadius: 44},
+    {at: [5, 0], from: [7.6, 0], to: [5, 2.6], right: true, tone: 2},
+    {at: [10, 0], from: [12.6, 0], to: [8.7, 2.25], label: '120^\\circ', tone: 3, radius: 26, labelRadius: 48},
+    {at: [16, 0], from: [18.6, 0], to: [13.4, 0], label: '180^\\circ', tone: 1, radius: 26, labelRadius: 46},
+  ]}
+  labels={[
+    {at: [1.3, -0.7], math: '\\text{agudo}', fontSize: 13},
+    {at: [6.3, -0.7], math: '\\text{reto}', fontSize: 13},
+    {at: [11.3, -0.7], math: '\\text{obtuso}', fontSize: 13},
+    {at: [16, -0.7], math: '\\text{raso}', fontSize: 13},
+  ]}
+  caption="As quatro faixas de abertura. O ângulo reto ganha um quadradinho no lugar do arco — é a marca padrão em qualquer desenho técnico."
+/>
+
+| Nome | Medida | Exemplo | Contraexemplo |
+|---|---|---|---|
+| agudo | menor que 90° | 30°, 89° | 90° já não é agudo |
+| reto | exatamente 90° | o canto de uma folha de papel | 89° é agudo, não reto |
+| obtuso | entre 90° e 180° | 120°, 179° | 180° já não é obtuso |
+| raso | exatamente 180° | os dois lados formam uma reta | 170° é obtuso |
+
+Dois casos extras aparecem quando o giro passa de meia volta: o ângulo é
+**côncavo** (ou reflexo) entre 180° e 360°, e é de **uma volta** em 360°. Eles
+serão úteis no [ciclo trigonométrico](./ciclo-trigonometrico), onde giros
+maiores que meia volta são a regra.
+
+O ângulo reto é o mais importante dos quatro, porque é o único que dá origem a
+um teorema com nome próprio — o [de Pitágoras](./teorema-de-pitagoras) — e a uma
+área inteira da matemática, a [trigonometria](./razoes-trigonometricas). Duas
+retas que se cruzam formando ângulo reto são chamadas de **perpendiculares**.
+
+## As duas somas que resolvem quase tudo
+
+Em geometria, raramente se mede um ângulo diretamente. Quase sempre se conhece
+um e se **deduz** o outro, porque a soma dos dois é fixa. Dois casos concentram
+a maior parte dos problemas.
+
+### Complementares: os que completam um ângulo reto
+
+<GeoFigure
+  unit={38}
+  padding={50}
+  segments={[
+    {from: [0, 0], to: [2.8, 0], tone: 1},
+    {from: [0, 0], to: [0, 2.8], tone: 1},
+    {from: [0, 0], to: [2.14, 1.8], tone: 2},
+  ]}
+  angles={[
+    {at: [0, 0], from: [2.8, 0], to: [2.14, 1.8], label: '\\alpha', tone: 2, radius: 42, labelRadius: 62},
+    {at: [0, 0], from: [2.14, 1.8], to: [0, 2.8], label: '\\beta', tone: 3, radius: 68, labelRadius: 88},
+  ]}
+  caption="A semirreta do meio corta o ângulo reto em duas partes. Elas não são iguais, mas somam sempre 90°."
+/>
+
+> Dois ângulos são **complementares** quando a soma das medidas é 90°. O
+> **complemento** de um ângulo $\alpha$ é $90^\circ - \alpha$.
+
+Exemplo: o complemento de 25° é $90 - 25 = 65^\circ$, porque
+$25 + 65 = 90$. Contraexemplo: 25° e 155° **não** são complementares — somam
+180°, o que os torna suplementares, não complementares.
+
+Repare no que a definição exige e no que ela não exige: os dois ângulos precisam
+somar 90°, mas **não precisam estar desenhados lado a lado**. “Complementar” é
+uma relação entre dois números, não uma posição na figura.
+
+### Suplementares: os que completam uma reta
+
+<GeoFigure
+  unit={38}
+  padding={46}
+  segments={[
+    {from: [-2.6, 0], to: [2.6, 0], tone: 1},
+    {from: [0, 0], to: [-1.4, 2.2], tone: 2},
+  ]}
+  angles={[
+    {at: [0, 0], from: [2.6, 0], to: [-1.4, 2.2], label: '\\alpha', tone: 2, radius: 40, labelRadius: 62},
+    {at: [0, 0], from: [-1.4, 2.2], to: [-2.6, 0], label: '\\beta', tone: 3, radius: 66, labelRadius: 88},
+  ]}
+  caption="Uma semirreta apoiada sobre uma reta divide o ângulo raso em dois. Eles somam sempre 180°."
+/>
+
+> Dois ângulos são **suplementares** quando a soma das medidas é 180°. O
+> **suplemento** de um ângulo $\alpha$ é $180^\circ - \alpha$.
+
+Exemplo: o suplemento de 100° é $180 - 100 = 80^\circ$. Contraexemplo: 100° não
+tem complemento, porque $90 - 100 = -10$, e não existe ângulo de medida
+negativa nessa conta — **só ângulos agudos têm complemento**.
+
+> **Erro comum:** trocar complementar por suplementar. Os nomes não ajudam, e a
+> confusão custa a resposta inteira. Um apoio que funciona: **c** de
+> **c**omplementar e de **c**anto (o canto reto, 90°); **s** de **s**uplementar
+> e de **s**eguir reto (a reta, 180°). Teste rápido: o complemento de 60° é 30°;
+> o suplemento de 60° é 120°. Se sua resposta for maior que o próprio ângulo
+> quando ele é agudo, você calculou o suplemento.
+
+### Por que essas somas aparecem tanto
+
+Porque um giro pode ser decomposto em partes, e a soma das partes é o giro
+inteiro — exatamente como uma quantidade pode ser repartida em parcelas. Uma
+reta é meia volta; um canto reto é um quarto de volta. Sempre que uma semirreta
+cai dentro de um deles, ela corta um valor conhecido em duas parcelas, e
+conhecer uma parcela entrega a outra por subtração.
+
+## Ângulos opostos pelo vértice
+
+Quando duas retas se cruzam, formam-se quatro ângulos. Os que ficam “de frente
+um para o outro” têm sempre a mesma medida.
+
+<GeoFigure
+  unit={40}
+  padding={52}
+  segments={[
+    {from: [-2.4, -1.35], to: [2.4, 1.35], tone: 1},
+    {from: [-2.4, 1.6], to: [2.4, -1.6], tone: 1},
+  ]}
+  angles={[
+    {at: [0, 0], from: [2.4, 1.35], to: [2.4, -1.6], label: '\\alpha', tone: 2, radius: 44, labelRadius: 66},
+    {at: [0, 0], from: [-2.4, -1.35], to: [-2.4, 1.6], label: '\\alpha', tone: 2, radius: 44, labelRadius: 66},
+    {at: [0, 0], from: [2.4, 1.35], to: [-2.4, 1.6], label: '\\beta', tone: 3, radius: 36, labelRadius: 58},
+    {at: [0, 0], from: [-2.4, -1.35], to: [2.4, -1.6], label: '\\beta', tone: 3, radius: 36, labelRadius: 58},
+  ]}
+  caption="Ângulos opostos pelo vértice são iguais. Os que ficam lado a lado são suplementares."
+/>
+
+A demonstração cabe em duas linhas e usa só a soma que acabamos de estabelecer.
+Olhe para a reta horizontal: $\alpha$ e $\beta$ estão apoiados nela, logo
+
+$$
+\alpha + \beta = 180^\circ.
+$$
+
+Agora olhe para a outra reta: o segundo $\beta$ e o segundo $\alpha$ também
+estão apoiados nela, então valem a mesma soma. Como cada um dos quatro ângulos
+tem $180^\circ - (\text{seu vizinho})$, os dois opostos acabam com o mesmo
+valor. Em números: se $\alpha = 55^\circ$, então $\beta = 125^\circ$, e o
+oposto de $\alpha$ vale $180 - 125 = 55^\circ$ — de volta ao mesmo.
+
+## Paralelas cortadas por uma transversal
+
+Este é o último bloco da página, e o mais rentável: ele é a peça que faltará na
+[próxima lição](./triangulos) para provar que os ângulos de um triângulo somam
+180°.
+
+Duas retas **paralelas** nunca se cruzam — mantêm a mesma direção. Quando uma
+terceira reta (a **transversal**) corta as duas, os oito ângulos formados
+assumem apenas dois valores.
+
+<GeoFigure
+  unit={40}
+  padding={54}
+  segments={[
+    {from: [-2.6, 2], to: [3.2, 2], tone: 1},
+    {from: [-2.6, -0.6], to: [3.2, -0.6], tone: 1},
+    {from: [-1.6, -1.6], to: [2.4, 3], tone: 2},
+  ]}
+  angles={[
+    {at: [0.13, 2], from: [3.2, 2], to: [2.4, 3], label: 'a', tone: 3, radius: 30, labelRadius: 48},
+    {at: [0.13, 2], from: [-2.6, 2], to: [-1.6, -1.6], label: 'a', tone: 3, radius: 30, labelRadius: 48},
+    {at: [-2.13, -0.6], from: [3.2, -0.6], to: [2.4, 3], label: 'a', tone: 3, radius: 30, labelRadius: 48},
+    {at: [-2.13, -0.6], from: [-2.6, -0.6], to: [-1.6, -1.6], label: 'a', tone: 3, radius: 30, labelRadius: 48},
+  ]}
+  labels={[
+    {at: [3.0, 2.35], math: 'r', tone: 1, fontSize: 13},
+    {at: [3.0, -0.25], math: 's', tone: 1, fontSize: 13},
+    {at: [2.55, 2.9], math: 't', tone: 2, fontSize: 13},
+  ]}
+  caption="As retas r e s são paralelas; t as corta. Todos os ângulos marcados com a têm a mesma medida; os quatro restantes valem 180° − a."
+/>
+
+Duas relações merecem nome, porque serão usadas adiante:
+
+- **correspondentes**: ocupam a mesma posição em cada cruzamento (por exemplo,
+  ambos “em cima e à direita”). São **iguais**.
+- **alternos internos**: ficam entre as duas paralelas, em lados opostos da
+  transversal. Também são **iguais**.
+
+Por que iguais? Porque as duas paralelas apontam para a mesma direção. A
+transversal chega ao segundo cruzamento com a mesma inclinação com que chegou ao
+primeiro — nada mudou entre um e outro, já que as retas cortadas não mudaram de
+direção. Se o ângulo fosse diferente lá embaixo, as retas $r$ e $s$ estariam se
+inclinando uma em relação à outra e, cedo ou tarde, se cruzariam — deixando de
+ser paralelas.
+
+Um jeito concreto de conferir: desenhe a figura, recorte um dos ângulos $a$ do
+cruzamento de cima e encaixe-o sobre o $a$ do cruzamento de baixo. Ele cobre
+exatamente.
+
+## Voltando ao problema do rodapé
+
+Agora dá para responder. O canto da sala tem 100°. As duas peças de rodapé se
+encontram nele, e cada uma será cortada em um ângulo $x$ — o mesmo nas duas, já
+que a junta é simétrica.
+
+Os dois cortes, juntos, formam o canto:
+
+$$
+x + x = 100^\circ
+$$
+
+$$
+2x = 100^\circ
+$$
+
+$$
+x = 50^\circ.
+$$
+
+Cada peça é cortada a 50°. Confere com o caso do manual: num canto comum, de
+90°, a conta daria $x = 45^\circ$ — o número que o manual mandava usar.
+
+Falta um detalhe prático, e ele é uma aplicação direta de suplementar. A escala
+da serra de esquadria não marca “o ângulo do corte”; ela marca o quanto a lâmina
+se afasta da posição perpendicular à peça. Ou seja, a serra pede
+
+$$
+90^\circ - 50^\circ = 40^\circ.
+$$
+
+Vale reparar no que aconteceu: o mesmo corte tem dois números, 50° e 40°,
+dependendo de onde se mede o giro. É por isso que a definição exigiu dizer **de
+onde parte** o giro. Um ângulo sem referência declarada é um número sem
+significado.
+
+## Exemplos resolvidos
+
+### Exemplo 1: complemento e suplemento
+
+Um ângulo mede 37°. Quanto valem seu complemento e seu suplemento?
+
+Complemento: $90 - 37 = 53^\circ$. Suplemento: $180 - 37 = 143^\circ$.
+
+Verificação: $37 + 53 = 90$ ✓ e $37 + 143 = 180$ ✓.
+
+### Exemplo 2: o dobro do complemento
+
+*Pause e tente antes de ler.* Um ângulo é o dobro de seu complemento. Quanto ele
+mede?
+
+Chame o ângulo de $x$. Seu complemento é $90 - x$. A condição do enunciado vira
+equação:
+
+$$
+x = 2(90 - x).
+$$
+
+Aplicando a distributiva (de
+[Expressões algébricas](../algebra/expressoes-algebricas)):
+
+$$
+x = 180 - 2x.
+$$
+
+Somando $2x$ nos dois lados:
+
+$$
+3x = 180,
+$$
+
+$$
+x = 60^\circ.
+$$
+
+Verificação: o complemento de 60° é 30°, e 60 é de fato o dobro de 30. ✓
+
+### Exemplo 3: rampa de acesso
+
+*Pause e tente antes de ler.* Uma rampa sobe formando 6° com o piso horizontal.
+Que ângulo ela forma com um poste vertical fincado no chão?
+
+O poste é perpendicular ao piso, então piso e poste formam 90°. A rampa está
+entre os dois, cortando esse ângulo reto em duas partes: os 6° do lado do piso e
+o restante do lado do poste. As duas partes são complementares:
+
+$$
+6^\circ + x = 90^\circ \quad\Longrightarrow\quad x = 84^\circ.
+$$
+
+A rampa forma 84° com o poste. Faz sentido: uma rampa quase deitada fica quase
+perpendicular a um poste em pé.
+
+### Exemplo 4: transversal
+
+*Pause e tente antes de ler.* Duas retas paralelas são cortadas por uma
+transversal. Um dos ângulos formados mede 63°. Quais são as medidas possíveis
+dos outros sete?
+
+Só existem dois valores: 63° e seu suplemento, $180 - 63 = 117^\circ$. Quatro
+ângulos medem 63° (o dado, seu oposto pelo vértice, e os dois correspondentes no
+outro cruzamento) e quatro medem 117°.
+
+Conferência: qualquer par vizinho soma $63 + 117 = 180$ ✓.
+
+## Erros comuns
+
+> **Erro comum 1: achar que ângulo maior tem lados maiores.** Um ângulo de 10°
+> desenhado com lados de 20 cm ocupa muito mais papel que um de 170° desenhado
+> com lados de 1 cm — e continua sendo o menor dos dois. A medida é do giro,
+> não da tinta.
+
+> **Erro comum 2: somar ângulos que não se encaixam.** Complementar e
+> suplementar valem para pares específicos. Se três semirretas partem do mesmo
+> vértice dividindo o ângulo raso, as **três** parcelas somam 180° — nenhuma
+> delas é, sozinha, o suplemento da outra.
+
+> **Erro comum 3: ler o transferidor na escala errada.** O transferidor traz
+> duas numerações, uma crescendo da esquerda para a direita e outra ao
+> contrário. Um ângulo visivelmente agudo lido como 150° é a escala trocada:
+> o valor certo é $180 - 150 = 30^\circ$. Antes de anotar, classifique o
+> ângulo a olho — agudo ou obtuso? — e veja se o número combina.
+
+## Perguntas de verificação
+
+Responda com suas palavras antes de abrir.
+
+1. Por que dois ângulos podem ser iguais mesmo com lados de comprimentos
+   diferentes?
+2. Que vantagem prática o número 360 tem sobre o número 100 como total de uma
+   volta?
+3. Um ângulo obtuso tem complemento? Por quê?
+4. Qual é a diferença entre dizer “$\alpha$ e $\beta$ são suplementares” e
+   dizer “$\alpha$ e $\beta$ estão lado a lado sobre uma reta”?
+5. Por que os ângulos opostos pelo vértice são necessariamente iguais?
+6. Se duas retas cortadas por uma transversal formam ângulos correspondentes
+   **diferentes**, o que se pode concluir sobre elas?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque o ângulo mede a diferença de direção entre os dois lados, e a direção
+   de uma semirreta não muda quando ela é alongada ou encurtada. Prolongar um
+   lado não gira nada.
+2. 360 tem 24 divisores positivos; 100 tem apenas 9. Isso faz com que muitas
+   frações usuais da volta (metade, terço, quarto, quinto, sexto, oitavo, doze
+   avos) caiam em números inteiros de graus. Com 100, um terço de volta já
+   seria uma dízima.
+3. Não. O complemento seria $90^\circ - \alpha$, e com $\alpha$ maior que 90°
+   essa conta dá um número negativo — não há ângulo sobrando para completar os
+   90°. Só ângulos agudos têm complemento.
+4. A segunda frase é mais forte: ela afirma uma **posição** na figura, e dessa
+   posição decorre a soma 180°. A primeira afirma só a **soma**; os dois
+   ângulos podem estar em figuras separadas, sem se tocar.
+5. Cada um deles é o suplemento do mesmo ângulo vizinho. Se $\alpha + \beta =
+   180^\circ$ e $\gamma + \beta = 180^\circ$, então $\alpha$ e $\gamma$ valem os
+   dois $180^\circ - \beta$ — logo, são iguais.
+6. Que elas **não** são paralelas. Se a transversal chega às duas com
+   inclinações diferentes, as retas estão convergindo ou divergindo, e em algum
+   ponto se cruzam.
+
+</details>
+
+## Exercícios
+
+### 1. Reconhecimento
+
+1. Classifique cada ângulo em agudo, reto, obtuso ou raso: 12°, 90°, 91°, 180°,
+   179°, 45°.
+2. Quantos graus tem cada parte quando a volta completa é dividida em 5 partes
+   iguais? E em 9?
+3. Um relógio marca 3 horas em ponto. Qual é o ângulo entre os ponteiros?
+
+### 2. Explicação
+
+4. Explique por que o ângulo entre duas semirretas não muda se você desenhá-las
+   com o dobro do comprimento.
+5. Um colega afirma: “todo ângulo tem complemento e suplemento”. Corrija a
+   afirmação e explique.
+6. Duas retas se cruzam formando um ângulo de 90°. Explique por que os outros
+   três também medem 90°.
+
+### 3. Aplicação direta
+
+7. Calcule o complemento e o suplemento de: 18°, 45° e 72°.
+8. Um ângulo mede 143°. Quanto mede seu suplemento?
+9. Duas retas paralelas são cortadas por uma transversal, e um dos ângulos mede
+   118°. Quanto medem os ângulos alternos internos correspondentes a ele?
+
+### 4. Variação
+
+10. Um ângulo é o triplo de seu suplemento. Quanto ele mede?
+11. Dois ângulos são complementares e um deles mede 14° a mais que o outro.
+    Determine os dois.
+12. Um canto de parede mede 84°. A que ângulo cada uma das duas peças de rodapé
+    deve ser cortada?
+
+<details>
+<summary>Dica para o 11</summary>
+
+Chame o menor de $x$. O outro é $x + 14$. O que a palavra “complementares” diz
+sobre a soma dos dois?
+
+</details>
+
+### 5. Problema misto
+
+13. Um telhado de duas águas tem os dois lados inclinados em 32° em relação à
+    horizontal. Qual é o ângulo formado entre as duas águas, no topo?
+14. Três semirretas partem de um mesmo ponto sobre uma reta, dividindo o ângulo
+    raso em três partes. A segunda mede o dobro da primeira, e a terceira mede
+    o triplo da primeira. Determine as três.
+
+<details>
+<summary>Dica para o 13</summary>
+
+Desenhe a horizontal passando pelo topo do telhado. Cada água forma com essa
+horizontal um ângulo igual ao que ela forma com o piso — são alternos internos
+entre duas paralelas. O que sobra entre as duas águas é o suplemento da soma
+dessas duas parcelas.
+
+</details>
+
+### 6. Justificativa
+
+15. Por que a definição de ângulo precisa dizer que as duas semirretas têm
+    **mesma origem**? O que deixaria de funcionar sem essa exigência?
+16. Mostre, usando apenas a ideia de ângulo raso, por que dois ângulos
+    correspondentes iguais garantem que as retas cortadas são paralelas.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Agudos: 12°, 45°. Reto: 90°. Obtusos: 91°, 179°. Raso: 180°.
+2. $360 \div 5 = 72^\circ$ e $360 \div 9 = 40^\circ$.
+3. 90°. Às 3h em ponto os ponteiros estão sobre o 12 e sobre o 3, que distam um
+   quarto de volta.
+4. Porque a medida do ângulo depende só das direções das semirretas. Alongar um
+   lado percorre mais distância, mas não muda para onde ele aponta — e é a
+   diferença de direções que o ângulo mede.
+5. Todo ângulo entre 0° e 180° tem suplemento, mas só os **agudos** têm
+   complemento: para $\alpha$ maior que 90°, a conta $90^\circ - \alpha$ daria
+   negativo.
+6. Cada um dos vizinhos é suplementar ao de 90°, logo mede $180 - 90 = 90^\circ$.
+   O oposto pelo vértice repete o valor original.
+7. Complementos: 72°, 45°, 18°. Suplementos: 162°, 135°, 108°.
+8. $180 - 143 = 37^\circ$.
+9. 118°. Alternos internos são iguais. (Se você respondeu 62°, pegou o
+   suplemento — esse é o valor dos outros quatro ângulos da figura.)
+10. $x = 3(180 - x) \Rightarrow x = 540 - 3x \Rightarrow 4x = 540 \Rightarrow
+    x = 135^\circ$. Confere: o suplemento é 45°, e $3 \times 45 = 135$ ✓.
+11. $x + (x+14) = 90 \Rightarrow 2x = 76 \Rightarrow x = 38^\circ$; o outro mede
+    52°. Confere: $38 + 52 = 90$ ✓ e $52 - 38 = 14$ ✓.
+12. $2x = 84 \Rightarrow x = 42^\circ$ em cada peça.
+13. 116°. Cada água forma 32° com a horizontal do topo, e essas duas parcelas
+    mais o ângulo do topo completam o ângulo raso:
+    $32 + 32 + x = 180 \Rightarrow x = 116^\circ$. Se você encontrou 64°, somou
+    as duas inclinações e parou antes de subtrair de 180.
+14. $x + 2x + 3x = 180 \Rightarrow 6x = 180 \Rightarrow x = 30^\circ$. As três
+    medem 30°, 60° e 90°.
+15. Sem origem comum não existe vértice, e sem vértice não há ponto em torno do
+    qual girar. Duas semirretas soltas no plano podem ter direções diferentes,
+    mas a figura não delimita nenhuma abertura — não há região entre elas.
+16. Suponha que os correspondentes sejam iguais e que, ainda assim, as retas se
+    cruzem em algum ponto $P$. Do lado do cruzamento formar-se-ia um triângulo,
+    e um ângulo externo desse triângulo teria de ser maior que o interno não
+    adjacente — o que contradiz a igualdade suposta. Sem essa saída, as retas
+    não se cruzam: são paralelas. (Na prática, o argumento visual basta: se a
+    transversal chega às duas retas com a mesma inclinação, as retas mantêm a
+    mesma direção uma em relação à outra e nunca se aproximam.)
+
+</details>
+
+## Revisão curta
+
+- **Ângulo** mede giro, não comprimento: alongar os lados não muda a medida.
+- O **grau** é $\frac{1}{360}$ de volta; 360 foi escolhido por ter muitos
+  divisores, o que faz as frações usuais da volta darem números inteiros.
+- Agudo (menos que 90°), reto (90°), obtuso (entre 90° e 180°), raso (180°).
+- **Complementares** somam 90°; **suplementares** somam 180°. Só ângulos agudos
+  têm complemento.
+- **Opostos pelo vértice** são iguais; vizinhos sobre uma reta são
+  suplementares.
+- Em **paralelas cortadas por uma transversal**, só existem dois valores de
+  ângulo: um deles e seu suplemento. Correspondentes e alternos internos são
+  iguais.
+
+O próximo passo usa a última linha como ferramenta: é ela que prova, sem
+medir nada, que os [três ângulos de um triângulo](./triangulos) somam sempre
+180°.

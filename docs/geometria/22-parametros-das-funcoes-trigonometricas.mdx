@@ -1,0 +1,671 @@
+---
+title: Os parâmetros das funções trigonométricas
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Os parâmetros de $a\sen(bx+c)+d$: esticar, comprimir, deslocar
+
+## Problema motivador: escrever a fórmula da maré
+
+A tábua de marés de um porto informa:
+
+- **maré alta:** 4,2 m, atingida às **5 horas** da manhã;
+- **maré baixa:** 0,8 m;
+- o ciclo completo dura **12 horas**.
+
+Um sistema de controle de atracação precisa da **altura da água a qualquer
+instante**, não só nos extremos tabelados.
+
+> Que função descreve a altura da maré em função do tempo?
+
+A forma da curva já é conhecida — é uma senoide, como visto em
+[Gráficos do seno e do cosseno](./graficos-seno-e-cosseno). Mas a senoide básica
+$\sen t$ oscila entre $-1$ e 1, tem período $2\pi$ e atinge o máximo em
+$t = \frac{\pi}{2}$. Nenhum desses três números serve aqui.
+
+É preciso **ajustar** a curva: esticá-la verticalmente, erguê-la, mudar o ritmo
+e deslocá-la no tempo. Cada ajuste é um parâmetro, e esta página trata de um de
+cada vez.
+
+## Mapa das ideias
+
+Na função $f(x) = a\,\sen(bx + c) + d$:
+
+- **$a$ — amplitude:** metade da distância entre máximo e mínimo; estica ou
+  comprime verticalmente. Se $a < 0$, a curva também vira de cabeça para baixo;
+- **$b$ — frequência angular:** controla o **período**, que vale
+  $\frac{2\pi}{|b|}$;
+- **$c$ — fase:** desloca a curva horizontalmente, em $-\frac{c}{b}$;
+- **$d$ — deslocamento vertical:** sobe ou desce a curva inteira; é o **valor
+  médio** da oscilação.
+
+Exemplo: em $f(x) = 3\sen(2x)$, a amplitude é 3 e o período é
+$\frac{2\pi}{2} = \pi$. Contraexemplo: o período **não** é $2\pi \times 2 = 4\pi$
+— um $b$ maior **acelera** a oscilação, encurtando o período. Essa inversão é o
+erro mais comum do assunto.
+
+## Para que isso serve?
+
+- modelar qualquer fenômeno periódico com dados reais: maré, temperatura,
+  consumo de energia, sazonalidade de vendas;
+- eletricidade: a tensão da rede é $V(t) = V_p\sen(2\pi f t)$, com $f = 60$ Hz;
+- áudio: a frequência define a nota, a amplitude define o volume, a fase define
+  o alinhamento entre ondas;
+- vibração e sinais em geral: quase toda análise começa por identificar
+  amplitude, período e fase;
+- e, dentro da matemática, é o mesmo estudo de parâmetros já feito com a
+  [função quadrática](../funcoes/funcao-quadratica), agora com uma curva
+  periódica.
+
+## Ideias anteriores que voltam aqui
+
+**1. O gráfico básico** (de
+[Gráficos do seno e do cosseno](./graficos-seno-e-cosseno)). Qual é o período,
+a amplitude e a imagem de $\sen x$?
+
+<details>
+<summary>Conferir</summary>
+
+Período $2\pi$, amplitude 1, imagem $[-1, 1]$. Todos os parâmetros desta página
+alteram um desses três.
+
+</details>
+
+**2. Efeito de parâmetros** (de
+[Função quadrática](../funcoes/funcao-quadratica)). O que o parâmetro $a$ faz
+com a parábola $y = ax^2$?
+
+<details>
+<summary>Conferir</summary>
+
+Estica verticalmente se $|a| > 1$, achata se $|a| < 1$, e inverte a concavidade
+se $a < 0$. O papel de $a$ aqui é análogo.
+
+</details>
+
+**3. Fator dentro da função.** Se $g(x) = f(2x)$, o gráfico de $g$ é mais largo
+ou mais estreito que o de $f$?
+
+<details>
+<summary>Conferir</summary>
+
+Mais **estreito**. Para $g$ atingir o que $f$ atinge em $x = 10$, basta
+$x = 5$ — tudo acontece na metade do caminho. Multiplicar a entrada por um
+número maior que 1 **comprime** horizontalmente. Guarde: é a origem da inversão
+que confunde no cálculo do período.
+
+</details>
+
+## Um parâmetro de cada vez
+
+O método desta página é isolar cada efeito. Depois, combiná-los.
+
+### $d$ — o deslocamento vertical
+
+$$
+f(x) = \sen x + d
+$$
+
+Somar uma constante ao **resultado** move a curva inteira para cima (ou para
+baixo, se $d < 0$). Nada mais muda: nem o formato, nem a largura, nem a altura
+da oscilação.
+
+<CartesianPlane
+  xMin={-0.5} xMax={6.8} yMin={-1.8} yMax={4.3}
+  xUnit={44} yUnit={34}
+  xStep={1.5707963} yStep={1}
+  xTicks={[{at: 3.1415927, label: '\\pi'}, {at: 6.2831853, label: '2\\pi'}]}
+  functions={[
+    {f: (x) => Math.sin(x), tone: 1},
+    {f: (x) => Math.sin(x) + 2, tone: 2},
+  ]}
+  lines={[{m: 0, n: 2, tone: 0, dashed: true}]}
+  caption="sen x (azul) e sen x + 2 (laranja). A linha tracejada é o novo eixo de oscilação."
+/>
+
+O que muda: a **imagem** passa de $[-1,1]$ para $[d-1,\ d+1]$.
+
+O parâmetro $d$ tem um nome útil: é o **valor médio** da função — a linha em
+torno da qual ela oscila. Num modelo de maré, é o nível médio do mar; num
+modelo de temperatura, a média anual.
+
+### $a$ — a amplitude
+
+$$
+f(x) = a\,\sen x
+$$
+
+Multiplicar o **resultado** por $a$ estica a curva verticalmente.
+
+<CartesianPlane
+  xMin={-0.5} xMax={6.8} yMin={-3.4} yMax={3.4}
+  xUnit={44} yUnit={30}
+  xStep={1.5707963} yStep={1}
+  xTicks={[{at: 3.1415927, label: '\\pi'}, {at: 6.2831853, label: '2\\pi'}]}
+  functions={[
+    {f: (x) => Math.sin(x), tone: 1},
+    {f: (x) => 3 * Math.sin(x), tone: 2},
+    {f: (x) => -1.5 * Math.sin(x), tone: 3, dashed: true},
+  ]}
+  caption="sen x (azul), 3 sen x (laranja) e −1,5 sen x (verde tracejado). O sinal negativo espelha a curva."
+/>
+
+- $|a| > 1$ estica; $|a| < 1$ achata;
+- $a < 0$ **inverte** a curva, refletindo-a no eixo horizontal;
+- a **amplitude** é $|a|$, e a imagem passa a ser $[-|a|,\ |a|]$;
+- o **período não muda** — os zeros continuam nos mesmos lugares.
+
+> **Erro comum:** dizer que a amplitude de $-3\sen x$ é $-3$. Amplitude é uma
+> distância, sempre positiva: vale 3. O sinal descreve a **inversão**, não o
+> tamanho.
+
+### $b$ — o período
+
+$$
+f(x) = \sen(bx)
+$$
+
+Aqui o parâmetro age **antes** do seno, sobre a entrada. E é aqui que quase todo
+mundo erra na primeira vez.
+
+<CartesianPlane
+  xMin={-0.5} xMax={6.8} yMin={-1.6} yMax={1.6}
+  xUnit={44} yUnit={44}
+  xStep={1.5707963} yStep={0.5}
+  xTicks={[{at: 3.1415927, label: '\\pi'}, {at: 6.2831853, label: '2\\pi'}]}
+  yTicks={[{at: 1, label: '1'}, {at: -1, label: '-1'}]}
+  functions={[
+    {f: (x) => Math.sin(x), tone: 1},
+    {f: (x) => Math.sin(2 * x), tone: 2},
+  ]}
+  caption="sen x (azul) completa um ciclo em 2π; sen 2x (laranja) completa dois no mesmo espaço."
+/>
+
+Pense no que a função precisa para completar um ciclo: o **argumento** do seno
+tem de percorrer $2\pi$. Se o argumento é $bx$, então
+
+$$
+b \times (\text{período}) = 2\pi
+\qquad\Longrightarrow\qquad
+\boxed{\ \text{período} = \frac{2\pi}{|b|}\ }
+$$
+
+Com $b = 2$, o período é $\pi$: a curva completa dois ciclos onde antes cabia
+um. Com $b = \frac{1}{2}$, o período é $4\pi$: a curva fica esticada, e um ciclo
+ocupa o dobro do espaço.
+
+> **Erro comum — o principal desta página:** achar que $b$ multiplica o período.
+> Ele **divide**. A intuição que resolve: $b$ é a **velocidade** com que o
+> argumento avança. Quanto mais rápido o argumento corre, mais depressa o ciclo
+> se completa, e **menor** é o período. Um teste de sanidade: $\sen(2x)$ tem de
+> ser mais “apertado” que $\sen x$, e $\frac{2\pi}{2} = \pi$ é menor que
+> $2\pi$ ✓.
+
+Em aplicações, $b$ costuma aparecer escrito a partir da **frequência** $f$
+(ciclos por unidade de tempo):
+
+$$
+b = 2\pi f
+\qquad\text{e}\qquad
+\text{período} = \frac{1}{f}.
+$$
+
+### $c$ — a fase
+
+$$
+f(x) = \sen(x + c)
+$$
+
+Somar uma constante **dentro** da função desloca a curva horizontalmente.
+
+<CartesianPlane
+  xMin={-1.8} xMax={6.8} yMin={-1.6} yMax={1.6}
+  xUnit={38} yUnit={44}
+  xStep={1.5707963} yStep={0.5}
+  xTicks={[{at: 3.1415927, label: '\\pi'}, {at: 6.2831853, label: '2\\pi'}]}
+  yTicks={[{at: 1, label: '1'}, {at: -1, label: '-1'}]}
+  functions={[
+    {f: (x) => Math.sin(x), tone: 1},
+    {f: (x) => Math.sin(x + 1.5707963), tone: 2},
+  ]}
+  caption="sen x (azul) e sen(x + π/2) (laranja): a curva se adianta π/2, e o resultado é o gráfico do cosseno."
+/>
+
+O sinal é contraintuitivo e vale explicitar: **somar** dentro desloca para a
+**esquerda**.
+
+Por quê? Porque $f(x) = \sen(x + \frac{\pi}{2})$ atinge em $x = 0$ o valor que o
+seno original só atingia em $x = \frac{\pi}{2}$. A curva **antecipou** o que
+faria — ou seja, andou para trás no eixo.
+
+E quando há $b$ junto, o deslocamento **não** é $c$:
+
+$$
+\sen(bx + c) = \sen\left(b\left(x + \frac{c}{b}\right)\right),
+$$
+
+de modo que o deslocamento horizontal é $-\frac{c}{b}$.
+
+> **Erro comum:** ler o deslocamento de $\sen(2x + \pi)$ como $\pi$ para a
+> esquerda. Colocando $b$ em evidência, $\sen\left(2\left(x +
+> \frac{\pi}{2}\right)\right)$ — o deslocamento é $\frac{\pi}{2}$, metade
+> daquilo. **Antes de ler a fase, ponha $b$ em evidência.**
+
+## Juntando tudo
+
+$$
+f(x) = a\,\sen(bx + c) + d
+$$
+
+| Parâmetro | Onde age | Efeito | Como calcular |
+|---|---|---|---|
+| $a$ | multiplica a saída | estica vertical; inverte se negativo | amplitude $= \lvert a \rvert$ |
+| $b$ | multiplica a entrada | comprime horizontal | período $= \frac{2\pi}{\lvert b \rvert}$ |
+| $c$ | soma à entrada | desloca horizontal | deslocamento $= -\frac{c}{b}$ |
+| $d$ | soma à saída | desloca vertical | valor médio $= d$ |
+
+E as leituras que mais importam na prática:
+
+$$
+\text{máximo} = d + |a|,
+\qquad
+\text{mínimo} = d - |a|,
+\qquad
+\text{imagem} = [\,d-|a|,\ d+|a|\,].
+$$
+
+Invertendo, quando os dados vêm de uma tabela:
+
+$$
+d = \frac{\text{máx} + \text{mín}}{2},
+\qquad
+|a| = \frac{\text{máx} - \text{mín}}{2}.
+$$
+
+Ou seja: $d$ é a **média** dos extremos e $a$ é a **metade da diferença**.
+
+## Resolvendo o problema da maré
+
+**Passo 1 — $d$ e $a$**, a partir dos extremos:
+
+$$
+d = \frac{4{,}2 + 0{,}8}{2} = 2{,}5 \text{ m}
+\qquad
+a = \frac{4{,}2 - 0{,}8}{2} = 1{,}7 \text{ m}.
+$$
+
+**Passo 2 — $b$**, a partir do período de 12 horas:
+
+$$
+\frac{2\pi}{b} = 12
+\quad\Longrightarrow\quad
+b = \frac{2\pi}{12} = \frac{\pi}{6}.
+$$
+
+**Passo 3 — $c$**, a partir do instante da maré alta. O seno atinge o máximo
+quando seu argumento vale $\frac{\pi}{2}$. Queremos isso em $t = 5$:
+
+$$
+\frac{\pi}{6} \times 5 + c = \frac{\pi}{2}
+$$
+
+$$
+\frac{5\pi}{6} + c = \frac{3\pi}{6}
+\quad\Longrightarrow\quad
+c = -\frac{2\pi}{6} = -\frac{\pi}{3}.
+$$
+
+**A função:**
+
+$$
+h(t) = 2{,}5 + 1{,}7\,\sen\!\left(\frac{\pi}{6}t - \frac{\pi}{3}\right).
+$$
+
+<CartesianPlane
+  xMin={-0.5} xMax={25} yMin={-0.5} yMax={5}
+  xUnit={14} yUnit={30}
+  xStep={2} yStep={1}
+  xLabelEvery={2}
+  functions={[{f: (t) => 2.5 + 1.7 * Math.sin(Math.PI * t / 6 - Math.PI / 3), tone: 1}]}
+  lines={[{m: 0, n: 2.5, tone: 0, dashed: true}]}
+  points={[
+    {at: [5, 4.2], label: '4{,}2', tone: 2, dy: -18},
+    {at: [11, 0.8], label: '0{,}8', tone: 3, dy: 20},
+  ]}
+  caption="h(t) = 2,5 + 1,7 sen(πt/6 − π/3), em metros e horas. Maré alta às 5h e às 17h; baixa às 11h e às 23h."
+/>
+
+**Verificações**, e vale fazer as três:
+
+- $h(5) = 2{,}5 + 1{,}7\sen\frac{\pi}{2} = 2{,}5 + 1{,}7 = 4{,}2$ ✓
+- $h(11) = 2{,}5 + 1{,}7\sen\left(\frac{11\pi}{6} - \frac{2\pi}{6}\right) =
+  2{,}5 + 1{,}7\sen\frac{3\pi}{2} = 2{,}5 - 1{,}7 = 0{,}8$ ✓ — maré baixa às 11h,
+  seis horas depois da alta, como um ciclo de 12 h exige;
+- $h(17) = h(5)$, porque $17 - 5 = 12$ é exatamente um período ✓.
+
+E a leitura da fase: o deslocamento é
+$-\frac{c}{b} = -\frac{-\pi/3}{\pi/6} = 2$, ou seja, **2 horas para a
+direita**. Confere com o gráfico: a senoide básica teria máximo em um quarto do
+período (3 h); deslocada 2 h, o máximo cai às 5 h ✓.
+
+**Uma pergunta prática que a fórmula responde e a tábua não:** a que horas a
+maré passa de 3,5 m, se um navio precisa desse calado para entrar? Basta
+resolver $h(t) = 3{,}5$ — uma equação trigonométrica, resolvida com o mesmo
+ciclo de sempre.
+
+## Exemplos resolvidos
+
+### Exemplo 1: ler os parâmetros
+
+Determine amplitude, período, deslocamentos e imagem de
+$f(x) = 4\sen(3x) - 1$.
+
+Amplitude 4; período $\frac{2\pi}{3}$; deslocamento horizontal 0 (não há $c$);
+deslocamento vertical $-1$.
+
+Imagem: $[-1-4,\ -1+4] = [-5,\ 3]$.
+
+### Exemplo 2: fase com $b$ diferente de 1
+
+*Pause e tente antes de ler.* Determine o período e o deslocamento horizontal de
+$g(x) = \sen\left(4x - \pi\right)$.
+
+Período: $\frac{2\pi}{4} = \frac{\pi}{2}$.
+
+Para a fase, ponha 4 em evidência:
+
+$$
+\sen\left(4x - \pi\right) = \sen\left(4\left(x - \frac{\pi}{4}\right)\right).
+$$
+
+Deslocamento: $\frac{\pi}{4}$ para a **direita**.
+
+> Sem colocar em evidência, a leitura apressada daria $\pi$ — quatro vezes o
+> valor certo.
+
+### Exemplo 3: da tensão da rede
+
+*Pause e tente antes de ler.* A tensão da rede elétrica brasileira é
+$V(t) = 180\,\sen(120\pi t)$, com $t$ em segundos. Determine a tensão de pico,
+o período e a frequência.
+
+Tensão de pico (amplitude): **180 V**.
+
+Período: $\frac{2\pi}{120\pi} = \frac{1}{60}$ s.
+
+Frequência: $\frac{1}{\text{período}} = 60$ ciclos por segundo, ou **60 Hz** —
+a frequência da rede brasileira ✓.
+
+(A “tensão de 127 V” anunciada nas tomadas é a **tensão eficaz**, que vale
+$\frac{180}{\sqrt{2}} \approx 127$ V. O pico é maior que o valor nominal — o que
+explica por que equipamentos precisam suportar mais de 127 V.)
+
+### Exemplo 4: montar a função a partir do gráfico
+
+*Pause e tente antes de ler.* Uma senoide oscila entre 7 e 1, com período 4, e
+atinge o máximo em $x = 1$. Escreva sua equação.
+
+$$
+d = \frac{7+1}{2} = 4,
+\qquad
+a = \frac{7-1}{2} = 3,
+\qquad
+b = \frac{2\pi}{4} = \frac{\pi}{2}.
+$$
+
+Máximo em $x=1$ exige argumento $\frac{\pi}{2}$ ali:
+
+$$
+\frac{\pi}{2} \times 1 + c = \frac{\pi}{2}
+\Longrightarrow
+c = 0.
+$$
+
+$$
+f(x) = 4 + 3\sen\!\left(\frac{\pi}{2}x\right).
+$$
+
+Conferindo em $x = 3$ (meio período depois do máximo, onde deve estar o mínimo):
+$\sen\frac{3\pi}{2} = -1$, e $f(3) = 4 - 3 = 1$ ✓.
+
+### Exemplo 5: cosseno em vez de seno
+
+*Pause e tente antes de ler.* Reescreva $f(x) = 3\cos(2x)$ usando seno.
+
+Como $\cos u = \sen\left(u + \frac{\pi}{2}\right)$:
+
+$$
+f(x) = 3\sen\!\left(2x + \frac{\pi}{2}\right).
+$$
+
+Os dois têm a mesma amplitude (3) e o mesmo período ($\pi$); só a fase difere.
+Isso é geral: **qualquer senoide pode ser escrita com seno ou com cosseno** —
+a escolha é de conveniência. Quando o fenômeno começa no máximo, o cosseno
+costuma dispensar a fase; quando começa no valor médio subindo, o seno dispensa.
+
+### Exemplo 6: temperatura anual
+
+*Pause e tente antes de ler.* Numa cidade, a temperatura média mensal varia
+entre 28 °C (janeiro) e 12 °C (julho). Escreva uma função com $t$ em meses,
+$t=1$ para janeiro.
+
+$$
+d = \frac{28+12}{2} = 20,
+\qquad
+a = \frac{28-12}{2} = 8,
+\qquad
+b = \frac{2\pi}{12} = \frac{\pi}{6}.
+$$
+
+Máximo em $t = 1$:
+
+$$
+\frac{\pi}{6} + c = \frac{\pi}{2}
+\Longrightarrow
+c = \frac{\pi}{3}.
+$$
+
+$$
+T(t) = 20 + 8\sen\!\left(\frac{\pi}{6}t + \frac{\pi}{3}\right).
+$$
+
+Conferindo julho ($t = 7$):
+$\frac{7\pi}{6} + \frac{2\pi}{6} = \frac{9\pi}{6} = \frac{3\pi}{2}$, cujo seno é
+$-1$: $T = 20 - 8 = 12$ °C ✓.
+
+## Erros comuns
+
+> **Erro 1: multiplicar o período por $b$.** O período é $\frac{2\pi}{|b|}$.
+> $b$ grande significa oscilação **rápida** e período **curto**.
+
+> **Erro 2: ler a fase sem pôr $b$ em evidência.** Em $\sen(bx+c)$, o
+> deslocamento é $-\frac{c}{b}$, não $-c$.
+
+> **Erro 3: errar o sentido do deslocamento.** Somar dentro desloca para a
+> **esquerda**; subtrair, para a direita. Teste com um ponto conhecido.
+
+> **Erro 4: dar amplitude negativa.** Amplitude é $|a|$, sempre positiva.
+
+> **Erro 5: confundir $d$ com o máximo.** $d$ é o **valor médio**; o máximo é
+> $d + |a|$.
+
+> **Erro 6: esquecer que $a$ e $d$ não afetam o período**, e que $b$ e $c$ não
+> afetam a amplitude. Cada parâmetro age numa direção.
+
+## Perguntas de verificação
+
+1. Por que o período é $\frac{2\pi}{|b|}$ e não $2\pi \cdot b$?
+2. Por que somar dentro da função desloca o gráfico para a esquerda?
+3. Por que a fase de $\sen(bx+c)$ é $-\frac{c}{b}$ e não $-c$?
+4. Por que a amplitude é $|a|$, e não $a$?
+5. Como obter $a$ e $d$ diretamente do máximo e do mínimo?
+6. Por que toda senoide pode ser escrita tanto com seno quanto com cosseno?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque um ciclo se completa quando o **argumento** do seno percorre $2\pi$.
+   Se o argumento é $bx$, ele percorre $2\pi$ quando $x$ percorre
+   $\frac{2\pi}{b}$. Um $b$ maior faz o argumento correr mais rápido, então o
+   ciclo termina antes — o período encurta.
+2. Porque a função com $+c$ atinge, num $x$ menor, o valor que a original só
+   atingia depois. Ela **antecipa** o comportamento, e antecipar no eixo
+   horizontal significa estar mais à esquerda.
+3. Porque o deslocamento é lido depois de colocar $b$ em evidência:
+   $bx + c = b\left(x + \frac{c}{b}\right)$. É o número somado a $x$ — e não ao
+   produto $bx$ — que mede o quanto a curva anda.
+4. Porque amplitude é uma **distância**: metade da diferença entre máximo e
+   mínimo. Um $a$ negativo inverte a curva, mas a distância entre os extremos
+   continua a mesma.
+5. $d = \frac{\text{máx}+\text{mín}}{2}$ (a média, que é o eixo de oscilação) e
+   $|a| = \frac{\text{máx}-\text{mín}}{2}$ (metade da amplitude total do
+   movimento).
+6. Porque $\cos u = \sen\left(u+\frac{\pi}{2}\right)$: as duas curvas são a mesma
+   forma, deslocadas de um quarto de período. Trocar uma pela outra só altera o
+   parâmetro de fase.
+
+</details>
+
+## Exercícios
+
+### 1. Reconhecimento
+
+1. Determine amplitude, período e imagem: (a) $f(x) = 5\sen x$;
+   (b) $g(x) = \sen(4x)$; (c) $h(x) = \sen x + 3$; (d) $p(x) = -2\cos x$.
+2. Qual é o período de: (a) $\sen(3x)$; (b) $\cos\left(\frac{x}{2}\right)$;
+   (c) $\sen(\pi x)$?
+3. Qual é o deslocamento horizontal de $\sen\left(x - \frac{\pi}{3}\right)$?
+
+### 2. Explicação
+
+4. Explique por que $\sen(2x)$ é mais “apertado” que $\sen x$.
+5. Um colega diz que a amplitude de $-4\sen x$ é $-4$. Corrija-o.
+6. Explique por que $d$ é chamado de valor médio.
+
+### 3. Aplicação direta
+
+7. Determine todos os parâmetros e a imagem de
+   $f(x) = 3\sen(2x + \pi) - 1$.
+8. Escreva a função senoidal de amplitude 6, período $\pi$, valor médio 2 e
+   máximo em $x = 0$.
+9. Determine o período e a frequência de $y = \sen(100\pi t)$, com $t$ em
+   segundos.
+
+### 4. Variação
+
+10. Uma senoide oscila entre $-3$ e 9, com período 8, e atinge o mínimo em
+    $x = 2$. Escreva sua equação.
+11. Reescreva $f(x) = 2\cos\left(3x - \frac{\pi}{2}\right)$ usando seno.
+12. Compare os gráficos de $\sen(2x)$ e de $2\sen x$: o que muda em cada um em
+    relação a $\sen x$?
+
+<details>
+<summary>Dica para o 10</summary>
+
+O **mínimo** do seno ocorre quando o argumento vale $\frac{3\pi}{2}$. Use isso
+para montar a equação da fase.
+
+</details>
+
+### 5. Problema misto
+
+13. A roda-gigante de raio 20 m e centro a 22 m completa uma volta em 40
+    segundos, partindo do ponto mais baixo. Escreva a altura da cadeirinha em
+    função do tempo, e determine em que instantes ela está a 32 m.
+14. A maré do porto da página é $h(t) = 2{,}5 + 1{,}7\sen\left(\frac{\pi}{6}t -
+    \frac{\pi}{3}\right)$. Um navio precisa de 3,35 m de calado. Determine os
+    instantes, na primeira maré do dia, em que ele pode entrar e em que precisa
+    ter saído.
+
+### 6. Justificativa
+
+15. Deduza a fórmula do período, $\frac{2\pi}{|b|}$, a partir da definição de
+    período (menor $T$ com $f(x+T) = f(x)$).
+16. Mostre que $a\sen(bx+c)+d$ e $a\cos(bx+c')+d$ podem descrever exatamente a
+    mesma curva, e determine a relação entre $c$ e $c'$.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. (a) amplitude 5, período $2\pi$, imagem $[-5,5]$;
+   (b) amplitude 1, período $\frac{\pi}{2}$, imagem $[-1,1]$;
+   (c) amplitude 1, período $2\pi$, imagem $[2,4]$;
+   (d) amplitude 2, período $2\pi$, imagem $[-2,2]$.
+2. (a) $\frac{2\pi}{3}$; (b) $4\pi$; (c) $\frac{2\pi}{\pi} = 2$.
+3. $\frac{\pi}{3}$ para a **direita**.
+4. Porque o argumento $2x$ avança duas vezes mais rápido que $x$: ele já
+   percorreu $2\pi$ quando $x$ percorreu apenas $\pi$. O ciclo termina na
+   metade do espaço, e por isso a curva parece comprimida.
+5. Amplitude é uma distância e vale $|-4| = 4$. O sinal negativo indica que a
+   curva está **invertida** em relação a $\sen x$, não que ela seja “menor”.
+6. Porque a curva oscila simetricamente em torno de $y = d$: ela sobe $|a|$
+   acima e desce $|a|$ abaixo. A média entre o máximo e o mínimo é exatamente
+   $d$.
+7. Amplitude 3; período $\frac{2\pi}{2} = \pi$; fase:
+   $3\sen\left(2\left(x+\frac{\pi}{2}\right)\right) - 1$, isto é,
+   $\frac{\pi}{2}$ para a esquerda; deslocamento vertical $-1$. Imagem
+   $[-4, 2]$.
+8. $b = \frac{2\pi}{\pi} = 2$. Máximo em $x = 0$ favorece o cosseno:
+   $f(x) = 2 + 6\cos(2x)$. (Com seno:
+   $f(x) = 2 + 6\sen\left(2x + \frac{\pi}{2}\right)$.)
+9. Período $\frac{2\pi}{100\pi} = 0{,}02$ s; frequência
+   $\frac{1}{0{,}02} = 50$ Hz.
+10. $d = \frac{9+(-3)}{2} = 3$; $a = \frac{9-(-3)}{2} = 6$;
+    $b = \frac{2\pi}{8} = \frac{\pi}{4}$. Mínimo em $x=2$:
+    $\frac{\pi}{4}\times 2 + c = \frac{3\pi}{2} \Rightarrow c = \pi$. Logo
+    $f(x) = 3 + 6\sen\left(\frac{\pi}{4}x + \pi\right)$.
+11. $\cos u = \sen\left(u+\frac{\pi}{2}\right)$, então
+    $f(x) = 2\sen\left(3x - \frac{\pi}{2} + \frac{\pi}{2}\right) = 2\sen(3x)$.
+12. $\sen(2x)$ tem o **período** reduzido à metade ($\pi$), mantendo amplitude
+    1. $2\sen x$ tem a **amplitude** dobrada (imagem $[-2,2]$), mantendo período
+    $2\pi$. Um age na horizontal, o outro na vertical.
+13. Partindo do ponto mais baixo (2 m) e com período 40 s, o cosseno invertido é
+    o mais direto: $h(t) = 22 - 20\cos\left(\frac{2\pi}{40}t\right)
+    = 22 - 20\cos\left(\frac{\pi t}{20}\right)$. Para $h = 32$:
+    $\cos\left(\frac{\pi t}{20}\right) = -0{,}5$, o que ocorre quando
+    $\frac{\pi t}{20} = \frac{2\pi}{3}$ ou $\frac{4\pi}{3}$ — ou seja,
+    $t = \frac{40}{3} \approx 13{,}3$ s e $t = \frac{80}{3} \approx 26{,}7$ s
+    (e a cada 40 s depois disso).
+14. $2{,}5 + 1{,}7\sen(u) = 3{,}35 \Rightarrow \sen u = 0{,}5$, com
+    $u = \frac{\pi}{6}t - \frac{\pi}{3}$. As soluções de $\sen u = 0{,}5$ são
+    $u = \frac{\pi}{6}$ e $u = \frac{5\pi}{6}$. Resolvendo:
+    $\frac{\pi}{6}t = \frac{\pi}{6}+\frac{\pi}{3} = \frac{\pi}{2}
+    \Rightarrow t = 3$ h; e
+    $\frac{\pi}{6}t = \frac{5\pi}{6}+\frac{2\pi}{6} = \frac{7\pi}{6}
+    \Rightarrow t = 7$ h. O navio pode entrar às **3 h** e precisa ter saído às
+    **7 h** — quatro horas de janela, centradas na maré alta das 5 h, como a
+    simetria da curva prevê.
+15. Por definição, $T$ é o menor valor positivo com
+    $a\sen(b(x+T)+c)+d = a\sen(bx+c)+d$ para todo $x$. Isso exige
+    $\sen(bx + bT + c) = \sen(bx+c)$, e como o seno tem período $2\pi$, a
+    condição é $bT = 2\pi$ (o menor caso positivo). Logo
+    $T = \frac{2\pi}{b}$; com $b$ negativo, o mesmo argumento dá
+    $T = \frac{2\pi}{|b|}$.
+16. Basta usar $\cos u = \sen\left(u+\frac{\pi}{2}\right)$:
+    $a\cos(bx+c')+d = a\sen\left(bx+c'+\frac{\pi}{2}\right)+d$. As duas
+    expressões coincidem quando $c = c' + \frac{\pi}{2}$, ou seja,
+    $c' = c - \frac{\pi}{2}$. Amplitude, período e valor médio são os mesmos.
+
+</details>
+
+## Revisão curta
+
+Em $f(x) = a\,\sen(bx+c)+d$:
+
+- **$a$** — amplitude $|a|$; estica na vertical; sinal negativo inverte. Não
+  muda o período.
+- **$b$** — período $= \frac{2\pi}{|b|}$. $b$ maior significa oscilação mais
+  rápida e período **menor**. Não muda a amplitude.
+- **$c$** — deslocamento horizontal de $-\frac{c}{b}$; **ponha $b$ em evidência
+  antes de ler**. Somar dentro desloca para a esquerda.
+- **$d$** — valor médio; a curva oscila em torno de $y = d$.
+- **Máximo** $= d+|a|$; **mínimo** $= d-|a|$; **imagem** $= [d-|a|,\ d+|a|]$.
+- Dos dados para os parâmetros: $d$ é a **média** dos extremos, $|a|$ é a
+  **metade da diferença**, $b$ sai do período e $c$ sai do instante do máximo.
+- Toda senoide pode ser escrita com seno ou com cosseno; muda só a fase.
+
+Falta o caminho de volta: dado o **valor** de um seno, qual é o ângulo? A
+resposta exige cuidado, porque cada valor corresponde a infinitos ângulos — e é
+disso que tratam as
+[funções trigonométricas inversas](./funcoes-trigonometricas-inversas).

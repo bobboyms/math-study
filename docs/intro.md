@@ -23,13 +23,16 @@ Estude os capítulos nesta ordem:
 4. [Equações](./equacoes/) — descobrir o valor que a situação não informa.
 5. [Funções](./funcoes/) — deixar de perguntar "quanto vale" e passar a
    perguntar "como uma quantidade depende de outra".
-6. [Revisão geral](./revisao-geral) — o arco inteiro em exercícios que misturam
+6. [Geometria e trigonometria](./geometria/) — medir forma e posição, dar
+   endereço a cada ponto e ligar ângulo a comprimento.
+7. [Revisão geral](./revisao-geral) — o arco inteiro em exercícios que misturam
    os capítulos.
 
 A ordem segue a dependência entre as ideias, e cada capítulo abre dizendo o que
 herda do anterior. Aritmética sustenta a álgebra; a fatoração da álgebra é o que
-resolve equações; e as raízes de uma equação são o que localiza um gráfico no
-capítulo de funções.
+resolve equações; as raízes de uma equação são o que localiza um gráfico no
+capítulo de funções; e a geometria reaproveita todos eles, transformando figuras
+em equações e ângulos em números.
 
 ## Como estudar cada página
 
