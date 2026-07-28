@@ -40,7 +40,7 @@ calcular: e explicar por que o procedimento faz sentido.
 ### Reconhecimento
 
 1. Em cada situacao, diga qual operacao aparece primeiro.
-   - Uma pessoa tinha R$ 40 e gastou R$ 13.
+   - Uma pessoa tinha R\$ 40 e gastou R\$ 13.
    - Ha 6 caixas com 8 livros em cada caixa.
    - 24 balas serao divididas igualmente entre 4 criancas.
    - Uma loja recebeu 15 produtos novos.
@@ -150,9 +150,9 @@ $$
 
 ### Variacoes
 
-21. Um produto custa R$ 150 e recebe desconto de 20%. Qual e o valor final?
+21. Um produto custa R\$ 150 e recebe desconto de 20%. Qual e o valor final?
 
-22. Uma pessoa tinha saldo de R$ 30 e fez uma compra de R$ 45. Qual e o novo
+22. Uma pessoa tinha saldo de R\$ 30 e fez uma compra de R\$ 45. Qual e o novo
     saldo?
 
 23. Uma receita usa `3/4` de xicara de farinha. Voce quer fazer o dobro da
@@ -160,7 +160,7 @@ $$
 
 24. Um quadrado tem area 144. Qual e o lado?
 
-25. Uma corrida de taxi custa R$ 6 fixos mais R$ 4 por quilometro. Escreva uma
+25. Uma corrida de taxi custa R\$ 6 fixos mais R\$ 4 por quilometro. Escreva uma
     funcao para o custo `C(x)` de uma corrida de `x` quilometros.
 
 26. Usando a funcao do exercicio anterior, calcule o custo para 8 km.
