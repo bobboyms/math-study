@@ -16,7 +16,7 @@ Estude os capitulos nesta ordem:
 
 1. [O que e matematica](./historia/o-que-e-matematica)
 2. [Matematica basica: dos numeros as funcoes](./matematica-basica/)
-3. [Fator comum em evidencia](./matematica-basica/fator-comum-em-evidencia)
+3. [Fator comum em evidência](./matematica-basica/fator-comum-em-evidencia)
 4. [Produtos notaveis](./matematica-basica/produtos-notaveis)
 5. [Funcao quadratica](./funcoes/funcao-quadratica)
 
