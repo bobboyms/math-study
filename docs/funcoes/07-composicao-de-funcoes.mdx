@@ -1,0 +1,502 @@
+---
+title: Composição de funções
+---
+
+import FunctionMachine from '@site/src/components/FunctionMachine';
+
+# Composição: encaixar uma função dentro de outra
+
+## 1. Problema motivador: o desconto e o imposto
+
+Uma loja online aplica duas operações sobre o preço de tabela:
+
+- um **desconto fixo de R\$ 30** para clientes cadastrados;
+- um **imposto de 10%** sobre o valor da nota.
+
+Um produto custa R\$ 100 de tabela. Quanto o cliente paga?
+
+A resposta depende da **ordem**, e a diferença não é pequena.
+
+**Desconto primeiro, imposto depois:** o preço cai para R\$ 70, e o imposto de
+10% sobre 70 é R\$ 7. Total: **R\$ 77**.
+
+**Imposto primeiro, desconto depois:** o imposto de 10% sobre 100 é R\$ 10,
+levando a R\$ 110, e o desconto de 30 deixa **R\$ 80**.
+
+Três reais de diferença, sobre o mesmo produto e as mesmas duas regras. Trocar a
+ordem mudou o resultado — e é por isso que contratos e notas fiscais especificam
+exatamente em que sequência as operações se aplicam.
+
+Cada uma das duas regras é uma função. O que fizemos foi aplicá-las **em
+sequência**, usando a saída de uma como entrada da outra. Essa operação tem nome
+— **composição** — e esta página mostra como escrevê-la, calculá-la e,
+sobretudo, por que a ordem importa.
+
+## 2. Mapa das ideias
+
+- **compor** duas funções é aplicá-las em sequência: a saída de uma vira a
+  entrada da outra;
+- a notação é $f(g(x))$, ou $(f \circ g)(x)$, e se lê “$f$ de $g$ de $x$”;
+- **a ordem de leitura é de dentro para fora**: em $f(g(x))$, quem age primeiro
+  é $g$;
+- **a composição não é comutativa**: em geral $f(g(x))$ e $g(f(x))$ são funções
+  diferentes.
+
+## 3. Para que serve
+
+- encadear regras de negócio: desconto, imposto, frete, comissão;
+- converter unidades em duas etapas — polegadas para centímetros e depois para
+  metros;
+- descrever processos em cadeia: o custo depende da produção, que depende das
+  horas trabalhadas;
+- em programação, é a chamada de uma função com o resultado de outra.
+
+Dentro da matemática, compor é o que permite construir funções complicadas a
+partir de simples — e reconhecer a composição escondida numa fórmula é o passo
+que, no cálculo, torna possível derivar quase tudo. A regra da cadeia existe
+exatamente para funções compostas.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [funções](./funcoes): o que a máquina faz com uma entrada?** Devolve uma
+saída. E nada impede que essa saída seja a entrada de outra máquina.
+
+**2. De [expressões algébricas](../algebra/expressoes-algebricas): o que
+significa substituir?** Trocar uma letra por algo que vale o mesmo. Em
+$f(x) = 2x + 1$, calcular $f(a+3)$ é trocar **todo** $x$ por $a+3$, obtendo
+$2(a+3)+1$.
+
+**3. De [domínio e imagem](./dominio-e-imagem): o que é o domínio?** O conjunto
+das entradas aceitas. Numa composição, a saída da primeira função precisa ser
+aceita pela segunda — e isso vai gerar restrições.
+
+O item 2 é o mecanismo inteiro da página. Compor não exige técnica nova: exige
+substituir uma **expressão** no lugar da letra, com o cuidado de manter os
+parênteses.
+
+## 5. Intuição: duas máquinas em série
+
+Ligue a saída da primeira máquina na entrada da segunda. O número entra na
+esquerda, passa por uma, passa pela outra, e sai transformado duas vezes.
+
+<FunctionMachine
+  input="p"
+  steps={[
+    {op: '\\text{desconto: } p - 30', value: 'p - 30'},
+    {op: '\\text{imposto: } \\times 1{,}1', value: '1{,}1(p - 30)'},
+  ]}
+  caption="As duas regras da loja em série: primeiro o desconto, depois o imposto. A saída da primeira é a entrada da segunda."
+/>
+
+Escrevendo cada regra como função, com $p$ o preço de tabela:
+
+$$
+d(p) = p - 30 \qquad \text{(desconto)},
+\qquad
+t(q) = 1{,}1q \qquad \text{(imposto)}.
+$$
+
+Aplicar o desconto e depois o imposto é calcular $t$ **do resultado de** $d$, ou
+seja, $t(d(p))$.
+
+> Numa composição, **quem está mais perto do $x$ age primeiro**. Em $t(d(p))$, o
+> $d$ está dentro e portanto atua antes; o $t$ recebe o que sobrou.
+
+A ordem de escrita é o contrário da ordem de leitura em português, e isso
+confunde no começo. “Desconto e depois imposto” se escreve com o imposto **na
+frente**. Lembre da imagem: o parêntese mais interno é a primeira máquina da
+linha.
+
+## 6. Formalização
+
+> Dadas duas funções $f$ e $g$, a **função composta** $f \circ g$ é definida por
+> $$
+> (f \circ g)(x) = f\big(g(x)\big).
+> $$
+> Ela só faz sentido nos valores de $x$ que estão no domínio de $g$ **e** cuja
+> saída $g(x)$ está no domínio de $f$.
+
+Na prática, calcular a fórmula da composta é substituir: onde houver $x$ na
+regra de $f$, escreva $g(x)$ inteiro, entre parênteses.
+
+**Exemplo.** Com $d(p) = p - 30$ e $t(q) = 1{,}1q$:
+
+$$
+t(d(p)) = 1{,}1 \cdot \big(d(p)\big) = 1{,}1(p - 30) = 1{,}1p - 33.
+$$
+
+**Conferindo com $p = 100$**: $1{,}1(70) = 77$. Bate com a conta do início.
+
+**Contraexemplo, para delimitar.** A composta **não** é o produto das duas
+funções. $t(d(p))$ é $1{,}1p - 33$, enquanto $t(p) \cdot d(p)$ seria
+$1{,}1p(p-30)$, uma função do 2º grau. Compor é encadear, não multiplicar.
+
+### A ordem importa
+
+Invertendo a sequência — imposto primeiro, desconto depois:
+
+$$
+d(t(p)) = t(p) - 30 = 1{,}1p - 30.
+$$
+
+Compare as duas fórmulas:
+
+| Composta | Fórmula | Em $p = 100$ | Em $p = 200$ |
+|---|---|---:|---:|
+| $t(d(p))$ — desconto antes | $1{,}1p - 33$ | R\$ 77 | R\$ 187 |
+| $d(t(p))$ — imposto antes | $1{,}1p - 30$ | R\$ 80 | R\$ 190 |
+
+A diferença é de R\$ 3 em qualquer preço — exatamente o imposto de 10% sobre os
+R\$ 30 de desconto. Aplicando o desconto antes, o cliente não paga imposto sobre
+aqueles 30 reais; aplicando depois, paga.
+
+> **A composição não é comutativa**: $f \circ g$ e $g \circ f$ são, em geral,
+> funções diferentes. Trocar a ordem é trocar de problema.
+
+Isso contrasta com a soma e a multiplicação de números, em que a ordem não
+importa. Vale reservar espaço na memória para essa diferença: quase toda
+operação da aritmética é comutativa, e a composição não é.
+
+## 7. Domínio de uma composta
+
+Aqui há um cuidado que passa despercebido. Para que $f(g(x))$ exista, duas
+condições precisam valer ao mesmo tempo:
+
+1. $x$ tem de estar no domínio de $g$ — senão nem a primeira máquina funciona;
+2. o valor $g(x)$ tem de estar no domínio de $f$ — senão a segunda trava.
+
+**Exemplo.** Sejam $f(x) = \sqrt{x}$ e $g(x) = x - 5$. Então
+
+$$
+f(g(x)) = \sqrt{x - 5},
+$$
+
+e o domínio é $x \ge 5$. A restrição não veio de $g$, que aceita qualquer
+número, mas da exigência de $f$ aplicada ao resultado dela.
+
+Na ordem inversa, $g(f(x)) = \sqrt{x} - 5$, com domínio $x \ge 0$. **Fórmulas
+diferentes e domínios diferentes** — mais uma evidência de que a ordem muda
+tudo.
+
+## 8. Reconhecer uma composição
+
+Tão útil quanto compor é o movimento inverso: olhar uma fórmula complicada e
+enxergar as funções simples que a formam.
+
+Tome $h(x) = (3x + 1)^5$. Ninguém expande isso. Mas repare no que se faz para
+calcular $h$ em um número: primeiro **calcula-se $3x+1$**, depois **eleva-se à
+quinta**. São duas etapas em sequência, logo:
+
+$$
+g(x) = 3x + 1, \qquad f(u) = u^5, \qquad h(x) = f(g(x)).
+$$
+
+A pergunta que resolve esses casos é sempre: **o que eu calcularia primeiro?**
+Essa é a função de dentro.
+
+Outros exemplos:
+
+| Função | De dentro | De fora |
+|---|---|---|
+| $\sqrt{x^2 + 1}$ | $x^2 + 1$ | $\sqrt{u}$ |
+| $\lvert 2x - 6 \rvert$ | $2x - 6$ | $\lvert u \rvert$ |
+| $\frac{1}{x + 4}$ | $x + 4$ | $\frac{1}{u}$ |
+
+Repare que a página de transformações já fazia isso sem dar nome: $f(x - 3)$ é a
+composição de $f$ com a função $x \mapsto x - 3$. Toda transformação horizontal
+é uma composição.
+
+## 9. Exemplos resolvidos
+
+### Exemplo 1: calcular num ponto
+
+Com $f(x) = x^2$ e $g(x) = x + 3$, calcule $f(g(2))$ e $g(f(2))$.
+
+O caminho mais seguro é **de dentro para fora**, um passo de cada vez.
+
+$f(g(2))$: primeiro $g(2) = 5$; depois $f(5) = 25$.
+
+$g(f(2))$: primeiro $f(2) = 4$; depois $g(4) = 7$.
+
+Resultados diferentes, como esperado.
+
+### Exemplo 2: encontrar a fórmula
+
+*Pause e tente antes de ler.* Com as mesmas $f$ e $g$, escreva $f(g(x))$ e
+$g(f(x))$.
+
+$$
+f(g(x)) = \big(g(x)\big)^2 = (x+3)^2 = x^2 + 6x + 9;
+$$
+
+$$
+g(f(x)) = f(x) + 3 = x^2 + 3.
+$$
+
+**Conferindo com $x = 2$**: a primeira dá $4 + 12 + 9 = 25$; a segunda dá
+$4 + 3 = 7$. Batem com o Exemplo 1.
+
+O erro clássico aqui é escrever $f(g(x)) = x^2 + 3^2$, esquecendo os parênteses.
+Como $(x+3)^2$ não é $x^2 + 9$, isso muda a função.
+
+### Exemplo 3: domínio da composta
+
+*Pause e tente.* Com $f(x) = \sqrt{x}$ e $g(x) = x - 5$, encontre $f(g(x))$ e
+$g(f(x))$, com os domínios.
+
+$$
+f(g(x)) = \sqrt{x-5}, \qquad D = [5, +\infty[;
+$$
+
+$$
+g(f(x)) = \sqrt{x} - 5, \qquad D = [0, +\infty[.
+$$
+
+Na primeira, a raiz age sobre $x - 5$ e exige que **esse** valor seja não
+negativo. Na segunda, a raiz age sobre o próprio $x$.
+
+**Conferindo em $x = 6$**: a primeira dá $\sqrt{1} = 1$; a segunda dá
+$\sqrt{6} - 5 \approx -2{,}55$. Funções bem diferentes.
+
+### Exemplo 4: reconhecer as partes
+
+*Pause e tente.* Escreva $h(x) = \sqrt{x^2 + 1}$ como composição.
+
+Pergunte o que se calcula primeiro: o $x^2 + 1$. Depois, a raiz.
+
+$$
+g(x) = x^2 + 1, \qquad f(u) = \sqrt{u}, \qquad h = f \circ g.
+$$
+
+Repare que o domínio de $h$ é **todos os reais**, embora a raiz seja exigente:
+$x^2 + 1$ é sempre pelo menos 1, então a saída de $g$ nunca é negativa. A
+condição 2 da seção 7 é satisfeita automaticamente.
+
+### Exemplo 5: uma cadeia com significado
+
+*Pause e tente.* Uma fábrica produz $P(h) = 12h$ peças em $h$ horas de trabalho,
+e o custo de produzir $n$ peças é $C(n) = 40n + 500$ reais. Escreva o custo em
+função das horas e calcule para 8 horas.
+
+O custo depende das peças, que dependem das horas — uma cadeia. A composição
+certa é $C(P(h))$:
+
+$$
+C(P(h)) = 40 \cdot (12h) + 500 = 480h + 500.
+$$
+
+Para 8 horas: $480 \times 8 + 500 = 3840 + 500 = 4340$ reais.
+
+**Conferindo pelo caminho longo**: em 8 horas saem $12 \times 8 = 96$ peças, e
+$C(96) = 40 \times 96 + 500 = 3840 + 500 = 4340$. Confere.
+
+A composta na ordem inversa, $P(C(n))$, seria $12(40n + 500)$ — um número que
+não significa nada aqui, porque estaria interpretando reais como horas. **A
+ordem correta é ditada pelo problema**, não pela conveniência algébrica.
+
+## 10. Erros comuns
+
+> **Erro 1: inverter a ordem.** Em $f(g(x))$, quem age primeiro é $g$, o de
+> dentro. Vale a imagem da linha de montagem: o parêntese mais interno é a
+> primeira máquina.
+
+> **Erro 2: esquecer os parênteses ao substituir.** Com $f(x) = x^2$ e
+> $g(x) = x+3$, a composta é $(x+3)^2$, não $x^2 + 3^2$. Substitua a expressão
+> **inteira**, entre parênteses.
+
+> **Erro 3: confundir composição com multiplicação.** $f(g(x))$ não é
+> $f(x) \cdot g(x)$. O símbolo $\circ$ não é um produto.
+
+> **Erro 4: supor que a ordem não muda nada.** Soma e multiplicação de números
+> são comutativas; composição não é. Desconto antes do imposto e depois dele dão
+> contas diferentes.
+
+> **Erro 5: ler o domínio só da fórmula final.** Em $f(g(x))$, é preciso que $x$
+> sirva para $g$ **e** que $g(x)$ sirva para $f$. Uma restrição pode desaparecer
+> da fórmula simplificada e continuar valendo.
+
+> **Erro 6: compor na ordem errada num problema aplicado.** Se o custo depende
+> das peças e as peças dependem das horas, a composta útil é $C(P(h))$. A outra
+> ordem produz uma fórmula sem significado.
+
+## 11. Perguntas de verificação
+
+1. Em $f(g(x))$, qual das duas funções age primeiro?
+2. Por que a ordem do desconto e do imposto muda o valor pago?
+3. Por que a diferença entre as duas ordens é sempre R\$ 3, qualquer que seja o
+   preço?
+4. Por que $f(g(x))$ não é $f(x) \cdot g(x)$?
+5. Como se descobre o domínio de uma composta?
+6. Por que $\sqrt{x^2+1}$ tem domínio igual a todos os reais, se a raiz é
+   exigente?
+7. Como se reconhece, numa fórmula, qual é a função “de dentro”?
+8. Que relação existe entre composição e as transformações da página 5.6?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. A função $g$, que está **dentro**. O valor $x$ entra em $g$, e o resultado é
+   que serve de entrada para $f$. A ordem de escrita é o inverso da ordem de
+   execução.
+2. Porque o imposto incide sobre um valor diferente em cada caso. Aplicando o
+   desconto antes, o imposto de 10% recai sobre R\$ 70; aplicando depois, recai
+   sobre os R\$ 100 cheios, e o desconto é subtraído de um valor já aumentado.
+3. Porque a diferença entre $1{,}1p - 30$ e $1{,}1p - 33$ é constante: 3. Em
+   termos concretos, são os 10% de imposto cobrados sobre os R\$ 30 de desconto
+   — um valor fixo, que não depende do preço do produto.
+4. Porque compor é **encadear**: usar a saída de uma como entrada da outra.
+   Multiplicar é aplicar as duas ao mesmo $x$ e multiplicar os resultados. Com
+   $f(x)=x^2$ e $g(x)=x+3$, a composta é $(x+3)^2$ e o produto é $x^2(x+3)$ —
+   funções bem diferentes.
+5. Exigindo as duas coisas: que $x$ esteja no domínio de $g$, e que $g(x)$
+   esteja no domínio de $f$. A segunda condição é a que costuma escapar, porque
+   não se lê na fórmula de $g$.
+6. Porque $x^2 + 1$ é sempre pelo menos 1, para qualquer $x$ real. A saída da
+   função de dentro nunca é negativa, então a raiz sempre aceita o que recebe. A
+   exigência existe, mas é satisfeita automaticamente.
+7. Perguntando **o que se calcularia primeiro** ao avaliar a fórmula num número.
+   Em $(3x+1)^5$, calcula-se $3x+1$ antes de elevar à quinta; logo $3x+1$ é a de
+   dentro.
+8. Toda transformação horizontal é uma composição. $f(x-3)$ é $f$ composta com a
+   função que subtrai 3, e $f(-x)$ é $f$ composta com a que troca o sinal. A
+   página 5.6 já usava composição sem dar o nome.
+
+</details>
+
+## 12. Exercícios
+
+### 1. Reconhecimento
+
+1. Com $f(x) = x^2$ e $g(x) = x + 3$, calcule: a) $f(g(1))$ &nbsp; b) $g(f(1))$
+   &nbsp; c) $f(g(0))$ &nbsp; d) $g(g(2))$
+2. Em cada fórmula, identifique a função de dentro e a de fora: a) $(2x - 5)^3$
+   &nbsp; b) $\sqrt{x + 7}$ &nbsp; c) $\lvert 3x \rvert$ &nbsp; d)
+   $\frac{1}{x^2 + 1}$
+3. Escreva, em notação de composição, “aplicar $g$ e depois $f$”.
+
+### 2. Explicação
+
+4. Explique por que a ordem das operações muda o valor pago no problema da loja.
+5. Explique por que $f(g(x))$ e $f(x) \cdot g(x)$ são coisas diferentes, com um
+   exemplo.
+6. Um colega escreveu, para $f(x) = x^2$ e $g(x) = x+3$, que
+   $f(g(x)) = x^2 + 9$. Aponte o erro e corrija.
+
+### 3. Aplicação direta
+
+7. Com $f(x) = 2x - 1$ e $g(x) = x^2$, encontre as fórmulas de: a) $f(g(x))$
+   &nbsp; b) $g(f(x))$
+8. Com $f(x) = \sqrt{x}$ e $g(x) = x - 5$, encontre $f(g(x))$ e $g(f(x))$ com os
+   respectivos domínios.
+9. Escreva $h(x) = (3x + 1)^5$ como composição de duas funções.
+
+### 4. Variação
+
+10. Com $d(p) = p - 30$ e $t(q) = 1{,}1q$, calcule $t(d(250))$ e $d(t(250))$, e
+    confirme que a diferença é R\$ 3.
+11. Sejam $f(x) = \frac{1}{x}$ e $g(x) = x - 2$. Encontre $f(g(x))$, o domínio,
+    e explique de onde vem a restrição.
+12. Encontre uma função $g$ tal que $f(g(x)) = \sqrt{2x+1}$, sabendo que
+    $f(u) = \sqrt{u}$.
+
+<details>
+<summary>Dica para o 11</summary>
+
+A fórmula final terá um denominador. Pergunte que valor de $x$ faz esse
+denominador se anular — e note que essa restrição vem da **segunda** máquina,
+não da primeira.
+
+</details>
+
+### 5. Problema misto
+
+13. Uma fábrica produz $P(h) = 12h$ peças em $h$ horas, e o custo de $n$ peças é
+    $C(n) = 40n + 500$ reais. a) Escreva o custo em função das horas. b) Calcule
+    para 8 horas, conferindo pelos dois caminhos. c) Explique por que $P(C(n))$
+    não tem significado neste problema.
+14. Uma temperatura em graus Celsius se converte para Fahrenheit por
+    $F(c) = \frac{9c}{5} + 32$. Um sensor registra a temperatura em Celsius como
+    $c(t) = 20 + 2t$, com $t$ em horas após as 6h. a) Escreva a temperatura em
+    Fahrenheit em função de $t$. b) Calcule a temperatura em Fahrenheit às 9h.
+
+### 6. Justificativa
+
+15. Mostre que, se $f(x) = x + a$ e $g(x) = x + b$, então $f(g(x)) = g(f(x))$.
+    Por que estas comutam, se em geral a composição não comuta?
+16. Explique por que a restrição de domínio de uma composta pode não aparecer na
+    fórmula simplificada, dando um exemplo.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) $g(1) = 4$, então $f(4) = 16$. &nbsp; b) $f(1) = 1$, então $g(1) = 4$.
+   &nbsp; c) $g(0) = 3$, então $f(3) = 9$. &nbsp; d) $g(2) = 5$, então
+   $g(5) = 8$.
+2. a) dentro $2x-5$, fora $u^3$ &nbsp; b) dentro $x+7$, fora $\sqrt{u}$ &nbsp;
+   c) dentro $3x$, fora $\lvert u \rvert$ &nbsp; d) dentro $x^2+1$, fora
+   $\frac{1}{u}$.
+3. $(f \circ g)(x) = f(g(x))$. A que age primeiro fica **dentro**.
+4. Porque o imposto de 10% incide sobre bases diferentes. Com o desconto antes,
+   a base é R\$ 70; com o imposto antes, é R\$ 100, e o desconto é retirado
+   depois de o valor já ter sido inflado. A diferença é o imposto sobre os 30
+   reais de desconto.
+5. Compor é encadear; multiplicar é aplicar as duas ao mesmo valor e multiplicar
+   os resultados. Com $f(x) = x^2$ e $g(x) = x + 3$ em $x = 1$: a composta dá
+   $f(4) = 16$, e o produto dá $1 \times 4 = 4$.
+6. Ele substituiu sem parênteses. O correto é $f(g(x)) = (x+3)^2 = x^2 + 6x + 9$
+   — falta o dobro do produto. Conferindo em $x = 1$: $16$, e não $1 + 9 = 10$.
+7. a) $f(g(x)) = 2x^2 - 1$ &nbsp; b) $g(f(x)) = (2x-1)^2 = 4x^2 - 4x + 1$.
+8. $f(g(x)) = \sqrt{x-5}$, com $D = [5, +\infty[$; $g(f(x)) = \sqrt{x} - 5$, com
+   $D = [0, +\infty[$.
+9. $g(x) = 3x+1$ e $f(u) = u^5$, com $h = f \circ g$.
+10. $t(d(250)) = 1{,}1 \times 220 = 242$ reais; $d(t(250)) = 275 - 30 = 245$
+    reais. A diferença é 3, como em qualquer preço.
+11. $f(g(x)) = \frac{1}{x-2}$, com $D$ excluindo $x = 2$. A restrição vem de
+    $f$, que não aceita zero na entrada: como $g(2) = 0$, esse valor trava a
+    segunda máquina. Repare que $g$ sozinha aceitaria o 2 sem problema.
+12. $g(x) = 2x + 1$. Assim $f(g(x)) = \sqrt{2x+1}$.
+13. a) $C(P(h)) = 40(12h) + 500 = 480h + 500$. &nbsp; b) Pela fórmula,
+    $480 \times 8 + 500 = 4340$ reais. Pelo caminho longo: $P(8) = 96$ peças e
+    $C(96) = 3840 + 500 = 4340$. &nbsp; c) Porque $C(n)$ devolve **reais**, e
+    $P$ espera receber **horas**. A composta $P(C(n))$ multiplicaria um valor em
+    reais por 12 e chamaria o resultado de peças — as unidades não se encaixam.
+14. a)
+    $F(c(t)) = \frac{9(20+2t)}{5} + 32 = \frac{180 + 18t}{5} + 32 = 3{,}6t + 68$.
+    &nbsp; b) Às 9h temos $t = 3$, então
+    $3{,}6 \times 3 + 68 = 10{,}8 + 68 = 78{,}8$ °F. Conferindo: $c(3) = 26$ °C,
+    e $F(26) = \frac{234}{5} + 32 = 46{,}8 + 32 = 78{,}8$.
+15. $f(g(x)) = (x + b) + a = x + a + b$, e $g(f(x)) = (x + a) + b = x + a + b$.
+    São iguais. Elas comutam porque as duas operações são somas, e a soma de
+    números é comutativa — a ordem em que se acrescenta $a$ e $b$ não importa. A
+    composição em geral não comuta porque as funções costumam ser de tipos
+    diferentes, como somar e multiplicar, e aí a ordem altera a base sobre a
+    qual a segunda opera.
+16. Porque a exigência pode vir da **segunda** função aplicada a um valor
+    intermediário, e o resultado simplificado nem sempre a exibe. Exemplo: com
+    $f(u) = \frac{1}{u}$ e $g(x) = x - 2$, a composta é $\frac{1}{x-2}$ — aqui a
+    restrição ainda aparece. Já com $f(u) = (\sqrt{u})^2$ e $g(x) = x$, a
+    composta simplifica para $x$, mas continua exigindo $x \ge 0$, que a fórmula
+    final não mostra.
+
+</details>
+
+## 13. Revisão curta
+
+- **Compor** é aplicar duas funções em sequência: a saída de uma é a entrada da
+  outra.
+- Em $f(g(x))$, **quem age primeiro é $g$**, o de dentro. A ordem de escrita é o
+  inverso da ordem de execução.
+- Para achar a fórmula, **substitua a expressão inteira entre parênteses** no
+  lugar da letra.
+- A composição **não é comutativa**: $f \circ g$ e $g \circ f$ costumam ser
+  funções diferentes — como desconto antes e depois do imposto.
+- Compor **não é multiplicar**.
+- O **domínio** exige duas condições: $x$ serve para $g$, e $g(x)$ serve para
+  $f$. A segunda é a que escapa.
+- Para reconhecer uma composição numa fórmula, pergunte **o que se calcularia
+  primeiro** — essa é a função de dentro.
+- Toda transformação horizontal é uma composição disfarçada.
+
+Antes de avançar, verifique se você consegue explicar por que a loja cobra
+valores diferentes conforme a ordem. A próxima página trata de **desfazer** uma
+função — o que exige, curiosamente, compor com ela.

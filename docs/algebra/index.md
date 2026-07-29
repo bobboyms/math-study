@@ -50,6 +50,12 @@ O capítulo percorre esse caminho nos dois sentidos:
 
 Fatorar é o sentido difícil, e é o que o próximo capítulo vai precisar.
 
+As três últimas páginas colhem o que a fatoração rendeu. Com uma expressão
+escrita como produto, é possível **simplificar um quociente** de polinômios,
+**somar frações** cujos denominadores têm letras e **tirar a raiz de um
+denominador**. Nenhuma delas traz técnica nova: todas são a fatoração posta para
+trabalhar sobre frações.
+
 ## Para que isso serve?
 
 - escrever a regra de um preço, de um consumo ou de um salário uma vez só, em
@@ -69,6 +75,12 @@ Fatorar é o sentido difícil, e é o que o próximo capítulo vai precisar.
    de trás para frente.
 4. [Agrupamento e trinômios](./agrupamento-e-trinomios) — fatorar quando não há
    fator comum em todos os termos.
+5. [Frações algébricas](./fracoes-algebricas) — simplificar um quociente de
+   polinômios, e por que só se cancela fator.
+6. [Operações com frações algébricas](./operacoes-com-fracoes-algebricas) —
+   multiplicar, dividir e, o caso difícil, somar com denominador comum.
+7. [Racionalizar denominadores](./racionalizacao) — tirar a raiz de baixo, e o
+   conjugado que faz isso quando há uma soma.
 
 ## O que vem depois
 

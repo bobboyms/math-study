@@ -1,0 +1,558 @@
+---
+title: Racionalizar denominadores
+---
+
+import GeoFigure from '@site/src/components/GeoFigure';
+
+# Racionalizar: tirar a raiz do denominador
+
+## 1. Problema motivador: o lado de uma peça quadrada
+
+Um marceneiro precisa cortar uma peça **quadrada** cuja diagonal meça exatamente
+10 cm — a diagonal é a medida que o projeto especifica, porque é ela que precisa
+caber num encaixe. Para cortar, porém, ele precisa do **lado**.
+
+<GeoFigure
+  polygons={[{points: [[0, 0], [5, 0], [5, 5], [0, 5]], tone: 1}]}
+  segments={[{from: [0, 0], to: [5, 5], tone: 2}]}
+  angles={[{at: [0, 0], from: [5, 0], to: [0, 5], right: true}]}
+  dims={[{from: [0, 0], to: [5, 0], label: '\\ell', offset: 26}]}
+  labels={[{at: [2.5, 2.5], math: '10', tone: 2, dx: 26, dy: 18}]}
+  caption="A diagonal corta o quadrado em dois triângulos retângulos de catetos iguais."
+/>
+
+Pelo [teorema de Pitágoras](../geometria/teorema-de-pitagoras), a diagonal e os
+dois lados formam um triângulo retângulo:
+
+$$
+\ell^2 + \ell^2 = 10^2
+\quad\Longrightarrow\quad
+2\ell^2 = 100
+\quad\Longrightarrow\quad
+\ell^2 = 50
+\quad\Longrightarrow\quad
+\ell = \sqrt{50}.
+$$
+
+Mas o caminho mais natural é escrever direto: como a diagonal de um quadrado é
+$\ell\sqrt{2}$, temos $\ell\sqrt{2} = 10$, e portanto
+
+$$
+\ell = \frac{10}{\sqrt{2}}.
+$$
+
+Agora o marceneiro precisa de um número para marcar na madeira. E é aqui que a
+forma da escrita passa a importar. Para calcular $\frac{10}{\sqrt{2}}$ à mão, é
+preciso **dividir por 1,41421356…** — uma divisão longa por um número que não
+termina. Já se a mesma medida estivesse escrita como $5\sqrt{2}$, bastaria
+**multiplicar** 5 por 1,41421356…, o que qualquer pessoa faz de cabeça até a
+segunda casa: cerca de 7,07 cm.
+
+As duas escritas valem o mesmo número. Uma é penosa de calcular; a outra não.
+Esta página mostra como passar de uma para a outra — e, no fim, resolve um caso
+em que a passagem não é uma conveniência, mas a única saída.
+
+## 2. Mapa das ideias
+
+- **racionalizar o denominador** é reescrever uma fração de modo que não sobre
+  raiz embaixo, sem mudar o valor;
+- o instrumento é sempre multiplicar por uma **forma de 1**, isto é, por
+  $\frac{k}{k}$, escolhendo o $k$ que elimina a raiz;
+- quando o denominador é uma **soma ou diferença** com raiz, o $k$ certo é o
+  **conjugado**: troca-se o sinal do meio.
+
+Por exemplo, $\frac{1}{\sqrt{3}}$ vira $\frac{\sqrt{3}}{3}$ multiplicando por
+$\frac{\sqrt{3}}{\sqrt{3}}$. Já $\frac{1}{\sqrt{3} + 1}$ **não** se resolve
+assim: multiplicar por $\frac{\sqrt{3}}{\sqrt{3}}$ deixaria
+$\frac{\sqrt 3}{3 + \sqrt 3}$, com raiz embaixo do mesmo jeito. É esse caso que
+pede o conjugado.
+
+## 3. Para que serve
+
+Vale ser honesto: com uma calculadora na mão, dividir por $\sqrt{2}$ não é mais
+difícil que multiplicar. Racionalizar deixou de ser obrigatório para obter um
+número. Mas continua sendo útil por três motivos que a calculadora não resolve:
+
+- **reconhecer que duas expressões são a mesma.** Olhando,
+  $\frac{1}{\sqrt5 - 2}$ e $\sqrt5 + 2$ não se parecem em nada. Racionalizando,
+  vê-se que são iguais. Sem uma forma padrão, respostas corretas parecem
+  diferentes;
+- **enxergar o tamanho de um número.** Em $5\sqrt2$ dá para estimar de cabeça
+  que o valor está perto de 7. Em $\frac{10}{\sqrt2}$, não;
+- **destravar contas que travam de outro jeito.** O último exemplo desta página
+  mostra uma expressão que só se simplifica pelo conjugado — e ela é exatamente
+  a conta que aparece no início do cálculo, quando se estuda a taxa de variação
+  de $\sqrt{x}$.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [raízes](../numeros-e-operacoes/raizes): quanto vale
+$\sqrt{2} \times \sqrt{2}$?** Vale 2. A raiz quadrada é a operação que, repetida
+como fator, devolve o número de dentro — é a definição dela. Vale também
+$\sqrt{a} \times \sqrt{b} = \sqrt{ab}$, e é dela que sai
+$\sqrt{50} = \sqrt{25 \times 2} = 5\sqrt{2}$.
+
+**2. De [produtos notáveis](./produtos-notaveis): quanto vale
+$(a + b)(a - b)$?** Vale $a^2 - b^2$. Os dois produtos cruzados se cancelam:
+$a^2 - ab + ab - b^2$. Guarde este, porque ele é o motor do conjugado — é ele
+que transforma raízes em números inteiros.
+
+**3. De [frações algébricas](./fracoes-algebricas): por que multiplicar
+numerador e denominador pelo mesmo valor não muda a fração?** Porque é
+multiplicar por $\frac{k}{k}$, que vale 1. Muda a escrita, não a quantidade.
+
+Repare que a página não traz técnica nova: ela combina esses três blocos. O que
+é novo é a **escolha** do $k$.
+
+## 5. Intuição: escolher o multiplicador que apaga a raiz
+
+Multiplicar por $\frac{k}{k}$ é sempre permitido, para qualquer $k$ diferente de
+zero. A pergunta não é *se* podemos, e sim **qual $k$ escolher** para que a raiz
+de baixo desapareça.
+
+A pista está na própria definição de raiz quadrada: $\sqrt{2}$ é o número que,
+multiplicado por si mesmo, dá 2. Ou seja, **a própria raiz é o que a apaga**. Se
+o denominador é $\sqrt{2}$, multiplicá-lo por $\sqrt{2}$ produz 2, um inteiro.
+
+$$
+\frac{10}{\sqrt{2}}
+= \frac{10}{\sqrt{2}} \times \frac{\sqrt{2}}{\sqrt{2}}
+= \frac{10\sqrt{2}}{2}
+= 5\sqrt{2}.
+$$
+
+O que mudou: a raiz saiu de baixo e foi para cima. O que permaneceu igual: o
+valor. Confira com a calculadora — os dois dão $7{,}0710678\ldots$
+
+Repare que a raiz **não sumiu**. Ela não podia sumir: o número é irracional,
+nenhuma reescrita transforma isso em fração de inteiros. O que a manipulação faz
+é **mudar a raiz de lugar**, tirando-a da posição incômoda. O nome
+“racionalizar” se refere apenas ao denominador, que ficou racional.
+
+## 6. O caso simples: raiz sozinha embaixo
+
+Quando o denominador é uma raiz sozinha, ou um número multiplicando uma raiz, o
+multiplicador é a própria raiz.
+
+$$
+\frac{3}{\sqrt{5}}
+= \frac{3}{\sqrt{5}} \times \frac{\sqrt{5}}{\sqrt{5}}
+= \frac{3\sqrt{5}}{5}.
+$$
+
+Vale um atalho que aparece muito e costuma surpreender:
+
+$$
+\frac{5}{\sqrt{5}}
+= \frac{5\sqrt{5}}{5}
+= \sqrt{5}.
+$$
+
+Ou seja, $\frac{5}{\sqrt 5}$ **é** $\sqrt 5$. Faz sentido: dividir 5 por
+$\sqrt5$ é perguntar quantos $\sqrt5$ cabem em 5, e como
+$5 = \sqrt5 \times \sqrt5$, a resposta é $\sqrt5$.
+
+## 7. O caso difícil: soma ou diferença embaixo
+
+Agora tome $\dfrac{1}{\sqrt{5} - 2}$. Multiplicar por $\frac{\sqrt5}{\sqrt5}$
+não resolve:
+
+$$
+\frac{1}{\sqrt5 - 2} \times \frac{\sqrt5}{\sqrt5}
+= \frac{\sqrt5}{5 - 2\sqrt5}.
+$$
+
+A raiz continua embaixo — apenas mudou de posição dentro da subtração. O motivo
+é que a distributiva espalha o $\sqrt5$ por **cada parcela**, e a parcela $-2$
+recebe uma raiz que antes não tinha.
+
+Precisamos de um multiplicador que ataque a soma **inteira**, e não parcela por
+parcela. Ele existe, e já foi estudado: é o produto notável
+
+$$
+(a + b)(a - b) = a^2 - b^2.
+$$
+
+Repare no que ele faz: eleva $a$ e $b$ ao quadrado, e o quadrado é justamente a
+operação que desfaz a raiz quadrada. Se $a = \sqrt5$ e $b = 2$:
+
+$$
+(\sqrt5 - 2)(\sqrt5 + 2) = (\sqrt5)^2 - 2^2 = 5 - 4 = 1.
+$$
+
+Um denominador irracional virou 1. Esse parceiro — a mesma expressão com o sinal
+do meio trocado — chama-se **conjugado**.
+
+> O **conjugado** de $a + b$ é $a - b$, e vice-versa. O produto dos dois é
+> $a^2 - b^2$, que não tem raiz quando $a$ e $b$ são raízes quadradas ou
+> inteiros.
+
+Completando a conta:
+
+$$
+\frac{1}{\sqrt5 - 2}
+= \frac{1}{\sqrt5 - 2} \times \frac{\sqrt5 + 2}{\sqrt5 + 2}
+= \frac{\sqrt5 + 2}{1}
+= \sqrt5 + 2.
+$$
+
+Um resultado que ninguém adivinharia olhando a expressão de partida. Conferindo:
+$\sqrt5 \approx 2{,}2360679$, então
+$\frac{1}{\sqrt5 - 2} \approx \frac{1}{0{,}2360679} \approx 4{,}2360679$, que é
+exatamente $\sqrt5 + 2$.
+
+### Por que o sinal trocado, e não outro
+
+É tentador multiplicar por $\frac{\sqrt5 - 2}{\sqrt5 - 2}$, repetindo o próprio
+denominador. Veja o que sai:
+
+$$
+(\sqrt5 - 2)^2 = 5 - 4\sqrt5 + 4 = 9 - 4\sqrt5.
+$$
+
+A raiz sobrevive, porque o quadrado de uma diferença tem o termo do meio $-2ab$.
+É exatamente esse termo que o sinal trocado cancela — os dois produtos cruzados
+saem com sinais opostos e se anulam. **O conjugado não é uma escolha estética: é
+o único multiplicador que mata o termo do meio.**
+
+## 8. Exemplos resolvidos
+
+### Exemplo 1: simplificar antes de racionalizar
+
+Racionalize $\dfrac{6}{\sqrt{7} + 2}$.
+
+O conjugado é $\sqrt7 - 2$, e o produto é $7 - 4 = 3$:
+
+$$
+\frac{6}{\sqrt7 + 2} \times \frac{\sqrt7 - 2}{\sqrt7 - 2}
+= \frac{6(\sqrt7 - 2)}{3}
+= 2(\sqrt7 - 2) = 2\sqrt7 - 4.
+$$
+
+Repare que o 3 do denominador cancelou com o 6 — vale sempre olhar se há fator
+comum antes de distribuir. Conferindo: $\sqrt7 \approx 2{,}6457513$, então a
+expressão original vale $\frac{6}{4{,}6457513} \approx 1{,}2915026$, e
+$2\sqrt7 - 4 \approx 1{,}2915026$.
+
+### Exemplo 2: duas raízes embaixo
+
+*Pause e tente antes de ler.* Racionalize $\dfrac{3}{\sqrt5 - \sqrt2}$.
+
+O conjugado é $\sqrt5 + \sqrt2$. O produto eleva as duas ao quadrado:
+
+$$
+(\sqrt5 - \sqrt2)(\sqrt5 + \sqrt2) = 5 - 2 = 3.
+$$
+
+$$
+\frac{3}{\sqrt5 - \sqrt2} \times \frac{\sqrt5 + \sqrt2}{\sqrt5 + \sqrt2}
+= \frac{3(\sqrt5 + \sqrt2)}{3}
+= \sqrt5 + \sqrt2.
+$$
+
+Conferindo:
+$\frac{3}{2{,}2360679 - 1{,}4142136} = \frac{3}{0{,}8218544} \approx 3{,}6502815$,
+e $\sqrt5 + \sqrt2 \approx 3{,}6502815$.
+
+### Exemplo 3: quando o numerador também tem raiz
+
+*Pause e tente.* Racionalize $\dfrac{1 + \sqrt2}{1 - \sqrt2}$.
+
+O conjugado do denominador é $1 + \sqrt2$. Ele multiplica os dois lados, e o
+numerador vira um quadrado da soma:
+
+$$
+\frac{1+\sqrt2}{1-\sqrt2} \times \frac{1+\sqrt2}{1+\sqrt2}
+= \frac{(1+\sqrt2)^2}{1 - 2}
+= \frac{1 + 2\sqrt2 + 2}{-1}
+= \frac{3 + 2\sqrt2}{-1}
+= -3 - 2\sqrt2.
+$$
+
+Cuidado com o denominador negativo: $1 - (\sqrt2)^2 = 1 - 2 = -1$, e o sinal
+atinge **as duas** parcelas do numerador. Conferindo:
+$\frac{1 + 1{,}4142136}{1 - 1{,}4142136} = \frac{2{,}4142136}{-0{,}4142136} \approx -5{,}8284271$,
+e $-3 - 2\sqrt2 \approx -5{,}8284271$.
+
+### Exemplo 4: com letras
+
+*Pause e tente.* Racionalize $\dfrac{1}{\sqrt{x} - \sqrt{y}}$.
+
+Nada muda: o conjugado é $\sqrt x + \sqrt y$, e o produto é $x - y$.
+
+$$
+\frac{1}{\sqrt x - \sqrt y} \times \frac{\sqrt x + \sqrt y}{\sqrt x + \sqrt y}
+= \frac{\sqrt x + \sqrt y}{x - y}.
+$$
+
+As restrições: $x \ge 0$ e $y \ge 0$ para que as raízes existam, e $x \neq y$
+para que o denominador original não seja zero.
+
+Conferindo com $x = 9$ e $y = 4$: à esquerda, $\frac{1}{3 - 2} = 1$; à direita,
+$\frac{3 + 2}{9 - 4} = \frac{5}{5} = 1$.
+
+### Exemplo 5: racionalizar o **numerador**
+
+*Pause e tente.* Reescreva $\dfrac{\sqrt{x+2} - \sqrt2}{x}$ sem raiz no
+numerador.
+
+Este é o caso que anunciamos: aqui a raiz incômoda está em cima, e o objetivo é
+tirá-la de lá. A técnica é a mesma — multiplicar pelo conjugado — só que
+escolhido pelo numerador:
+
+$$
+\frac{\sqrt{x+2} - \sqrt2}{x} \times
+\frac{\sqrt{x+2} + \sqrt2}{\sqrt{x+2} + \sqrt2}
+= \frac{(x + 2) - 2}{x\left(\sqrt{x+2} + \sqrt2\right)}
+= \frac{x}{x\left(\sqrt{x+2} + \sqrt2\right)}.
+$$
+
+E agora o $x$ é **fator** do numerador e do denominador, então pode ser
+cancelado:
+
+$$
+= \frac{1}{\sqrt{x+2} + \sqrt2}, \qquad x \neq 0.
+$$
+
+Olhe o que aconteceu. A expressão de partida, em $x = 0$, daria $\frac{0}{0}$ —
+indeterminada. A forma final, no mesmo $x = 0$, dá
+$\frac{1}{2\sqrt2} \approx 0{,}3535534$, um número perfeitamente definido. A
+racionalização **revelou** o valor para o qual a expressão tende quando $x$ se
+aproxima de zero, e que a forma original escondia atrás de uma divisão
+impossível.
+
+É por isso que o conjugado sobrevive à calculadora. Ele não está aqui para
+facilitar uma divisão: está aqui para destravar uma expressão que, escrita de
+outro jeito, não tem saída. Essa conta é o primeiro passo do cálculo de
+derivadas de raízes.
+
+Conferindo com $x = 2$: à esquerda,
+$\frac{2 - 1{,}4142136}{2} \approx 0{,}2928932$; à direita,
+$\frac{1}{2 + 1{,}4142136} \approx 0{,}2928932$.
+
+### Exemplo 6: de volta à peça do marceneiro
+
+O lado da peça era $\ell = \frac{10}{\sqrt2}$. Racionalizando,
+$\ell = 5\sqrt2 \approx 7{,}07$ cm.
+
+Vale a pena ver a diferença de trabalho lado a lado:
+
+| Escrita | Conta a fazer | Esforço |
+|---|---|---|
+| $\dfrac{10}{\sqrt2}$ | $10 \div 1{,}41421356$ | divisão longa por decimal infinito |
+| $5\sqrt2$ | $5 \times 1{,}41421356$ | uma multiplicação |
+
+E, de quebra, a forma racionalizada responde a outra pergunta de imediato: a
+área da peça é $\ell^2 = (5\sqrt2)^2 = 25 \times 2 = 50$ cm², um número redondo
+que a primeira escrita não deixava ver.
+
+## 9. Erros comuns
+
+> **Erro 1: multiplicar só o denominador.** Passar de $\frac{10}{\sqrt2}$ para
+> $\frac{10}{2}$ “multiplicando por $\sqrt2$”. Isso muda o valor: $\frac{10}{2}$
+> é 5, e a expressão original é 7,07. O multiplicador tem de entrar em cima e
+> embaixo, porque só $\frac{k}{k}$ vale 1.
+
+> **Erro 2: usar a raiz sozinha quando há soma embaixo.** Em
+> $\frac{1}{\sqrt3 + 1}$, multiplicar por $\frac{\sqrt3}{\sqrt3}$ deixa
+> $\frac{\sqrt3}{3 + \sqrt3}$ — a raiz continua lá. Soma ou diferença embaixo
+> pede **conjugado**.
+
+> **Erro 3: repetir o denominador em vez de conjugá-lo.** Multiplicar
+> $\frac{1}{\sqrt5 - 2}$ por $\frac{\sqrt5 - 2}{\sqrt5 - 2}$ dá $9 - 4\sqrt5$
+> embaixo: a raiz sobrevive, porque o quadrado da diferença tem termo do meio. É
+> o sinal **trocado** que cancela esse termo.
+
+> **Erro 4: esquecer que $(\sqrt a)^2 = a$, não $\sqrt{a^2}$ genérico.** Ao
+> aplicar $(a+b)(a-b) = a^2 - b^2$ com $a = \sqrt5$, o $a^2$ é 5, não
+> $\sqrt{25}$ nem $\sqrt5$. É o passo que faz a raiz desaparecer; pulá-lo perde
+> o sentido da técnica.
+
+> **Erro 5: perder o sinal do denominador negativo.** Em
+> $\frac{1+\sqrt2}{1-\sqrt2}$, o denominador conjugado dá $1 - 2 = -1$. O sinal
+> negativo atinge o numerador **inteiro**: o resultado é $-3 - 2\sqrt2$, e não
+> $-3 + 2\sqrt2$.
+
+> **Erro 6: achar que a raiz sumiu.** Ela mudou de lugar. $5\sqrt2$ continua
+> irracional; só o denominador ficou racional. Uma resposta “racionalizada” que
+> não tem raiz nenhuma provavelmente perdeu algo pelo caminho.
+
+## 10. Perguntas de verificação
+
+1. Por que multiplicar por $\frac{\sqrt2}{\sqrt2}$ não muda o valor da fração?
+2. Por que a raiz não desaparece de vez ao racionalizar?
+3. Por que multiplicar pela raiz sozinha não resolve quando há uma soma no
+   denominador?
+4. Qual produto notável faz o conjugado funcionar, e por que ele elimina a raiz?
+5. Por que repetir o denominador, em vez de conjugá-lo, não serve?
+6. Em que sentido $\frac{5}{\sqrt5}$ e $\sqrt5$ são a mesma coisa?
+7. No Exemplo 5, por que a forma racionalizada tem valor em $x = 0$ e a original
+   não?
+8. Com calculadora disponível, por que ainda vale aprender a racionalizar?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque $\frac{\sqrt2}{\sqrt2}$ é 1, e multiplicar por 1 não altera quantidade
+   nenhuma. Muda apenas a escrita: o tamanho da parte usada para contar.
+2. Porque o número é irracional, e nenhuma reescrita transforma um irracional em
+   razão de inteiros. A técnica muda a raiz **de lugar** — do denominador para o
+   numerador —, que é onde ela atrapalha menos.
+3. Porque a distributiva espalha o multiplicador por cada parcela separadamente.
+   A parcela que não tinha raiz passa a ter, e o denominador continua
+   irracional.
+4. É $(a+b)(a-b) = a^2 - b^2$. Ele eleva cada parcela ao quadrado, e o quadrado
+   desfaz a raiz quadrada: $(\sqrt5)^2 = 5$. Os dois produtos cruzados, que
+   trariam raízes, saem com sinais opostos e se cancelam.
+5. Porque $(\sqrt5 - 2)^2 = 9 - 4\sqrt5$ mantém o termo do meio $-2ab$, que
+   carrega a raiz. Só com o sinal trocado esses dois termos se anulam.
+6. São o mesmo número, escrito de duas formas. Dividir 5 por $\sqrt5$ é
+   perguntar quantos $\sqrt5$ cabem em 5; como $5 = \sqrt5 \times \sqrt5$, cabem
+   exatamente $\sqrt5$.
+7. Porque o cancelamento do $x$ só foi legítimo sob a hipótese $x \neq 0$, e ele
+   apagou da escrita a divisão que travava. A forma original tem $\frac{0}{0}$
+   em $x = 0$; a final não tem divisão por $x$ nenhuma. As duas coincidem em
+   todos os outros valores.
+8. Porque a calculadora resolve só o problema de obter um número. Ela não ajuda
+   a reconhecer que $\frac{1}{\sqrt5-2}$ e $\sqrt5+2$ são iguais, não permite
+   estimar tamanhos de cabeça, e sobretudo não destrava expressões como a do
+   Exemplo 5, em que a forma original é uma divisão indeterminada.
+
+</details>
+
+## 11. Exercícios
+
+### 1. Reconhecimento
+
+1. Diga quais expressões têm denominador irracional: a) $\dfrac{\sqrt3}{2}$
+   &nbsp; b) $\dfrac{2}{\sqrt3}$ &nbsp; c) $\dfrac{1 + \sqrt2}{3}$ &nbsp; d)
+   $\dfrac{1}{1 + \sqrt2}$
+2. Diga por qual expressão se deve multiplicar para racionalizar: a)
+   $\dfrac{1}{\sqrt7}$ &nbsp; b) $\dfrac{1}{\sqrt3 + 1}$ &nbsp; c)
+   $\dfrac{1}{\sqrt5 - \sqrt3}$ &nbsp; d) $\dfrac{1}{2 - \sqrt2}$
+3. Escreva o conjugado de: $\sqrt5 + 3$, &nbsp; $\sqrt7 - 2$, &nbsp;
+   $2\sqrt3 + \sqrt2$.
+
+### 2. Explicação
+
+4. Explique por que multiplicar numerador e denominador por $\sqrt2$ não altera
+   o valor da fração, mas altera a forma como ela se calcula.
+5. Explique, usando o produto notável, por que o conjugado elimina a raiz do
+   denominador.
+6. Por que racionalizar não é obrigatório para obter o valor numérico, mas ainda
+   assim é útil? Dê dois motivos.
+
+### 3. Aplicação direta
+
+7. Racionalize: a) $\dfrac{5}{\sqrt5}$ &nbsp; b) $\dfrac{3}{\sqrt6}$ &nbsp; c)
+   $\dfrac{1}{\sqrt3 - 1}$ &nbsp; d) $\dfrac{4}{\sqrt7 + \sqrt3}$
+
+### 4. Variação
+
+8. Racionalize $\dfrac{1 + \sqrt2}{1 - \sqrt2}$.
+9. Racionalize, indicando as restrições: a) $\dfrac{2}{\sqrt x}$ &nbsp; b)
+   $\dfrac{1}{\sqrt x - \sqrt y}$
+10. Reescreva $\dfrac{\sqrt{x+2} - \sqrt2}{x}$ sem raiz no numerador, e diga
+    quanto vale a forma obtida em $x = 0$.
+
+<details>
+<summary>Dica para o 10</summary>
+
+O conjugado se escolhe olhando **onde está a raiz que incomoda**. Aqui ela está
+em cima, então o multiplicador vem do numerador — e depois procure um fator
+comum para cancelar.
+
+</details>
+
+### 5. Problema misto
+
+11. Uma peça quadrada tem diagonal de 6 cm. a) Escreva o lado como uma fração
+    com raiz no denominador. b) Racionalize e calcule o valor aproximado. c)
+    Calcule a área da peça usando a forma racionalizada.
+12. Um retângulo tem área 12 cm² e um dos lados mede $\sqrt3$ cm. Escreva o
+    outro lado, racionalize e dê o valor aproximado.
+
+### 6. Justificativa
+
+13. Mostre que $\dfrac{1}{\sqrt a - \sqrt b} = \dfrac{\sqrt a + \sqrt b}{a - b}$
+    e diga quais restrições são necessárias e por quê.
+14. O conjugado de $\sqrt5 + 3$ é $\sqrt5 - 3$, e não $-\sqrt5 - 3$. Explique a
+    diferença calculando os dois produtos.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Denominador irracional em (b) e (d). Em (a) e (c) a raiz está no numerador,
+   que é justamente onde queremos que ela fique.
+2. a) $\sqrt7$ &nbsp; b) $\sqrt3 - 1$ &nbsp; c) $\sqrt5 + \sqrt3$ &nbsp; d)
+   $2 + \sqrt2$. Em (b), (c) e (d) o multiplicador é o conjugado, porque há soma
+   ou diferença embaixo.
+3. $\sqrt5 - 3$; &nbsp; $\sqrt7 + 2$; &nbsp; $2\sqrt3 - \sqrt2$. Troca-se só o
+   sinal do meio.
+4. Porque $\frac{\sqrt2}{\sqrt2} = 1$, e multiplicar por 1 preserva a
+   quantidade. O que muda é a posição da raiz: sai do denominador, onde
+   obrigaria a dividir por um decimal infinito, e vai para o numerador, onde
+   basta multiplicar.
+5. Porque $(a+b)(a-b) = a^2 - b^2$, e elevar ao quadrado desfaz a raiz quadrada.
+   Os termos $+ab$ e $-ab$, que ainda conteriam raiz, se cancelam — é o sinal
+   trocado que garante isso.
+6. Entre outros: (i) permite reconhecer que duas expressões diferentes são o
+   mesmo número, como $\frac{1}{\sqrt5-2}$ e $\sqrt5+2$; (ii) permite estimar o
+   tamanho de cabeça, já que $5\sqrt2$ se lê como “cerca de 7”; (iii) destrava
+   expressões indeterminadas, como no exercício 10.
+7. a) $\frac{5\sqrt5}{5} = \sqrt5$. &nbsp; b)
+   $\frac{3\sqrt6}{6} = \frac{\sqrt6}{2}$. &nbsp; c)
+   $\frac{\sqrt3+1}{3-1} = \frac{\sqrt3+1}{2}$. &nbsp; d)
+   $\frac{4(\sqrt7-\sqrt3)}{7-3} = \sqrt7 - \sqrt3$. Nos itens (a), (b) e (d)
+   houve fator comum para cancelar depois — vale sempre conferir.
+8. Multiplicando por $\frac{1+\sqrt2}{1+\sqrt2}$:
+   $\frac{(1+\sqrt2)^2}{1-2} = \frac{3 + 2\sqrt2}{-1} = -3 - 2\sqrt2 \approx -5{,}83$.
+   Se você obteve $-3 + 2\sqrt2$, o sinal negativo do denominador alcançou só a
+   primeira parcela.
+9. a) $\frac{2\sqrt x}{x}$, com $x > 0$ — estritamente maior que zero, porque
+   $x$ está no denominador e dentro da raiz. &nbsp; b)
+   $\frac{\sqrt x + \sqrt y}{x - y}$, com $x \ge 0$, $y \ge 0$ e $x \neq y$.
+10. Multiplicando pelo conjugado do numerador:
+    $\frac{(x+2)-2}{x(\sqrt{x+2}+\sqrt2)} = \frac{x}{x(\sqrt{x+2}+\sqrt2)} = \frac{1}{\sqrt{x+2}+\sqrt2}$,
+    com $x \neq 0$. Em $x = 0$ a forma obtida vale
+    $\frac{1}{2\sqrt2} = \frac{\sqrt2}{4} \approx 0{,}354$, enquanto a original
+    daria $\frac{0}{0}$.
+11. a) $\ell = \frac{6}{\sqrt2}$. &nbsp; b) $\ell = 3\sqrt2 \approx 4{,}24$ cm.
+    &nbsp; c) $\ell^2 = (3\sqrt2)^2 = 9 \times 2 = 18$ cm².
+12. O outro lado é
+    $\frac{12}{\sqrt3} = \frac{12\sqrt3}{3} = 4\sqrt3 \approx 6{,}93$ cm.
+13. Multiplicando numerador e denominador por $\sqrt a + \sqrt b$, o denominador
+    vira $(\sqrt a)^2 - (\sqrt b)^2 = a - b$, e sobra
+    $\frac{\sqrt a + \sqrt b}{a-b}$. As restrições: $a \ge 0$ e $b \ge 0$, para
+    que as raízes existam nos reais, e $a \neq b$, porque com $a = b$ o
+    denominador original $\sqrt a - \sqrt b$ seria zero.
+14. Com o conjugado: $(\sqrt5+3)(\sqrt5-3) = 5 - 9 = -4$, um inteiro — a raiz
+    sumiu. Com o oposto:
+    $(\sqrt5+3)(-\sqrt5-3) = -(\sqrt5+3)^2 = -(5 + 6\sqrt5 + 9) = -14 - 6\sqrt5$,
+    que ainda tem raiz. O que importa não é trocar todos os sinais, e sim trocar
+    **só o do meio**, para que os produtos cruzados se cancelem.
+
+</details>
+
+## 12. Revisão curta
+
+- **Racionalizar** é tirar a raiz do denominador multiplicando por uma forma de
+  1, $\frac{k}{k}$. O valor não muda; a escrita, sim.
+- Com uma **raiz sozinha** embaixo, o multiplicador é a própria raiz:
+  $\sqrt a \times \sqrt a = a$.
+- Com **soma ou diferença** embaixo, o multiplicador é o **conjugado** — a mesma
+  expressão com o sinal do meio trocado.
+- O conjugado funciona por causa de $(a+b)(a-b) = a^2 - b^2$: o quadrado desfaz
+  a raiz, e os produtos cruzados se cancelam. Repetir o denominador não serve,
+  porque o quadrado da diferença conserva o termo do meio.
+- A raiz **não some**: ela muda de lugar. Racional é o denominador, não o
+  número.
+- A técnica também serve para racionalizar o **numerador**, e é aí que ela deixa
+  de ser conveniência: é o que destrava expressões que, na forma original, dão
+  $\frac{0}{0}$.
+- Confira sempre com valor aproximado: as duas formas têm de dar o mesmo número.
+
+Antes de avançar, verifique se você consegue explicar por que o sinal trocado é
+essencial — e não apenas uma convenção. Com este bloco, o capítulo de álgebra
+está fechado: as próximas páginas voltam a resolver equações, agora com raiz e
+com desigualdade.

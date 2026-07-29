@@ -1,0 +1,554 @@
+---
+title: Raízes racionais
+---
+
+# Raízes racionais: quais valores vale a pena testar
+
+## 1. Problema motivador: por onde começar
+
+A página anterior fatorou $x^3 - 6x^2 + 11x - 6$ depois de descobrir que $x = 1$
+era raiz. Mas de onde saiu esse 1?
+
+Da sorte. Testamos e deu certo — e é justamente isso que precisa ser consertado,
+porque o método inteiro depende de **encontrar a primeira raiz**. Sem ela, não
+há o que dividir.
+
+Considere agora
+
+$$
+S(x) = 2x^3 - 3x^2 - 8x - 3.
+$$
+
+Testar “alguns números” aqui é pior que inútil. Os inteiros pequenos falham:
+
+$$
+S(1) = 2 - 3 - 8 - 3 = -12, \qquad
+S(2) = 16 - 12 - 16 - 3 = -15, \qquad
+S(0) = -3.
+$$
+
+E não há como saber se a raiz é 7, ou $-4$, ou $\frac{3}{2}$, ou um irracional
+qualquer. Os candidatos são infinitos, e testar ao acaso não é método.
+
+Esta página resolve isso com um resultado que **reduz infinitos candidatos a uma
+lista curta**. Ele não garante que exista raiz racional — mas garante que, se
+existir, ela está na lista.
+
+## 2. Mapa das ideias
+
+- o **teorema das raízes racionais** lista os únicos números racionais que podem
+  ser raiz de um polinômio de coeficientes inteiros;
+- os candidatos têm a forma $\frac{p}{q}$, com $p$ **divisor do termo
+  independente** e $q$ **divisor do coeficiente principal**;
+- a lista é **finita**, e cada candidato se testa em segundos pelo teorema do
+  resto;
+- achada uma raiz, **Briot-Ruffini** rebaixa o grau e o processo recomeça.
+
+## 3. Para que serve
+
+- fatorar polinômios de grau 3 ou mais sem tentativa cega;
+- resolver equações polinomiais que não têm fórmula fechada;
+- simplificar frações algébricas de grau alto, achando fatores comuns;
+- e, no lado negativo mas igualmente útil: **provar que não há raiz racional**,
+  esgotando a lista.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [divisão de polinômios](./divisao-de-polinomios): como se testa se $a$ é
+raiz?** Calculando $P(a)$. Se der zero, $(x-a)$ é fator, pelo teorema do fator.
+
+**2. De [múltiplos e
+divisores](../numeros-e-operacoes/multiplos-divisores-primos): quais são os
+divisores de 6?** $1, 2, 3, 6$ — e também os negativos $-1, -2, -3, -6$, que
+aqui vão importar.
+
+**3. De [frações](../numeros-e-operacoes/fracoes): o que é uma fração
+irredutível?** Aquela em que numerador e denominador não têm divisor comum além
+de 1, como $\frac{3}{2}$. É a forma em que os candidatos serão escritos.
+
+**4. De [função polinomial](./funcao-polinomial): quantas raízes um polinômio de
+grau $n$ pode ter?** No máximo $n$. Isso limita quantas vezes precisaremos
+repetir o processo.
+
+## 5. Intuição: de onde a lista sai
+
+Antes do enunciado geral, veja o caso simples, em que o coeficiente principal é
+1.
+
+Suponha que $x^3 - 6x^2 + 11x - 6$ fatore como $(x - r_1)(x - r_2)(x - r_3)$ com
+raízes inteiras. Multiplicando os três parênteses, o **termo sem $x$** é o
+produto dos três termos constantes:
+
+$$
+(-r_1)(-r_2)(-r_3) = -r_1 r_2 r_3.
+$$
+
+Comparando com o polinômio, esse termo é $-6$. Logo $r_1 r_2 r_3 = 6$.
+
+> Se as raízes são inteiras, o **produto delas divide o termo independente**. Em
+> particular, **cada raiz é um divisor** dele.
+
+Isso já reduz o problema drasticamente: em vez de infinitos números, os
+candidatos são $\pm 1, \pm 2, \pm 3, \pm 6$ — oito, e não mais.
+
+**Conferindo**: as raízes eram 1, 2 e 3, e o produto é 6. Todas dividem 6, como
+previsto.
+
+Quando o coeficiente principal não é 1, aparecem raízes fracionárias, e o
+denominador delas também é controlado — pelo coeficiente principal. É o que o
+teorema geral formaliza.
+
+## 6. O teorema das raízes racionais
+
+> Seja $P(x) = a_n x^n + \ldots + a_1 x + a_0$ um polinômio de **coeficientes
+> inteiros**. Se $\frac{p}{q}$ é uma raiz racional escrita em forma
+> **irredutível**, então:
+>
+> - $p$ é divisor de $a_0$, o termo independente;
+> - $q$ é divisor de $a_n$, o coeficiente principal.
+
+O procedimento decorre direto:
+
+1. liste os divisores de $a_0$ — **incluindo os negativos**;
+2. liste os divisores de $a_n$;
+3. monte todas as frações $\frac{p}{q}$;
+4. teste cada candidato calculando $P$ nele;
+5. achada uma raiz, use Briot-Ruffini e repita com o quociente.
+
+**Contraexemplo, para delimitar.** O teorema **não** garante que exista raiz
+racional. Em $x^3 - 2$, os candidatos são $\pm 1$ e $\pm 2$, e nenhum funciona:
+$P(1) = -1$, $P(-1) = -3$, $P(2) = 6$, $P(-2) = -10$. A raiz real é
+$\sqrt[3]{2}$, irracional. O teorema fez seu trabalho — provou que **não há raiz
+racional** —, e essa é uma resposta legítima.
+
+A hipótese de coeficientes inteiros também não é decorativa: com coeficientes
+fracionários ou irracionais o resultado simplesmente não vale.
+
+## 7. Resolvendo o problema motivador
+
+Voltemos a $S(x) = 2x^3 - 3x^2 - 8x - 3$.
+
+**Passo 1 — divisores do termo independente**, que é $-3$:
+$$
+p \in \{1,\ -1,\ 3,\ -3\}.
+$$
+
+**Passo 2 — divisores do coeficiente principal**, que é 2:
+$$
+q \in \{1,\ 2\}.
+$$
+
+**Passo 3 — os candidatos** $\frac{p}{q}$:
+$$
+\pm 1, \quad \pm 3, \quad \pm \tfrac{1}{2}, \quad \pm \tfrac{3}{2}.
+$$
+
+Oito candidatos. Infinitos números viraram uma lista que cabe numa linha — e
+repare que $\frac{1}{2}$ e $\frac{3}{2}$ jamais ocorreriam a quem testa só
+inteiros.
+
+**Passo 4 — testar.** Comece pelos mais simples:
+
+| Candidato | $S(x)$ | |
+|---|---:|---|
+| $1$ | $2 - 3 - 8 - 3 = -12$ | não |
+| $-1$ | $-2 - 3 + 8 - 3 = 0$ | **raiz** |
+
+Achamos $-1$ na segunda tentativa.
+
+**Passo 5 — rebaixar.** Briot-Ruffini com raiz $-1$ e coeficientes
+$2,\ -3,\ -8,\ -3$:
+
+$$
+\begin{array}{r|rrrr}
+-1 & 2 & -3 & -8 & -3 \\
+\hline
+ & 2 & -5 & -3 & \boxed{0}
+\end{array}
+$$
+
+Resto zero, como esperado. O quociente é $2x^2 - 5x - 3$, e agora estamos em
+terreno conhecido — grau 2:
+
+$$
+\Delta = 25 + 24 = 49, \qquad
+x = \frac{5 \pm 7}{4} \quad\Longrightarrow\quad x = 3 \ \text{ ou } \
+x = -\tfrac{1}{2}.
+$$
+
+A fatoração completa:
+
+$$
+S(x) = (x+1)(2x+1)(x-3).
+$$
+
+**Conferindo em $x = 0$**: à esquerda, $-3$; à direita,
+$1 \times 1 \times (-3) = -3$. Confere.
+
+As três raízes — $-1$, $-\frac12$ e 3 — estão todas na lista de candidatos, como
+o teorema garantia. E uma delas é fracionária, o que confirma a necessidade dos
+denominadores.
+
+## 8. Estratégias para testar menos
+
+A lista pode ficar longa quando os coeficientes têm muitos divisores. Três
+economias valem a pena.
+
+**Comece pelos inteiros pequenos.** Na prática, $1$ e $-1$ são raiz com
+frequência desproporcional, e testá-los custa uma soma de coeficientes. Repare
+que $P(1)$ é literalmente **a soma de todos os coeficientes**.
+
+**Use o sinal para descartar blocos.** Se todos os coeficientes de $P$ são
+positivos, nenhum valor positivo pode ser raiz — a soma de parcelas positivas
+nunca é zero. Só vale testar os negativos.
+
+**Use Briot-Ruffini como teste.** O dispositivo dá o resto e, de quebra, já
+entrega o quociente quando acerta. Testar com ele custa quase o mesmo que
+substituir na fórmula, e não desperdiça o trabalho.
+
+E, sobretudo: **assim que uma raiz aparecer, pare e rebaixe.** O quociente tem
+grau menor e uma lista de candidatos possivelmente mais curta. Não faz sentido
+continuar testando no polinômio original.
+
+## 9. Exemplos resolvidos
+
+### Exemplo 1: coeficiente principal 1
+
+Fatore $P(x) = x^3 - 7x + 6$.
+
+Termo independente 6, coeficiente principal 1. Como $q$ só pode ser 1, os
+candidatos são os divisores de 6:
+
+$$
+\pm 1, \pm 2, \pm 3, \pm 6.
+$$
+
+Testando: $P(1) = 1 - 7 + 6 = 0$. **Raiz.**
+
+Briot-Ruffini com $1,\ 0,\ -7,\ 6$ — atenção ao zero do termo em $x^2$:
+
+$$
+\begin{array}{r|rrrr}
+1 & 1 & 0 & -7 & 6 \\
+\hline
+ & 1 & 1 & -6 & \boxed{0}
+\end{array}
+$$
+
+Quociente $x^2 + x - 6 = (x+3)(x-2)$. Logo
+
+$$
+P(x) = (x-1)(x-2)(x+3),
+$$
+
+com raízes 1, 2 e $-3$. **Conferindo em $x = 0$**: à esquerda 6; à direita
+$(-1)(-2)(3) = 6$. Confere.
+
+### Exemplo 2: quando não há raiz racional
+
+*Pause e tente antes de ler.* Mostre que $P(x) = x^3 - 2$ não tem raiz racional.
+
+Candidatos: divisores de $-2$ sobre divisores de 1, ou seja, $\pm 1, \pm 2$.
+
+$$
+P(1) = -1, \quad P(-1) = -3, \quad P(2) = 6, \quad P(-2) = -10.
+$$
+
+Nenhum zera. Como o teorema garante que **qualquer** raiz racional estaria nessa
+lista, concluímos que $P$ **não tem raiz racional**.
+
+Ele tem, sim, uma raiz real: $\sqrt[3]{2} \approx 1{,}26$, irracional. Esgotar a
+lista é uma demonstração, não uma desistência.
+
+### Exemplo 3: com denominadores
+
+*Pause e tente.* Encontre as raízes de $P(x) = 3x^3 - x^2 - 8x - 4$.
+
+Divisores de $-4$: $\pm 1, \pm 2, \pm 4$. Divisores de 3: $1, 3$. Candidatos:
+
+$$
+\pm 1, \pm 2, \pm 4, \pm \tfrac{1}{3}, \pm \tfrac{2}{3}, \pm \tfrac{4}{3}.
+$$
+
+Testando: $P(1) = 3 - 1 - 8 - 4 = -10$; $P(-1) = -3 - 1 + 8 - 4 = 0$. **Raiz.**
+
+Briot-Ruffini com $3,\ -1,\ -8,\ -4$ e raiz $-1$:
+
+$$
+\begin{array}{r|rrrr}
+-1 & 3 & -1 & -8 & -4 \\
+\hline
+ & 3 & -4 & -4 & \boxed{0}
+\end{array}
+$$
+
+Quociente $3x^2 - 4x - 4$. Por Bhaskara, $\Delta = 16 + 48 = 64$ e
+$x = \frac{4 \pm 8}{6}$, dando $x = 2$ e $x = -\frac{2}{3}$.
+
+Raízes: $-1$, 2 e $-\frac23$ — todas na lista.
+
+### Exemplo 4: descartar pelo sinal
+
+*Pause e tente.* Quais candidatos de $P(x) = x^3 + 2x^2 + 5x + 6$ vale a pena
+testar?
+
+Todos os coeficientes são **positivos**. Para $x > 0$, todas as parcelas são
+positivas, e a soma nunca é zero — nenhum positivo pode ser raiz.
+
+Restam os negativos: $-1, -2, -3, -6$.
+
+Testando: $P(-1) = -1 + 2 - 5 + 6 = 2$; $P(-2) = -8 + 8 - 10 + 6 = -4$;
+$P(-3) = -27 + 18 - 15 + 6 = -18$; $P(-6) = -216 + 72 - 30 + 6 = -168$.
+
+Nenhum zera: **não há raiz racional**. O argumento de sinal cortou metade do
+trabalho antes de qualquer conta.
+
+### Exemplo 5: aplicar duas vezes
+
+*Pause e tente.* Fatore $P(x) = x^4 - 5x^2 + 4$ completamente.
+
+Candidatos: divisores de 4, ou seja, $\pm 1, \pm 2, \pm 4$.
+
+$P(1) = 1 - 5 + 4 = 0$. **Raiz.** Briot-Ruffini com $1,\ 0,\ -5,\ 0,\ 4$:
+
+$$
+\begin{array}{r|rrrrr}
+1 & 1 & 0 & -5 & 0 & 4 \\
+\hline
+ & 1 & 1 & -4 & -4 & \boxed{0}
+\end{array}
+$$
+
+Quociente $x^3 + x^2 - 4x - 4$, de grau 3. **Repita o processo**: os candidatos
+agora são os divisores de $-4$.
+
+$Q(-1) = -1 + 1 + 4 - 4 = 0$. **Raiz.** Briot-Ruffini com $1,\ 1,\ -4,\ -4$ e
+raiz $-1$:
+
+$$
+\begin{array}{r|rrrr}
+-1 & 1 & 1 & -4 & -4 \\
+\hline
+ & 1 & 0 & -4 & \boxed{0}
+\end{array}
+$$
+
+Quociente $x^2 - 4 = (x-2)(x+2)$. Portanto
+
+$$
+P(x) = (x-1)(x+1)(x-2)(x+2),
+$$
+
+com raízes $1, -1, 2, -2$ — as quatro que o grau 4 permite.
+
+**Conferindo em $x = 0$**: à esquerda, 4; à direita, $(-1)(1)(-2)(2) = 4$.
+Confere.
+
+## 10. Erros comuns
+
+> **Erro 1: esquecer os candidatos negativos.** Os divisores de 6 incluem
+> $-1, -2, -3, -6$. Metade da lista some se o sinal for ignorado, e é comum a
+> raiz estar justamente ali.
+
+> **Erro 2: esquecer os denominadores.** Quando o coeficiente principal não é 1,
+> há candidatos fracionários. Em $2x^3 - 3x^2 - 8x - 3$, a raiz $-\frac12$ nunca
+> apareceria testando só inteiros.
+
+> **Erro 3: trocar $p$ com $q$.** O numerador divide o **termo independente**; o
+> denominador divide o **coeficiente principal**. Inverter produz uma lista
+> errada.
+
+> **Erro 4: concluir que não há raiz nenhuma.** Esgotar a lista prova que não há
+> raiz **racional**. Pode haver raiz irracional, como $\sqrt[3]{2}$.
+
+> **Erro 5: continuar testando no polinômio original.** Assim que uma raiz
+> aparece, rebaixe o grau. Trabalhar no quociente é mais barato e a lista de
+> candidatos pode encurtar.
+
+> **Erro 6: aplicar o teorema a coeficientes não inteiros.** A demonstração usa
+> divisibilidade entre inteiros. Com coeficientes fracionários, multiplique a
+> equação inteira para limpar os denominadores antes de usar o teorema.
+
+## 11. Perguntas de verificação
+
+1. Por que o teorema reduz infinitos candidatos a uma lista finita?
+2. De onde vem a exigência de que $p$ divida o termo independente?
+3. Por que os candidatos negativos são indispensáveis?
+4. Quando aparecem candidatos fracionários?
+5. O que significa esgotar a lista sem achar raiz?
+6. Por que $P(1)$ é a soma dos coeficientes?
+7. Por que se deve rebaixar o grau assim que uma raiz aparece?
+8. Por que o teorema exige coeficientes inteiros?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque ele amarra numerador e denominador de qualquer raiz racional a
+   **divisores** de dois coeficientes específicos, e um número inteiro tem
+   finitos divisores. O que era uma busca em todos os racionais vira uma lista
+   que cabe numa linha.
+2. Da forma fatorada. No caso de coeficiente principal 1, o termo sem $x$ do
+   produto $(x-r_1)(x-r_2)\cdots$ é o produto dos termos constantes, a menos de
+   sinal. Se as raízes são inteiras, o produto delas é o termo independente, e
+   cada uma o divide.
+3. Porque os divisores de um número incluem os negativos, e raízes negativas são
+   tão comuns quanto positivas. No problema motivador, a primeira raiz
+   encontrada foi $-1$: ignorar os negativos teria travado a resolução.
+4. Quando o **coeficiente principal** não é 1. Ele é quem fornece os
+   denominadores possíveis: com $a_n = 2$, entram na lista os candidatos com
+   denominador 2.
+5. Que o polinômio **não tem raiz racional**. É uma conclusão definitiva, não
+   uma desistência — mas ela não exclui raízes irracionais, que podem existir.
+6. Porque substituir $x = 1$ faz toda potência valer 1, e o polinômio vira
+   $a_n + a_{n-1} + \ldots + a_0$. Por isso testar o 1 é o teste mais barato de
+   todos.
+7. Porque o quociente tem grau menor, e trabalhar com ele é mais simples: menos
+   contas por teste, e uma lista de candidatos que pode ser mais curta. Além
+   disso, o quociente já veio pronto do dispositivo — não aproveitá-lo é
+   desperdiçar trabalho já feito.
+8. Porque a demonstração se apoia em **divisibilidade**, que é uma relação entre
+   inteiros. Com coeficientes fracionários, não faz sentido falar em “divisores
+   do termo independente”. O conserto é multiplicar a equação toda pelo mmc dos
+   denominadores antes de aplicar o teorema.
+
+</details>
+
+## 12. Exercícios
+
+### 1. Reconhecimento
+
+1. Liste todos os candidatos a raiz racional: a) $x^3 - 4x + 3$ &nbsp; b)
+   $2x^2 - 7x + 3$ &nbsp; c) $3x^3 + x - 4$
+2. Em $P(x) = 5x^3 + 2x^2 - x + 6$, quais números fornecem os numeradores dos
+   candidatos? E os denominadores?
+3. Calcule $P(1)$ de $x^4 - 3x^3 + 2x - 5$ somando os coeficientes.
+
+### 2. Explicação
+
+4. Explique por que um polinômio de coeficientes todos positivos não pode ter
+   raiz positiva.
+5. Explique por que esgotar a lista não prova que o polinômio não tem raiz real.
+6. Explique de onde vêm os denominadores dos candidatos.
+
+### 3. Aplicação direta
+
+7. Fatore completamente, listando os candidatos antes de testar: a)
+   $x^3 - 7x + 6$ &nbsp; b) $x^3 - 6x^2 + 11x - 6$
+8. Encontre todas as raízes de $S(x) = 2x^3 - 3x^2 - 8x - 3$.
+
+### 4. Variação
+
+9. Encontre as raízes de $P(x) = 3x^3 - x^2 - 8x - 4$.
+10. Mostre que $x^3 - 2$ não tem raiz racional, e diga qual é a sua raiz real.
+11. Fatore $P(x) = x^4 - 5x^2 + 4$ completamente, aplicando o processo duas
+    vezes.
+
+<details>
+<summary>Dica para o 11</summary>
+
+Depois de encontrar a primeira raiz e rebaixar, você terá um polinômio de grau 3
+— aplique o teorema outra vez, agora sobre o **quociente**. (Há também um
+atalho: repare que só aparecem potências pares de $x$.)
+
+</details>
+
+### 5. Problema misto
+
+12. O volume de uma peça é $V(x) = x^3 - 6x^2 + 8x$ cm³. a) Fatore
+    completamente. b) Dê as raízes e diga o domínio da situação. c) Calcule
+    $V(1)$ e $V(3)$ e explique o sinal de cada resultado.
+13. Uma equação de projeto leva a $2x^3 + x^2 - 13x + 6 = 0$, com $x$ em metros.
+    a) Liste os candidatos. b) Encontre todas as raízes. c) Quais delas fazem
+    sentido como medida?
+
+### 6. Justificativa
+
+14. Explique por que, num polinômio de coeficiente principal 1 e raízes
+    inteiras, o produto das raízes é o termo independente a menos de sinal.
+    Verifique em $(x-1)(x-2)(x-3)$.
+15. Um colega quer aplicar o teorema a $\frac{1}{2}x^3 + x - 3$. Explique o que
+    ele precisa fazer antes, e por quê.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) Divisores de 3 sobre divisores de 1: $\pm 1, \pm 3$. &nbsp; b) Divisores
+   de 3 sobre divisores de 2: $\pm 1, \pm 3, \pm \frac12, \pm \frac32$. &nbsp;
+   c) Divisores de $-4$ sobre divisores de 3:
+   $\pm 1, \pm 2, \pm 4, \pm \frac13, \pm \frac23, \pm \frac43$.
+2. Os numeradores vêm dos divisores de **6**: $\pm 1, \pm 2, \pm 3, \pm 6$. Os
+   denominadores, dos divisores de **5**: $1$ e $5$.
+3. $1 - 3 + 0 + 2 - 5 = -5$. (O coeficiente de $x^2$ é zero.)
+4. Porque, para $x > 0$, toda potência de $x$ é positiva, e multiplicada por um
+   coeficiente positivo dá parcela positiva. Uma soma de parcelas positivas é
+   sempre positiva, nunca zero.
+5. Porque a lista contém apenas os candidatos **racionais**. Um polinômio pode
+   ter raiz irracional, como $x^3 - 2$, cuja raiz é $\sqrt[3]{2}$. O teorema
+   decide sobre racionais, e só.
+6. Do **coeficiente principal**. Quando ele não é 1, a fatoração pode conter
+   fatores como $(2x+1)$, que produzem raiz $-\frac12$ — e o 2 desse fator é
+   justamente um divisor do coeficiente principal.
+7. a) Candidatos $\pm 1, \pm 2, \pm 3, \pm 6$. Como $P(1) = 0$, dividindo
+   obtemos $x^2 + x - 6$, e $P(x) = (x-1)(x-2)(x+3)$. &nbsp; b) Mesmos
+   candidatos. $P(1) = 0$, e dividindo sai $x^2 - 5x + 6$, logo
+   $P(x) = (x-1)(x-2)(x-3)$.
+8. Candidatos $\pm 1, \pm 3, \pm \frac12, \pm \frac32$. Como $S(-1) = 0$,
+   dividindo obtemos $2x^2 - 5x - 3$, cujas raízes por Bhaskara são 3 e
+   $-\frac12$. As raízes de $S$ são $-1$, $3$ e $-\frac12$, e
+   $S(x) = (x+1)(2x+1)(x-3)$.
+9. $P(-1) = -3 - 1 + 8 - 4 = 0$. Dividindo, o quociente é $3x^2 - 4x - 4$, com
+   $\Delta = 64$ e raízes $\frac{4 \pm 8}{6}$, isto é, 2 e $-\frac23$. As raízes
+   são $-1$, 2 e $-\frac23$.
+10. Candidatos $\pm 1, \pm 2$. Calculando: $-1$, $-3$, $6$ e $-10$ — nenhum
+    zera. Logo não há raiz racional. A raiz real é $\sqrt[3]{2} \approx 1{,}26$,
+    que é irracional.
+11. $P(1) = 0$; dividindo, sai $x^3 + x^2 - 4x - 4$. Nele, $Q(-1) = 0$;
+    dividindo de novo, sai $x^2 - 4$. Portanto $P(x) = (x-1)(x+1)(x-2)(x+2)$,
+    com raízes $\pm 1$ e $\pm 2$. Pelo atalho: substituindo $u = x^2$, a
+    expressão vira $u^2 - 5u + 4 = (u-1)(u-4)$, o que dá $x^2 = 1$ ou $x^2 = 4$.
+12. a) O fator comum $x$ sai primeiro: $V(x) = x(x^2 - 6x + 8) = x(x-2)(x-4)$.
+    &nbsp; b) Raízes 0, 2 e 4. O domínio da situação é $\,]0, 2[$, o primeiro
+    trecho em que o volume é positivo. &nbsp; c)
+    $V(1) = 1 \times (-1) \times (-3) = 3$, positivo — uma peça possível.
+    $V(3) = 3 \times 1 \times (-1) = -3$, negativo — sem significado físico, e
+    por isso 3 está fora do domínio.
+13. a) Divisores de 6 sobre divisores de 2:
+    $\pm 1, \pm 2, \pm 3, \pm 6, \pm \frac12, \pm \frac32$. &nbsp; b)
+    $P(2) = 16 + 4 - 26 + 6 = 0$. Dividindo por $(x-2)$, o quociente é
+    $2x^2 + 5x - 3$, com $\Delta = 25 + 24 = 49$ e raízes $\frac{-5 \pm 7}{4}$,
+    isto é, $\frac12$ e $-3$. As raízes são 2, $\frac12$ e $-3$. &nbsp; c) Só as
+    positivas: 2 m e 0,5 m. Uma medida negativa não descreve comprimento nenhum.
+14. Multiplicando $(x-r_1)(x-r_2)(x-r_3)$, o termo sem $x$ é o produto dos três
+    termos constantes: $(-r_1)(-r_2)(-r_3) = -r_1r_2r_3$. Comparando com o
+    polinômio escrito na forma somada, esse é o termo independente. Em
+    $(x-1)(x-2)(x-3) = x^3 - 6x^2 + 11x - 6$, o produto das raízes é
+    $1 \times 2 \times 3 = 6$, e o termo independente é $-6$. Confere.
+15. Ele precisa **multiplicar a equação inteira por 2** para eliminar a fração,
+    obtendo $x^3 + 2x - 6$. O teorema exige coeficientes inteiros porque se
+    apoia em divisibilidade, que só faz sentido entre inteiros. Multiplicar por
+    uma constante não altera as raízes, então o conserto é seguro.
+
+</details>
+
+## 13. Revisão curta
+
+- O **teorema das raízes racionais** transforma a busca infinita numa **lista
+  finita** de candidatos.
+- Todo candidato tem a forma $\frac{p}{q}$, com $p$ dividindo o **termo
+  independente** e $q$ dividindo o **coeficiente principal**.
+- Os divisores incluem os **negativos** — metade das raízes costuma estar lá.
+- Denominadores só aparecem quando o coeficiente principal **não** é 1.
+- Achada uma raiz, use **Briot-Ruffini** e repita o processo no quociente. Um
+  problema de grau 3 vira um de grau 2, que Bhaskara resolve sempre.
+- Testar $x = 1$ é somar os coeficientes — o teste mais barato.
+- Se **todos** os coeficientes são positivos, nenhum candidato positivo pode ser
+  raiz.
+- Esgotar a lista **prova** que não há raiz racional. Pode haver raiz
+  irracional.
+- O teorema exige **coeficientes inteiros**; se houver frações, multiplique a
+  equação primeiro.
+
+Com esta página fecha-se o estudo dos polinômios: já sabemos esboçar, dividir e
+fatorar. A próxima trata do que acontece quando um polinômio vai para o
+**denominador** — e aí surge um comportamento que nenhuma curva vista até aqui
+tinha.

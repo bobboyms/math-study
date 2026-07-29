@@ -1,0 +1,695 @@
+---
+title: Valor absoluto
+---
+
+import NumberLine from '@site/src/components/NumberLine';
+
+# Valor absoluto: o tamanho de um número, sem o lado
+
+## Problema motivador: quando o erro para mais e o erro para menos pesam igual
+
+Uma oficina fabrica eixos que devem medir **50 mm**. Nenhuma peça sai exata —
+toda fabricação tem variação. Por isso o controle de qualidade aceita uma
+**tolerância**: a peça passa se errar no máximo 0,3 mm, para mais ou para menos.
+
+Três peças saíram da máquina:
+
+| Peça | Medida | Quanto se afastou de 50 mm |
+|---|---:|---:|
+| A | 50,2 mm | 0,2 mm acima |
+| B | 49,6 mm | 0,4 mm abaixo |
+| C | 50,35 mm | 0,35 mm acima |
+
+Repare no que o inspetor faz sem pensar: ele calcula o afastamento e **ignora se
+foi para cima ou para baixo**. Uma peça 0,4 mm curta é tão defeituosa quanto uma
+peça 0,4 mm longa. O lado do erro não interessa; só o tamanho.
+
+O problema aparece na hora de escrever a regra. Se tentarmos usar a subtração,
+teremos duas contas diferentes conforme o lado:
+
+$$
+50{,}2 - 50 = 0{,}2
+\qquad\text{mas}\qquad
+49{,}6 - 50 = -0{,}4.
+$$
+
+A segunda deu negativa. E “erro de $-0{,}4$ mm” não é uma frase que faça
+sentido: não existe afastamento negativo, do mesmo jeito que não existe
+distância negativa. Para escrever a regra da tolerância em **uma linha só**,
+precisamos de uma operação que responda “quão longe?” sem responder “para que
+lado?”.
+
+Essa operação é o **valor absoluto**. No fim desta página voltaremos às três
+peças e escreveremos o critério inteiro como uma única condição.
+
+## Mapa das ideias
+
+O significado essencial dos termos que a página vai construir:
+
+- **valor absoluto** (ou **módulo**) de um número é a distância dele até o zero
+  na reta numérica;
+- **$\lvert x \rvert$** é a notação: duas barras verticais em volta do número;
+- **distância entre dois números** $a$ e $b$ é $\lvert a - b \rvert$ — o tamanho
+  da diferença entre eles.
+
+Por exemplo, $\lvert -7 \rvert = 7$, porque $-7$ está a 7 unidades de distância
+do zero. Já $\lvert -7 \rvert$ **não** é $-7$: distância nenhuma é negativa. E o
+valor absoluto também não é “trocar o sinal”, porque $\lvert 7 \rvert = 7$ —
+aqui nada mudou.
+
+Este mapa é só referência inicial. Cada ideia será reconstruída adiante a partir
+da reta numérica.
+
+## Para que isso serve?
+
+O valor absoluto aparece sempre que a pergunta é **de quanto**, e não **para que
+lado**:
+
+- tolerância de fabricação e margem de erro de uma medição;
+- variação de temperatura, de preço ou de estoque, quando só o tamanho da
+  oscilação importa;
+- comparar o desvio de duas previsões em relação ao valor real;
+- calcular a distância entre dois pontos — é o que a
+  [geometria](../geometria/plano-cartesiano-e-distancia) faz no plano;
+- em programação, é a função `abs()`, presente em praticamente toda linguagem.
+
+Dentro da própria matemática, ele é o que permite escrever **“$x$ está perto de
+$a$”** como uma conta. Essa escrita vai sustentar as [inequações](../equacoes/),
+o domínio de várias funções e, mais adiante, a definição de limite no cálculo.
+
+Vale notar uma coisa: o curso já vinha usando a expressão “valor absoluto” em
+palavras — ao comparar coeficientes angulares, ao escolher os sinais de um
+trinômio. Esta página dá a essa ideia um símbolo e uma definição.
+
+## Ideias anteriores que voltam aqui
+
+Da página de [números negativos](./numeros-negativos), três ideias reaparecem
+inteiras. Responda antes de conferir — se alguma travar, o conserto está lá, não
+aqui.
+
+**1. Onde fica $-5$ na reta, em relação ao zero?** Cinco unidades à esquerda do
+zero. E o $5$ fica cinco unidades à direita. Os dois estão do mesmo jeito longe
+do zero, em lados opostos.
+
+**2. Quanto vale $-(-5)$?** Vale $5$. O sinal de menos significa “o oposto de”,
+e o oposto de $-5$ é $5$. Guarde isto com cuidado: **um sinal de menos na frente
+de um número negativo produz um número positivo**. É o passo de que a definição
+desta página vai depender.
+
+**3. Qual é maior: $-7$ ou $-2$? E qual está mais longe do zero?** O maior é
+$-2$, porque está mais à direita na reta. Mas o que está **mais longe do zero**
+é $-7$, a sete unidades de distância contra duas.
+
+Pare nesta terceira pergunta, porque ela é a página inteira em miniatura: para
+números negativos, **“maior” e “mais longe do zero” são perguntas diferentes, e
+dão respostas diferentes**. A ordem na reta e a distância até o zero são duas
+informações independentes. O valor absoluto é o nome da segunda.
+
+Da página de [operações básicas](./operacoes-basicas) volta ainda a subtração
+lida como **diferença**: $a - b$ mede o quanto $a$ e $b$ se afastam — com a
+ressalva, que veremos, de que essa medida sai com sinal.
+
+## Intuição: duas perguntas sobre o mesmo número
+
+Todo número diferente de zero carrega duas informações de uma vez:
+
+- **de que lado do zero ele está** — é o que o sinal conta;
+- **a que distância do zero ele está** — é o que o valor absoluto conta.
+
+Um velocímetro ilustra bem a diferença. Ele marca 60 km/h, esteja o carro indo
+para o norte ou para o sul. O aparelho não guarda a direção; guarda o tamanho. O
+valor absoluto faz isso com um número: **apaga a informação de lado e conserva a
+de tamanho**.
+
+Por isso $-5$ e $5$ têm o mesmo valor absoluto. Como números eles são diferentes
+— um é negativo, o outro positivo, e um é maior que o outro. Como distâncias até
+o zero eles são idênticos: cinco unidades cada.
+
+## Modelo visual: a mesma distância, lados opostos
+
+<NumberLine
+  min={-6}
+  max={6}
+  unit={38}
+  spans={[
+    {from: -5, to: 0, tone: 1},
+    {from: 0, to: 5, tone: 2},
+  ]}
+  marks={[
+    {at: -5, label: '-5', tone: 1},
+    {at: 5, label: '5', tone: 2},
+  ]}
+  caption="As duas faixas têm o mesmo comprimento: 5 unidades. É esse comprimento — e não o lado em que ele está — que o valor absoluto mede."
+/>
+
+Se você medir as duas faixas com uma régua, encontrará o mesmo número. A faixa
+da esquerda parte de $-5$ e a da direita parte de $5$, mas ambas têm 5 unidades.
+Escrevemos isso assim:
+
+$$
+\lvert -5 \rvert = 5
+\qquad\text{e}\qquad
+\lvert 5 \rvert = 5.
+$$
+
+E o zero? Ele está a distância nenhuma de si mesmo, então $\lvert 0 \rvert = 0$.
+É o único número cujo valor absoluto é zero — qualquer outro está a alguma
+distância da origem.
+
+## Ponte para a formalização: por que não basta “tirar o sinal”
+
+A descrição informal “valor absoluto é o número sem o sinal” funciona nos
+exemplos acima, mas não serve como definição. Duas razões.
+
+A primeira é que ela não diz o que fazer com uma **conta** dentro das barras. Em
+$\lvert 3 - 10 \rvert$ não há sinal de menos na frente de nada para ser apagado
+— há uma subtração. Precisamos de uma regra que diga a ordem do trabalho.
+
+A segunda é mais séria: “tirar o sinal” não é uma operação matemática. As
+operações que conhecemos são somar, subtrair, multiplicar, dividir, elevar,
+extrair raiz. Apagar um símbolo escrito não é nenhuma delas.
+
+Então vamos construir a definição a partir da distância, que é o que realmente
+queremos medir. Na reta, andar do zero até $x$ é o deslocamento $x - 0 = x$.
+Esse deslocamento sai **com sinal**: positivo se andamos para a direita,
+negativo se para a esquerda. A distância é o tamanho desse deslocamento, e
+tamanho não tem sinal.
+
+Ou seja, precisamos de uma regra que deixe os positivos como estão e converta os
+negativos em seus opostos. E já temos a ferramenta para a segunda metade: o
+oposto de um número, da página de números negativos. Repare que ela faz
+exatamente o serviço:
+
+$$
+-(-5) = 5.
+$$
+
+Aplicar o menos a um número negativo devolve um positivo. É esse fato, e não
+nenhum truque novo, que a definição vai usar.
+
+## Formalização
+
+> O **valor absoluto** de um número real $x$, escrito $\lvert x \rvert$, é
+> definido por
+> $$
+> \lvert x \rvert = \begin{cases}
+> x, & \text{se } x \ge 0 \\[4pt]
+> -x, & \text{se } x < 0
+> \end{cases}
+> $$
+
+A definição tem dois casos porque a reta tem dois lados, e cada lado exige um
+tratamento. Leia cada linha:
+
+- se $x$ já é positivo ou zero, ele já é a própria distância até a origem — não
+  há nada a fazer, e $\lvert x \rvert = x$;
+- se $x$ é negativo, tomamos o seu oposto, que é positivo e tem o mesmo tamanho.
+
+**Exemplo.** Para $x = -7$, vale $x < 0$, então a segunda linha se aplica:
+
+$$
+\lvert -7 \rvert = -(-7) = 7.
+$$
+
+**Contraexemplo, para delimitar o conceito.** É tentador ler a segunda linha e
+concluir que $\lvert x \rvert$ pode sair negativo, afinal ela tem um sinal de
+menos. Não pode. O menos ali não está criando um número negativo: ele está sendo
+aplicado a um número **que já era negativo**, e o resultado é positivo. A
+segunda linha só é usada quando $x < 0$, e nesse caso $-x > 0$ sempre.
+
+Um segundo contraexemplo, do outro lado: $\lvert x \rvert$ também não é “sempre
+$-x$”. Se fosse, teríamos $\lvert 7 \rvert = -7$, o que é absurdo. Cada linha
+vale só no seu caso.
+
+Disso saem três fatos que vale guardar:
+
+$$
+\lvert x \rvert \ge 0 \text{ para todo } x,
+\qquad
+\lvert x \rvert = 0 \text{ somente se } x = 0,
+\qquad
+\lvert -x \rvert = \lvert x \rvert.
+$$
+
+O terceiro diz que $x$ e seu oposto estão à mesma distância do zero — é a
+simetria que o desenho mostrou.
+
+### A ordem do trabalho: as barras são parênteses
+
+As barras funcionam como um parêntese: **primeiro resolve-se o que está dentro,
+depois toma-se o valor absoluto do resultado**. Isso responde à primeira dúvida
+que levantamos:
+
+$$
+\lvert 3 - 10 \rvert = \lvert -7 \rvert = 7.
+$$
+
+Não existe passo intermediário em que se “apague” alguma coisa. Calcula-se
+$3 - 10 = -7$; esse resultado é negativo, então a segunda linha da definição dá
+$7$.
+
+E um sinal escrito **fora** das barras não é alcançado por elas:
+
+$$
+-\lvert -4 \rvert = -(4) = -4.
+$$
+
+O valor absoluto age só sobre o $-4$ de dentro, devolvendo $4$; o menos de fora
+continua valendo e nega esse resultado. Sai um número negativo — o que não
+contradiz nada, porque quem nunca é negativo é $\lvert x \rvert$, não
+$-\lvert x \rvert$.
+
+## A distância entre dois números
+
+Até aqui medimos distâncias a partir do zero. Mas o problema das peças pergunta
+outra coisa: a que distância a medida está de **50**, não do zero.
+
+Na reta, ir de $b$ até $a$ é o deslocamento $a - b$. Como todo deslocamento, ele
+sai com sinal: positivo se $a$ está à direita de $b$, negativo se está à
+esquerda. A distância é o tamanho desse deslocamento:
+
+> A **distância entre dois números** $a$ e $b$ é
+> $$
+> d(a, b) = \lvert a - b \rvert.
+> $$
+
+Confira com um caso concreto. Entre 3 e 11:
+
+$$
+\lvert 3 - 11 \rvert = \lvert -8 \rvert = 8
+\qquad\text{e}\qquad
+\lvert 11 - 3 \rvert = \lvert 8 \rvert = 8.
+$$
+
+As duas subtrações dão resultados opostos, mas o **mesmo** valor absoluto. Isso
+tem que acontecer: a distância de sua casa até a padaria é a mesma da padaria
+até sua casa. É o valor absoluto que garante essa simetria — a subtração
+sozinha, não. Em símbolos, $\lvert a - b \rvert = \lvert b - a \rvert$ para
+quaisquer $a$ e $b$.
+
+<NumberLine
+  min={-10}
+  max={4}
+  unit={26}
+  spans={[{from: -9, to: -4, tone: 3}]}
+  marks={[
+    {at: -9, label: '-9', tone: 3},
+    {at: -4, label: '-4', tone: 3},
+  ]}
+  caption="Entre −9 e −4 há 5 unidades. Os dois números são negativos, mas a distância entre eles não é."
+/>
+
+$$
+\lvert -9 - (-4) \rvert = \lvert -9 + 4 \rvert = \lvert -5 \rvert = 5.
+$$
+
+Repare que os dois números são negativos e a distância saiu positiva — como
+tinha de ser.
+
+## De volta ao problema das peças
+
+Agora a regra da tolerância cabe em uma linha. Chame de $m$ a medida de uma
+peça. O afastamento dela em relação ao alvo de 50 mm é a distância entre $m$ e
+$50$, ou seja, $\lvert m - 50 \rvert$. A peça é aprovada quando esse afastamento
+não passa de 0,3 mm:
+
+$$
+\lvert m - 50 \rvert \le 0{,}3.
+$$
+
+Vamos às três peças.
+
+**Peça A**, $m = 50{,}2$:
+
+$$
+\lvert 50{,}2 - 50 \rvert = \lvert 0{,}2 \rvert = 0{,}2 \le 0{,}3. \quad \text{Aprovada.}
+$$
+
+**Peça B**, $m = 49{,}6$:
+
+$$
+\lvert 49{,}6 - 50 \rvert = \lvert -0{,}4 \rvert = 0{,}4 > 0{,}3. \quad \text{Rejeitada.}
+$$
+
+**Peça C**, $m = 50{,}35$:
+
+$$
+\lvert 50{,}35 - 50 \rvert = \lvert 0{,}35 \rvert = 0{,}35 > 0{,}3. \quad \text{Rejeitada.}
+$$
+
+Compare com o que teríamos sem o valor absoluto. Seriam duas condições separadas
+— “$m - 50$ não passa de $0{,}3$” **e** “$50 - m$ não passa de $0{,}3$” — e um
+teste diferente para cada lado. O valor absoluto reúne as duas numa só porque
+mede afastamento, e afastamento não tem lado.
+
+A mesma desigualdade tem uma segunda leitura, que será útil adiante: dizer que
+$m$ está a no máximo $0{,}3$ de distância de $50$ é dizer que $m$ está entre
+$49{,}7$ e $50{,}3$. Uma condição com módulo descreve uma **faixa em torno de um
+centro** — o centro é 50, o raio da faixa é 0,3.
+
+## Um encontro com as raízes: por que $\sqrt{x^2}$ é $\lvert x \rvert$
+
+Vale conectar isto com as [raízes](./raizes), porque o resultado surpreende e
+reaparece na geometria.
+
+Poderíamos supor que elevar ao quadrado e depois extrair a raiz devolve o número
+de partida, já que uma operação desfaz a outra. Teste com $x = -6$:
+
+$$
+(-6)^2 = 36
+\qquad\text{e}\qquad
+\sqrt{36} = 6.
+$$
+
+Saímos de $-6$ e chegamos em $6$. O caminho de ida e volta **não** devolveu o
+número original — devolveu o valor absoluto dele.
+
+O motivo é que cada operação perde ou impõe uma informação. Elevar ao quadrado
+apaga o sinal: $(-6)^2$ e $6^2$ dão o mesmo 36, e daí em diante não há como
+saber de qual dos dois viemos. E a raiz quadrada, por convenção, devolve sempre
+o valor não negativo. Sobra o tamanho, sem o lado — que é exatamente o que o
+valor absoluto mede:
+
+$$
+\sqrt{x^2} = \lvert x \rvert.
+$$
+
+Para $x$ positivo isso é o mesmo que $\sqrt{x^2} = x$, e por isso a regra
+costuma passar despercebida. É com $x$ negativo que a diferença aparece.
+
+## Erros comuns
+
+> **Erro 1: escrever $\lvert x \rvert = x$ para qualquer $x$.** Isso vale só
+> quando $x \ge 0$. Com $x = -3$, o lado esquerdo é 3 e o direito é $-3$. A
+> definição tem dois casos justamente porque uma fórmula só não dá conta dos
+> dois lados da reta.
+
+> **Erro 2: achar que $-x$ é sempre um número negativo.** A letra engana: $-x$ é
+> “o oposto de $x$”, e o oposto de um negativo é positivo. Com $x = -5$, temos
+> $-x = 5$. Se este erro estiver instalado, a segunda linha da definição parece
+> errada — e não está.
+
+> **Erro 3: distribuir o módulo sobre uma soma**, escrevendo
+> $\lvert a + b \rvert = \lvert a \rvert + \lvert b \rvert$. Teste com $a = 3$ e
+> $b = -8$: à esquerda, $\lvert 3 + (-8) \rvert = \lvert -5 \rvert = 5$; à
+> direita, $\lvert 3 \rvert + \lvert -8 \rvert = 3 + 8 = 11$. Não são iguais. A
+> razão é que $3$ e $-8$ puxam para lados opostos e se cancelam em parte,
+> enquanto os valores absolutos, todos positivos, só se somam. A igualdade só
+> acontece quando os dois números apontam para o mesmo lado.
+
+> **Erro 4: distribuir o módulo sobre uma subtração**, escrevendo
+> $\lvert a - b \rvert = \lvert a \rvert - \lvert b \rvert$. Com $a = 3$ e
+> $b = 8$: à esquerda, $\lvert 3 - 8 \rvert = 5$; à direita, $3 - 8 = -5$. O
+> lado direito nem sequer é positivo, então não poderia ser um valor absoluto.
+> Lembre da ordem do trabalho: resolve-se a conta de dentro primeiro.
+
+> **Erro 5: deixar o módulo comer um sinal que está do lado de fora**,
+> escrevendo $-\lvert -4 \rvert = 4$. As barras alcançam só o que está dentro
+> delas: $-\lvert -4 \rvert = -4$.
+
+## Exemplos resolvidos
+
+### Exemplo 1: leitura direta da definição
+
+Calcule $\lvert -12 \rvert$, $\lvert 8 \rvert$, $\lvert 0 \rvert$ e
+$\lvert 4 - 9 \rvert$.
+
+- $\lvert -12 \rvert$: o número é negativo, então vale a segunda linha:
+  $-(-12) = 12$.
+- $\lvert 8 \rvert$: o número é positivo, então vale a primeira linha:
+  $\lvert 8 \rvert = 8$.
+- $\lvert 0 \rvert$: zero se encaixa no caso $x \ge 0$, então
+  $\lvert 0 \rvert = 0$.
+- $\lvert 4 - 9 \rvert$: primeiro a conta de dentro, $4 - 9 = -5$; depois o
+  módulo, $\lvert -5 \rvert = 5$.
+
+### Exemplo 2: distância entre dois números
+
+*Pause e tente antes de ler.* Qual é a distância entre $-7$ e $-3$?
+
+Aplicando a definição de distância:
+
+$$
+\lvert -7 - (-3) \rvert = \lvert -7 + 3 \rvert = \lvert -4 \rvert = 4.
+$$
+
+Confira na reta: de $-7$ para $-3$ andamos quatro unidades para a direita. E na
+ordem inversa dá o mesmo:
+$\lvert -3 - (-7) \rvert = \lvert -3 + 7 \rvert = \lvert 4 \rvert = 4$.
+
+### Exemplo 3: uma equação lida como distância
+
+*Pause e tente.* Para que valores de $x$ vale $\lvert x \rvert = 5$?
+
+A pergunta, traduzida, é: **quais números estão a 5 unidades de distância do
+zero?** Na reta há dois, um de cada lado:
+
+$$
+x = 5 \qquad\text{ou}\qquad x = -5.
+$$
+
+Duas respostas, e não uma. Isso é típico de equações com módulo: a informação
+“distância 5” não diz o lado, então os dois lados servem.
+
+E se a equação fosse $\lvert x \rvert = -2$? Nenhum valor de $x$ serve, porque
+valor absoluto nunca é negativo. Não é que a conta seja difícil — é que a
+pergunta “qual número está a $-2$ de distância do zero?” não faz sentido.
+
+### Exemplo 4: distância a partir de um centro que não é o zero
+
+*Pause e tente.* Resolva $\lvert x - 2 \rvert = 3$.
+
+Sem nenhuma manipulação algébrica, leia o significado: $\lvert x - 2 \rvert$ é a
+distância entre $x$ e $2$. A equação pede os números que estão a 3 unidades de
+distância de 2. Andando 3 para cada lado a partir de 2:
+
+$$
+x = 2 + 3 = 5
+\qquad\text{ou}\qquad
+x = 2 - 3 = -1.
+$$
+
+<NumberLine
+  min={-3}
+  max={7}
+  unit={32}
+  spans={[
+    {from: -1, to: 2, tone: 1},
+    {from: 2, to: 5, tone: 2},
+  ]}
+  marks={[
+    {at: -1, label: '-1', tone: 1},
+    {at: 2, label: '2', tone: 3},
+    {at: 5, label: '5', tone: 2},
+  ]}
+  caption="Os dois números a 3 unidades de distância de 2. O centro é o valor que anula o que está dentro das barras."
+/>
+
+Conferindo: $\lvert 5 - 2 \rvert = \lvert 3 \rvert = 3$ e
+$\lvert -1 - 2 \rvert = \lvert -3 \rvert = 3$. As duas servem.
+
+Repare em como se acha o centro: é o valor que **anula** a expressão dentro das
+barras. Em $\lvert x - 2 \rvert$, o centro é 2. Em $\lvert x + 4 \rvert$,
+reescreva como $\lvert x - (-4) \rvert$ e o centro é $-4$.
+
+## Perguntas de verificação
+
+Responda com suas palavras antes de abrir.
+
+1. Que informação sobre um número o valor absoluto conserva, e que informação
+   ele descarta?
+2. Por que a definição precisa de dois casos, em vez de uma fórmula só?
+3. A segunda linha da definição é $-x$. Por que isso não produz um resultado
+   negativo?
+4. Por que $\lvert a - b \rvert$ e $\lvert b - a \rvert$ dão sempre o mesmo
+   número? Que fato do mundo isso reflete?
+5. Por que $\lvert x \rvert = -2$ não tem solução, enquanto
+   $\lvert x \rvert = 2$ tem duas?
+6. Em $\lvert 3 - 10 \rvert$, por que não faz sentido dizer que “apagamos o
+   sinal”?
+7. Por que $\sqrt{x^2}$ é $\lvert x \rvert$ e não $x$?
+8. Como você explicaria, para alguém sem conhecer a fórmula, o que a condição
+   $\lvert T - 18 \rvert \le 1{,}5$ está exigindo?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Conserva o tamanho — a distância até o zero. Descarta o lado, isto é, o
+   sinal. É por isso que $-5$ e $5$ têm o mesmo valor absoluto.
+2. Porque a reta tem dois lados e cada um precisa de um tratamento diferente: os
+   números não negativos já **são** a própria distância até o zero, enquanto os
+   negativos precisam ser trocados pelo oposto. Uma única fórmula que servisse
+   aos dois casos teria de dar $\lvert 7 \rvert = 7$ e $\lvert -7 \rvert = 7$ ao
+   mesmo tempo, o que nenhuma das duas linhas sozinha faz.
+3. Porque a segunda linha só é usada quando $x < 0$. O sinal de menos significa
+   “o oposto de”, e o oposto de um número negativo é positivo: com $x = -7$,
+   $-x = -(-7) = 7$.
+4. Porque $a - b$ e $b - a$ são números opostos, e números opostos estão à mesma
+   distância do zero. Isso reflete o fato de que a distância entre dois lugares
+   não depende de qual deles se toma como ponto de partida.
+5. Porque $\lvert x \rvert$ é uma distância, e distância nunca é negativa —
+   nenhum número está a $-2$ de distância do zero. Já a distância 2 é alcançada
+   por dois números, um de cada lado: $2$ e $-2$. A informação “distância” não
+   diz o lado, então sobram as duas possibilidades.
+6. Porque não há sinal de menos escrito para apagar: há uma subtração. As barras
+   funcionam como parênteses, então primeiro se calcula $3 - 10 = -7$ e só
+   depois se aplica o valor absoluto, obtendo 7.
+7. Porque elevar ao quadrado apaga o sinal — $(-6)^2$ e $6^2$ dão o mesmo 36 — e
+   a raiz quadrada devolve sempre o valor não negativo. O caminho de ida e volta
+   perde o lado e conserva o tamanho, que é justamente o valor absoluto. Com $x$
+   positivo os dois coincidem; é com $x$ negativo que a diferença aparece.
+8. “A temperatura não pode se afastar de 18 °C por mais de 1,5 °C, nem para cima
+   nem para baixo.” Ou, na outra leitura: a temperatura tem de ficar entre 16,5
+   °C e 19,5 °C.
+
+</details>
+
+## Exercícios
+
+### 1. Reconhecimento
+
+1. Calcule: a) $\lvert -9 \rvert$ &nbsp; b) $\lvert 14 \rvert$ &nbsp; c)
+   $\lvert 0 \rvert$ &nbsp; d) $\lvert -0{,}7 \rvert$ &nbsp; e)
+   $\lvert 5 - 12 \rvert$ &nbsp; f) $-\lvert -6 \rvert$
+2. Em cada par, diga qual número está **mais longe do zero**: a) $-8$ ou $5$
+   &nbsp; b) $-2$ ou $-11$ &nbsp; c) $4$ ou $-4$
+3. Escreva com valor absoluto a expressão “a distância entre 12 e 30”, e calcule
+   o resultado.
+
+### 2. Explicação
+
+4. Explique por que $\lvert -x \rvert = \lvert x \rvert$ vale para qualquer
+   número $x$, inclusive quando $x$ é negativo.
+5. Um colega descreve o valor absoluto como “apagar o sinal de menos”. Aponte
+   duas situações em que essa descrição falha.
+6. Por que faz sentido dizer que $-5 < -2$ e, ao mesmo tempo, que $-5$ está mais
+   longe do zero que $-2$? As duas afirmações se contradizem?
+
+### 3. Aplicação direta
+
+7. Calcule a distância entre: a) $3$ e $11$ &nbsp; b) $-5$ e $2$ &nbsp; c) $-9$
+   e $-4$ &nbsp; d) $7$ e $7$
+8. Resolva: a) $\lvert x \rvert = 6$ &nbsp; b) $\lvert x \rvert = 0$ &nbsp; c)
+   $\lvert x \rvert = -2$
+9. Resolva lendo cada equação como distância: a) $\lvert x - 4 \rvert = 3$
+   &nbsp; b) $\lvert x + 2 \rvert = 5$
+
+### 4. Variação
+
+10. Uma peça deve medir 120 mm, com tolerância de 0,5 mm. Escreva a condição de
+    aprovação usando valor absoluto e decida se as medidas 119,6 mm e 120,6 mm
+    passam.
+11. Calcule $\sqrt{(-6)^2}$ e $\sqrt{6^2}$. Por que os dois dão o mesmo
+    resultado?
+12. Sabendo que $x$ é menor que 5, reescreva $\lvert x - 5 \rvert$ sem as
+    barras.
+
+### 5. Problema misto
+
+13. Um termostato deve manter 18 °C, tolerando variação de 1,5 °C. Ao longo do
+    dia registraram-se 16,8 °C, 19,4 °C, 17,2 °C e 19,6 °C. Escreva a condição
+    com módulo e diga quais leituras estão dentro da faixa.
+14. Quais números inteiros estão a menos de 3 unidades de distância de 10?
+    Escreva a condição com valor absoluto e liste as respostas.
+
+<details>
+<summary>Dica para o 14</summary>
+
+Não tente manipular a expressão. Localize o centro na reta e ande 3 unidades
+para cada lado — depois decida se as pontas entram, olhando se a condição é
+“menos que” ou “no máximo”.
+
+</details>
+
+### 6. Justificativa
+
+15. Demonstre, testando os casos, que
+    $\lvert a - b \rvert = \lvert b - a \rvert$ para quaisquer $a$ e $b$. Que
+    propriedade dos números opostos você usou?
+16. Verifique se $\lvert a + b \rvert = \lvert a \rvert + \lvert b \rvert$ vale
+    sempre. Se não valer, apresente um contraexemplo e diga em que situação a
+    igualdade acontece.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) 9 &nbsp; b) 14 &nbsp; c) 0 &nbsp; d) 0,7 &nbsp; e)
+   $\lvert 5-12 \rvert = \lvert -7 \rvert = 7$ &nbsp; f) $-6$. Se você respondeu
+   6 no item f, o módulo comeu o sinal de fora: as barras só alcançam o $-6$ de
+   dentro.
+2. a) $-8$, que está a 8 unidades contra 5. &nbsp; b) $-11$. &nbsp; c) empate:
+   os dois estão a 4 unidades do zero.
+3. $\lvert 12 - 30 \rvert = \lvert -18 \rvert = 18$. Também vale
+   $\lvert 30 - 12 \rvert = 18$ — a ordem não muda nada.
+4. Porque $x$ e $-x$ são opostos e, sendo opostos, estão à mesma distância do
+   zero, em lados contrários. Vale nos dois casos: se $x = 3$, então
+   $\lvert -3 \rvert = 3 = \lvert 3 \rvert$; se $x = -3$, então $-x = 3$ e
+   $\lvert 3 \rvert = 3 = \lvert -3 \rvert$.
+5. Primeira: em $\lvert 3 - 10 \rvert$ não há sinal de menos na frente para
+   apagar, e sim uma subtração a resolver. Segunda: em $-\lvert -4 \rvert$,
+   apagar “o sinal de menos” daria 4, mas o resultado correto é $-4$, porque o
+   menos externo não é alcançado pelas barras.
+6. Não se contradizem, porque respondem a perguntas diferentes. “$-5 < -2$” fala
+   de **posição na reta**: $-5$ está mais à esquerda. “Mais longe do zero” fala
+   de **distância**: $\lvert -5 \rvert = 5$ e $\lvert -2 \rvert = 2$. Para
+   números negativos, quanto menor o número, maior o valor absoluto.
+7. a) 8 &nbsp; b) 7 &nbsp; c) 5 &nbsp; d) 0. No item d, distância zero é o
+   esperado: um número não se afasta de si mesmo.
+8. a) $x = 6$ ou $x = -6$. &nbsp; b) $x = 0$, resposta única — é o único número
+   a distância nenhuma do zero. &nbsp; c) nenhuma solução, porque valor absoluto
+   nunca é negativo.
+9. a) $x = 7$ ou $x = 1$: os números a 3 unidades de 4. &nbsp; b) reescrevendo
+   como $\lvert x - (-2) \rvert = 5$, o centro é $-2$, logo $x = 3$ ou $x = -7$.
+   Se você encontrou 3 e 7, tratou o centro como $+2$ — confira qual valor anula
+   a expressão dentro das barras.
+10. A condição é $\lvert m - 120 \rvert \le 0{,}5$. Para 119,6:
+    $\lvert -0{,}4 \rvert = 0{,}4 \le 0{,}5$, aprovada. Para 120,6:
+    $\lvert 0{,}6 \rvert = 0{,}6 > 0{,}5$, rejeitada.
+11. Os dois dão 6. Em $\sqrt{(-6)^2}$, o quadrado apaga o sinal e produz o mesmo
+    36 do outro caso; a raiz então devolve o valor não negativo. É o
+    $\sqrt{x^2} = \lvert x \rvert$ em ação.
+12. Se $x$ é menor que 5, então $x - 5$ é negativo, e a segunda linha da
+    definição se aplica: $\lvert x - 5 \rvert = -(x - 5) = 5 - x$. Confira com
+    $x = 2$: $\lvert 2 - 5 \rvert = 3$ e $5 - 2 = 3$.
+13. A condição é $\lvert T - 18 \rvert \le 1{,}5$. Dentro da faixa: 16,8 °C
+    ($1{,}2$), 19,4 °C ($1{,}4$) e 17,2 °C ($0{,}8$). Fora: 19,6 °C, cujo
+    afastamento é $1{,}6$.
+14. A condição é $\lvert x - 10 \rvert < 3$, que descreve os números entre 7 e
+    13, sem incluir as pontas — a desigualdade é estrita. Os inteiros são
+    $8, 9, 10, 11, 12$. Se você incluiu 7 e 13, releia o “a menos de”: eles
+    estão a exatamente 3 unidades, não a menos que isso.
+15. Os números $a - b$ e $b - a$ são opostos, pois $b - a = -(a - b)$. Como
+    opostos têm o mesmo valor absoluto (o fato do exercício 4), os dois módulos
+    coincidem. Teste com $a = 3$ e $b = 8$: $\lvert 3 - 8 \rvert = 5$ e
+    $\lvert 8 - 3 \rvert = 5$.
+16. Não vale sempre. Contraexemplo: $a = 3$ e $b = -8$ dão
+    $\lvert 3 + (-8) \rvert = \lvert -5 \rvert = 5$ do lado esquerdo e
+    $3 + 8 = 11$ do direito. A igualdade acontece quando $a$ e $b$ têm o mesmo
+    sinal — ou quando um deles é zero. Quando os sinais são diferentes, as
+    parcelas se cancelam em parte na soma da esquerda, enquanto os valores
+    absolutos da direita, todos positivos, só se acumulam.
+
+</details>
+
+## Revisão curta
+
+- O **valor absoluto** $\lvert x \rvert$ é a distância de $x$ até o zero na
+  reta: conserva o tamanho do número e descarta o lado.
+- A definição tem dois casos porque a reta tem dois lados: $\lvert x \rvert = x$
+  quando $x \ge 0$, e $\lvert x \rvert = -x$ quando $x < 0$. O segundo caso usa
+  o **oposto**, e o oposto de um negativo é positivo.
+- $\lvert x \rvert$ nunca é negativo, e vale zero apenas quando $x = 0$.
+- As barras funcionam como parênteses: primeiro a conta de dentro, depois o
+  módulo. Um sinal escrito fora delas não é alcançado.
+- A **distância entre $a$ e $b$** é $\lvert a - b \rvert$, e a ordem não
+  importa: $\lvert a - b \rvert = \lvert b - a \rvert$.
+- Uma condição como $\lvert x - c \rvert \le r$ descreve uma **faixa em torno do
+  centro $c$**, com raio $r$ — é assim que tolerâncias e margens de erro se
+  escrevem em uma linha só.
+- $\sqrt{x^2} = \lvert x \rvert$, não $x$: o quadrado apaga o sinal e a raiz
+  devolve o valor não negativo.
+- O módulo **não** se distribui sobre somas nem subtrações.
+
+Antes de avançar, verifique se você consegue explicar por que $-5$ é menor que
+$-2$ e, ainda assim, está mais longe do zero. Quem separa essas duas perguntas
+não erra as inequações com módulo mais adiante.

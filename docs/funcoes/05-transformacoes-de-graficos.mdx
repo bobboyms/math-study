@@ -1,0 +1,537 @@
+---
+title: Transformações de gráficos
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Transformações: mover, esticar e refletir um gráfico
+
+## 1. Problema motivador: a mesma bola, três lançamentos
+
+A altura de uma bola lançada do chão é
+
+$$
+h(t) = 20t - 5t^2,
+$$
+
+com $t$ em segundos e $h$ em metros. Já sabemos desenhá-la: uma parábola que
+parte do zero, atinge 20 metros aos 2 segundos e volta ao chão aos 4.
+
+Agora considere duas variações do mesmo lançamento.
+
+**Primeira:** a bola é lançada do topo de um prédio de 15 metros, com a mesma
+força. Toda altura passa a ter 15 metros a mais, então a nova função é
+$h(t) + 15$.
+
+**Segunda:** o lançamento acontece **1 segundo depois**, do chão. O que a bola
+fazia aos 2 segundos, agora faz aos 3.
+
+A pergunta é: **é preciso refazer tudo — calcular vértice, raízes, tabela — para
+cada variação?**
+
+A resposta é não, e economizar esse trabalho é o assunto desta página. Se você
+conhece o gráfico de uma função, conhece também o de toda uma família de funções
+aparentadas — bastando saber **mover, esticar e refletir** o desenho que já tem.
+
+Há uma armadilha no caminho, e ela aparece já na segunda variação: a função que
+descreve o lançamento atrasado é $h(t - 1)$, com sinal de **menos**, embora o
+gráfico ande para a **direita**. Entender por que é o ponto central da página.
+
+## 2. Mapa das ideias
+
+- **translação vertical**: somar uma constante **fora** da função sobe ou desce
+  o gráfico;
+- **translação horizontal**: somar uma constante **dentro** da função move o
+  gráfico para os lados — e no sentido contrário ao que o sinal sugere;
+- **dilatação**: multiplicar a função por um número estica ou achata o gráfico;
+- **reflexão**: um sinal de menos vira o gráfico de cabeça para baixo (fora) ou
+  de trás para frente (dentro).
+
+A regra que organiza tudo: **o que está fora dos parênteses age na saída, na
+vertical, do jeito esperado; o que está dentro age na entrada, na horizontal, ao
+contrário.**
+
+## 3. Para que serve
+
+- adaptar um modelo já conhecido a uma situação parecida, sem refazer as contas:
+  outro ponto de partida, outro instante inicial, outra escala;
+- reconhecer que várias fórmulas diferentes descrevem a **mesma curva** em
+  posições diferentes;
+- esboçar rapidamente o gráfico de funções novas a partir de umas poucas curvas
+  básicas — é assim que se desenha $\sqrt{x-2}$, $\lvert x+3 \rvert$ ou
+  $\frac{1}{x-1}$ sem tabela;
+- em programação e em edição de imagem, é literalmente o que fazem as operações
+  de deslocar e escalar.
+
+Dentro da matemática, este é o assunto que torna baratas todas as famílias de
+funções que vêm a seguir. Cada uma tem **uma** curva básica; as demais são
+transformações dela.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [função quadrática](./funcao-quadratica): o que a forma canônica
+$a(x-h)^2 + k$ diz sobre o vértice?** Que ele está em $(h, k)$. Repare no que já
+estava ali: o $k$ está **fora** do quadrado e mexe na altura; o $h$ está
+**dentro** e mexe na posição horizontal — com sinal invertido.
+
+**2. Da mesma página: o que o parâmetro $a$ faz com a parábola?** Decide a
+direção pelo sinal e a abertura pelo tamanho. Quanto maior $\lvert a \rvert$,
+mais fechada a curva.
+
+**3. De [crescimento e simetria](./crescimento-sinal-e-simetria): o que
+caracteriza uma função par?** $f(-x) = f(x)$, e o gráfico é simétrico no eixo
+vertical. Trocar $x$ por $-x$ é justamente uma das transformações desta página.
+
+A forma canônica era, sem que disséssemos, um caso particular do que estudamos
+aqui. Esta página generaliza aquilo para **qualquer** função, não só a parábola.
+
+## 5. Intuição: mover a curva ou mover o mundo
+
+Tome uma função qualquer $f$, cujo gráfico você já conhece, e uma constante
+positiva $k$.
+
+**Somar fora: $f(x) + k$.** Toda saída aumenta $k$. Como a saída é a altura, o
+gráfico inteiro **sobe** $k$. Nada mais muda: a forma é idêntica, as subidas e
+descidas acontecem nos mesmos lugares. É o caso da bola lançada do prédio.
+
+Isso é intuitivo. O caso seguinte não é.
+
+**Somar dentro: $f(x + k)$.** Aqui a constante entra **antes** de a função agir.
+A nova função, no ponto $x$, faz o que a antiga fazia em $x + k$ — ou seja,
+**adianta-se**: ela produz agora o que a original só produziria mais tarde. E
+adiantar significa que o gráfico anda para a **esquerda**.
+
+> Somar dentro dos parênteses move para a **esquerda**; subtrair move para a
+> **direita**. É o contrário do que o sinal sugere.
+
+A forma mais segura de não errar é perguntar: **onde o novo gráfico faz o que o
+antigo fazia no zero?** Em $f(x - 3)$, o parêntese se anula quando $x = 3$. Logo
+o que acontecia em 0 agora acontece em 3: o gráfico andou 3 para a **direita**.
+
+Aplique à bola lançada 1 segundo depois. Ela sai do chão em $t = 1$, e a
+original saía em $t = 0$. O parêntese precisa se anular em $t = 1$, então a
+função é $h(t - 1)$. Confirmando: $h(3 - 1) = h(2) = 20$, o ápice aos 3
+segundos.
+
+## 6. Modelo visual: as translações
+
+<CartesianPlane
+  xMin={-0.5}
+  xMax={5.5}
+  yMin={-2}
+  yMax={38}
+  xUnit={62}
+  yUnit={8}
+  yStep={5}
+  functions={[
+    {f: (t) => 20 * t - 5 * t * t, domain: [0, 4], tone: 1},
+    {f: (t) => 20 * t - 5 * t * t + 15, domain: [0, 4], tone: 2},
+    {f: (t) => 20 * (t - 1) - 5 * (t - 1) * (t - 1), domain: [1, 5], tone: 3},
+  ]}
+  points={[
+    {at: [2, 20], tone: 1},
+    {at: [2, 35], tone: 2},
+    {at: [3, 20], tone: 3},
+  ]}
+  axisLabels={['t', 'h']}
+  caption="A curva original (azul), a mesma somada de 15 (laranja, subiu) e a mesma com t − 1 (verde, andou para a direita). Os três ápices marcam o efeito de cada transformação."
+/>
+
+Compare os três ápices. O original está em $(2, 20)$. Somar 15 **fora** levou-o
+a $(2, 35)$: mesma abscissa, altura maior. Trocar $t$ por $t-1$ **dentro**
+levou-o a $(3, 20)$: mesma altura, posição adiantada.
+
+**Nenhuma das duas mudou a forma da curva.** A parábola continua com a mesma
+abertura, a mesma largura, o mesmo tempo de voo de 4 segundos. Ela só mudou de
+lugar — e é por isso que não é preciso refazer conta nenhuma.
+
+## 7. Formalização
+
+Seja $f$ uma função conhecida e $k > 0$ uma constante.
+
+| Nova função | Efeito no gráfico |
+|---|---|
+| $f(x) + k$ | sobe $k$ |
+| $f(x) - k$ | desce $k$ |
+| $f(x + k)$ | move $k$ para a **esquerda** |
+| $f(x - k)$ | move $k$ para a **direita** |
+| $a \cdot f(x)$, com $a > 1$ | estica na vertical |
+| $a \cdot f(x)$, com $0 < a < 1$ | achata na vertical |
+| $-f(x)$ | reflete no **eixo horizontal** (de cabeça para baixo) |
+| $f(-x)$ | reflete no **eixo vertical** (espelho lateral) |
+
+A tabela tem quatro linhas de cada tipo, e a regra que as separa é sempre a
+mesma:
+
+> **Fora dos parênteses** a operação age sobre a **saída**, produz efeito
+> **vertical** e funciona do jeito esperado. **Dentro dos parênteses** ela age
+> sobre a **entrada**, produz efeito **horizontal** e funciona ao contrário.
+
+**Exemplo.** Partindo de $f(x) = x^2$, a função $g(x) = (x-3)^2 + 2$ é a mesma
+parábola movida 3 para a direita e 2 para cima. O vértice sai de $(0,0)$ e vai
+para $(3, 2)$ — exatamente o que a forma canônica já dizia.
+
+**Contraexemplo, para delimitar.** $f(x) + 3$ e $f(x + 3)$ **não** são a mesma
+coisa, embora se pareçam. Teste com $f(x) = x^2$: a primeira dá $x^2 + 3$, e em
+$x = 0$ vale 3. A segunda dá $(x+3)^2$, e em $x = 0$ vale 9. Uma subiu, a outra
+andou de lado.
+
+### Por que o efeito horizontal é invertido
+
+Vale entender, e não decorar. Em $g(x) = f(x - 3)$, para saber o que $g$ faz num
+ponto, é preciso primeiro **subtrair 3** e só então aplicar $f$. Isso significa
+que $g$ está sempre “atrasada”: ela precisa que $x$ chegue a 3 para fazer o que
+$f$ já fazia em 0.
+
+Uma imagem que ajuda: a constante dentro dos parênteses não move a curva — move
+a **régua**. Empurrar a régua 3 para a esquerda faz a curva parecer 3 mais à
+direita.
+
+## 8. Dilatações e reflexões
+
+**Multiplicar fora: $a \cdot f(x)$.** Toda altura é multiplicada por $a$. Com
+$a = 3$, o que valia 5 passa a valer 15: a curva **estica** verticalmente. Com
+$a = 0{,}5$, ela **achata**.
+
+Repare no que **não** muda: os pontos onde $f$ vale zero continuam valendo zero,
+porque $a \times 0 = 0$. As raízes ficam onde estavam, e a curva estica em torno
+do eixo horizontal como um elástico preso nos zeros.
+
+**Reflexão fora: $-f(x)$.** É o caso $a = -1$: toda altura troca de sinal, e o
+gráfico vira de cabeça para baixo, espelhado no eixo horizontal. O que era
+máximo vira mínimo.
+
+**Reflexão dentro: $f(-x)$.** Toda entrada troca de sinal, e o gráfico é
+espelhado no eixo **vertical**: o lado direito vai para a esquerda e vice-versa.
+
+<CartesianPlane
+  xMin={-3.2}
+  xMax={3.2}
+  yMin={-5}
+  yMax={5}
+  xUnit={46}
+  yUnit={28}
+  functions={[
+    {f: (x) => Math.sqrt(x), domain: [0, 3], tone: 1},
+    {f: (x) => -Math.sqrt(x), domain: [0, 3], tone: 2},
+    {f: (x) => Math.sqrt(-x), domain: [-3, 0], tone: 3},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Em azul, √x. Em laranja, −√x: espelhada no eixo horizontal. Em verde, √(−x): espelhada no eixo vertical, e por isso definida só para x negativo."
+/>
+
+Repare no detalhe do domínio: $\sqrt{-x}$ só existe quando $-x \ge 0$, ou seja,
+$x \le 0$. A reflexão **arrastou o domínio junto** — mais uma consequência de o
+sinal estar dentro.
+
+E uma observação que fecha a página anterior: uma função é **par** exatamente
+quando $f(-x) = f(x)$, isto é, quando a reflexão no eixo vertical **não muda
+nada**. E é **ímpar** quando $f(-x) = -f(x)$: refletir na vertical dá o mesmo
+que refletir na horizontal.
+
+## 9. Combinando transformações
+
+Quando há várias ao mesmo tempo, a ordem importa — e a regra é fazer **de dentro
+para fora**, na ordem em que as operações atingem o $x$.
+
+Tome $g(x) = -2(x - 3)^2 + 1$, partindo de $f(x) = x^2$:
+
+1. $(x-3)^2$ — move 3 para a **direita**;
+2. $2(x-3)^2$ — **estica** verticalmente por 2;
+3. $-2(x-3)^2$ — **reflete** no eixo horizontal;
+4. $-2(x-3)^2 + 1$ — **sobe** 1.
+
+O vértice sai de $(0,0)$, vai para $(3,0)$ com o passo 1, permanece ali nos
+passos 2 e 3 — esticar e refletir não movem um ponto que está na altura zero — e
+sobe para $(3, 1)$ no passo 4.
+
+**Conferindo pela fórmula do vértice**: expandindo,
+$g(x) = -2(x^2 - 6x + 9) + 1 = -2x^2 + 12x - 17$, logo
+$x_v = -\frac{12}{2(-2)} = 3$ e $g(3) = -18 + 36 - 17 = 1$. O vértice é $(3,1)$.
+Confere.
+
+## 10. Exemplos resolvidos
+
+### Exemplo 1: identificar as transformações
+
+Descreva $g(x) = \sqrt{x - 2} + 4$ em termos de $f(x) = \sqrt{x}$.
+
+O $-2$ está **dentro** da raiz: move 2 para a **direita**. O $+4$ está **fora**:
+sobe 4.
+
+O ponto inicial da curva, que em $\sqrt{x}$ é $(0,0)$, vai para $(2, 4)$. E o
+domínio acompanha: era $x \ge 0$, passa a ser $x - 2 \ge 0$, isto é, $x \ge 2$.
+
+### Exemplo 2: da descrição para a fórmula
+
+*Pause e tente antes de ler.* Escreva a função obtida ao mover o gráfico de
+$f(x) = x^2$ **5 unidades para a esquerda** e **3 para baixo**.
+
+Esquerda é o sentido “contrário”, então dentro dos parênteses o sinal é de
+**mais**: $(x + 5)^2$. Descer 3 é subtrair fora:
+
+$$
+g(x) = (x + 5)^2 - 3.
+$$
+
+**Conferindo**: o vértice deve estar em $(-5, -3)$. De fato, $(x+5)^2$ se anula
+em $x = -5$, e ali $g = -3$.
+
+### Exemplo 3: a bola lançada mais tarde
+
+*Pause e tente.* Escreva a função da bola lançada 1 segundo depois, a partir de
+$h(t) = 20t - 5t^2$, e calcule a altura aos 3 segundos.
+
+Atrasar o lançamento move o gráfico para a **direita**, o que exige sinal de
+menos dentro: $h(t - 1)$.
+
+$$
+h(t-1) = 20(t-1) - 5(t-1)^2.
+$$
+
+Aos 3 segundos: $20(2) - 5(2)^2 = 40 - 20 = 20$ metros. É o ápice — e faz
+sentido, porque o original atingia o ápice aos 2 segundos, e tudo atrasou 1.
+
+### Exemplo 4: distinguir os quatro casos
+
+*Pause e tente.* Partindo de $f$, o que cada uma faz? a) $f(x) - 6$ &nbsp; b)
+$f(x - 6)$ &nbsp; c) $-f(x)$ &nbsp; d) $f(-x)$
+
+a) **Desce 6** — o menos está fora, efeito vertical, sentido esperado.
+
+b) **Move 6 para a direita** — o menos está dentro, efeito horizontal, sentido
+invertido.
+
+c) **Reflete no eixo horizontal**, de cabeça para baixo.
+
+d) **Reflete no eixo vertical**, como num espelho lateral.
+
+Um teste rápido para (a) e (b), se a dúvida bater: em (a), o valor em $x = 0$ é
+$f(0) - 6$, alterado; em (b), é $f(-6)$, um valor da função original tomado em
+outro ponto. A primeira mexeu na altura, a segunda no lugar.
+
+### Exemplo 5: dilatação e as raízes
+
+*Pause e tente.* O gráfico de $f$ corta o eixo horizontal em $x = 1$ e $x = 4$,
+e tem máximo 6. O que acontece com $3f(x)$?
+
+As **raízes não mudam**: em $x = 1$ e $x = 4$ a função vale zero, e $3 \times 0$
+continua zero. O **máximo triplica**, indo para 18.
+
+A curva esticou verticalmente sem sair do lugar na horizontal, como um elástico
+preso nos dois zeros.
+
+## 11. Erros comuns
+
+> **Erro 1: mover para o lado errado.** $f(x - 3)$ move para a **direita**, não
+> para a esquerda. Se a regra escapar, pergunte onde o parêntese se anula: em
+> $x = 3$, e é para lá que vai o que acontecia em zero.
+
+> **Erro 2: confundir $f(x) + 3$ com $f(x + 3)$.** A primeira sobe, a segunda
+> anda de lado. Teste com $f(x) = x^2$ em $x = 0$: uma dá 3, a outra dá 9.
+
+> **Erro 3: achar que a dilatação move as raízes.** Multiplicar por 3 não muda
+> onde a função vale zero, porque $3 \times 0 = 0$. Só as outras alturas mudam.
+
+> **Erro 4: trocar as duas reflexões.** $-f(x)$ vira de cabeça para baixo;
+> $f(-x)$ espelha para os lados. O sinal fora age na altura; dentro, na posição.
+
+> **Erro 5: esquecer que o domínio acompanha.** $\sqrt{x-2}$ tem domínio
+> $x \ge 2$, e $\sqrt{-x}$ tem $x \le 0$. Transformações horizontais arrastam o
+> domínio junto.
+
+> **Erro 6: aplicar as transformações em ordem arbitrária.** Em $-2(x-3)^2 + 1$,
+> faça de dentro para fora: mover, esticar, refletir, subir. Trocar a ordem
+> entre esticar e subir dá outra curva.
+
+## 12. Perguntas de verificação
+
+1. Por que somar dentro dos parênteses move o gráfico para a esquerda?
+2. Qual é a diferença entre $f(x) + 3$ e $f(x + 3)$?
+3. Por que uma dilatação vertical não muda as raízes?
+4. Qual a diferença entre $-f(x)$ e $f(-x)$?
+5. Por que a forma canônica da parábola já era um caso de transformação?
+6. Por que o domínio muda numa translação horizontal, mas não numa vertical?
+7. Como se relacionam “função par” e a reflexão $f(-x)$?
+8. Numa combinação de transformações, por que a ordem é de dentro para fora?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque a constante age **antes** de a função processar o valor. Em $f(x+3)$,
+   a função faz no ponto $x$ o que fazia em $x+3$ — ela se adianta, produzindo
+   mais cedo o que a original só produzia depois. Adiantar-se, no gráfico, é
+   estar mais à esquerda.
+2. $f(x) + 3$ mexe na **saída** e sobe o gráfico 3 unidades. $f(x+3)$ mexe na
+   **entrada** e move o gráfico 3 unidades para a esquerda. Com $f(x) = x^2$ em
+   $x = 0$, a primeira dá 3 e a segunda dá 9.
+3. Porque nas raízes a função vale zero, e qualquer número multiplicado por zero
+   continua zero. A curva estica em torno do eixo horizontal, como um elástico
+   preso nos pontos onde toca o eixo.
+4. $-f(x)$ troca o sinal da **saída** e reflete o gráfico no eixo horizontal —
+   ele vira de cabeça para baixo. $f(-x)$ troca o sinal da **entrada** e reflete
+   no eixo vertical — o lado direito troca de lugar com o esquerdo.
+5. Porque $a(x-h)^2 + k$ é exatamente a parábola básica $x^2$ com três
+   transformações: movida $h$ para a direita (dentro, sinal invertido),
+   multiplicada por $a$ (fora, dilatação e possível reflexão) e subida $k$
+   (fora). O vértice em $(h,k)$ é a origem da curva básica levada para o novo
+   lugar.
+6. Porque o domínio é o conjunto das **entradas** aceitas, e a translação
+   horizontal mexe justamente na entrada: $\sqrt{x-2}$ exige $x - 2 \ge 0$. Já a
+   translação vertical altera só o resultado depois de a função ter agido, e
+   quais entradas eram aceitas continua igual.
+7. Uma função é par exatamente quando a reflexão no eixo vertical **não muda
+   nada**, isto é, $f(-x) = f(x)$. O gráfico refletido coincide com o original.
+   E é ímpar quando refletir na vertical dá o mesmo que refletir na horizontal:
+   $f(-x) = -f(x)$.
+8. Porque as operações atingem o $x$ nessa ordem: primeiro o que está mais
+   próximo dele, dentro dos parênteses, depois as multiplicações e por fim as
+   somas externas. Executar as transformações fora dessa ordem corresponde a uma
+   fórmula diferente.
+
+</details>
+
+## 13. Exercícios
+
+### 1. Reconhecimento
+
+1. Descreva a transformação de $f$ em cada caso: a) $f(x) + 7$ &nbsp; b)
+   $f(x - 7)$ &nbsp; c) $f(x + 2)$ &nbsp; d) $5f(x)$ &nbsp; e) $-f(x)$ &nbsp; f)
+   $f(-x)$
+2. Partindo de $f(x) = x^2$, diga onde fica o vértice de: a) $(x-5)^2$ &nbsp; b)
+   $x^2 + 4$ &nbsp; c) $(x+1)^2 - 6$
+3. O gráfico de $f$ passa pelo ponto $(2, 9)$. Por qual ponto passa o gráfico de
+   $f(x) + 5$? E o de $f(x - 5)$?
+
+### 2. Explicação
+
+4. Explique, sem citar a regra, por que $f(x-3)$ move o gráfico para a direita.
+5. Explique por que $2f(x)$ não altera as raízes de $f$.
+6. Um colega diz que $f(x+4)$ e $f(x)+4$ dão o mesmo gráfico. Mostre com
+   $f(x) = x^2$ que estão errados.
+
+### 3. Aplicação direta
+
+7. Escreva a fórmula obtida de $f(x) = \sqrt{x}$ ao: a) mover 3 para a direita
+   &nbsp; b) subir 2 &nbsp; c) mover 1 para a esquerda e descer 4 &nbsp; d)
+   refletir no eixo horizontal
+8. Determine o domínio de: a) $\sqrt{x-2}$ &nbsp; b) $\sqrt{x+5}$ &nbsp; c)
+   $\sqrt{-x}$
+9. Descreva, passo a passo, como obter o gráfico de $g(x) = -(x-1)^2 + 3$ a
+   partir de $x^2$, e dê o vértice.
+
+### 4. Variação
+
+10. O gráfico de $f$ corta o eixo horizontal em $-2$ e 5, e tem mínimo $-8$.
+    Descreva as raízes e o mínimo de: a) $f(x) + 8$ &nbsp; b) $4f(x)$ &nbsp; c)
+    $-f(x)$
+11. Escreva a função da bola $h(t) = 20t - 5t^2$ lançada 2 segundos mais tarde e
+    do alto de um prédio de 10 metros. Calcule a altura em $t = 4$.
+12. Duas fórmulas descrevem a mesma curva em posições diferentes:
+    $f(x) = (x-1)^2 + 2$ e $g(x) = (x-4)^2 + 2$. Qual transformação leva uma à
+    outra?
+
+<details>
+<summary>Dica para o 11</summary>
+
+São duas transformações independentes. Uma delas mexe **dentro** dos parênteses,
+onde o sinal se inverte; a outra mexe **fora**, do jeito esperado. Faça uma de
+cada vez.
+
+</details>
+
+### 5. Problema misto
+
+13. A receita mensal de uma loja é $R(x) = -x^2 + 60x$ mil reais, com $x$ em
+    centenas de produtos vendidos. a) Qual é o vértice? b) A loja passou a ter
+    um custo fixo de 200 mil reais. Escreva o novo lucro e diga o que muda no
+    gráfico. c) O vértice se desloca na horizontal? Justifique.
+14. Uma temperatura registrada ao longo do dia é dada por $T(h)$, com $h$ em
+    horas. Escreva, em termos de $T$, a função que descreve: a) a mesma
+    variação, medida em um dia 3 °C mais quente; b) a mesma variação, mas com
+    tudo acontecendo 2 horas mais tarde.
+
+### 6. Justificativa
+
+15. Mostre que $f(x) = a(x-h)^2 + k$ é a parábola $x^2$ transformada, listando
+    as três transformações na ordem correta.
+16. Explique por que uma reflexão no eixo vertical altera o domínio de uma
+    função, mas uma reflexão no eixo horizontal não.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) sobe 7 &nbsp; b) move 7 para a **direita** &nbsp; c) move 2 para a
+   **esquerda** &nbsp; d) estica verticalmente por 5 &nbsp; e) reflete no eixo
+   horizontal &nbsp; f) reflete no eixo vertical.
+2. a) $(5, 0)$ &nbsp; b) $(0, 4)$ &nbsp; c) $(-1, -6)$.
+3. Por $(2, 14)$ e por $(7, 9)$, respectivamente. No primeiro caso muda a
+   altura; no segundo, a posição.
+4. Porque para calcular $f(x-3)$ é preciso subtrair 3 antes de aplicar $f$. A
+   nova função só faz, no ponto $x$, o que a antiga fazia em $x - 3$: ela está
+   sempre “atrasada” em 3 unidades, e por isso o desenho aparece 3 mais adiante.
+5. Porque nas raízes $f$ vale zero, e $2 \times 0 = 0$. Os pontos onde a curva
+   toca o eixo permanecem intactos; só as demais alturas dobram.
+6. Com $f(x) = x^2$: $f(x+4) = (x+4)^2$, que em $x = 0$ vale 16; já
+   $f(x) + 4 = x^2 + 4$, que em $x = 0$ vale 4. Além disso, o vértice da
+   primeira está em $(-4, 0)$ e o da segunda em $(0, 4)$ — posições diferentes.
+7. a) $\sqrt{x-3}$ &nbsp; b) $\sqrt{x} + 2$ &nbsp; c) $\sqrt{x+1} - 4$ &nbsp; d)
+   $-\sqrt{x}$.
+8. a) $x \ge 2$ &nbsp; b) $x \ge -5$ &nbsp; c) $x \le 0$.
+9. Partindo de $x^2$: mover 1 para a direita, obtendo $(x-1)^2$; refletir no
+   eixo horizontal, obtendo $-(x-1)^2$; subir 3. O vértice sai de $(0,0)$, vai
+   para $(1,0)$ e sobe para $(1, 3)$ — e agora é um **máximo**, por causa da
+   reflexão.
+10. a) As raízes **mudam**, porque a curva subiu 8 e o mínimo passa a ser 0: a
+    função toca o eixo em um ponto só, o antigo vértice. O mínimo é 0. &nbsp; b)
+    As raízes continuam em $-2$ e 5; o mínimo vira $-32$. &nbsp; c) As raízes
+    continuam em $-2$ e 5; o mínimo $-8$ vira **máximo** $8$.
+11. Atrasar 2 segundos exige $t - 2$ dentro; subir 10 metros exige $+10$ fora:
+    $$H(t) = 20(t-2) - 5(t-2)^2 + 10.$$ Em $t = 4$:
+    $20(2) - 5(4) + 10 = 40 - 20 + 10 = 30$ metros. Faz sentido: aos 4 segundos
+    a bola está 2 segundos após o lançamento, no ápice de 20 m, e o prédio
+    acrescenta 10.
+12. É uma translação horizontal de 3 unidades para a **direita**: o vértice sai
+    de $(1,2)$ e vai para $(4,2)$. Em símbolos, $g(x) = f(x-3)$.
+13. a) $x_v = -\frac{60}{-2} = 30$ e $R(30) = -900 + 1800 = 900$: vértice
+    $(30, 900)$. &nbsp; b) O lucro é $L(x) = -x^2 + 60x - 200$, que é $R(x)$
+    **descida 200** — o gráfico inteiro desce 200 mil. &nbsp; c) **Não.** O
+    custo fixo é uma constante somada **fora**, então o efeito é puramente
+    vertical. O vértice continua em $x = 30$, com altura $900 - 200 = 700$ mil.
+14. a) $T(h) + 3$ — o acréscimo é na temperatura, ou seja, na saída. &nbsp; b)
+    $T(h - 2)$ — o atraso é no tempo, ou seja, na entrada, e move o gráfico para
+    a direita.
+15. Na ordem de dentro para fora: (i) $(x-h)^2$ move a parábola $h$ unidades
+    para a direita, levando o vértice de $(0,0)$ a $(h,0)$; (ii) multiplicar por
+    $a$ estica verticalmente e, se $a<0$, reflete no eixo horizontal — o vértice
+    não se move, por estar na altura zero; (iii) somar $k$ sobe tudo, levando o
+    vértice a $(h,k)$.
+16. Porque o domínio é o conjunto das **entradas** aceitas. Refletir no eixo
+    vertical troca $x$ por $-x$, ou seja, mexe na entrada: o que era aceito à
+    direita passa a ser aceito à esquerda, como em $\sqrt{-x}$. Refletir no eixo
+    horizontal troca o sinal da **saída**, depois de a função já ter aceitado a
+    entrada — quais valores entram não muda.
+
+</details>
+
+## 14. Revisão curta
+
+- Conhecendo uma curva básica, conhece-se toda a família obtida por
+  **translação**, **dilatação** e **reflexão** dela.
+- **Fora dos parênteses**: age na saída, efeito **vertical**, sentido esperado.
+  **Dentro dos parênteses**: age na entrada, efeito **horizontal**, sentido
+  **invertido**.
+- $f(x-k)$ move para a **direita**; $f(x+k)$, para a esquerda. Para não errar,
+  veja onde o parêntese se anula.
+- $a \cdot f(x)$ estica ($a>1$) ou achata ($0<a<1$) na vertical, **sem mover as
+  raízes**.
+- $-f(x)$ reflete no eixo horizontal; $f(-x)$, no vertical.
+- Translações e reflexões **horizontais** arrastam o **domínio** junto; as
+  verticais não.
+- Combinando várias, aplique **de dentro para fora**.
+- A forma canônica $a(x-h)^2+k$ é a parábola básica transformada — o caso
+  particular que esta página generaliza.
+
+Antes de avançar, verifique se você consegue esboçar $\sqrt{x-2}+1$ sem calcular
+nenhum ponto. A próxima página estreia a primeira família nova desde a parábola,
+e ela é feita de dois pedaços de reta colados.

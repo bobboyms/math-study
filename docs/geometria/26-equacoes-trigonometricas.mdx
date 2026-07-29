@@ -1,0 +1,601 @@
+---
+title: Equações trigonométricas
+---
+
+import UnitCircle from '@site/src/components/UnitCircle';
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Equações trigonométricas: quando o ângulo é a incógnita
+
+## 1. Problema motivador: a cabine da roda-gigante
+
+Uma roda-gigante tem 40 metros de diâmetro, com o eixo a 25 metros do chão, e
+completa uma volta a cada 2 minutos. Uma cabine parte do ponto mais baixo.
+
+A altura da cabine, $t$ minutos após a partida, é
+
+$$
+h(t) = 25 - 20\cos(\pi t).
+$$
+
+**Conferindo a fórmula**: em $t = 0$, $\cos 0 = 1$ e $h = 25 - 20 = 5$ metros —
+o ponto mais baixo, cinco metros do chão. Em $t = 1$, meia volta,
+$\cos \pi = -1$ e $h = 45$ metros, o topo. Em $t = 2$, a volta se completa e a
+altura volta a 5.
+
+O operador precisa saber: **em que instantes a cabine está a exatamente 35
+metros?**
+
+Isso é resolver
+
+$$
+25 - 20\cos(\pi t) = 35
+\quad\Longrightarrow\quad
+\cos(\pi t) = -\frac12.
+$$
+
+E aqui aparece algo que nenhuma equação anterior tinha. A incógnita está
+**dentro de uma função trigonométrica**, e essas funções são **periódicas**:
+elas repetem os mesmos valores infinitas vezes.
+
+A consequência é imediata: a cabine passa pelos 35 metros **duas vezes por
+volta** — subindo e descendo —, e a roda dá voltas indefinidamente. A resposta
+não é um número nem dois: é uma **família infinita** de instantes.
+
+Esta página mostra como encontrar todos.
+
+## 2. Mapa das ideias
+
+- uma **equação trigonométrica** tem a incógnita dentro de seno, cosseno ou
+  tangente;
+- por serem **periódicas**, essas equações têm infinitas soluções — ou nenhuma;
+- resolve-se em duas etapas: achar as soluções **num período** e depois
+  **generalizar**;
+- o **ciclo trigonométrico** mostra quantas soluções há por volta e onde estão.
+
+## 3. Para que serve
+
+- prever instantes em fenômenos cíclicos: marés, roda-gigante, pêndulo, corrente
+  alternada;
+- calcular horários de nascer e pôr do sol ao longo do ano;
+- determinar ângulos a partir de razões, em construção e topografia;
+- e, dentro da matemática, é o que permite achar máximos, cruzamentos e zeros
+  das funções trigonométricas.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. Do [ciclo trigonométrico](./ciclo-trigonometrico): o que são seno e cosseno
+de um ângulo?** As **coordenadas** do ponto correspondente na circunferência de
+raio 1: o cosseno é a abscissa e o seno é a ordenada. Daí
+$-1 \le \sen\theta \le 1$ e $-1 \le \cos\theta \le 1$.
+
+**2. Da [redução ao primeiro quadrante](./reducao-ao-primeiro-quadrante): como
+se acha o ângulo de referência?** O módulo vem da referência no primeiro
+quadrante; o sinal vem do quadrante. Se $\cos\theta = -\frac12$, a referência é
+o ângulo cujo cosseno vale $\frac12$, ou seja, $\frac{\pi}{3}$.
+
+**3. Dos [ângulos notáveis](./angulos-notaveis): qual ângulo tem seno
+$\frac12$?** $\frac{\pi}{6}$, ou 30°. E $\cos\frac{\pi}{3} = \frac12$,
+$\tg\frac{\pi}{4} = 1$.
+
+**4. Das [funções inversas](./funcoes-trigonometricas-inversas): o que $\arccos$
+devolve?** Um ângulo, e **apenas um** — o do intervalo $[0, \pi]$. Foi preciso
+restringir o domínio do cosseno para que a inversa existisse, e essa restrição é
+justamente o que faz $\arccos$ devolver **uma** solução quando a equação tem
+infinitas.
+
+O item 4 explica a estrutura da página: a calculadora devolve **uma** solução, e
+cabe a nós reconstruir as demais.
+
+## 5. Intuição: uma reta horizontal cortando a onda
+
+Resolver $\sen x = \frac12$ é achar onde a curva do seno atinge a altura
+$\frac12$. Graficamente, é traçar a reta $y = \frac12$ e marcar os cruzamentos.
+
+<CartesianPlane
+  xMin={-0.4}
+  xMax={13.2}
+  yMin={-1.5}
+  yMax={1.5}
+  xUnit={30}
+  yUnit={64}
+  xTicks={[
+    {at: 0, label: '0'},
+    {at: Math.PI, label: '\\pi'},
+    {at: 2 * Math.PI, label: '2\\pi'},
+    {at: 3 * Math.PI, label: '3\\pi'},
+    {at: 4 * Math.PI, label: '4\\pi'},
+  ]}
+  yStep={0.5}
+  functions={[
+    {f: (x) => Math.sin(x), domain: [-0.3, 13], tone: 1},
+    {f: () => 0.5, domain: [-0.3, 13], tone: 2, dashed: true},
+  ]}
+  points={[
+    {at: [Math.PI / 6, 0.5], tone: 3},
+    {at: [(5 * Math.PI) / 6, 0.5], tone: 3},
+    {at: [Math.PI / 6 + 2 * Math.PI, 0.5], tone: 3},
+    {at: [(5 * Math.PI) / 6 + 2 * Math.PI, 0.5], tone: 3},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A reta y = 1/2 corta a onda do seno duas vezes por período, e o padrão se repete indefinidamente."
+/>
+
+O desenho mostra tudo o que precisamos saber.
+
+**Há dois cruzamentos por período**, e não um. Um na subida da onda, outro na
+descida.
+
+**O padrão se repete a cada $2\pi$.** Achados os dois do primeiro período, todos
+os demais saem somando múltiplos de $2\pi$.
+
+**E há alturas sem cruzamento nenhum.** Uma reta em $y = 2$ passaria acima da
+onda inteira, e a equação $\sen x = 2$ não teria solução.
+
+> Toda equação trigonométrica tem **infinitas** soluções ou **nenhuma**. Nunca
+> uma quantidade finita — a periodicidade não permite.
+
+O procedimento decorre disso:
+
+> 1. isole a função trigonométrica;
+> 2. **verifique se o valor é possível** — seno e cosseno vivem em $[-1, 1]$;
+> 3. ache as soluções **em um período**, usando ângulos notáveis ou a inversa;
+> 4. **generalize**, somando os múltiplos do período.
+
+## 6. Quantas soluções por volta, e onde
+
+O ciclo trigonométrico responde ao passo 3 de forma visual. Resolver
+$\sen x = \frac12$ é procurar os pontos do ciclo cuja **ordenada** vale
+$\frac12$ — ou seja, os cruzamentos da circunferência com uma reta horizontal.
+
+<UnitCircle
+  angles={[
+    {deg: 30, label: '\\frac{\\pi}{6}', tone: 1, showProjections: true},
+    {deg: 150, label: '\\frac{5\\pi}{6}', tone: 2, showProjections: true},
+  ]}
+  quadrants
+  caption="Os dois ângulos com seno 1/2: um no primeiro quadrante e outro no segundo. As alturas são iguais; as abscissas, opostas."
+/>
+
+Há **dois** pontos, simétricos em relação ao eixo vertical: $\frac{\pi}{6}$ e
+$\frac{5\pi}{6}$. Isso não é acidente — é a simetria que a redução ao primeiro
+quadrante já descrevia.
+
+As três funções seguem padrões próprios:
+
+| Equação | Soluções por volta | Onde |
+|---|---|---|
+| $\sen x = a$, com $-1 < a < 1$ | duas | simétricas em relação ao **eixo vertical** |
+| $\cos x = a$, com $-1 < a < 1$ | duas | simétricas em relação ao **eixo horizontal** |
+| $\tg x = a$ | **uma** por meia-volta | separadas por $\pi$ |
+
+A tangente é diferente porque seu período é $\pi$, e não $2\pi$ — ela repete a
+cada meia volta, como o gráfico da tangente mostrou.
+
+E os casos extremos: $\sen x = 1$ tem **uma** solução por volta
+($\frac{\pi}{2}$), porque a reta tangencia o topo da onda em vez de cortá-la. O
+mesmo para $\sen x = -1$, $\cos x = 1$ e $\cos x = -1$.
+
+## 7. A solução geral
+
+Achadas as soluções de um período, todas as outras saem somando voltas inteiras.
+
+> Com $\alpha$ uma solução conhecida e $k$ um inteiro qualquer:
+>
+> - $\sen x = a$: &nbsp; $x = \alpha + 2k\pi$ &nbsp; ou &nbsp;
+>   $x = \pi - \alpha + 2k\pi$;
+> - $\cos x = a$: &nbsp; $x = \alpha + 2k\pi$ &nbsp; ou &nbsp;
+>   $x = -\alpha + 2k\pi$;
+> - $\tg x = a$: &nbsp; $x = \alpha + k\pi$.
+
+O $k$ percorre **todos** os inteiros — positivos, negativos e zero —, o que
+produz as infinitas soluções.
+
+Repare em de onde vem cada segunda família. No seno, a outra solução é
+$\pi - \alpha$, a reflexão no eixo vertical. No cosseno, é $-\alpha$, a reflexão
+no eixo horizontal. São exatamente as simetrias da tabela anterior.
+
+**Exemplo.** Para $\sen x = \frac12$, com $\alpha = \frac{\pi}{6}$:
+
+$$
+x = \frac{\pi}{6} + 2k\pi
+\qquad\text{ou}\qquad
+x = \frac{5\pi}{6} + 2k\pi.
+$$
+
+**Conferindo com $k = 1$**: $\frac{\pi}{6} + 2\pi = \frac{13\pi}{6}$, e
+$\sen\frac{13\pi}{6} = \sen\frac{\pi}{6} = \frac12$. Confere — é o terceiro
+ponto marcado no gráfico da seção 5.
+
+## 8. Resolvendo o problema da roda-gigante
+
+A equação era
+
+$$
+\cos(\pi t) = -\frac12.
+$$
+
+**Passo 2 — o valor é possível?** Sim: $-\frac12$ está em $[-1,1]$.
+
+**Passo 3 — soluções num período.** Chamando $u = \pi t$, procuramos os ângulos
+com cosseno $-\frac12$. A referência é $\frac{\pi}{3}$, cujo cosseno é
+$+\frac12$; o cosseno é negativo no **segundo e terceiro quadrantes**, então
+
+$$
+u = \frac{2\pi}{3} \qquad\text{ou}\qquad u = \frac{4\pi}{3}.
+$$
+
+**Passo 4 — generalizar e voltar a $t$.** Como $u = \pi t$:
+
+$$
+\pi t = \frac{2\pi}{3} + 2k\pi
+\quad\Longrightarrow\quad
+t = \frac{2}{3} + 2k,
+$$
+$$
+\pi t = \frac{4\pi}{3} + 2k\pi
+\quad\Longrightarrow\quad
+t = \frac{4}{3} + 2k.
+$$
+
+**A cabine está a 35 metros nos instantes $t = \frac23 + 2k$ e
+$t = \frac43 + 2k$ minutos**, com $k$ inteiro não negativo.
+
+Na primeira volta: aos **40 segundos** ($\frac23$ de minuto), subindo, e aos **1
+min 20 s** ($\frac43$), descendo. Depois o padrão se repete a cada 2 minutos,
+que é o período da roda.
+
+**Conferindo**:
+$h\!\left(\frac23\right) = 25 - 20\cos\frac{2\pi}{3} = 25 - 20\left(-\frac12\right) = 35$.
+Confere.
+
+Repare que o resultado é fisicamente sensato: duas passagens por volta, uma na
+subida e outra na descida, simétricas em relação ao topo — que ocorre em
+$t = 1$, bem no meio entre $\frac23$ e $\frac43$.
+
+## 9. Exemplos resolvidos
+
+### Exemplo 1: num intervalo dado
+
+Resolva $\cos x = \frac{\sqrt3}{2}$ em $[0, 2\pi]$.
+
+O ângulo notável com cosseno $\frac{\sqrt3}{2}$ é $\frac{\pi}{6}$. O cosseno é
+positivo no **primeiro e quarto** quadrantes, então a outra solução é
+$2\pi - \frac{\pi}{6} = \frac{11\pi}{6}$.
+
+$$
+x = \frac{\pi}{6} \qquad\text{ou}\qquad x = \frac{11\pi}{6}.
+$$
+
+**Conferindo**:
+$\cos\frac{11\pi}{6} = \cos\left(-\frac{\pi}{6}\right) = \frac{\sqrt3}{2}$.
+Confere.
+
+### Exemplo 2: tangente
+
+*Pause e tente antes de ler.* Resolva $\tg x = 1$ em $[0, 2\pi]$, e dê a solução
+geral.
+
+O ângulo notável é $\frac{\pi}{4}$. Como o período da tangente é $\pi$, a outra
+solução do intervalo é $\frac{\pi}{4} + \pi = \frac{5\pi}{4}$.
+
+No intervalo: $x = \frac{\pi}{4}$ ou $x = \frac{5\pi}{4}$.
+
+Solução geral: $x = \frac{\pi}{4} + k\pi$ — uma família só, porque a tangente
+repete a cada meia volta.
+
+**Conferindo**: $\tg\frac{5\pi}{4} = \tg\frac{\pi}{4} = 1$, já que os dois
+ângulos diferem de $\pi$.
+
+### Exemplo 3: valor negativo
+
+*Pause e tente.* Resolva $2\sen x + 1 = 0$ em $[0, 2\pi]$.
+
+Isolando: $\sen x = -\frac12$.
+
+A referência é $\frac{\pi}{6}$, cujo seno é $+\frac12$. O seno é negativo no
+**terceiro e quarto** quadrantes:
+
+$$
+x = \pi + \frac{\pi}{6} = \frac{7\pi}{6}
+\qquad\text{ou}\qquad
+x = 2\pi - \frac{\pi}{6} = \frac{11\pi}{6}.
+$$
+
+**Conferindo**: $\sen\frac{7\pi}{6} = -\frac12$ e
+$\sen\frac{11\pi}{6} = -\frac12$. Confere.
+
+Repare no método: **a referência sai do valor absoluto, e o quadrante sai do
+sinal** — exatamente a regra da página de redução ao primeiro quadrante.
+
+### Exemplo 4: quando não há solução
+
+*Pause e tente.* Resolva $\sen x = 2$.
+
+**Não tem solução.** O seno é a ordenada de um ponto da circunferência de raio
+1, e portanto nunca passa de 1. Nenhum ângulo tem seno 2.
+
+Isso se vê sem conta nenhuma, e é por isso que o passo 2 do procedimento existe:
+verificar a possibilidade **antes** de procurar ângulos poupa trabalho inútil.
+
+O mesmo vale para $\cos x = -1{,}5$ ou $\sen x = 3$. Já $\tg x = 100$ **tem**
+solução, porque a tangente não é limitada.
+
+### Exemplo 5: reduzir a uma equação do 2º grau
+
+*Pause e tente.* Resolva $2\sen^2 x - \sen x - 1 = 0$ em $[0, 2\pi]$.
+
+A equação é do 2º grau **no seno**. Chame $u = \sen x$:
+
+$$
+2u^2 - u - 1 = 0.
+$$
+
+Fatorando — dois números de produto $2 \times (-1) = -2$ e soma $-1$ são $-2$ e
+$1$ —, obtemos $(2u + 1)(u - 1) = 0$, logo
+
+$$
+u = 1 \qquad\text{ou}\qquad u = -\frac12.
+$$
+
+Agora resolvemos cada uma como equação trigonométrica.
+
+**$\sen x = 1$**: caso extremo, uma solução por volta — $x = \frac{\pi}{2}$.
+
+**$\sen x = -\frac12$**: pelo Exemplo 3, $x = \frac{7\pi}{6}$ ou
+$x = \frac{11\pi}{6}$.
+
+Três soluções em $[0, 2\pi]$: $\frac{\pi}{2}$, $\frac{7\pi}{6}$ e
+$\frac{11\pi}{6}$.
+
+**Conferindo em $x = \frac{7\pi}{6}$**: $\sen x = -\frac12$, e
+$2\left(\frac14\right) - \left(-\frac12\right) - 1 = \frac12 + \frac12 - 1 = 0$.
+Confere.
+
+A substituição $u = \sen x$ é o movimento-chave: ela transforma uma equação
+trigonométrica em algébrica, resolve, e devolve o resultado ao mundo dos
+ângulos.
+
+### Exemplo 6: quando o argumento não é $x$
+
+*Pause e tente.* Resolva $\sen(2x) = \frac12$ em $[0, 2\pi]$.
+
+Chame $u = 2x$. Como $x$ percorre $[0, 2\pi]$, o $u$ percorre $[0, 4\pi]$ —
+**dois** períodos, e portanto o dobro de soluções.
+
+Em $[0, 4\pi]$, os ângulos com seno $\frac12$ são
+
+$$
+u = \frac{\pi}{6}, \quad \frac{5\pi}{6}, \quad
+\frac{\pi}{6} + 2\pi = \frac{13\pi}{6}, \quad
+\frac{5\pi}{6} + 2\pi = \frac{17\pi}{6}.
+$$
+
+Dividindo por 2 para voltar a $x$:
+
+$$
+x = \frac{\pi}{12}, \quad \frac{5\pi}{12}, \quad \frac{13\pi}{12}, \quad
+\frac{17\pi}{12}.
+$$
+
+**Quatro** soluções. O erro clássico aqui é achar as duas de $u$ e dividir por
+2, esquecendo que o intervalo de $u$ dobrou — o que perderia metade das
+respostas.
+
+## 10. Erros comuns
+
+> **Erro 1: dar só uma solução.** A calculadora devolve **um** ângulo, porque
+> $\arcsen$ e $\arccos$ foram definidos assim. Há sempre outra no período — e
+> infinitas fora dele.
+
+> **Erro 2: esquecer de generalizar.** Se o enunciado não limita o intervalo, a
+> resposta precisa do $+2k\pi$ (ou $+k\pi$, na tangente). Sem ele, a resposta
+> está incompleta.
+
+> **Erro 3: não verificar se o valor é possível.** $\sen x = 2$ não tem solução,
+> e procurar ângulos é perder tempo. Seno e cosseno vivem em $[-1,1]$.
+
+> **Erro 4: usar $2k\pi$ para a tangente.** O período da tangente é $\pi$, então
+> a generalização é $+k\pi$. Usar $2k\pi$ perde metade das soluções.
+
+> **Erro 5: dividir o intervalo em vez de multiplicá-lo.** Em $\sen(2x) = a$ com
+> $x \in [0,2\pi]$, o argumento percorre $[0,4\pi]$ — **dois** períodos, e o
+> dobro de soluções.
+
+> **Erro 6: perder o sinal ao reduzir.** A referência vem do **valor absoluto**;
+> o quadrante vem do **sinal**. Achar a referência e esquecer de escolher o
+> quadrante certo dá a resposta do outro lado do ciclo.
+
+## 11. Perguntas de verificação
+
+1. Por que uma equação trigonométrica tem infinitas soluções ou nenhuma?
+2. Por que $\sen x = \frac12$ tem duas soluções por período, e não uma?
+3. Por que $\sen x = 1$ tem apenas uma solução por período?
+4. Por que a tangente se generaliza com $k\pi$ e o seno com $2k\pi$?
+5. Por que a calculadora devolve só uma solução?
+6. Por que $\sen x = 2$ não tem solução?
+7. Em $\sen(2x) = a$, por que aparecem mais soluções que em $\sen x = a$?
+8. No problema da roda-gigante, por que os dois instantes são simétricos em
+   relação a $t = 1$?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque seno, cosseno e tangente são **periódicas**: repetem os mesmos valores
+   indefinidamente. Se um ângulo é solução, todos os que diferem dele por um
+   período também são — daí as infinitas. E se o valor procurado está fora da
+   imagem da função, nenhum ângulo serve.
+2. Porque a reta horizontal na altura $\frac12$ **corta** a onda duas vezes por
+   período: uma na subida e outra na descida. No ciclo, são os dois pontos da
+   circunferência com a mesma ordenada, simétricos em relação ao eixo vertical.
+3. Porque a altura 1 é o **máximo** do seno, e ali a reta **tangencia** a onda
+   em vez de cortá-la. O ponto de subida e o de descida coincidem no topo.
+4. Porque os períodos são diferentes. O seno e o cosseno repetem a cada $2\pi$;
+   a tangente repete a cada $\pi$, como o gráfico dela mostra. A generalização
+   usa o período da função em questão.
+5. Porque $\arcsen$ e $\arccos$ são **funções**, e função devolve uma saída só.
+   Para que a inversa existisse, foi preciso restringir o domínio do seno e do
+   cosseno a um trecho em que eles não repetem valores — e a calculadora devolve
+   o ângulo desse trecho. As demais soluções ficam por nossa conta.
+6. Porque o seno é a **ordenada** de um ponto da circunferência de raio 1, e
+   nenhuma ordenada dessa circunferência passa de 1. O valor 2 está fora da
+   imagem da função.
+7. Porque, enquanto $x$ percorre um intervalo, o argumento $2x$ percorre um
+   intervalo **duas vezes maior** — e portanto atravessa o dobro de períodos.
+   Cada período contribui com o mesmo número de soluções, então o total dobra.
+8. Porque o topo da roda ocorre em $t = 1$, e a subida e a descida são
+   simétricas em relação a ele. A altura de 35 metros é atingida uma vez antes
+   do topo e uma vez depois, à mesma distância — em $\frac23$ e em $\frac43$,
+   ambos a $\frac13$ de minuto do topo.
+
+</details>
+
+## 12. Exercícios
+
+### 1. Reconhecimento
+
+1. Diga quantas soluções cada equação tem em $[0, 2\pi]$, sem resolver: a)
+   $\sen x = \frac{\sqrt2}{2}$ &nbsp; b) $\cos x = 1$ &nbsp; c) $\tg x = 3$
+   &nbsp; d) $\cos x = 4$
+2. Qual é o ângulo de referência para: a) $\sen x = \frac12$ &nbsp; b)
+   $\cos x = -\frac{\sqrt3}{2}$ &nbsp; c) $\tg x = 1$
+3. Escreva a solução geral de $\sen x = 0$.
+
+### 2. Explicação
+
+4. Explique por que uma equação trigonométrica nunca tem exatamente três
+   soluções no total.
+5. Explique por que a calculadora devolve apenas um ângulo.
+6. Explique por que a generalização da tangente usa $k\pi$ e não $2k\pi$.
+
+### 3. Aplicação direta
+
+7. Resolva em $[0, 2\pi]$: a) $\sen x = \frac12$ &nbsp; b)
+   $\cos x = \frac{\sqrt3}{2}$ &nbsp; c) $\tg x = 1$ &nbsp; d)
+   $\cos x = -\frac12$
+8. Dê a solução geral de cada item do exercício 7.
+9. Resolva $2\sen x + 1 = 0$ em $[0, 2\pi]$.
+
+### 4. Variação
+
+10. Resolva $2\sen^2 x - \sen x - 1 = 0$ em $[0, 2\pi]$.
+11. Resolva $\sen(2x) = \frac12$ em $[0, 2\pi]$.
+12. Resolva $2\cos^2 x - 1 = 0$ em $[0, 2\pi]$.
+
+<details>
+<summary>Dica para o 12</summary>
+
+Isole o $\cos^2 x$ e extraia a raiz — lembrando que a equação $u^2 = k$ tem
+**duas** soluções, uma positiva e outra negativa. Cada uma delas gera as suas
+próprias soluções trigonométricas.
+
+</details>
+
+### 5. Problema misto
+
+13. A roda-gigante do início tem $h(t) = 25 - 20\cos(\pi t)$, com $t$ em
+    minutos. a) Em que instantes a cabine está a 45 metros? b) E a 15 metros? c)
+    Em que instantes ela está exatamente na altura do eixo?
+14. A altura da maré num porto é $h(t) = 3 + 2\sen\left(\frac{\pi t}{6}\right)$
+    metros, com $t$ em horas a partir da meia-noite. a) Qual é o período, e o
+    que ele significa? b) Em que instantes a maré atinge 4 metros? c) Um barco
+    precisa de pelo menos 4 metros para passar. Descreva as janelas de passagem.
+
+### 6. Justificativa
+
+15. Explique por que a segunda solução de $\sen x = a$ é $\pi - \alpha$, e a
+    segunda de $\cos x = a$ é $-\alpha$, usando as simetrias do ciclo.
+16. Mostre que $\tg x = a$ tem exatamente uma solução em cada intervalo de
+    comprimento $\pi$, qualquer que seja $a$.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) **duas** &nbsp; b) **uma** — é o máximo do cosseno, atingido só em $x = 0$
+   (e em $2\pi$, que é o mesmo ponto do ciclo) &nbsp; c) **duas**, separadas por
+   $\pi$ &nbsp; d) **nenhuma**, porque 4 está fora de $[-1,1]$.
+2. a) $\frac{\pi}{6}$ &nbsp; b) $\frac{\pi}{6}$, pois
+   $\cos\frac{\pi}{6} = \frac{\sqrt3}{2}$ &nbsp; c) $\frac{\pi}{4}$.
+3. $x = k\pi$. O seno se anula em $0$, $\pi$, $2\pi$ e assim por diante — de
+   meia em meia volta.
+4. Porque a periodicidade garante que, existindo uma solução, existem infinitas:
+   basta somar múltiplos do período. Um número finito de soluções só seria
+   possível se a função não repetisse valores, o que contradiz a periodicidade.
+   (Num **intervalo limitado**, é claro, três soluções são perfeitamente
+   possíveis.)
+5. Porque $\arcsen$ e $\arccos$ são funções, e uma função devolve **uma** saída
+   por entrada. Para que existissem, o domínio do seno e do cosseno teve de ser
+   restrito a um trecho sem repetição, e é o ângulo desse trecho que a
+   calculadora entrega.
+6. Porque o período da tangente é $\pi$: ela repete os mesmos valores a cada
+   meia volta, e não a cada volta inteira. Usar $2k\pi$ pularia metade das
+   soluções.
+7. a) $\frac{\pi}{6}$ e $\frac{5\pi}{6}$ &nbsp; b) $\frac{\pi}{6}$ e
+   $\frac{11\pi}{6}$ &nbsp; c) $\frac{\pi}{4}$ e $\frac{5\pi}{4}$ &nbsp; d)
+   $\frac{2\pi}{3}$ e $\frac{4\pi}{3}$.
+8. a) $x = \frac{\pi}{6} + 2k\pi$ ou $x = \frac{5\pi}{6} + 2k\pi$ &nbsp; b)
+   $x = \pm\frac{\pi}{6} + 2k\pi$ &nbsp; c) $x = \frac{\pi}{4} + k\pi$ &nbsp; d)
+   $x = \pm\frac{2\pi}{3} + 2k\pi$.
+9. $\sen x = -\frac12$, com referência $\frac{\pi}{6}$ e seno negativo no
+   terceiro e quarto quadrantes: $x = \frac{7\pi}{6}$ ou $x = \frac{11\pi}{6}$.
+10. Com $u = \sen x$: $2u^2 - u - 1 = (2u+1)(u-1) = 0$, logo $u = 1$ ou
+    $u = -\frac12$. De $\sen x = 1$ vem $x = \frac{\pi}{2}$; de
+    $\sen x = -\frac12$ vêm $\frac{7\pi}{6}$ e $\frac{11\pi}{6}$. Três soluções.
+11. Com $u = 2x$ percorrendo $[0, 4\pi]$: $u = \frac{\pi}{6}$, $\frac{5\pi}{6}$,
+    $\frac{13\pi}{6}$, $\frac{17\pi}{6}$. Dividindo por 2:
+    $x = \frac{\pi}{12}, \frac{5\pi}{12}, \frac{13\pi}{12}, \frac{17\pi}{12}$.
+12. $\cos^2 x = \frac12$, logo $\cos x = \pm\frac{\sqrt2}{2}$. De
+    $\cos x = \frac{\sqrt2}{2}$ vêm $\frac{\pi}{4}$ e $\frac{7\pi}{4}$; de
+    $\cos x = -\frac{\sqrt2}{2}$ vêm $\frac{3\pi}{4}$ e $\frac{5\pi}{4}$. Quatro
+    soluções, igualmente espaçadas.
+13. a) 45 m é o **máximo**, atingido quando $\cos(\pi t) = -1$, ou seja,
+    $\pi t = \pi + 2k\pi$ e $t = 1 + 2k$ minutos. &nbsp; b)
+    $25 - 20\cos(\pi t) = 15$ dá $\cos(\pi t) = \frac12$, logo
+    $\pi t = \pm\frac{\pi}{3} + 2k\pi$ e $t = \frac13 + 2k$ ou
+    $t = \frac53 + 2k$ minutos. &nbsp; c) A altura do eixo é 25 m, o que exige
+    $\cos(\pi t) = 0$, isto é, $\pi t = \frac{\pi}{2} + k\pi$ e
+    $t = \frac12 + k$ minutos.
+14. a) O período é $\frac{2\pi}{\pi/6} = 12$ horas — a maré completa um ciclo a
+    cada 12 horas. &nbsp; b) $3 + 2\sen\left(\frac{\pi t}{6}\right) = 4$ dá
+    $\sen\left(\frac{\pi t}{6}\right) = \frac12$, logo
+    $\frac{\pi t}{6} = \frac{\pi}{6}$ ou $\frac{5\pi}{6}$ (mais voltas), o que
+    dá $t = 1$ h ou $t = 5$ h, repetindo a cada 12 horas: 1h, 5h, 13h e 17h.
+    &nbsp; c) A maré fica **acima** de 4 m entre esses instantes, ou seja, das
+    1h às 5h e das 13h às 17h — duas janelas de quatro horas por dia.
+15. No ciclo, dois pontos têm a mesma **ordenada** quando são simétricos em
+    relação ao eixo vertical, e o simétrico de $\alpha$ nesse eixo é
+    $\pi - \alpha$ — daí a segunda solução do seno. Dois pontos têm a mesma
+    **abscissa** quando são simétricos em relação ao eixo horizontal, e o
+    simétrico de $\alpha$ ali é $-\alpha$ — daí a do cosseno.
+16. Em cada intervalo de comprimento $\pi$, a tangente é **contínua e sempre
+    crescente**, indo de valores arbitrariamente negativos a arbitrariamente
+    positivos. Sendo crescente, ela nunca repete um valor dentro do intervalo —
+    o que garante **no máximo** uma solução; e sendo contínua e cobrindo todos
+    os reais, ela atinge qualquer $a$ — o que garante **pelo menos** uma. Logo,
+    exatamente uma.
+
+</details>
+
+## 13. Revisão curta
+
+- Numa **equação trigonométrica**, a incógnita está dentro de seno, cosseno ou
+  tangente — e, por periodicidade, ela tem **infinitas soluções ou nenhuma**.
+- O procedimento é: isolar a função, **verificar se o valor é possível**, achar
+  as soluções de um período e **generalizar**.
+- Seno e cosseno só assumem valores em $[-1, 1]$; a tangente assume qualquer
+  valor real.
+- Há **duas** soluções por volta para seno e cosseno (uma só nos extremos
+  $\pm1$) e **uma por meia volta** para a tangente.
+- A **referência** vem do valor absoluto; o **quadrante**, do sinal.
+- Generalização: $+2k\pi$ para seno e cosseno; $+k\pi$ para a tangente.
+- A segunda solução é $\pi - \alpha$ no seno e $-\alpha$ no cosseno — as
+  simetrias do ciclo.
+- A calculadora devolve **uma** solução, porque as inversas foram definidas com
+  domínio restrito. As demais ficam por sua conta.
+- Equações do 2º grau em $\sen x$ se resolvem substituindo $u = \sen x$.
+- Quando o argumento é $2x$, o intervalo percorrido **dobra**, e o número de
+  soluções também.
+
+Com esta página o capítulo de geometria e trigonometria fica completo: você já
+sabe medir, localizar, relacionar ângulo e comprimento, descrever curvas
+periódicas e **resolver** as equações que elas produzem.

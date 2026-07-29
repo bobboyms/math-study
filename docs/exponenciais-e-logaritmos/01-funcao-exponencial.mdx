@@ -1,0 +1,531 @@
+---
+title: Função exponencial
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Função exponencial: quando o acréscimo depende do que já existe
+
+## 1. Problema motivador: dois investimentos de R\$ 1.000
+
+Duas aplicações prometem render sobre um depósito inicial de R\$ 1.000.
+
+- A **primeira** paga R\$ 100 por ano, sempre o mesmo valor.
+- A **segunda** paga **10% ao ano** — e os juros de cada ano passam a render
+  também nos anos seguintes.
+
+No primeiro ano, as duas pagam exatamente R\$ 100, e um investidor apressado
+concluiria que dá no mesmo. Veja o que acontece com o tempo:
+
+| Ano | Primeira | Segunda |
+|---:|---:|---:|
+| 0 | R\$ 1.000,00 | R\$ 1.000,00 |
+| 1 | R\$ 1.100,00 | R\$ 1.100,00 |
+| 2 | R\$ 1.200,00 | R\$ 1.210,00 |
+| 3 | R\$ 1.300,00 | R\$ 1.331,00 |
+| 5 | R\$ 1.500,00 | R\$ 1.610,51 |
+| 10 | R\$ 2.000,00 | R\$ 2.593,74 |
+| 20 | R\$ 3.000,00 | R\$ 6.727,50 |
+
+Em vinte anos, a segunda aplicação rende **mais que o dobro** da primeira. E a
+distância não para de crescer.
+
+A primeira coluna já sabemos descrever: acréscimo constante, função afim,
+gráfico reto. A segunda é outra coisa — o acréscimo **muda a cada ano**, porque
+depende do saldo acumulado. Nenhuma família de funções vista até aqui produz
+esse comportamento.
+
+Esta página constrói a fórmula da segunda coluna e mostra por que ela ultrapassa
+qualquer polinômio.
+
+## 2. Mapa das ideias
+
+- uma **função exponencial** tem a variável **no expoente**:
+  $f(x) = a \cdot b^x$;
+- a **base** $b$ é o fator de multiplicação por período;
+- o crescimento é **multiplicativo**: cada passo **multiplica** o valor
+  anterior, em vez de somar;
+- com $b > 1$ a função **cresce**; com $0 < b < 1$ ela **decresce**.
+
+Por exemplo, a segunda aplicação é $M(t) = 1000 \cdot 1{,}1^t$: a cada ano o
+saldo é multiplicado por 1,1.
+
+## 3. Para que serve
+
+- juros compostos, inflação acumulada e correção monetária;
+- crescimento de uma população, de uma audiência ou de uma epidemia;
+- valorização e depreciação de bens;
+- multiplicação de células, de bactérias, de dados armazenados;
+- e, do outro lado, decaimento — assunto da próxima página.
+
+Dentro da matemática, esta é a família que **nenhuma operação polinomial
+produz**, e a que cresce mais rápido que todas elas. Reconhecê-la é o que separa
+um modelo correto de um errado.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [potências](../numeros-e-operacoes/potencias): o que $2^5$ significa, e
+quanto vale $2^0$?** $2^5$ é o 2 usado cinco vezes como fator: 32. E $2^0 = 1$ —
+não por capricho, mas porque dividir $2^1$ por $2^1$ dá 1 e, pela regra dos
+expoentes, dá $2^0$.
+
+**2. Da mesma página: qual é a regra do produto de potências de mesma base?**
+$a^m \cdot a^n = a^{m+n}$: **somar expoentes corresponde a multiplicar
+potências**. Guarde essa frase — ela é o motivo de tudo nesta página.
+
+**3. De [expoentes fracionários](../numeros-e-operacoes/expoentes-fracionarios):
+o que é $2^{1/2}$?** É $\sqrt{2}$. É isso que permite ao expoente assumir
+valores não inteiros, e portanto à exponencial ser uma **curva contínua**, e não
+uma sequência de pontos.
+
+**4. De [funções](../funcoes/funcoes): o que caracteriza uma função afim?** Taxa
+de variação **constante** — o mesmo acréscimo por passo. É exatamente o que a
+exponencial não tem.
+
+O item 2 é a ponte central: como somar no expoente vira multiplicar no valor,
+uma função com a variável no expoente cresce **multiplicando**.
+
+## 5. Intuição: somar ou multiplicar a cada passo
+
+Compare as duas colunas do motivador olhando não para os valores, mas para o que
+acontece **de uma linha para a outra**.
+
+Na primeira aplicação, cada ano **soma** R\$ 100. A diferença entre linhas
+consecutivas é sempre 100.
+
+Na segunda, cada ano **multiplica** o saldo por 1,1. A **razão** entre linhas
+consecutivas é sempre 1,1:
+
+$$
+\frac{1100}{1000} = 1{,}1, \qquad
+\frac{1210}{1100} = 1{,}1, \qquad
+\frac{1331}{1210} = 1{,}1.
+$$
+
+> **Função afim**: a **diferença** entre valores consecutivos é constante.
+> **Função exponencial**: a **razão** entre valores consecutivos é constante.
+
+Esse é o teste prático para reconhecer qual modelo se aplica a uma tabela de
+dados: calcule as diferenças; se não forem constantes, calcule as razões.
+
+E há uma leitura que explica o comportamento. Na segunda aplicação, os juros de
+cada ano incidem sobre um saldo que **já inclui** os juros anteriores. O
+acréscimo é proporcional ao que existe, e como o que existe cresce, o acréscimo
+cresce junto.
+
+$$
+\text{acréscimo do ano 1} = 100, \qquad
+\text{acréscimo do ano 10} = 2593{,}74 - 2357{,}95 \approx 236.
+$$
+
+Na primeira aplicação, o acréscimo do ano 10 é os mesmos R\$ 100 do ano 1.
+
+## 6. Formalização
+
+> Uma **função exponencial** é toda função da forma
+> $$
+> f(x) = a \cdot b^x,
+> $$
+> com $a \neq 0$, $b > 0$ e $b \neq 1$. O número $b$ é a **base** e $a$ é o
+> **valor inicial**, pois $f(0) = a \cdot b^0 = a$.
+
+**Exemplo.** $M(t) = 1000 \cdot 1{,}1^t$ descreve a segunda aplicação:
+$a = 1000$ é o depósito, e $b = 1{,}1$ é o fator anual.
+
+Repare de onde vem o 1,1. Render 10% significa ficar com **110%** do que se
+tinha, ou seja, multiplicar por $1 + 0{,}10 = 1{,}1$. A base de uma taxa $i$ é
+sempre $1 + i$.
+
+**Contraexemplo, para delimitar.** As restrições sobre a base não são
+decorativas:
+
+- se $b = 1$, então $1^x = 1$ sempre, e a função é **constante** — não há
+  crescimento nenhum;
+- se $b < 0$, a função nem existe direito. Com $b = -4$, o valor $(-4)^{1/2}$
+  seria $\sqrt{-4}$, que não é real. A curva teria buracos por toda parte;
+- se $b = 0$, temos $0^x = 0$ para $x > 0$ e nada definido para $x \le 0$.
+
+E é essencial não confundir com potência: em $x^2$ a variável é a **base**; em
+$2^x$ ela é o **expoente**. São famílias diferentes, com comportamentos
+diferentes.
+
+## 7. Modelo visual: a curva e a reta
+
+<CartesianPlane
+  xMin={-1}
+  xMax={21}
+  yMin={-300}
+  yMax={7200}
+  xUnit={19}
+  yUnit={0.031}
+  xStep={5}
+  yStep={1000}
+  functions={[
+    {f: (t) => 1000 * Math.pow(1.1, t), domain: [0, 20], tone: 1},
+    {f: (t) => 1000 + 100 * t, domain: [0, 20], tone: 2},
+  ]}
+  points={[
+    {at: [20, 6727.5], label: '6.727', tone: 1, place: 'above-left'},
+    {at: [20, 3000], label: '3.000', tone: 2, place: 'below-right'},
+  ]}
+  axisLabels={['t', 'M']}
+  caption="Em azul, os juros compostos; em laranja, o acréscimo fixo. Nos primeiros anos quase se confundem; em vinte anos, a diferença passa de R$ 3.700."
+/>
+
+O desenho mostra o que a tabela sugeria: as duas curvas **partem juntas** e se
+separam devagar, até que a distância explode.
+
+Isso tem uma consequência prática desagradável. Olhando só os primeiros anos —
+que é o que quase todo mundo faz —, a diferença entre os dois investimentos
+parece irrelevante. A vantagem do juro composto **não aparece cedo**; ela
+aparece tarde, e de uma vez.
+
+Três propriedades se leem no gráfico e valem para qualquer exponencial com
+$b > 1$:
+
+- ela é **sempre positiva**, nunca cruza o eixo horizontal;
+- ela é **crescente** em todo o domínio;
+- ela tem **assíntota horizontal** $y = 0$ para $x$ muito negativo.
+
+A primeira merece atenção: $b^x$ nunca vale zero, por menor que seja $x$. Com
+$x = -10$ e $b = 2$, temos $2^{-10} = \frac{1}{1024}$ — pequeno, mas positivo.
+Isso vale para todo $x$, e é por isso que a curva se aproxima do eixo sem
+tocá-lo.
+
+## 8. A exponencial vence qualquer polinômio
+
+Compare $2^x$ com $x^{10}$, um polinômio de grau alto:
+
+| $x$ | $x^{10}$ | $2^x$ |
+|---:|---:|---:|
+| 10 | 10 000 000 000 | 1 024 |
+| 30 | $5{,}9 \times 10^{14}$ | $1{,}1 \times 10^{9}$ |
+| 60 | $6{,}0 \times 10^{17}$ | $1{,}2 \times 10^{18}$ |
+| 100 | $10^{20}$ | $1{,}3 \times 10^{30}$ |
+
+Em $x = 10$ o polinômio é dez milhões de vezes maior. Em $x = 60$ eles se
+cruzam. Em $x = 100$ a exponencial é **dez bilhões de vezes** maior.
+
+> Para $x$ suficientemente grande, **toda** função exponencial de base maior que
+> 1 ultrapassa **qualquer** polinômio, por maior que seja o grau.
+
+O motivo está na estrutura. Um polinômio, ao dobrar a entrada, multiplica a
+saída por um fator **fixo** — de $x^{10}$ para $(2x)^{10}$ o fator é
+$2^{10} = 1024$, sempre. Já a exponencial, ao **somar** um valor fixo à entrada,
+multiplica a saída por um fator fixo. Somar é muito mais barato que dobrar, e
+por isso a exponencial acumula multiplicações em ritmo incomparavelmente maior.
+
+É por isso que crescimento exponencial surpreende: ele parece modesto por muito
+tempo, e depois passa por cima de tudo.
+
+## 9. Exemplos resolvidos
+
+### Exemplo 1: montar a fórmula
+
+Um investimento de R\$ 5.000 rende 8% ao ano. Escreva a fórmula do saldo e
+calcule para 3 anos.
+
+Render 8% é multiplicar por $1{,}08$ a cada ano, então
+
+$$
+M(t) = 5000 \cdot 1{,}08^t.
+$$
+
+Para 3 anos: $5000 \times 1{,}08^3 = 5000 \times 1{,}259712 = 6298{,}56$ reais.
+
+**Conferindo ano a ano**: $5000 \to 5400 \to 5832 \to 6298{,}56$. Confere.
+
+### Exemplo 2: reconhecer o modelo
+
+*Pause e tente antes de ler.* Qual destas tabelas é exponencial?
+
+| $x$ | 0 | 1 | 2 | 3 |
+|---|---:|---:|---:|---:|
+| $f(x)$ | 3 | 7 | 11 | 15 |
+| $g(x)$ | 3 | 6 | 12 | 24 |
+
+Em $f$, as **diferenças** são 4, 4, 4 — constantes. É **afim**: $f(x) = 4x + 3$.
+
+Em $g$, as diferenças são 3, 6, 12 — não constantes. Mas as **razões** são
+$\frac63 = 2$, $\frac{12}{6} = 2$, $\frac{24}{12} = 2$ — constantes. É
+**exponencial**, de base 2 e valor inicial 3:
+
+$$
+g(x) = 3 \cdot 2^x.
+$$
+
+**Conferindo em $x = 3$**: $3 \times 8 = 24$. Confere.
+
+### Exemplo 3: a base a partir de uma taxa
+
+*Pause e tente.* Uma cidade tem 200 mil habitantes e cresce 3% ao ano. Qual a
+população em 10 anos? E em 50?
+
+Base $1{,}03$, valor inicial 200 mil:
+
+$$
+P(t) = 200 \cdot 1{,}03^t \ \text{(em milhares)}.
+$$
+
+Em 10 anos: $200 \times 1{,}03^{10} = 200 \times 1{,}3439 \approx 269$ mil.
+
+Em 50 anos: $200 \times 1{,}03^{50} = 200 \times 4{,}3839 \approx 877$ mil.
+
+Repare no salto: dobrar o prazo de 10 para 20 anos não dobra o crescimento, e
+cinquenta anos a 3% mais que quadruplicam a população. **Taxas pequenas em
+prazos longos produzem números grandes** — o efeito que a coluna de juros
+compostos já mostrava.
+
+### Exemplo 4: valor inicial e base a partir de dois pontos
+
+*Pause e tente.* Uma exponencial vale 12 em $x = 0$ e 48 em $x = 2$. Encontre a
+fórmula.
+
+Como $f(0) = a$, temos $a = 12$. Substituindo o segundo ponto:
+
+$$
+12 \cdot b^2 = 48 \quad\Longrightarrow\quad b^2 = 4 \quad\Longrightarrow\quad
+b = 2.
+$$
+
+Tomamos a raiz positiva porque a base de uma exponencial precisa ser positiva.
+
+$$
+f(x) = 12 \cdot 2^x.
+$$
+
+**Conferindo em $x = 2$**: $12 \times 4 = 48$. Confere. E em $x = 1$ a função
+vale 24, o meio geométrico entre 12 e 48 — não a média aritmética 30. Numa
+exponencial, o meio é multiplicativo.
+
+### Exemplo 5: expoente negativo
+
+*Pause e tente.* Quanto valia o investimento $M(t) = 1000 \cdot 1{,}1^t$ dois
+anos **antes** do depósito, segundo a fórmula?
+
+Basta usar $t = -2$:
+
+$$
+M(-2) = 1000 \cdot 1{,}1^{-2} = \frac{1000}{1{,}1^2} = \frac{1000}{1{,}21}
+\approx 826{,}45.
+$$
+
+Faz sentido: R\$ 826,45 rendendo 10% ao ano por dois anos chegam a R\$ 1.000.
+**Conferindo**: $826{,}45 \times 1{,}1 = 909{,}10$, e
+$909{,}10 \times 1{,}1 = 1000{,}01$. Confere, a menos de arredondamento.
+
+Expoentes negativos são o que fazem a curva continuar para a esquerda — sempre
+positiva, cada vez mais próxima de zero.
+
+## 10. Erros comuns
+
+> **Erro 1: confundir $x^2$ com $2^x$.** Na potência, a variável é a **base**;
+> na exponencial, o **expoente**. Em $x = 10$: $x^2 = 100$ e $2^x = 1024$. São
+> famílias diferentes.
+
+> **Erro 2: usar a taxa como base.** Render 10% ao ano dá base $1{,}1$, e não
+> $0{,}1$. Multiplicar por 0,1 seria **perder** 90% ao ano.
+
+> **Erro 3: tratar crescimento percentual como afim.** “Cresce 3% ao ano” não é
+> “cresce 6 mil por ano”. O acréscimo muda porque a base sobre a qual ele incide
+> muda.
+
+> **Erro 4: achar que a exponencial pode valer zero.** $b^x$ é sempre positivo,
+> por mais negativo que seja $x$. Ela se aproxima do eixo sem tocá-lo.
+
+> **Erro 5: subestimar o efeito de prazos longos.** A vantagem do crescimento
+> multiplicativo quase não aparece nos primeiros períodos, e aparece de uma vez
+> nos últimos. Comparar dois modelos só no começo leva à conclusão errada.
+
+> **Erro 6: calcular o valor intermediário pela média.** Entre 12 e 48 numa
+> exponencial, o valor do meio é 24 — o meio **multiplicativo** —, e não 30.
+
+## 11. Perguntas de verificação
+
+1. Que teste distingue uma tabela afim de uma exponencial?
+2. Por que o acréscimo dos juros compostos cresce a cada ano?
+3. Por que render 10% corresponde a base 1,1?
+4. Por que a base não pode ser negativa?
+5. Por que a base não pode ser 1?
+6. Por que a exponencial nunca vale zero?
+7. Por que $2^x$ acaba ultrapassando $x^{10}$, mesmo começando muito menor?
+8. Por que a vantagem do juro composto quase não se nota nos primeiros anos?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Calcular o que acontece entre valores consecutivos. Se a **diferença** é
+   constante, é afim; se a **razão** é constante, é exponencial. Em 3, 6, 12, 24
+   as diferenças variam mas as razões são todas 2.
+2. Porque os juros incidem sobre o saldo, que já inclui os juros dos anos
+   anteriores. Como o saldo cresce, 10% dele também cresce — o acréscimo é
+   proporcional ao que já existe.
+3. Porque render 10% significa ficar com o que se tinha **mais** 10% dele, ou
+   seja, com 110% do valor. E 110% é o mesmo que multiplicar por 1,1. Em geral,
+   a base de uma taxa $i$ é $1 + i$.
+4. Porque expoentes fracionários produziriam raízes de números negativos. Com
+   base $-4$, o valor em $x = \frac12$ seria $\sqrt{-4}$, que não existe nos
+   reais. A curva teria buracos em toda parte e não seria uma função contínua.
+5. Porque $1^x = 1$ para qualquer $x$, e a função seria constante. Não haveria
+   crescimento nem decrescimento — o caso é excluído por não descrever nada de
+   interessante.
+6. Porque uma potência de base positiva é sempre positiva, qualquer que seja o
+   expoente. Expoentes muito negativos produzem valores muito pequenos, como
+   $2^{-10} = \frac{1}{1024}$, mas nunca zero. Daí a assíntota horizontal.
+7. Porque os dois crescem de maneiras estruturalmente diferentes. No polinômio,
+   **dobrar** a entrada multiplica a saída por um fator fixo. Na exponencial,
+   basta **somar** um valor fixo à entrada para multiplicar a saída por um fator
+   fixo. Como somar é muito mais barato que dobrar, a exponencial acumula
+   multiplicações em ritmo incomparavelmente maior.
+8. Porque no início o saldo é pequeno, e uma porcentagem de um valor pequeno é
+   pouco. A diferença entre os dois modelos depende do acúmulo, e o acúmulo leva
+   tempo — a vantagem existe desde o primeiro dia, mas só fica visível depois de
+   muitos períodos.
+
+</details>
+
+## 12. Exercícios
+
+### 1. Reconhecimento
+
+1. Classifique cada função como exponencial, polinomial ou nenhuma: a)
+   $f(x) = 3^x$ &nbsp; b) $g(x) = x^3$ &nbsp; c) $h(x) = 5 \cdot 2^x$ &nbsp; d)
+   $p(x) = 2x + 7$
+2. Dê a base correspondente a cada taxa anual: a) render 5% &nbsp; b) render 12%
+   &nbsp; c) render 100%
+3. Diga qual tabela é afim e qual é exponencial:
+
+   | $x$ | 0 | 1 | 2 | 3 |
+   |---|---:|---:|---:|---:|
+   | $f(x)$ | 3 | 7 | 11 | 15 |
+   | $g(x)$ | 3 | 6 | 12 | 24 |
+
+### 2. Explicação
+
+4. Explique por que “crescer 3% ao ano” não é a mesma coisa que “crescer um
+   valor fixo por ano”.
+5. Explique por que a base de uma exponencial não pode ser negativa.
+6. Um colega diz que $2^x$ e $x^2$ são a mesma coisa escrita de outro jeito.
+   Refute com valores.
+
+### 3. Aplicação direta
+
+7. Um investimento de R\$ 5.000 rende 8% ao ano. Escreva $M(t)$ e calcule para
+   $t = 1$, $t = 3$ e $t = 10$.
+8. Escreva a fórmula da exponencial que vale 12 em $x = 0$ e 48 em $x = 2$.
+9. Calcule, para $f(x) = 1000 \cdot 1{,}1^x$: $f(0)$, $f(2)$ e $f(-2)$.
+
+### 4. Variação
+
+10. Uma cidade de 200 mil habitantes cresce 3% ao ano. Calcule a população em
+    10, 20 e 50 anos.
+11. Uma exponencial vale 5 em $x = 1$ e 45 em $x = 3$. Encontre a base e o valor
+    inicial.
+12. Compare $2^x$ e $x^3$ em $x = 2$, $x = 5$ e $x = 12$. A partir de qual dos
+    três a exponencial já venceu?
+
+<details>
+<summary>Dica para o 11</summary>
+
+Divida um valor pelo outro. O valor inicial se cancela e sobra uma equação só
+com a base — e o expoente que sobra é a diferença entre as duas entradas.
+
+</details>
+
+### 5. Problema misto
+
+13. Duas aplicações de R\$ 1.000: a primeira paga R\$ 120 fixos por ano; a
+    segunda rende 10% ao ano. a) Escreva as duas fórmulas. b) Calcule os saldos
+    em 5, 10 e 20 anos. c) Em qual prazo a segunda passa a ser melhor? d)
+    Explique por que a comparação em 5 anos leva à conclusão errada.
+14. Um equipamento de R\$ 40.000 se desvaloriza 15% ao ano. a) Qual é a base? b)
+    Escreva $V(t)$ e calcule o valor em 3 anos. c) O equipamento chega a valer
+    zero em algum momento? Justifique.
+
+### 6. Justificativa
+
+15. Mostre que, em $f(x) = a \cdot b^x$, a razão $\frac{f(x+1)}{f(x)}$ é sempre
+    $b$, qualquer que seja $x$. Que propriedade das potências você usou?
+16. Explique por que uma exponencial de base maior que 1 acaba ultrapassando
+    qualquer polinômio, usando a diferença entre “somar” e “dobrar” a entrada.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) exponencial &nbsp; b) polinomial &nbsp; c) exponencial &nbsp; d)
+   polinomial (afim).
+2. a) $1{,}05$ &nbsp; b) $1{,}12$ &nbsp; c) $2$ — render 100% é dobrar.
+3. $f$ é **afim**: as diferenças são todas 4, e a fórmula é $4x + 3$. $g$ é
+   **exponencial**: as razões são todas 2, e a fórmula é $3 \cdot 2^x$.
+4. Porque 3% incide sobre o valor atual, que muda a cada ano. Numa população de
+   200 mil, 3% são 6 mil; numa de 400 mil, são 12 mil. O acréscimo cresce junto
+   com a quantidade, enquanto um valor fixo é sempre o mesmo.
+5. Porque a exponencial precisa aceitar expoentes fracionários, e uma base
+   negativa produziria raízes de números negativos — $(-4)^{1/2} = \sqrt{-4}$
+   não existe nos reais. A função teria buracos e deixaria de ser uma curva.
+6. Em $x = 2$ os dois valem 4, o que pode enganar. Mas em $x = 3$: $2^3 = 8$ e
+   $3^2 = 9$; e em $x = 10$: $2^{10} = 1024$ contra $10^2 = 100$. São funções
+   diferentes — numa a variável é o expoente, na outra é a base.
+7. $M(t) = 5000 \cdot 1{,}08^t$. Assim, $M(1) = 5400$;
+   $M(3) = 5000 \times 1{,}259712 \approx 6298{,}56$;
+   $M(10) = 5000 \times 2{,}158925 \approx 10\,794{,}62$ reais.
+8. $a = f(0) = 12$; de $12b^2 = 48$ vem $b^2 = 4$ e $b = 2$. Logo
+   $f(x) = 12 \cdot 2^x$.
+9. $f(0) = 1000$; $f(2) = 1210$; $f(-2) = \frac{1000}{1{,}21} \approx 826{,}45$.
+10. $P(10) = 200 \times 1{,}3439 \approx 269$ mil;
+    $P(20) = 200 \times 1{,}8061 \approx 361$ mil;
+    $P(50) = 200 \times 4{,}3839 \approx 877$ mil.
+11. Dividindo $\frac{f(3)}{f(1)} = \frac{45}{5} = 9$. Como
+    $\frac{ab^3}{ab^1} = b^2$, temos $b^2 = 9$ e $b = 3$. E de $ab = 5$ vem
+    $a = \frac53$. A fórmula é $f(x) = \frac53 \cdot 3^x$. Conferindo em
+    $x = 3$: $\frac53 \times 27 = 45$.
+12. Em $x = 2$: $2^2 = 4$ e $2^3 = 8$ — o polinômio ganha. Em $x = 5$: $32$
+    contra $125$ — o polinômio ainda ganha. Em $x = 12$: $4096$ contra $1728$ —
+    **a exponencial já venceu**. A virada ocorre entre 5 e 12, e depois dela a
+    exponencial nunca mais é alcançada.
+13. a) $A(t) = 1000 + 120t$ e $B(t) = 1000 \cdot 1{,}1^t$. &nbsp; b) Em 5 anos:
+    1.600 e 1.610,51. Em 10: 2.200 e 2.593,74. Em 20: 3.400 e 6.727,50. &nbsp;
+    c) A segunda já é melhor em 5 anos, por uma margem pequena — e a partir daí
+    a vantagem só cresce. &nbsp; d) Porque em 5 anos a diferença é de apenas R\$
+    10, o que parece irrelevante e sugere empate. A vantagem do crescimento
+    multiplicativo depende do acúmulo, e olhar só o começo esconde exatamente o
+    que ele tem de diferente.
+14. a) Perder 15% é ficar com 85%, então a base é $0{,}85$. &nbsp; b)
+    $V(t) = 40000 \cdot 0{,}85^t$, e $V(3) = 40000 \times 0{,}614125 = 24\,565$
+    reais. &nbsp; c) **Não.** Uma exponencial de base positiva nunca vale zero:
+    o valor fica cada vez menor, aproximando-se de zero sem alcançá-lo. Na
+    prática o equipamento é sucateado antes, mas o modelo nunca zera.
+15. $\frac{f(x+1)}{f(x)} = \frac{a \cdot b^{x+1}}{a \cdot b^x} = b^{x+1-x} = b^1 = b$.
+    Foi usada a regra do quociente de potências de mesma base,
+    $\frac{a^m}{a^n} = a^{m-n}$. Isso mostra que a razão entre valores
+    consecutivos é constante, que é a definição prática de crescimento
+    exponencial.
+16. Num polinômio de grau $n$, para multiplicar a saída por um fator fixo é
+    preciso **dobrar** (ou multiplicar) a entrada — de $x^n$ para $(2x)^n$ o
+    ganho é $2^n$. Numa exponencial, basta **somar** um valor fixo à entrada
+    para multiplicar a saída pelo mesmo fator. Como somar avança muito mais
+    rápido que dobrar ao longo do eixo, a exponencial acumula multiplicações em
+    ritmo incomparavelmente maior, e acaba ultrapassando qualquer grau.
+
+</details>
+
+## 13. Revisão curta
+
+- Uma **função exponencial** tem a variável **no expoente**:
+  $f(x) = a \cdot b^x$, com $b > 0$ e $b \neq 1$.
+- $a$ é o **valor inicial**, pois $f(0) = a$; $b$ é o **fator por período**.
+- A base de uma taxa $i$ é $1 + i$: render 10% dá base 1,1; perder 15% dá 0,85.
+- **Afim**: a **diferença** entre valores consecutivos é constante.
+  **Exponencial**: a **razão** é constante. É assim que se reconhece uma tabela.
+- O crescimento é **multiplicativo**: o acréscimo é proporcional ao que já
+  existe, e por isso aumenta a cada período.
+- A exponencial é **sempre positiva** e tem **assíntota horizontal** $y = 0$.
+- Com $b > 1$ ela cresce; com $0 < b < 1$, decresce.
+- Para $x$ grande, **qualquer** exponencial de base maior que 1 ultrapassa
+  **qualquer** polinômio.
+- A vantagem do crescimento multiplicativo aparece **tarde** — comparar dois
+  modelos só no início leva à conclusão errada.
+
+Antes de avançar, verifique se você consegue reconhecer, numa tabela, se o
+padrão é aditivo ou multiplicativo. A próxima página estuda o que muda quando a
+base é **menor que 1** — e apresenta a base mais importante de todas.

@@ -1,0 +1,512 @@
+---
+title: Decaimento e o número e
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Decaimento e o número $e$
+
+## 1. Problema motivador: quanto do remédio ainda está no sangue
+
+Um analgésico tem **meia-vida de 6 horas**: a cada 6 horas, o organismo elimina
+metade do que restava na corrente sanguínea.
+
+Uma pessoa toma uma dose às 8h da manhã. Quanto ainda circula às 20h? E no dia
+seguinte, na hora da próxima dose?
+
+O padrão é claro, e é multiplicativo — só que agora **para baixo**:
+
+| Horas depois | Fração restante |
+|---:|---:|
+| 0 | 100% |
+| 6 | 50% |
+| 12 | 25% |
+| 18 | 12,5% |
+| 24 | 6,25% |
+
+Às 20h, doze horas depois, resta um quarto da dose.
+
+Repare no que **não** acontece: a quantidade nunca chega a zero. A cada período
+some metade do que havia, e metade de algo positivo continua positivo. O remédio
+fica cada vez mais diluído e nunca desaparece por completo — pelo menos segundo
+o modelo.
+
+Falta uma pergunta que a tabela não responde: e às **9 horas**, que não é
+múltiplo de 6? A resposta exige escrever a regra como função, com expoente
+fracionário. É o primeiro assunto desta página.
+
+O segundo é uma constante que aparece quando se leva o juro composto ao limite —
+e que se torna a base preferida de toda a matemática a partir daqui.
+
+## 2. Mapa das ideias
+
+- com base **entre 0 e 1**, a exponencial **decresce**: é o **decaimento**;
+- a **meia-vida** é o tempo para restar metade, e leva à fórmula
+  $M(t) = M_0 \cdot \left(\frac12\right)^{t/h}$;
+- o **número $e$** $\approx 2{,}71828$ surge de capitalizar juros em intervalos
+  cada vez menores;
+- $e$ é a base padrão da matemática, e $e^x$ é chamada **a** função exponencial.
+
+## 3. Para que serve
+
+- meia-vida de medicamentos, dosagem e intervalo entre doses;
+- datação por carbono-14 e decaimento radioativo;
+- resfriamento de um corpo, descarga de um capacitor, atenuação de um sinal;
+- depreciação de bens e queda de audiência;
+- e, com o número $e$: qualquer modelo de crescimento ou decaimento
+  **contínuo**, que é como a física e a economia escrevem quase tudo.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [função exponencial](./funcao-exponencial): o que a base representa?** O
+fator de multiplicação por período. Base 1,1 multiplica por 1,1 a cada passo.
+
+**2. De [potências](../numeros-e-operacoes/potencias): quanto vale
+$\left(\frac12\right)^3$?** $\frac18$. Uma base entre 0 e 1 elevada a expoentes
+crescentes produz valores cada vez menores.
+
+**3. De [expoentes fracionários](../numeros-e-operacoes/expoentes-fracionarios):
+o que é $2^{1/2}$?** $\sqrt2 \approx 1{,}414$. É o que permite calcular a fração
+restante em instantes que não são múltiplos da meia-vida.
+
+**4. De [funções racionais](../funcoes/funcoes-racionais): o que é uma assíntota
+horizontal?** Uma altura da qual a curva se aproxima sem alcançar. O decaimento
+tem uma em $y = 0$.
+
+## 5. Decaimento: base entre 0 e 1
+
+Uma base menor que 1 encolhe o valor a cada passo. Com $b = \frac12$, cada
+período corta o valor pela metade; com $b = 0{,}85$, cada período tira 15%.
+
+> Com $0 < b < 1$, a função $f(x) = a \cdot b^x$ é **decrescente**. Ela continua
+> sempre positiva e tem assíntota horizontal $y = 0$.
+
+Repare que a regra de traduzir taxa em base é a mesma: perder 15% é ficar com
+85%, ou seja, base $0{,}85 = 1 - 0{,}15$.
+
+E há uma relação elegante entre crescimento e decaimento. Como
+$\left(\frac12\right)^t = 2^{-t}$, decair pela metade é o mesmo que crescer por
+2 com o tempo andando **para trás**. No gráfico, uma curva é a reflexão da outra
+no eixo vertical — a transformação $f(-x)$ da página 5.6.
+
+## 6. A fórmula da meia-vida
+
+O remédio perde metade a cada 6 horas. Se contássemos o tempo **em
+meias-vidas**, a fórmula seria simplesmente $\left(\frac12\right)^n$, com $n$ o
+número de períodos.
+
+O tempo, porém, vem em horas. Então converte-se: em $t$ horas cabem
+$\frac{t}{6}$ meias-vidas.
+
+> Com meia-vida $h$ e quantidade inicial $M_0$:
+> $$
+> M(t) = M_0 \cdot \left(\frac{1}{2}\right)^{t/h}.
+> $$
+
+**Conferindo nos pontos da tabela.** Em $t = 12$:
+$\left(\frac12\right)^{12/6} = \left(\frac12\right)^2 = \frac14$ — 25%, como
+esperado. Em $t = 18$: expoente 3, dando $\frac18$ — 12,5%.
+
+E agora a pergunta que a tabela não respondia. Em $t = 9$ horas:
+
+$$
+M(9) = 100 \cdot \left(\frac12\right)^{9/6}
+= 100 \cdot \left(\frac12\right)^{1{,}5}
+= 100 \cdot \frac{1}{2\sqrt2}
+\approx 35{,}4\%.
+$$
+
+Entre os 50% das 6 horas e os 25% das 12 — e **mais perto de 25 que a média
+sugeriria**, porque a queda é multiplicativa, não linear. A média aritmética
+daria 37,5%.
+
+<CartesianPlane
+  xMin={-1}
+  xMax={26}
+  yMin={-8}
+  yMax={110}
+  xUnit={20}
+  yUnit={2.4}
+  xStep={6}
+  yStep={25}
+  functions={[{f: (t) => 100 * Math.pow(0.5, t / 6), domain: [0, 25], tone: 1}]}
+  points={[
+    {at: [6, 50], label: '50\\%', tone: 2, place: 'above-right'},
+    {at: [12, 25], label: '25\\%', tone: 2, place: 'above-right'},
+    {at: [18, 12.5], label: '12{,}5\\%', tone: 2, place: 'above-right'},
+  ]}
+  axisLabels={['t', 'M']}
+  caption="Decaimento com meia-vida de 6 horas. A cada 6 horas a quantidade cai pela metade, e a curva se aproxima do eixo sem tocá-lo."
+/>
+
+O gráfico mostra a propriedade que define a meia-vida: **o tempo para cair pela
+metade é sempre o mesmo**, não importa de onde se comece. De 100% a 50% leva 6
+horas; de 50% a 25%, mais 6; de 12,5% a 6,25%, mais 6. Isso não vale para uma
+queda linear, em que o tempo para perder metade dependeria do ponto de partida.
+
+## 7. O número $e$
+
+Volte ao juro composto. Um banco oferece **100% ao ano** sobre R\$ 1,00 —
+generoso, mas serve para o argumento. Ao fim de um ano, o cliente tem R\$ 2,00.
+
+Agora suponha que o banco pague **50% a cada semestre**, capitalizando duas
+vezes:
+
+$$
+1 \cdot (1 + \tfrac12)^2 = 1{,}5^2 = 2{,}25.
+$$
+
+Rende mais — porque os juros do primeiro semestre passam a render no segundo.
+
+E se capitalizasse todo mês, a $\frac{100\%}{12}$ ao mês?
+
+$$
+\left(1 + \tfrac{1}{12}\right)^{12} \approx 2{,}6130.
+$$
+
+Mais ainda. A pergunta natural é: **capitalizando cada vez mais vezes, o valor
+cresce sem limite?**
+
+| Capitalizações por ano | $(1 + \frac1n)^n$ |
+|---:|---:|
+| 1 (anual) | 2,000000 |
+| 2 (semestral) | 2,250000 |
+| 12 (mensal) | 2,613035 |
+| 365 (diária) | 2,714567 |
+| 8 760 (horária) | 2,718127 |
+| 1 000 000 | 2,718280 |
+
+**Não cresce sem limite.** Os valores se acumulam num número perto de 2,71828, e
+por mais que se aumente $n$ eles não passam disso.
+
+> O **número $e$** é o valor de que $\left(1 + \frac1n\right)^n$ se aproxima
+> quando $n$ cresce indefinidamente:
+> $$
+> e \approx 2{,}718281828\ldots
+> $$
+> Ele é irracional, como $\pi$: a expansão decimal não termina nem se repete.
+
+O que essa tabela mostra é que existe um **teto** para o ganho de capitalizar
+mais vezes. Passar de anual para mensal acrescenta bastante; de diária para
+horária, quase nada. Capitalizar “a cada instante” — o chamado **juro contínuo**
+— multiplica o capital por $e$ ao ano, e não por mais que isso.
+
+### Por que essa base, e não outra
+
+À primeira vista, escolher 2,71828 como base parece arbitrário. Duas razões o
+justificam.
+
+A primeira é a que acabamos de ver: $e$ é a base do **crescimento contínuo**.
+Sempre que uma grandeza cresce a uma taxa proporcional a si mesma **a cada
+instante** — e não em saltos periódicos —, a fórmula é $e^{kt}$. Populações,
+temperaturas e decaimentos físicos funcionam assim, porque não esperam o fim do
+mês para variar.
+
+A segunda só se explica no cálculo, mas vale anunciar: entre todas as
+exponenciais, $e^x$ é a única cuja **taxa de variação em cada ponto é igual ao
+próprio valor da função**. Nenhuma outra base tem essa propriedade, e é ela que
+faz $e$ aparecer em praticamente toda fórmula de cálculo.
+
+Por isso $e^x$ é chamada simplesmente de **a função exponencial**, e a notação
+$\exp(x)$ também é comum.
+
+Vale registrar que $e$ é apenas um número entre 2 e 3 — nada de místico. Como
+$2 < e < 3$, a curva de $e^x$ fica entre $2^x$ e $3^x$, e tem exatamente as
+mesmas propriedades de qualquer exponencial de base maior que 1.
+
+## 8. Exemplos resolvidos
+
+### Exemplo 1: fração restante
+
+Um medicamento tem meia-vida de 4 horas. Que fração da dose resta após 10 horas?
+
+$$
+M(10) = \left(\frac12\right)^{10/4} = \left(\frac12\right)^{2{,}5} \approx
+0{,}1768,
+$$
+
+ou seja, cerca de **17,7%**.
+
+**Conferindo pelos vizinhos**: em 8 horas restam 25%, e em 12 horas, 12,5%. O
+valor em 10 horas está entre os dois, e mais perto de 12,5 que a média — como a
+queda multiplicativa exige.
+
+### Exemplo 2: depreciação
+
+*Pause e tente antes de ler.* Um carro de R\$ 60.000 perde 20% do valor por ano.
+Escreva a fórmula e calcule o valor em 4 anos.
+
+Perder 20% é ficar com 80%, então a base é $0{,}80$:
+
+$$
+V(t) = 60000 \cdot 0{,}8^t.
+$$
+
+Em 4 anos: $60000 \times 0{,}8^4 = 60000 \times 0{,}4096 = 24\,576$ reais.
+
+Repare que perder 20% ao ano por 4 anos **não** é perder 80% — restaria zero. É
+perder cerca de 59%, porque cada corte incide sobre um valor já reduzido.
+
+### Exemplo 3: achar a meia-vida a partir de dados
+
+*Pause e tente.* Uma substância cai de 80 g para 20 g em 10 horas. Qual é a
+meia-vida?
+
+De 80 para 20, a quantidade caiu para $\frac{20}{80} = \frac14$ — ou seja,
+**duas** meias-vidas, porque $\frac12 \times \frac12 = \frac14$.
+
+Se duas meias-vidas cabem em 10 horas, cada uma dura **5 horas**.
+
+**Conferindo**: $80 \to 40$ em 5 h, $40 \to 20$ em mais 5 h. Confere.
+
+### Exemplo 4: o efeito de capitalizar mais vezes
+
+*Pause e tente.* Um investimento de R\$ 1.000 rende 12% ao ano. Compare o
+resultado com capitalização anual, mensal e contínua.
+
+**Anual**: $1000 \times 1{,}12 = 1120{,}00$.
+
+**Mensal**: a taxa mensal é $\frac{0{,}12}{12} = 0{,}01$, aplicada 12 vezes:
+
+$$
+1000 \times (1{,}01)^{12} = 1000 \times 1{,}126825 = 1126{,}83.
+$$
+
+**Contínua**: $1000 \times e^{0{,}12} = 1000 \times 1{,}127497 = 1127{,}50$.
+
+A diferença entre anual e mensal é de R\$ 6,83; entre mensal e contínua, de R\$
+0,67. **O ganho de capitalizar mais vezes tem um teto**, e a capitalização
+contínua é esse teto.
+
+### Exemplo 5: comparar crescimento e decaimento
+
+*Pause e tente.* Descreva as diferenças entre $f(x) = 2^x$ e
+$g(x) = \left(\frac12\right)^x$.
+
+Ambas valem 1 em $x = 0$, ambas são sempre positivas e ambas têm assíntota
+horizontal $y = 0$. Mas $f$ **cresce** e $g$ **decresce**.
+
+E há uma relação exata entre elas:
+
+$$
+\left(\frac12\right)^x = (2^{-1})^x = 2^{-x} = f(-x).
+$$
+
+Ou seja, $g$ é a **reflexão de $f$ no eixo vertical** — a transformação $f(-x)$
+da página 5.6. A assíntota de uma está à esquerda, e a da outra à direita.
+
+**Conferindo em $x = 3$**: $f(3) = 8$ e $g(3) = \frac18$; e $f(-3) = \frac18$
+também. Confere.
+
+## 9. Erros comuns
+
+> **Erro 1: achar que a quantidade chega a zero.** Metade de algo positivo é
+> positivo. A curva se aproxima do eixo sem tocá-lo — o modelo nunca zera,
+> embora na prática o valor se torne desprezível.
+
+> **Erro 2: somar as perdas percentuais.** Perder 20% ao ano por 4 anos não é
+> perder 80%. Cada corte incide sobre um valor já reduzido, e o total é cerca de
+> 59%.
+
+> **Erro 3: interpolar linearmente.** Entre 6 e 12 horas, com meia-vida de 6, o
+> valor em 9 horas **não** é a média entre 50% e 25%. É 35,4%, porque a queda é
+> multiplicativa.
+
+> **Erro 4: esquecer de dividir pelo período.** A fórmula é
+> $\left(\frac12\right)^{t/h}$, com $t$ e $h$ na **mesma unidade**. Usar $t$
+> direto no expoente só funciona se a meia-vida for 1.
+
+> **Erro 5: tratar $e$ como algo místico.** É um número entre 2 e 3, como $\pi$
+> é um número entre 3 e 4. A curva $e^x$ fica entre $2^x$ e $3^x$.
+
+> **Erro 6: achar que capitalizar mais vezes rende indefinidamente mais.**
+> Existe um teto, e ele é a capitalização contínua. De diária para horária, o
+> ganho já é quase nulo.
+
+## 10. Perguntas de verificação
+
+1. Por que uma base entre 0 e 1 produz decaimento?
+2. Por que a quantidade nunca chega a zero?
+3. Por que a fórmula da meia-vida tem $\frac{t}{h}$ no expoente?
+4. Por que perder 20% ao ano durante 4 anos não é perder 80%?
+5. De onde vem o número $e$?
+6. Por que capitalizar mais vezes tem um teto?
+7. Que relação existe entre $2^x$ e $\left(\frac12\right)^x$?
+8. Por que $e^x$ é chamada de “a” função exponencial?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque multiplicar por um número menor que 1 diminui o valor. Com base
+   $\frac12$, cada passo corta pela metade; com 0,85, cada passo tira 15%. O
+   mecanismo é o mesmo do crescimento, com fator de encolhimento no lugar do de
+   aumento.
+2. Porque metade de um número positivo continua positiva, por menor que ele
+   seja. Não existe um passo em que a quantidade “acabe”: ela apenas fica cada
+   vez menor, com assíntota horizontal em zero.
+3. Porque o expoente precisa contar **quantas meias-vidas** se passaram, e o
+   tempo é dado em horas. Dividindo o tempo decorrido pela duração de uma
+   meia-vida, obtém-se esse número — que pode ser fracionário.
+4. Porque cada perda incide sobre o valor **remanescente**, não sobre o
+   original. O primeiro ano tira 20% de 60 mil; o segundo tira 20% de 48 mil,
+   que é menos. Somar percentuais só funcionaria se a base fosse sempre a mesma.
+5. Do juro composto levado ao limite. Capitalizando 100% ao ano em $n$ parcelas,
+   o fator é $\left(1+\frac1n\right)^n$, e esses valores se acumulam perto de
+   2,71828 conforme $n$ cresce — sem nunca passar disso.
+6. Porque a vantagem de capitalizar mais vezes vem de os juros começarem a
+   render mais cedo, e esse ganho é cada vez menor quando os intervalos já são
+   curtos. De anual para mensal a diferença é sensível; de diária para horária,
+   é da ordem de centésimos. O limite desse processo é a capitalização contínua.
+7. Uma é a **reflexão da outra no eixo vertical**. Como
+   $\left(\frac12\right)^x = 2^{-x}$, a segunda é a primeira com $x$ trocado por
+   $-x$ — a transformação $f(-x)$. Onde uma cresce, a outra decresce, e as duas
+   valem 1 em $x = 0$.
+8. Porque ela é a base do crescimento **contínuo**, que é como quase todos os
+   fenômenos naturais variam, e porque é a única exponencial cuja taxa de
+   variação em cada ponto é igual ao próprio valor da função — propriedade que a
+   torna central em todo o cálculo.
+
+</details>
+
+## 11. Exercícios
+
+### 1. Reconhecimento
+
+1. Diga se cada função cresce ou decresce: a) $3^x$ &nbsp; b) $0{,}7^x$ &nbsp;
+   c) $\left(\frac32\right)^x$ &nbsp; d) $\left(\frac13\right)^x$
+2. Dê a base correspondente a cada perda anual: a) perder 10% &nbsp; b) perder
+   25% &nbsp; c) perder 50%
+3. Uma substância tem meia-vida de 8 horas. Que fração resta em 8, 16 e 24
+   horas?
+
+### 2. Explicação
+
+4. Explique por que a quantidade num decaimento nunca chega a zero.
+5. Explique por que perder 20% ao ano por 4 anos não é perder 80%.
+6. Explique de onde vem o número $e$, sem usar a palavra “limite”.
+
+### 3. Aplicação direta
+
+7. Um medicamento tem meia-vida de 4 horas. Calcule a fração restante em 4, 6 e
+   10 horas.
+8. Um carro de R\$ 60.000 perde 20% ao ano. Escreva $V(t)$ e calcule $V(1)$,
+   $V(4)$ e $V(10)$.
+9. Calcule $\left(1 + \frac1n\right)^n$ para $n = 1$, $n = 4$ e $n = 12$, e
+   compare com $e$.
+
+### 4. Variação
+
+10. Uma substância cai de 80 g para 20 g em 10 horas. Qual é a meia-vida?
+11. Um investimento de R\$ 1.000 a 12% ao ano: compare o montante ao fim de um
+    ano com capitalização anual, mensal e contínua.
+12. Mostre que $\left(\frac12\right)^x$ e $2^{-x}$ são a mesma função, e
+    explique o que isso significa no gráfico.
+
+<details>
+<summary>Dica para o 10</summary>
+
+Não tente resolver uma equação. Pergunte primeiro **quantas vezes** a quantidade
+foi dividida por 2 para ir de 80 até 20 — e depois reparta o tempo total por
+esse número.
+
+</details>
+
+### 5. Problema misto
+
+13. Uma dose de 500 mg de um remédio com meia-vida de 6 horas é tomada às 8h. a)
+    Escreva $M(t)$, com $t$ em horas. b) Quanto resta às 14h, às 20h e às 8h do
+    dia seguinte? c) Se a bula recomenda nova dose quando restar menos de 100
+    mg, a partir de que horário isso ocorre? (Estime pela tabela.)
+14. O carbono-14 tem meia-vida de aproximadamente 5.730 anos. a) Escreva a
+    fórmula da fração restante. b) Que fração resta em 11.460 anos? c) Um fóssil
+    tem 25% do carbono-14 original. Qual é a idade estimada?
+
+### 6. Justificativa
+
+15. Mostre que numa exponencial de base $\frac12$ o tempo para cair pela metade
+    é **sempre o mesmo**, independentemente do valor de partida.
+16. Explique por que a curva de $e^x$ fica entre as de $2^x$ e $3^x$, e o que
+    isso diz sobre o número $e$.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) cresce &nbsp; b) decresce &nbsp; c) cresce, pois $\frac32 > 1$ &nbsp; d)
+   decresce.
+2. a) $0{,}90$ &nbsp; b) $0{,}75$ &nbsp; c) $0{,}50$.
+3. Em 8 h resta 50%; em 16 h, 25%; em 24 h, 12,5%.
+4. Porque cada passo multiplica por um número positivo menor que 1, e o produto
+   de positivos é sempre positivo. Não há passo em que a quantidade se anule —
+   ela apenas fica cada vez menor, com assíntota horizontal em zero.
+5. Porque cada perda incide sobre o valor que **restou**, e não sobre o valor
+   original. Do primeiro para o segundo ano a base de cálculo já encolheu, então
+   os 20% seguintes valem menos em reais. O total acumulado é
+   $1 - 0{,}8^4 \approx 59\%$.
+6. De uma pergunta sobre juros: se um banco paga 100% ao ano e capitaliza em
+   parcelas cada vez mais frequentes, quanto se ganha? Anual dá 2; semestral,
+   2,25; mensal, 2,613; diária, 2,7146. Esses valores se acumulam perto de
+   2,71828 e não passam disso, por mais que se aumente a frequência. Esse teto é
+   o $e$.
+7. Em 4 h: 50%. Em 6 h: $\left(\frac12\right)^{1{,}5} \approx 35{,}4\%$. Em 10
+   h: $\left(\frac12\right)^{2{,}5} \approx 17{,}7\%$.
+8. $V(t) = 60000 \cdot 0{,}8^t$. Assim, $V(1) = 48\,000$;
+   $V(4) = 60000 \times 0{,}4096 = 24\,576$;
+   $V(10) = 60000 \times 0{,}1074 \approx 6\,442$ reais.
+9. $n=1$: 2. $n=4$: $1{,}25^4 = 2{,}4414$. $n=12$: $2{,}6130$. Todos abaixo de
+   $e \approx 2{,}7183$, e cada vez mais próximos.
+10. A quantidade caiu para $\frac{20}{80} = \frac14$, o que corresponde a
+    **duas** meias-vidas. Como as duas cabem em 10 horas, cada meia-vida dura
+    **5 horas**.
+11. Anual: R\$ 1.120,00. Mensal: $1000 \times 1{,}01^{12} = 1126{,}83$.
+    Contínua: $1000 \times e^{0{,}12} = 1127{,}50$. A diferença entre anual e
+    mensal é de R\$ 6,83; entre mensal e contínua, de apenas R\$ 0,67.
+12. Como $\frac12 = 2^{-1}$, temos
+    $\left(\frac12\right)^x = (2^{-1})^x = 2^{-x}$, pela regra da potência de
+    potência. No gráfico, isso significa que uma é a **reflexão da outra no eixo
+    vertical**: onde $2^x$ cresce, $2^{-x}$ decresce, e as duas valem 1 em
+    $x = 0$.
+13. a) $M(t) = 500 \cdot \left(\frac12\right)^{t/6}$ mg. &nbsp; b) Às 14h
+    ($t=6$): 250 mg. Às 20h ($t=12$): 125 mg. Às 8h do dia seguinte ($t=24$):
+    31,25 mg. &nbsp; c) Entre 20h e 2h da manhã: às 20h restam 125 mg, ainda
+    acima de 100, e às 2h ($t=18$) restam 62,5 mg. O limite de 100 mg é cruzado
+    por volta das 22h.
+14. a) $M(t) = M_0 \cdot \left(\frac12\right)^{t/5730}$. &nbsp; b) 11.460 anos
+    são exatamente duas meias-vidas, então resta $\frac14$, ou 25%. &nbsp; c)
+    25% correspondem a duas meias-vidas, ou seja, $2 \times 5730 = 11\,460$
+    anos.
+15. Se num instante a quantidade é $Q$, então depois de uma meia-vida $h$ ela é
+    $Q \cdot \left(\frac12\right)^{h/h} = Q \cdot \frac12$. O fator $\frac12$
+    não depende de $Q$ — a conta é a mesma partindo de 100, de 50 ou de 6,25.
+    Por isso o tempo de queda pela metade é constante, o que não aconteceria
+    numa queda linear.
+16. Porque $2 < e < 3$, e uma base maior produz crescimento mais rápido: para
+    $x > 0$, $2^x < e^x < 3^x$. Isso mostra que $e$ não tem nada de excepcional
+    como **número** — é apenas um valor entre 2 e 3, e sua curva é uma
+    exponencial comum. O que o torna especial é a propriedade de taxa de
+    variação, não o tamanho.
+
+</details>
+
+## 12. Revisão curta
+
+- Com base **entre 0 e 1**, a exponencial **decresce** — é o **decaimento**.
+- A regra de traduzir taxa em base é a mesma: perder 15% dá base $0{,}85$.
+- A quantidade **nunca chega a zero**: a curva tem assíntota horizontal $y = 0$.
+- Perdas percentuais **não se somam**: cada corte incide sobre o que restou.
+- **Meia-vida**: $M(t) = M_0 \cdot \left(\frac12\right)^{t/h}$, com $t$ e $h$ na
+  mesma unidade. O expoente conta **quantas meias-vidas** se passaram.
+- O tempo de queda pela metade é **sempre o mesmo**, qualquer que seja o ponto
+  de partida.
+- Valores intermediários **não** se obtêm por média: a queda é multiplicativa.
+- O **número $e$** $\approx 2{,}71828$ é o teto de $\left(1+\frac1n\right)^n$, e
+  é a base do crescimento **contínuo**.
+- $e$ é apenas um número entre 2 e 3. O que o torna a base padrão é a
+  propriedade de $e^x$ ser igual à sua própria taxa de variação — assunto do
+  cálculo.
+- $\left(\frac12\right)^x = 2^{-x}$: decaimento é crescimento refletido no eixo
+  vertical.
+
+Antes de avançar, verifique se você consegue calcular a fração restante num
+instante que não é múltiplo da meia-vida. A próxima página faz a pergunta
+inversa, que ficou pendente desde o início do capítulo: **quanto tempo até
+chegar a tal valor?**

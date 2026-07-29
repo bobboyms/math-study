@@ -1,0 +1,500 @@
+---
+title: Função logarítmica
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Função logarítmica: o gráfico da inversa
+
+## 1. Problema motivador: por que a escala de decibéis vai só até 120
+
+O ouvido humano percebe sons cuja intensidade varia por um fator de **um
+trilhão** — do mais fraco audível ao limiar da dor. Escrever isso numa escala
+comum seria impraticável: os números iriam de 1 a $10^{12}$, e um gráfico
+precisaria de um eixo de doze ordens de grandeza.
+
+A solução foi medir o **expoente** em vez da intensidade:
+
+$$
+N = 10 \log_{10}\!\left(\frac{I}{I_0}\right).
+$$
+
+Com isso, a faixa inteira cabe entre 0 e 120 decibéis.
+
+| Som | $\frac{I}{I_0}$ | Decibéis |
+|---|---:|---:|
+| limiar da audição | $1$ | 0 |
+| conversa | $10^6$ | 60 |
+| trânsito pesado | $10^8$ | 80 |
+| show de rock | $10^{11}$ | 110 |
+| limiar da dor | $10^{12}$ | 120 |
+
+A escala funciona porque o logaritmo **cresce muito devagar**: multiplicar a
+intensidade por mil acrescenta apenas 30 decibéis.
+
+Esse crescimento lento é a característica visual da função logarítmica, e é o
+que esta página estuda. Já sabemos calcular logaritmos e manipulá-los; falta ver
+**como é a curva** — e, com ela, entender por que escalas logarítmicas são tão
+usadas e tão mal interpretadas.
+
+## 2. Mapa das ideias
+
+- a **função logarítmica** é $f(x) = \log_b x$, a inversa da exponencial;
+- o **domínio** é $\,]0, +\infty[$, e a **imagem** é todos os reais — exatamente
+  o contrário da exponencial;
+- ela tem **assíntota vertical** em $x = 0$;
+- seu gráfico é o da exponencial **refletido na reta $y = x$**;
+- ela **cresce sem limite**, mas cada vez mais devagar.
+
+## 3. Para que serve
+
+- construir escalas que comprimem faixas enormes: decibel, Richter, pH,
+  magnitude estelar;
+- desenhar gráficos de dados que variam por ordens de grandeza;
+- descrever processos que desaceleram: tempo de busca, curva de aprendizado,
+  saturação;
+- e, dentro da matemática, é a inversa que resolve toda equação exponencial.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [função inversa](../funcoes/funcao-inversa): qual a relação geométrica
+entre $f$ e $f^{-1}$?** Os gráficos são **simétricos em relação à reta
+$y = x$**, e domínio e imagem trocam de papel.
+
+**2. De [função exponencial](./funcao-exponencial): qual o domínio e a imagem de
+$b^x$?** Domínio todos os reais; imagem $\,]0, +\infty[$. Ela é sempre positiva,
+com assíntota horizontal $y = 0$.
+
+**3. De [o logaritmo](./logaritmo): o que o logaritmando não pode ser?** Zero ou
+negativo. Essa restrição vira, agora, o **domínio** da função.
+
+**4. De [funções racionais](../funcoes/funcoes-racionais): o que é uma assíntota
+vertical?** Uma reta vertical da qual a curva se aproxima disparando. O
+logaritmo tem uma em $x = 0$.
+
+O item 1 é o atalho da página: como já conhecemos o gráfico da exponencial,
+conhecemos o do logaritmo — basta refletir.
+
+## 5. Intuição: trocar os eixos
+
+Como o logaritmo é a inversa da exponencial, cada par ordenado troca de
+coordenadas.
+
+| Exponencial $2^x$ | Logaritmo $\log_2 x$ |
+|---|---|
+| $(0, 1)$ | $(1, 0)$ |
+| $(1, 2)$ | $(2, 1)$ |
+| $(3, 8)$ | $(8, 3)$ |
+| $(-2, \frac14)$ | $(\frac14, -2)$ |
+
+Todas as propriedades da exponencial reaparecem trocadas:
+
+| | Exponencial $b^x$ | Logaritmo $\log_b x$ |
+|---|---|---|
+| domínio | todos os reais | $\,]0, +\infty[$ |
+| imagem | $\,]0, +\infty[$ | todos os reais |
+| assíntota | horizontal $y = 0$ | **vertical** $x = 0$ |
+| corte nos eixos | passa por $(0,1)$ | passa por $(1,0)$ |
+| crescimento | cada vez mais rápido | cada vez mais devagar |
+
+> O gráfico de $\log_b x$ é o de $b^x$ **refletido na reta $y = x$**. Tudo o que
+> era horizontal vira vertical, e vice-versa.
+
+A última linha é a mais reveladora. A exponencial acelera; o logaritmo, sendo o
+espelho, **desacelera**. Ele cresce sem limite — não há altura que ele não
+alcance —, mas precisa de entradas cada vez mais absurdas para subir mais um
+degrau.
+
+## 6. O gráfico
+
+<CartesianPlane
+  xMin={-4}
+  xMax={8}
+  yMin={-4}
+  yMax={8}
+  xUnit={30}
+  yUnit={30}
+  functions={[
+    {f: (x) => Math.pow(2, x), domain: [-3.5, 3], tone: 1},
+    {f: (x) => Math.log(x) / Math.log(2), domain: [0.06, 8], tone: 2},
+    {f: (x) => x, domain: [-4, 8], tone: 0, dashed: true},
+  ]}
+  points={[
+    {at: [0, 1], label: '(0,1)', tone: 1, place: 'above-left'},
+    {at: [1, 0], label: '(1,0)', tone: 2, place: 'below-right'},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Em azul, 2^x; em laranja, log₂x. As duas curvas são espelhos na reta tracejada y = x, e os pontos (0,1) e (1,0) são um o reflexo do outro."
+/>
+
+Três leituras valem destacar.
+
+**A assíntota vertical em $x = 0$.** Aproximando-se do zero pela direita, o
+logaritmo despenca:
+
+$$
+\log_2 0{,}5 = -1, \qquad
+\log_2 0{,}001 \approx -10, \qquad
+\log_2 10^{-9} \approx -30.
+$$
+
+Ele fica arbitrariamente negativo, mas nunca alcança $x = 0$, porque ali não
+existe. **À esquerda do zero não há curva nenhuma** — é o domínio falando.
+
+**O corte no eixo horizontal em $x = 1$.** Como $\log_b 1 = 0$ para qualquer
+base, todas as curvas logarítmicas passam por $(1, 0)$.
+
+**O crescimento cada vez mais lento.** Para dobrar o valor de $\log_2 x$, é
+preciso **elevar $x$ ao quadrado**:
+
+| $x$ | 2 | 4 | 16 | 256 | 65 536 |
+|---|---:|---:|---:|---:|---:|
+| $\log_2 x$ | 1 | 2 | 4 | 8 | 16 |
+
+Sair de 8 para 16 no eixo vertical custou ir de 256 a 65 536 no horizontal. É
+esse achatamento que torna o logaritmo útil como escala.
+
+## 7. Por que a escala engana
+
+Volte aos decibéis. A tabela do início mostra que uma conversa (60 dB) e o
+trânsito pesado (80 dB) diferem em **20 pontos** — e essa diferença parece
+modesta.
+
+Mas 20 decibéis correspondem a
+
+$$
+\frac{I_2}{I_1} = 10^{2} = 100
+$$
+
+vezes mais intensidade. A escala mostra o **expoente**, não a quantidade.
+
+> Numa escala logarítmica, **somar** na escala corresponde a **multiplicar** na
+> grandeza. Diferenças pequenas escondem razões enormes.
+
+É por isso que a diferença entre magnitude 5 e 7 na escala Richter é de cem
+vezes em amplitude, e entre pH 5 e pH 3 é de cem vezes em acidez. Ler essas
+escalas como se fossem lineares é o erro mais comum de interpretação de dados
+científicos na imprensa.
+
+O ganho, em compensação, é enorme: uma faixa de doze ordens de grandeza cabe num
+número de dois dígitos.
+
+## 8. Transformações e domínio
+
+As transformações da página 5.6 valem integralmente, com uma consequência
+importante: como o domínio é limitado, **as translações horizontais arrastam a
+assíntota junto**.
+
+**Exemplo.** $f(x) = \log_2(x - 3)$.
+
+O $-3$ está **dentro**, então move o gráfico 3 para a **direita**. E o domínio
+acompanha: exige-se $x - 3 > 0$, ou seja, $x > 3$. A assíntota vertical sai de
+$x = 0$ e vai para $x = 3$.
+
+**Conferindo**: $f(4) = \log_2 1 = 0$, então a curva corta o eixo em $x = 4$ —
+que é o $(1,0)$ da curva básica deslocado 3.
+
+Já $g(x) = \log_2 x + 3$ sobe o gráfico 3 unidades. O domínio **não muda**, e a
+assíntota continua em $x = 0$ — translações verticais não mexem no domínio.
+
+E as bases entre 0 e 1? Como $\log_{1/2} x = -\log_2 x$ pela mudança de base, a
+curva é a reflexão no eixo horizontal: ela **decresce**. É o análogo, do lado do
+logaritmo, do decaimento exponencial.
+
+## 9. Exemplos resolvidos
+
+### Exemplo 1: domínio de uma logarítmica
+
+Determine o domínio de $f(x) = \log_2(x - 5)$.
+
+O logaritmando precisa ser positivo:
+
+$$
+x - 5 > 0 \quad\Longrightarrow\quad x > 5, \qquad D = \,]5, +\infty[.
+$$
+
+A assíntota vertical está em $x = 5$.
+
+Repare que a desigualdade é **estrita**: $\log_2 0$ não existe, então o 5 fica
+de fora.
+
+### Exemplo 2: domínio com quadrática dentro
+
+*Pause e tente antes de ler.* Determine o domínio de $g(x) = \log(x^2 - 4)$.
+
+Exige-se $x^2 - 4 > 0$, ou seja, $(x-2)(x+2) > 0$. É uma inequação do 2º grau:
+com $a > 0$ e sinal positivo pedido, a solução é **fora** das raízes.
+
+$$
+D = \,]-\infty, -2[\ \cup\ ]2, +\infty[.
+$$
+
+**Conferindo**: em $x = 3$, o logaritmando é 5, positivo — existe. Em $x = 0$, é
+$-4$ — não existe. Em $x = -3$, é 5 — existe. Confere.
+
+O domínio tem **dois pedaços**, e o gráfico, duas partes separadas.
+
+### Exemplo 3: ler valores no gráfico
+
+*Pause e tente.* Sem calculadora, ordene: $\log_2 5$, $\log_2 20$,
+$\log_2 0{,}3$.
+
+Use os valores conhecidos como âncoras. Como $2^2 = 4$ e $2^3 = 8$, temos
+$2 < \log_2 5 < 3$. Como $2^4 = 16$ e $2^5 = 32$, temos $4 < \log_2 20 < 5$. E
+$0{,}3$ está entre 0 e 1, então $\log_2 0{,}3$ é **negativo**.
+
+Ordem crescente: $\log_2 0{,}3 < \log_2 5 < \log_2 20$.
+
+Isso ilustra que a função é **crescente**: logaritmando maior, logaritmo maior.
+E que logaritmandos entre 0 e 1 dão resultados negativos.
+
+### Exemplo 4: transformação
+
+*Pause e tente.* Descreva $h(x) = \log_2(x + 4) - 1$ a partir de $\log_2 x$, e
+dê o domínio e a assíntota.
+
+O $+4$ está **dentro**: move 4 para a **esquerda**. O $-1$ está fora: desce 1.
+
+- **Domínio**: $x + 4 > 0$, ou seja, $x > -4$.
+- **Assíntota vertical**: $x = -4$, arrastada pela translação horizontal.
+- **Corte no eixo horizontal**: onde $\log_2(x+4) = 1$, ou seja, $x + 4 = 2$ e
+  $x = -2$.
+
+**Conferindo**: $h(-2) = \log_2 2 - 1 = 1 - 1 = 0$. Confere.
+
+### Exemplo 5: a escala de pH
+
+*Pause e tente.* O pH é $-\log_{10}[\mathrm{H}^+]$, com $[\mathrm{H}^+]$ a
+concentração de íons em mol/L. Quantas vezes mais ácida é uma solução de pH 3
+que uma de pH 6?
+
+pH 3 significa $[\mathrm{H}^+] = 10^{-3}$; pH 6 significa $10^{-6}$. A razão é
+
+$$
+\frac{10^{-3}}{10^{-6}} = 10^{3} = 1000.
+$$
+
+**Mil vezes** mais ácida, embora a escala mostre apenas três pontos de
+diferença.
+
+Repare no sinal de menos da definição: ele existe para que soluções mais ácidas
+— de concentração maior — tenham pH **menor**, produzindo números positivos e
+confortáveis na faixa usual.
+
+### Exemplo 6: crescimento que desacelera
+
+*Pause e tente.* Um algoritmo de busca precisa de $\log_2 n$ comparações para
+achar um item entre $n$. Quantas comparações para 1 000 itens? E para 1 milhão?
+
+Para mil: $\log_2 1000 \approx 10$ comparações. Para um milhão:
+$\log_2 10^6 \approx 20$.
+
+**Multiplicar o problema por mil custou apenas o dobro do trabalho.** É por isso
+que algoritmos logarítmicos são considerados excelentes: o custo mal cresce
+quando o problema explode.
+
+Compare com um algoritmo linear, que precisaria de mil comparações no primeiro
+caso e um milhão no segundo.
+
+## 10. Erros comuns
+
+> **Erro 1: aceitar logaritmando não positivo.** O domínio de $\log_b x$ é
+> $\,]0, +\infty[$, com desigualdade **estrita**. Em $\log(x-5)$, o 5 fica de
+> fora.
+
+> **Erro 2: esquecer que a assíntota se move.** Em $\log_2(x-3)$, a assíntota
+> vertical vai para $x = 3$ junto com o gráfico. Translações **verticais** não a
+> movem.
+
+> **Erro 3: achar que o logaritmo tem um teto.** Ele cresce **sem limite** — a
+> imagem é todos os reais. O que ele faz é crescer devagar, o que é diferente de
+> parar.
+
+> **Erro 4: ler escala logarítmica como linear.** Vinte decibéis a mais são cem
+> vezes mais intensidade, não “um terço a mais”.
+
+> **Erro 5: trocar as assíntotas.** A exponencial tem assíntota **horizontal**;
+> o logaritmo, **vertical**. São reflexos, e a reflexão troca os eixos.
+
+> **Erro 6: desenhar curva à esquerda do zero.** Não há gráfico ali — o domínio
+> não inclui valores negativos. Salvo, é claro, se uma translação tiver movido a
+> assíntota.
+
+## 11. Perguntas de verificação
+
+1. Por que o domínio da função logarítmica é $\,]0,+\infty[$?
+2. Por que a imagem é todos os reais?
+3. Por que todas as curvas $\log_b x$ passam por $(1, 0)$?
+4. Por que a exponencial tem assíntota horizontal e o logaritmo, vertical?
+5. O que significa dizer que o logaritmo cresce “cada vez mais devagar”, se ele
+   cresce sem limite?
+6. Por que 20 decibéis de diferença correspondem a 100 vezes mais intensidade?
+7. Por que uma translação horizontal move a assíntota, e uma vertical não?
+8. Por que o pH tem um sinal de menos na definição?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque a função é a inversa da exponencial, cuja **imagem** é
+   $\,]0, +\infty[$. Domínio e imagem trocam de papel entre inversas, então o
+   domínio do logaritmo é a imagem da exponencial. Concretamente: só números
+   positivos são produzidos por $b^x$, e só eles têm expoente correspondente.
+2. Pelo mesmo motivo, ao contrário: a imagem do logaritmo é o **domínio** da
+   exponencial, que é todos os reais. Qualquer altura é atingida — basta
+   escolher o logaritmando adequado.
+3. Porque $\log_b 1 = 0$ para qualquer base, já que $b^0 = 1$ sempre. Esse é o
+   reflexo do fato de todas as exponenciais passarem por $(0, 1)$.
+4. Porque uma é o reflexo da outra na reta $y = x$, e essa reflexão troca os
+   eixos. A assíntota horizontal da exponencial, $y = 0$, vira a assíntota
+   vertical $x = 0$ do logaritmo.
+5. Significa que o **ritmo** de subida diminui, não que exista um teto. Para
+   ganhar mais uma unidade em $\log_2 x$, é preciso **dobrar** o $x$ — e como
+   dobrar fica cada vez mais caro em valor absoluto, a curva vai ficando quase
+   horizontal. Mas ela nunca para: qualquer altura é alcançada, só que muito
+   longe.
+6. Porque a fórmula é $N = 10\log_{10}\frac{I}{I_0}$. Uma diferença de 20 em $N$
+   corresponde a uma diferença de 2 no logaritmo, e uma diferença de 2 no
+   logaritmo corresponde a um fator de $10^2 = 100$ na razão de intensidades.
+7. Porque a assíntota vertical marca a fronteira do **domínio**, e o domínio
+   depende do que entra na função. Uma translação horizontal mexe na entrada —
+   em $\log(x-3)$ a exigência vira $x > 3$ — enquanto uma vertical altera só o
+   resultado, depois de a entrada já ter sido aceita.
+8. Porque as concentrações de íons em soluções comuns são números muito
+   pequenos, com logaritmos negativos — algo entre $-1$ e $-14$. O sinal de
+   menos inverte isso, produzindo uma escala positiva de 0 a 14, e faz com que
+   soluções mais ácidas tenham pH menor, que é a convenção adotada.
+
+</details>
+
+## 12. Exercícios
+
+### 1. Reconhecimento
+
+1. Determine o domínio: a) $\log_2(x-5)$ &nbsp; b) $\log(x+1)$ &nbsp; c)
+   $\ln(3-x)$
+2. Dê a assíntota vertical de cada função do exercício 1.
+3. Por qual ponto passa o gráfico de $\log_5 x$ no eixo horizontal? E o de
+   $\log_{10} x$?
+
+### 2. Explicação
+
+4. Explique por que o domínio da logarítmica é limitado, mas a imagem não.
+5. Explique por que o logaritmo cresce sem limite, apesar de desacelerar.
+6. Explique por que os gráficos de $2^x$ e $\log_2 x$ são espelhos na reta
+   $y = x$.
+
+### 3. Aplicação direta
+
+7. Sem calculadora, diga entre quais inteiros consecutivos está cada valor: a)
+   $\log_2 5$ &nbsp; b) $\log_2 20$ &nbsp; c) $\log_{10} 500$
+8. Ordene: $\log_2 0{,}3$, &nbsp; $\log_2 5$, &nbsp; $\log_2 20$, &nbsp;
+   $\log_2 1$
+9. Determine o domínio e a assíntota de $h(x) = \log_2(x+4) - 1$, e o ponto onde
+   corta o eixo horizontal.
+
+### 4. Variação
+
+10. Determine o domínio de $g(x) = \log(x^2 - 4)$.
+11. Descreva $f(x) = -\log_2 x$ a partir de $\log_2 x$, e diga se cresce ou
+    decresce.
+12. Uma busca binária faz $\log_2 n$ comparações. Calcule para $n = 1000$,
+    $n = 10^6$ e $n = 10^9$, e comente o crescimento.
+
+<details>
+<summary>Dica para o 10</summary>
+
+O logaritmando é uma quadrática, então a condição “maior que zero” é uma
+**inequação do 2º grau**. Fatore e use o quadro de sinais — a resposta terá dois
+pedaços.
+
+</details>
+
+### 5. Problema misto
+
+13. O nível sonoro é $N = 10\log_{10}\frac{I}{I_0}$. a) Calcule $N$ para
+    $I = 10^8 I_0$. b) Quantas vezes mais intenso é 100 dB que 70 dB? c) Por que
+    a escala vai só até cerca de 120?
+14. O pH é $-\log_{10}[\mathrm{H}^+]$. a) Qual o pH de uma solução com
+    $[\mathrm{H}^+] = 10^{-4}$? b) Quantas vezes mais ácida é pH 3 que pH 6? c)
+    Se o pH cai de 7 para 4, o que aconteceu com a concentração?
+
+### 6. Justificativa
+
+15. Mostre que $\log_{1/2} x = -\log_2 x$ usando mudança de base, e explique o
+    que isso significa no gráfico.
+16. Explique por que, para o logaritmo subir uma unidade, o logaritmando precisa
+    ser **multiplicado** pela base — e o que isso diz sobre o formato da curva.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) $x > 5$ &nbsp; b) $x > -1$ &nbsp; c) $3 - x > 0$, logo $x < 3$.
+2. a) $x = 5$ &nbsp; b) $x = -1$ &nbsp; c) $x = 3$.
+3. Os dois passam por $(1, 0)$, porque $\log_b 1 = 0$ para qualquer base.
+4. Porque a exponencial, de quem ela é inversa, produz **apenas** valores
+   positivos — e domínio e imagem trocam entre inversas. Já a exponencial aceita
+   qualquer entrada real, e por isso o logaritmo devolve qualquer valor real.
+5. Porque desacelerar é sobre o **ritmo**, não sobre um teto. Cada nova unidade
+   de altura exige multiplicar o logaritmando pela base, o que é sempre possível
+   — nenhuma altura é inatingível, apenas cada vez mais distante.
+6. Porque são funções inversas, e a inversa troca as coordenadas de cada ponto:
+   o $(3,8)$ da exponencial vira $(8,3)$ do logaritmo. Trocar coordenadas é
+   exatamente refletir na reta $y = x$.
+7. a) entre 2 e 3, pois $2^2 = 4$ e $2^3 = 8$ &nbsp; b) entre 4 e 5, pois
+   $2^4 = 16$ e $2^5 = 32$ &nbsp; c) entre 2 e 3, pois $10^2 = 100$ e
+   $10^3 = 1000$.
+8. $\log_2 0{,}3 < \log_2 1 < \log_2 5 < \log_2 20$, ou seja, um valor negativo,
+   depois 0, depois algo entre 2 e 3, depois entre 4 e 5.
+9. Domínio $x > -4$; assíntota vertical $x = -4$. Corta o eixo horizontal onde
+   $\log_2(x+4) = 1$, ou seja, $x + 4 = 2$ e $x = -2$.
+10. Exige-se $x^2 - 4 > 0$, isto é, $(x-2)(x+2) > 0$. Com $a>0$ e sinal positivo
+    pedido, a solução é fora das raízes: $\,]-\infty, -2[\ \cup\ ]2, +\infty[$.
+11. É a **reflexão no eixo horizontal**: o sinal de menos está fora. A função
+    passa a **decrescer** — o mesmo comportamento de $\log_{1/2} x$.
+12. $\log_2 1000 \approx 10$; $\log_2 10^6 \approx 20$;
+    $\log_2 10^9 \approx 30$. Multiplicar o tamanho do problema por mil
+    acrescenta apenas 10 comparações. O custo cresce de forma quase desprezível
+    diante da explosão do problema, o que torna algoritmos logarítmicos muito
+    eficientes.
+13. a) $N = 10 \times 8 = 80$ dB. &nbsp; b) A diferença de 30 dB corresponde a 3
+    no logaritmo, ou seja, $10^3 = 1000$ vezes mais intenso. &nbsp; c) Porque
+    120 dB corresponde a $10^{12}$ vezes o limiar da audição, que é
+    aproximadamente o limiar da dor. Acima disso a escala continua existindo
+    matematicamente, mas deixa de descrever som audível.
+14. a) $-\log_{10}(10^{-4}) = 4$. &nbsp; b) A diferença de 3 no pH corresponde a
+    $10^3 = 1000$ vezes mais concentração de íons. &nbsp; c) A concentração
+    **aumentou mil vezes**: pH menor significa mais ácido, e três pontos a menos
+    correspondem a um fator de $10^3$.
+15. Pela mudança de base,
+    $\log_{1/2} x = \frac{\log_2 x}{\log_2 \frac12} = \frac{\log_2 x}{-1} = -\log_2 x$.
+    No gráfico, isso significa que a curva de base $\frac12$ é a de base 2
+    **refletida no eixo horizontal**: onde uma sobe, a outra desce. As duas
+    passam por $(1,0)$ e têm a mesma assíntota vertical.
+16. Se $\log_b x = c$, então $\log_b(bx) = \log_b b + \log_b x = 1 + c$, pela
+    propriedade do produto. Ou seja, **multiplicar** o logaritmando por $b$
+    acrescenta exatamente 1 ao logaritmo. Como multiplicar por $b$ significa
+    avançar cada vez mais no eixo horizontal em termos absolutos, a curva
+    precisa de trechos cada vez mais longos para ganhar a mesma altura — e por
+    isso vai ficando quase horizontal.
+
+</details>
+
+## 13. Revisão curta
+
+- A **função logarítmica** $f(x) = \log_b x$ é a inversa da exponencial, e seu
+  gráfico é o dela **refletido na reta $y = x$**.
+- **Domínio** $\,]0, +\infty[$ e **imagem** todos os reais — o oposto da
+  exponencial.
+- **Assíntota vertical** em $x = 0$; não há curva à esquerda dela.
+- Todas as curvas passam por $(1, 0)$, porque $\log_b 1 = 0$.
+- Ela **cresce sem limite**, porém cada vez mais devagar: para subir uma
+  unidade, o logaritmando precisa ser **multiplicado** pela base.
+- Translações **horizontais** movem a assíntota e alteram o domínio; as
+  **verticais**, não.
+- Base entre 0 e 1 dá função **decrescente**, pois $\log_{1/b} x = -\log_b x$.
+- Em **escalas logarítmicas**, somar na escala é multiplicar na grandeza. Vinte
+  decibéis a mais são cem vezes mais intensidade.
+
+Antes de avançar, verifique se você consegue esboçar $\log_2(x-3)$ dizendo
+domínio, assíntota e o ponto onde corta o eixo. A próxima página junta tudo:
+resolver equações em que a incógnita está no expoente ou dentro do logaritmo.

@@ -1,376 +1,662 @@
 ---
-title: Funcao quadratica
+title: Função quadrática
 ---
 
-import FunctionGraph from '@site/src/components/FunctionGraph';
 import DotArray from '@site/src/components/DotArray';
+import CartesianPlane from '@site/src/components/CartesianPlane';
+import FunctionGraph from '@site/src/components/FunctionGraph';
 
-# Funcao quadratica
+# Função quadrática: a parábola e o seu vértice
 
-Uma funcao quadratica aparece quando uma quantidade depende do quadrado de
-outra. Isso acontece em areas, trajetorias de objetos lancados, lucro com preco
-variavel, freios, antenas parabolicas, jogos, animacoes e varios problemas de
-otimizacao.
+## 1. Problema motivador: achar o lote ótimo sem tentar valores
 
-O ponto mais importante nao e memorizar:
-
-$$
-f(x) = ax^2 + bx + c
-$$
-
-O ponto importante e entender por que uma situacao pode precisar de um termo
-com $x^2$.
-
-## 1. Problema motivador
-
-Imagine um terreno quadrado. Se o lado mede 1 metro, a area e:
+A página anterior descobriu, olhando o gráfico, que o lucro da serigrafia
 
 $$
-1 \times 1 = 1
+L(x) = -x^2 + 100x - 1600
 $$
 
-Se o lado mede 2 metros:
+é máximo em $x = 50$ camisetas, com R\$ 900. Mas repare em **como** chegamos lá:
+calculando valores e observando onde a curva virava. Isso funciona quando o
+desenho já está pronto, e não funciona quando ele não está.
 
-$$
-2 \times 2 = 4
-$$
+O problema fica evidente no caso do custo da oficina, $C(x) = x^2 - 40x + 500$.
+Naquela página testamos 18, 20 e 22, vimos os valores subirem depois de 20 e
+concluímos que o mínimo estava ali. Mas por que não em 19,5? Ou em 20,3?
+Tentativas não provam nada — só sugerem.
 
-Se o lado mede 3 metros:
+Precisamos de uma forma de **calcular** o vértice, e não de adivinhá-lo. Esta
+página constrói essa forma, e ela vem de uma observação simples: a parábola é
+**simétrica**, e o vértice está exatamente no eixo dessa simetria.
 
-$$
-3 \times 3 = 9
-$$
+Ficou também uma promessa em aberto: por que 50 é exatamente o meio entre as
+raízes 20 e 80? A resposta é a mesma.
 
-O lado cresce de 1 em 1, mas a area nao cresce de 1 em 1. Ela cresce assim:
+## 2. Mapa das ideias
 
-| Lado $x$ | Area $x^2$ |
-| --- | --- |
-| 1 | 1 |
-| 2 | 4 |
-| 3 | 9 |
-| 4 | 16 |
-| 5 | 25 |
+- **função quadrática** é toda função da forma $f(x) = ax^2 + bx + c$, com
+  $a \neq 0$;
+- o gráfico é uma **parábola**, e ela abre para cima se $a > 0$, para baixo se
+  $a < 0$;
+- o **vértice** é o ponto de virada — mínimo se abre para cima, máximo se abre
+  para baixo;
+- a **forma canônica** $f(x) = a(x - h)^2 + k$ escreve a mesma função deixando o
+  vértice $(h, k)$ à vista.
 
-A regra e:
+Por exemplo, $C(x) = x^2 - 40x + 500$ e $C(x) = (x - 20)^2 + 100$ são a mesma
+função. A segunda escrita entrega o mínimo de graça: 100, em $x = 20$.
 
-$$
-A(x) = x^2
-$$
+## 3. Para que serve
 
-Essa e a forma mais simples de uma funcao quadratica.
+- encontrar o ponto de **máximo lucro** ou de **custo mínimo** de uma operação;
+- calcular a altura máxima de um lançamento e o instante em que ela ocorre;
+- resolver problemas de área máxima com material limitado — o clássico do
+  terreno cercado;
+- descrever qualquer grandeza cujo crescimento acelera ou desacelera de forma
+  regular: área em função do lado, energia em função da velocidade, distância de
+  frenagem.
 
-## 2. Uso
+Dentro da matemática, é a primeira família de funções em que o **ritmo muda**, e
+por isso a primeira em que a pergunta “onde está o melhor valor?” tem resposta
+interessante.
 
-Funcoes quadraticas sao usadas quando a mudanca nao e constante.
+## 4. Ideias anteriores que voltam aqui
 
-Em uma funcao linear, somar 1 no valor de entrada soma sempre a mesma coisa no
-valor de saida. Por exemplo, se cada caderno custa R\$ 5:
+**1. De [funções](./funcoes): o que faz o gráfico de uma função afim ser uma
+reta?** A taxa de variação constante: ela sobe sempre o mesmo tanto por passo.
+Se o ritmo mudar, a curva entorta.
 
-$$
-C(x) = 5x
-$$
+**2. De [crescimento e sinal](./crescimento-sinal-e-simetria): o que é o
+vértice, em palavras?** O ponto onde a função para de crescer e começa a
+decrescer — ou o contrário. É onde se lê o melhor resultado possível.
 
-Cada caderno a mais aumenta o custo em R\$ 5.
+**3. De [completar o quadrado](../equacoes/completar-o-quadrado): como se
+transforma $x^2 - 6x$ num quadrado perfeito?** Somando o quadrado da metade do
+coeficiente de $x$: metade de $-6$ é $-3$, e $(-3)^2 = 9$, então
+$x^2 - 6x + 9 = (x-3)^2$. Para não alterar a expressão, subtrai-se o que foi
+somado.
 
-Na funcao $A(x) = x^2$, isso nao acontece:
+**4. De [Bhaskara](../equacoes/formula-de-bhaskara): quais são as raízes de
+$ax^2 + bx + c = 0$?** $x = \frac{-b \pm \sqrt{\Delta}}{2a}$, com
+$\Delta = b^2 - 4ac$.
 
-| De $x$ para $x + 1$ | Area anterior | Area nova | Aumento |
-| --- | --- | --- | --- |
-| 1 para 2 | 1 | 4 | 3 |
-| 2 para 3 | 4 | 9 | 5 |
-| 3 para 4 | 9 | 16 | 7 |
-| 4 para 5 | 16 | 25 | 9 |
+O item 3 é o motor desta página. Completar o quadrado foi apresentado como um
+**método para resolver equações**; aqui ele reaparece como um **método para
+enxergar o vértice**. É a mesma manipulação com outro propósito.
 
-O aumento tambem aumenta. Esse e um sinal forte de comportamento quadratico.
+## 5. Intuição: por que a curva entorta
 
-## 3. Intuicao
+Uma função afim sobe sempre o mesmo tanto. A quadrática, não — e vale ver por
+quê antes de qualquer fórmula.
 
-Uma funcao quadratica mede uma relacao em que a entrada afeta a saida duas
-vezes.
-
-No quadrado, o lado aparece duas vezes:
-
-$$
-\text{area} = \text{lado} \times \text{lado}
-$$
-
-Se chamamos o lado de $x$, fica:
-
-$$
-A(x) = x \times x = x^2
-$$
-
-Por isso o grafico nao e uma reta. A cada passo para a direita, o crescimento
-fica mais intenso.
-
-## 4. Modelo visual
-
-Pense no quadrado de lado 4 como 4 linhas com 4 blocos:
-
-<DotArray
-  rows={4}
-  cols={4}
-  caption="Quatro linhas com quatro blocos: 16 no total."
-/>
-
-Ha 16 blocos, entao a area e $4^2 = 16$.
-
-Agora aumente o lado de 4 para 5:
+Tome a função mais simples da família, $f(x) = x^2$, e leia-a como área de um
+quadrado de lado $x$. Aumentar o lado de 4 para 5 acrescenta quanto?
 
 <DotArray
   rows={5}
   cols={5}
   gnomon={4}
-  caption="Os blocos destacados são o que se acrescenta ao passar de 4² para 5²: uma coluna nova, uma linha nova e o canto — 9 blocos, não 1."
+  caption="Ao passar de um quadrado 4×4 para um 5×5, entram uma coluna nova, uma linha nova e o canto: 9 blocos, não 1."
 />
 
-Nao foi adicionado apenas 1 bloco. Foi adicionada uma nova coluna, uma nova
-linha e o canto que completa o quadrado. Por isso o crescimento acelera.
+Não entra um bloco: entram **nove**. Uma coluna de 4, uma linha de 4 e o canto
+que fecha o quadrado. E ao passar de 5 para 6 entrariam 11 — sempre mais que no
+passo anterior.
 
-Essa imagem ajuda a entender por que $x^2$ cresce mais rapido que $x$.
+> É por isso que a curva entorta: **o acréscimo cresce a cada passo**. A taxa de
+> variação não é constante, e uma curva de ritmo crescente não pode ser uma
+> reta.
 
-## 5. Formalizacao
+Compare numericamente com uma função afim:
 
-Uma funcao quadratica e qualquer funcao que pode ser escrita assim:
+| $x$ | $x^2$ | acréscimo | $10x$ | acréscimo |
+|---:|---:|---:|---:|---:|
+| 1 | 1 | — | 10 | — |
+| 2 | 4 | 3 | 20 | 10 |
+| 3 | 9 | 5 | 30 | 10 |
+| 4 | 16 | 7 | 40 | 10 |
+| 5 | 25 | 9 | 50 | 10 |
+
+À direita, o acréscimo é sempre 10 — reta. À esquerda, ele cresce de 2 em 2 —
+curva.
+
+## 6. Formalização
+
+> Uma **função quadrática** é toda função que pode ser escrita como
+> $$
+> f(x) = ax^2 + bx + c, \qquad a \neq 0.
+> $$
+> Seu gráfico chama-se **parábola**.
+
+Cada parâmetro tem um papel:
+
+- $a$ **cria a curvatura** e decide o lado para onde a parábola abre;
+- $b$ **desloca a curva na horizontal**, junto com $a$;
+- $c$ é o valor em $x = 0$, ou seja, onde a curva **corta o eixo vertical**.
+
+**Exemplo.** $f(x) = 2x^2 - 3x + 1$ é quadrática, com $a = 2$, $b = -3$ e
+$c = 1$.
+
+**Contraexemplo, para delimitar.** A exigência $a \neq 0$ não é detalhe. Se
+$a = 0$, o termo $x^2$ some e sobra $f(x) = bx + c$ — uma função **afim**, cujo
+gráfico é uma reta, sem vértice e sem curvatura. A família quadrática começa
+exatamente onde o $x^2$ existe.
+
+Repare também que $f(x) = x^2$ é quadrática mesmo sem $b$ e sem $c$: eles valem
+zero, e zero é um valor legítimo. Só o $a$ não pode se anular.
+
+### Por que a parábola é simétrica
+
+Comece pelo caso mais simples. Em $f(x) = x^2$, entradas opostas dão a mesma
+saída: $(-3)^2 = 9$ e $3^2 = 9$. Isso é exatamente a definição de **função
+par**, da página anterior, e no gráfico produz simetria em relação ao eixo
+vertical.
+
+| $x$ | $-3$ | $-2$ | $-1$ | 0 | 1 | 2 | 3 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| $x^2$ | 9 | 4 | 1 | 0 | 1 | 4 | 9 |
+
+As alturas se repetem em espelho, e o ponto mais baixo — o **vértice** — é
+$(0,0)$, bem no eixo de simetria.
+
+Quando $b$ não é zero, a parábola deixa de ser par: ela é a mesma curva
+**deslocada** para o lado. A simetria continua existindo, só que em torno de
+outra vertical. Achar essa vertical é achar o vértice, e é o que a próxima seção
+faz.
+
+## 7. A forma canônica: onde o vértice fica à vista
+
+Retome o custo da oficina, $C(x) = x^2 - 40x + 500$, e complete o quadrado. A
+metade de $-40$ é $-20$, e $(-20)^2 = 400$:
 
 $$
-f(x) = ax^2 + bx + c
+x^2 - 40x + 500
+= \underbrace{x^2 - 40x + 400}_{(x-20)^2} - 400 + 500
+= (x - 20)^2 + 100.
 $$
 
-com $a \neq 0$.
+O $-400$ aparece para compensar o $+400$ que somamos — a expressão mudou de
+forma, não de valor. **Confira em $x = 0$**: à esquerda, 500; à direita,
+$(-20)^2 + 100 = 400 + 100 = 500$. Confere.
 
-Cada parte tem um papel:
+Agora leia a nova escrita. O termo $(x-20)^2$ é um quadrado, então **nunca é
+negativo**. O menor valor que ele pode assumir é **zero**, e isso acontece em um
+único ponto: $x = 20$. Para qualquer outro $x$, ele soma algo positivo.
 
-- $ax^2$ e o termo quadratico. Ele cria a curvatura.
-- $bx$ e o termo linear. Ele inclina e desloca a posicao da curva.
-- $c$ e o termo constante. Ele mostra o valor de $f(x)$ quando $x = 0$.
+Logo, o menor valor de $C$ é $0 + 100 = 100$, atingido em $x = 20$. **Sem tentar
+valores, sem gráfico, sem adivinhação.**
 
-Se $a = 0$, o termo $x^2$ desaparece:
+> A **forma canônica** de uma quadrática é
+> $$
+> f(x) = a(x - h)^2 + k,
+> $$
+> e nela o vértice é $(h, k)$ — lido diretamente, sem conta.
+
+O papel do $a$ aqui é decidir a direção. Com $a > 0$, o termo $a(x-h)^2$ é
+positivo fora do vértice e o $k$ é o **mínimo**. Com $a < 0$, ele é negativo
+fora do vértice e o $k$ vira **máximo**.
+
+Cuidado com o sinal do $h$: em $(x - 20)^2$, o vértice está em $+20$; em
+$(x + 3)^2$, reescreva como $(x - (-3))^2$ e o vértice está em $-3$. A fórmula
+tem um menos embutido.
+
+## 8. A fórmula do vértice
+
+Completar o quadrado a cada função é trabalhoso. Vale fazê-lo **uma vez**, com
+letras, e guardar o resultado — a mesma estratégia que produziu Bhaskara.
+
+Partindo de $f(x) = ax^2 + bx + c$, ponha o $a$ em evidência nos dois primeiros
+termos:
 
 $$
-f(x) = bx + c
+f(x) = a\left(x^2 + \frac{b}{a}x\right) + c.
 $$
 
-Nesse caso, a funcao deixa de ser quadratica e vira linear.
-
-## 6. O grafico: por que aparece uma parabola?
-
-O grafico de uma funcao quadratica e chamado de parabola.
-
-Na funcao mais simples:
+Dentro do parêntese, a metade do coeficiente de $x$ é $\frac{b}{2a}$, e o
+quadrado dela é $\frac{b^2}{4a^2}$. Somando e subtraindo:
 
 $$
-f(x) = x^2
+f(x) = a\left(x^2 + \frac{b}{a}x + \frac{b^2}{4a^2} - \frac{b^2}{4a^2}\right) + c
+= a\left(x + \frac{b}{2a}\right)^2 - \frac{b^2}{4a} + c.
 $$
 
-valores positivos e negativos de $x$ geram o mesmo resultado:
+Comparando com $a(x-h)^2 + k$, lê-se o vértice:
 
 $$
-(-3)^2 = 9
+h = -\frac{b}{2a}.
 $$
 
+> A coordenada horizontal do vértice é
+> $$
+> x_v = -\frac{b}{2a},
+> $$
+> e a vertical se obtém calculando $f(x_v)$ — não vale a pena decorar uma
+> segunda fórmula.
+
+**Conferindo na serigrafia**: $a = -1$ e $b = 100$, então
+$x_v = -\frac{100}{2(-1)} = 50$. E $L(50) = -2500 + 5000 - 1600 = 900$. É
+exatamente o que a página anterior encontrou olhando o gráfico — agora
+calculado.
+
+**Conferindo na oficina**: $a = 1$ e $b = -40$, então $x_v = \frac{40}{2} = 20$,
+e $C(20) = 100$. Bate com a forma canônica.
+
+### A promessa cumprida: o vértice é o meio das raízes
+
+Por Bhaskara, as duas raízes são
+
 $$
-3^2 = 9
+r_1 = \frac{-b + \sqrt{\Delta}}{2a}
+\qquad\text{e}\qquad
+r_2 = \frac{-b - \sqrt{\Delta}}{2a}.
 $$
 
-Por isso o grafico fica simetrico. O lado esquerdo e o lado direito se
-espelham.
+O ponto médio entre elas é a média:
 
-| $x$ | $f(x) = x^2$ |
-| --- | --- |
-| -3 | 9 |
-| -2 | 4 |
-| -1 | 1 |
-| 0 | 0 |
-| 1 | 1 |
-| 2 | 4 |
-| 3 | 9 |
+$$
+\frac{r_1 + r_2}{2}
+= \frac{1}{2} \cdot \frac{-b + \sqrt{\Delta} - b - \sqrt{\Delta}}{2a}
+= \frac{1}{2} \cdot \frac{-2b}{2a}
+= -\frac{b}{2a} = x_v.
+$$
 
-O ponto mais baixo dessa parabola e $(0, 0)$. Ele se chama vertice.
+As raízes quadradas se cancelam, porque uma entra somando e a outra subtraindo.
+**O vértice está exatamente no meio das raízes** — e isso explica o 50 entre 20
+e 80 da serigrafia.
 
-## 7. Como os parametros mudam a curva?
+Vale notar que a fórmula $x_v = -\frac{b}{2a}$ funciona **mesmo quando não há
+raízes reais**. A simetria da parábola não depende de ela cruzar o eixo: o custo
+da oficina nunca vale zero, e ainda assim tem vértice em 20.
 
-Use o grafico abaixo para experimentar. Mexa em um parametro por vez e tente
-explicar o que mudou antes de ler a resposta.
+## 9. O papel de cada parâmetro
+
+Experimente no gráfico abaixo. Mexa em um parâmetro por vez e tente explicar o
+que mudou antes de ler.
 
 <FunctionGraph />
 
-### O papel de $a$
+### O papel de $a$: curvatura e direção
 
-O parametro $a$ multiplica o termo $x^2$.
+O sinal decide o lado. Com $a > 0$ a parábola abre para cima e tem **mínimo**;
+com $a < 0$, abre para baixo e tem **máximo**.
 
-Se $a$ e positivo, a parabola abre para cima. Se $a$ e negativo, abre para
-baixo.
+O tamanho decide a abertura. Compare em $x = 2$: com $a = 1$, a curva chega a 4;
+com $a = 3$, chega a 12. Quanto maior $\lvert a \rvert$, mais fechada e íngreme
+a parábola; quanto menor, mais aberta.
 
-Compare:
+### O papel de $c$: onde corta o eixo vertical
 
-$$
-f(x) = x^2
-$$
+Como $f(0) = a(0)^2 + b(0) + c = c$, o parâmetro $c$ é sempre a altura em que a
+curva cruza o eixo vertical. Mudá-lo **desloca a parábola inteira para cima ou
+para baixo**, sem mudar a forma nem a posição horizontal do vértice.
 
-$$
-g(x) = -x^2
-$$
+### O papel de $b$: o deslocamento horizontal
 
-Em $x = 2$:
+Este é o menos intuitivo, e a fórmula do vértice explica. Como
+$x_v = -\frac{b}{2a}$, mexer em $b$ move o vértice **na horizontal** — e, como a
+curva desliza por uma trajetória curva, ela também sobe ou desce no caminho.
 
-$$
-f(2) = 4
-$$
+Repare que $b = 0$ deixa o vértice em $x = 0$, sobre o eixo vertical: é o caso
+simétrico, em que a função é **par**.
 
-$$
-g(2) = -4
-$$
+## 10. Imagem e sinal
 
-O mesmo quadrado foi multiplicado por sinais opostos. Por isso uma curva sobe
-e a outra desce.
+Com o vértice em mãos, duas perguntas da página anterior se respondem de
+imediato.
 
-O tamanho de $a$ tambem altera a abertura:
+**A imagem.** Se $a > 0$, a função nunca desce abaixo do vértice, e sobe sem
+limite: a imagem é $[k, +\infty[$. Se $a < 0$, é $\,]-\infty, k]$.
 
-- se $|a|$ e grande, a curva fica mais fechada;
-- se $|a|$ e pequeno, a curva fica mais aberta.
+<CartesianPlane
+  xMin={-1}
+  xMax={7}
+  yMin={-5.5}
+  yMax={6}
+  xUnit={48}
+  yUnit={30}
+  functions={[{f: (x) => x * x - 6 * x + 5, domain: [-0.5, 6.5], tone: 1}]}
+  points={[
+    {at: [3, -4], label: '(3,\\ -4)', tone: 3, place: 'below'},
+    {at: [1, 0], label: '1', tone: 2, place: 'above-left'},
+    {at: [5, 0], label: '5', tone: 2, place: 'above-right'},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="f(x) = x² − 6x + 5. O vértice (3, −4) fica no meio das raízes 1 e 5, e a imagem é [−4, +∞[."
+/>
 
-### O papel de $c$
+**O sinal.** As raízes continuam sendo as fronteiras, e o atalho da parábola
+continua valendo: com $a > 0$, a função é negativa entre as raízes e positiva
+fora.
 
-O parametro $c$ e o valor da funcao quando $x = 0$.
+E quando não há raízes reais, o vértice decide tudo sozinho: se a parábola abre
+para cima e seu ponto mais baixo já está acima do eixo, ela é **positiva em toda
+parte**. É o caso do custo da oficina, cujo mínimo é 100.
 
-Veja:
+## 11. Exemplos resolvidos
 
-$$
-f(x) = ax^2 + bx + c
-$$
+### Exemplo 1: vértice, raízes e imagem
 
-Substituindo $x$ por 0:
+Estude $f(x) = x^2 - 6x + 5$.
 
-$$
-f(0) = a \cdot 0^2 + b \cdot 0 + c
-$$
+**Vértice**: $x_v = \frac{6}{2} = 3$, e $f(3) = 9 - 18 + 5 = -4$. Como
+$a = 1 > 0$, é um **mínimo**: o vértice é $(3, -4)$.
 
-$$
-f(0) = c
-$$
+**Raízes**: dois números de soma 6 e produto 5 são 1 e 5, então
+$f(x) = (x-1)(x-5)$ e as raízes são 1 e 5. Confirmando a regra do meio:
+$\frac{1+5}{2} = 3$.
 
-Entao $c$ mostra onde o grafico cruza o eixo vertical.
+**Imagem**: $[-4, +\infty[$.
 
-### O papel de $b$
+**Comportamento**: decrescente em $\,]-\infty, 3]$, crescente em $[3, +\infty[$;
+negativa entre 1 e 5, positiva fora.
 
-O parametro $b$ e mais sutil. Ele nao apenas "move para a direita" ou "move
-para a esquerda". Ele muda a inclinacao inicial da expressao e desloca o eixo
-de simetria da parabola.
+### Exemplo 2: parábola para baixo
 
-O eixo de simetria passa pelo vertice. Para:
+*Pause e tente antes de ler.* Estude $f(x) = -2x^2 + 8x - 3$.
 
-$$
-f(x) = ax^2 + bx + c
-$$
+$x_v = -\frac{8}{2(-2)} = 2$, e $f(2) = -8 + 16 - 3 = 5$. Como $a = -2 < 0$, a
+parábola abre para baixo e o vértice $(2, 5)$ é um **máximo**.
 
-a coordenada horizontal do vertice e:
+**Imagem**: $\,]-\infty, 5]$ — a função nunca passa de 5.
 
-$$
-x_v = \frac{-b}{2a}
-$$
+**Conferindo o máximo**: $f(1) = -2 + 8 - 3 = 3$ e $f(3) = -18 + 24 - 3 = 3$. Os
+dois vizinhos simétricos dão o mesmo valor, menor que 5. Confere.
 
-Essa formula faz sentido porque a parabola tem dois lados simetricos. O vertice
-fica exatamente no meio entre pontos que produzem o mesmo valor de $f(x)$.
+### Exemplo 3: escrever na forma canônica
 
-## 8. Exemplo resolvido: lucro
+*Pause e tente.* Escreva $f(x) = x^2 + 6x + 11$ na forma canônica e diga o
+vértice.
 
-Uma loja vende um produto. Se o preco for baixo, vende muito, mas ganha pouco
-por unidade. Se o preco for alto, ganha mais por unidade, mas vende menos.
-
-Suponha que o lucro, em reais, possa ser modelado por:
-
-$$
-L(x) = -x^2 + 10x
-$$
-
-em que $x$ representa um ajuste de preco.
-
-Vamos calcular alguns valores:
-
-| $x$ | $L(x)$ |
-| --- | --- |
-| 0 | 0 |
-| 1 | 9 |
-| 2 | 16 |
-| 3 | 21 |
-| 4 | 24 |
-| 5 | 25 |
-| 6 | 24 |
-| 7 | 21 |
-| 8 | 16 |
-| 9 | 9 |
-| 10 | 0 |
-
-O lucro sobe ate $x = 5$ e depois desce. Isso acontece porque $a$ e negativo,
-entao a parabola abre para baixo. O vertice representa o maior lucro.
-
-Vamos achar o $x$ do vertice:
+Metade de 6 é 3, e $3^2 = 9$:
 
 $$
-x_v = \frac{-b}{2a}
+x^2 + 6x + 11 = \underbrace{x^2 + 6x + 9}_{(x+3)^2} - 9 + 11 = (x+3)^2 + 2.
 $$
 
-Aqui, $a = -1$ e $b = 10$:
+Reescrevendo como $(x - (-3))^2 + 2$, o vértice é $(-3, 2)$.
+
+**Conferindo em $x = 0$**: à esquerda, 11; à direita, $9 + 2 = 11$. Confere.
+
+Repare numa consequência: o mínimo é 2, que é positivo. Então essa parábola
+**nunca toca o eixo** — não tem raízes reais. De fato,
+$\Delta = 36 - 44 = -8 < 0$. A forma canônica descobriu isso sem calcular
+$\Delta$.
+
+### Exemplo 4: com $a$ diferente de 1
+
+*Pause e tente.* Escreva $f(x) = 2x^2 - 8x + 3$ na forma canônica.
+
+Primeiro ponha o 2 em evidência nos termos com $x$ — só neles:
 
 $$
-x_v = \frac{-10}{2 \cdot (-1)}
+2x^2 - 8x + 3 = 2(x^2 - 4x) + 3.
 $$
 
-$$
-x_v = 5
-$$
-
-Agora calculamos o lucro nesse ponto:
+Dentro do parêntese, metade de $-4$ é $-2$, e $(-2)^2 = 4$:
 
 $$
-L(5) = -5^2 + 10 \cdot 5
+= 2\left((x-2)^2 - 4\right) + 3 = 2(x-2)^2 - 8 + 3 = 2(x-2)^2 - 5.
 $$
 
+Cuidado com o passo do meio: o $-4$ estava **dentro** do parêntese, então ao
+sair ele é multiplicado por 2 e vira $-8$. Esquecer essa multiplicação é o erro
+clássico deste exemplo.
+
+Vértice: $(2, -5)$. **Conferindo em $x = 0$**: à esquerda, 3; à direita,
+$2(4) - 5 = 3$. Confere.
+
+### Exemplo 5: área máxima com cerca limitada
+
+*Pause e tente.* Um sítio quer cercar um terreno retangular usando um muro já
+existente como um dos lados. Há 40 metros de cerca disponíveis. Qual é a maior
+área possível?
+
+Como um lado é o muro, a cerca cobre **três** lados: dois de comprimento $x$ e
+um de comprimento $y$. Então
+
 $$
-L(5) = -25 + 50 = 25
+2x + y = 40 \quad\Longrightarrow\quad y = 40 - 2x.
 $$
 
-O maior lucro previsto pelo modelo e R\$ 25.
+A área é
 
-## 9. Perguntas de verificacao
+$$
+A(x) = x \cdot y = x(40 - 2x) = -2x^2 + 40x.
+$$
 
-Responda com palavras antes de calcular:
+Uma quadrática com $a = -2 < 0$: tem **máximo**. O vértice está em
 
-1. Por que a area de um quadrado de lado $x$ e $x^2$?
-2. Por que $x^2$ nao cresce de forma constante?
-3. O que aconteceria com a parabola se $a$ fosse negativo?
-4. Por que $c$ e igual ao ponto em que o grafico cruza o eixo vertical?
-5. Em um problema de lucro, por que uma parabola virada para baixo pode indicar
-   um valor maximo?
+$$
+x_v = -\frac{40}{2(-2)} = 10,
+$$
 
-## 10. Exercicios
+e $A(10) = -200 + 400 = 200$.
 
-1. Complete a tabela para $f(x) = x^2 + 1$.
+**A maior área é 200 m²**, com o terreno medindo 10 m por 20 m.
 
-| $x$ | -2 | -1 | 0 | 1 | 2 |
-| --- | --- | --- | --- | --- | --- |
-| $f(x)$ |  |  |  |  |  |
+**Conferindo com vizinhos**: com $x = 8$, $y = 24$ e a área é 192; com $x = 12$,
+$y = 16$ e a área é 192. Os dois são menores que 200, e iguais entre si — a
+simetria da parábola aparecendo no problema concreto.
 
-2. Para $f(x) = 2x^2$, calcule $f(0)$, $f(1)$, $f(2)$ e $f(3)$. Depois explique
-   por que a curva e mais fechada que a de $f(x) = x^2$.
+Repare que a resposta **não** é um quadrado, ao contrário do que a intuição
+sugere. Com muro de um lado, o formato ótimo tem o lado paralelo ao muro valendo
+o dobro dos outros dois.
 
-3. A funcao $h(x) = -x^2 + 6x$ abre para cima ou para baixo? Ela tem valor
-   maximo ou minimo? Justifique sem fazer a tabela inteira.
+## 12. Erros comuns
 
-4. Em $p(x) = x^2 - 4x + 3$, identifique $a$, $b$ e $c$. Depois calcule o eixo
-   de simetria usando $x_v = \frac{-b}{2a}$.
+> **Erro 1: trocar o sinal do vértice.** A fórmula é $x_v = -\frac{b}{2a}$, com
+> o menos. Em $f(x) = x^2 - 6x + 5$, temos $b = -6$, então
+> $x_v = -\frac{-6}{2} = 3$, e não $-3$. O sinal do próprio $b$ já entra na
+> conta.
 
-5. Crie uma situacao concreta que poderia ser modelada por uma funcao
-   quadratica. Explique por que a relacao nao deveria ser linear.
+> **Erro 2: ler o vértice errado na forma canônica.** Em $(x + 3)^2 + 2$, o
+> vértice é $(-3, 2)$, não $(3, 2)$. Reescreva mentalmente como $(x - (-3))^2$ —
+> a fórmula traz um menos embutido.
 
-## Revisao curta
+> **Erro 3: esquecer de multiplicar ao tirar o termo do parêntese.** No Exemplo
+> 4, o $-4$ dentro de $2(\ldots)$ vira $-8$ ao sair. Deixá-lo como $-4$ muda o
+> vértice e a função.
 
-Uma funcao quadratica aparece quando a saida depende de $x^2$. O grafico e uma
-parabola porque o crescimento nao e constante e ha simetria em torno do
-vertice. O termo $a$ controla a curvatura e o sentido da parabola, $b$ desloca
-o eixo de simetria e $c$ mostra o valor inicial quando $x = 0$.
+> **Erro 4: procurar o máximo entre as raízes por tentativa.** As raízes dizem
+> onde a função **vale zero**. O vértice se calcula, e fica no meio delas.
 
-Use funcao quadratica quando o problema envolver area, trajetoria, maximo,
-minimo ou crescimento que acelera em vez de aumentar sempre pela mesma
-quantidade.
+> **Erro 5: achar que sem raízes reais não há vértice.** A simetria não depende
+> de a curva cruzar o eixo. O custo da oficina não tem raízes e tem vértice em
+> $x = 20$, com mínimo 100.
+
+> **Erro 6: confundir $a$ com a altura da curva.** O $a$ controla a **abertura**
+> e a direção, não a posição vertical. Quem move a curva para cima e para baixo
+> é o $c$ — ou o $k$, na forma canônica.
+
+## 13. Perguntas de verificação
+
+1. Por que o gráfico de uma quadrática não pode ser uma reta?
+2. Por que a exigência $a \neq 0$ faz parte da definição?
+3. O que a forma canônica $a(x-h)^2 + k$ deixa à vista que a forma $ax^2+bx+c$
+   esconde?
+4. Por que o menor valor de $(x-20)^2 + 100$ é 100?
+5. Por que o vértice fica exatamente no meio das raízes?
+6. Por que a fórmula do vértice funciona mesmo quando $\Delta < 0$?
+7. Como se determina a imagem de uma quadrática a partir do vértice?
+8. No Exemplo 5, por que a área máxima não é obtida com um quadrado?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque a taxa de variação não é constante. A tabela de $x^2$ mostra
+   acréscimos de 3, 5, 7, 9 — cada passo acrescenta mais que o anterior. Uma
+   reta exigiria acréscimo sempre igual.
+2. Porque com $a = 0$ o termo $x^2$ desaparece e sobra $bx + c$, que é uma
+   função **afim**: gráfico reto, sem curvatura e sem vértice. A família
+   quadrática só existe onde o $x^2$ existe.
+3. Deixa o **vértice** à vista: em $a(x-h)^2 + k$, ele é $(h, k)$, lido sem
+   nenhuma conta. A forma $ax^2+bx+c$ mostra bem o corte no eixo vertical (o
+   $c$), mas esconde o ponto de virada.
+4. Porque $(x-20)^2$ é um quadrado, e quadrado nunca é negativo. O mínimo que
+   ele atinge é zero, exatamente em $x = 20$; em qualquer outro ponto ele soma
+   algo positivo ao 100.
+5. Porque as duas raízes de Bhaskara são $\frac{-b}{2a}$ mais e menos a mesma
+   quantidade $\frac{\sqrt{\Delta}}{2a}$. Ao tirar a média, essas duas parcelas
+   se cancelam e sobra $-\frac{b}{2a}$, que é o vértice. É a simetria da
+   parábola escrita em símbolos.
+6. Porque ela vem da **simetria**, obtida por completar o quadrado, e não das
+   raízes. A parábola tem eixo de simetria mesmo quando não cruza o eixo
+   horizontal — como o custo da oficina, que tem mínimo 100 e nenhuma raiz real.
+7. Calcula-se o vértice $(h, k)$ e olha-se o sinal de $a$. Se $a > 0$, a função
+   nunca desce abaixo de $k$ e sobe sem limite: imagem $[k, +\infty[$. Se
+   $a < 0$, imagem $\,]-\infty, k]$.
+8. Porque um dos lados é o muro e não consome cerca. Isso quebra a simetria do
+   problema: vale a pena esticar o lado paralelo ao muro, que sai “de graça”.
+   Com os quatro lados cercados, o ótimo seria de fato o quadrado.
+
+</details>
+
+## 14. Exercícios
+
+### 1. Reconhecimento
+
+1. Identifique $a$, $b$ e $c$, e diga para que lado a parábola abre: a)
+   $f(x) = 3x^2 - 5x + 2$ &nbsp; b) $g(x) = -x^2 + 4$ &nbsp; c) $h(x) = x^2$
+   &nbsp; d) $p(x) = 7 - 2x^2 + x$
+2. Diga qual destas **não** é quadrática e por quê: $x^2 - 1$, &nbsp; $3x + 8$,
+   &nbsp; $-x^2 + x$, &nbsp; $5x^2$
+3. Leia o vértice diretamente: a) $f(x) = (x-4)^2 + 1$ &nbsp; b)
+   $g(x) = -(x+2)^2 - 3$
+
+### 2. Explicação
+
+4. Explique, com a imagem do quadrado de blocos, por que $x^2$ cresce cada vez
+   mais rápido.
+5. Explique por que o vértice está no meio das raízes, sem usar a demonstração
+   algébrica — apenas com a ideia de simetria.
+6. Um colega calculou o vértice de $f(x) = x^2 - 8x + 3$ e obteve $x_v = -4$.
+   Aponte o erro.
+
+### 3. Aplicação direta
+
+7. Para cada função, encontre o vértice, diga se é máximo ou mínimo e dê a
+   imagem: a) $f(x) = x^2 - 4x + 3$ &nbsp; b) $g(x) = -x^2 + 6x - 5$ &nbsp; c)
+   $h(x) = 2x^2 + 4x$ &nbsp; d) $p(x) = x^2 + 2x + 5$
+8. Em qual das funções do exercício 7 a parábola **não** cruza o eixo
+   horizontal? Justifique pelo vértice.
+
+### 4. Variação
+
+9. Escreva na forma canônica e dê o vértice: a) $f(x) = x^2 + 6x + 11$ &nbsp; b)
+   $g(x) = 2x^2 - 8x + 3$
+10. A função $f(x) = x^2 - 40x + 500$ tem raízes reais? Responda usando a forma
+    canônica, sem calcular $\Delta$.
+11. Duas parábolas têm o mesmo vértice $(2, -3)$, mas uma tem $a = 1$ e a outra
+    $a = 4$. Descreva a diferença entre os dois gráficos e calcule $f(4)$ nos
+    dois casos.
+
+<details>
+<summary>Dica para o 10</summary>
+
+Complete o quadrado e olhe o valor do vértice. Uma parábola que abre para cima
+cruza o eixo apenas se o seu ponto mais baixo estiver **abaixo** dele.
+
+</details>
+
+### 5. Problema misto
+
+12. Um sítio quer cercar um terreno retangular usando um muro como um dos lados,
+    com 60 metros de cerca. Encontre as dimensões de área máxima e a área.
+13. Uma bola é lançada e sua altura é $h(t) = 20t - 5t^2$ metros. a) Calcule o
+    vértice e interprete as duas coordenadas. b) Qual é a altura máxima e quando
+    ocorre? c) Quanto tempo a bola fica no ar?
+14. A serigrafia do capítulo anterior aumentou o custo fixo, e o lucro passou a
+    ser $L(x) = -x^2 + 100x - 2100$. Encontre o lote ótimo e o lucro máximo, e
+    compare com os R\$ 900 do caso original.
+
+### 6. Justificativa
+
+15. Mostre que $f(x) = ax^2 + bx + c$ e $f(x) = a(x - h)^2 + k$ descrevem a
+    mesma função quando $h = -\frac{b}{2a}$, verificando num caso numérico à sua
+    escolha.
+16. Explique por que uma quadrática com $a > 0$ e vértice acima do eixo
+    horizontal é positiva para **todo** $x$.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) $a=3$, $b=-5$, $c=2$; abre para **cima**. &nbsp; b) $a=-1$, $b=0$, $c=4$;
+   abre para **baixo**. &nbsp; c) $a=1$, $b=0$, $c=0$; abre para cima. &nbsp; d)
+   reorganizando, $-2x^2 + x + 7$: $a=-2$, $b=1$, $c=7$; abre para baixo.
+2. $3x + 8$ não é quadrática, porque não tem termo em $x^2$ — equivale a
+   $a = 0$, e o gráfico é uma reta. As outras três têm $a \neq 0$.
+3. a) $(4, 1)$ &nbsp; b) $(-2, -3)$. Em (b), reescreva como $-(x-(-2))^2 - 3$
+   para ler o $h$.
+4. Ao aumentar o lado de $n$ para $n+1$, entram uma linha inteira de $n$ blocos,
+   uma coluna inteira de $n$ blocos e o canto — ou seja, $2n+1$ blocos. Como
+   esse número depende de $n$, o acréscimo aumenta a cada passo, e uma curva de
+   acréscimo crescente não pode ser reta.
+5. Porque a parábola é simétrica em relação a uma vertical que passa pelo
+   vértice. Se ela cruza o eixo horizontal, os dois cruzamentos são reflexos um
+   do outro nesse espelho, e o espelho fica necessariamente à mesma distância
+   dos dois — ou seja, no meio.
+6. Ele esqueceu o sinal de menos da fórmula ou o sinal do próprio $b$. Como
+   $b = -8$, temos $x_v = -\frac{-8}{2 \times 1} = 4$. O vértice é $(4, -13)$.
+7. a) $x_v = 2$, $f(2) = -1$: **mínimo** em $(2,-1)$, imagem $[-1, +\infty[$.
+   &nbsp; b) $x_v = 3$, $g(3) = 4$: **máximo** em $(3,4)$, imagem
+   $\,]-\infty, 4]$. &nbsp; c) $x_v = -1$, $h(-1) = -2$: **mínimo** em
+   $(-1,-2)$, imagem $[-2, +\infty[$. &nbsp; d) $x_v = -1$, $p(-1) = 4$:
+   **mínimo** em $(-1,4)$, imagem $[4, +\infty[$.
+8. A função (d). Ela abre para cima ($a = 1 > 0$) e seu ponto mais baixo está na
+   altura 4, acima do eixo. Uma curva cujo mínimo é 4 nunca chega a zero.
+9. a) $(x+3)^2 + 2$, vértice $(-3, 2)$. &nbsp; b) $2(x-2)^2 - 5$, vértice
+   $(2, -5)$. Conferindo em $x = 0$: 3 nos dois casos.
+10. Completando: $x^2 - 40x + 500 = (x-20)^2 + 100$. O mínimo é 100, acima do
+    eixo, e a parábola abre para cima. Logo ela **não tem raízes reais** — nunca
+    chega a zero.
+11. As duas têm o mesmo ponto de virada, mas a de $a = 4$ é muito mais
+    **fechada**: sobe quatro vezes mais rápido ao se afastar do vértice. Com
+    $a=1$: $f(4) = (4-2)^2 - 3 = 1$. Com $a=4$: $f(4) = 4(4-2)^2 - 3 = 13$.
+12. Com o muro num lado, $2x + y = 60$, logo $y = 60 - 2x$ e
+    $A(x) = -2x^2 + 60x$. O vértice está em $x_v = -\frac{60}{-4} = 15$, e
+    $A(15) = -450 + 900 = 450$. O terreno mede **15 m por 30 m**, com área de
+    **450 m²**.
+13. a) $t_v = -\frac{20}{2(-5)} = 2$ e $h(2) = 40 - 20 = 20$. A primeira
+    coordenada é o **instante** do ponto mais alto; a segunda, a **altura** ali.
+    &nbsp; b) 20 metros, aos 2 segundos. &nbsp; c) As raízes de $5t(4-t) = 0$
+    são 0 e 4, então a bola fica **4 segundos** no ar — e o ápice, aos 2 s, fica
+    no meio, como a simetria exige.
+14. $x_v = -\frac{100}{2(-1)} = 50$, o mesmo lote de antes, e
+    $L(50) = -2500 + 5000 - 2100 = 400$. O **lote ótimo não mudou**, porque o
+    custo fixo não altera $a$ nem $b$; o que caiu foi o lucro máximo, de R\$ 900
+    para R\$ 400 — exatamente os R\$ 500 a mais de custo fixo.
+15. Tomando $f(x) = x^2 - 6x + 5$: temos $h = -\frac{-6}{2} = 3$ e
+    $k = f(3) = -4$, o que dá $(x-3)^2 - 4$. Conferindo em três pontos: em
+    $x=0$, $5$ e $9-4=5$; em $x=1$, $0$ e $4-4=0$; em $x=5$, $0$ e $4-4=0$. As
+    duas escritas coincidem.
+16. Na forma canônica $a(x-h)^2 + k$, o termo $(x-h)^2$ nunca é negativo, e com
+    $a > 0$ o produto $a(x-h)^2$ também não. Logo $f(x) \ge k$ para todo $x$. Se
+    o vértice está acima do eixo, então $k > 0$, e portanto $f(x) > 0$ sempre.
+
+</details>
+
+## 15. Revisão curta
+
+- Uma **função quadrática** é $f(x) = ax^2 + bx + c$ com $a \neq 0$, e seu
+  gráfico é uma **parábola**.
+- A curva entorta porque o **acréscimo cresce a cada passo** — a taxa de
+  variação não é constante.
+- $a$ decide a **direção** (cima se positivo, baixo se negativo) e a
+  **abertura**; $c$ é a altura em que a curva corta o eixo vertical; $b$ desloca
+  o vértice na horizontal.
+- A **forma canônica** $a(x-h)^2 + k$ deixa o vértice $(h,k)$ à vista, e sai de
+  **completar o quadrado**. Atenção ao sinal: $(x+3)^2$ tem vértice em $-3$.
+- A **fórmula do vértice** é $x_v = -\frac{b}{2a}$; a altura sai calculando
+  $f(x_v)$.
+- O vértice fica **no meio das raízes**, porque em Bhaskara as duas parcelas com
+  $\sqrt{\Delta}$ se cancelam na média.
+- A fórmula vale **mesmo sem raízes reais**: a simetria não depende de a curva
+  cruzar o eixo.
+- **Imagem**: $[k, +\infty[$ se $a > 0$; $\,]-\infty, k]$ se $a < 0$.
+- Uma parábola que abre para cima com vértice acima do eixo é **positiva em toda
+  parte**.
+
+Antes de avançar, verifique se você consegue achar o vértice de uma quadrática
+qualquer sem tentar valores, e explicar por que a fórmula tem um sinal de menos.
+A próxima página generaliza o que você viu aqui sobre $a$, $b$ e $c$: como
+**qualquer** gráfico se desloca, estica e reflete.

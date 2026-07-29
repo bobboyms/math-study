@@ -25,10 +25,10 @@ matérias diferentes, mas que são o mesmo assunto visto de três distâncias:
 Este capítulo é o que mais reaproveita o curso inteiro. Vale saber onde cada
 peça está antes de começar:
 
-- de [Frações](../numeros-e-operacoes/fracoes) e
-  [Decimais e porcentagem](../numeros-e-operacoes/decimais-e-porcentagem):
-  **razão e proporção**, que são a espinha da semelhança de triângulos e da
-  definição de seno e cosseno;
+- de [Frações](../numeros-e-operacoes/fracoes) e [Decimais e
+  porcentagem](../numeros-e-operacoes/decimais-e-porcentagem): **razão e
+  proporção**, que são a espinha da semelhança de triângulos e da definição de
+  seno e cosseno;
 - de [Potências](../numeros-e-operacoes/potencias) e
   [Raízes](../numeros-e-operacoes/raizes): $a^2$ e $\sqrt{\ }$, que aparecem no
   teorema de Pitágoras e na distância entre dois pontos;
@@ -36,9 +36,9 @@ peça está antes de começar:
   literalmente a forma da equação da circunferência;
 - de [Equações do 1º grau](../equacoes/equacoes-do-primeiro-grau): isolar a
   medida desconhecida — quase todo problema de geometria termina numa dessas;
-- de [Funções](../funcoes/funcoes) e
-  [Função quadrática](../funcoes/funcao-quadratica): a leitura de um gráfico e a
-  ideia de parâmetro, que voltam nas funções trigonométricas.
+- de [Funções](../funcoes/funcoes) e [Função
+  quadrática](../funcoes/funcao-quadratica): a leitura de um gráfico e a ideia
+  de parâmetro, que voltam nas funções trigonométricas.
 
 ## Roteiro das páginas
 
@@ -55,8 +55,8 @@ peça está antes de começar:
 
 **Módulo 2 — Áreas e volumes.** Medir o espaço ocupado.
 
-5. [Áreas de polígonos](./areas-de-poligonos) — retângulo, quadrado, triângulo
-   e trapézio, todas derivadas de uma fórmula só.
+5. [Áreas de polígonos](./areas-de-poligonos) — retângulo, quadrado, triângulo e
+   trapézio, todas derivadas de uma fórmula só.
 6. [O círculo](./circulo) — de onde vem $\pi$, e por que ele aparece tanto no
    comprimento quanto na área.
 7. [Figuras compostas](./figuras-compostas) — decompor o que não tem fórmula em
@@ -87,8 +87,8 @@ peça está antes de começar:
 16. [Radianos](./radianos) — a medida de ângulo que o próprio círculo sugere.
 17. [O ciclo trigonométrico](./ciclo-trigonometrico) — seno e cosseno como
     coordenadas de um ponto, para ângulo de qualquer valor.
-18. [Redução ao primeiro quadrante](./reducao-ao-primeiro-quadrante) — como
-    todo ângulo se resolve com o que já se sabe de 0° a 90°.
+18. [Redução ao primeiro quadrante](./reducao-ao-primeiro-quadrante) — como todo
+    ângulo se resolve com o que já se sabe de 0° a 90°.
 19. [Arco e setor circular](./arco-e-setor-circular) — $s = r\theta$ e
     $A = \frac{1}{2}r^2\theta$.
 
@@ -98,8 +98,8 @@ peça está antes de começar:
     amplitude, domínio e imagem.
 21. [Gráfico da tangente](./grafico-da-tangente) — onde a curva dispara, e por
     quê.
-22. [Os parâmetros de $a\sen(bx+c)$](./parametros-das-funcoes-trigonometricas)
-    — o que cada letra faz com a onda.
+22. [Os parâmetros de $a\sen(bx+c)$](./parametros-das-funcoes-trigonometricas) —
+    o que cada letra faz com a onda.
 23. [Funções trigonométricas inversas](./funcoes-trigonometricas-inversas) —
     $\arcsen$, $\arccos$ e $\arctg$.
 
@@ -109,6 +109,8 @@ peça está antes de começar:
     e o que sai dela.
 25. [Soma, diferença e arco duplo](./soma-diferenca-e-arco-duplo) — o seno e o
     cosseno de $a \pm b$ e de $2x$.
+26. [Equações trigonométricas](./equacoes-trigonometricas) — achar o ângulo
+    quando o que se conhece é o seno, o cosseno ou a tangente.
 
 ## Como este capítulo se sustenta
 

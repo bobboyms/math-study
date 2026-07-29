@@ -1,0 +1,550 @@
+---
+title: Funções racionais
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Funções racionais: assíntotas e buracos
+
+## 1. Problema motivador: o custo médio que nunca chega a 12
+
+Uma fábrica gasta R\$ 800 fixos por lote — preparação de máquina — mais R\$ 12
+por peça produzida. O custo médio por peça, num lote de $x$ peças, é
+
+$$
+C(x) = \frac{800 + 12x}{x}.
+$$
+
+A página de [frações algébricas](../algebra/fracoes-algebricas) mostrou como
+reescrever isso: separando as parcelas,
+
+$$
+C(x) = \frac{800}{x} + 12.
+$$
+
+Agora observe o que acontece conforme o lote cresce:
+
+| Peças $x$ | $\dfrac{800}{x}$ | Custo médio |
+|---:|---:|---:|
+| 10 | R\$ 80,00 | R\$ 92,00 |
+| 100 | R\$ 8,00 | R\$ 20,00 |
+| 1 000 | R\$ 0,80 | R\$ 12,80 |
+| 10 000 | R\$ 0,08 | R\$ 12,08 |
+
+O custo médio **cai sempre**, aproximando-se de R\$ 12 — mas nunca chega lá. A
+parcela $\frac{800}{x}$ encolhe indefinidamente e jamais se anula, porque uma
+fração de numerador 800 nunca vale zero.
+
+Do outro lado, com lotes muito pequenos, o custo médio **explode**: com 1 peça,
+$C(1) = 812$ reais.
+
+Nenhuma curva vista até aqui se comporta assim. Parábolas e polinômios crescem
+sem limite, mas não se aproximam de uma altura sem alcançá-la, nem disparam ao
+chegar perto de um ponto. Esse comportamento novo tem nome — **assíntota** — e é
+o assunto desta página.
+
+## 2. Mapa das ideias
+
+- uma **função racional** é um quociente de polinômios,
+  $f(x) = \frac{P(x)}{Q(x)}$;
+- o **domínio** exclui os zeros do denominador;
+- uma **assíntota vertical** é uma reta vertical da qual a curva se aproxima
+  disparando para o infinito;
+- uma **assíntota horizontal** é uma altura da qual a curva se aproxima quando
+  $x$ fica muito grande;
+- um **buraco** é um ponto isolado que falta na curva, e aparece quando um fator
+  se cancela.
+
+## 3. Para que serve
+
+- custo médio, consumo médio e qualquer taxa do tipo “total dividido por
+  quantidade”;
+- concentração de uma mistura conforme se acrescenta solvente;
+- tempo de trabalho conjunto, velocidade média e resistência elétrica em
+  paralelo;
+- dose por unidade de massa, densidade e rendimento.
+
+Dentro da matemática, a assíntota é o primeiro encontro com a ideia de
+**aproximar-se sem atingir**, que é a semente do conceito de limite — o ponto de
+partida do cálculo.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [frações algébricas](../algebra/fracoes-algebricas): que valor um
+denominador nunca pode assumir?** Zero. E, ao simplificar, a restrição continua
+valendo mesmo que o fator suma da escrita.
+
+**2. De [domínio e imagem](./dominio-e-imagem): como se determina o domínio de
+um quociente?** Excluindo os valores que anulam o denominador — e resolvendo a
+equação $Q(x) = 0$ para achá-los.
+
+**3. De [função polinomial](./funcao-polinomial): o que domina um polinômio
+longe da origem?** O termo de **maior grau**. Os outros viram correções
+desprezíveis.
+
+**4. De [transformações](./transformacoes-de-graficos): o que $f(x-3)$ faz com
+um gráfico?** Move 3 para a direita. Vamos usar isso para desenhar
+$\frac{1}{x-3}$ a partir de $\frac{1}{x}$.
+
+O item 3 é a chave das assíntotas horizontais: se numerador e denominador são
+polinômios, longe da origem o quociente se comporta como o quociente dos termos
+de maior grau.
+
+## 5. A curva básica: $f(x) = \dfrac{1}{x}$
+
+Toda a família se entende a partir desta.
+
+O domínio exclui o zero. E o comportamento perto dele é dramático: dividir 1 por
+um número minúsculo dá um número enorme.
+
+| $x$ | $0{,}1$ | $0{,}01$ | $0{,}001$ | $-0{,}001$ | $-0{,}01$ |
+|---|---:|---:|---:|---:|---:|
+| $\frac1x$ | 10 | 100 | 1 000 | $-1\,000$ | $-100$ |
+
+Aproximando-se de zero **pela direita**, a curva dispara para cima; **pela
+esquerda**, para baixo. Ela nunca toca a reta vertical $x = 0$, mas chega tão
+perto quanto se queira.
+
+E longe da origem acontece o oposto: dividir 1 por um número enorme dá quase
+zero. Em $x = 1000$, $\frac1x = 0{,}001$. A curva se cola no eixo horizontal sem
+tocá-lo, porque $\frac1x$ nunca é zero.
+
+<CartesianPlane
+  xMin={-5}
+  xMax={5}
+  yMin={-5}
+  yMax={5}
+  xUnit={38}
+  yUnit={38}
+  functions={[
+    {f: (x) => 1 / x, domain: [-5, -0.2], tone: 1},
+    {f: (x) => 1 / x, domain: [0.2, 5], tone: 1},
+  ]}
+  lines={[{x: 0, dashed: true, tone: 2}]}
+  axisLabels={['x', 'y']}
+  caption="f(x) = 1/x. Dois ramos separados pela assíntota vertical x = 0. Longe da origem, a curva se aproxima do eixo horizontal sem tocá-lo."
+/>
+
+> Uma **assíntota** é uma reta da qual a curva se aproxima indefinidamente sem
+> alcançar. Ela não faz parte do gráfico — é uma referência.
+
+Repare que o gráfico tem **dois ramos**, separados pela assíntota vertical. Isso
+é típico das funções racionais e nunca acontece com polinômios, cujo traço é
+contínuo.
+
+## 6. Assíntotas verticais
+
+> As candidatas a **assíntota vertical** são as retas $x = a$ em que o
+> denominador se anula — desde que o numerador **não** se anule junto.
+
+A razão é direta: perto de $a$, o denominador fica minúsculo enquanto o
+numerador continua num valor não nulo, e um quociente assim explode.
+
+**Exemplo.** Em $f(x) = \frac{2x+1}{x-3}$, o denominador zera em $x = 3$, e ali
+o numerador vale $7 \neq 0$. Logo $x = 3$ é assíntota vertical.
+
+**Conferindo**: em $x = 3{,}01$, o denominador é $0{,}01$ e a fração vale
+$\frac{7{,}02}{0{,}01} = 702$. Em $x = 2{,}99$, vale $-698$. A curva dispara
+para lados opostos.
+
+A ressalva “desde que o numerador não se anule junto” não é detalhe. É ela que
+distingue uma assíntota de um **buraco**, e a seção 8 trata disso.
+
+## 7. Assíntotas horizontais
+
+Aqui usamos o item 3 da seção 4: longe da origem, cada polinômio se comporta
+como seu termo de maior grau. Então o quociente se comporta como o quociente
+desses termos.
+
+Em $f(x) = \frac{2x+1}{x-3}$, para $x$ grande, o $+1$ e o $-3$ são
+insignificantes diante dos termos com $x$:
+
+$$
+\frac{2x + 1}{x - 3} \approx \frac{2x}{x} = 2.
+$$
+
+**Conferindo**: $f(100) = \frac{201}{97} \approx 2{,}072$;
+$f(1000) = \frac{2001}{997} \approx 2{,}007$. A curva se aproxima de 2.
+
+A comparação de graus resolve os três casos possíveis:
+
+| Graus | Assíntota horizontal | Por quê |
+|---|---|---|
+| grau do numerador **menor** | $y = 0$ | o denominador cresce mais rápido, e o quociente encolhe |
+| graus **iguais** | $y = \frac{a_n}{b_n}$, razão dos coeficientes principais | os crescimentos se equilibram |
+| grau do numerador **maior** | não há | o quociente cresce sem limite |
+
+**Exemplos.** $\frac{3}{x^2+1}$ tem assíntota $y = 0$; $\frac{2x+1}{x-3}$ tem
+$y = 2$; $\frac{x^2}{x+1}$ não tem assíntota horizontal.
+
+E o custo médio do início? Reescrito como $\frac{800}{x} + 12$, ele é a curva
+$\frac{1}{x}$ esticada e **subida 12** — exatamente uma transformação da página
+5.6. Subir 12 leva a assíntota horizontal de $y = 0$ para $y = 12$. É por isso
+que o custo se aproxima de 12 e não de outro número: **12 é o custo variável por
+peça**, e o custo fixo diluído tende a zero sem sumir.
+
+> **Uma curva pode cruzar uma assíntota horizontal.** Ela descreve o
+> comportamento **longe** da origem, não uma barreira. Já a assíntota vertical
+> nunca é cruzada, porque ali a função não existe.
+
+## 8. Buracos: quando um fator se cancela
+
+Considere
+
+$$
+f(x) = \frac{x^2 - 4}{x - 2}.
+$$
+
+O denominador zera em $x = 2$, e a tentação é declarar assíntota vertical. Mas o
+numerador **também** zera ali: $2^2 - 4 = 0$.
+
+Fatorando e simplificando:
+
+$$
+\frac{(x-2)(x+2)}{x-2} = x + 2, \qquad x \neq 2.
+$$
+
+A função é, em todo o resto, a reta $y = x+2$. Nada explode: em $x = 1{,}99$ ela
+vale $3{,}99$, e em $x = 2{,}01$, $4{,}01$. Os valores se aproximam
+tranquilamente de 4.
+
+Mas em $x = 2$ ela **não existe** — a restrição sobreviveu ao cancelamento, como
+a página de frações algébricas insistiu. O gráfico é a reta com um **ponto
+faltando**, e chamamos isso de **buraco**.
+
+<CartesianPlane
+  xMin={-1}
+  xMax={5}
+  yMin={-1}
+  yMax={7}
+  xUnit={50}
+  yUnit={34}
+  functions={[
+    {f: (x) => x + 2, domain: [-1, 1.93], tone: 1},
+    {f: (x) => x + 2, domain: [2.07, 5], tone: 1},
+  ]}
+  points={[{at: [2, 4], label: '(2,\\ 4)', tone: 2, place: 'below-right', open: true}]}
+  axisLabels={['x', 'y']}
+  caption="A curva de (x²−4)/(x−2) é a reta y = x+2 com um ponto faltando em x = 2. O círculo vazio marca o buraco."
+/>
+
+> Se um fator do denominador **se cancela** com o numerador, ali há um
+> **buraco**. Se ele **não** se cancela, há uma **assíntota vertical**.
+
+Por isso o procedimento começa sempre por **fatorar**: é a fatoração que revela
+qual dos dois casos ocorre.
+
+## 9. Como esboçar uma função racional
+
+> 1. **fatore** numerador e denominador;
+> 2. determine o **domínio**, excluindo os zeros do denominador;
+> 3. cancele os fatores comuns — cada um deles marca um **buraco**;
+> 4. os zeros do denominador que **sobraram** são **assíntotas verticais**;
+> 5. compare os **graus** para achar a assíntota horizontal;
+> 6. os zeros do **numerador** que sobraram são as raízes da função;
+> 7. teste um valor em cada trecho para saber de que lado a curva vai.
+
+O passo 3 é o que separa buraco de assíntota, e o passo 2 vem antes dele de
+propósito — a mesma ordem que o capítulo de álgebra exigia.
+
+## 10. Exemplos resolvidos
+
+### Exemplo 1: assíntotas de uma racional simples
+
+Estude $f(x) = \dfrac{2x+1}{x-3}$.
+
+**Domínio**: $x \neq 3$.
+
+**Fatoração**: nada a fatorar, e nada se cancela.
+
+**Assíntota vertical**: $x = 3$, pois o denominador zera ali e o numerador vale
+7.
+
+**Assíntota horizontal**: graus iguais (ambos 1), então $y = \frac{2}{1} = 2$.
+
+**Raiz**: o numerador zera em $x = -\frac12$.
+
+**Corte no eixo vertical**: $f(0) = \frac{1}{-3} = -\frac13$.
+
+### Exemplo 2: distinguir buraco de assíntota
+
+*Pause e tente antes de ler.* Estude $g(x) = \dfrac{x^2-4}{x^2-x-2}$.
+
+Fatorando os dois:
+
+$$
+g(x) = \frac{(x-2)(x+2)}{(x-2)(x+1)}.
+$$
+
+**Domínio**: $x \neq 2$ e $x \neq -1$ — lido **antes** de cancelar.
+
+O fator $(x-2)$ se cancela, deixando
+
+$$
+g(x) = \frac{x+2}{x+1}, \qquad x \neq 2, \ x \neq -1.
+$$
+
+- em $x = 2$ há um **buraco**, na altura $\frac{4}{3}$;
+- em $x = -1$ há uma **assíntota vertical**, porque esse fator sobreviveu.
+
+**Assíntota horizontal**: graus iguais, coeficientes principais 1 e 1, logo
+$y = 1$.
+
+**Conferindo**: $g(100) = \frac{102}{101} \approx 1{,}0099$. Aproxima-se de 1.
+
+### Exemplo 3: numerador de grau menor
+
+*Pause e tente.* Qual a assíntota horizontal de $h(x) = \dfrac{3}{x^2+1}$?
+
+O numerador tem grau 0 e o denominador, grau 2. O denominador cresce muito mais
+rápido, e o quociente encolhe: $y = 0$.
+
+**Conferindo**: $h(10) = \frac{3}{101} \approx 0{,}0297$;
+$h(100) \approx 0{,}0003$.
+
+Repare que $x^2 + 1$ nunca se anula, então **não há assíntota vertical** — o
+domínio é todos os reais. É uma função racional com gráfico contínuo, o que é
+possível quando o denominador não tem raiz real.
+
+### Exemplo 4: numerador de grau maior
+
+*Pause e tente.* O que acontece com $p(x) = \dfrac{x^2}{x+1}$ para $x$ grande?
+
+Grau 2 sobre grau 1: o numerador cresce mais rápido, e o quociente **cresce sem
+limite**. Não há assíntota horizontal.
+
+**Conferindo**: $p(10) = \frac{100}{11} \approx 9{,}1$;
+$p(100) = \frac{10\,000}{101} \approx 99$. Os valores acompanham aproximadamente
+o próprio $x$.
+
+Há, sim, assíntota vertical em $x = -1$.
+
+### Exemplo 5: a curva do custo médio
+
+*Pause e tente.* Estude $C(x) = \dfrac{800 + 12x}{x}$ para $x > 0$ e explique o
+comportamento nos dois extremos.
+
+Separando as parcelas: $C(x) = \frac{800}{x} + 12$ — a curva $\frac1x$ esticada
+por 800 e subida 12.
+
+- **Assíntota vertical** em $x = 0$: com lotes minúsculos, o custo fixo se dilui
+  entre pouquíssimas peças e o custo médio explode;
+- **Assíntota horizontal** em $y = 12$: com lotes enormes, o custo fixo por peça
+  tende a zero e sobra só o custo variável.
+
+A função é **decrescente** em todo o domínio: produzir mais sempre reduz o custo
+médio. Mas o ganho é cada vez menor — de 10 para 100 peças o custo cai R\$ 72;
+de 1 000 para 10 000, cai R\$ 0,72.
+
+**Interpretação**: os R\$ 12 são um piso que a fábrica jamais atinge, por mais
+que produza. É o custo de fazer mais uma peça, e nenhuma diluição o elimina.
+
+## 11. Erros comuns
+
+> **Erro 1: declarar assíntota sem fatorar.** Se o numerador zera junto com o
+> denominador, ali há **buraco**, não assíntota. Só a fatoração revela isso.
+
+> **Erro 2: ler o domínio depois de cancelar.** Em
+> $\frac{(x-2)(x+2)}{(x-2)(x+1)}$, o $x \neq 2$ tem de ser anotado **antes** do
+> cancelamento — depois ele some da escrita.
+
+> **Erro 3: achar que a curva nunca cruza uma assíntota horizontal.** Ela pode.
+> A assíntota descreve o comportamento **longe** da origem. Já a **vertical**
+> nunca é cruzada, porque ali a função não existe.
+
+> **Erro 4: comparar coeficientes em vez de graus.** A assíntota horizontal só é
+> a razão dos coeficientes principais quando os **graus são iguais**. Com graus
+> diferentes, quem decide é o grau.
+
+> **Erro 5: esquecer que pode não haver assíntota vertical.** Se o denominador
+> nunca se anula, como em $x^2+1$, não há nenhuma, e o domínio é todos os reais.
+
+> **Erro 6: traçar a curva como um traço contínuo.** Uma racional com assíntota
+> vertical tem **ramos separados**. Ligá-los atravessando a assíntota é desenhar
+> uma função que não existe.
+
+## 12. Perguntas de verificação
+
+1. Por que o custo médio se aproxima de 12 sem nunca chegar lá?
+2. O que é uma assíntota, e por que ela não faz parte do gráfico?
+3. Como se distingue um buraco de uma assíntota vertical?
+4. Por que o domínio deve ser lido antes de cancelar?
+5. Por que a comparação de graus decide a assíntota horizontal?
+6. Por que uma curva pode cruzar a assíntota horizontal, mas não a vertical?
+7. Por que $\frac{3}{x^2+1}$ não tem assíntota vertical?
+8. Por que o gráfico de $\frac1x$ tem dois ramos separados?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque o custo médio é $\frac{800}{x} + 12$, e a parcela $\frac{800}{x}$
+   encolhe indefinidamente conforme o lote cresce — mas **nunca vale zero**, já
+   que uma fração de numerador 800 não pode se anular. Sempre sobra algo do
+   custo fixo para diluir.
+2. É uma reta da qual a curva se aproxima indefinidamente sem alcançar. Ela não
+   é parte do gráfico: é uma referência para descrever o comportamento,
+   desenhada tracejada justamente para marcar essa diferença.
+3. Fatorando. Se o fator do denominador que se anula **se cancela** com um do
+   numerador, há buraco; se ele **sobrevive** ao cancelamento, há assíntota
+   vertical. A diferença está em o numerador zerar ou não junto.
+4. Porque o cancelamento apaga da escrita o fator que produzia a proibição. Em
+   $\frac{(x-2)(x+2)}{(x-2)(x+1)}$, depois de simplificar não há nada que
+   denuncie o $x \neq 2$ — e ele continua valendo.
+5. Porque longe da origem cada polinômio se comporta como seu termo de maior
+   grau. O quociente, então, se comporta como o quociente desses termos, e é a
+   comparação entre eles que decide se o resultado encolhe, estabiliza ou
+   cresce.
+6. Porque a assíntota horizontal descreve o que acontece **longe** da origem —
+   nada impede a curva de tocá-la ou atravessá-la perto do centro. Já a
+   assíntota vertical marca um ponto **fora do domínio**: ali a função não tem
+   valor nenhum, então não há como o gráfico passar por lá.
+7. Porque $x^2 + 1$ nunca se anula: $x^2$ é no mínimo 0, e somando 1 o
+   denominador é sempre pelo menos 1. Sem zero no denominador, não há ponto de
+   explosão, e o domínio é todos os reais.
+8. Porque o ponto $x = 0$ está fora do domínio, e ele separa a reta em dois
+   pedaços. À direita a curva dispara para cima; à esquerda, para baixo. Não há
+   como ligar os dois ramos, porque isso exigiria passar por um ponto onde a
+   função não existe.
+
+</details>
+
+## 13. Exercícios
+
+### 1. Reconhecimento
+
+1. Determine o domínio: a) $\dfrac{1}{x-4}$ &nbsp; b) $\dfrac{x+1}{x^2-9}$
+   &nbsp; c) $\dfrac{5}{x^2+4}$
+2. Sem calcular, diga se há assíntota horizontal e qual: a) $\dfrac{3x+2}{x-1}$
+   &nbsp; b) $\dfrac{7}{x^3+1}$ &nbsp; c) $\dfrac{x^3}{x^2-1}$
+3. Em $\dfrac{(x-1)(x+4)}{(x-1)(x-2)}$, onde há buraco e onde há assíntota
+   vertical?
+
+### 2. Explicação
+
+4. Explique por que o custo médio nunca chega a R\$ 12.
+5. Explique a diferença entre buraco e assíntota vertical.
+6. Explique por que a curva pode cruzar a assíntota horizontal.
+
+### 3. Aplicação direta
+
+7. Para $f(x) = \dfrac{2x+1}{x-3}$: domínio, assíntotas vertical e horizontal,
+   raiz e valor em $x = 0$.
+8. Para $g(x) = \dfrac{x^2-4}{x^2-x-2}$: simplifique, diga onde há buraco e onde
+   há assíntota, e dê a assíntota horizontal.
+
+### 4. Variação
+
+9. Estude $h(x) = \dfrac{x^2-9}{x-3}$: simplifique, diga o domínio e descreva o
+   gráfico.
+10. Determine as assíntotas de $p(x) = \dfrac{x^2}{x+1}$ e explique por que não
+    há horizontal.
+11. Esboce $f(x) = \dfrac{1}{x-2} + 3$ a partir de $\frac1x$, dizendo as duas
+    assíntotas.
+
+<details>
+<summary>Dica para o 11</summary>
+
+São duas transformações da curva básica: uma **dentro** do denominador e outra
+**fora** da fração. Cada uma arrasta uma das assíntotas junto.
+
+</details>
+
+### 5. Problema misto
+
+12. Uma fábrica gasta R\$ 1.200 fixos por lote e R\$ 8 por peça. a) Escreva o
+    custo médio $C(x)$. b) Calcule $C(50)$, $C(200)$ e $C(2000)$. c) Qual é a
+    assíntota horizontal, e o que ela significa? d) O custo médio pode chegar a
+    R\$ 8? E ficar abaixo?
+13. A concentração de sal numa mistura, após acrescentar $x$ litros de água a
+    uma solução com 5 g de sal em 10 litros, é $C(x) = \dfrac{5}{10 + x}$ g/L.
+    a) Qual é o domínio da situação? b) Calcule $C(0)$ e $C(90)$. c) Qual é a
+    assíntota horizontal, e o que ela diz sobre a diluição?
+
+### 6. Justificativa
+
+14. Explique por que, quando os graus são iguais, a assíntota horizontal é a
+    razão dos coeficientes principais. Use a ideia de termo dominante.
+15. Mostre que $\dfrac{x^2-1}{x-1}$ e $x+1$ **não** são a mesma função, apesar
+    de a simplificação sugerir que sim.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) $x \neq 4$ &nbsp; b) $x \neq 3$ e $x \neq -3$ &nbsp; c) todos os reais,
+   pois $x^2 + 4$ nunca se anula.
+2. a) Graus iguais: $y = 3$. &nbsp; b) Grau do numerador menor: $y = 0$. &nbsp;
+   c) Grau do numerador maior: **não há** assíntota horizontal.
+3. Buraco em $x = 1$, onde o fator se cancela; assíntota vertical em $x = 2$,
+   onde o fator do denominador sobrevive.
+4. Porque $C(x) = \frac{800}{x} + 12$, e a parcela $\frac{800}{x}$ é sempre
+   positiva para $x > 0$: por maior que seja o lote, sobra alguma fração do
+   custo fixo a ser diluída. O custo médio se aproxima de 12 por cima, sem
+   alcançar.
+5. No **buraco**, o fator problemático se cancela: a função tem valores bem
+   comportados dos dois lados, e só falta o ponto exato. Na **assíntota**, o
+   fator sobrevive no denominador: perto dali a função dispara para o infinito.
+6. Porque a assíntota horizontal descreve o comportamento para $x$ muito grande
+   ou muito negativo. Perto da origem a curva é livre, e pode tocar ou
+   atravessar essa altura sem contradição.
+7. Domínio $x \neq 3$; assíntota vertical $x = 3$; assíntota horizontal $y = 2$
+   (graus iguais, coeficientes 2 e 1); raiz em $x = -\frac12$; e
+   $f(0) = -\frac13$.
+8. Fatorando, $\frac{(x-2)(x+2)}{(x-2)(x+1)} = \frac{x+2}{x+1}$ com $x \neq 2$ e
+   $x \neq -1$. Buraco em $x = 2$, na altura $\frac43$; assíntota vertical em
+   $x = -1$; assíntota horizontal $y = 1$.
+9. $\frac{(x-3)(x+3)}{x-3} = x+3$, com $x \neq 3$. O gráfico é a **reta**
+   $y = x+3$ com um buraco em $(3, 6)$. Não há assíntota nenhuma.
+10. Assíntota vertical em $x = -1$. Não há horizontal porque o grau do numerador
+    (2) é maior que o do denominador (1): longe da origem o quociente se
+    comporta como $\frac{x^2}{x} = x$, que cresce sem limite em vez de
+    estabilizar.
+11. O $-2$ está dentro, movendo a curva 2 para a **direita**: a assíntota
+    vertical vai de $x = 0$ para $x = 2$. O $+3$ está fora, subindo tudo 3: a
+    assíntota horizontal vai de $y = 0$ para $y = 3$.
+12. a) $C(x) = \frac{1200 + 8x}{x} = \frac{1200}{x} + 8$. &nbsp; b)
+    $C(50) = 24 + 8 = 32$; $C(200) = 6 + 8 = 14$; $C(2000) = 0{,}6 + 8 = 8{,}6$
+    reais. &nbsp; c) $y = 8$ — o custo variável por peça, que é o piso do custo
+    médio. &nbsp; d) **Não** pode chegar a 8 nem ficar abaixo: a parcela
+    $\frac{1200}{x}$ é sempre positiva, então o custo médio é sempre maior que
+    8.
+13. a) $x \ge 0$: não se acrescenta um volume negativo de água. &nbsp; b)
+    $C(0) = \frac{5}{10} = 0{,}5$ g/L; $C(90) = \frac{5}{100} = 0{,}05$ g/L.
+    &nbsp; c) A assíntota é $y = 0$, porque o grau do numerador é menor.
+    Significa que a concentração pode ficar tão pequena quanto se queira, mas
+    **nunca zero** — o sal continua ali, apenas cada vez mais diluído.
+14. Longe da origem, o numerador se comporta como $a_n x^n$ e o denominador como
+    $b_n x^n$, com o **mesmo** expoente. O quociente se comporta então como
+    $\frac{a_n x^n}{b_n x^n} = \frac{a_n}{b_n}$, porque as potências se
+    cancelam. Sobra uma constante, que é a altura da assíntota.
+15. As duas coincidem em todo ponto **exceto** $x = 1$. Ali, $x+1$ vale 2, mas
+    $\frac{x^2-1}{x-1}$ não existe, porque o denominador é zero. Como funções
+    iguais precisam ter o mesmo domínio, elas são diferentes: uma tem domínio
+    todos os reais, a outra exclui o 1. No gráfico, a diferença é exatamente um
+    buraco em $(1, 2)$.
+
+</details>
+
+## 14. Revisão curta
+
+- Uma **função racional** é um quociente de polinômios. O domínio exclui os
+  zeros do denominador.
+- **Assíntota** é uma reta da qual a curva se aproxima sem alcançar. Ela não faz
+  parte do gráfico.
+- **Assíntota vertical**: onde o denominador zera e o numerador **não**.
+- **Buraco**: onde os dois zeram e o fator **se cancela**. Só a fatoração
+  distingue os dois casos — e o domínio se lê **antes** de cancelar.
+- **Assíntota horizontal** pela comparação de graus: numerador menor dá $y = 0$;
+  graus iguais dão a razão dos coeficientes principais; numerador maior não dá
+  nenhuma.
+- A curva **pode** cruzar a assíntota horizontal, mas **nunca** a vertical.
+- Um denominador sem raiz real, como $x^2+1$, produz racional sem assíntota
+  vertical e com domínio total.
+- O gráfico costuma ter **ramos separados**, e eles não se ligam através da
+  assíntota.
+- Custo médio, concentração e taxas são racionais na prática: a assíntota
+  horizontal costuma ser o **piso** que o processo nunca alcança.
+
+Com esta página fecha-se o capítulo de funções. Você já sabe descrever, mover,
+compor, inverter e esboçar as famílias construídas a partir de somas, produtos e
+quocientes. Falta uma família que nenhuma dessas operações produz — aquela em
+que a variável está **no expoente** —, e ela é o assunto do próximo capítulo.

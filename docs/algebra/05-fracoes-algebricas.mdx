@@ -1,0 +1,611 @@
+---
+title: Frações algébricas
+---
+
+import AreaModel from '@site/src/components/AreaModel';
+
+# Frações algébricas: simplificar é cancelar fator, nunca parcela
+
+## 1. Problema motivador: o custo médio de um cartaz
+
+Uma gráfica cobra R\$ 200 pela preparação do arquivo — valor cobrado uma vez só,
+não importa quantos cartazes saiam — mais R\$ 4 por cartaz impresso.
+
+Se você encomendar $x$ cartazes, o custo total é $200 + 4x$ reais, e o **custo
+médio por cartaz** é esse total repartido entre os $x$ cartazes:
+
+$$
+\frac{200 + 4x}{x}.
+$$
+
+Essa escrita incomoda. Ela é uma divisão que não termina, e a vontade imediata é
+“limpar” a expressão cortando o $x$ de cima com o $x$ de baixo:
+
+$$
+\frac{200 + 4\cancel{x}}{\cancel{x}} = 200 + 4 = 204 \quad \text{(errado)}.
+$$
+
+Antes de aceitar, teste com um número. Encomende 100 cartazes: o custo total é
+$200 + 4 \times 100 = 600$ reais, repartidos entre 100 cartazes, o que dá **R\$
+6** por cartaz. Não 204. O corte não errou por pouco — errou por um fator de 34.
+
+E o custo médio nem sequer é constante, como “204” sugeriria:
+
+| Cartazes $x$ | Custo total | Custo médio por cartaz |
+|---:|---:|---:|
+| 50 | $200 + 200 = 400$ | R\$ 8,00 |
+| 100 | $200 + 400 = 600$ | R\$ 6,00 |
+| 200 | $200 + 800 = 1000$ | R\$ 5,00 |
+
+O custo médio **cai** conforme a encomenda cresce, porque os R\$ 200 fixos se
+diluem entre mais cartazes. Nenhum número fixo poderia descrever isso.
+
+Então cortar às vezes é permitido — é o que fazemos com
+$\frac{6}{8} = \frac{3}{4}$ desde as frações — e às vezes não é. Esta página
+responde exatamente **quando**, e por quê. No fim, voltaremos à expressão do
+custo médio e faremos com ela a única coisa que de fato é legítima.
+
+## 2. Mapa das ideias
+
+- **fração algébrica** é um quociente de duas expressões com letras, como
+  $\dfrac{x + 1}{x - 3}$ — a mesma ideia de fração, com polinômios no lugar dos
+  números;
+- **condição de existência** é a lista dos valores que a letra **não** pode
+  assumir, porque anulariam o denominador;
+- **fator** é algo que está sendo **multiplicado**; **parcela** é algo que está
+  sendo **somado**;
+- **simplificar** é cancelar um fator que aparece no numerador e no denominador.
+
+Por exemplo, em $3x(x+4)$ os fatores são $3$, $x$ e $(x+4)$. Já em $3x + 4$ não
+há fator comum nenhum: $3x$ e $4$ são **parcelas**. Essa distinção — o que está
+multiplicado contra o que está somado — é a página inteira.
+
+## 3. Para que serve
+
+- calcular custo médio, consumo médio, preço por unidade e qualquer taxa que
+  seja “total dividido por quantidade”;
+- reduzir uma fórmula antes de usá-la, o que diminui trabalho e chance de erro;
+- reconhecer que duas fórmulas de aparência diferente descrevem a mesma coisa.
+
+Dentro da matemática, é o passo que faltava para operar com expressões
+fracionárias em geral. Ele sustenta as [inequações](../equacoes/) que envolvem
+quociente e, mais adiante, o estudo de [funções](../funcoes/) cujo denominador
+pode se anular — as funções racionais, onde o valor proibido vira um traço
+marcante do gráfico.
+
+## 4. Ideias anteriores que voltam aqui
+
+Três blocos voltam inteiros. Responda antes de conferir.
+
+**1. De [frações](../numeros-e-operacoes/fracoes): por que $\frac{6}{8}$ e
+$\frac{3}{4}$ são a mesma quantidade?** Porque dividimos numerador e denominador
+pelo mesmo número: $6 \div 2 = 3$ e $8 \div 2 = 4$. Agrupar os oitavos de dois
+em dois muda o tamanho da parte usada para contar, mas não muda a região marcada
+da barra.
+
+**2. De [fator comum em evidência](./fator-comum-em-evidencia): o que é pôr um
+fator em evidência?** É a distributiva lida de trás para frente:
+$3x^2 + 12x = 3x(x + 4)$. A expressão deixa de ser uma **soma** de dois termos e
+passa a ser um **produto** de dois fatores. A quantidade não muda; o que muda é
+a forma da escrita.
+
+**3. De [agrupamento e trinômios](./agrupamento-e-trinomios): como fatorar
+$x^2 - 9$ e $x^2 + 5x + 6$?** A primeira é uma diferença de quadrados:
+$x^2 - 9 = (x - 3)(x + 3)$. A segunda pede dois números de soma 5 e produto 6,
+que são 2 e 3: $x^2 + 5x + 6 = (x + 2)(x + 3)$.
+
+Guarde a ordem em que esses três blocos vão trabalhar: **fatorar primeiro,
+cancelar depois**. É a resposta curta para a pergunta que o motivador deixou em
+aberto — a expressão $200 + 4x$ não estava fatorada, e é por isso que não havia
+nada a cancelar.
+
+## 5. Intuição: teste a regra com números, onde dá para conferir
+
+A pergunta “quando posso cancelar?” é difícil com letras e fácil com números,
+porque com números dá para calcular os dois lados e comparar. Vamos decidir a
+questão lá, e só depois trazer a conclusão de volta.
+
+Compare duas frações que se parecem muito. Na primeira, o 2 está
+**multiplicando** em cima e embaixo:
+
+$$
+\frac{2 \times 3}{2 \times 5} = \frac{6}{10} = \frac{3}{5}.
+$$
+
+Cancelar o 2 funcionou: $\frac{3}{5}$ é de fato o resultado. Na segunda, o 2
+está **somando**:
+
+$$
+\frac{2 + 3}{2 + 5} = \frac{5}{7}.
+$$
+
+Se cancelássemos o 2 aqui, obteríamos $\frac{3}{5}$. Mas $\frac{5}{7}$ e
+$\frac{3}{5}$ não são o mesmo número — $\frac{5}{7}$ é aproximadamente $0{,}714$
+e $\frac{3}{5}$ é $0{,}6$. O corte estragou a fração.
+
+> Cancelar funciona quando o que se corta é **fator**; não funciona quando é
+> **parcela**.
+
+O motivo não é uma convenção. Simplificar uma fração é dividir numerador e
+denominador pelo mesmo número — e dividir $2 \times 3$ por 2 realmente deixa 3,
+porque a divisão desfaz a multiplicação. Já dividir $2 + 3$ por 2 **não** deixa
+3: deixa $2{,}5$. A divisão desfaz a multiplicação, não a soma. Cortar uma
+parcela é usar a divisão contra a operação errada.
+
+Com letras é idêntico. Em $\frac{5x}{x}$, o $x$ de cima é fator, então o corte
+vale e sobra 5. Em $\frac{5 + x}{x}$, o $x$ de cima é parcela, e não há nada a
+cortar.
+
+## 6. Modelo visual: só um retângulo inteiro pode ser dividido
+
+O motivador travou porque $200 + 4x$ é uma soma. Veja o que muda quando a
+expressão de cima **é** um produto. Tome $3x^2 + 12x$ e ponha o fator comum em
+evidência:
+
+<AreaModel
+  rows={[{size: 3, label: '3x'}]}
+  cols={[{size: 4, label: 'x'}, {size: 4, label: '4'}]}
+  cells={[['3x \\times x = 3x^2', '3x \\times 4 = 12x']]}
+  baseLabel="x + 4"
+  caption="A área total é 3x² + 12x. Vista como retângulo inteiro, ela é um produto: altura 3x por base x + 4."
+/>
+
+A mesma área tem duas leituras. Somando os dois pedaços, ela é $3x^2 + 12x$.
+Vista como um retângulo só, ela é $3x \times (x + 4)$ — um **produto**, e o $3x$
+é um dos fatores.
+
+Agora dividir por $x$ tem um significado geométrico: estamos encolhendo o lado
+$3x$, que é um lado inteiro do retângulo. O resultado ainda é um retângulo, de
+altura 3 e base $x + 4$. Foi possível porque o $x$ media um **lado completo**.
+
+No caso do motivador, $200 + 4x$ não é a área de um retângulo cujo lado seja
+$x$: o pedaço de 200 não tem $x$ nenhum. Não há lado inteiro para encolher, e é
+por isso que não há o que cortar.
+
+## 7. Ponte para a formalização
+
+Nada aqui é novo — é a regra de frações da aritmética com uma peça trocada. Lá
+tínhamos, para $b \neq 0$ e $k \neq 0$:
+
+$$
+\frac{a \times k}{b \times k} = \frac{a}{b}.
+$$
+
+Repare no que a fórmula exige: o $k$ precisa estar **multiplicando** o numerador
+inteiro e o denominador inteiro. Ela nunca autorizou cortar um pedaço de uma
+soma; simplesmente não é isso que está escrito.
+
+A passagem para a álgebra troca os números $a$, $b$ e $k$ por expressões. A
+justificativa continua a mesma, porque uma letra representa um número: seja qual
+for o valor de $x$, a igualdade acima vale para os números que $a$, $b$ e $k$
+produzirem naquele caso.
+
+Muda uma coisa só, e é importante. Com números, escrever $k \neq 0$ é uma
+conferência trivial. Com letras, $k$ é uma expressão, e saber quando ela se
+anula exige resolver uma equação. Essa é a novidade real desta página — e a
+razão de toda simplificação vir acompanhada de uma restrição.
+
+## 8. Formalização
+
+> Uma **fração algébrica** é um quociente $\dfrac{P}{Q}$ em que $P$ e $Q$ são
+> expressões polinomiais e $Q$ não é o polinômio nulo.
+
+Como toda divisão, ela só faz sentido quando o denominador não é zero. Os
+valores da letra que anulam o denominador formam a **condição de existência** da
+fração.
+
+**Exemplo.** Em $\dfrac{x + 1}{x - 3}$, o denominador se anula quando $x = 3$.
+Para todo outro valor a fração existe. Escrevemos a restrição como $x \neq 3$.
+
+**Contraexemplo, para delimitar.** A restrição vem do **denominador**, não do
+numerador. Em $\dfrac{x - 3}{x + 1}$ o valor 3 é perfeitamente legítimo: ele
+apenas faz a fração valer zero, e zero é um resultado como outro qualquer. Quem
+está proibido aqui é $x = -1$.
+
+A regra de simplificação, então:
+
+> Se $R$ é um fator comum ao numerador e ao denominador, e $R$ não é zero, então
+> $$
+> \frac{P \times R}{Q \times R} = \frac{P}{Q}.
+> $$
+
+O procedimento tem sempre três passos, nesta ordem:
+
+1. **fatorar** numerador e denominador por completo;
+2. **anotar a condição de existência**, olhando o denominador **antes** de
+   qualquer corte;
+3. **cancelar** os fatores comuns.
+
+O passo 2 vem antes do 3 de propósito, e a próxima seção explica por quê.
+
+## 9. Por que a restrição sobrevive ao cancelamento
+
+Simplifique $\dfrac{3x^2 + 12x}{x}$. Fatorando o numerador, como o desenho
+mostrou:
+
+$$
+\frac{3x^2 + 12x}{x} = \frac{3x(x + 4)}{x} = 3(x + 4) = 3x + 12,
+\qquad x \neq 0.
+$$
+
+Confira com $x = 2$: o original dá
+$\frac{3 \times 4 + 24}{2} = \frac{36}{2} = 18$, e a forma simplificada dá
+$3 \times 2 + 12 = 18$. As duas concordam.
+
+Mas elas não concordam em toda parte, e este é o ponto delicado. Em $x = 0$:
+
+- a expressão original vira $\frac{0}{0}$, que não é um número;
+- a expressão simplificada vira $3 \times 0 + 12 = 12$, um valor perfeitamente
+  calculável.
+
+Ou seja, a simplificação **criou** um valor que a expressão original não tinha.
+Isso acontece porque o cancelamento só foi legítimo sob a hipótese $x \neq 0$ —
+foi ela que autorizou dividir por $x$. Ao apagar o $x$ da escrita, apagamos
+também o lembrete de que ele nunca podia ser zero.
+
+Por isso a restrição é anotada **antes** do corte, quando ainda está visível, e
+carregada até o fim. As duas expressões são iguais **para todo $x$ em que ambas
+fazem sentido** — e não simplesmente iguais.
+
+Vale ver que a restrição não é burocracia. No problema dos cartazes, $x = 0$ é
+proibido porque não existe custo médio de uma encomenda de zero cartazes: não há
+por onde repartir os R\$ 200. A conta e a situação concordam.
+
+## 10. Exemplos resolvidos
+
+### Exemplo 1: fatorar o que parecia não fatorar
+
+Simplifique $\dfrac{x^2 - 9}{x + 3}$.
+
+À primeira vista não há nada em comum entre cima e baixo. Mas o numerador é uma
+diferença de quadrados:
+
+$$
+\frac{x^2 - 9}{x + 3} = \frac{(x - 3)(x + 3)}{x + 3} = x - 3, \qquad x \neq -3.
+$$
+
+Agora sim o $(x + 3)$ é um fator dos dois lados, e o corte é legítimo.
+
+Conferindo com $x = 1$: o original dá $\frac{1 - 9}{4} = \frac{-8}{4} = -2$, e a
+forma simplificada dá $1 - 3 = -2$.
+
+### Exemplo 2: fatorar os dois lados
+
+*Pause e tente antes de ler.* Simplifique $\dfrac{2x + 6}{x^2 + 3x}$.
+
+Fator comum em cima e em baixo:
+
+$$
+\frac{2x + 6}{x^2 + 3x} = \frac{2(x + 3)}{x(x + 3)} = \frac{2}{x},
+\qquad x \neq 0 \text{ e } x \neq -3.
+$$
+
+Duas restrições, porque o denominador original é um produto de dois fatores e
+**cada um** deles pode zerar.
+
+Conferindo com $x = 1$: o original dá $\frac{8}{4} = 2$, e $\frac{2}{1} = 2$.
+
+### Exemplo 3: trinômios em cima e embaixo
+
+*Pause e tente.* Simplifique $\dfrac{x^2 + 5x + 6}{x^2 - 4}$.
+
+O numerador pede dois números de soma 5 e produto 6 — são 2 e 3. O denominador é
+diferença de quadrados:
+
+$$
+\frac{x^2 + 5x + 6}{x^2 - 4} = \frac{(x + 2)(x + 3)}{(x - 2)(x + 2)}
+= \frac{x + 3}{x - 2},
+\qquad x \neq 2 \text{ e } x \neq -2.
+$$
+
+Conferindo com $x = 0$: o original dá $\frac{6}{-4} = -\frac{3}{2}$, e a forma
+simplificada dá $\frac{3}{-2} = -\frac{3}{2}$.
+
+Repare que a restrição $x \neq -2$ não é mais visível na forma final — só o
+$x \neq 2$ sobrou à vista. É exatamente o caso da seção anterior: sem a anotação
+feita a tempo, essa informação se perderia.
+
+### Exemplo 4: quando os fatores são opostos
+
+*Pause e tente.* Simplifique $\dfrac{x - 5}{5 - x}$.
+
+Os dois parênteses não são iguais, então parece não haver o que cortar. Mas eles
+são **opostos**: um é o negativo do outro. Pondo $-1$ em evidência embaixo:
+
+$$
+5 - x = -(x - 5).
+$$
+
+Confira com um número, porque este passo costuma gerar desconfiança: com
+$x = 1$, o lado esquerdo é $5 - 1 = 4$, e o direito é $-(1 - 5) = -(-4) = 4$.
+Iguais.
+
+Agora o fator comum apareceu:
+
+$$
+\frac{x - 5}{5 - x} = \frac{x - 5}{-(x - 5)} = -1, \qquad x \neq 5.
+$$
+
+Conferindo com $x = 1$: $\frac{1 - 5}{5 - 1} = \frac{-4}{4} = -1$.
+
+Guarde o padrão: **sempre que dois parênteses aparecem em ordem invertida, um
+$-1$ em evidência os torna iguais.**
+
+### Exemplo 5: fator repetido
+
+*Pause e tente.* Simplifique $\dfrac{x^2 - 4}{x^2 - 4x + 4}$.
+
+O denominador é um quadrado perfeito: dois números de soma $-4$ e produto 4 são
+$-2$ e $-2$, então $x^2 - 4x + 4 = (x - 2)^2$.
+
+$$
+\frac{x^2 - 4}{x^2 - 4x + 4} = \frac{(x - 2)(x + 2)}{(x - 2)^2}
+= \frac{x + 2}{x - 2}, \qquad x \neq 2.
+$$
+
+O $(x-2)$ aparecia duas vezes embaixo e uma vez em cima; cancelou-se **um** de
+cada lado, e sobrou um embaixo. Cancelar não é apagar o fator dos dois lugares —
+é dividir os dois por ele, uma vez.
+
+Conferindo com $x = 0$: o original dá $\frac{-4}{4} = -1$, e a forma
+simplificada dá $\frac{2}{-2} = -1$.
+
+### Exemplo 6: de volta aos cartazes
+
+Retome o custo médio $\dfrac{200 + 4x}{x}$. Já sabemos que cancelar é proibido,
+porque $200$ e $4x$ são parcelas. Mas existe uma reescrita legítima, e ela é
+justamente a que revela o comportamento do preço: **repartir a soma entre os
+dois termos**, cada um sobre o mesmo denominador.
+
+$$
+\frac{200 + 4x}{x} = \frac{200}{x} + \frac{4x}{x} = \frac{200}{x} + 4,
+\qquad x \neq 0.
+$$
+
+Este passo é permitido porque somar $\frac{200}{x}$ com $\frac{4x}{x}$ devolve a
+fração original — é a soma de frações de mesmo denominador, lida de trás para
+frente. E agora, na segunda parcela, o $x$ **é** fator: $\frac{4x}{x} = 4$.
+
+A fórmula ficou legível. O custo médio é R\$ 4 por cartaz — o custo de imprimir
+— mais a parcela da preparação, $\frac{200}{x}$, que cada cartaz precisa
+carregar. Quanto maior a encomenda, menor essa parcela:
+
+| Cartazes $x$ | $\dfrac{200}{x}$ | Custo médio |
+|---:|---:|---:|
+| 50 | R\$ 4,00 | R\$ 8,00 |
+| 100 | R\$ 2,00 | R\$ 6,00 |
+| 200 | R\$ 1,00 | R\$ 5,00 |
+
+Os valores batem com a tabela do início da página. E fica claro por que o custo
+médio cai sem nunca chegar a R\$ 4: a parcela fixa se dilui, mas não desaparece.
+
+Compare as duas contas: cortar o $x$ dava 204 e não explicava nada; separar as
+parcelas dá $\frac{200}{x} + 4$ e explica tudo. A diferença entre a manipulação
+errada e a certa não é só de resultado — é de significado.
+
+## 11. Erros comuns
+
+> **Erro 1: cancelar parcela.** É o erro desta página, e vale reconhecê-lo em
+> todas as formas: $\frac{5 + x}{x}$ não é 5, $\frac{x + 6}{6}$ não é $x$,
+> $\frac{200 + 4x}{x}$ não é 204. Teste o segundo com $x = 6$:
+> $\frac{6 + 6}{6} = \frac{12}{6} = 2$, e não 6. **Antes de cortar, pergunte: o
+> que estou cortando está multiplicando o numerador inteiro?** Se houver um
+> sinal de mais ou de menos separando termos, a resposta é não — e o conserto é
+> fatorar primeiro, não cortar mesmo assim.
+
+> **Erro 2: cortar dentro de um denominador somado.** Escrever
+> $\frac{x}{x + 2} = \frac{1}{2}$. Teste com $x = 4$: à esquerda,
+> $\frac{4}{6} = \frac{2}{3}$; à direita, $\frac{1}{2}$. Diferentes. O $x$ de
+> baixo é parcela, e o de cima não pode cancelá-lo.
+
+> **Erro 3: esquecer a restrição, ou anotá-la tarde demais.** Em
+> $\frac{(x-3)(x+1)}{x-3} = x + 1$, a forma final não tem denominador nenhum e
+> nada denuncia o valor proibido. A hora de anotar $x \neq 3$ é enquanto o fator
+> ainda está escrito.
+
+> **Erro 4: tirar a restrição do numerador.** Em $\frac{x - 4}{x + 2}$, o valor
+> proibido é $-2$, não 4. Zerar o numerador é permitido — só faz a fração valer
+> zero.
+
+> **Erro 5: perder o sinal em parênteses invertidos.** Escrever
+> $\frac{x - 5}{5 - x} = 1$. Teste com $x = 1$: $\frac{-4}{4} = -1$. Quando os
+> parênteses estão em ordem trocada, o resultado do cancelamento é $-1$, não 1.
+
+> **Erro 6: cancelar um fator dos dois lados de vez.** Em
+> $\frac{(x-2)(x+2)}{(x-2)^2}$, cortar o $(x-2)$ **não** deixa $\frac{x+2}{1}$:
+> embaixo havia dois, e sobra um. Cancelar é dividir os dois lados uma vez, não
+> apagar o fator do desenho.
+
+## 12. Perguntas de verificação
+
+Responda com suas palavras antes de abrir.
+
+1. Qual é a diferença entre fator e parcela, e por que só uma delas pode ser
+   cancelada?
+2. Por que o primeiro passo de toda simplificação é fatorar?
+3. Por que a condição de existência precisa ser anotada antes do cancelamento?
+4. As expressões $\frac{x^2-9}{x+3}$ e $x - 3$ são iguais? Em que sentido sim,
+   em que sentido não?
+5. Por que a restrição sai do denominador e não do numerador?
+6. Em $\frac{200 + 4x}{x}$, cancelar é proibido, mas separar em
+   $\frac{200}{x} + \frac{4x}{x}$ é permitido. Que regra autoriza a segunda
+   coisa e não a primeira?
+7. Por que $\frac{x-5}{5-x}$ dá $-1$ e não 1?
+8. Como você conferiria, sem refazer a álgebra, se uma simplificação está certa?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Fator é o que está sendo multiplicado; parcela é o que está sendo somado.
+   Simplificar é dividir numerador e denominador pelo mesmo valor, e a divisão
+   desfaz a multiplicação, não a soma. Dividir $2 \times 3$ por 2 deixa 3;
+   dividir $2 + 3$ por 2 deixa $2{,}5$, não 3.
+2. Porque a regra de cancelamento exige um fator comum, e enquanto a expressão
+   estiver escrita como soma não há fator nenhum à vista. Fatorar é o que
+   transforma a soma em produto e faz o fator comum aparecer — quando ele
+   existe.
+3. Porque o cancelamento pode apagar da escrita justamente o fator que carregava
+   a informação. Em $\frac{3x(x+4)}{x}$ o valor proibido é visível; em $3x + 12$
+   não há nada que o denuncie. Anotar depois é anotar quando a evidência já
+   sumiu.
+4. Elas dão o mesmo valor para todo $x$ diferente de $-3$. Em $x = -3$ a
+   primeira não existe (denominador zero) e a segunda vale $-6$. Então são
+   iguais **onde ambas fazem sentido**, e é por isso que a restrição acompanha a
+   resposta.
+5. Porque a divisão por zero é que não é definida. Um numerador zerado apenas
+   torna a fração igual a zero, o que é um resultado legítimo.
+6. A soma de frações de mesmo denominador:
+   $\frac{a}{c} + \frac{b}{c} = \frac{a+b}{c}$, lida de trás para frente. Ela
+   reparte a soma de cima entre duas frações, e cada parcela fica sozinha sobre
+   o denominador. Depois disso, o $x$ de $\frac{4x}{x}$ virou fator do numerador
+   **inteiro** daquela fração, e aí sim pode ser cancelado. O corte original
+   falhava porque o $x$ dividia a soma toda, não cada parcela.
+7. Porque $5 - x$ é o oposto de $x - 5$, isto é, $5 - x = -(x-5)$. Cancelando o
+   fator $(x-5)$ sobra o $-1$ que estava em evidência.
+8. Escolhendo um número simples, permitido pelas restrições, e calculando as
+   duas expressões. Se derem valores diferentes, a simplificação está errada. É
+   uma conferência barata e pega quase todo erro de fator e de sinal.
+
+</details>
+
+## 13. Exercícios
+
+### 1. Reconhecimento
+
+1. Para cada expressão, diga quais valores de $x$ estão proibidos: a)
+   $\dfrac{x+1}{2}$ &nbsp; b) $\dfrac{3}{x-4}$ &nbsp; c) $\dfrac{x-7}{x}$ &nbsp;
+   d) $\dfrac{x^2-1}{x+1}$
+2. Diga se cada cancelamento é legítimo, **sem calcular**, e justifique em uma
+   frase: a) $\dfrac{5x}{x}$ &nbsp; b) $\dfrac{5+x}{x}$ &nbsp; c)
+   $\dfrac{x(x+1)}{x}$ &nbsp; d) $\dfrac{x+1}{x}$
+3. Fatore o numerador e o denominador de $\dfrac{x^2-16}{x^2+4x}$, **sem
+   simplificar ainda**.
+
+### 2. Explicação
+
+4. Explique, usando um exemplo com números, por que cancelar um fator é
+   permitido e cancelar uma parcela não é.
+5. Um colega escreve $\dfrac{x+6}{6} = x$. Mostre com um número que está errado
+   e diga qual foi o raciocínio que o levou ao erro.
+6. Por que $\dfrac{x^2-9}{x+3}$ e $x-3$ não podem ser chamadas simplesmente de
+   “a mesma expressão”?
+
+### 3. Aplicação direta
+
+7. Simplifique, indicando as restrições: a) $\dfrac{4x^2}{2x}$ &nbsp; b)
+   $\dfrac{x^2-25}{x-5}$ &nbsp; c) $\dfrac{3x+9}{x^2+3x}$ &nbsp; d)
+   $\dfrac{x^2+7x+12}{x+3}$
+
+### 4. Variação
+
+8. Simplifique $\dfrac{x^2-2x-15}{x^2-9}$.
+9. Simplifique $\dfrac{3-x}{x^2-9}$.
+10. Simplifique $\dfrac{2x^2-8}{x^2+4x+4}$.
+
+<details>
+<summary>Dica para o 9</summary>
+
+Os parênteses vão sair em ordem invertida. Lembre do Exemplo 4: pôr $-1$ em
+evidência num deles é o que os torna iguais.
+
+</details>
+
+### 5. Problema misto
+
+11. Uma oficina cobra R\$ 900 pela preparação de um molde, mais R\$ 15 por peça
+    produzida. a) Escreva o custo médio por peça para uma encomenda de $x$
+    peças. b) Explique por que não é possível cancelar o $x$. c) Reescreva a
+    expressão separando as parcelas e calcule o custo médio para 30, 100 e 300
+    peças. d) O custo médio pode chegar a R\$ 15? E ficar abaixo disso?
+12. Um retângulo tem área $x^2 + 7x + 10$ e um dos lados mede $x + 2$. Qual é a
+    medida do outro lado?
+
+### 6. Justificativa
+
+13. Por que a condição de existência de uma fração algébrica é lida na expressão
+    **original**, e não na simplificada? Dê um exemplo em que as duas leituras
+    dariam respostas diferentes.
+14. Mostre que $\dfrac{a-b}{b-a} = -1$ para quaisquer $a$ e $b$ com $a \neq b$,
+    e explique por que a restrição $a \neq b$ é necessária.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) nenhum: o denominador é 2, que nunca se anula. &nbsp; b) $x \neq 4$.
+   &nbsp; c) $x \neq 0$. &nbsp; d) $x \neq -1$. Se em (d) você respondeu
+   $x \neq 1$ ou $x \neq \pm 1$, olhou o numerador: a restrição vem só do
+   denominador.
+2. a) Legítimo: o $x$ multiplica o numerador inteiro. &nbsp; b) Não: o $x$ de
+   cima é parcela, somada ao 5. &nbsp; c) Legítimo: o $x$ é um dos dois fatores
+   do numerador. &nbsp; d) Não: em $x + 1$ o $x$ é parcela.
+3. $\dfrac{x^2-16}{x^2+4x} = \dfrac{(x-4)(x+4)}{x(x+4)}$. (Simplificando, o que
+   o exercício não pediu, daria $\frac{x-4}{x}$ com $x \neq 0$ e $x \neq -4$.)
+4. Com fator: $\frac{2 \times 3}{2 \times 5} = \frac{6}{10} = \frac{3}{5}$, e o
+   corte do 2 dá $\frac{3}{5}$ — confere. Com parcela:
+   $\frac{2+3}{2+5} = \frac{5}{7}$, enquanto o corte do 2 daria $\frac{3}{5}$ —
+   e $\frac{5}{7}$ não é $\frac{3}{5}$. Simplificar é dividir os dois termos
+   pelo mesmo número, e dividir desfaz multiplicação, não soma.
+5. Com $x = 6$: $\frac{6+6}{6} = \frac{12}{6} = 2$, e não 6. O erro é ver o 6 de
+   baixo e o 6 de cima como “o mesmo número, então corta” — mas o 6 de cima está
+   somado a $x$, é parcela.
+6. Porque em $x = -3$ a primeira não existe e a segunda vale $-6$. Elas
+   coincidem em todos os outros valores, e é por isso que a resposta correta é
+   “$x - 3$, com $x \neq -3$”.
+7. a) $2x$, com $x \neq 0$. &nbsp; b) $x + 5$, com $x \neq 5$. &nbsp; c)
+   $\frac{3(x+3)}{x(x+3)} = \frac{3}{x}$, com $x \neq 0$ e $x \neq -3$. &nbsp;
+   d) $\frac{(x+3)(x+4)}{x+3} = x + 4$, com $x \neq -3$.
+8. $\frac{(x-5)(x+3)}{(x-3)(x+3)} = \frac{x-5}{x-3}$, com $x \neq 3$ e
+   $x \neq -3$. Conferindo em $x = 0$: o original dá
+   $\frac{-15}{-9} = \frac{5}{3}$ e a resposta dá $\frac{-5}{-3} = \frac{5}{3}$.
+9. $3 - x = -(x-3)$, então
+   $\frac{3-x}{x^2-9} = \frac{-(x-3)}{(x-3)(x+3)} = \frac{-1}{x+3}$, com
+   $x \neq 3$ e $x \neq -3$. Conferindo em $x = 0$: o original dá
+   $\frac{3}{-9} = -\frac{1}{3}$, e a resposta dá $-\frac{1}{3}$. Se você chegou
+   a $\frac{1}{x+3}$, perdeu o sinal do fator invertido.
+10. $\frac{2(x^2-4)}{(x+2)^2} = \frac{2(x-2)(x+2)}{(x+2)^2} = \frac{2(x-2)}{x+2}$,
+    com $x \neq -2$. Conferindo em $x = 0$: o original dá $\frac{-8}{4} = -2$, e
+    a resposta dá $\frac{-4}{2} = -2$.
+11. a) $\dfrac{900 + 15x}{x}$, com $x \neq 0$. &nbsp; b) Porque $900$ e $15x$
+    são parcelas: o $x$ de baixo divide a soma inteira, não cada termo. &nbsp;
+    c) $\frac{900}{x} + 15$; para 30 peças, R\$ 45; para 100, R\$ 24; para 300,
+    R\$ 18. &nbsp; d) Não pode chegar a R\$ 15 nem ficar abaixo: a parcela
+    $\frac{900}{x}$ é sempre positiva, então o custo médio é sempre maior que
+    15. Ele se aproxima de 15 conforme a encomenda cresce, sem nunca alcançar.
+12. $\frac{x^2+7x+10}{x+2} = \frac{(x+2)(x+5)}{x+2} = x + 5$. A restrição
+    algébrica é $x \neq -2$; no problema ela é automática, porque um lado de
+    retângulo é positivo.
+13. Porque o cancelamento pode apagar o fator que produzia a proibição. Em
+    $\frac{x^2-9}{x+3}$, a expressão original proíbe $x = -3$; a simplificada,
+    $x - 3$, não proíbe nada. Ler a restrição na forma final daria “nenhum valor
+    proibido”, o que é falso para a expressão de partida.
+14. Como $b - a = -(a - b)$, temos $\frac{a-b}{b-a} = \frac{a-b}{-(a-b)} = -1$.
+    A restrição $a \neq b$ é necessária porque, se $a = b$, o denominador
+    $b - a$ é zero e a fração não existe — e é justamente essa hipótese que
+    autoriza cancelar o fator $(a - b)$.
+
+</details>
+
+## 14. Revisão curta
+
+- Uma **fração algébrica** é um quociente de polinômios. Como toda divisão, ela
+  exige denominador diferente de zero — daí a **condição de existência**.
+- **Fator** é o que multiplica; **parcela** é o que soma. Só fator pode ser
+  cancelado, porque simplificar é dividir, e a divisão desfaz a multiplicação,
+  não a soma.
+- Por isso o procedimento é sempre: **fatorar, anotar a restrição, cancelar** —
+  nessa ordem.
+- A restrição é lida no **denominador original**, antes do corte. O cancelamento
+  apaga da escrita o fator que a justificava, mas não a revoga.
+- Duas expressões ligadas por uma simplificação são iguais **onde ambas fazem
+  sentido**, não em toda parte.
+- Parênteses em ordem invertida ficam iguais com um $-1$ em evidência:
+  $b - a = -(a-b)$, e o cancelamento deixa $-1$.
+- Quando não há fator comum, ainda pode haver uma reescrita útil: repartir a
+  soma do numerador entre parcelas de mesmo denominador, como
+  $\frac{200 + 4x}{x} = \frac{200}{x} + 4$.
+- A conferência é gratuita: escolha um número permitido e avalie as duas formas.
+
+Antes de avançar, verifique se você consegue dizer, olhando para uma fração
+qualquer, **por que** ainda não dá para cancelar nada — e qual fatoração faria o
+fator comum aparecer. A próxima página usa exatamente esse olhar para somar e
+multiplicar frações algébricas.

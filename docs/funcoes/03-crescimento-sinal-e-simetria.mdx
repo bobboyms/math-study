@@ -1,0 +1,581 @@
+---
+title: Crescimento, sinal e simetria
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Descrever uma função: crescimento, sinal e simetria
+
+## 1. Problema motivador: o gráfico do lucro da serigrafia
+
+Volte à serigrafia da página de [inequações do 2º
+grau](../equacoes/inequacoes-do-segundo-grau). Cada lote custa R\$ 1.600 fixos,
+e o preço de cada camiseta cai conforme o lote cresce, de modo que o lucro de um
+lote de $x$ camisetas é
+
+$$
+L(x) = -x^2 + 100x - 1600.
+$$
+
+Naquela página respondemos **uma** pergunta: para que tamanhos de lote há lucro?
+A resposta foi $20 < x < 80$.
+
+Mas o dono da serigrafia tem outras perguntas, e nenhuma delas é sobre onde o
+lucro é positivo:
+
+- **até que tamanho de lote vale a pena aumentar a produção?**
+- existe um lote **ótimo**, ou quanto maior melhor até os 80?
+- se ele produz 30 e passa para 40, o lucro sobe ou desce?
+
+Essas perguntas não são sobre o **valor** do lucro, e sim sobre a **direção** em
+que ele se move. Precisamos de um vocabulário para isso — e é o que esta página
+constrói. Ao lado dele vêm outras duas perguntas que se lê direto do gráfico:
+onde a função é positiva, e se ela tem alguma simetria.
+
+## 2. Mapa das ideias
+
+- uma função é **crescente** num trecho quando, andando para a direita, a curva
+  sobe; **decrescente** quando desce;
+- o **máximo** e o **mínimo** são as alturas maior e menor que a função atinge —
+  e o ponto onde ela troca de direção;
+- o **sinal** da função diz onde ela é positiva, negativa ou zero — os **zeros**
+  são as fronteiras;
+- uma função é **par** quando seu gráfico é simétrico em relação ao eixo
+  vertical, e **ímpar** quando é simétrico em relação à origem.
+
+Nada disso é conta nova: são leituras do gráfico, ou perguntas que as inequações
+do capítulo anterior já sabem responder.
+
+## 3. Para que serve
+
+- decidir se aumentar a produção melhora ou piora o resultado;
+- identificar o ponto de máximo — a produção mais lucrativa, a altura máxima de
+  um lançamento, o custo mínimo;
+- saber em que faixa um negócio opera no vermelho;
+- descrever o comportamento de uma grandeza ao longo do tempo, sem depender de
+  calcular ponto a ponto;
+- e, do lado da economia de trabalho: reconhecer uma simetria permite estudar
+  metade da curva e deduzir a outra metade.
+
+Este vocabulário é o mesmo que o cálculo vai usar depois, e as perguntas serão
+literalmente estas — só que respondidas por derivada em vez de por leitura de
+gráfico.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [funções](./funcoes): o que a altura da curva sobre um ponto $x$
+representa?** O valor $f(x)$. Subir de $x$ até a curva e ler a altura é calcular
+$f(x)$.
+
+**2. De [inequações do 2º grau](../equacoes/inequacoes-do-segundo-grau): onde
+$-x^2 + 100x - 1600$ é positivo?** Entre as raízes 20 e 80, porque o coeficiente
+de $x^2$ é negativo e o sinal contrário ao de $a$ fica no meio.
+
+**3. De [funções](./funcoes): o que é taxa de variação constante?** Uma função
+afim sobe sempre o mesmo tanto por passo, e por isso seu gráfico é uma reta.
+Quando o ritmo muda, a curva entorta — e é aí que faz sentido perguntar **onde**
+ela sobe e **onde** desce.
+
+**4. De [valor absoluto](../numeros-e-operacoes/valor-absoluto): por que
+$(-3)^2$ e $3^2$ dão o mesmo resultado?** Porque elevar ao quadrado apaga o
+sinal. Essa é a raiz da simetria que veremos na última seção.
+
+## 5. Intuição: leia o gráfico como quem caminha da esquerda para a direita
+
+Todo o vocabulário desta página sai de uma única convenção: **percorra o gráfico
+no sentido em que $x$ cresce**, ou seja, da esquerda para a direita, como quem
+lê um texto.
+
+Fazendo isso, cada trecho da curva é uma subida, uma descida ou um patamar.
+Dizer que a função é **crescente** num trecho é dizer que, caminhando naquele
+trecho, você sobe.
+
+> Uma função é **crescente** num intervalo quando entradas maiores produzem
+> saídas maiores; **decrescente** quando entradas maiores produzem saídas
+> menores.
+
+A parte que costuma confundir é esta: **crescente não é o mesmo que positiva.**
+São perguntas independentes.
+
+Uma função pode ser negativa e crescente ao mesmo tempo — é o caso de uma
+empresa que está no prejuízo mas melhorando a cada mês. E pode ser positiva e
+decrescente: lucrativa, porém piorando. As duas informações respondem coisas
+diferentes:
+
+| Pergunta | Onde se lê no gráfico |
+|---|---|
+| a função é **positiva**? | a curva está **acima** do eixo horizontal? |
+| a função é **crescente**? | a curva **sobe** conforme se anda para a direita? |
+
+Confundir as duas é o erro mais comum ao ler gráficos, e é por isso que elas
+aparecem juntas nesta página.
+
+## 6. Modelo visual: as duas leituras no mesmo gráfico
+
+<CartesianPlane
+  xMin={-5}
+  xMax={105}
+  yMin={-1800}
+  yMax={1100}
+  xUnit={4.2}
+  yUnit={0.075}
+  xStep={10}
+  xLabelEvery={2}
+  yStep={400}
+  yLabelEvery={2}
+  functions={[{f: (x) => -x * x + 100 * x - 1600, domain: [0, 100], tone: 1}]}
+  points={[
+    {at: [20, 0], label: '20', tone: 2, place: 'below-left'},
+    {at: [80, 0], label: '80', tone: 2, place: 'below-right'},
+    {at: [50, 900], label: '(50,\\ 900)', tone: 3, place: 'above'},
+  ]}
+  axisLabels={['x', 'L']}
+  caption="O lucro da serigrafia. Ele cresce até 50 camisetas e decresce depois; é positivo entre 20 e 80. As duas leituras não coincidem."
+/>
+
+Leia o gráfico e compare as duas perguntas.
+
+**Sinal.** A curva está acima do eixo entre $x = 20$ e $x = 80$. Nesse trecho o
+lucro é positivo; fora dele, negativo. Isso já sabíamos — é a resposta da
+inequação.
+
+**Crescimento.** A curva sobe de $x = 0$ até $x = 50$, e desce de $x = 50$ em
+diante. O ponto de virada é $x = 50$.
+
+Os dois trechos **não** coincidem, e é aí que está a informação nova. Entre
+$x = 0$ e $x = 20$, por exemplo, a função é **negativa e crescente**: a
+serigrafia está no prejuízo, mas o prejuízo diminui a cada camiseta a mais.
+Entre $x = 50$ e $x = 80$, é **positiva e decrescente**: ainda dá lucro, mas
+produzir mais piora o resultado.
+
+Isso responde à pergunta do dono. **O lote ótimo é 50 camisetas**, com lucro de
+
+$$
+L(50) = -2500 + 5000 - 1600 = 900 \ \text{reais}.
+$$
+
+E a resposta à outra pergunta é não: não é “quanto maior melhor até os 80”.
+Passar de 50 já piora, embora ainda haja lucro até os 80.
+
+> O ponto onde a função para de crescer e começa a decrescer é o **máximo**. É
+> nele que se lê o melhor resultado possível — e essa é, em geral, a pergunta
+> mais valiosa que se faz a uma função.
+
+Repare que 50 é exatamente o **meio** entre as raízes 20 e 80. Não é
+coincidência, e a próxima página explica por quê.
+
+## 7. Formalização
+
+> Seja $f$ uma função e $I$ um intervalo do seu domínio.
+>
+> - $f$ é **crescente** em $I$ quando, para quaisquer $x_1 < x_2$ em $I$, vale
+>   $f(x_1) < f(x_2)$;
+> - $f$ é **decrescente** em $I$ quando, para quaisquer $x_1 < x_2$ em $I$, vale
+>   $f(x_1) > f(x_2)$.
+
+A definição em símbolos diz exatamente o que a caminhada dizia: avançar em $x$
+faz $f$ subir, no primeiro caso, ou descer, no segundo.
+
+**Exemplo.** Em $L(x) = -x^2 + 100x - 1600$, tome $x_1 = 30$ e $x_2 = 40$, ambos
+menores que 50. Então $L(30) = 500$ e $L(40) = 800$: entrada maior, saída maior.
+A função é crescente ali.
+
+**Contraexemplo, para delimitar.** Não faz sentido dizer que essa função “é
+crescente”, sem mais. Ela é crescente **em** $\,]-\infty, 50]$ e decrescente
+**em** $[50, +\infty[$. Crescimento é sempre uma propriedade de um **trecho**, e
+declarar o trecho faz parte da resposta.
+
+Uma função pode, é claro, ser crescente em todo o seu domínio — é o caso de
+$f(x) = 2x + 3$, que sobe em qualquer trecho que se escolha. Mas aí também se
+diz **onde**: em todo o domínio.
+
+### O sinal e os zeros
+
+> Os **zeros** (ou **raízes**) de $f$ são os valores de $x$ com $f(x) = 0$. No
+> gráfico, são os pontos em que a curva cruza ou toca o eixo horizontal.
+
+Os zeros são as fronteiras do sinal: entre dois zeros consecutivos, a função não
+troca de sinal — é a mesma ideia do quadro de sinais do capítulo anterior, agora
+com nome de função.
+
+Na serigrafia, os zeros são 20 e 80, e eles separam o prejuízo do lucro.
+
+## 8. Simetria: par e ímpar
+
+Algumas funções repetem, do lado esquerdo, o que fazem do lado direito.
+Reconhecer isso economiza metade do trabalho de esboçar um gráfico.
+
+### Funções pares
+
+Compare $f(2)$ e $f(-2)$ para $f(x) = x^2$:
+
+$$
+f(2) = 4, \qquad f(-2) = (-2)^2 = 4.
+$$
+
+São iguais, e não por acaso: elevar ao quadrado apaga o sinal, então entradas
+opostas dão a mesma saída. O mesmo vale para qualquer par de opostos.
+
+> $f$ é **par** quando $f(-x) = f(x)$ para todo $x$ do domínio. O gráfico é
+> simétrico em relação ao **eixo vertical**: o lado esquerdo é o reflexo do
+> direito, como num espelho.
+
+<CartesianPlane
+  xMin={-3.5}
+  xMax={3.5}
+  yMin={-1}
+  yMax={9}
+  xUnit={44}
+  yUnit={26}
+  functions={[{f: (x) => x * x, domain: [-3, 3], tone: 1}]}
+  points={[
+    {at: [2, 4], label: '(2,\\ 4)', tone: 2, place: 'above-right'},
+    {at: [-2, 4], label: '(-2,\\ 4)', tone: 2, place: 'above-left'},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="f(x) = x² é par: entradas opostas dão a mesma altura, e o gráfico dobra sobre o eixo vertical."
+/>
+
+### Funções ímpares
+
+Agora $f(x) = x^3$:
+
+$$
+f(2) = 8, \qquad f(-2) = (-2)^3 = -8.
+$$
+
+A saída não se repete: ela **troca de sinal**. Um expoente ímpar preserva o
+sinal da base, então entradas opostas dão saídas opostas.
+
+> $f$ é **ímpar** quando $f(-x) = -f(x)$ para todo $x$ do domínio. O gráfico é
+> simétrico em relação à **origem**: girá-lo meia volta em torno do ponto
+> $(0,0)$ devolve o mesmo desenho.
+
+<CartesianPlane
+  xMin={-2.6}
+  xMax={2.6}
+  yMin={-9}
+  yMax={9}
+  xUnit={56}
+  yUnit={16}
+  yStep={2}
+  functions={[{f: (x) => x * x * x, domain: [-2.1, 2.1], tone: 1}]}
+  points={[
+    {at: [2, 8], label: '(2,\\ 8)', tone: 2, place: 'above-left'},
+    {at: [-2, -8], label: '(-2,\\ -8)', tone: 2, place: 'below-right'},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="f(x) = x³ é ímpar: entradas opostas dão saídas opostas, e o gráfico gira meia volta sobre si mesmo."
+/>
+
+### O caso mais comum: nenhuma das duas
+
+**A maioria das funções não é par nem ímpar.** Tome $f(x) = x^2 + x$:
+
+$$
+f(2) = 6, \qquad f(-2) = 4 - 2 = 2.
+$$
+
+O 2 não é igual a 6 (logo não é par) nem é o oposto de 6 (logo não é ímpar). Não
+há simetria a aproveitar, e isso é perfeitamente normal.
+
+Os nomes vêm dos expoentes: as potências de expoente **par** ($x^2$, $x^4$) são
+funções pares, e as de expoente **ímpar** ($x$, $x^3$) são ímpares. Somar termos
+de paridades diferentes, como em $x^2 + x$, destrói a simetria.
+
+## 9. Exemplos resolvidos
+
+### Exemplo 1: separar sinal de crescimento
+
+Uma função vale $-40$ em $x = 1$ e $-10$ em $x = 5$. Ela é positiva? É crescente
+nesse trecho?
+
+Não é positiva: os dois valores são negativos, então a curva está abaixo do
+eixo. Mas **é crescente**: a entrada foi de 1 para 5 e a saída foi de $-40$ para
+$-10$, que é maior. A função sobe, embora ainda esteja no negativo.
+
+Na prática: um negócio no prejuízo, mas se recuperando.
+
+### Exemplo 2: ler trechos num gráfico conhecido
+
+*Pause e tente antes de ler.* Para $L(x) = -x^2 + 100x - 1600$, descreva o
+comportamento no trecho $[60, 90]$.
+
+- **Crescimento**: o máximo está em 50, e 60 já passou dele. A função é
+  **decrescente** em todo o trecho.
+- **Sinal**: os zeros são 20 e 80. Entre 60 e 80 a função é **positiva**; entre
+  80 e 90, **negativa**.
+
+Em palavras: a partir de 60 camisetas, produzir mais só piora o resultado — e a
+partir de 80 o negócio passa a dar prejuízo.
+
+Conferindo: $L(60) = -3600 + 6000 - 1600 = 800$, positivo; $L(90) = -8100 + 9000
+- 1600 = -700$, negativo. E $800 > -700$, coerente com decrescer.
+
+### Exemplo 3: testar paridade
+
+*Pause e tente.* Classifique como par, ímpar ou nenhuma das duas: a)
+$f(x) = x^4 - 3$ &nbsp; b) $g(x) = x^3 + x$ &nbsp; c) $h(x) = x^2 + 5x$
+
+O teste é sempre o mesmo: calcule $f(-x)$ e compare com $f(x)$ e com $-f(x)$.
+
+a) $f(-x) = (-x)^4 - 3 = x^4 - 3 = f(x)$. **Par.**
+
+b) $g(-x) = (-x)^3 + (-x) = -x^3 - x = -(x^3 + x) = -g(x)$. **Ímpar.**
+
+c) $h(-x) = x^2 - 5x$. Isso não é $h(x)$, que tem $+5x$, nem é $-h(x)$, que
+seria $-x^2 - 5x$. **Nenhuma das duas.**
+
+Um atalho útil: um polinômio é par se **todos** os expoentes forem pares
+(contando a constante como $x^0$), e ímpar se todos forem ímpares. Misturar
+estraga.
+
+### Exemplo 4: o mínimo de um custo
+
+*Pause e tente.* O custo de produzir $x$ peças por hora é
+$C(x) = x^2 - 40x + 500$ reais. Em que produção o custo é mínimo, e quanto vale?
+
+O coeficiente de $x^2$ é positivo, então a parábola abre para cima: a função
+decresce, atinge um **mínimo** e volta a crescer.
+
+O ponto de virada de uma parábola fica no meio entre as raízes — mas aqui há um
+caminho ainda mais direto, e a próxima página o formaliza. Por ora, teste
+valores em torno do meio da fórmula:
+
+$$
+C(18) = 324 - 720 + 500 = 104, \quad
+C(20) = 400 - 800 + 500 = 100, \quad
+C(22) = 484 - 880 + 500 = 104.
+$$
+
+Os valores caem até 20 e voltam a subir depois, simetricamente. O mínimo é **R\$
+100, produzindo 20 peças por hora**.
+
+Repare que aqui a função **nunca é negativa** — o custo mínimo é 100, bem acima
+de zero. Ela não tem zeros, e a pergunta de sinal fica sem graça. É outro
+exemplo de que sinal e crescimento são independentes.
+
+### Exemplo 5: usar a simetria para desenhar
+
+*Pause e tente.* Sabendo que $f$ é par e que seu gráfico, para $x \ge 0$, sobe
+de $(0, 1)$ até $(3, 10)$, como é o gráfico para $x \le 0$?
+
+Por ser par, o lado esquerdo é o espelho do direito no eixo vertical. Então ele
+**desce** de $(-3, 10)$ até $(0, 1)$.
+
+Repare na inversão: o que é crescente à direita fica decrescente à esquerda. O
+espelho preserva as alturas e inverte o sentido da caminhada. Numa função
+**ímpar**, ao contrário, o crescimento se preserva nos dois lados.
+
+## 10. Erros comuns
+
+> **Erro 1: confundir positiva com crescente.** São perguntas diferentes.
+> Positiva é sobre estar **acima do eixo**; crescente é sobre **subir**. Uma
+> empresa no prejuízo e melhorando é negativa e crescente ao mesmo tempo.
+
+> **Erro 2: dizer “a função é crescente” sem dizer onde.** O lucro da serigrafia
+> cresce até 50 e decresce depois. Crescimento é propriedade de um **trecho**, e
+> o trecho faz parte da resposta.
+
+> **Erro 3: procurar o máximo entre os zeros por tentativa.** Os zeros dizem
+> onde a função **vale zero**, não onde ela é maior. Na serigrafia, o máximo
+> está em 50, e não em 20 nem em 80 — nesses dois o lucro é exatamente zero.
+
+> **Erro 4: achar que toda função é par ou ímpar.** A maioria não é nenhuma das
+> duas. $x^2 + x$ mistura expoente par com ímpar e não tem simetria.
+
+> **Erro 5: testar paridade em um número só.** Achar que $f(1) = f(-1)$ não
+> prova que a função é par: a igualdade precisa valer para **todo** $x$. O teste
+> correto é algébrico — calcular $f(-x)$ e comparar com $f(x)$.
+
+> **Erro 6: esperar que a simetria preserve o crescimento numa função par.** No
+> espelho, subida vira descida. É na função **ímpar** que o sentido se conserva,
+> porque a rotação de meia volta preserva a direção da caminhada.
+
+## 11. Perguntas de verificação
+
+1. Qual a diferença entre uma função ser positiva e ser crescente?
+2. Por que não faz sentido dizer que $L(x) = -x^2 + 100x - 1600$ “é crescente”?
+3. Por que os zeros são as fronteiras do sinal?
+4. Por que o máximo do lucro não está em nenhum dos zeros?
+5. Como se reconhece uma função par pela fórmula? E pelo gráfico?
+6. Por que $x^2 + x$ não é par nem ímpar?
+7. Por que testar $f(1) = f(-1)$ não basta para concluir que a função é par?
+8. Numa função par, por que um trecho crescente à direita corresponde a um
+   decrescente à esquerda?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. **Positiva** é sobre a posição: a curva está acima do eixo horizontal, ou
+   seja, $f(x) > 0$. **Crescente** é sobre a direção: caminhando para a direita,
+   a curva sobe. As duas são independentes — uma função pode ser negativa e
+   crescente, como um prejuízo que diminui.
+2. Porque ela cresce em parte do domínio e decresce em outra: sobe até $x = 50$
+   e desce depois. Crescimento é propriedade de um **intervalo**, e a afirmação
+   só fica completa quando o intervalo é declarado.
+3. Porque uma função só pode trocar de sinal passando pelo zero — para ir de
+   negativa a positiva ela precisa, em algum ponto, valer zero. Entre dois zeros
+   consecutivos, portanto, o sinal não muda.
+4. Porque nos zeros o lucro vale **zero**, que é o pior resultado do trecho
+   lucrativo, não o melhor. O máximo está onde a função para de subir e começa a
+   descer, que na serigrafia é $x = 50$, com R\$ 900.
+5. Pela fórmula: calcula-se $f(-x)$ e verifica-se se dá exatamente $f(x)$. Num
+   polinômio, isso acontece quando todos os expoentes são pares. Pelo gráfico: o
+   desenho é simétrico em relação ao eixo vertical — dobrando a folha nesse
+   eixo, as duas metades coincidem.
+6. Porque mistura um termo de expoente par ($x^2$) com um de expoente ímpar
+   ($x$). Calculando, $f(-x) = x^2 - x$, que não é igual a $x^2 + x$ nem ao seu
+   oposto $-x^2 - x$.
+7. Porque a definição exige que a igualdade valha para **todo** $x$ do domínio,
+   e um único caso pode coincidir por acaso. Em $f(x) = x^2 + x - 2$, por
+   exemplo, é fácil encontrar coincidências pontuais sem que haja simetria
+   alguma. O teste confiável é algébrico.
+8. Porque o espelho no eixo vertical preserva as alturas mas inverte o sentido
+   da caminhada: o que estava à direita e subindo aparece à esquerda descendo.
+   Numa função **ímpar** isso não acontece, porque a rotação de meia volta
+   inverte altura e direção ao mesmo tempo, e os dois efeitos se compensam.
+
+</details>
+
+## 12. Exercícios
+
+### 1. Reconhecimento
+
+1. Uma função vale $f(2) = -5$ e $f(6) = -1$. No trecho de 2 a 6, ela é
+   positiva? É crescente? Responda as duas separadamente.
+2. Os zeros de uma função são $-3$ e 4, e ela é positiva entre eles. Descreva o
+   sinal em cada um dos três trechos da reta.
+3. Diga se cada afirmação é sobre sinal ou sobre crescimento: a) “a curva está
+   acima do eixo” &nbsp; b) “a curva sobe” &nbsp; c) “$f(x) < 0$” &nbsp; d)
+   “$f(1) < f(2)$”
+
+### 2. Explicação
+
+4. Explique, com um exemplo do mundo real, uma função negativa e crescente.
+5. Explique por que os zeros de uma função são as fronteiras do seu sinal.
+6. Um colega diz que $f(x) = x^2$ “é crescente”. Corrija a afirmação.
+
+### 3. Aplicação direta
+
+7. Classifique como par, ímpar ou nenhuma das duas, mostrando o cálculo de
+   $f(-x)$: a) $f(x) = x^4 - 3$ &nbsp; b) $g(x) = x^3 + x$ &nbsp; c)
+   $h(x) = x^2 + 5x$ &nbsp; d) $p(x) = 2x$
+8. Para $L(x) = -x^2 + 100x - 1600$, diga o sinal e o comportamento no trecho
+   $[0, 20]$.
+9. Para a mesma função, diga o sinal e o comportamento no trecho $[60, 90]$.
+
+### 4. Variação
+
+10. O custo horário de uma oficina é $C(x) = x^2 - 40x + 500$ reais para $x$
+    peças por hora. Calcule $C$ em 15, 20 e 25, e diga onde está o mínimo.
+11. Essa função de custo tem zeros? Justifique usando o valor mínimo que você
+    encontrou, sem calcular o discriminante.
+12. Uma função $f$ é ímpar e $f(3) = 7$. Quanto vale $f(-3)$? E se ela fosse
+    par?
+
+<details>
+<summary>Dica para o 11</summary>
+
+Ter zero significa a curva **tocar** o eixo horizontal. Compare a menor altura
+que a função atinge com a altura do eixo.
+
+</details>
+
+### 5. Problema misto
+
+13. A altura de uma bola lançada é $h(t) = 20t - 5t^2$ metros, com $t$ em
+    segundos. a) Quais são os zeros, e o que significam na situação? b) Em que
+    trecho a bola sobe? Em que trecho desce? c) Qual é a altura máxima e quando
+    ela ocorre?
+14. O lucro mensal de uma loja nos primeiros seis meses foi, em milhares de
+    reais: $-8$, $-3$, 1, 4, 2, $-1$. a) Em que meses o lucro foi crescente? b)
+    Em que meses a loja esteve no vermelho? c) Houve algum mês negativo e
+    crescente? Explique o que isso significa.
+
+### 6. Justificativa
+
+15. Mostre algebricamente que $f(x) = x^2 + k$ é par para qualquer constante
+    $k$, e explique o que isso significa no gráfico.
+16. Explique por que uma função par não pode ser crescente em todo o seu domínio
+    (a menos que seja constante).
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. **Não é positiva**: os dois valores estão abaixo de zero. **É crescente**: a
+   entrada cresceu de 2 para 6 e a saída cresceu de $-5$ para $-1$.
+2. Negativa em $\,]-\infty, -3[$, positiva em $\,]-3, 4[$ e negativa em
+   $\,]4, +\infty[$. Nos próprios $-3$ e 4 ela vale zero.
+3. a) sinal &nbsp; b) crescimento &nbsp; c) sinal &nbsp; d) crescimento.
+4. Uma empresa que perdeu R\$ 50 mil em janeiro, R\$ 30 mil em fevereiro e R\$
+   10 mil em março: o resultado é negativo (prejuízo) e crescente (o prejuízo
+   está diminuindo). Serve também um saldo bancário negativo sendo pago aos
+   poucos.
+5. Porque para passar de negativa a positiva a curva precisa cruzar o eixo
+   horizontal, e cruzar o eixo é valer zero. Se não há zero num trecho, a função
+   não pôde trocar de sinal ali.
+6. Ela é **decrescente** em $\,]-\infty, 0]$ e **crescente** em $[0, +\infty[$.
+   Dizer que é crescente sem qualificar ignora metade do gráfico — o ramo
+   esquerdo da parábola desce.
+7. a) $f(-x) = x^4 - 3 = f(x)$: **par**. &nbsp; b) $g(-x) = -x^3 - x = -g(x)$:
+   **ímpar**. &nbsp; c) $h(-x) = x^2 - 5x$, que não é $h(x)$ nem $-h(x)$:
+   **nenhuma**. &nbsp; d) $p(-x) = -2x = -p(x)$: **ímpar**.
+8. Em $[0, 20]$ a função é **negativa** (o zero só ocorre em 20) e **crescente**
+   (o máximo está em 50, ainda à frente). É o trecho em que a serigrafia tem
+   prejuízo, mas ele diminui a cada camiseta.
+9. Em $[60, 90]$ a função é **decrescente** o tempo todo, porque 60 já passou do
+   máximo. Quanto ao sinal, é positiva em $[60, 80[$ e negativa em $\,]80, 90]$,
+   com zero em 80.
+10. $C(15) = 225 - 600 + 500 = 125$; $C(20) = 400 - 800 + 500 = 100$;
+    $C(25) = 625 - 1000 + 500 = 125$. Os valores caem até 20 e sobem depois,
+    simetricamente: o **mínimo é R\$ 100, em 20 peças por hora**.
+11. **Não tem zeros.** A menor altura que a função atinge é 100, e o eixo
+    horizontal está na altura 0. Uma curva cujo ponto mais baixo é 100 nunca
+    encosta no eixo, então nunca vale zero — o custo é sempre positivo, o que
+    aliás faz sentido na situação.
+12. Se $f$ é ímpar, $f(-3) = -f(3) = -7$. Se fosse par, $f(-3) = f(3) = 7$.
+13. a) Os zeros são $t = 0$ e $t = 4$, pois $20t - 5t^2 = 5t(4 - t)$. Significam
+    os instantes em que a bola está no chão: a saída e a volta. &nbsp; b) Sobe
+    em $[0, 2]$ e desce em $[2, 4]$ — o ponto de virada fica no meio dos zeros.
+    &nbsp; c) A altura máxima é $h(2) = 40 - 20 = 20$ metros, aos 2 segundos.
+14. a) Do mês 1 ao 4 o lucro cresce ($-8 \to -3 \to 1 \to 4$); do 4 ao 6
+    decresce. &nbsp; b) No vermelho nos meses 1, 2 e 6, quando o valor é
+    negativo. &nbsp; c) Sim, os meses 1 a 3: o resultado ainda era negativo mas
+    subia. Significa que a loja dava prejuízo e estava se recuperando —
+    exatamente o caso em que sinal e crescimento discordam.
+15. $f(-x) = (-x)^2 + k = x^2 + k = f(x)$, porque o quadrado apaga o sinal da
+    base. Isso vale para qualquer $k$, já que a constante não depende de $x$. No
+    gráfico significa que a curva é simétrica em relação ao eixo vertical: somar
+    $k$ apenas desloca a parábola para cima ou para baixo, sem inclinar nem
+    torcer a simetria.
+16. Se $f$ é par, então $f(-x) = f(x)$ para todo $x$. Tome $x > 0$: as entradas
+    $-x$ e $x$ são diferentes, com $-x < x$, mas produzem a **mesma** saída. Uma
+    função crescente em todo o domínio exigiria $f(-x) < f(x)$ nesse caso, o que
+    contradiz a igualdade. Só resta a possibilidade de a função ser constante,
+    que não é crescente nem decrescente.
+
+</details>
+
+## 13. Revisão curta
+
+- **Crescente** é subir andando para a direita; **decrescente** é descer. É
+  sempre propriedade de um **trecho**, e o trecho faz parte da resposta.
+- **Positiva** é estar acima do eixo. Sinal e crescimento são perguntas
+  **independentes**: existe função negativa e crescente, e positiva e
+  decrescente.
+- O ponto em que a função troca de direção é o **máximo** ou o **mínimo** — e é
+  ali que se lê o melhor (ou pior) resultado possível.
+- Os **zeros** são as fronteiras do sinal, porque a curva só troca de lado
+  passando pelo eixo.
+- O máximo não fica nos zeros: nos zeros a função vale zero.
+- **Par**: $f(-x) = f(x)$, gráfico simétrico no eixo vertical. **Ímpar**:
+  $f(-x) = -f(x)$, gráfico simétrico na origem.
+- Num polinômio, todos os expoentes pares dão função par; todos ímpares dão
+  ímpar; misturar não dá nenhuma das duas — e esse é o caso mais comum.
+- Testar paridade exige o cálculo algébrico de $f(-x)$, não um caso numérico.
+
+Antes de avançar, verifique se você consegue olhar um gráfico e responder
+separadamente “onde é positiva” e “onde é crescente”. A próxima página estuda em
+detalhe a curva que serviu de exemplo aqui — a parábola — e mostra como achar o
+vértice sem tentar valores.

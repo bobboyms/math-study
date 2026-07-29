@@ -1,8 +1,8 @@
 ---
-title: Equações
+title: Equações e inequações
 ---
 
-# Equações: descobrir o valor que falta
+# Equações e inequações: o valor que falta, e a faixa que serve
 
 Os dois capítulos anteriores tratavam de **reescrever**. Aritmética reescreve
 $\frac{1}{2} + \frac{1}{3}$ como $\frac{5}{6}$; álgebra reescreve
@@ -16,6 +16,16 @@ Este capítulo faz a outra pergunta:
 A diferença é grande o bastante para merecer um capítulo. Uma **expressão**
 descreve uma quantidade e não tem resposta; uma **equação** é uma afirmação que
 só é verdadeira para certos valores, e a tarefa é descobrir quais.
+
+A segunda metade do capítulo troca o sinal de igual por um de desigualdade, e com
+isso a pergunta muda de novo:
+
+> Que valores da incógnita tornam esta comparação verdadeira?
+
+A resposta deixa de ser um número e passa a ser uma **faixa** — um intervalo, ou
+uma união de intervalos. Equação e inequação não são assuntos separados: a
+equação entrega a **fronteira**, e a inequação diz de que lado dela está a
+resposta.
 
 ## O que vem antes
 
@@ -45,7 +55,12 @@ elas é sempre uma equação concreta que trava:
 | Equações do 1º grau | $8 + 3x = 23$ | $x^2 + 3x = 40$: o $x$ aparece em dois graus |
 | Equações do 2º grau por fatoração | $x^2 + 3x - 40 = 0$ | $x^2 + 3x + 1 = 0$: não fatora com inteiros |
 | Completar o quadrado | $x^2 + 3x + 1 = 0$ | refazer o mesmo trabalho a cada equação |
-| Fórmula de Bhaskara | qualquer $ax^2 + bx + c = 0$ | — |
+| Fórmula de Bhaskara | qualquer $ax^2 + bx + c = 0$ | $\sqrt{x+3} = x-3$: a incógnita está dentro da raiz |
+| Equações com radical | $\sqrt{x+3} = x-3$ | $3c + 2p = 58$: duas incógnitas de uma vez |
+| Sistemas de duas equações | $3c + 2p = 58$ e $5c + 4p = 102$ | $50 < 20 + 0{,}60m$: não é igualdade |
+| Inequações do 1º grau | $50 < 20 + 0{,}60m$ | $-x^2 + 100x - 1600 > 0$: aparece o quadrado |
+| Inequações do 2º grau | $-x^2 + 100x - 1600 > 0$ | $\frac{200+4x}{x} < 6$: a incógnita está embaixo |
+| Inequações com fração e módulo | $\frac{200+4x}{x} < 6$ | — |
 
 Repare que a última página não traz método novo: ela executa o método da
 anterior **uma única vez**, com letras no lugar dos números, e guarda o
@@ -71,9 +86,22 @@ resultado. É por isso que Bhaskara não precisa ser decorada.
    a fatoração existir.
 4. [A fórmula de Bhaskara](./formula-de-bhaskara) — o método anterior resolvido
    de uma vez por todas.
+5. [Equações com radical](./equacoes-com-radical) — tirar a incógnita de dentro
+   da raiz, e por que a verificação passa a ser obrigatória.
+6. [Sistemas de duas equações](./sistemas-de-duas-equacoes) — duas incógnitas
+   exigem duas informações independentes.
+7. [Intervalos](./intervalos) — a notação que descreve uma faixa inteira de
+   números sem ambiguidade.
+8. [Inequações do 1º grau](./inequacoes-do-primeiro-grau) — as mesmas regras das
+   equações, com uma exceção: o sinal inverte ao multiplicar por negativo.
+9. [Inequações do 2º grau](./inequacoes-do-segundo-grau) — o quadro de sinais.
+10. [Inequações com fração e módulo](./inequacoes-racionais-e-modulares) — quando
+    multiplicar deixa de ser permitido.
 
 ## O que vem depois
 
 O capítulo de [Funções](../funcoes/) para de perguntar "qual é o valor" e passa
 a perguntar "como uma quantidade depende de outra". As raízes encontradas aqui
-reaparecem lá como os pontos em que a curva cruza o eixo horizontal.
+reaparecem lá como os pontos em que a curva cruza o eixo horizontal, e as
+inequações reaparecem em dois papéis: dizer **onde uma fórmula faz sentido** — o
+domínio — e **onde ela é positiva**.

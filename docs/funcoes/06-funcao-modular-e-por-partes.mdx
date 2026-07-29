@@ -1,0 +1,548 @@
+---
+title: Função modular e por partes
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Função modular e por partes: quando uma fórmula só não basta
+
+## 1. Problema motivador: a conta de luz
+
+Uma distribuidora cobra energia em duas faixas:
+
+- **até 100 kWh**: R\$ 0,50 por kWh consumido;
+- **acima de 100 kWh**: R\$ 50 fixos, referentes aos primeiros 100 kWh, mais R\$
+  0,80 por kWh **excedente**.
+
+Qual é a conta de quem consome 80 kWh? E 150 kWh?
+
+O primeiro caso é direto: $0{,}50 \times 80 = 40$ reais. O segundo exige a outra
+regra: os primeiros 100 kWh custam 50 reais, e os 50 kWh restantes custam
+$0{,}80 \times 50 = 40$ reais, totalizando 90.
+
+Agora tente escrever isso como **uma** função. Não dá — nenhuma fórmula única
+descreve as duas faixas, porque a regra literalmente muda no meio do caminho.
+
+E ainda assim isto **é** uma função: para cada consumo há exatamente uma conta.
+A definição do capítulo não exigia fórmula única; exigia regra. Esta página
+mostra como escrever funções assim — e apresenta a mais importante delas, que
+esconde duas fórmulas dentro de um símbolo só: o **módulo**.
+
+## 2. Mapa das ideias
+
+- uma **função definida por partes** usa fórmulas diferentes em trechos
+  diferentes do domínio;
+- cada parte vem acompanhada da **condição** que diz onde ela vale;
+- a **função modular** $f(x) = \lvert x \rvert$ é o exemplo mais importante: seu
+  gráfico é um **V**;
+- toda função modular **é** uma função por partes disfarçada — a definição de
+  valor absoluto já tinha dois casos.
+
+## 3. Para que serve
+
+- tarifas por faixa: energia, água, imposto de renda, frete, estacionamento;
+- descontos progressivos e comissões por meta;
+- qualquer regra que muda a partir de um limite;
+- e, no caso modular, medir **afastamento** — erro de medição, desvio de meta,
+  distância a um alvo.
+
+Dentro da matemática, é aqui que aparece a primeira curva com **bico** — um
+ponto onde a direção muda bruscamente. Isso terá consequências no cálculo, onde
+justamente nesses pontos a derivada não existe.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [valor absoluto](../numeros-e-operacoes/valor-absoluto): qual é a
+definição de $\lvert x \rvert$?**
+$$
+\lvert x \rvert = \begin{cases}
+x, & \text{se } x \ge 0 \\[4pt]
+-x, & \text{se } x < 0
+\end{cases}
+$$
+Repare: essa definição **já** tinha duas fórmulas e duas condições. Ela sempre
+foi uma função por partes.
+
+**2. De [intervalos](../equacoes/intervalos): por que a notação de intervalo
+importa numa tabela de faixas?** Porque é ela que decide de que lado fica o
+valor de fronteira. “Até 100” inclui o 100; “acima de 100” não.
+
+**3. De [transformações](./transformacoes-de-graficos): o que $f(x-3)$ faz com
+um gráfico?** Move 3 unidades para a **direita**. Vamos usar isso para desenhar
+$\lvert x - 3 \rvert$ sem tabela.
+
+**4. De [funções](./funcoes): função precisa de fórmula?** Não. Precisa de
+**regra**: cada entrada determina uma saída. A tabela de faixas cumpre isso.
+
+## 5. Intuição: uma regra que troca de fórmula
+
+Pense na conta de luz como duas máquinas ligadas a uma chave. Se o consumo está
+até 100, a chave manda para a primeira máquina; acima disso, para a segunda.
+
+Nada nisso viola a definição de função. Cada consumo aciona **uma** máquina e
+produz **um** valor. O que existe é uma regra em duas partes.
+
+Duas exigências tornam a construção honesta:
+
+**As condições não podem se sobrepor.** Se uma faixa dissesse “até 100” e a
+outra “de 100 em diante”, o consumo de exatamente 100 acionaria as duas — e a
+máquina hesitaria.
+
+**As condições não podem deixar buracos.** Se fossem “até 99” e “acima de 100”,
+o consumo de 99,5 não acionaria nenhuma, e a máquina travaria.
+
+> Uma função por partes exige que as condições **cubram todo o domínio** e **não
+> se sobreponham**. É o mesmo teste que a página de intervalos aplicou à tabela
+> de fretes.
+
+## 6. Formalização e o modelo visual
+
+Escrevemos a conta de luz assim, com $x$ em kWh:
+
+$$
+C(x) = \begin{cases}
+0{,}50x, & \text{se } 0 \le x \le 100 \\[4pt]
+50 + 0{,}80(x - 100), & \text{se } x > 100
+\end{cases}
+$$
+
+A chave agrupa as partes, e cada linha traz a fórmula e a condição.
+
+<CartesianPlane
+  xMin={-10}
+  xMax={210}
+  yMin={-10}
+  yMax={145}
+  xUnit={2.1}
+  yUnit={2.4}
+  xStep={50}
+  yStep={25}
+  functions={[
+    {f: (x) => 0.5 * x, domain: [0, 100], tone: 1},
+    {f: (x) => 50 + 0.8 * (x - 100), domain: [100, 200], tone: 2},
+  ]}
+  points={[{at: [100, 50], label: '(100,\\ 50)', tone: 3, place: 'above-left'}]}
+  axisLabels={['kWh', 'R\\$']}
+  caption="Duas retas coladas em 100 kWh. A segunda é mais íngreme, porque o kWh excedente custa mais."
+/>
+
+Repare em três coisas.
+
+**As duas partes se encontram.** Em $x = 100$, a primeira fórmula dá
+$0{,}50 \times 100 = 50$, e a segunda dá $50 + 0{,}80 \times 0 = 50$. O gráfico
+não tem salto — a conta não pula de repente quando se cruza a faixa.
+
+**A inclinação muda.** Antes de 100, o gráfico sobe R\$ 0,50 por kWh; depois,
+R\$ 0,80. É exatamente a diferença de tarifa, visível como uma dobra.
+
+**Há um bico em $x = 100$.** A curva é contínua, mas muda de direção
+bruscamente. Nenhuma função dada por uma fórmula polinomial faz isso.
+
+**Conferindo os valores do início**: $C(80) = 40$ pela primeira parte, e
+$C(150) = 50 + 0{,}80(50) = 90$ pela segunda. Confere.
+
+Nem toda função por partes é contínua, aliás. Se a distribuidora cobrasse uma
+taxa extra de R\$ 10 ao ultrapassar os 100 kWh, o gráfico daria um **salto** ali
+— e o consumidor teria interesse real em não cruzar a fronteira.
+
+## 7. A função modular
+
+A definição de valor absoluto já era uma função por partes:
+
+$$
+f(x) = \lvert x \rvert = \begin{cases}
+x, & \text{se } x \ge 0 \\[4pt]
+-x, & \text{se } x < 0
+\end{cases}
+$$
+
+Cada parte é uma reta. À direita do zero, o gráfico é a reta $y = x$; à
+esquerda, a reta $y = -x$, que desce. As duas se encontram na origem, formando
+um **V**.
+
+<CartesianPlane
+  xMin={-4}
+  xMax={4}
+  yMin={-1}
+  yMax={4.5}
+  xUnit={44}
+  yUnit={44}
+  functions={[{f: (x) => Math.abs(x), domain: [-4, 4], tone: 1}]}
+  points={[{at: [0, 0], label: '(0,\\ 0)', tone: 3, place: 'below-right'}]}
+  axisLabels={['x', 'y']}
+  caption="O gráfico de |x|: duas semirretas encontrando-se num bico na origem. A altura sobre cada x é a distância de x até o zero."
+/>
+
+O desenho confirma o que a página de valor absoluto dizia: a altura sobre cada
+ponto é a **distância até o zero**. Por isso o gráfico nunca desce abaixo do
+eixo, e por isso ele é simétrico — $\lvert x \rvert$ é uma função **par**.
+
+- **Domínio**: todos os reais.
+- **Imagem**: $[0, +\infty[$ — nunca negativa.
+- **Vértice**: $(0,0)$, um mínimo.
+- **Comportamento**: decrescente em $\,]-\infty, 0]$, crescente em
+  $[0, +\infty[$.
+
+### Movendo o V
+
+Aqui as transformações da página anterior valem integralmente, e é o caminho
+rápido para desenhar qualquer função modular.
+
+$\lvert x - 3 \rvert$ move o V **3 para a direita**: o bico vai para $(3, 0)$. E
+isso confirma a leitura de distância — $\lvert x - 3 \rvert$ é a distância de
+$x$ até **3**, que se anula justamente em 3.
+
+$\lvert x \rvert + 2$ sobe o V duas unidades, e o bico vai para $(0, 2)$. Como o
+V inteiro subiu, a função nunca chega a zero.
+
+$-\lvert x \rvert$ reflete no eixo horizontal: o V vira um Λ, com **máximo** na
+origem.
+
+## 8. Reescrever um módulo sem barras
+
+Às vezes é preciso remover as barras para calcular ou para resolver uma equação.
+O método é o mesmo da definição: descobrir onde a expressão de dentro troca de
+sinal e escrever uma fórmula para cada lado.
+
+Tome $f(x) = \lvert x - 3 \rvert$. A expressão de dentro, $x - 3$, é:
+
+- positiva ou zero quando $x \ge 3$ — nesse caso o módulo não muda nada;
+- negativa quando $x < 3$ — nesse caso o módulo troca o sinal.
+
+$$
+\lvert x - 3 \rvert = \begin{cases}
+x - 3, & \text{se } x \ge 3 \\[4pt]
+3 - x, & \text{se } x < 3
+\end{cases}
+$$
+
+**Conferindo em $x = 1$**: pela segunda linha, $3 - 1 = 2$. E de fato
+$\lvert 1 - 3 \rvert = \lvert -2 \rvert = 2$. Confere.
+
+Repare que $-(x-3)$ foi escrito como $3 - x$ — a mesma coisa, distribuído. É a
+forma mais legível, e evita carregar um menos na frente do parêntese.
+
+> Para tirar as barras, encontre o valor que **anula** a expressão de dentro.
+> Ele divide a reta em dois trechos, e em cada um o módulo vira uma fórmula sem
+> barras.
+
+## 9. Exemplos resolvidos
+
+### Exemplo 1: calcular numa função por partes
+
+Dada
+$$
+f(x) = \begin{cases}
+2x + 1, & \text{se } x \le 2 \\[4pt]
+x^2, & \text{se } x > 2
+\end{cases}
+$$
+calcule $f(0)$, $f(2)$ e $f(3)$.
+
+O primeiro passo é sempre **decidir qual linha usar**.
+
+- $f(0)$: como $0 \le 2$, vale a primeira linha: $2(0) + 1 = 1$.
+- $f(2)$: como $2 \le 2$, ainda é a primeira linha: $2(2) + 1 = 5$. A condição
+  tem o igual, então o 2 pertence ao primeiro trecho.
+- $f(3)$: como $3 > 2$, vale a segunda: $3^2 = 9$.
+
+Repare que esta função **salta** em $x = 2$: a primeira parte chega a 5, e a
+segunda começa em valores próximos de 4. O gráfico é descontínuo ali.
+
+### Exemplo 2: tirar as barras
+
+*Pause e tente antes de ler.* Escreva $g(x) = \lvert 2x - 6 \rvert$ como função
+por partes.
+
+O que está dentro se anula em $2x - 6 = 0$, ou seja, $x = 3$. Ele é positivo
+para $x > 3$ e negativo para $x < 3$.
+
+$$
+\lvert 2x - 6 \rvert = \begin{cases}
+2x - 6, & \text{se } x \ge 3 \\[4pt]
+6 - 2x, & \text{se } x < 3
+\end{cases}
+$$
+
+**Conferindo em $x = 1$**: pela segunda linha, $6 - 2 = 4$; e
+$\lvert 2 - 6 \rvert = 4$. Confere.
+
+### Exemplo 3: desenhar por transformação
+
+*Pause e tente.* Esboce $h(x) = \lvert x + 2 \rvert - 3$ e dê o vértice, a
+imagem e os zeros.
+
+Partindo do V básico:
+
+1. $\lvert x + 2 \rvert$ — o sinal está **dentro**, então move **2 para a
+   esquerda**: bico em $(-2, 0)$;
+2. $-3$ está **fora**: desce 3, e o bico vai para $(-2, -3)$.
+
+- **Vértice**: $(-2, -3)$, um mínimo.
+- **Imagem**: $[-3, +\infty[$.
+- **Zeros**: onde $\lvert x+2 \rvert = 3$, isto é, onde $x$ está a 3 de
+  distância de $-2$: em $x = 1$ e $x = -5$.
+
+**Conferindo**: $h(1) = \lvert 3 \rvert - 3 = 0$ e
+$h(-5) = \lvert -3 \rvert - 3 = 0$. Confere.
+
+Repare que, por ter descido abaixo do eixo, este V tem **dois** zeros — enquanto
+o V básico tinha um só e o V subido não teria nenhum.
+
+### Exemplo 4: uma faixa de imposto
+
+*Pause e tente.* Um imposto simplificado cobra 5% sobre a renda até R\$ 2.000 e
+15% sobre o que passar disso. Escreva a função do imposto e calcule para uma
+renda de R\$ 3.000.
+
+Até 2.000, o imposto é $0{,}05r$. Acima disso, são R\$ 100 — os 5% dos primeiros
+2.000 — mais 15% do excedente:
+
+$$
+I(r) = \begin{cases}
+0{,}05r, & \text{se } 0 \le r \le 2000 \\[4pt]
+100 + 0{,}15(r - 2000), & \text{se } r > 2000
+\end{cases}
+$$
+
+Para $r = 3000$: $100 + 0{,}15 \times 1000 = 100 + 150 = 250$ reais.
+
+**Conferindo a continuidade em 2.000**: a primeira linha dá 100, e a segunda dá
+$100 + 0 = 100$. As partes se encontram, como deve ser num imposto bem desenhado
+— senão ganhar um real a mais poderia aumentar o imposto em muito mais que um
+real.
+
+### Exemplo 5: reconhecer o erro de uma tabela
+
+*Pause e tente.* Uma transportadora divulga: “até 5 kg, R\$ 20; de 5 a 12 kg,
+R\$ 35; acima de 12 kg, R\$ 50”. Que problema essa tabela tem?
+
+O peso de exatamente **5 kg** cai em duas faixas: “até 5” inclui o 5, e “de 5 a
+12” também. As condições se **sobrepõem**, e o cliente não sabe se paga 20 ou
+35.
+
+O conserto é escrever as faixas como intervalos que se encaixam: $\,]0, 5]$,
+$\,]5, 12]$ e $\,]12, +\infty[$. Agora cada peso cai em exatamente uma.
+
+## 10. Erros comuns
+
+> **Erro 1: usar a linha errada.** Antes de calcular, verifique **qual
+> condição** a entrada satisfaz. Em $f(2)$ com a condição $x \le 2$, é a
+> primeira linha que vale — o igual está do lado dela.
+
+> **Erro 2: escrever condições que se sobrepõem ou deixam buracos.** “Até 5” e
+> “de 5 a 12” cobrem o 5 duas vezes; “até 4” e “acima de 5” deixam o 4,5 sem
+> regra. Cada entrada precisa de exatamente uma linha.
+
+> **Erro 3: mover o V para o lado errado.** $\lvert x + 2 \rvert$ tem bico em
+> $-2$, não em $+2$. Vale a regra da página anterior: o sinal dentro age ao
+> contrário. Pergunte onde a expressão se anula.
+
+> **Erro 4: achar que $\lvert x \rvert$ é sempre $x$ com o sinal trocado.** Só
+> para $x$ negativo. Para $x$ positivo, o módulo não faz nada — e é por isso que
+> a definição tem duas linhas.
+
+> **Erro 5: supor que toda função por partes é contínua.** As partes podem não
+> se encontrar. A conta de luz é contínua porque foi projetada assim, mas o
+> Exemplo 1 salta em $x = 2$.
+
+> **Erro 6: esquecer que o bico é um ponto especial.** Na dobra, a função muda
+> de direção bruscamente. Mais adiante isso importa: é exatamente ali que o
+> cálculo encontra dificuldade.
+
+## 11. Perguntas de verificação
+
+1. Por que a conta de luz não pode ser escrita com uma fórmula única?
+2. Por que ela ainda assim é uma função?
+3. Que duas exigências as condições de uma função por partes precisam cumprir?
+4. Por que o gráfico de $\lvert x \rvert$ é um V?
+5. Por que $\lvert x \rvert$ é uma função par?
+6. Como se descobre onde “quebrar” um módulo em duas fórmulas?
+7. Por que faz sentido que a conta de luz seja contínua na fronteira das faixas?
+8. Quantos zeros pode ter uma função da forma $\lvert x - a \rvert + k$? De que
+   depende?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque a regra de cobrança **muda** ao cruzar os 100 kWh: antes o preço é R\$
+   0,50 por kWh, depois é R\$ 0,80 sobre o excedente. Uma única expressão
+   algébrica não consegue trocar de comportamento a partir de um valor.
+2. Porque cada consumo determina **exatamente uma** conta. A definição de função
+   exige regra, não fórmula — e a tabela de faixas é uma regra perfeitamente
+   determinada.
+3. As condições precisam **cobrir todo o domínio**, para que nenhuma entrada
+   fique sem regra, e **não se sobrepor**, para que nenhuma entrada tenha duas
+   saídas.
+4. Porque cada uma das duas partes da definição é uma reta. À direita do zero o
+   gráfico é $y = x$, que sobe; à esquerda é $y = -x$, que desce. As duas se
+   encontram na origem, formando o bico.
+5. Porque $\lvert -x \rvert = \lvert x \rvert$: números opostos estão à mesma
+   distância do zero. No gráfico, isso é a simetria em relação ao eixo vertical
+   — os dois braços do V são espelhos um do outro.
+6. Encontrando o valor que **anula** a expressão dentro das barras. Ele divide a
+   reta em dois trechos: onde o interior é positivo, o módulo não muda nada;
+   onde é negativo, o módulo troca o sinal.
+7. Porque um salto significaria que consumir um kWh a mais aumentaria a conta em
+   muito mais que o preço de um kWh. Na fronteira, quem consome 100 e quem
+   consome 100,1 pagariam valores muito diferentes — o que seria arbitrário e
+   daria ao consumidor um incentivo estranho a não cruzar a linha.
+8. Pode ter **dois**, **um** ou **nenhum**, dependendo do sinal de $k$. Se
+   $k < 0$, o V desceu abaixo do eixo e o corta duas vezes. Se $k = 0$, o bico
+   toca o eixo: um zero só. Se $k > 0$, o V inteiro está acima do eixo e não há
+   zero nenhum.
+
+</details>
+
+## 12. Exercícios
+
+### 1. Reconhecimento
+
+1. Dada
+   $$
+   f(x) = \begin{cases}
+   2x + 1, & \text{se } x \le 2 \\[4pt]
+   x^2, & \text{se } x > 2
+   \end{cases}
+   $$
+   calcule $f(0)$, $f(2)$, $f(3)$ e $f(-1)$.
+2. Diga o vértice de: a) $\lvert x \rvert$ &nbsp; b) $\lvert x - 4 \rvert$
+   &nbsp; c) $\lvert x + 1 \rvert + 2$
+3. Uma tabela de frete diz: “até 5 kg, R\$ 20; de 5 a 12 kg, R\$ 35”. Aponte o
+   problema e reescreva as faixas corretamente.
+
+### 2. Explicação
+
+4. Explique por que a conta de luz é uma função, apesar de não ter fórmula
+   única.
+5. Explique por que o gráfico de $\lvert x \rvert$ nunca fica abaixo do eixo
+   horizontal.
+6. Explique por que o bico de $\lvert x - 5 \rvert$ está em 5, e não em $-5$.
+
+### 3. Aplicação direta
+
+7. Escreva sem barras, como função por partes: a) $\lvert x - 3 \rvert$ &nbsp;
+   b) $\lvert 2x - 6 \rvert$ &nbsp; c) $\lvert x + 4 \rvert$
+8. Para cada função, dê vértice, imagem e zeros: a) $\lvert x \rvert - 2$ &nbsp;
+   b) $\lvert x - 1 \rvert + 3$ &nbsp; c) $-\lvert x \rvert + 4$
+
+### 4. Variação
+
+9. Esboce $h(x) = \lvert x + 2 \rvert - 3$ descrevendo as transformações a
+   partir do V básico, e encontre os zeros.
+10. Escreva a função da conta de luz do início da página e calcule $C(60)$,
+    $C(100)$ e $C(200)$.
+11. A função abaixo é contínua? Justifique calculando os dois lados da
+    fronteira.
+    $$
+    g(x) = \begin{cases}
+    3x, & \text{se } x < 2 \\[4pt]
+    x + 4, & \text{se } x \ge 2
+    \end{cases}
+    $$
+
+<details>
+<summary>Dica para o 11</summary>
+
+Continuidade na fronteira significa que as duas partes chegam ao **mesmo valor**
+ali. Calcule o que cada fórmula dá em $x = 2$ e compare.
+
+</details>
+
+### 5. Problema misto
+
+12. Um imposto cobra 5% sobre a renda até R\$ 2.000 e 15% sobre o excedente. a)
+    Escreva $I(r)$. b) Calcule o imposto para rendas de R\$ 1.500, R\$ 2.000 e
+    R\$ 3.000. c) Verifique se a função é contínua em 2.000 e explique por que
+    isso é desejável.
+13. Uma fábrica aceita peças cuja medida se afaste no máximo 0,4 mm de 25 mm. O
+    afastamento de uma peça de medida $m$ é $E(m) = \lvert m - 25 \rvert$. a)
+    Qual é o vértice e o que ele significa? b) Para que medidas a peça é
+    aprovada? Escreva como intervalo. c) Esboce o gráfico de $E$ e indique a
+    faixa de aprovação nele.
+
+### 6. Justificativa
+
+14. Mostre que $\lvert x \rvert = \sqrt{x^2}$ testando com um valor positivo e
+    um negativo, e explique por que os dois gráficos coincidem.
+15. Explique por que $\lvert x - a \rvert$ tem sempre o bico em $a$, qualquer
+    que seja $a$, usando a leitura de distância.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. $f(0) = 1$ (primeira linha, pois $0 \le 2$); $f(2) = 5$ (ainda a primeira, o
+   igual está com ela); $f(3) = 9$ (segunda linha); $f(-1) = -1$ (primeira
+   linha).
+2. a) $(0,0)$ &nbsp; b) $(4,0)$ &nbsp; c) $(-1, 2)$.
+3. O peso de exatamente 5 kg cai nas duas faixas, e o preço fica ambíguo. Uma
+   escrita correta é: $\,]0, 5]$ custa R\$ 20 e $\,]5, 12]$ custa R\$ 35.
+4. Porque, apesar de a fórmula mudar, **cada** consumo determina **um** valor de
+   conta, sem ambiguidade. A definição de função pede regra determinada, e não
+   uma expressão algébrica única.
+5. Porque $\lvert x \rvert$ é a distância de $x$ até o zero, e distância nunca é
+   negativa. O menor valor possível é 0, atingido só em $x = 0$.
+6. Porque o bico fica onde a expressão dentro das barras se anula, e $x - 5$ se
+   anula em $x = 5$. Na leitura de distância, $\lvert x - 5 \rvert$ mede o
+   afastamento até 5, que é zero exatamente em 5.
+7. a) $x - 3$ se $x \ge 3$; $3 - x$ se $x < 3$. &nbsp; b) $2x - 6$ se $x \ge 3$;
+   $6 - 2x$ se $x < 3$. &nbsp; c) $x + 4$ se $x \ge -4$; $-x - 4$ se $x < -4$.
+8. a) Vértice $(0,-2)$; imagem $[-2, +\infty[$; zeros em $x = 2$ e $x = -2$.
+   &nbsp; b) Vértice $(1, 3)$; imagem $[3, +\infty[$; **nenhum** zero, porque o
+   V inteiro está acima do eixo. &nbsp; c) Vértice $(0, 4)$, agora um
+   **máximo**; imagem $\,]-\infty, 4]$; zeros em $x = 4$ e $x = -4$.
+9. Duas transformações: $\lvert x+2 \rvert$ move o V 2 para a **esquerda**, e o
+   $-3$ desce 3. O bico vai para $(-2, -3)$. Os zeros são os pontos a 3 de
+   distância de $-2$: $x = 1$ e $x = -5$.
+10. $C(x) = 0{,}50x$ para $0 \le x \le 100$, e $C(x) = 50 + 0{,}80(x-100)$ para
+    $x > 100$. Assim, $C(60) = 30$ reais; $C(100) = 50$ reais;
+    $C(200) = 50 + 0{,}80 \times 100 = 130$ reais.
+11. **É contínua.** Pela primeira fórmula, à medida que $x$ se aproxima de 2 o
+    valor tende a $3 \times 2 = 6$; pela segunda, em $x = 2$ o valor é
+    $2 + 4 = 6$. As duas partes chegam à mesma altura, então não há salto. Se a
+    segunda fórmula fosse $x + 5$, ela daria 7 e o gráfico pularia uma unidade
+    na fronteira.
+12. a) $I(r) = 0{,}05r$ para $0 \le r \le 2000$, e
+    $I(r) = 100 + 0{,}15(r - 2000)$ para $r > 2000$. &nbsp; b) $I(1500) = 75$;
+    $I(2000) = 100$; $I(3000) = 100 + 150 = 250$ reais. &nbsp; c) É contínua: as
+    duas fórmulas dão 100 em $r = 2000$. Isso é desejável porque, com salto,
+    ganhar um real a mais poderia aumentar o imposto em muito mais que um real,
+    e o contribuinte ficaria em situação pior ao ganhar mais.
+13. a) O vértice é $(25, 0)$: a peça de medida exatamente 25 mm tem afastamento
+    zero. &nbsp; b) A aprovação exige $\lvert m - 25 \rvert \le 0{,}4$, ou seja,
+    $m \in [24{,}6;\ 25{,}4]$. &nbsp; c) O gráfico é um V com bico em $(25,0)$;
+    a faixa de aprovação é o trecho do eixo horizontal em que o V se mantém
+    abaixo da altura 0,4.
+14. Com $x = 3$: $\sqrt{3^2} = \sqrt9 = 3 = \lvert 3 \rvert$. Com $x = -3$:
+    $\sqrt{(-3)^2} = \sqrt9 = 3 = \lvert -3 \rvert$. Os gráficos coincidem
+    porque o quadrado apaga o sinal e a raiz devolve sempre o valor não negativo
+    — o caminho de ida e volta produz exatamente o valor absoluto.
+15. Porque $\lvert x - a \rvert$ é a **distância entre $x$ e $a$**, e a única
+    forma de a distância valer zero é $x$ coincidir com $a$. Como o módulo nunca
+    é negativo, esse zero é o menor valor possível, e o ponto mais baixo do
+    gráfico — o bico — fica exatamente em $x = a$.
+
+</details>
+
+## 13. Revisão curta
+
+- Uma **função por partes** usa fórmulas diferentes em trechos diferentes, cada
+  uma com a sua **condição**.
+- As condições precisam **cobrir todo o domínio** e **não se sobrepor** — o
+  mesmo teste das tabelas de faixa.
+- Antes de calcular, decida **qual linha** a entrada aciona.
+- A **função modular** $\lvert x \rvert$ é a função por partes mais importante:
+  gráfico em **V**, vértice na origem, imagem $[0, +\infty[$, e **par**.
+- Para tirar as barras, ache o valor que **anula** o interior: ele divide a reta
+  em dois trechos.
+- As **transformações** funcionam igual: $\lvert x - 3 \rvert$ move o V para a
+  direita, $\lvert x \rvert + 2$ sobe, $-\lvert x \rvert$ vira o V de cabeça
+  para baixo.
+- Um V pode ter **dois, um ou nenhum** zero, conforme desça, toque ou fique
+  acima do eixo.
+- Nem toda função por partes é **contínua**: as partes podem não se encontrar.
+  Em tarifas e impostos, a continuidade é uma escolha deliberada de projeto.
+
+Antes de avançar, verifique se você consegue esboçar $\lvert x - 4 \rvert - 1$ e
+dizer seus zeros sem tabela. A próxima página trata de encaixar uma função
+dentro de outra — o que acontece quando duas regras se aplicam em sequência.

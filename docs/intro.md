@@ -20,19 +20,26 @@ Estude os capítulos nesta ordem:
    conhecidos, e ampliar que tipo de número se aceita.
 3. [Álgebra](./algebra/) — escrever a regra que vale para qualquer número, e
    reescrevê-la sem mudar o que ela vale.
-4. [Equações](./equacoes/) — descobrir o valor que a situação não informa.
+4. [Equações e inequações](./equacoes/) — descobrir o valor que a situação não
+   informa, e a faixa de valores que satisfaz uma condição.
 5. [Funções](./funcoes/) — deixar de perguntar "quanto vale" e passar a
    perguntar "como uma quantidade depende de outra".
-6. [Geometria e trigonometria](./geometria/) — medir forma e posição, dar
+6. [Exponenciais e logaritmos](./exponenciais-e-logaritmos/) — o crescimento em
+   que o acréscimo depende do que já existe, e a operação que o inverte.
+7. [Geometria e trigonometria](./geometria/) — medir forma e posição, dar
    endereço a cada ponto e ligar ângulo a comprimento.
-7. [Revisão geral](./revisao-geral) — o arco inteiro em exercícios que misturam
+8. [Revisão geral](./revisao-geral) — o arco inteiro em exercícios que misturam
    os capítulos.
 
 A ordem segue a dependência entre as ideias, e cada capítulo abre dizendo o que
 herda do anterior. Aritmética sustenta a álgebra; a fatoração da álgebra é o que
-resolve equações; as raízes de uma equação são o que localiza um gráfico no
-capítulo de funções; e a geometria reaproveita todos eles, transformando figuras
-em equações e ângulos em números.
+resolve equações e inequações; as raízes de uma equação são o que localiza um
+gráfico no capítulo de funções; exponenciais e logaritmos acrescentam a família
+que nenhuma operação polinomial produz; e a geometria reaproveita todos eles,
+transformando figuras em equações e ângulos em números.
+
+Ao fim do percurso, o conjunto de ferramentas cobre o que um curso de cálculo
+assume de antemão.
 
 ## Como estudar cada página
 

@@ -1,0 +1,513 @@
+---
+title: Função polinomial
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Função polinomial: o que muda acima do 2º grau
+
+## 1. Problema motivador: a caixa, de novo
+
+A página de [domínio e imagem](./dominio-e-imagem) deixou uma pergunta em
+aberto. A caixa de papelão feita de uma folha de 30 cm por 20 cm, com cortes de
+lado $x$ nos cantos, tem volume
+
+$$
+V(x) = x(30 - 2x)(20 - 2x).
+$$
+
+O gráfico mostrava o volume subindo, atingindo um máximo perto de $x = 5$ e
+descendo. Calculamos $V(5) = 1000$ cm³ e observamos que era o maior valor entre
+os testados. Mas **é mesmo o máximo?** E por que a curva tem aquele formato, com
+uma corcova e depois uma queda?
+
+Com a parábola, sabíamos responder: havia fórmula para o vértice. Aqui não há —
+e nem poderia haver a mesma, porque expandindo o produto obtemos
+
+$$
+V(x) = 4x^3 - 100x^2 + 600x,
+$$
+
+uma função de **grau 3**. A família mudou.
+
+Esta página não vai achar o máximo exato — isso é trabalho do cálculo. Ela vai
+responder ao que **é** possível responder sem cálculo, e que já é bastante:
+quantas raízes uma função dessas pode ter, para onde a curva vai nos extremos, e
+como esboçar o gráfico a partir da forma fatorada.
+
+## 2. Mapa das ideias
+
+- uma **função polinomial** é uma soma de potências de $x$ com expoentes
+  naturais, como $4x^3 - 100x^2 + 600x$;
+- o **grau** é o maior expoente, e ele limita o número de raízes;
+- o **comportamento nos extremos** — para onde a curva vai quando $x$ fica muito
+  grande ou muito negativo — depende só do grau e do sinal do coeficiente
+  principal;
+- a **multiplicidade** de uma raiz diz se a curva **cruza** o eixo ali ou apenas
+  **encosta** nele.
+
+## 3. Para que serve
+
+- modelar volumes e capacidades, que envolvem produtos de três dimensões;
+- descrever curvas de custo, receita ou desempenho com mais de uma virada;
+- ajustar uma curva a dados que sobem, descem e sobem de novo;
+- em computação gráfica, curvas polinomiais são a base do desenho de fontes e
+  trajetórias.
+
+Dentro da matemática, é a família mais simples depois das quadráticas, e a que
+prepara o terreno para as **funções racionais** — quocientes de polinômios — que
+vêm três páginas adiante.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [função quadrática](./funcao-quadratica): o que a forma fatorada de uma
+quadrática entrega de imediato?** As raízes. Em $(x-1)(x-5)$, elas são 1 e 5,
+porque um produto se anula quando algum fator se anula.
+
+**2. De [inequações do 2º grau](../equacoes/inequacoes-do-segundo-grau): como se
+estuda o sinal de um produto?** Pelo **quadro de sinais**: marcam-se as raízes,
+que partem a reta em trechos, e testa-se um número por trecho.
+
+**3. De [crescimento e simetria](./crescimento-sinal-e-simetria): quando um
+polinômio é par? E ímpar?** Par quando todos os expoentes são pares; ímpar
+quando todos são ímpares.
+
+**4. De [potências](../numeros-e-operacoes/potencias): qual é o sinal de $x^3$
+para $x$ negativo?** Negativo. Expoente **ímpar** preserva o sinal da base;
+expoente **par** apaga.
+
+O item 4 é o que decide todo o comportamento nos extremos. Guarde-o.
+
+## 5. Formalização
+
+> Uma **função polinomial** é toda função da forma
+> $$
+> f(x) = a_n x^n + a_{n-1}x^{n-1} + \ldots + a_1 x + a_0,
+> $$
+> com expoentes naturais e $a_n \neq 0$. O número $n$ é o **grau**, e $a_n$ é o
+> **coeficiente principal**.
+
+O domínio é sempre **todos os reais**: não há denominador nem raiz, e potências
+de expoente natural aceitam qualquer número.
+
+**Exemplo.** $V(x) = 4x^3 - 100x^2 + 600x$ tem grau 3 e coeficiente principal 4.
+
+**Contraexemplo, para delimitar.** Nem toda soma de potências é polinômio. As
+expressões $\frac{1}{x}$ (expoente $-1$), $\sqrt{x}$ (expoente $\frac12$) e
+$2^x$ (a variável **no** expoente) não são polinomiais. A exigência de expoente
+**natural** é o que dá à família suas propriedades.
+
+Já vimos casos particulares desta definição sem chamá-los assim:
+
+| Grau | Nome | Gráfico |
+|---:|---|---|
+| 0 | constante | reta horizontal |
+| 1 | afim | reta inclinada |
+| 2 | quadrática | parábola |
+| 3 | cúbica | curva com até duas viradas |
+
+## 6. Quantas raízes, e quantas viradas
+
+Duas perguntas se respondem só olhando o grau.
+
+> Um polinômio de grau $n$ tem **no máximo $n$ raízes reais** e **no máximo
+> $n - 1$ viradas** no gráfico.
+
+O limite das raízes vem da forma fatorada. Se conseguirmos escrever
+$f(x) = a(x - r_1)(x - r_2)\cdots$, cada fator contribui com uma raiz, e um
+polinômio de grau $n$ não comporta mais de $n$ fatores desse tipo — senão o grau
+do produto passaria de $n$.
+
+**Exemplo.** $V(x) = x(30-2x)(20-2x)$ é grau 3 e tem três raízes: $x = 0$,
+$x = 15$ e $x = 10$, cada uma anulando um fator.
+
+“No máximo” é importante: uma quadrática pode ter duas, uma ou nenhuma raiz
+real, como o custo da oficina mostrou. O mesmo vale acima.
+
+Quanto às viradas, a parábola de grau 2 tem uma; a cúbica pode ter duas — uma
+subida, uma descida e outra subida. É exatamente o formato do volume da caixa.
+
+## 7. O comportamento nos extremos
+
+Esta é a informação mais útil para esboçar o gráfico, e ela sai de uma
+observação simples: **para $x$ muito grande, o termo de maior grau domina todos
+os outros**.
+
+Compare, em $V(x) = 4x^3 - 100x^2 + 600x$:
+
+| $x$ | $4x^3$ | $-100x^2$ | $600x$ | total |
+|---:|---:|---:|---:|---:|
+| 10 | 4 000 | $-10\,000$ | 6 000 | 0 |
+| 50 | 500 000 | $-250\,000$ | 30 000 | 280 000 |
+| 100 | 4 000 000 | $-1\,000\,000$ | 60 000 | 3 060 000 |
+
+Em $x = 10$ os três termos são comparáveis. Em $x = 100$, o termo cúbico é
+quatro vezes maior que o quadrático e sessenta vezes maior que o linear. Quanto
+mais longe se vai, mais o $4x^3$ decide sozinho.
+
+> Longe da origem, um polinômio se comporta como o seu **termo de maior grau**.
+> Basta o grau e o sinal do coeficiente principal para saber para onde a curva
+> vai.
+
+E aí entram só dois fatos: se o grau é **par**, os dois lados vão para o mesmo
+lugar; se é **ímpar**, vão para lados opostos. É o comportamento de $x^2$ e
+$x^3$, que já conhecemos.
+
+| Grau | $a_n > 0$ | $a_n < 0$ |
+|---|---|---|
+| **par** | sobe dos dois lados | desce dos dois lados |
+| **ímpar** | desce à esquerda, sobe à direita | sobe à esquerda, desce à direita |
+
+Uma consequência que vale registrar: **todo polinômio de grau ímpar tem pelo
+menos uma raiz real.** Se a curva vem de baixo à esquerda e vai para cima à
+direita, ela precisa cruzar o eixo em algum ponto do caminho.
+
+## 8. Modelo visual: o gráfico da caixa
+
+<CartesianPlane
+  xMin={-2}
+  xMax={17}
+  yMin={-700}
+  yMax={1200}
+  xUnit={26}
+  yUnit={0.19}
+  xStep={5}
+  yStep={200}
+  yLabelEvery={2}
+  functions={[{f: (x) => 4 * x ** 3 - 100 * x ** 2 + 600 * x, domain: [-1.5, 16], tone: 1}]}
+  points={[
+    {at: [0, 0], label: '0', tone: 2, place: 'below-left'},
+    {at: [10, 0], label: '10', tone: 2, place: 'below-right'},
+    {at: [15, 0], label: '15', tone: 2, place: 'below-right'},
+  ]}
+  axisLabels={['x', 'V']}
+  caption="V(x) = x(30−2x)(20−2x). Três raízes, duas viradas, e nos extremos ela desce à esquerda e sobe à direita — o padrão do grau ímpar com coeficiente positivo."
+/>
+
+Tudo o que a seção anterior previu está no desenho: três raízes (0, 10 e 15),
+duas viradas, e o comportamento de grau ímpar com coeficiente positivo — vindo
+de baixo à esquerda, indo para cima à direita.
+
+Repare que só o trecho entre 0 e 10 corresponde a caixas de verdade, como o
+domínio determinou. O resto é a fórmula falando sozinha.
+
+E o máximo? Ele está perto de $x = 4{,}5$, e não exatamente em 5. Encontrá-lo
+com precisão exige derivada — mas o esboço já mostra **que existe** e **onde
+fica**, o que muitas vezes basta.
+
+## 9. Multiplicidade: cruzar ou encostar
+
+Compare duas curvas na raiz $x = 2$:
+
+- $f(x) = (x-2)(x+1)$ — o fator $(x-2)$ aparece **uma** vez;
+- $g(x) = (x-2)^2(x+1)$ — ele aparece **duas** vezes.
+
+O número de repetições chama-se **multiplicidade** da raiz, e ele decide o
+comportamento local.
+
+Em $f$, ao passar por 2, o fator $(x-2)$ troca de sinal e arrasta a função
+junto: a curva **cruza** o eixo. Em $g$, o fator aparece ao quadrado, e quadrado
+nunca é negativo — a função toca o zero e **volta pelo mesmo lado**.
+
+> Raiz de multiplicidade **ímpar**: a curva **cruza** o eixo. Raiz de
+> multiplicidade **par**: a curva **encosta** e volta.
+
+**Conferindo com $g(x) = (x-2)^2(x+1)$** perto de 2: em $x = 1{,}9$,
+$(-0{,}1)^2 \times 2{,}9 = 0{,}029$, positivo; em $x = 2{,}1$,
+$(0{,}1)^2 \times 3{,}1 = 0{,}031$, também positivo. A função não trocou de
+sinal — como o vértice da parábola, que toca o eixo sem atravessar.
+
+Isso importa no quadro de sinais: uma raiz de multiplicidade par **não** separa
+trechos de sinais diferentes.
+
+## 10. Exemplos resolvidos
+
+### Exemplo 1: ler tudo da forma fatorada
+
+Estude $f(x) = (x+2)(x-1)(x-3)$.
+
+**Grau**: três fatores do 1º grau, então grau 3. Expandindo, o termo principal
+seria $x^3$, com coeficiente 1.
+
+**Raízes**: $-2$, 1 e 3, cada uma anulando um fator.
+
+**Extremos**: grau ímpar, coeficiente positivo — desce à esquerda, sobe à
+direita.
+
+**Sinal**, pelo quadro:
+
+| Trecho | $x+2$ | $x-1$ | $x-3$ | $f$ |
+|---|:---:|:---:|:---:|:---:|
+| $x < -2$ | $-$ | $-$ | $-$ | $-$ |
+| $-2 < x < 1$ | $+$ | $-$ | $-$ | $+$ |
+| $1 < x < 3$ | $+$ | $+$ | $-$ | $-$ |
+| $x > 3$ | $+$ | $+$ | $+$ | $+$ |
+
+**Conferindo**: $f(0) = 2 \times (-1) \times (-3) = 6$, positivo — bate com o
+segundo trecho.
+
+### Exemplo 2: comportamento nos extremos
+
+*Pause e tente antes de ler.* Para onde vai cada curva, à esquerda e à direita?
+a) $f(x) = -2x^4 + 3x - 1$ &nbsp; b) $g(x) = x^5 - 100x^2$
+
+a) Grau 4, **par**, com coeficiente principal $-2 < 0$: **desce dos dois
+lados**. Os outros termos não importam longe da origem.
+
+b) Grau 5, **ímpar**, coeficiente $+1$: **sobe à direita, desce à esquerda**.
+
+Repare que em (b) o coeficiente $-100$ é grande, e perto da origem ele domina —
+$g(2) = 32 - 400 = -368$. Mas em $x = 100$ temos $x^5 = 10^{10}$ contra $10^6$:
+o quinto grau ganha por um fator de dez mil. **Coeficiente grande atrasa a
+virada, não a impede.**
+
+### Exemplo 3: multiplicidade
+
+*Pause e tente.* Esboce o comportamento de $h(x) = (x+1)(x-2)^2$ perto de cada
+raiz.
+
+Em $x = -1$: multiplicidade 1, **ímpar** — a curva **cruza** o eixo.
+
+Em $x = 2$: multiplicidade 2, **par** — a curva **encosta** e volta.
+
+**Conferindo o sinal** em torno de 2: em $x = 1{,}9$, $2{,}9 \times 0{,}01 > 0$;
+em $x = 2{,}1$, $3{,}1 \times 0{,}01 > 0$. Positiva dos dois lados, como
+previsto.
+
+E o grau total é 3 (contando o fator repetido duas vezes), então nos extremos
+ela desce à esquerda e sobe à direita.
+
+### Exemplo 4: quantas raízes são possíveis
+
+*Pause e tente.* Um polinômio de grau 4 pode ter exatamente 3 raízes reais? E
+zero raízes?
+
+**Três raízes: sim** — basta uma delas ter multiplicidade 2. Por exemplo,
+$(x-1)^2(x-2)(x-3)$ tem grau 4 e as raízes 1, 2 e 3, sendo a primeira dupla.
+
+**Zero raízes: também sim.** $f(x) = x^4 + 1$ nunca vale zero, porque $x^4$
+nunca é negativo e somar 1 mantém tudo acima. É o análogo, em grau 4, da
+parábola que não toca o eixo.
+
+O que um polinômio de grau 4 **não** pode ter é cinco raízes — o grau é um teto.
+
+### Exemplo 5: quando o grau é ímpar
+
+*Pause e tente.* Por que $f(x) = x^3 - 7x + 2$ certamente tem raiz real, sem
+calcular nenhuma?
+
+Grau **ímpar**, coeficiente principal positivo: a curva vem de $-\infty$ à
+esquerda e vai para $+\infty$ à direita. Para sair de valores muito negativos e
+chegar a valores muito positivos, ela precisa passar pelo zero em algum ponto.
+
+**Conferindo com dois valores**: $f(-3) = -27 + 21 + 2 = -4$, negativo, e
+$f(0) = 2$, positivo. Há raiz entre $-3$ e 0.
+
+Este argumento não vale para grau par: $x^4 + 1$ sobe dos dois lados sem nunca
+cruzar.
+
+## 11. Erros comuns
+
+> **Erro 1: usar a fórmula do vértice em grau maior que 2.** $-\frac{b}{2a}$
+> vale só para parábolas. Uma cúbica tem duas viradas, e nenhuma delas se acha
+> assim.
+
+> **Erro 2: achar que grau $n$ significa exatamente $n$ raízes.** É um **teto**.
+> $x^4+1$ tem grau 4 e nenhuma raiz real.
+
+> **Erro 3: olhar o coeficiente errado para os extremos.** Quem decide é o
+> **principal**, o do maior grau — não o primeiro que aparece escrito. Reordene
+> a fórmula antes de decidir.
+
+> **Erro 4: supor que um coeficiente grande muda o comportamento distante.** Em
+> $x^5 - 100x^2$, o $-100$ manda perto da origem, mas longe dela o quinto grau
+> vence sempre.
+
+> **Erro 5: tratar toda raiz como um cruzamento.** Multiplicidade **par** faz a
+> curva encostar e voltar, sem trocar de sinal.
+
+> **Erro 6: chamar de polinômio o que não é.** $\frac{1}{x}$, $\sqrt{x}$ e $2^x$
+> não têm expoentes naturais na variável, e não pertencem a esta família.
+
+## 12. Perguntas de verificação
+
+1. Por que o domínio de uma função polinomial é sempre todos os reais?
+2. Por que o grau limita o número de raízes?
+3. Por que “no máximo $n$ raízes” e não “exatamente $n$”?
+4. Por que só o termo de maior grau importa longe da origem?
+5. Por que todo polinômio de grau ímpar tem pelo menos uma raiz real?
+6. Qual a diferença entre uma raiz de multiplicidade 1 e uma de multiplicidade
+   2?
+7. Por que $\sqrt{x}$ não é uma função polinomial?
+8. Um polinômio de grau 3 pode ter três viradas? Justifique.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque a fórmula só tem somas, multiplicações e potências de expoente
+   **natural** — operações que aceitam qualquer número real. Não há denominador
+   que possa zerar nem raiz que exija radicando não negativo.
+2. Porque cada raiz $r$ corresponde a um fator $(x - r)$ na forma fatorada, e o
+   grau do produto é a soma dos graus dos fatores. Mais de $n$ fatores do 1º
+   grau produziriam um polinômio de grau maior que $n$.
+3. Porque a curva pode simplesmente não cruzar o eixo. $x^2 + 1$ tem grau 2 e
+   nenhuma raiz real; $x^4 + 1$ tem grau 4 e nenhuma. O grau é um teto, não uma
+   cota obrigatória.
+4. Porque as potências crescem em ritmos muito diferentes. Em $x = 100$, o termo
+   $x^3$ vale um milhão enquanto $x^2$ vale dez mil — cem vezes menos. Quanto
+   mais longe se vai, mais a diferença aumenta, e o termo de maior grau passa a
+   decidir o valor praticamente sozinho.
+5. Porque grau ímpar faz a curva ir para lados opostos nos dois extremos: de
+   valores muito negativos de um lado a muito positivos do outro. Para fazer
+   essa travessia, ela tem de passar pelo zero em algum ponto.
+6. Multiplicidade 1 (ímpar) faz a curva **cruzar** o eixo, trocando de sinal.
+   Multiplicidade 2 (par) faz a curva **encostar** e voltar pelo mesmo lado, sem
+   trocar de sinal — como o vértice de uma parábola que toca o eixo.
+7. Porque o expoente da variável seria $\frac{1}{2}$, e a definição exige
+   expoentes **naturais**. É essa exigência que garante domínio total e o
+   comportamento previsível nos extremos.
+8. **Não.** Um polinômio de grau $n$ tem no máximo $n-1$ viradas, então uma
+   cúbica tem no máximo duas. Três viradas exigiriam grau 4 ou mais.
+
+</details>
+
+## 13. Exercícios
+
+### 1. Reconhecimento
+
+1. Diga o grau e o coeficiente principal: a) $3x^4 - x + 7$ &nbsp; b)
+   $-2x^3 + 5x^2$ &nbsp; c) $x^2 - 9x^5 + 1$ &nbsp; d) $8$
+2. Quais destas **não** são polinomiais? Justifique. $x^3 - 2x$, &nbsp;
+   $\frac{2}{x}$, &nbsp; $\sqrt{x} + 1$, &nbsp; $5x^7$, &nbsp; $3^x$
+3. Quantas raízes e quantas viradas, no máximo, pode ter um polinômio de grau 5?
+
+### 2. Explicação
+
+4. Explique por que o termo de maior grau domina longe da origem.
+5. Explique por que grau ímpar garante pelo menos uma raiz real, e grau par não.
+6. Explique a diferença, no gráfico, entre uma raiz simples e uma raiz dupla.
+
+### 3. Aplicação direta
+
+7. Para $f(x) = (x+2)(x-1)(x-3)$: dê o grau, as raízes, o comportamento nos
+   extremos e o quadro de sinais.
+8. Descreva o comportamento nos extremos de: a) $-2x^4 + 3x - 1$ &nbsp; b)
+   $x^5 - 100x^2$ &nbsp; c) $7 - x^6$ &nbsp; d) $3x^3 + 2x$
+
+### 4. Variação
+
+9. Para $h(x) = (x+1)(x-2)^2$: dê o grau, as raízes com multiplicidade, e diga
+   em qual delas a curva cruza e em qual encosta.
+10. Um polinômio de grau 4 pode ter exatamente 3 raízes reais? Dê um exemplo ou
+    explique por que não.
+11. Mostre que $f(x) = x^3 - 7x + 2$ tem raiz entre $-3$ e 0, sem calcular a
+    raiz.
+
+<details>
+<summary>Dica para o 11</summary>
+
+Calcule a função nos dois extremos e compare os sinais. Se ela é negativa num
+ponto e positiva noutro, alguma coisa aconteceu no meio do caminho.
+
+</details>
+
+### 5. Problema misto
+
+12. Retome a caixa: $V(x) = x(30-2x)(20-2x)$. a) Expanda e confirme que o grau é
+    3. b) Dê as três raízes e explique o significado de cada uma na situação. c)
+    Descreva o comportamento nos extremos e diga por que ele não tem significado
+    físico.
+13. Uma caixa é feita de uma folha quadrada de 24 cm de lado, com cortes de $x$
+    nos cantos. a) Escreva $V(x)$ e diga o grau. b) Dê o domínio da situação. c)
+    Calcule $V(2)$, $V(4)$ e $V(6)$ e diga entre quais valores está o máximo.
+
+### 6. Justificativa
+
+14. Explique por que um polinômio de grau $n$ não pode ter $n+1$ raízes,
+    argumentando pela forma fatorada.
+15. Mostre que $f(x) = x^4 + 1$ não tem raiz real e explique por que isso não
+    contradiz nada do que a página afirmou.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) grau 4, coeficiente 3 &nbsp; b) grau 3, coeficiente $-2$ &nbsp; c) grau 5,
+   coeficiente $-9$ — reordenando, o termo principal é $-9x^5$ &nbsp; d) grau 0,
+   coeficiente 8.
+2. Não são polinomiais: $\frac{2}{x}$ (expoente $-1$), $\sqrt{x}+1$ (expoente
+   $\frac12$) e $3^x$ (a variável está **no** expoente). As outras duas têm só
+   expoentes naturais.
+3. No máximo **5 raízes** e no máximo **4 viradas**.
+4. Porque as potências crescem em ritmos muito diferentes: em $x = 100$, $x^5$ é
+   dez mil vezes maior que $x^3$. Longe da origem, a diferença é tão grande que
+   os termos menores viram correções desprezíveis diante do maior.
+5. Grau ímpar faz os dois extremos irem para lados **opostos** — um para
+   $-\infty$, outro para $+\infty$. Uma curva que atravessa de um ao outro tem
+   de cruzar o eixo. Grau par manda os dois extremos para o **mesmo** lado, e a
+   curva pode ficar inteira acima (ou abaixo) do eixo, sem nunca cruzá-lo.
+6. Numa raiz **simples**, a curva atravessa o eixo e troca de sinal. Numa raiz
+   **dupla**, ela encosta e volta pelo mesmo lado, sem trocar de sinal — o ponto
+   é um mínimo ou máximo local sobre o eixo.
+7. Grau 3, coeficiente 1. Raízes $-2$, 1 e 3. Nos extremos, desce à esquerda e
+   sobe à direita. Sinal: negativa em $\,]-\infty,-2[$, positiva em $\,]-2,1[$,
+   negativa em $\,]1,3[$, positiva em $\,]3,+\infty[$.
+8. a) grau par, coeficiente negativo: **desce dos dois lados**. &nbsp; b) grau
+   ímpar, coeficiente positivo: desce à esquerda, sobe à direita. &nbsp; c)
+   reordenando, $-x^6 + 7$: grau par, coeficiente negativo — desce dos dois
+   lados. &nbsp; d) grau ímpar, coeficiente positivo: desce à esquerda, sobe à
+   direita.
+9. Grau 3 (contando o fator repetido). Raízes: $-1$ com multiplicidade 1 e 2 com
+   multiplicidade 2. Em $-1$ a curva **cruza**; em 2 ela **encosta** e volta,
+   porque a multiplicidade é par.
+10. **Sim**, desde que uma raiz seja dupla. Exemplo: $(x-1)^2(x-2)(x-3)$ tem
+    grau 4 e exatamente três raízes distintas — 1, 2 e 3 —, sendo a primeira de
+    multiplicidade 2.
+11. $f(-3) = -27 + 21 + 2 = -4$, negativo; $f(0) = 2$, positivo. Como a função
+    passa de negativa a positiva entre $-3$ e 0, ela cruza o eixo em algum ponto
+    desse intervalo.
+12. a) $x(30-2x)(20-2x) = x(4x^2 - 100x + 600) = 4x^3 - 100x^2 + 600x$: grau 3.
+    &nbsp; b) Raízes 0, 10 e 15. O 0 é o corte nulo (não há caixa, altura zero);
+    o 10 é o corte que zera a largura da base; o 15 zeraria o comprimento — mas
+    esse já está fora do domínio, porque a largura acabou antes. &nbsp; c) Nos
+    extremos ela desce à esquerda e sobe à direita, o que significaria volumes
+    negativos e volumes arbitrariamente grandes. Nada disso corresponde a
+    caixas: fora de $\,]0,10[$, a fórmula fala sozinha.
+13. a) $V(x) = x(24-2x)^2$, de grau 3. &nbsp; b) É preciso $x > 0$ e
+    $24 - 2x > 0$, logo $D = \,]0, 12[$. &nbsp; c) $V(2) = 2 \times 400 = 800$;
+    $V(4) = 4 \times 256 = 1024$; $V(6) = 6 \times 144 = 864$. Os valores sobem
+    até 4 e caem depois, então o máximo está entre 2 e 6 — mais precisamente
+    perto de 4.
+14. Cada raiz $r$ dá um fator $(x-r)$, e o grau de um produto é a soma dos graus
+    dos fatores. Com $n+1$ raízes distintas, o polinômio teria de conter $n+1$
+    fatores do 1º grau, e seu grau seria pelo menos $n+1$ — contradizendo a
+    hipótese de que o grau é $n$.
+15. Como $x^4$ é uma potência de expoente par, ela nunca é negativa: vale no
+    mínimo 0, em $x = 0$. Somando 1, a função vale no mínimo 1, e portanto nunca
+    chega a zero. Isso não contradiz nada, porque o grau é **par**: a regra que
+    garante raiz vale apenas para grau ímpar, e o limite de $n$ raízes é um
+    teto, não um mínimo.
+
+</details>
+
+## 14. Revisão curta
+
+- Uma **função polinomial** é soma de potências de expoente **natural**, com
+  domínio igual a todos os reais.
+- O **grau** é o maior expoente. Ele dá o teto: no máximo $n$ raízes e no máximo
+  $n-1$ viradas.
+- Longe da origem, o **termo de maior grau domina**. Só ele decide o
+  comportamento nos extremos.
+- Grau **par**: os dois lados vão para o mesmo lugar. Grau **ímpar**: vão para
+  lados opostos — e por isso **todo polinômio de grau ímpar tem raiz real**.
+- O sinal do coeficiente principal decide se sobe ou desce.
+- A **multiplicidade** de uma raiz diz se a curva **cruza** (ímpar) ou
+  **encosta** (par) no eixo.
+- A forma **fatorada** entrega raízes, multiplicidades e o quadro de sinais de
+  imediato — daí a insistência do capítulo de álgebra em fatorar.
+- A fórmula do vértice **não** se aplica acima do 2º grau; achar máximos exatos
+  em grau maior é trabalho do cálculo.
+
+Antes de avançar, verifique se você consegue esboçar $(x+1)(x-2)^2$ sem tabela,
+dizendo onde cruza, onde encosta e para onde vai nos extremos. A próxima página
+resolve o problema que ficou de fora: **como fatorar** um polinômio de grau 3 ou
+mais, quando nenhum fator comum salta à vista.

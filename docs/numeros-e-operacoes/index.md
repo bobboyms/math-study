@@ -41,7 +41,9 @@ Só para acompanhar esse dia já é preciso quase todo o capítulo:
 - **frações, decimais e porcentagens** para representar partes;
 - **potências** para representar crescimento repetido, área e volume;
 - **raízes** para desfazer potências e recuperar uma medida;
-- **expoentes fracionários** para escrever raiz e potência na mesma linguagem.
+- **expoentes fracionários** para escrever raiz e potência na mesma linguagem;
+- **valor absoluto** para medir o tamanho de uma diferença sem perguntar para
+  que lado ela foi.
 
 Agora imagine que o dono queira prever quanto ganhará se vender a mesma
 quantidade **todos os dias**, sem saber ainda qual será essa quantidade. Esse
@@ -52,8 +54,9 @@ o próximo começa.
 
 Primeiro aprendemos a operar com quantidades. Depois ampliamos o tipo de número
 que aceitamos: negativos, frações e decimais. Em seguida estudamos formas
-compactas de representar repetição e medida: potências e raízes. Por fim
-juntamos essas duas linguagens com expoentes fracionários.
+compactas de representar repetição e medida: potências e raízes. Juntamos essas
+duas linguagens com expoentes fracionários e, no fim, voltamos à reta numérica
+para medir distância com o valor absoluto.
 
 Cada página amplia a anterior, e nenhuma delas fecha sozinha: raízes só fazem
 sentido depois de potências, porque raiz é a pergunta inversa da potência.
@@ -83,6 +86,7 @@ Estude na ordem. Cada uma aprofunda um degrau antes de passar para o próximo.
 6. [Potências](./potencias)
 7. [Raízes](./raizes)
 8. [Expoentes fracionários](./expoentes-fracionarios)
+9. [Valor absoluto](./valor-absoluto)
 
 ## O que vem depois
 

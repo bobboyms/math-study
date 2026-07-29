@@ -1,0 +1,595 @@
+---
+title: Intervalos
+---
+
+import NumberLine from '@site/src/components/NumberLine';
+
+# Intervalos: escrever uma faixa inteira de números
+
+## 1. Problema motivador: “conservar entre 2 °C e 8 °C”
+
+A bula de uma vacina traz a instrução:
+
+> Conservar entre 2 °C e 8 °C.
+
+Um técnico de farmácia confere o termômetro da geladeira e lê exatamente **8,0
+°C**. Ele descarta o lote ou não?
+
+A instrução, em português comum, não decide. A palavra “entre” às vezes inclui
+os extremos e às vezes não — dependendo de quem escreveu. Se o autor quis dizer
+“de 2 a 8, inclusive”, a leitura de 8,0 está dentro da faixa. Se quis dizer
+“estritamente entre”, está fora. E aqui a diferença não é acadêmica: um lote de
+vacina pode ser descartado, ou aplicado indevidamente, por causa dessa
+ambiguidade.
+
+O mesmo problema aparece numa transportadora que anuncia:
+
+> Até 10 kg: R\$ 20. Acima de 10 kg: R\$ 35.
+
+Uma encomenda de exatamente 10 kg custa 20 ou 35? Aqui a linguagem foi mais
+cuidadosa — “até” costuma incluir e “acima de” costuma excluir —, mas ainda
+depende de convenção, não de regra.
+
+A matemática não pode conviver com isso. Esta página traz a notação que decide a
+questão sem depender de interpretação: **os intervalos**. No fim, as duas
+situações acima ficam escritas de um jeito que não admite dúvida.
+
+## 2. Mapa das ideias
+
+- **intervalo** é um conjunto de todos os números reais entre dois extremos;
+- os **extremos** são os dois números que limitam a faixa;
+- o intervalo é **fechado** num extremo quando esse número **pertence** a ele, e
+  **aberto** quando não pertence;
+- um intervalo é **ilimitado** quando se estende sem parar para um dos lados;
+- a **união** de intervalos junta duas faixas separadas num único conjunto.
+
+Por exemplo, $[2, 8]$ é a faixa de 2 a 8 **incluindo** os dois extremos — a
+leitura de 8,0 °C está dentro. Já $\,]2, 8[\,$ é a mesma faixa **sem** os
+extremos: 8,0 estaria fora. São conjuntos diferentes, e a escrita diz qual é
+qual.
+
+## 3. Para que serve
+
+- especificar faixas de temperatura, de peso, de pressão e de tolerância sem
+  ambiguidade;
+- descrever faixas de preço, de renda tributável ou de consumo escalonado;
+- registrar o resultado de uma inequação, que quase nunca é um número e quase
+  sempre é uma faixa;
+- dizer para quais valores uma expressão faz sentido — o **domínio** de uma
+  função, que é o assunto imediato do capítulo seguinte.
+
+Dentro da matemática, o intervalo é a forma padrão de responder “quais
+números?”. As próximas três páginas produzem intervalos como resposta o tempo
+todo.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [números negativos](../numeros-e-operacoes/numeros-negativos): o que
+significa dizer que $-7$ é menor que $-2$?** Que $-7$ está **mais à esquerda**
+na reta numérica. A ordem dos números é a ordem das posições: quanto mais à
+direita, maior.
+
+**2. Da mesma página: como se lê a reta numérica?** Cada ponto da reta é um
+número, e cada número tem um ponto. Entre dois números quaisquer há infinitos
+outros — não existe “o próximo número” depois de 2, como existe o próximo
+inteiro.
+
+**3. De [valor absoluto](../numeros-e-operacoes/valor-absoluto): o que descreve
+a condição $\lvert x - 5 \rvert \le 3$?** Os números cuja distância até 5 não
+passa de 3. Ou seja, uma **faixa em torno de um centro** — que é exatamente a
+ideia de intervalo, vista do outro lado.
+
+O item 2 explica por que precisamos de uma notação especial. Não dá para listar
+os números de uma faixa: eles são infinitos, e entre dois quaisquer sempre cabe
+mais um. A única saída é descrever a faixa pelos **limites**.
+
+## 5. Intuição: um pedaço da reta, com duas decisões nas pontas
+
+Um intervalo é um pedaço contínuo da reta numérica — sem buracos, sem saltos.
+Para descrevê-lo, bastam três informações:
+
+- onde ele **começa**;
+- onde ele **termina**;
+- se cada uma dessas duas pontas **entra ou não** no conjunto.
+
+As duas primeiras são óbvias. É a terceira que a linguagem comum erra, e é ela
+que a notação resolve.
+
+Pense num muro de 2 a 8 metros de altura. Dizer “a faixa vai de 2 a 8” não
+esclarece se os tijolos exatamente na marca dos 8 metros pertencem à faixa. A
+notação de intervalo obriga quem escreve a decidir isso, e registra a decisão
+num símbolo que não se perde.
+
+> Um intervalo é uma faixa da reta mais uma decisão, ponta a ponta, sobre
+> incluir ou excluir o extremo.
+
+## 6. Modelo visual: cheio inclui, vazio exclui
+
+O desenho registra a decisão com dois símbolos diferentes nas pontas: **bola
+cheia** quando o extremo entra, **bola vazia** quando não entra.
+
+<NumberLine
+  min={0}
+  max={10}
+  unit={44}
+  spans={[{from: 2, to: 8, tone: 1}]}
+  marks={[
+    {at: 2, label: '2', tone: 1},
+    {at: 8, label: '8', tone: 1},
+  ]}
+  caption="O intervalo [2, 8]: as duas bolas são cheias, então 2 e 8 pertencem ao conjunto. A leitura de 8,0 °C está dentro da faixa."
+/>
+
+<NumberLine
+  min={0}
+  max={10}
+  unit={44}
+  spans={[{from: 2, to: 8, tone: 2}]}
+  marks={[
+    {at: 2, label: '2', tone: 2, open: true},
+    {at: 8, label: '8', tone: 2, open: true},
+  ]}
+  caption="O intervalo ]2, 8[: as bolas são vazias, então 2 e 8 ficam de fora. Aqui a leitura de 8,0 °C seria descartada."
+/>
+
+As duas faixas ocupam o mesmo pedaço da reta e diferem em **exatamente dois
+números**. Parece pouco, e do ponto de vista de quantidade é: dois números
+contra uma infinidade. Mas são justamente os dois números sobre os quais alguém
+vai ter de decidir na prática — e por isso a notação não os deixa implícitos.
+
+E nada obriga as duas pontas a serem iguais. Um intervalo pode ser fechado de um
+lado e aberto do outro:
+
+<NumberLine
+  min={-2}
+  max={6}
+  unit={44}
+  spans={[{from: -1, to: 4, tone: 3}]}
+  marks={[
+    {at: -1, label: '-1', tone: 3, open: true},
+    {at: 4, label: '4', tone: 3},
+  ]}
+  caption="O intervalo ]−1, 4]: o −1 fica de fora, o 4 entra. Cada ponta tem sua própria decisão."
+/>
+
+## 7. Formalização
+
+> Sejam $a$ e $b$ números reais com $a < b$.
+>
+> - **fechado**: $[a, b]$ é o conjunto dos $x$ com $a \le x \le b$;
+> - **aberto**: $\,]a, b[\,$ é o conjunto dos $x$ com $a < x < b$;
+> - **semiabertos**: $[a, b[$ tem $a \le x < b$, e $\,]a, b]$ tem $a < x \le b$.
+
+A regra de leitura do símbolo é simples e não tem exceção: **o colchete que
+“abraça” o número o inclui; o colchete que “dá as costas” o exclui.**
+
+**Exemplo.** $[2, 8]$ contém 2, contém 8 e contém tudo entre eles, inclusive
+$2{,}0001$ e $7{,}9999$.
+
+**Contraexemplo, para delimitar.** $[2, 8]$ **não** contém 8,1 nem 1,99. E
+$\,]2, 8[\,$ não contém 2 nem 8 — embora contenha $2{,}000001$, que está tão
+perto de 2 quanto se queira. Não existe “o primeiro número do intervalo aberto”:
+essa é a diferença real entre aberto e fechado, e é ela que dá trabalho quando
+se estuda limite.
+
+### Intervalos ilimitados
+
+Quando a faixa não termina de um dos lados, usamos os símbolos $+\infty$ e
+$-\infty$:
+
+| Escrita | Significa | Exemplo em palavras |
+|---|---|---|
+| $[a, +\infty[$ | $x \ge a$ | “pelo menos $a$” |
+| $\,]a, +\infty[$ | $x > a$ | “mais que $a$” |
+| $\,]-\infty, b]$ | $x \le b$ | “no máximo $b$” |
+| $\,]-\infty, b[$ | $x < b$ | “menos que $b$” |
+
+> **O lado do infinito é sempre aberto.** Nunca se escreve $[a, +\infty]$. O
+> motivo não é convenção: $+\infty$ **não é um número**, e portanto não é um
+> valor que $x$ possa assumir. O colchete fechado significaria “este extremo
+> pertence ao conjunto”, e não há extremo nenhum ali para pertencer — a faixa
+> simplesmente não termina.
+
+### Uma nota sobre notação
+
+A escrita $\,]a, b[\,$ é a usual nos livros brasileiros do ensino médio, e é a
+que este curso adota. Você também vai encontrar, sobretudo em livros de cálculo,
+a notação $(a, b)$ para o mesmo intervalo aberto.
+
+As duas dizem a mesma coisa. Preferimos os colchetes aqui por um motivo prático:
+neste curso, $(2, 8)$ já significa **o ponto** de coordenadas 2 e 8 no plano, e
+usar o mesmo símbolo para duas coisas diferentes atrapalha. Quando encontrar
+$(a, b)$ num livro de cálculo, saiba que é o nosso $\,]a, b[$.
+
+## 8. União: quando a resposta é feita de dois pedaços
+
+Nem toda resposta é uma faixa só. Considere: “os números que são menores que 1
+**ou** maiores que 3”.
+
+<NumberLine
+  min={-2}
+  max={6}
+  unit={44}
+  spans={[
+    {from: -2, to: 1, tone: 1},
+    {from: 3, to: 6, tone: 1},
+  ]}
+  marks={[
+    {at: 1, label: '1', tone: 1, open: true},
+    {at: 3, label: '3', tone: 1, open: true},
+  ]}
+  caption="Dois pedaços separados, com um buraco entre 1 e 3. As setas nas pontas lembram que as faixas continuam."
+/>
+
+Esse conjunto **não é um intervalo**, porque tem um buraco: 2 não pertence a
+ele, embora esteja entre dois números que pertencem. A escrita usa o símbolo de
+**união**, $\cup$:
+
+$$
+\,]-\infty,\ 1[\ \cup\ ]3,\ +\infty[.
+$$
+
+Leia como “ou”: um número está nesse conjunto se está no primeiro pedaço **ou**
+no segundo.
+
+O símbolo irmão é a **interseção**, $\cap$, que significa “e”: pertencer aos
+dois ao mesmo tempo. Por exemplo,
+
+$$
+[0, 10] \cap [4, 20] = [4, 10],
+$$
+
+porque estar nos dois intervalos exige estar acima de 4 (exigência do segundo) e
+abaixo de 10 (exigência do primeiro).
+
+## 9. A ponte com o valor absoluto
+
+A página de [valor absoluto](../numeros-e-operacoes/valor-absoluto) terminou com
+uma observação que agora ganha nome. A condição
+
+$$
+\lvert x - 5 \rvert \le 3
+$$
+
+diz “a distância de $x$ até 5 não passa de 3”. Andando 3 para cada lado a partir
+de 5, chega-se a 2 e a 8 — e como a desigualdade é $\le$, os extremos entram:
+
+$$
+\lvert x - 5 \rvert \le 3
+\qquad\text{é o mesmo que}\qquad
+[2,\ 8].
+$$
+
+É exatamente a faixa da vacina, escrita de outro jeito. E a tradução funciona
+nos dois sentidos:
+
+> Todo intervalo limitado é uma condição com módulo, e vice-versa. O **centro**
+> é o ponto médio dos extremos e o **raio** é a metade da distância entre eles.
+> Desigualdade estrita ($<$) dá intervalo aberto; desigualdade com igual ($\le$)
+> dá intervalo fechado.
+
+Para $[2, 8]$: o centro é $\frac{2+8}{2} = 5$ e o raio é $\frac{8-2}{2} = 3$ —
+os números que apareceram acima.
+
+Ter as duas escritas à disposição é útil porque cada uma responde a uma pergunta
+melhor. O intervalo mostra de imediato **onde a faixa começa e termina**; o
+módulo mostra de imediato **em torno de que valor ela está centrada e com que
+folga**. Uma tolerância de fabricação se enuncia melhor com módulo; uma faixa de
+temperatura, com intervalo.
+
+## 10. Exemplos resolvidos
+
+### Exemplo 1: da frase para o símbolo
+
+Escreva em notação de intervalo: “todos os números maiores ou iguais a $-3$ e
+menores que 5”.
+
+“Maior ou igual a $-3$” inclui o $-3$: colchete fechado. “Menor que 5” exclui o
+5: colchete aberto. Portanto, $[-3,\ 5[$.
+
+### Exemplo 2: do símbolo para a frase
+
+*Pause e tente antes de ler.* O que é $\,]-\infty,\ -2]$?
+
+O lado esquerdo não termina, e o direito termina em $-2$ **incluindo** o $-2$.
+Em palavras: “todos os números menores ou iguais a $-2$”, ou “no máximo $-2$”.
+
+Cuidado com a leitura no caso negativo: “no máximo $-2$” inclui $-5$, $-100$ e
+$-1000$, que são todos menores que $-2$. O intervalo se estende para a
+**esquerda**.
+
+### Exemplo 3: pertence ou não
+
+*Pause e tente.* Decida cada caso: $8 \in [2, 8]$? &nbsp; $8 \in [2, 8[$? &nbsp;
+$-2 \in \,]-\infty, -2]$? &nbsp; $0 \in \,]0, +\infty[$?
+
+- $8 \in [2, 8]$: **sim** — o colchete fechado à direita inclui o 8.
+- $8 \in [2, 8[$: **não** — aqui o colchete à direita está virado para fora.
+- $-2 \in \,]-\infty, -2]$: **sim** — o colchete à direita é fechado.
+- $0 \in \,]0, +\infty[$: **não** — o colchete à esquerda é aberto, então o
+  próprio 0 fica de fora, embora $0{,}0001$ pertença.
+
+### Exemplo 4: de intervalo para módulo
+
+*Pause e tente.* Escreva $\,]-3,\ 7[\,$ como uma condição com valor absoluto.
+
+O centro é o ponto médio: $\frac{-3 + 7}{2} = 2$. O raio é metade da distância
+entre os extremos: $\frac{7 - (-3)}{2} = 5$. Como o intervalo é aberto, a
+desigualdade é estrita:
+
+$$
+\lvert x - 2 \rvert < 5.
+$$
+
+Conferindo nas pontas: com $x = 7$, teríamos $\lvert 5 \rvert = 5$, que **não**
+é menor que 5 — o 7 fica de fora, como o colchete aberto exigia. E com $x = 2$,
+$\lvert 0 \rvert = 0 < 5$, dentro. Confere.
+
+### Exemplo 5: união a partir de uma frase
+
+*Pause e tente.* Escreva o conjunto dos números que estão a **mais** de 4 de
+distância de 1.
+
+“Mais de 4 de distância de 1” é $\lvert x - 1 \rvert > 4$. Andando 4 para cada
+lado a partir de 1, chega-se a $-3$ e a 5. Mas atenção: a condição pede os que
+estão **longe**, e não os que estão perto — o conjunto é o que sobra **fora** da
+faixa:
+
+$$
+\,]-\infty,\ -3[\ \cup\ ]5,\ +\infty[.
+$$
+
+As pontas são abertas porque a desigualdade é estrita: $-3$ e 5 estão a
+exatamente 4 de distância, e a condição pede mais que isso.
+
+Repare no contraste com o Exemplo 4: módulo **menor** que um valor dá um
+intervalo só, no meio; módulo **maior** dá dois pedaços, nas bordas.
+
+### Exemplo 6: resolvendo o problema da vacina
+
+A instrução “conservar entre 2 °C e 8 °C” quer dizer, no padrão sanitário, que
+os dois extremos são aceitáveis. Escrita sem ambiguidade:
+
+$$
+T \in [2,\ 8]
+\qquad\text{ou, o que é o mesmo,}\qquad
+\lvert T - 5 \rvert \le 3.
+$$
+
+Agora as leituras se decidem sozinhas:
+
+| Leitura | Está em $[2, 8]$? | Decisão |
+|---:|---|---|
+| 1,9 °C | não | descarta |
+| 2,0 °C | sim | conserva |
+| 5,5 °C | sim | conserva |
+| 8,0 °C | sim | conserva |
+| 8,1 °C | não | descarta |
+
+O técnico do início da página **não descarta** o lote.
+
+E a transportadora? “Até 10 kg” inclui os 10; “acima de 10 kg” não. Em símbolos,
+com $m$ a massa em quilos:
+
+$$
+\text{R\$ 20 para } m \in\ ]0,\ 10]
+\qquad\text{e}\qquad
+\text{R\$ 35 para } m \in\ ]10,\ +\infty[.
+$$
+
+Repare que as duas faixas não se sobrepõem e não deixam buraco: todo peso
+positivo cai em exatamente uma delas. É assim que uma tabela de preços deve ser
+escrita — e é o teste que denuncia tabelas mal feitas.
+
+## 11. Erros comuns
+
+> **Erro 1: fechar o colchete no infinito.** Escrever $[3, +\infty]$. O
+> $+\infty$ não é um número, então não há o que incluir. O certo é
+> $[3, +\infty[$.
+
+> **Erro 2: confundir intervalo aberto com par ordenado.** Em livros de cálculo,
+> $(2, 8)$ é o intervalo aberto; neste curso, $(2, 8)$ é um ponto do plano. Ao
+> ler, decida pelo contexto — e ao escrever aqui, use $\,]2, 8[$.
+
+> **Erro 3: inverter a ordem dos extremos.** Não se escreve $[8, 2]$. O primeiro
+> número é sempre o menor; caso contrário, o conjunto descrito é vazio.
+
+> **Erro 4: escrever união onde a resposta é um intervalo só.** Os números com
+> $\lvert x - 5 \rvert \le 3$ formam $[2, 8]$, e não
+> $\,]-\infty, 2] \cup [8, +\infty[$. Módulo **menor** olha para dentro da
+> faixa; módulo **maior**, para fora.
+
+> **Erro 5: achar que aberto e fechado quase não diferem.** Diferem em dois
+> números apenas, mas são exatamente os dois que alguém precisa decidir na
+> prática — a leitura de 8,0 °C, a encomenda de 10 kg. E, mais adiante, é
+> justamente essa distinção que separa um máximo que existe de um que não
+> existe.
+
+> **Erro 6: ler “no máximo $-2$” como se fosse um valor grande.** O intervalo
+> $\,]-\infty, -2]$ contém $-1000$. Para números negativos, “menor” significa
+> mais à esquerda, e a faixa se estende nessa direção.
+
+## 12. Perguntas de verificação
+
+1. Por que não dá para descrever uma faixa de números listando seus elementos?
+2. Qual é a diferença concreta entre $[2, 8]$ e $\,]2, 8[$?
+3. Por que o lado do infinito nunca leva colchete fechado?
+4. Por que $\,]-\infty, 1[\ \cup\ ]3, +\infty[$ não pode ser escrito como um
+   intervalo só?
+5. Como se acha o centro e o raio de um intervalo limitado?
+6. Por que $\lvert x - c \rvert < r$ dá um intervalo e $\lvert x - c \rvert > r$
+   dá dois pedaços?
+7. Numa tabela de preços por faixa de peso, que teste mostra que ela está bem
+   escrita?
+8. O intervalo $\,]2, 8[\,$ tem um menor elemento? Por quê?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque os números de uma faixa são infinitos, e entre dois quaisquer sempre
+   cabe outro — não existe “o próximo”. A única descrição possível é pelos
+   limites.
+2. Exatamente dois números: o 2 e o 8. O primeiro os inclui, o segundo não. São
+   poucos elementos, mas são justamente os que aparecem nas decisões práticas de
+   fronteira.
+3. Porque $+\infty$ não é um número, e o colchete fechado significa “este
+   extremo pertence ao conjunto”. Não há extremo ali: a faixa não termina.
+4. Porque esse conjunto tem um buraco. O número 2 não pertence a ele, mas está
+   entre 0 e 4, que pertencem. Um intervalo é um pedaço **contínuo** da reta,
+   sem falhas.
+5. O centro é o ponto médio dos extremos, $\frac{a+b}{2}$; o raio é metade da
+   distância entre eles, $\frac{b-a}{2}$. Para $[2,8]$: centro 5, raio 3.
+6. Porque “distância menor que $r$” descreve os pontos **próximos** do centro, e
+   eles formam uma faixa contínua em torno dele. “Distância maior que $r$”
+   descreve os **afastados**, que ficam de um lado ou do outro — dois pedaços,
+   com a faixa central removida.
+7. Que as faixas não se sobreponham e não deixem buraco: todo peso possível deve
+   cair em exatamente uma delas. Uma tabela com “até 10” e “de 10 em diante”
+   cobre o 10 duas vezes; uma com “até 9” e “acima de 10” deixa o 9,5 sem preço.
+8. Não tem. Qualquer candidato a menor elemento, digamos $2{,}0001$, é derrubado
+   por outro menor que ainda pertence, como $2{,}00001$. E o próprio 2 não
+   pertence. Essa é a diferença de fundo entre aberto e fechado — em $[2,8]$ o
+   menor elemento existe e é 2.
+
+</details>
+
+## 13. Exercícios
+
+### 1. Reconhecimento
+
+1. Escreva em notação de intervalo: a) $2 \le x \le 8$ &nbsp; b) $x > 5$ &nbsp;
+   c) $-1 < x \le 4$ &nbsp; d) $x \le 0$
+2. Traduza para palavras: $[3, 7[$, &nbsp; $\,]-\infty, -2]$, &nbsp;
+   $\,]0, +\infty[$.
+3. Decida se pertence: &nbsp; $7 \in [3, 7[$? &nbsp; $-2 \in \,]-\infty, -2]$?
+   &nbsp; $0 \in [0, 4]$? &nbsp; $5 \in \,]5, 9]$?
+
+### 2. Explicação
+
+4. Explique por que não se escreve $[3, +\infty]$.
+5. Explique por que “conservar entre 2 °C e 8 °C” é uma instrução ambígua e como
+   a notação de intervalo resolve isso.
+6. Quantos números há em $[2,8]$ que não estão em $\,]2,8[$? A diferença entre
+   os dois conjuntos é grande ou pequena? Justifique nos dois sentidos.
+
+### 3. Aplicação direta
+
+7. Escreva como união de intervalos: a) $x < 1$ ou $x > 3$ &nbsp; b)
+   $-2 \le x < 0$ ou $2 < x \le 5$
+8. Traduza para intervalo: a) $\lvert x - 5 \rvert \le 2$ &nbsp; b)
+   $\lvert x + 1 \rvert < 4$
+9. Calcule: a) $[0, 10] \cap [4, 20]$ &nbsp; b) $[0, 3] \cap [5, 8]$
+
+### 4. Variação
+
+10. Escreva com valor absoluto: a) $[1, 9]$ &nbsp; b) $\,]-3, 7[$
+11. Escreva com valor absoluto e como união o conjunto dos números que estão a
+    mais de 2 de distância de 6.
+12. Um intervalo tem centro 10 e raio 0,5, e inclui os extremos. Escreva-o nas
+    duas notações.
+
+<details>
+<summary>Dica para o 11</summary>
+
+“Mais de” é uma desigualdade estrita, e ela pede os pontos **afastados** do
+centro. Compare com o Exemplo 5: o resultado não é a faixa central, é o que
+sobra fora dela.
+
+</details>
+
+### 5. Problema misto
+
+13. Uma balança industrial é aceita se o erro de medida não passar de 0,2 kg em
+    relação ao valor real de 50 kg. a) Escreva a condição de aceitação com valor
+    absoluto. b) Escreva-a como intervalo. c) As leituras 49,7 kg, 49,8 kg e
+    50,2 kg são aceitas?
+14. Uma transportadora cobra R\$ 20 até 10 kg e R\$ 35 acima disso. Escreva as
+    duas faixas como intervalos e mostre que elas não se sobrepõem nem deixam
+    buraco.
+
+### 6. Justificativa
+
+15. Explique por que $\lvert x - c \rvert < r$ é sempre o intervalo
+    $\,]c-r,\ c+r[$, e por que a desigualdade estrita produz colchetes abertos.
+16. Um colega afirma que $\,]2, 8[\,$ e $[2, 8]$ “têm praticamente o mesmo
+    tamanho, então tanto faz”. Dê um argumento a favor e um argumento contra
+    essa afirmação.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) $[2, 8]$ &nbsp; b) $\,]5, +\infty[$ &nbsp; c) $\,]-1, 4]$ &nbsp; d)
+   $\,]-\infty, 0]$
+2. $[3, 7[$: “de 3, inclusive, até 7, sem incluir o 7”. &nbsp;
+   $\,]-\infty, -2]$: “todos os números menores ou iguais a $-2$”. &nbsp;
+   $\,]0, +\infty[$: “todos os números positivos”, sem incluir o zero.
+3. $7 \in [3,7[$: não. &nbsp; $-2 \in \,]-\infty,-2]$: sim. &nbsp;
+   $0 \in [0,4]$: sim. &nbsp; $5 \in \,]5,9]$: não.
+4. Porque $+\infty$ não é um número que $x$ possa assumir, e o colchete fechado
+   afirmaria justamente que esse extremo pertence ao conjunto. A faixa não tem
+   extremo daquele lado.
+5. Porque “entre” não deixa claro se os extremos entram, e a decisão sobre a
+   leitura de exatamente 8,0 °C depende disso. Escrevendo $[2, 8]$, a resposta
+   fica registrada no próprio símbolo: os colchetes fechados incluem os
+   extremos.
+6. Há exatamente **dois**: o 2 e o 8. Argumento de que a diferença é pequena:
+   são dois elementos contra uma infinidade, e nenhuma medida de comprimento
+   distingue os conjuntos. Argumento de que é grande: são exatamente os dois
+   números sobre os quais alguém precisa decidir na prática, e a distinção muda
+   propriedades importantes — $[2,8]$ tem menor e maior elemento, $\,]2,8[\,$
+   não tem nenhum dos dois.
+7. a) $\,]-\infty, 1[\ \cup\ ]3, +\infty[$ &nbsp; b) $[-2, 0[\ \cup\ ]2, 5]$
+8. a) $[3, 7]$ — centro 5, raio 2, com extremos incluídos. &nbsp; b)
+   Reescrevendo como $\lvert x - (-1) \rvert < 4$: centro $-1$, raio 4, com
+   extremos excluídos, ou seja, $\,]-5, 3[$.
+9. a) $[4, 10]$ &nbsp; b) vazio: nenhum número está ao mesmo tempo em $[0,3]$ e
+   em $[5,8]$.
+10. a) Centro $\frac{1+9}{2} = 5$, raio $\frac{9-1}{2} = 4$, extremos incluídos:
+    $\lvert x - 5 \rvert \le 4$. &nbsp; b) Centro $\frac{-3+7}{2} = 2$, raio
+    $\frac{7+3}{2} = 5$, extremos excluídos: $\lvert x - 2 \rvert < 5$.
+11. $\lvert x - 6 \rvert > 2$, que corresponde a
+    $\,]-\infty, 4[\ \cup\ ]8, +\infty[$. Se você respondeu $\,]4, 8[$, leu a
+    desigualdade como “menor que” — o “mais de” pede os pontos afastados.
+12. $\lvert x - 10 \rvert \le 0{,}5$, ou $[9{,}5;\ 10{,}5]$.
+13. a) $\lvert m - 50 \rvert \le 0{,}2$. &nbsp; b) $[49{,}8;\ 50{,}2]$. &nbsp;
+    c) 49,7 é rejeitada (afastamento 0,3); 49,8 e 50,2 são aceitas, porque estão
+    exatamente no limite e o colchete é fechado.
+14. $\,]0, 10]$ para R\$ 20 e $\,]10, +\infty[$ para R\$ 35. Não se sobrepõem
+    porque o 10 pertence só à primeira — a segunda tem colchete aberto ali. Não
+    deixam buraco porque todo peso maior que 10 está na segunda e todo peso
+    positivo até 10 está na primeira.
+15. Porque $\lvert x - c \rvert$ é a distância de $x$ até $c$. Exigir que essa
+    distância seja menor que $r$ é exigir que $x$ esteja a menos de $r$ passos
+    de $c$ em qualquer direção, o que são os pontos entre $c - r$ e $c + r$. Os
+    próprios $c-r$ e $c+r$ estão a distância **exatamente** $r$, e a
+    desigualdade estrita os recusa — daí os colchetes abertos.
+16. A favor: os dois conjuntos têm o mesmo comprimento, 6 unidades, e diferem em
+    apenas dois de infinitos elementos. Contra: esses dois elementos são
+    exatamente os que aparecem nas decisões de fronteira do mundo real, e a
+    diferença muda propriedades estruturais — só o fechado tem menor e maior
+    elemento. Em cálculo, é essa distinção que decide se um máximo é atingido ou
+    apenas aproximado.
+
+</details>
+
+## 14. Revisão curta
+
+- Um **intervalo** é um pedaço contínuo da reta descrito por dois extremos mais
+  a decisão, ponta a ponta, de incluir ou excluir cada um.
+- O colchete que **abraça** o número inclui; o que **dá as costas** exclui:
+  $[2,8]$ contém as pontas, $\,]2,8[\,$ não.
+- No desenho, **bola cheia** inclui e **bola vazia** exclui.
+- O lado do infinito é **sempre aberto**, porque $+\infty$ não é um número.
+- Faixas separadas se escrevem com **união** ($\cup$, “ou”); a exigência
+  simultânea usa **interseção** ($\cap$, “e”).
+- Todo intervalo limitado é uma condição com módulo: **centro** é o ponto médio
+  dos extremos, **raio** é metade da distância entre eles.
+- Módulo **menor** que o raio dá um intervalo; módulo **maior** dá dois pedaços,
+  fora da faixa.
+- Neste curso o intervalo aberto é $\,]a,b[$; em livros de cálculo, o mesmo
+  conjunto aparece como $(a,b)$.
+
+Antes de avançar, verifique se você consegue escrever uma faixa de tolerância
+nas duas notações e explicar o que muda quando uma ponta abre. As próximas
+páginas resolvem desigualdades, e a resposta delas será sempre um intervalo ou
+uma união de intervalos.

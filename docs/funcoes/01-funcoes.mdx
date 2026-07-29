@@ -1,167 +1,631 @@
 ---
-title: Funcoes
+title: Funções
 ---
 
 import FunctionMachine from '@site/src/components/FunctionMachine';
+import CartesianPlane from '@site/src/components/CartesianPlane';
 
-# Funcoes
+# Funções: a regra inteira, não um valor só
 
-## Contexto
+## 1. Problema motivador: o custo da academia
 
-Funcao e uma regra de dependencia entre duas quantidades. Uma quantidade entra,
-a regra age sobre ela, e uma quantidade sai. A ideia importante e que cada
-entrada deve produzir uma unica saida.
+Uma academia cobra **R\$ 50 por mês** de mensalidade mais **R\$ 10 por aula
+avulsa** de treino personalizado.
 
-Funcoes ampliam o estudo de equacoes. Em uma equacao, muitas vezes procuramos
-um valor especifico. Em uma funcao, estudamos a regra inteira: como a saida
-muda quando a entrada muda.
+Com o que já sabemos, dá para responder perguntas isoladas. Quanto custa um mês
+com 3 aulas avulsas? Basta calcular $50 + 10 \times 3 = 80$ reais. Quantas aulas
+cabem num orçamento de R\$ 120? Basta resolver a equação $50 + 10x = 120$, que
+dá $x = 7$.
 
-Por isso funcoes sao essenciais para modelar movimento, preco, crescimento,
-temperatura, lucro, area e qualquer situacao em que uma grandeza depende de
-outra.
+Mas repare no que essas duas perguntas têm em comum: cada uma devolve **um
+número**, e cada uma exige refazer a conta do zero. Se o aluno quiser saber
+quanto custam 5 aulas, é outra conta. Se quiser comparar 12 meses de cenários
+diferentes, são doze contas.
 
-## Problema motivador
+Existem perguntas que nenhuma delas responde:
 
-Uma assinatura de academia custa R\$ 50 por mes mais R\$ 10 por aula avulsa.
+- de quanto sobe a conta **a cada aula a mais**?
+- o custo cresce sempre no mesmo ritmo, ou acelera?
+- se eu vir a conta, consigo saber quantas aulas fiz?
 
-Se a pessoa fizer `x` aulas avulsas, o custo total sera:
+Essas perguntas não são sobre um valor. São sobre a **relação inteira** entre
+duas quantidades. Responder a elas exige parar de olhar para casos isolados e
+começar a olhar para a regra que os produz — que é o objeto deste capítulo, e se
+chama **função**.
 
-$$
-50 + 10x
-$$
+## 2. Mapa das ideias
 
-Agora nao queremos apenas resolver um valor. Queremos estudar a relacao inteira
-entre duas quantidades:
+- **função** é uma regra que associa a cada entrada **exatamente uma** saída;
+- a **variável independente** é a entrada, aquela que escolhemos; a **variável
+  dependente** é a saída, que a regra devolve;
+- **$f(x)$** é a notação: “o valor que a função $f$ devolve quando a entrada é
+  $x$”;
+- o **plano cartesiano** é a folha quadriculada em que um par de números vira um
+  ponto;
+- o **gráfico** de uma função é o desenho de todos esses pontos ao mesmo tempo —
+  a regra vista de uma vez só.
 
-- entrada: quantidade de aulas avulsas;
-- saida: custo total.
+Por exemplo, a regra da academia é $f(x) = 50 + 10x$, e $f(3) = 80$ significa
+“com 3 aulas avulsas, o custo é 80 reais”. Já $f$ sozinho não é um número: é a
+**regra**.
 
-Essa relacao e uma funcao.
+## 3. Para que serve
 
-## Uso
+Função é a forma de descrever qualquer situação em que uma quantidade depende de
+outra:
 
-Funcoes aparecem sempre que uma quantidade depende de outra:
+- preço em função da quantidade, e desconto em função do volume;
+- distância percorrida em função do tempo;
+- consumo de energia em função da potência e das horas de uso;
+- lucro em função das unidades produzidas;
+- juros acumulados em função do prazo;
+- em programação, uma função é literalmente isto: entra um valor, sai outro.
 
-- preco depende da quantidade;
-- distancia depende do tempo;
-- area de um quadrado depende do lado;
-- temperatura pode depender do horario;
-- lucro depende de receita e custo;
-- posicao de um personagem em um jogo depende do tempo e dos comandos.
+Dentro da matemática, este é o conceito que organiza tudo o que vem depois. Taxa
+de variação, crescimento, otimização e, mais adiante, o cálculo inteiro são
+perguntas sobre funções. É por isso que este capítulo é o mais longo do curso.
 
-## Intuicao
+## 4. Ideias anteriores que voltam aqui
 
-Uma funcao e uma regra que associa cada entrada a exatamente uma saida.
+**1. De [expressões algébricas](../algebra/expressoes-algebricas): o que a letra
+faz numa expressão como $50 + 10x$?** Ela guarda um lugar. A expressão descreve
+um procedimento que vale para qualquer número: “multiplique por 10 e some 50”.
+Trocar o $x$ por um número devolve um valor concreto.
 
-Se a regra e:
+**2. De [equações do 1º grau](../equacoes/equacoes-do-primeiro-grau): o que
+significa resolver $50 + 10x = 120$?** Procurar o valor de $x$ que torna a
+igualdade verdadeira — no caso, $x = 7$. A equação faz uma pergunta com resposta
+única.
 
-$$
-f(x) = 50 + 10x
-$$
+**3. De [intervalos](../equacoes/intervalos): como se escreve “todos os números
+maiores ou iguais a zero”?** $[0, +\infty[$. Vamos precisar disso para dizer
+quais entradas uma função aceita.
 
-entao:
+Guarde a diferença entre os itens 1 e 2, porque a função é uma terceira coisa:
 
-$$
-f(0) = 50
-$$
+| Escrita | O que é | O que se pergunta |
+|---|---|---|
+| $50 + 10x$ | **expressão** | nada — ela só descreve uma quantidade |
+| $50 + 10x = 120$ | **equação** | qual $x$ torna isto verdadeiro? |
+| $f(x) = 50 + 10x$ | **função** | como a saída muda quando a entrada muda? |
 
-$$
-f(3) = 80
-$$
+As três têm a mesma fórmula. O que muda é a pergunta.
 
-$$
-f(10) = 150
-$$
+## 5. Intuição: a máquina
 
-O simbolo `f(x)` significa "valor da funcao quando a entrada e `x`".
-
-## Modelo visual
+A imagem mais útil é a de uma máquina. Você põe um número na entrada, a máquina
+faz sempre o mesmo processamento, e sai um número.
 
 <FunctionMachine
   input="x"
-  steps={[{op: '\\text{regra: } 50 + 10x', value: '50 + 10x'}]}
-  caption="A entrada é o número de aulas; a regra transforma; a saída é o custo. Cada entrada produz uma única saída."
+  steps={[
+    {op: '\\text{multiplica por } 10', value: '10x'},
+    {op: '\\text{soma } 50', value: '50 + 10x'},
+  ]}
+  caption="A regra da academia como uma máquina de dois passos. Entra o número de aulas; sai o custo do mês."
 />
 
-Tabela:
+Duas exigências definem a máquina, e vale entender por que cada uma existe.
 
-| Aulas `x` | Custo `f(x)` |
-| --- | --- |
-| 0 | 50 |
-| 1 | 60 |
-| 2 | 70 |
-| 3 | 80 |
-| 4 | 90 |
+**A máquina não pode travar.** Se você põe um número que ela aceita, ela tem de
+devolver alguma coisa.
 
-Cada entrada tem uma unica saida.
+**A máquina não pode hesitar.** Para a mesma entrada, ela devolve **sempre** a
+mesma saída. Não pode devolver 80 numa vez e 90 na outra.
 
-## Formalizacao
+Essa segunda exigência parece óbvia, mas é justamente ela que separa função de
+“relação qualquer”. Se a academia cobrasse “entre 80 e 90 reais” por 3 aulas,
+dependendo do humor do gerente, o custo não seria função do número de aulas —
+não haveria regra que permitisse prever a conta.
 
-Uma funcao pode ser representada por:
+> Uma **função** associa a cada entrada aceita **exatamente uma** saída. Uma
+> entrada, uma saída — nunca duas, nunca nenhuma.
 
-- uma regra verbal;
-- uma formula;
-- uma tabela;
-- um grafico;
-- um conjunto de pares ordenados.
+## 6. A notação $f(x)$
 
-Exemplo de formula:
+Damos um nome à máquina — geralmente $f$, $g$ ou $h$ — e escrevemos a regra
+assim:
 
 $$
-f(x) = 2x + 1
+f(x) = 50 + 10x.
 $$
 
-Alguns valores:
+Lê-se “$f$ de $x$ é igual a $50 + 10x$”. E $f(3)$ significa: pegue a regra,
+troque todo $x$ por 3 e calcule.
 
 $$
-f(0) = 1
+f(3) = 50 + 10(3) = 50 + 30 = 80.
 $$
 
-$$
-f(1) = 3
-$$
+Com a notação, as perguntas do início ficam curtas de escrever:
 
 $$
-f(2) = 5
+f(0) = 50, \qquad f(1) = 60, \qquad f(7) = 120, \qquad f(10) = 150.
 $$
 
-Pares ordenados:
+**Exemplo.** Em $g(x) = 3x - 2$, temos $g(4) = 3(4) - 2 = 10$.
+
+**Contraexemplo, para delimitar.** $f(x)$ **não** é “$f$ vezes $x$”. Os
+parênteses aqui não são de multiplicação: eles marcam a entrada. Se fossem
+multiplicação, $f(3)$ seria três vezes alguma coisa, e $f(0)$ seria zero — mas
+$f(0) = 50$ na nossa função. O $f$ não é um número; é o nome da regra.
+
+Repare também numa consequência da notação: **a letra da variável não importa**.
+As regras $f(x) = 50 + 10x$ e $f(t) = 50 + 10t$ são a mesma função, do mesmo
+jeito que “multiplique por 10 e some 50” é a mesma instrução independentemente
+de como você chama o número que entra.
+
+## 7. O plano cartesiano: um par de números vira um ponto
+
+Uma tabela mostra a regra caso a caso:
+
+| Aulas $x$ | Custo $f(x)$ | Par |
+|---:|---:|---|
+| 0 | 50 | $(0, 50)$ |
+| 1 | 60 | $(1, 60)$ |
+| 2 | 70 | $(2, 70)$ |
+| 3 | 80 | $(3, 80)$ |
+| 4 | 90 | $(4, 90)$ |
+
+Cada linha é um **par ordenado**: primeiro a entrada, depois a saída. “Ordenado”
+porque a ordem importa — $(3, 80)$ diz “3 aulas custam 80”, enquanto $(80, 3)$
+diria uma coisa completamente diferente.
+
+A tabela, porém, mostra cinco casos, e a regra tem infinitos. Precisamos de uma
+representação que mostre todos de uma vez. Ela existe, e é uma ideia
+notavelmente simples.
+
+Tome duas retas numéricas e cruze-as perpendicularmente no zero: uma na
+horizontal, para as **entradas**, e outra na vertical, para as **saídas**. O
+ponto de cruzamento chama-se **origem**. Agora cada par de números tem um
+endereço: ande para a direita o valor da entrada, suba o valor da saída, e
+marque um ponto.
+
+Esse quadriculado é o **plano cartesiano**, e o eixo horizontal costuma se
+chamar **eixo $x$**, o vertical, **eixo $y$**. A
+[geometria](../geometria/plano-cartesiano-e-distancia) volta a ele mais adiante
+para medir distâncias; aqui precisamos só do endereço.
+
+<CartesianPlane
+  xMin={-1}
+  xMax={7}
+  yMin={-10}
+  yMax={110}
+  xUnit={44}
+  yUnit={1.6}
+  yStep={10}
+  yLabelEvery={2}
+  points={[
+    {at: [0, 50], tone: 1},
+    {at: [1, 60], tone: 1},
+    {at: [2, 70], tone: 1},
+    {at: [3, 80], label: '(3,\\ 80)', tone: 2, place: 'above-left'},
+    {at: [4, 90], tone: 1},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Os cinco pares da tabela, marcados como pontos. O par (3, 80) se lê: ande 3 para a direita, suba 80."
+/>
+
+Repare que os pontos **não** ficam espalhados ao acaso: eles se alinham. Isso
+não é coincidência — é a regra aparecendo como forma.
+
+## 8. O gráfico: a regra vista de uma vez
+
+O **gráfico** de uma função é o conjunto de **todos** os pontos $(x, f(x))$, e
+não apenas os da tabela. Preenchendo os buracos entre os cinco pontos, obtemos
+uma reta:
+
+<CartesianPlane
+  xMin={-1}
+  xMax={7}
+  yMin={-10}
+  yMax={110}
+  xUnit={44}
+  yUnit={1.6}
+  yStep={10}
+  yLabelEvery={2}
+  functions={[{f: (x) => 50 + 10 * x, domain: [0, 7], tone: 1}]}
+  points={[
+    {at: [0, 50], label: '50', tone: 2, place: 'left'},
+    {at: [7, 120], label: '(7,\\ 120)', tone: 3, place: 'above-left'},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="O gráfico de f(x) = 50 + 10x. A altura da curva sobre cada x é o valor de f(x)."
+/>
+
+O gráfico responde de olho a todas as perguntas do início da página.
+
+**“Quanto custa com 3 aulas?”** Suba de $x = 3$ até a curva e leia a altura: 80.
+
+**“Quantas aulas cabem em R\$ 120?”** Percurso inverso: ache a altura 120, ande
+até a curva, desça e leia $x = 7$. Esta é exatamente a equação que resolvemos no
+início — resolver uma equação é achar **onde** o gráfico atinge certa altura.
+
+**“Quanto custa sem nenhuma aula avulsa?”** É a altura em $x = 0$: 50 reais, a
+mensalidade pura. O ponto em que o gráfico corta o eixo vertical é sempre o
+valor da função em zero.
+
+**“De quanto sobe a cada aula a mais?”** É a inclinação: andando 1 para a
+direita, a curva sobe 10.
+
+Nenhuma dessas leituras exigiu conta. É esse o ganho de olhar para a regra
+inteira em vez de para casos isolados.
+
+## 9. O teste da reta vertical
+
+Nem todo desenho no plano é gráfico de uma função. A exigência “uma entrada, uma
+saída” tem uma tradução visual imediata.
+
+Se algum valor de $x$ tivesse **duas** saídas, o desenho teria dois pontos na
+mesma vertical. Logo:
+
+> **Teste da reta vertical:** um desenho é gráfico de função se, e somente se,
+> nenhuma reta vertical o cruza em mais de um ponto.
+
+<CartesianPlane
+  xMin={-4}
+  xMax={4}
+  yMin={-4}
+  yMax={4}
+  xUnit={34}
+  yUnit={34}
+  circles={[{center: [0, 0], r: 3, tone: 2}]}
+  lines={[{x: 2, dashed: true, tone: 3}]}
+  points={[
+    {at: [2, 2.236], tone: 3},
+    {at: [2, -2.236], tone: 3},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A circunferência falha no teste: a vertical em x = 2 a corta duas vezes. Para essa entrada haveria duas saídas — então não é função."
+/>
+
+A circunferência é uma curva perfeitamente legítima, e a geometria vai
+estudá-la. Ela só não é **gráfico de função**, porque não serve para prever uma
+saída a partir de uma entrada.
+
+## 10. Taxa de variação: quando o ritmo é constante
+
+Volte à pergunta “de quanto sobe a cada aula a mais?”. Ela se responde
+comparando duas linhas da tabela: de $x = 3$ para $x = 4$, o custo vai de 80
+para 90 — **sobe 10**.
+
+Faça o mesmo entre outros dois pontos quaisquer. De $x = 0$ para $x = 3$, o
+custo sobe 30 em 3 aulas, ou seja, 10 por aula. De $x = 3$ para $x = 7$, sobe 40
+em 4 aulas: 10 por aula de novo.
 
 $$
-(0,1),\ (1,3),\ (2,5)
+\text{taxa de variação} = \frac{\text{variação da saída}}{\text{variação da entrada}}
+= \frac{f(7) - f(3)}{7 - 3} = \frac{120 - 80}{4} = 10.
 $$
 
-Em um grafico, cada par ordenado vira um ponto.
+**A taxa é sempre a mesma**, e é isso que faz o gráfico ser uma reta. Uma
+quantidade que cresce sempre no mesmo ritmo desenha uma linha reta; qualquer
+mudança de ritmo entortaria a curva.
 
-## Exemplo resolvido
-
-Uma funcao e dada por:
-
-$$
-f(x) = 3x - 2
-$$
-
-Calcule `f(4)`.
-
-Substituimos `x` por 4:
+Funções desse tipo — as que têm taxa de variação constante — chamam-se **funções
+afins**, e sua fórmula é sempre
 
 $$
-f(4) = 3(4) - 2
+f(x) = ax + b,
 $$
 
-$$
-f(4) = 12 - 2
-$$
+onde $a$ é a taxa de variação e $b$ é o valor em $x = 0$. Na academia, $a = 10$
+(o preço da aula) e $b = 50$ (a mensalidade).
+
+A geometria estuda essa mesma reta pelo lado da forma, na página de [equação da
+reta](../geometria/equacao-da-reta), onde $a$ ganha o nome de **coeficiente
+angular**. É a mesma coisa vista de dois ângulos: aqui, o ritmo de crescimento
+de uma grandeza; lá, a inclinação de uma linha.
+
+Nem toda função tem taxa constante — a maioria não tem. É justamente aí que
+começa o interesse, e a próxima página do capítulo já traz um caso em que o
+ritmo muda.
+
+## 11. Exemplos resolvidos
+
+### Exemplo 1: calcular valores
+
+Dada $g(x) = 3x - 2$, calcule $g(4)$, $g(0)$ e $g(-1)$.
+
+Trocando o $x$ pelo número, em cada caso:
 
 $$
-f(4) = 10
+g(4) = 3(4) - 2 = 10, \qquad
+g(0) = 3(0) - 2 = -2, \qquad
+g(-1) = 3(-1) - 2 = -5.
 $$
 
-Quando a entrada e 4, a saida e 10.
+Repare no cuidado com o negativo: $3(-1)$ é $-3$, e $-3 - 2$ é $-5$, não $-1$.
 
-## Perguntas de verificacao
+### Exemplo 2: a pergunta invertida
 
-- Por que uma funcao precisa dar uma unica saida para cada entrada?
-- Qual e a diferenca entre resolver `2x + 1 = 9` e calcular `f(4)` em
-  `f(x) = 2x + 1`?
-- Como uma tabela pode ajudar a enxergar uma funcao?
+*Pause e tente antes de ler.* Ainda com $g(x) = 3x - 2$: para que entrada a
+saída vale 13?
+
+Agora sabemos a saída e queremos a entrada — é uma **equação**:
+
+$$
+3x - 2 = 13 \quad\Longrightarrow\quad 3x = 15 \quad\Longrightarrow\quad x = 5.
+$$
+
+Conferindo: $g(5) = 15 - 2 = 13$. Confere.
+
+Guarde a distinção: **calcular $g(5)$ é aplicar a regra; resolver $g(x) = 13$ é
+desfazê-la.** No gráfico, o primeiro é subir de $x$ até a curva, e o segundo é
+partir da altura e descer até o eixo.
+
+### Exemplo 3: função sem fórmula
+
+*Pause e tente.* Um estacionamento cobra por faixa de tempo:
+
+| Tempo | Preço |
+|---|---:|
+| até 1 hora | R\$ 8 |
+| mais de 1 até 3 horas | R\$ 14 |
+| mais de 3 até 6 horas | R\$ 20 |
+| mais de 6 horas | R\$ 26 |
+
+Isto é uma função? Quanto custam 1,5 hora? E 6 horas?
+
+**É uma função**, sim. Não há fórmula única, mas há regra: para cada tempo de
+permanência, a tabela determina **um** preço, sem ambiguidade. Função é regra,
+não fórmula.
+
+Para 1,5 hora: cai na segunda faixa, R\$ 14. Para 6 horas: a terceira faixa vai
+“até 6 horas”, incluindo o 6, então R\$ 20. Repare que a tabela foi escrita com
+o cuidado de intervalos que o capítulo anterior exigiu — sem isso, as 6 horas
+ficariam ambíguas.
+
+### Exemplo 4: reconhecer o que não é função
+
+*Pause e tente.* A regra “$y$ é um número cujo quadrado é $x$” define uma função
+de $x$ para $y$?
+
+Não. Para $x = 9$, existem **dois** números cujo quadrado é 9: o 3 e o $-3$. Uma
+entrada, duas saídas — a máquina hesita.
+
+É exatamente por isso que a raiz quadrada foi definida devolvendo só o valor não
+negativo. A convenção $\sqrt{9} = 3$ não é capricho: é o que torna a raiz uma
+**função**.
+
+### Exemplo 5: lendo taxa de variação numa tabela
+
+*Pause e tente.* A tabela abaixo é de uma função afim? Se for, qual é a fórmula?
+
+| $x$ | 0 | 1 | 2 | 3 |
+|---|---:|---:|---:|---:|
+| $h(x)$ | 7 | 4 | 1 | $-2$ |
+
+Olhe as diferenças entre saídas consecutivas: $4 - 7 = -3$, $1 - 4 = -3$,
+$-2 - 1 = -3$. A taxa é constante e vale $-3$ — a função **decresce** três
+unidades por passo.
+
+Como $h(0) = 7$, a fórmula é
+
+$$
+h(x) = -3x + 7.
+$$
+
+Conferindo em $x = 2$: $-6 + 7 = 1$. Confere.
+
+## 12. Erros comuns
+
+> **Erro 1: ler $f(x)$ como multiplicação.** $f(3)$ não é “$f$ vezes 3”. O $f$
+> não é um número: é o nome da regra, e os parênteses marcam a entrada. Se fosse
+> multiplicação, $f(0)$ seria sempre zero — e na academia $f(0) = 50$.
+
+> **Erro 2: confundir a função com um dos seus valores.** $f$ é a regra inteira;
+> $f(3)$ é um número. Dizer “$f = 80$” é como confundir uma receita com um bolo.
+
+> **Erro 3: achar que função precisa de fórmula.** O estacionamento do Exemplo 3
+> é função e não tem fórmula única. O que se exige é que cada entrada determine
+> uma saída, por qualquer meio: fórmula, tabela, gráfico ou descrição.
+
+> **Erro 4: aceitar duas saídas para a mesma entrada.** Se para $x = 9$ a regra
+> devolve 3 **e** $-3$, não é função. O teste da reta vertical é a versão visual
+> dessa exigência.
+
+> **Erro 5: trocar a ordem do par.** $(3, 80)$ e $(80, 3)$ são pontos
+> diferentes. Primeiro sempre a entrada, depois a saída.
+
+> **Erro 6: supor que todo gráfico é reta.** Reta é o caso particular da taxa de
+> variação **constante**. Quando o ritmo muda, a curva entorta — e é o que
+> acontece na maioria das funções.
+
+## 13. Perguntas de verificação
+
+Responda com suas palavras antes de abrir.
+
+1. Qual a diferença entre a expressão $50 + 10x$, a equação $50 + 10x = 120$ e a
+   função $f(x) = 50 + 10x$?
+2. Por que uma função não pode devolver duas saídas para a mesma entrada?
+3. Por que $f(x)$ não significa “$f$ vezes $x$”?
+4. O que o gráfico mostra que uma tabela não mostra?
+5. No gráfico, como se lê $f(3)$? E como se resolve $f(x) = 120$?
+6. Por que a circunferência não é gráfico de função?
+7. Por que a raiz quadrada foi definida devolvendo só o valor não negativo?
+8. O que significa a taxa de variação ser constante, e o que isso produz no
+   gráfico?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. A expressão só descreve uma quantidade e não pergunta nada. A equação
+   pergunta qual valor de $x$ torna a igualdade verdadeira, e a resposta é um
+   número. A função pergunta como a saída varia com a entrada, e a resposta é a
+   relação inteira — melhor representada por um gráfico do que por um número.
+2. Porque a razão de existir de uma função é permitir **prever** a saída a
+   partir da entrada. Se a mesma entrada pudesse dar saídas diferentes, não
+   haveria previsão possível, e a regra não serviria para nada.
+3. Porque $f$ não é um número, e sim o nome de uma regra. Os parênteses marcam
+   qual valor entra na regra. Se fosse multiplicação, $f(0)$ teria de ser zero
+   para qualquer função, o que é falso.
+4. Todos os casos de uma vez. A tabela mostra as linhas que alguém escolheu
+   escrever; o gráfico mostra o comportamento inteiro, e com ele coisas que a
+   tabela esconde: se a função cresce sempre, se acelera, onde ela vale zero,
+   onde é mais alta.
+5. Para ler $f(3)$: suba de $x = 3$ até a curva e leia a altura. Para resolver
+   $f(x) = 120$: localize a altura 120, ande até encontrar a curva e desça até o
+   eixo horizontal. São o mesmo movimento em direções opostas.
+6. Porque a reta vertical em $x = 2$ a corta em dois pontos, o que significa
+   duas saídas para a mesma entrada. Ela é uma curva legítima, apenas não serve
+   para definir uma saída a partir de uma entrada.
+7. Porque $x^2 = 9$ tem duas soluções, 3 e $-3$, e devolver as duas faria da
+   raiz uma regra que hesita. Escolher sempre o valor não negativo é o que torna
+   a raiz quadrada uma função bem definida.
+8. Significa que a saída sobe (ou desce) sempre a mesma quantidade a cada passo
+   da entrada, independentemente de onde se comece. No gráfico isso produz uma
+   **reta**: qualquer mudança de ritmo entortaria a curva.
+
+</details>
+
+## 14. Exercícios
+
+### 1. Reconhecimento
+
+1. Dada $f(x) = 2x + 5$, calcule $f(0)$, $f(1)$ e $f(-3)$.
+2. Escreva os pares ordenados correspondentes aos três valores do exercício 1.
+3. Diga se cada situação define uma função da primeira grandeza para a segunda:
+   a) número de litros abastecidos → valor pago &nbsp; b) altura de uma pessoa →
+   seu nome &nbsp; c) dia do mês → temperatura máxima registrada naquele dia
+   &nbsp; d) valor pago no posto → número de litros abastecidos
+
+### 2. Explicação
+
+4. Explique, com a imagem da máquina, por que “uma entrada, uma saída” é uma
+   exigência e não um detalhe.
+5. Um colega escreve “$f = 12$”. Explique por que isso não faz sentido e o que
+   ele provavelmente queria dizer.
+6. Explique a diferença entre calcular $f(5)$ e resolver $f(x) = 5$.
+
+### 3. Aplicação direta
+
+7. Dada $h(x) = x^2 - 3$, calcule $h(0)$, $h(2)$, $h(-2)$ e $h(3)$.
+8. Ainda com $h(x) = x^2 - 3$: o que os resultados de $h(2)$ e $h(-2)$ revelam
+   sobre essa função?
+9. Dada $p(x) = 2x + 5$, encontre o valor de $x$ para o qual $p(x) = 17$.
+
+### 4. Variação
+
+10. A tabela abaixo vem de uma função afim. Encontre a taxa de variação e a
+    fórmula.
+
+    | $x$ | 0 | 1 | 2 | 3 |
+    |---|---:|---:|---:|---:|
+    | $f(x)$ | 12 | 15 | 18 | 21 |
+
+11. Uma segunda tabela:
+
+    | $x$ | 0 | 1 | 2 | 3 |
+    |---|---:|---:|---:|---:|
+    | $g(x)$ | 1 | 2 | 4 | 8 |
+
+    Ela vem de uma função afim? Justifique olhando as diferenças.
+12. Esboce mentalmente o gráfico de $f(x) = 50 + 10x$ e diga onde ele cruza o
+    eixo vertical e por quê.
+
+<details>
+<summary>Dica para o 11</summary>
+
+Calcule as diferenças entre saídas consecutivas, como no Exemplo 5. Se elas não
+forem todas iguais, a taxa não é constante — e aí vale perguntar se há algum
+outro padrão regular entre os valores.
+
+</details>
+
+### 5. Problema misto
+
+13. Uma operadora cobra R\$ 40 de assinatura mais R\$ 0,50 por minuto. a)
+    Escreva a função do custo mensal. b) Calcule o custo para 60 e para 200
+    minutos. c) Quantos minutos cabem em R\$ 100? d) Qual é a taxa de variação,
+    e o que ela significa na situação?
+14. O gráfico de uma função afim passa pelos pontos $(0, 8)$ e $(4, 20)$.
+    Encontre a taxa de variação e a fórmula da função.
+
+### 6. Justificativa
+
+15. Explique por que o valor de $f(0)$ é sempre a altura em que o gráfico cruza
+    o eixo vertical.
+16. Mostre que, numa função afim $f(x) = ax + b$, a expressão
+    $\frac{f(x_2) - f(x_1)}{x_2 - x_1}$ dá sempre $a$, quaisquer que sejam
+    $x_1 \neq x_2$. O que isso explica sobre o formato do gráfico?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. $f(0) = 5$, $f(1) = 7$, $f(-3) = -1$. No último, $2(-3) = -6$ e
+   $-6 + 5 = -1$.
+2. $(0, 5)$, $(1, 7)$ e $(-3, -1)$.
+3. a) **Sim**: cada quantidade de litros determina um valor. &nbsp; b) **Não**:
+   duas pessoas de mesma altura têm nomes diferentes — uma entrada, várias
+   saídas. &nbsp; c) **Sim**: cada dia teve uma única máxima. &nbsp; d) **Sim**,
+   se o preço por litro for fixo: o valor pago determina a quantidade. Repare
+   que (a) e (d) são a mesma relação lida nos dois sentidos.
+4. Porque a máquina existe para **prever**: dado o que entra, saber o que sai.
+   Se a mesma entrada pudesse produzir saídas diferentes, não haveria previsão,
+   e a regra não teria utilidade nenhuma. É essa exigência que separa função de
+   associação qualquer.
+5. Porque $f$ é a regra, não um número — não faz sentido dizer que uma regra
+   vale
+   12. Ele provavelmente queria dizer que $f(x) = 12$ para algum $x$ específico,
+       ou seja, que a saída vale 12 em determinada entrada.
+6. Calcular $f(5)$ é **aplicar** a regra: entra 5, sai um número. Resolver
+   $f(x) = 5$ é **desfazê-la**: sabemos que saiu 5 e procuramos o que entrou. No
+   gráfico, um é subir do eixo horizontal até a curva; o outro é partir da
+   altura e descer.
+7. $h(0) = -3$, $h(2) = 1$, $h(-2) = 1$, $h(3) = 6$.
+8. Que entradas diferentes podem produzir a **mesma** saída: $h(2)$ e $h(-2)$
+   valem os dois 1. Isso é permitido — a exigência é que cada entrada tenha uma
+   saída, não que cada saída venha de uma entrada só.
+9. $2x + 5 = 17$, logo $2x = 12$ e $x = 6$. Conferindo: $p(6) = 17$.
+10. As diferenças são $15-12 = 3$, $18-15 = 3$ e $21-18 = 3$: taxa constante 3.
+    Como $f(0) = 12$, a fórmula é $f(x) = 3x + 12$. Conferindo em $x = 3$:
+    $9 + 12 = 21$.
+11. **Não** é afim. As diferenças são $1$, $2$ e $4$ — cada uma é o dobro da
+    anterior, então a taxa não é constante. Há um padrão, mas é
+    **multiplicativo**: cada saída é o dobro da anterior. Esse tipo de
+    crescimento tem capítulo próprio mais adiante.
+12. Cruza o eixo vertical em 50, porque esse é o valor de $f(0)$ — o custo com
+    zero aulas avulsas, isto é, a mensalidade sozinha. E sobe 10 a cada passo
+    para a direita.
+13. a) $C(m) = 40 + 0{,}50m$. &nbsp; b) $C(60) = 70$ reais e $C(200) = 140$
+    reais. &nbsp; c) $40 + 0{,}50m = 100$ dá $m = 120$ minutos. &nbsp; d) A taxa
+    é 0,50 — cada minuto a mais custa 50 centavos. É o preço unitário da
+    ligação, e é constante porque o plano não tem faixas.
+14. A taxa é $\frac{20 - 8}{4 - 0} = \frac{12}{4} = 3$. Como o ponto $(0, 8)$ dá
+    $f(0) = 8$, a fórmula é $f(x) = 3x + 8$. Conferindo em $x = 4$:
+    $12 + 8 = 20$.
+15. Porque o eixo vertical é o conjunto dos pontos com $x = 0$, e o ponto do
+    gráfico ali é $(0, f(0))$. A altura desse ponto é, por definição, $f(0)$.
+16. Calculando: $f(x_2) - f(x_1) = (ax_2 + b) - (ax_1 + b) = a(x_2 - x_1)$, pois
+    os dois $b$ se cancelam. Dividindo por $x_2 - x_1$, que não é zero, sobra
+    $a$. Isso explica o formato porque significa que o ritmo de subida é o mesmo
+    em qualquer trecho, por menor que seja — e uma curva que sobe sempre no
+    mesmo ritmo não tem como entortar. Ela é uma reta.
+
+</details>
+
+## 15. Revisão curta
+
+- Uma **função** é uma regra que associa a cada entrada **exatamente uma**
+  saída. A imagem é a máquina: não trava e não hesita.
+- **Expressão**, **equação** e **função** podem ter a mesma fórmula. O que muda
+  é a pergunta: descrever, achar um valor, ou estudar a relação inteira.
+- $f(x)$ **não** é multiplicação: $f$ é o nome da regra e os parênteses marcam a
+  entrada. A letra da variável não importa.
+- No **plano cartesiano**, um par ordenado vira um ponto: primeiro a entrada, na
+  horizontal; depois a saída, na vertical.
+- O **gráfico** é o conjunto de todos os pontos $(x, f(x))$ — a regra inteira
+  vista de uma vez. Nele, calcular $f(3)$ é subir até a curva, e resolver
+  $f(x) = 120$ é descer a partir da altura.
+- **Teste da reta vertical**: nenhuma vertical pode cortar o gráfico duas vezes.
+- $f(0)$ é sempre a altura em que o gráfico cruza o eixo vertical.
+- A **taxa de variação** mede quanto a saída muda por unidade de entrada. Quando
+  ela é constante, a função é **afim**, $f(x) = ax + b$, e o gráfico é uma reta.
+- Função não precisa de fórmula: tabela, gráfico ou descrição servem, desde que
+  determinem uma saída por entrada.
+
+Antes de avançar, verifique se você consegue explicar por que a circunferência
+não é gráfico de função, e por que $f(0) = 50$ na academia. A próxima página faz
+uma pergunta que ficou pendente aqui: **quais entradas a máquina realmente
+aceita?**

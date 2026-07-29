@@ -1,0 +1,526 @@
+---
+title: Domínio e imagem
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Domínio e imagem: o que entra e o que sai
+
+## 1. Problema motivador: a caixa de papelão
+
+Uma pequena confeitaria quer fabricar caixas sem tampa a partir de folhas de
+papelão de **30 cm por 20 cm**. O método é simples: recortar um quadrado de lado
+$x$ em cada canto e dobrar as abas para cima.
+
+Depois do corte, a base da caixa mede $(30 - 2x)$ por $(20 - 2x)$ centímetros —
+foram tirados $x$ de cada lado, dos dois lados —, e a altura é o próprio $x$. O
+volume, portanto, é
+
+$$
+V(x) = x(30 - 2x)(20 - 2x).
+$$
+
+Temos uma função, e podemos calcular valores:
+
+$$
+V(2) = 2 \times 26 \times 16 = 832 \ \text{cm}^3,
+\qquad
+V(5) = 5 \times 20 \times 10 = 1000 \ \text{cm}^3.
+$$
+
+Até aqui, tudo bem. Mas experimente $x = 12$:
+
+$$
+V(12) = 12 \times 6 \times (-4) = -288 \ \text{cm}^3.
+$$
+
+**Volume negativo.** A conta está certa — nenhum erro de aritmética. O problema
+é que a fórmula não sabe que existe uma caixa. Ela obedece cegamente, mesmo
+quando o corte é grande demais e a “caixa” não pode ser construída: com
+$x = 12$, os cortes de 12 cm em cada canto somam 24 cm, mais que os 20 cm de
+largura da folha.
+
+A fórmula, sozinha, aceita qualquer número. A **situação**, não. Esta página
+trata dessa diferença — e da pergunta que o capítulo deixou pendente: **quais
+entradas a máquina realmente aceita?**
+
+## 2. Mapa das ideias
+
+- o **domínio** de uma função é o conjunto de todas as entradas aceitas;
+- a **imagem** é o conjunto de todas as saídas que a função de fato produz;
+- há duas fontes de restrição: as **matemáticas**, que valem sempre, e as do
+  **contexto**, que vêm do problema.
+
+Por exemplo, $f(x) = \frac{1}{x-3}$ tem domínio “todos os reais menos o 3”,
+porque em $x = 3$ a divisão é por zero. Já a caixa tem domínio $\,]0, 10[$ — não
+por impedimento algébrico, mas porque fora disso não há caixa.
+
+## 3. Para que serve
+
+- garantir que uma fórmula não seja aplicada onde ela não vale, evitando
+  resultados absurdos como volume negativo;
+- saber de antemão que valores um modelo pode assumir — a **imagem** responde
+  “qual a produção máxima possível?”, “o custo pode ficar abaixo de tanto?”;
+- em programação, é exatamente a validação de entrada: aceitar só o que a função
+  sabe processar;
+- dentro da matemática, é o primeiro passo antes de esboçar qualquer gráfico:
+  não se desenha curva onde a função não existe.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [funções](./funcoes): o que a máquina faz com uma entrada?** Devolve
+exatamente uma saída. Mas nem todo número pode entrar: a máquina pode travar, e
+é isso que vamos catalogar.
+
+**2. De [frações algébricas](../algebra/fracoes-algebricas): que valor um
+denominador nunca pode assumir?** Zero. A divisão por zero não é definida, e a
+expressão simplesmente não existe ali.
+
+**3. De [raízes](../numeros-e-operacoes/raizes): existe $\sqrt{-4}$ nos reais?**
+Não. Nenhum número real, multiplicado por si mesmo, dá um resultado negativo. A
+raiz quadrada exige radicando maior ou igual a zero.
+
+**4. De [inequações](../equacoes/inequacoes-do-primeiro-grau) e
+[intervalos](../equacoes/intervalos): como se escreve o conjunto dos $x$ com
+$x - 5 \ge 0$?** Resolvendo, $x \ge 5$, ou seja, $[5, +\infty[$.
+
+Os itens 2 e 3 são as **duas** únicas restrições matemáticas que aparecem neste
+curso, e o item 4 é a ferramenta para escrever a resposta. Determinar um domínio
+é, quase sempre, resolver uma inequação.
+
+## 5. Intuição: o domínio é a lista do que a máquina aceita
+
+Volte à imagem da máquina. Ela tem uma boca de entrada, e nem tudo cabe ali.
+
+Uma máquina que **divide por $x - 3$** trava se você puser 3: ela precisaria
+repartir em zero partes, o que não significa nada. Uma máquina que **extrai raiz
+quadrada** trava se você puser um número negativo: não há resultado real a
+devolver.
+
+> O **domínio** é o conjunto de entradas para as quais a máquina devolve uma
+> saída. O que faz um número ficar de fora não é a nossa escolha: é a máquina
+> não conseguir processá-lo.
+
+E a **imagem** é a pergunta espelhada: percorrendo todo o domínio, que saídas
+aparecem?
+
+As duas não são simétricas em dificuldade. O domínio se determina olhando a
+fórmula e listando os impedimentos — é um trabalho mecânico. A imagem exige
+saber como a função se comporta, e muitas vezes só o gráfico responde.
+
+## 6. As duas restrições matemáticas
+
+Só há dois motivos, neste curso, para um número ficar fora do domínio:
+
+> **1. Denominador zero.** Se a fórmula tem $\frac{\ \cdot\ }{Q(x)}$, exija
+> $Q(x) \neq 0$.
+>
+> **2. Radicando negativo.** Se a fórmula tem $\sqrt{R(x)}$, exija $R(x) \ge 0$.
+
+Quando as duas aparecem juntas, as exigências se **somam**: o domínio é a
+interseção.
+
+E há um caso que combina as duas e merece atenção: uma raiz **no denominador**,
+como $\frac{1}{\sqrt{R(x)}}$. Aí não basta $R(x) \ge 0$ — é preciso $R(x) > 0$,
+estritamente, porque um radicando zero produziria denominador zero.
+
+**Exemplo.** $f(x) = \dfrac{\sqrt{x+2}}{x-1}$.
+
+- da raiz: $x + 2 \ge 0$, ou seja, $x \ge -2$;
+- do denominador: $x - 1 \neq 0$, ou seja, $x \neq 1$.
+
+As duas ao mesmo tempo dão $D = [-2, 1[ \ \cup\ ]1, +\infty[$.
+
+**Contraexemplo, para delimitar.** O domínio não se lê no numerador nem nos
+outros pedaços da fórmula. Em $g(x) = \frac{x-1}{x+2}$, o valor 1 é
+perfeitamente aceito — ele apenas faz a função valer zero. Quem está proibido é
+o $-2$.
+
+E funções sem denominador nem raiz — como $f(x) = 3x + 7$ ou $f(x) = x^2 - 5$ —
+**não têm restrição nenhuma**: o domínio é todo o conjunto dos reais. É o caso
+mais comum, e não deve ser esquecido por parecer trivial demais.
+
+## 7. A restrição que vem do problema
+
+A caixa do início não tinha nenhum impedimento algébrico:
+$V(x) = x(30-2x)(20-2x)$ é um produto de três fatores, calculável para qualquer
+número. A restrição veio de outro lugar.
+
+Para existir caixa, é preciso que:
+
+- o corte seja positivo: $x > 0$ — sem corte não há abas para dobrar;
+- a base tenha largura positiva: $20 - 2x > 0$, ou seja, $x < 10$;
+- a base tenha comprimento positivo: $30 - 2x > 0$, ou seja, $x < 15$.
+
+As três ao mesmo tempo: $0 < x < 10$, porque quem manda é a exigência mais
+apertada — não adianta caber no comprimento se não cabe na largura.
+
+$$
+D = \,]0,\ 10[.
+$$
+
+<CartesianPlane
+  xMin={-1}
+  xMax={13}
+  yMin={-350}
+  yMax={1150}
+  xUnit={30}
+  yUnit={0.19}
+  yStep={200}
+  functions={[
+    {f: (x) => x * (30 - 2 * x) * (20 - 2 * x), domain: [0, 10], tone: 1},
+    {f: (x) => x * (30 - 2 * x) * (20 - 2 * x), domain: [10, 13], tone: 2, dashed: true},
+  ]}
+  points={[{at: [5, 1000], label: '(5,\\ 1000)', tone: 3, place: 'above-left'}]}
+  axisLabels={['x', 'V']}
+  caption="A parte cheia é o domínio real do problema. A parte tracejada é o que a fórmula continua calculando fora dele — e onde o volume sai negativo."
+/>
+
+O trecho tracejado é o retrato do problema: a fórmula segue produzindo números
+depois de $x = 10$, e eles descem para valores negativos. Nada nela avisa que a
+caixa deixou de existir. **É o domínio que carrega essa informação**, e por isso
+ele faz parte da resposta.
+
+Repare de passagem no que o gráfico já entrega: o volume sobe, atinge um máximo
+perto de $x = 5$ e volta a cair. Com corte de 5 cm sai uma caixa de 1000 cm³ —
+que, aliás, é o maior valor entre os que testamos. Achar esse ponto com precisão
+é assunto de mais adiante.
+
+## 8. A imagem
+
+A **imagem** é o conjunto das saídas efetivamente produzidas quando a entrada
+percorre todo o domínio.
+
+Compare com o domínio: ele é uma lista de impedimentos, e sai da fórmula. A
+imagem é uma pergunta sobre o **comportamento**, e costuma sair do gráfico.
+
+Tome $f(x) = x^2$, cujo domínio é todo o conjunto dos reais. Que valores ela
+produz?
+
+Nunca um número negativo, porque um quadrado nunca é negativo. Produz o zero, em
+$x = 0$. E produz qualquer número positivo, porque $\sqrt{k}$ é uma entrada que
+devolve $k$. Logo:
+
+$$
+\text{Imagem de } f(x) = x^2 \ \text{ é } \ [0, +\infty[.
+$$
+
+Repare no que isso significa no gráfico: a curva ocupa alturas de 0 para cima, e
+nenhuma altura negativa. **A imagem é a “sombra” do gráfico projetada no eixo
+vertical**, assim como o domínio é a sombra projetada no eixo horizontal.
+
+Alguns casos que vale reconhecer de imediato:
+
+| Função | Domínio | Imagem |
+|---|---|---|
+| $f(x) = 2x + 3$ | todos os reais | todos os reais |
+| $f(x) = x^2$ | todos os reais | $[0, +\infty[$ |
+| $f(x) = x^2 + 1$ | todos os reais | $[1, +\infty[$ |
+| $f(x) = \sqrt{x}$ | $[0, +\infty[$ | $[0, +\infty[$ |
+| $f(x) = \frac{1}{x}$ | $x \neq 0$ | $y \neq 0$ |
+
+A linha da função afim merece um comentário: uma reta inclinada sobe sem parar
+para um lado e desce sem parar para o outro, então alcança **toda** altura. Já
+$x^2 + 1$ é o gráfico de $x^2$ deslocado uma unidade para cima, e sua imagem
+sobe junto.
+
+E a última linha guarda uma surpresa: $\frac{1}{x}$ nunca devolve zero. Para que
+uma fração valha zero, o numerador precisaria ser zero, e aqui ele é sempre 1. O
+valor 0 fica fora tanto do domínio quanto da imagem, por motivos diferentes.
+
+## 9. Exemplos resolvidos
+
+### Exemplo 1: apenas denominador
+
+Determine o domínio de $f(x) = \dfrac{1}{x - 3}$.
+
+Único impedimento: $x - 3 \neq 0$, ou seja, $x \neq 3$.
+
+$$
+D = \,]-\infty,\ 3[\ \cup\ ]3,\ +\infty[.
+$$
+
+### Exemplo 2: apenas raiz
+
+*Pause e tente antes de ler.* Determine o domínio de $g(x) = \sqrt{x - 5}$.
+
+Exigimos radicando não negativo:
+
+$$
+x - 5 \ge 0 \quad\Longrightarrow\quad x \ge 5, \qquad D = [5, +\infty[.
+$$
+
+Repare que aqui o extremo **entra**: $\sqrt{0} = 0$ existe perfeitamente. É a
+desigualdade $\ge$, e não $>$.
+
+### Exemplo 3: raiz no denominador
+
+*Pause e tente.* Determine o domínio de $p(x) = \dfrac{1}{\sqrt{4 - x}}$.
+
+Duas exigências, e elas se combinam numa só:
+
+- a raiz pede $4 - x \ge 0$;
+- o denominador pede $\sqrt{4-x} \neq 0$, isto é, $4 - x \neq 0$.
+
+Juntas, exigem $4 - x > 0$, estritamente:
+
+$$
+x < 4, \qquad D = \,]-\infty,\ 4[.
+$$
+
+Este é o caso em que o extremo **sai**. Compare com o Exemplo 2: a mesma raiz,
+mas a posição no denominador troca o $\ge$ por $>$.
+
+### Exemplo 4: radicando do 2º grau
+
+*Pause e tente.* Determine o domínio de $q(x) = \sqrt{9 - x^2}$.
+
+Exigimos $9 - x^2 \ge 0$. Isso é uma inequação do 2º grau — passe tudo para um
+lado e fatore:
+
+$$
+9 - x^2 \ge 0 \quad\Longrightarrow\quad x^2 - 9 \le 0 \quad\Longrightarrow\quad
+(x-3)(x+3) \le 0.
+$$
+
+Com $a > 0$ e sinal negativo pedido, a solução é entre as raízes, incluindo-as:
+
+$$
+D = [-3,\ 3].
+$$
+
+**Conferindo**: em $x = 0$, $\sqrt{9} = 3$, existe; em $x = 3$, $\sqrt{0} = 0$,
+existe; em $x = 4$, $\sqrt{-7}$ não existe nos reais. Confere.
+
+### Exemplo 5: as duas restrições
+
+*Pause e tente.* Determine o domínio de $h(x) = \dfrac{\sqrt{x}}{x - 2}$.
+
+- da raiz: $x \ge 0$;
+- do denominador: $x \neq 2$.
+
+$$
+D = [0,\ 2[\ \cup\ ]2,\ +\infty[.
+$$
+
+Note que o 0 **entra** — ele satisfaz a raiz e não anula o denominador, já que
+$0 - 2 = -2$.
+
+### Exemplo 6: imagem a partir do gráfico
+
+*Pause e tente.* Qual é a imagem de $f(x) = x^2 - 4$?
+
+O menor valor que $x^2$ produz é 0, em $x = 0$. Subtraindo 4, o menor valor de
+$f$ é $-4$. E como $x^2$ cresce sem limite, $f$ também: qualquer altura acima de
+$-4$ é alcançada.
+
+$$
+\text{Imagem} = [-4, +\infty[.
+$$
+
+**Conferindo**: $f(0) = -4$, o mínimo; $f(2) = 0$; $f(10) = 96$. Nenhuma entrada
+produz algo menor que $-4$, porque isso exigiria $x^2$ negativo.
+
+## 10. Erros comuns
+
+> **Erro 1: procurar restrição no numerador.** Em $\frac{x-1}{x+2}$, o valor 1 é
+> aceito e apenas zera a função. A proibição vem do **denominador**:
+> $x \neq -2$.
+
+> **Erro 2: usar $\ge$ onde o caso pede $>$.** Uma raiz sozinha aceita radicando
+> zero; uma raiz **no denominador** não. Compare $\sqrt{x-5}$, com $x \ge 5$, e
+> $\frac{1}{\sqrt{x-5}}$, com $x > 5$.
+
+> **Erro 3: dizer que uma função sem raiz e sem denominador “não tem domínio”.**
+> Ela tem: **todos os reais**. Domínio vazio seria outra coisa, e muito rara.
+
+> **Erro 4: parar na restrição matemática num problema concreto.** A fórmula da
+> caixa não proíbe $x = 12$; a caixa proíbe. Num problema aplicado, sempre
+> pergunte que valores fazem sentido na situação.
+
+> **Erro 5: unir em vez de interseccionar.** Quando há duas exigências, o
+> domínio é o conjunto dos números que satisfazem **as duas**. Em
+> $\frac{\sqrt{x}}{x-2}$, não basta $x \ge 0$ **ou** $x \neq 2$: são as duas ao
+> mesmo tempo.
+
+> **Erro 6: confundir domínio com imagem.** Domínio é o que **entra**, e se lê
+> no eixo horizontal; imagem é o que **sai**, e se lê no vertical. Em
+> $f(x) = \sqrt{x}$ os dois coincidem, o que é coincidência dessa função, não
+> regra.
+
+## 11. Perguntas de verificação
+
+1. Por que a fórmula da caixa devolve um número em $x = 12$, se a caixa não
+   existe?
+2. Quais são as duas restrições matemáticas de domínio deste curso?
+3. Por que uma raiz no denominador exige desigualdade **estrita**?
+4. Por que o domínio de $\frac{x-1}{x+2}$ não exclui o 1?
+5. Qual é o domínio de $f(x) = 3x + 7$? Por quê?
+6. Como se lê o domínio num gráfico? E a imagem?
+7. Por que a imagem de $\frac{1}{x}$ não contém o zero?
+8. Por que determinar um domínio quase sempre vira resolver uma inequação?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque a fórmula é apenas uma sequência de operações, e todas elas são
+   executáveis com o número 12. Ela não guarda nenhuma informação sobre folhas
+   de papelão. Quem sabe que a caixa não existe é o problema, e é o **domínio**
+   que registra essa informação.
+2. Denominador não pode ser zero, e radicando de raiz quadrada não pode ser
+   negativo. Todas as demais operações — somar, multiplicar, elevar ao quadrado
+   — aceitam qualquer número real.
+3. Porque um radicando zero produziria $\sqrt{0} = 0$ no denominador, e divisão
+   por zero não existe. A raiz sozinha aceitaria o zero; a divisão o recusa, e a
+   exigência mais apertada prevalece.
+4. Porque a restrição vem do denominador. O valor 1 anula o **numerador**, o que
+   apenas faz a função valer zero — um resultado perfeitamente legítimo.
+5. Todos os números reais. Não há denominador nem raiz, então nenhuma operação
+   trava para valor nenhum.
+6. O domínio é a sombra do gráfico projetada no eixo **horizontal**: os valores
+   de $x$ sobre os quais existe curva. A imagem é a sombra no eixo **vertical**:
+   as alturas que a curva chega a ocupar.
+7. Porque uma fração só vale zero quando o numerador é zero, e aqui o numerador
+   é sempre 1. Curiosamente, o zero fica fora tanto do domínio quanto da imagem
+   — mas por motivos diferentes: no domínio, por causa da divisão; na imagem,
+   porque nenhuma entrada o produz.
+8. Porque as duas restrições são desigualdades: “$Q(x) \neq 0$” pede resolver
+   uma equação para depois excluir, e “$R(x) \ge 0$” é literalmente uma
+   inequação. Quando o radicando é do 2º grau, é o quadro de sinais que dá a
+   resposta.
+
+</details>
+
+## 12. Exercícios
+
+### 1. Reconhecimento
+
+1. Diga qual restrição cada fórmula impõe, sem resolver: a) $\dfrac{5}{x+4}$
+   &nbsp; b) $\sqrt{2x-6}$ &nbsp; c) $x^2 - 8x$ &nbsp; d)
+   $\dfrac{1}{\sqrt{x-1}}$
+2. Determine o domínio de $f(x) = \dfrac{1}{x+4}$ e escreva-o como união de
+   intervalos.
+3. Determine o domínio de $g(x) = \sqrt{2x - 6}$.
+
+### 2. Explicação
+
+4. Explique por que $\sqrt{x-5}$ aceita $x = 5$, mas $\dfrac{1}{\sqrt{x-5}}$
+   não.
+5. Explique por que a fórmula do volume da caixa não “sabe” que $x = 12$ é
+   impossível.
+6. Um colega diz que o domínio de $\frac{x-3}{x+1}$ exclui o 3. Corrija-o e
+   explique de onde vem a confusão.
+
+### 3. Aplicação direta
+
+7. Determine o domínio de cada função: a) $\dfrac{\sqrt{x}}{x-2}$ &nbsp; b)
+   $\dfrac{x+1}{x^2-4}$ &nbsp; c) $\sqrt{9 - x^2}$ &nbsp; d)
+   $\dfrac{1}{\sqrt{x-1}}$
+
+### 4. Variação
+
+8. Determine a imagem de: a) $f(x) = x^2 + 1$ &nbsp; b) $f(x) = -x^2$ &nbsp; c)
+   $f(x) = \sqrt{x} + 2$
+9. Uma função tem domínio $[0, 6]$ e é dada por $f(x) = 2x - 3$. Qual é a
+   imagem?
+10. Determine o domínio de $f(x) = \sqrt{x^2 - 4}$.
+
+<details>
+<summary>Dica para o 9</summary>
+
+O domínio é limitado, então a imagem também será. Como a função é afim e
+crescente, os extremos da imagem vêm dos extremos do domínio — calcule os dois.
+
+</details>
+
+### 5. Problema misto
+
+11. Uma folha de papelão mede 40 cm por 25 cm. Cortando quadrados de lado $x$
+    nos cantos e dobrando, forma-se uma caixa sem tampa. a) Escreva $V(x)$. b)
+    Determine o domínio imposto pela situação. c) Calcule $V(5)$ e $V(20)$, e
+    explique o que o segundo resultado significa.
+12. O custo médio de produzir $x$ peças é $C(x) = \dfrac{800 + 12x}{x}$. a) Qual
+    é o domínio matemático? b) Qual é o domínio da situação? c) O custo médio
+    pode chegar a R\$ 12? Explique usando a ideia de imagem.
+
+### 6. Justificativa
+
+13. Explique por que, quando há duas restrições, o domínio é a **interseção** e
+    não a união das duas condições.
+14. Mostre que a imagem de $f(x) = x^2 + k$ é sempre $[k, +\infty[$, para
+    qualquer número $k$.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) $x + 4 \neq 0$ &nbsp; b) $2x - 6 \ge 0$ &nbsp; c) nenhuma &nbsp; d)
+   $x - 1 > 0$, estritamente, por causa da raiz no denominador.
+2. $x \neq -4$, ou seja, $\,]-\infty, -4[\ \cup\ ]-4, +\infty[$.
+3. $2x - 6 \ge 0$ dá $x \ge 3$, isto é, $[3, +\infty[$.
+4. Em $\sqrt{x-5}$, o valor $x = 5$ dá $\sqrt{0} = 0$, que existe. Já em
+   $\frac{1}{\sqrt{x-5}}$, esse mesmo zero iria para o denominador, e não se
+   divide por zero. A segunda exigência é mais apertada e prevalece: $x > 5$.
+5. Porque a fórmula é só uma sequência de operações aritméticas, todas
+   executáveis com o número 12. Ela não carrega nenhuma informação sobre o
+   tamanho da folha. Essa informação existe no problema e se registra no
+   domínio.
+6. O domínio exclui o $-1$, que anula o denominador. O 3 é aceito e apenas faz a
+   função valer zero. A confusão vem de olhar o numerador — mas quem impede é a
+   divisão, e ela mora embaixo.
+7. a) $x \ge 0$ e $x \neq 2$: $[0, 2[\ \cup\ ]2, +\infty[$. &nbsp; b)
+   $x^2 - 4 \neq 0$, logo $x \neq 2$ e $x \neq -2$:
+   $\,]-\infty,-2[\ \cup\ ]-2,2[\ \cup\ ]2,+\infty[$. &nbsp; c) $9 - x^2 \ge 0$,
+   que dá $[-3, 3]$. &nbsp; d) $x - 1 > 0$, logo $\,]1, +\infty[$.
+8. a) $[1, +\infty[$ — o menor valor de $x^2$ é 0, e somando 1 o mínimo vira 1.
+   &nbsp; b) $\,]-\infty, 0]$ — o sinal de menos vira a parábola para baixo, e o
+   maior valor passa a ser 0. &nbsp; c) $[2, +\infty[$ — a raiz produz de 0 para
+   cima, e o $+2$ desloca tudo.
+9. Como $f$ é crescente, o menor valor está em $x = 0$ e o maior em $x = 6$:
+   $f(0) = -3$ e $f(6) = 9$. A imagem é $[-3, 9]$.
+10. $x^2 - 4 \ge 0$, ou $(x-2)(x+2) \ge 0$. Com $a>0$ e sinal positivo pedido, a
+    solução é fora das raízes, incluindo-as:
+    $\,]-\infty, -2]\ \cup\ [2, +\infty[$.
+11. a) $V(x) = x(40-2x)(25-2x)$. &nbsp; b) É preciso $x > 0$, $25 - 2x > 0$ e
+    $40 - 2x > 0$; a mais apertada é $x < 12{,}5$, então $D = \,]0;\ 12{,}5[$.
+    &nbsp; c) $V(5) = 5 \times 30 \times 15 = 2250$ cm³. Já
+    $V(20) = 20 \times 0 \times (-15) = 0$, um número que a fórmula produz mas
+    que não descreve caixa nenhuma: com cortes de 20 cm numa folha de 25 cm de
+    largura, não sobra base. O valor 20 está fora do domínio.
+12. a) $x \neq 0$. &nbsp; b) $x$ inteiro e positivo: não se produz meia peça nem
+    quantidade negativa. &nbsp; c) Não. Separando, $C(x) = \frac{800}{x} + 12$,
+    e a parcela $\frac{800}{x}$ é sempre positiva para $x > 0$. Logo o custo
+    médio é sempre **maior** que 12, aproximando-se de 12 conforme a produção
+    cresce, sem nunca alcançar. O valor 12 não pertence à imagem.
+13. Porque cada restrição é uma condição que precisa valer para a fórmula
+    funcionar, e elas valem ao mesmo tempo. Um número que satisfaz só uma delas
+    ainda trava a máquina na outra. “E” corresponde a interseção; “ou”
+    corresponderia a aceitar entradas que quebram metade da fórmula.
+14. O menor valor de $x^2$ é 0, atingido em $x = 0$, e daí $f(0) = k$. Como
+    $x^2$ nunca é negativo, $f(x) = x^2 + k$ nunca é menor que $k$. E como $x^2$
+    cresce sem limite, qualquer altura acima de $k$ é alcançada: para atingir
+    $k + c$ com $c > 0$, basta tomar $x = \sqrt{c}$. Logo a imagem é exatamente
+    $[k, +\infty[$.
+
+</details>
+
+## 13. Revisão curta
+
+- O **domínio** é o conjunto das entradas aceitas; a **imagem**, o das saídas
+  produzidas.
+- Neste curso há **duas** restrições matemáticas: denominador $\neq 0$ e
+  radicando $\ge 0$.
+- Raiz **no denominador** combina as duas e exige desigualdade **estrita**.
+- Quando há mais de uma exigência, o domínio é a **interseção** delas.
+- Funções sem denominador e sem raiz têm domínio igual a **todos os reais** — o
+  que é uma resposta, não uma ausência de resposta.
+- Num problema concreto, o **contexto** impõe restrições que a fórmula não
+  conhece: a caixa não existe para $x \ge 10$, mas a fórmula segue calculando.
+- No gráfico, o domínio é a sombra no eixo **horizontal** e a imagem é a sombra
+  no eixo **vertical**.
+- O domínio se determina **da fórmula**, mecanicamente; a imagem costuma exigir
+  entender o **comportamento** da função.
+
+Antes de avançar, verifique se você consegue dizer, olhando uma fórmula, quais
+valores ela recusa — e se consegue explicar por que a caixa de papelão tem
+domínio mais estreito que o da fórmula. A próxima página aprende a descrever o
+comportamento de uma função a partir do gráfico.

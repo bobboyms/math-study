@@ -1,0 +1,512 @@
+---
+title: O logaritmo
+---
+
+import FunctionMachine from '@site/src/components/FunctionMachine';
+
+# O logaritmo: qual expoente produz este número
+
+## 1. Problema motivador: quanto tempo até dobrar
+
+Volte ao investimento de R\$ 1.000 a 10% ao ano, cujo saldo é
+
+$$
+M(t) = 1000 \cdot 1{,}1^t.
+$$
+
+Sabemos calcular o saldo em qualquer prazo. Mas o investidor quer o contrário:
+**em quanto tempo o dinheiro dobra?**
+
+Traduzindo, é resolver
+
+$$
+1000 \cdot 1{,}1^t = 2000
+\quad\Longrightarrow\quad
+1{,}1^t = 2.
+$$
+
+E aqui todas as ferramentas do curso falham. A incógnita está **no expoente**, e
+nenhuma operação conhecida a tira de lá.
+
+- Somar e subtrair não alcançam o expoente.
+- Multiplicar e dividir também não.
+- A **raiz** desfaz a potência quando a incógnita é a **base**: de $x^2 = 9$ vem
+  $x = 3$. Mas aqui a base é conhecida e o expoente é a incógnita. É o problema
+  espelhado, e a raiz não serve.
+
+Dá para tatear: $1{,}1^7 = 1{,}949$ e $1{,}1^8 = 2{,}144$. A resposta está entre
+7 e 8 anos. Mas tatear não é método, e a pergunta reaparece toda vez que se muda
+a taxa.
+
+Falta uma operação. Esta página a apresenta.
+
+## 2. Mapa das ideias
+
+- o **logaritmo** responde “qual expoente?”: $\log_b a$ é o expoente que se deve
+  dar a $b$ para obter $a$;
+- ele é a **operação inversa** da exponencial, assim como a raiz é a inversa da
+  potência;
+- a **base** $b$ precisa ser positiva e diferente de 1; o **logaritmando** $a$
+  precisa ser **positivo**;
+- há duas bases com notação própria: $\log$ para base 10 e $\ln$ para base $e$.
+
+## 3. Para que serve
+
+- calcular prazos: até dobrar, até triplicar, até atingir uma meta;
+- determinar idade por decaimento — carbono-14, meia-vida;
+- as escalas logarítmicas: Richter, decibel, pH;
+- comprimir faixas enormes de valores em números manejáveis;
+- e, dentro da matemática, transformar produtos em somas — o que fez dos
+  logaritmos, por três séculos, a ferramenta de cálculo mais importante que
+  existia.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [função inversa](../funcoes/funcao-inversa): o que a inversa faz?**
+Desfaz a função: $f^{-1}(f(x)) = x$. E só existe quando a função **não repete
+saídas**.
+
+**2. De [raízes](../numeros-e-operacoes/raizes): a raiz desfaz o quê?** A
+potência, quando a **base** é a incógnita. De $x^3 = 8$ vem
+$x = \sqrt[3]{8} = 2$.
+
+**3. De [função exponencial](./funcao-exponencial): a exponencial repete
+saídas?** Não. Ela é **sempre crescente** (para $b > 1$) ou sempre decrescente,
+e por isso tem inversa — pelo teste da reta horizontal.
+
+**4. De [potências](../numeros-e-operacoes/potencias): quanto valem $2^0$ e
+$2^{-3}$?** $2^0 = 1$ e $2^{-3} = \frac18$. Esses dois casos explicam dois
+valores de logaritmo que costumam surpreender.
+
+O item 3 é a licença para tudo o que vem a seguir: como a exponencial é
+injetora, a inversa existe — e ela tem nome.
+
+## 5. Intuição: a terceira pergunta sobre uma potência
+
+Uma potência relaciona três números: base, expoente e resultado.
+
+$$
+2^3 = 8.
+$$
+
+Conhecendo dois deles, há **três** perguntas possíveis, e cada uma exige uma
+operação diferente:
+
+| Pergunta | Exemplo | Operação |
+|---|---|---|
+| Qual é o **resultado**? | $2^3 = \ ?$ | potenciação |
+| Qual é a **base**? | $x^3 = 8$ | radiciação |
+| Qual é o **expoente**? | $2^x = 8$ | **logaritmo** |
+
+As duas primeiras já foram estudadas. A terceira é a que faltava, e é a que o
+problema do investimento pede.
+
+<FunctionMachine
+  input="x"
+  steps={[{op: '\\text{eleva } 2 \\text{ a } x', value: '2^x'}]}
+  back="\log_2"
+  caption="A exponencial de base 2 e sua inversa. Entra o expoente, sai a potência; a volta é o logaritmo."
+/>
+
+> $\log_b a$ é **o expoente que se deve dar a $b$ para obter $a$**.
+
+Toda a página cabe nessa frase. Sempre que ficar em dúvida sobre um logaritmo,
+releia-a e pergunte: “$b$ elevado a quanto dá $a$?”
+
+Por exemplo, $\log_2 8 = 3$, porque $2^3 = 8$. E $\log_{10} 1000 = 3$, porque
+$10^3 = 1000$.
+
+## 6. Formalização
+
+> Sejam $b > 0$, $b \neq 1$ e $a > 0$. O **logaritmo de $a$ na base $b$** é o
+> número $c$ tal que
+> $$
+> \log_b a = c \quad\Longleftrightarrow\quad b^c = a.
+> $$
+
+As duas escritas dizem exatamente a mesma coisa. Passar de uma à outra é a
+manobra mais usada do capítulo, e vale treiná-la até ficar automática:
+
+| Forma logarítmica | Forma exponencial |
+|---|---|
+| $\log_2 8 = 3$ | $2^3 = 8$ |
+| $\log_3 81 = 4$ | $3^4 = 81$ |
+| $\log_{10} 0{,}01 = -2$ | $10^{-2} = 0{,}01$ |
+| $\log_5 1 = 0$ | $5^0 = 1$ |
+
+**Exemplo.** $\log_5 125 = 3$, porque $5^3 = 125$.
+
+**Contraexemplo, para delimitar.** As restrições não são formalidades:
+
+- **$a$ precisa ser positivo.** Não existe $\log_2(-8)$: nenhum expoente faz
+  $2^x$ dar um número negativo, porque a exponencial é sempre positiva. Não
+  existe $\log_2 0$ pelo mesmo motivo — $2^x$ nunca chega a zero, só se
+  aproxima.
+- **$b$ não pode ser 1.** Como $1^x = 1$ sempre, a pergunta “1 elevado a quanto
+  dá 8?” não tem resposta.
+- **$b$ precisa ser positivo**, pela mesma razão que a base da exponencial
+  precisa ser.
+
+A restrição sobre $a$ é a que mais aparece na prática, e vai gerar soluções
+descartadas na página de equações.
+
+### Dois valores que valem guardar
+
+$$
+\log_b 1 = 0 \qquad\text{e}\qquad \log_b b = 1.
+$$
+
+O primeiro porque $b^0 = 1$, para qualquer base. O segundo porque $b^1 = b$.
+
+E, sendo inversas, exponencial e logaritmo se desfazem:
+
+$$
+b^{\log_b a} = a \qquad\text{e}\qquad \log_b(b^x) = x.
+$$
+
+## 7. As duas bases com nome próprio
+
+Qualquer base positiva diferente de 1 serve, mas duas dominam o uso:
+
+> - **$\log a$**, sem base escrita, significa base **10**. É a base das escalas
+>   Richter, decibel e pH, e a que os antigos usavam em tabelas.
+> - **$\ln a$** é o **logaritmo natural**, de base $e$. É a base do cálculo.
+
+Cuidado: em alguns livros e em várias linguagens de programação, `log` sem
+índice significa base $e$. Na dúvida, confira a convenção do texto ou da
+ferramenta.
+
+O nome “natural” não é elogio vazio: assim como $e$ é a base do crescimento
+contínuo, $\ln$ é o logaritmo que aparece naturalmente sempre que se pergunta
+“quanto tempo?” num processo contínuo.
+
+## 8. Por que os logaritmos foram inventados
+
+Vale um parágrafo de história, porque ele explica a propriedade central da
+próxima página.
+
+Antes das calculadoras, multiplicar dois números de seis dígitos à mão levava
+minutos e era propenso a erro — e a astronomia e a navegação exigiam milhares
+dessas contas. No século XVII, percebeu-se que a regra das potências
+
+$$
+b^m \cdot b^n = b^{m+n}
+$$
+
+podia ser lida ao contrário: **se todo número for escrito como potência de uma
+mesma base, multiplicar números vira somar expoentes**.
+
+Bastava então uma tabela que convertesse número em expoente — uma tábua de
+logaritmos — para trocar toda multiplicação por uma soma. Foi o que Napier
+publicou em 1614, e o ganho de produtividade foi tão grande que se dizia ter
+dobrado a vida útil de um astrônomo.
+
+A régua de cálculo, usada por engenheiros até os anos 1970, é uma tábua de
+logaritmos em forma de régua: ela multiplica **somando comprimentos**.
+
+As calculadoras aposentaram esse uso, mas a propriedade que o sustentava
+continua central — é ela que resolve equações com incógnita no expoente, e é o
+assunto da página seguinte.
+
+## 9. Resolvendo o problema do investimento
+
+A equação era $1{,}1^t = 2$. Aplicando a definição, $t$ é o expoente que faz 1,1
+dar 2:
+
+$$
+t = \log_{1{,}1} 2.
+$$
+
+Isso **é** a resposta exata. Para obter um número, usa-se a calculadora — e,
+como ela não costuma ter base 1,1, a próxima página mostrará a mudança de base.
+O valor é
+
+$$
+t \approx 7{,}27 \ \text{anos}.
+$$
+
+**Conferindo**: $1{,}1^7 = 1{,}949$ e $1{,}1^8 = 2{,}144$. O valor 7,27 está
+entre os dois, mais perto de 7 — coerente com o tateio do início.
+
+Repare no formato da resposta: **cerca de 7 anos e 3 meses para dobrar, a 10% ao
+ano**. E há uma aproximação prática que circula no mercado, a **regra dos 72**:
+dividir 72 pela taxa em porcentagem dá o tempo aproximado de dobra. Aqui,
+$\frac{72}{10} = 7{,}2$ — muito perto dos 7,27 exatos.
+
+## 10. Exemplos resolvidos
+
+### Exemplo 1: logaritmos que saem de cabeça
+
+Calcule $\log_2 32$, $\log_3 81$ e $\log_{10} 1000$.
+
+A pergunta é sempre “a base elevada a quanto dá isso?”.
+
+- $2^5 = 32$, então $\log_2 32 = 5$;
+- $3^4 = 81$, então $\log_3 81 = 4$;
+- $10^3 = 1000$, então $\log_{10} 1000 = 3$.
+
+### Exemplo 2: resultado negativo
+
+*Pause e tente antes de ler.* Calcule $\log_{10} 0{,}01$ e $\log_2 \frac18$.
+
+- $10^{-2} = \frac{1}{100} = 0{,}01$, então $\log_{10} 0{,}01 = -2$;
+- $2^{-3} = \frac18$, então $\log_2 \frac18 = -3$.
+
+**O logaritmo pode ser negativo** — e isso acontece exatamente quando o
+logaritmando está **entre 0 e 1**. Não confunda com o logaritmando ser negativo,
+que é o caso proibido.
+
+### Exemplo 3: o que não existe
+
+*Pause e tente.* Quais destes existem? &nbsp; $\log_2 (-4)$, &nbsp; $\log_2 0$,
+&nbsp; $\log_1 5$, &nbsp; $\log_2 0{,}5$
+
+- $\log_2(-4)$: **não existe**. Seria preciso $2^x = -4$, e $2^x$ é sempre
+  positivo.
+- $\log_2 0$: **não existe**. $2^x$ nunca chega a zero, apenas se aproxima.
+- $\log_1 5$: **não existe**. $1^x = 1$ sempre, e nunca 5.
+- $\log_2 0{,}5$: **existe** e vale $-1$, porque $2^{-1} = \frac12$.
+
+O último mostra a distinção do exemplo anterior: logaritmando **entre 0 e 1** é
+permitido e dá resultado negativo; logaritmando **negativo** é proibido.
+
+### Exemplo 4: converter entre as formas
+
+*Pause e tente.* Reescreva na outra forma: a) $\log_4 64 = 3$ &nbsp; b)
+$7^2 = 49$ &nbsp; c) $\log_b 1 = 0$
+
+a) $4^3 = 64$.
+
+b) $\log_7 49 = 2$.
+
+c) $b^0 = 1$ — verdadeiro para qualquer base positiva diferente de 1, e é por
+isso que $\log_b 1 = 0$ sempre.
+
+### Exemplo 5: uma equação simples
+
+*Pause e tente.* Resolva $\log_3 x = 4$.
+
+Passando para a forma exponencial: $x = 3^4 = 81$.
+
+**Conferindo**: $\log_3 81 = 4$, porque $3^4 = 81$. E o logaritmando 81 é
+positivo, então a solução é válida.
+
+Esse último cuidado — verificar se o logaritmando ficou positivo — parece
+supérfluo aqui, mas será decisivo na página de equações.
+
+### Exemplo 6: a escala Richter
+
+*Pause e tente.* A magnitude Richter de um terremoto é
+$M = \log_{10}\left(\frac{A}{A_0}\right)$, com $A$ a amplitude medida e $A_0$
+uma referência. Quantas vezes mais forte é um terremoto de magnitude 7 que um de
+magnitude 5?
+
+Magnitude 5 significa $\frac{A}{A_0} = 10^5$; magnitude 7 significa $10^7$. A
+razão entre as amplitudes é
+
+$$
+\frac{10^7}{10^5} = 10^2 = 100.
+$$
+
+**Cem vezes maior** — embora a escala mostre apenas “dois pontos a mais”.
+
+É exatamente para isso que a escala é logarítmica: ela comprime uma faixa que
+vai de 1 a bilhões numa numeração de 1 a 10. O preço é que a diferença entre 5 e
+7 não é de dois, e sim de cem vezes — o que engana quem lê a escala como se
+fosse linear.
+
+## 11. Erros comuns
+
+> **Erro 1: confundir com raiz.** A raiz acha a **base** ($x^3 = 8$); o
+> logaritmo acha o **expoente** ($2^x = 8$). São perguntas espelhadas.
+
+> **Erro 2: aceitar logaritmando negativo ou zero.** $\log_2(-8)$ e $\log_2 0$
+> não existem, porque $2^x$ é sempre positivo e nunca chega a zero.
+
+> **Erro 3: confundir “logaritmo negativo” com “logaritmando negativo”.**
+> $\log_2 0{,}5 = -1$ existe e é negativo. É $\log_2(-2)$ que não existe.
+
+> **Erro 4: achar que $\log_b 0 = 1$.** É $\log_b 1 = 0$, porque $b^0 = 1$. A
+> troca de posição inverte tudo.
+
+> **Erro 5: assumir a base pelo símbolo.** Neste curso, $\log$ é base 10 e $\ln$
+> é base $e$. Em várias linguagens de programação, `log` é base $e$ — confira
+> antes de usar.
+
+> **Erro 6: ler escala logarítmica como linear.** Dois pontos a mais na Richter
+> não são o dobro: são **cem vezes**.
+
+## 12. Perguntas de verificação
+
+1. Por que a raiz não resolve $1{,}1^t = 2$?
+2. Qual é a definição de $\log_b a$, em uma frase?
+3. Por que o logaritmando precisa ser positivo?
+4. Por que a base não pode ser 1?
+5. Por que $\log_b 1 = 0$ para qualquer base?
+6. Por que existe $\log_2 0{,}5$, mas não $\log_2(-2)$?
+7. Por que o logaritmo tem inversa garantida — isto é, por que a exponencial é
+   invertível?
+8. Por que as escalas Richter e decibel são logarítmicas?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque a raiz desfaz uma potência quando a incógnita é a **base**, como em
+   $x^3 = 8$. Em $1{,}1^t = 2$, a base é conhecida e a incógnita é o
+   **expoente** — o problema espelhado, que exige outra operação.
+2. $\log_b a$ é o **expoente que se deve dar a $b$ para obter $a$**. Em
+   símbolos, $\log_b a = c$ significa $b^c = a$.
+3. Porque o logaritmo devolve um expoente da exponencial, e a exponencial é
+   **sempre positiva**. Nenhum expoente faz $b^x$ dar zero ou um número
+   negativo, então esses logaritmandos não têm resposta possível.
+4. Porque $1^x = 1$ para todo $x$. A pergunta “1 elevado a quanto dá 8?” não tem
+   resposta, e a pergunta “1 elevado a quanto dá 1?” tem infinitas. Em nenhum
+   dos casos há um valor bem definido.
+5. Porque $b^0 = 1$ para qualquer base positiva. O expoente que produz 1 é
+   sempre o zero, independentemente da base escolhida.
+6. Porque $0{,}5$ é **positivo**, e há um expoente que o produz:
+   $2^{-1} = 0{,}5$. Já $-2$ é negativo, e nenhum expoente faz $2^x$ ficar
+   negativo. A restrição é sobre o **logaritmando** ser positivo, não sobre o
+   resultado.
+7. Porque a exponencial é **sempre crescente** (com base maior que 1) ou sempre
+   decrescente, e portanto nunca repete saídas. Pelo teste da reta horizontal,
+   funções assim têm inversa — e essa inversa é o logaritmo.
+8. Porque as grandezas envolvidas variam por fatores enormes — a amplitude de um
+   terremoto varia por bilhões, e a intensidade sonora audível cobre doze ordens
+   de grandeza. O logaritmo comprime essa faixa numa numeração pequena e
+   legível. O custo é que a escala deixa de ser lida como diferença e passa a
+   ser lida como **razão**.
+
+</details>
+
+## 13. Exercícios
+
+### 1. Reconhecimento
+
+1. Calcule mentalmente: a) $\log_2 16$ &nbsp; b) $\log_3 27$ &nbsp; c)
+   $\log_{10} 100$ &nbsp; d) $\log_5 1$
+2. Reescreva na forma exponencial: a) $\log_2 64 = 6$ &nbsp; b)
+   $\log_{10} 0{,}1 = -1$ &nbsp; c) $\ln e = 1$
+3. Reescreva na forma logarítmica: a) $3^5 = 243$ &nbsp; b) $10^{-3} = 0{,}001$
+   &nbsp; c) $7^0 = 1$
+
+### 2. Explicação
+
+4. Explique, em uma frase, o que $\log_b a$ significa.
+5. Explique por que $\log_2(-8)$ não existe.
+6. Explique a diferença entre a pergunta que a raiz responde e a que o logaritmo
+   responde.
+
+### 3. Aplicação direta
+
+7. Calcule: a) $\log_2 32$ &nbsp; b) $\log_{10} 0{,}01$ &nbsp; c)
+   $\log_2 \frac18$ &nbsp; d) $\log_4 64$
+8. Diga quais existem e por quê: $\log_2 0$, &nbsp; $\log_2 0{,}25$, &nbsp;
+   $\log_1 9$, &nbsp; $\log_3(-9)$
+9. Resolva: a) $\log_3 x = 4$ &nbsp; b) $\log_x 25 = 2$ &nbsp; c)
+   $\log_2 x = -3$
+
+### 4. Variação
+
+10. Escreva, sem calcular o valor, o tempo necessário para um investimento a 8%
+    ao ano dobrar.
+11. Calcule $\log_2 1024$ e explique como chegou ao resultado sem calculadora.
+12. Um terremoto de magnitude 8 é quantas vezes mais forte que um de magnitude
+    5?
+
+<details>
+<summary>Dica para o 9b</summary>
+
+Aqui a incógnita é a **base**. Passe para a forma exponencial e veja que tipo de
+equação sobra — e lembre que a base de um logaritmo precisa ser positiva.
+
+</details>
+
+### 5. Problema misto
+
+13. Um investimento de R\$ 4.000 rende 6% ao ano. a) Escreva o saldo $M(t)$. b)
+    Escreva, usando logaritmo, o tempo para o saldo chegar a R\$ 8.000. c)
+    Compare com a estimativa da regra dos 72.
+14. O nível sonoro em decibéis é $N = 10 \log_{10}\left(\frac{I}{I_0}\right)$.
+    a) Qual é o nível de um som com $I = 10^6 I_0$? b) Quantas vezes mais
+    intenso é um som de 80 dB que um de 60 dB? c) Por que um aumento de 20 dB
+    não parece “um terço mais alto”?
+
+### 6. Justificativa
+
+15. Explique por que $b^{\log_b a} = a$, usando a definição de logaritmo.
+16. Explique por que o logaritmo existe como função, recorrendo à propriedade da
+    exponencial que garante a existência de inversa.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) 4 &nbsp; b) 3 &nbsp; c) 2 &nbsp; d) 0.
+2. a) $2^6 = 64$ &nbsp; b) $10^{-1} = 0{,}1$ &nbsp; c) $e^1 = e$.
+3. a) $\log_3 243 = 5$ &nbsp; b) $\log_{10} 0{,}001 = -3$ &nbsp; c)
+   $\log_7 1 = 0$.
+4. É o **expoente que se deve dar à base $b$ para obter $a$**.
+5. Porque seria preciso encontrar $x$ com $2^x = -8$, e a exponencial de base
+   positiva **nunca** produz valor negativo. Não há expoente que sirva.
+6. A raiz responde “**qual base**, elevada a este expoente, dá este resultado?”
+   — como em $x^3 = 8$. O logaritmo responde “**qual expoente**, aplicado a esta
+   base, dá este resultado?” — como em $2^x = 8$. São as duas perguntas inversas
+   possíveis sobre a mesma potência.
+7. a) 5 &nbsp; b) $-2$ &nbsp; c) $-3$ &nbsp; d) 3.
+8. $\log_2 0$: **não existe**, porque $2^x$ nunca vale zero. &nbsp;
+   $\log_2 0{,}25$: **existe** e vale $-2$, pois $2^{-2} = 0{,}25$. &nbsp;
+   $\log_1 9$: **não existe**, porque $1^x$ é sempre 1. &nbsp; $\log_3(-9)$:
+   **não existe**, porque a exponencial nunca é negativa.
+9. a) $x = 3^4 = 81$. &nbsp; b) $x^2 = 25$, logo $x = 5$ — descartamos $-5$
+   porque a base de um logaritmo precisa ser positiva. &nbsp; c)
+   $x = 2^{-3} = \frac18$.
+10. O saldo dobra quando $1{,}08^t = 2$, ou seja, $t = \log_{1{,}08} 2$ anos.
+11. $\log_2 1024 = 10$. Sem calculadora: 1024 é a décima potência de 2 — basta
+    dobrar a partir de 1 e contar os passos, ou lembrar que $2^{10} = 1024$, o
+    número que dá nome ao kilobyte.
+12. Magnitude 8 corresponde a $10^8$ e magnitude 5 a $10^5$; a razão é
+    $10^3 = 1000$. **Mil vezes** mais forte.
+13. a) $M(t) = 4000 \cdot 1{,}06^t$. &nbsp; b) Dobrar exige $1{,}06^t = 2$, logo
+    $t = \log_{1{,}06} 2$ anos — aproximadamente 11,9. &nbsp; c) A regra dos 72
+    dá $\frac{72}{6} = 12$ anos, muito próximo do valor exato. A regra é uma boa
+    aproximação para taxas pequenas.
+14. a) $N = 10 \log_{10}(10^6) = 10 \times 6 = 60$ dB. &nbsp; b) A diferença de
+    20 dB corresponde a $\log_{10}\left(\frac{I_2}{I_1}\right) = 2$, ou seja,
+    $\frac{I_2}{I_1} = 100$: **cem vezes** mais intenso. &nbsp; c) Porque a
+    escala é logarítmica, e não linear. O número mostrado é o **expoente** da
+    intensidade, não a intensidade em si — somar 20 no expoente corresponde a
+    multiplicar a intensidade por 100.
+15. Por definição, $\log_b a$ é o expoente que se deve dar a $b$ para obter $a$.
+    Elevar $b$ a esse expoente é, portanto, fazer exatamente o que ele foi
+    definido para produzir: o resultado é $a$. Em outras palavras, é a relação
+    $f(f^{-1}(a)) = a$ entre funções inversas.
+16. Porque uma função só tem inversa se **não repetir saídas**, e a exponencial
+    de base maior que 1 é sempre crescente — entradas diferentes produzem sempre
+    saídas diferentes. Pelo teste da reta horizontal, ela é invertível, e sua
+    inversa é o logaritmo. O mesmo vale para bases entre 0 e 1, que são sempre
+    decrescentes.
+
+</details>
+
+## 14. Revisão curta
+
+- $\log_b a$ é **o expoente que se deve dar a $b$ para obter $a$**:
+  $\log_b a = c \Leftrightarrow b^c = a$.
+- É a **terceira** pergunta sobre uma potência. Potenciação acha o resultado,
+  radiciação acha a base, logaritmo acha o **expoente**.
+- É a **inversa** da exponencial, e existe porque a exponencial nunca repete
+  saídas.
+- **Restrições**: base positiva e diferente de 1; **logaritmando positivo**.
+- Logaritmando entre 0 e 1 dá resultado **negativo** — o que é permitido.
+  Logaritmando negativo é **proibido**.
+- $\log_b 1 = 0$ e $\log_b b = 1$, para qualquer base.
+- $\log$ sem índice é base **10**; $\ln$ é base **$e$**, o logaritmo natural.
+- Os logaritmos nasceram para **trocar multiplicação por soma**, e essa
+  propriedade continua sendo a mais importante.
+- Escalas logarítmicas — Richter, decibel, pH — comprimem faixas enormes, e por
+  isso devem ser lidas como **razão**, não como diferença.
+
+Antes de avançar, verifique se você consegue converter entre as formas
+logarítmica e exponencial sem hesitar. A próxima página desenvolve a propriedade
+que motivou a invenção dos logaritmos — e que é o que finalmente permite
+**resolver** equações com incógnita no expoente.
