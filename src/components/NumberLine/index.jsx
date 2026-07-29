@@ -176,8 +176,19 @@ export default function NumberLine({
 
         {marks.map((mark, index) => (
           <g key={`mark-${index}`}>
+            {/* O miolo da bola vazia precisa apagar o traço da escala e a faixa
+                que passam por baixo, senão o ponto sai cruzado em vez de oco.
+                O raio cobre o tique inteiro, que vai de -TICK a +TICK. */}
+            {mark.open && (
+              <circle
+                className={styles.markDotMask}
+                cx={px(mark.at)}
+                cy={yLine}
+                r={TICK + 1}
+              />
+            )}
             <circle
-              className={styles.markDot}
+              className={mark.open ? styles.markDotOpen : styles.markDot}
               style={{'--tone': `var(--mv-tone-${mark.tone ?? 2})`}}
               cx={px(mark.at)}
               cy={yLine}

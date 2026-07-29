@@ -146,7 +146,12 @@ símbolos diferentes significam a mesma coisa:
 - divisão: `\div`;
 - MMC e MDC: `\operatorname{mmc}(12,18)` e `\operatorname{mdc}(48,60)`;
 - continuação: `\ldots`;
-- texto dentro de fórmula: `\text{área} = \text{lado} \times \text{lado}`.
+- texto dentro de fórmula: `\text{área} = \text{lado} \times \text{lado}`;
+- valor absoluto: `\lvert x \rvert`, **nunca** `|x|`. Com a barra crua o KaTeX
+  não sabe que ela abre um delimitador e trata o sinal seguinte como operador
+  binário: `$|-5|$` sai como “∣ − 5∣”, com um vão visível depois da barra.
+  `\lvert`/`\rvert` produzem o espaçamento correto. A barra crua também quebra
+  a célula quando a fórmula está dentro de uma tabela markdown.
 
 ### Trigonometria: nomes em português
 

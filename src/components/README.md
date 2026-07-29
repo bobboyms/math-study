@@ -119,13 +119,18 @@ Reta numérica com saltos, pontos e intervalos.
 | `labelEvery` | numera uma marca a cada N (padrão 1) |
 | `unit` | pixels por unidade (padrão 44) |
 | `jumps` | `[{from, to, label?, tone?, level?}]` — seta curva com ponta na direção do movimento. `level` (0, 1, 2…) empilha arcos que se cruzariam |
-| `marks` | `[{at, label?, tone?}]` — ponto cheio sobre a reta |
+| `marks` | `[{at, label?, tone?, open?}]` — ponto sobre a reta; `open: true` desenha a bola vazia |
 | `spans` | `[{from, to, tone?}]` — faixa grossa translúcida sobre a reta |
 | `caption` | texto simples |
 
 Dois saltos que se cruzam precisam de `level` diferente, senão os arcos se
 sobrepõem. Reta longa fica apertada no celular: prefira intervalos curtos, ou
 aumente `step` e use `labelEvery`.
+
+`open` é o que distingue $x < 3$ de $x \le 3$ no desenho: bola vazia exclui o
+extremo, bola cheia inclui. Um intervalo é um `span` mais as duas bolas nas
+pontas — `[2, 5)` sai de `spans={[{from: 2, to: 5}]}` com
+`marks={[{at: 2}, {at: 5, open: true}]}`.
 
 ## FractionBar
 
