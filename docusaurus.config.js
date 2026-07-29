@@ -10,9 +10,9 @@ const config = {
   tagline: 'Estudo de matematica com explicacoes, exercicios e graficos interativos.',
   favicon: 'img/favicon.svg',
 
-  url: 'https://example.com',
-  baseUrl: '/',
-  organizationName: 'local',
+  url: 'https://bobboyms.github.io',
+  baseUrl: '/math-study/',
+  organizationName: 'bobboyms',
   projectName: 'math-study',
 
   onBrokenLinks: 'throw',
