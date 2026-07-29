@@ -279,12 +279,27 @@ Dois reforços para quem não tem professor:
 
 ## Tamanho e escopo
 
-As lições variam hoje de 163 a 1265 linhas, o que não é intencional. Alvo:
-**400 a 700 linhas**, uma ideia central por página.
+**Não existe alvo de número de linhas.** A estrutura de lição desta skill —
+motivador resolvido, reativação do pré-requisito, intuição, modelo visual,
+formalização com contraexemplo, exemplos resolvidos, erros comuns, perguntas de
+verificação com resposta e gabarito comentado — custa o que custa. Aplicada com
+honestidade, uma lição fica entre 900 e 1200 linhas, e as boas páginas do
+repositório estão nessa faixa. Cortar para caber num número é cortar exatamente
+o que o aluno que estuda sozinho não tem como repor.
 
-Se uma lição passa disso, provavelmente carrega dois conceitos que mereciam
-páginas separadas — proponha a divisão em vez de continuar acrescentando. Menos
-conteúdo com domínio real vale mais que muitos tópicos superficiais.
+O critério é outro: **uma ideia central por página**. A pergunta não é "está
+longa demais?", e sim:
+
+- a página tem **uma** ideia central, ou duas que só estão juntas por vizinhança
+  temática?
+- se são duas, a segunda **depende** da primeira ao ponto de separá-las obrigar
+  a página nova a começar reensinando a anterior? Se depende, mantenha juntas.
+- alguma seção repete o que outra já disse, ou acrescenta exemplo sem
+  acrescentar entendimento?
+
+Só a segunda resposta autoriza propor uma divisão — e proponha, em vez de
+continuar acrescentando. O que sempre vale cortar é redundância, não
+profundidade.
 
 ## Revisão de lições existentes
 
