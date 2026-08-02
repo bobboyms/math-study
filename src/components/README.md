@@ -97,6 +97,60 @@ O tom padrão de cada célula é `((linha + coluna) % 3) + 1`. Numa grade 2×2 i
 dá azul, laranja / laranja, verde — os dois produtos cruzados saem com a mesma
 cor de propósito. Passe `{math, tone}` para escolher outra.
 
+## TileModel
+
+O `AreaModel` visto do outro lado. Lá o retângulo já vem montado e a figura
+mostra em que pedaços ele se corta; aqui as peças — o quadrado de lado $x$, a
+tira de $x$ por $1$ e o quadradinho de lado $1$ — vêm soltas, e a pergunta é se
+elas fecham um retângulo. É o desenho da **fatoração**, que é o caminho de
+volta: dado o monte de peças, achar os dois lados.
+
+```mdx
+{/* o monte que a expressão entrega */}
+<TileModel loose={{x2: 1, x: 8, one: 15}} caption="x² + 8x + 15 em peças." />
+
+{/* a montagem que fecha: (x + 3)(x + 5) */}
+<TileModel rows={['x', 3]} cols={['x', 5]} caption="..." />
+
+{/* uma montagem que não fecha: faltam tiras */}
+<TileModel rows={['x', 1]} cols={['x', 5]} ghost={[[0, 3], [0, 4], [0, 5]]} />
+
+{/* agrupamento: o retângulo cortado em duas faixas */}
+<TileModel
+  rows={['x', 3]} cols={['x', 5]}
+  splitAfter={0} bandLabels={['x(x + 5)', '3(x + 5)']}
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `rows`, `cols` | os lados, em pedaços: `'x'` é um comprimento $x$, e um número `n` vira `n` células de lado 1. `['x', 'x', 1]` é o lado $2x + 1$ |
+| `loose` | `{x2, x, one}` — modo peças soltas, uma linha por tipo. Ignora `rows`/`cols` |
+| `ghost` | `[[linha, coluna]]` na grade expandida — peça que **faltaria**, desenhada tracejada e sem cor |
+| `splitAfter` | índice da linha depois da qual o desenho abre um vão; `splitGap` (padrão 0.7) é o tamanho dele em unidades |
+| `bandLabels` | `[LaTeX, LaTeX]` — rótulo de cada faixa, à direita do desenho |
+| `xLen` | comprimento visual de $x$, em unidades (padrão 3.2) |
+| `unit` | pixels por unidade (padrão 26). Baixe para 22 quando o retângulo for muito largo |
+| `perRow` | peças por linha no modo `loose` (padrão 8) |
+| `baseLabel` | LaTeX no colchete de baixo. Sem a prop, sai automático (`x + 5`); `null` remove |
+| `caption` | **texto simples**, não LaTeX |
+
+Três tipos de peça, três tons: quadrado, tira, quadradinho. Os colchetes das
+bordas juntam células vizinhas do mesmo tipo, então `cols={['x', 5]}` sai como
+dois colchetes, "x" e "5", e não como seis.
+
+Duas escolhas de desenho carregam argumento e não devem ser desfeitas: cada
+peça é desenhada **uma a uma**, porque o que a lição quer é que as tiras se
+contem ($5 + 3 = 8$) e os quadradinhos formem uma grade ($3 \times 5 = 15$); e o
+$x$ mede 3,2 quadradinhos, um valor não inteiro de propósito, porque uma tira
+com exatamente três quadradinhos afirmaria que $x = 3$. No modo `loose`, os
+quadradinhos quebram a cada `perRow` justamente para **não** saírem numa grade
+certinha — seria entregar a fatoração que o aluno deveria procurar.
+
+Peça tem área, e área não é negativa: o modelo cobre o caso de dois números
+positivos. Para $x^2 - 12x + 35$ não existe desenho de peças, e a lição precisa
+dizer isso em vez de fingir que existe.
+
 ## CubeModel
 
 O `AreaModel` um grau acima: cubo de aresta $a + b$ cortado nos oito pedaços de

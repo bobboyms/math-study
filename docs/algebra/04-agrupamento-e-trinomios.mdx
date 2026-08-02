@@ -3,6 +3,7 @@ title: Agrupamento e trinômios do 2º grau
 ---
 
 import AreaModel from '@site/src/components/AreaModel';
+import TileModel from '@site/src/components/TileModel';
 
 # Agrupamento e trinômios: fatorar quando não há fator comum
 
@@ -53,6 +54,9 @@ Esta página é sobre o que fazer quando o fator comum **não existe à vista**.
   isoladamente e depois fatorar o que os grupos passam a ter em comum;
 - **fator comum composto** — um fator comum que não é um número nem uma letra
   solta, mas um parêntese inteiro, como o $(x+5)$ em $x(x+5) + 3(x+5)$;
+- **peças de área** — o quadrado de lado $x$, a tira de $x$ por $1$ e o
+  quadradinho de lado $1$: os três formatos em que um trinômio se desmonta, e
+  com os quais a fatoração vira uma montagem;
 - **decompor o termo do meio** — trocar $8x$ por $3x + 5x$ para criar quatro
   parcelas onde havia três;
 - **soma e produto** — o par de números que soma $b$ e multiplica $c$, e que
@@ -158,12 +162,119 @@ $$
 
 A pergunta que fica — e ela é a boa pergunta — é: de onde saiu
 $x^2 + 5x + 3x + 15$, se o problema original tinha três parcelas
-($x^2 + 8x + 15$)? A resposta está na seção 9. Antes disso, vale ver o desenho.
+($x^2 + 8x + 15$)? O desenho da próxima seção mostra de onde, e a seção 9
+transforma o desenho em regra.
 
-## 6. Modelo visual: quatro pedaços de um retângulo
+## 6. Modelo visual: fatorar é montar um retângulo
 
-Multiplicação é área. Um produto de dois parênteses é um retângulo cortado em
-quatro pedaços:
+Multiplicação é área — foi assim que a página anterior desenhou o fator comum,
+como a altura que dois pedaços compartilham. Aqui essa mesma leitura faz mais do
+que ilustrar: ela transforma a fatoração num **problema de encaixe**, com peças
+que ou fecham um retângulo ou não fecham. Tudo o que vem depois nesta página —
+soma, produto, sinais, agrupamento — é consequência desse encaixe.
+
+### As peças que a expressão entrega
+
+Leia $x^2 + 8x + 15$ como um inventário de peças, uma por parcela:
+
+- $x^2$ é um **quadrado de lado $x$**, porque a área de um quadrado é lado vezes
+  lado;
+- $8x$ são **oito tiras** de $x$ por $1$, porque $x \times 1 = x$;
+- $15$ são **quinze quadradinhos** de lado $1$, cada um de área $1$.
+
+<TileModel
+  loose={{x2: 1, x: 8, one: 15}}
+  caption="As peças que a planilha entregou: um quadrado de lado x, oito tiras e quinze quadradinhos. Juntas, elas têm área x² + 8x + 15."
+/>
+
+No desenho, a tira é mais comprida que três quadradinhos e mais curta que
+quatro. Isso é de propósito: se ela medisse exatamente três, a figura estaria
+dizendo que $x = 3$, e $x$ ainda não foi escolhido. O que a figura afirma é
+apenas que a tira e o lado do quadrado têm o **mesmo** comprimento, seja ele
+qual for.
+
+### A pergunta do encaixe
+
+> Dá para arrumar essas peças — todas, sem sobrar nem faltar nenhuma — formando
+> **um único retângulo**?
+
+Vale a pena ver por que essa pergunta é a mesma que "fatorar". Se as peças
+fecharem um retângulo, a área dele pode ser contada de dois jeitos: somando as
+peças, o que dá $x^2 + 8x + 15$; ou multiplicando os dois lados, o que dá o
+produto das duas medidas. Como é a mesma área, as duas contas dão o mesmo
+número, e a expressão fica escrita como produto — que é exatamente o que
+fatorar significa. **O que muda:** de soma de peças para produto de dois lados.
+**O que permanece igual:** a área, para qualquer $x$.
+
+Então a montagem tem uma ordem quase obrigatória. O quadrado $x^2$ vai num
+canto. Os quadradinhos, que não têm $x$ nenhum, só cabem no canto oposto — e
+para caber lá eles próprios precisam formar um retângulo. É essa a escolha
+central: **de quantas formas 15 quadradinhos se arrumam num retângulo?** Só há
+duas, $1$ por $15$ e $3$ por $5$, porque só existem esses dois pares de
+divisores de 15. Cada uma dá uma tentativa.
+
+### Uma tentativa que não fecha
+
+Comece pela fileira única, $1$ por $15$:
+
+<TileModel
+  rows={['x', 1]}
+  cols={['x', 15]}
+  ghost={[[0, 8], [0, 9], [0, 10], [0, 11], [0, 12], [0, 13], [0, 14], [0, 15]]}
+  unit={22}
+  caption="Com os quinze quadradinhos numa fileira só, o retângulo exige 16 tiras. A caixa tem 8 — as tracejadas são as que faltariam."
+/>
+
+O canto de quadradinhos mede $1$ de altura por $15$ de largura, e isso já fixa o
+retângulo inteiro: ele mede $x + 1$ por $x + 15$. Agora conte as tiras que essa
+forma exige. Em cima, o vão entre o quadrado e a borda tem $15$ de largura por
+$x$ de altura: são **15 tiras em pé**. À esquerda, o vão tem $x$ de largura por
+$1$ de altura: é **1 tira deitada**. Ao todo, 16 tiras — e a caixa só tem 8.
+
+O par $1$ e $15$ está descartado, e repare **por quê**: não por uma regra, mas
+porque as peças não alcançam. Faltam oito tiras.
+
+### A montagem que fecha
+
+Resta o outro arranjo dos quinze quadradinhos, $3$ por $5$:
+
+<TileModel
+  rows={['x', 3]}
+  cols={['x', 5]}
+  caption="Agora fecha: 5 tiras em pé, 3 deitadas — as 8 da caixa — e os 15 quadradinhos em 3 fileiras de 5."
+/>
+
+Conte de novo, com o mesmo cuidado. Em cima, um vão de $5$ de largura por $x$ de
+altura: **5 tiras em pé**. À esquerda, um vão de $x$ por $3$: **3 tiras
+deitadas**. Total, $5 + 3 = 8$ — exatamente as tiras que a caixa tem. Nada
+sobrou, nada faltou, e o retângulo fechou medindo $x + 3$ por $x + 5$.
+
+Escrevendo as duas contagens da mesma área:
+
+$$
+x^2 + 8x + 15 = (x + 3)(x + 5)
+$$
+
+E agora as duas regras que a página inteira vai formalizar já estão à vista, e
+são apenas contagem de peças:
+
+- **as tiras somam.** As 5 em pé vieram da largura do canto de quadradinhos; as
+  3 deitadas vieram da altura dele. Por isso o número do meio é a **soma**
+  $3 + 5 = 8$;
+- **os quadradinhos multiplicam.** Eles formam 3 fileiras de 5, então o número
+  do fim é o **produto** $3 \times 5 = 15$.
+
+Procurar "dois números que somam 8 e multiplicam 15" é, no desenho, procurar as
+duas medidas do canto de quadradinhos. E procurar as medidas de um retângulo
+feito de 15 quadradinhos é listar os divisores de 15 — assunto da página de
+[múltiplos, divisores e
+primos](../numeros-e-operacoes/multiplos-divisores-primos), que reaparece aqui
+com outra roupa.
+
+### As peças juntadas por tipo
+
+Peças do mesmo tipo, encostadas, formam um bloco só. Juntando-as, o desenho
+anterior vira este:
 
 <AreaModel
   rows={[{size: 6, label: 'x'}, {size: 3, label: '3'}]}
@@ -181,25 +292,32 @@ $$
 x^2 + 5x + 3x + 15
 $$
 
-E como $5x$ e $3x$ são termos semelhantes, eles se juntam em $8x$ — que é
+As cinco tiras em pé viraram o bloco $5x$; as três deitadas viraram o bloco
+$3x$. E como $5x$ e $3x$ são termos semelhantes, eles se juntam em $8x$ — que é
 exatamente a forma que veio na planilha do orçamento:
 
 $$
 x^2 + 8x + 15
 $$
 
-**O que muda** entre as duas escritas: uma mostra dois lados, a outra mostra
-quatro pedaços de área. **O que permanece igual:** a área, para qualquer $x$.
+Guarde essa passagem, porque ela é a resposta da pergunta deixada em aberto na
+seção 5: o $8x$ do orçamento nasceu de $5x + 3x$, e o desenho mostra de onde
+vêm as duas parcelas — de dois vãos diferentes do mesmo retângulo.
 
-Agora repare em duas coisas neste desenho, porque elas explicam a página toda:
+### Agrupar é ler o retângulo em duas faixas
 
-- os dois pedaços do meio, juntos, valem $5x + 3x = 8x$ — o coeficiente do meio
-  é a **soma** de 3 e 5;
-- o pedaço do canto vale $3 \times 5 = 15$ — o termo sem letra é o **produto**
-  de 3 e 5.
+Falta o agrupamento, e no desenho ele é um corte só. Separe o retângulo em
+**faixas horizontais**:
 
-E o agrupamento, no desenho, é simplesmente **ler o retângulo em faixas
-horizontais**:
+<TileModel
+  rows={['x', 3]}
+  cols={['x', 5]}
+  splitAfter={0}
+  bandLabels={['x(x + 5)', '3(x + 5)']}
+  caption="O mesmo retângulo cortado em duas faixas. As duas têm largura x + 5 — e é essa largura comum que sai em evidência."
+/>
+
+Cada faixa é um retângulo inteiro, e a área de cada uma é largura vezes altura:
 
 - a faixa de cima é um retângulo de altura $x$ e largura $x + 5$, ou seja
   $x(x+5)$;
@@ -342,6 +460,22 @@ $-1$ e $-5$ (soma $-6$). Nenhum soma 3. Isso é informação, não fracasso: a
 expressão existe, é perfeitamente válida, mas não se escreve como produto de
 dois fatores de coeficientes inteiros.
 
+Com as peças, o mesmo impasse fica visível de uma olhada. A caixa tem 1
+quadrado, 3 tiras e 5 quadradinhos. Como 5 é primo, os cinco quadradinhos só se
+arrumam de um jeito: numa fileira de $1$ por $5$. E essa fileira já obriga o
+retângulo:
+
+<TileModel
+  rows={['x', 1]}
+  cols={['x', 5]}
+  ghost={[[0, 3], [0, 4], [0, 5]]}
+  caption="Único arranjo possível dos 5 quadradinhos — e ele pede 6 tiras. A caixa tem 3, e as tracejadas são as que faltam."
+/>
+
+Cinco tiras em pé mais uma deitada são 6, e a caixa tem 3. Não há segunda
+tentativa para testar, porque não há outro retângulo de 5 quadradinhos. A
+conclusão não é "não achei": é "não existe".
+
 ### Descobrir o sinal antes de procurar os números
 
 Os sinais de $b$ e $c$ já revelam quase tudo sobre o par procurado, e usar isso
@@ -358,6 +492,14 @@ O raciocínio por trás da tabela é o resgate da seção 4: produto positivo ob
 os dois a terem o **mesmo sinal**, e aí a soma decide qual; produto negativo
 obriga sinais **diferentes**, e a soma pende para o lado do número de maior
 valor absoluto.
+
+Aqui o retângulo de peças para de acompanhar, e vale dizer por quê: peça tem
+área, e área não é negativa. O desenho é o modelo do caso em que os dois números
+são positivos. Com um número negativo, a conta é a mesma — ela nunca dependeu da
+figura, e sim do desenvolvimento $(x+p)(x+q) = x^2 + (p+q)x + pq$, que vale para
+qualquer $p$ e $q$ — mas a figura não desenha. Saber até onde um modelo vai faz
+parte de usá-lo: o desenho serviu para **descobrir** a regra, e a distributiva
+garante que ela continua valendo onde o desenho não alcança.
 
 ### Os produtos notáveis são casos particulares
 
@@ -377,8 +519,22 @@ Se a expressão é $2x^2 + 7x + 3$, a regra da soma e do produto não vale como
 está — porque $(x+p)(x+q)$ nunca produz $2x^2$. Aqui o agrupamento deixa de ser
 curiosidade e vira ferramenta.
 
-A ideia continua sendo decompor o termo do meio, mas o alvo muda. Olhe o
-retângulo do produto:
+Nas peças, a única novidade é que a caixa agora traz **dois** quadrados de lado
+$x$, sete tiras e três quadradinhos:
+
+<TileModel
+  rows={['x', 'x', 1]}
+  cols={['x', 3]}
+  caption="2x² + 7x + 3 montado: dois quadrados empilhados, seis tiras em pé, uma deitada e três quadradinhos."
+/>
+
+Dois quadrados empilhados fazem um lado medir $x + x + 1 = 2x + 1$, e é daí que
+o $2$ do $2x^2$ aparece na forma fatorada. Conte as tiras: seis em pé (três para
+cada quadrado) e uma deitada, total 7 ✓. E os quadradinhos, 3, formam a fileira
+do canto ✓. O retângulo mede $2x + 1$ por $x + 3$.
+
+A ideia continua sendo decompor o termo do meio, mas o alvo muda. Olhe o mesmo
+retângulo com as peças juntadas por tipo:
 
 <AreaModel
   rows={[{size: 6, label: '2x'}, {size: 3, label: '1'}]}
@@ -655,7 +811,23 @@ grau 2 depois que o $2x$ sai.
 
 </details>
 
-**7. A diferença de quadrados é uma regra diferente desta?**
+**7. No desenho das peças, por que listar os pares de inteiros com produto $c$ é
+o mesmo que listar todas as montagens possíveis?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque os quadradinhos não têm $x$ nenhum e, por isso, só cabem no canto oposto
+ao quadrado grande — e lá eles precisam formar um retângulo. Um retângulo feito
+de $c$ quadradinhos tem lados inteiros $p$ e $q$ com $p \times q = c$, ou seja,
+um par de divisores de $c$. Cada par é uma montagem candidata; o número de
+tiras que ela exige é $p + q$. Por isso a lista de tentativas é finita e
+completa: quando nenhum par soma $b$, não faltou tentar, acabaram as
+montagens.
+
+</details>
+
+**8. A diferença de quadrados é uma regra diferente desta?**
 
 <details>
 <summary>Resposta</summary>
@@ -775,6 +947,26 @@ lugar de $u$, e olhe se os fatores que apareceram ainda podem ser fatorados.
 
 20. Alguém fatorou $x^2 - 5x + 6$ como $(x-2)(x+3)$. Mostre que está errado sem
     desenvolver o produto inteiro, e corrija.
+
+### 7. Com as peças
+
+Estes três voltam ao desenho da seção 6. Resolva contando peças, e só depois
+confira pela regra da soma e do produto — as duas respostas têm que coincidir.
+
+21. Uma caixa tem 1 quadrado de lado $x$, 7 tiras e 10 quadradinhos.
+    a) de quantas formas os 10 quadradinhos podem ser arrumados num retângulo?
+    b) qual delas fecha o retângulo grande, e quais são os dois lados?
+    c) na forma que não fecha, quantas tiras faltariam?
+
+22. Outra caixa: 1 quadrado, 5 tiras e 9 quadradinhos. Teste **todos** os
+    arranjos possíveis dos quadradinhos e mostre que nenhum retângulo fecha. Que
+    expressão essa caixa representa, e o que você acabou de provar sobre ela?
+
+23. Um retângulo de peças foi cortado em duas faixas horizontais: a de cima é
+    $x(x+6)$ e a de baixo é $2(x+6)$.
+    a) quantas peças de cada tipo o retângulo inteiro tem?
+    b) que expressão essas peças somam?
+    c) quais são os dois lados do retângulo?
 
 ## 15. Gabarito comentado
 
@@ -908,10 +1100,42 @@ Confira um grupo de cada vez, logo depois de resolvê-lo.
 
 </details>
 
+<details>
+<summary>Respostas — Com as peças</summary>
+
+21. A caixa é $x^2 + 7x + 10$. a) De duas formas, porque 10 tem dois pares de
+    divisores: $1 \times 10$ e $2 \times 5$. b) A de $2$ por $5$: ela exige
+    $2 + 5 = 7$ tiras, exatamente as que a caixa tem, e o retângulo mede
+    $x + 2$ por $x + 5$ — ou seja, $x^2 + 7x + 10 = (x+2)(x+5)$. c) A fileira de
+    $1$ por $10$ exigiria $1 + 10 = 11$ tiras; com 7 na caixa, **faltariam 4**.
+    Confira pela regra: soma 7 e produto 10 dão o par 2 e 5, o mesmo resultado.
+22. A caixa é $x^2 + 5x + 9$. Os arranjos possíveis dos 9 quadradinhos são dois,
+    porque só há dois pares de divisores de 9: $1 \times 9$, que exigiria
+    $1 + 9 = 10$ tiras, e $3 \times 3$, que exigiria $3 + 3 = 6$. A caixa tem 5,
+    e nenhum dos dois números é 5. Como a lista de arranjos acabou, está
+    provado: $x^2 + 5x + 9$ **não** fatora com números inteiros. Repare que essa
+    é a mesma prova da regra da soma e do produto, feita com peças em vez de
+    contas.
+23. a) A faixa de cima tem altura $x$ e largura $x + 6$: é 1 quadrado mais 6
+    tiras em pé. A faixa de baixo tem altura 2, ou seja, duas fileiras de altura
+    1, e cada fileira é 1 tira deitada mais 6 quadradinhos: 2 tiras e 12
+    quadradinhos. No total, **1 quadrado, 8 tiras e 12 quadradinhos**.
+    b) $x^2 + 8x + 12$. c) As duas faixas têm a mesma largura $x + 6$, e as
+    alturas somam $x + 2$: os lados são $x + 6$ e $x + 2$. Conferindo pela
+    regra, soma 8 e produto 12 dão o par 6 e 2 ✓; e com $x = 1$, a expressão
+    vale $1 + 8 + 12 = 21$ e o produto vale $7 \times 3 = 21$ ✓.
+
+</details>
+
 ## 16. Revisão curta
 
 - Quando **não há fator comum** a todas as parcelas, ainda dá para fatorar — mas
   é preciso primeiro **fabricar** um fator comum.
+- **Fatorar é montar um retângulo.** Cada parcela é uma peça — o quadrado de
+  lado $x$, as tiras de $x$ por $1$, os quadradinhos de lado $1$ — e a montagem
+  que usa todas elas, sem sobra nem falta, tem por lados os dois fatores. O
+  número do meio é a **soma** porque conta as tiras dos dois vãos; o número do
+  fim é o **produto** porque conta o retângulo de quadradinhos do canto.
 - **Agrupar** é fatorar a expressão por partes: cada par entrega um parêntese, e
   se os parênteses saírem **iguais**, eles saem em evidência. Um parêntese
   inteiro pode ser fator comum, como um número ou uma letra.
@@ -926,8 +1150,9 @@ Confira um grupo de cada vez, logo depois de resolvê-lo.
   dois números partem o termo do meio e o agrupamento termina o serviço.
 - **Sempre comece pelo fator comum.** Ele encolhe os números e, às vezes, é o
   que faz o trinômio aparecer.
-- Nem todo trinômio fatora com inteiros. Listar os pares possíveis e concluir
-  que nenhum serve é uma resposta legítima.
+- Nem todo trinômio fatora com inteiros. Cada par de divisores do termo sem
+  letra é uma montagem para testar, e essa lista é finita: percorrê-la inteira e
+  concluir que nenhuma fecha é uma resposta legítima, não uma desistência.
 - A conferência é gratuita: multiplique de volta, ou avalie as duas formas em um
   número qualquer.
 
