@@ -39,6 +39,8 @@ Só para acompanhar esse dia já é preciso quase todo o capítulo:
 - **números negativos** para representar perda, dívida ou saldo abaixo de zero;
 - **múltiplos e divisores** para entender ciclos de reposição e divisão justa;
 - **frações, decimais e porcentagens** para representar partes;
+- **razão e proporção** para comparar duas embalagens de tamanhos diferentes e
+  descobrir qual compensa;
 - **potências** para representar crescimento repetido, área e volume;
 - **raízes** para desfazer potências e recuperar uma medida;
 - **expoentes fracionários** para escrever raiz e potência na mesma linguagem;
@@ -53,10 +55,11 @@ o próximo começa.
 ## A ordem das páginas não é acidental
 
 Primeiro aprendemos a operar com quantidades. Depois ampliamos o tipo de número
-que aceitamos: negativos, frações e decimais. Em seguida estudamos formas
-compactas de representar repetição e medida: potências e raízes. Juntamos essas
-duas linguagens com expoentes fracionários e, no fim, voltamos à reta numérica
-para medir distância com o valor absoluto.
+que aceitamos: negativos, frações e decimais. Com esses em mãos, aprendemos a
+**comparar** duas quantidades por divisão — razão e proporção. Em seguida
+estudamos formas compactas de representar repetição e medida: potências e
+raízes. Juntamos essas duas linguagens com expoentes fracionários e, no fim,
+voltamos à reta numérica para medir distância com o valor absoluto.
 
 Cada página amplia a anterior, e nenhuma delas fecha sozinha: raízes só fazem
 sentido depois de potências, porque raiz é a pergunta inversa da potência.
@@ -83,10 +86,11 @@ Estude na ordem. Cada uma aprofunda um degrau antes de passar para o próximo.
 3. [Múltiplos, divisores e primos](./multiplos-divisores-primos)
 4. [Frações](./fracoes)
 5. [Decimais e porcentagem](./decimais-e-porcentagem)
-6. [Potências](./potencias)
-7. [Raízes](./raizes)
-8. [Expoentes fracionários](./expoentes-fracionarios)
-9. [Valor absoluto](./valor-absoluto)
+6. [Razão e proporção](./razao-e-proporcao)
+7. [Potências](./potencias)
+8. [Raízes](./raizes)
+9. [Expoentes fracionários](./expoentes-fracionarios)
+10. [Valor absoluto](./valor-absoluto)
 
 ## O que vem depois
 

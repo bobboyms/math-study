@@ -59,23 +59,28 @@ const sidebars = {
         },
         {
           type: 'doc',
+          id: 'numeros-e-operacoes/razao-e-proporcao',
+          label: '2.7 Razão e proporção',
+        },
+        {
+          type: 'doc',
           id: 'numeros-e-operacoes/potencias',
-          label: '2.7 Potências',
+          label: '2.8 Potências',
         },
         {
           type: 'doc',
           id: 'numeros-e-operacoes/raizes',
-          label: '2.8 Raízes',
+          label: '2.9 Raízes',
         },
         {
           type: 'doc',
           id: 'numeros-e-operacoes/expoentes-fracionarios',
-          label: '2.9 Expoentes fracionários',
+          label: '2.10 Expoentes fracionários',
         },
         {
           type: 'doc',
           id: 'numeros-e-operacoes/valor-absoluto',
-          label: '2.10 Valor absoluto',
+          label: '2.11 Valor absoluto',
         },
       ],
     },
