@@ -34,6 +34,8 @@ import AreaModel from '@site/src/components/AreaModel';
 | Ideia | Componente |
 |---|---|
 | produto como área, distributiva, produtos notáveis, fatoração | `AreaModel` |
+| fatorar como montar um retângulo: peças de $x^2$, $x$ e $1$ | `TileModel` |
+| produto como volume, cubo da soma, $(a+b)^3$ | `CubeModel` |
 | adição e subtração como deslocamento, múltiplos, intervalos, sinal | `NumberLine` |
 | frações, equivalência, denominador comum | `FractionBar` |
 | quantidade contável, grupos iguais, quadrado perfeito, comutativa | `DotArray` |
@@ -94,6 +96,52 @@ distributiva; duas × duas é o quadrado da soma.
 O tom padrão de cada célula é `((linha + coluna) % 3) + 1`. Numa grade 2×2 isso
 dá azul, laranja / laranja, verde — os dois produtos cruzados saem com a mesma
 cor de propósito. Passe `{math, tone}` para escolher outra.
+
+## CubeModel
+
+O `AreaModel` um grau acima: cubo de aresta $a + b$ cortado nos oito pedaços de
+$(a+b)^3$. Projeção cavaleira — a profundidade recua a 45° com escala reduzida.
+
+```mdx
+{/* cubo montado, com as linhas de corte à mostra */}
+<CubeModel a={4} b={2} showPieceLabels={false} baseLabel="a + b" caption="..." />
+
+{/* os oito pedaços separados */}
+<CubeModel
+  a={4} b={2}
+  gap={4.4} gapY={1.2} depth={0.55}
+  showEdgeLabels={false}
+  caption="..."
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `a`, `b` | proporção visual das duas arestas (em unidades) |
+| `unit` | pixels por unidade (padrão 30) |
+| `gap` | afastamento entre os pedaços na largura e na profundidade, em unidades. `0` (padrão) monta o cubo inteiro |
+| `gapY` | afastamento na vertical (padrão: igual a `gap`) |
+| `depth` | quanto a profundidade recua (padrão 0.5) |
+| `aLabel`, `bLabel` | LaTeX nos colchetes das arestas |
+| `pieceLabels` | `[a³, a²b, ab², b³]` em LaTeX — um rótulo por **tipo** de pedaço |
+| `showPieceLabels` | `false` no cubo montado, onde metade dos pedaços está escondida |
+| `showEdgeLabels` | `false` na vista explodida, onde os colchetes não medem mais nada |
+| `baseLabel` | LaTeX num colchete embaixo, cobrindo a aresta inteira |
+| `caption` | **texto simples**, não LaTeX |
+
+O tom vem do **tipo** do pedaço, contando quantas arestas $b$ ele tem: $a^3$ sai
+neutro (é o volume que já existia), e os três $a^2b$ dividem uma cor, os três
+$ab^2$ dividem outra. São quatro tipos e três tons — o limite de três cores
+continua valendo porque o neutro não gasta tom. Topo, frente e lado do mesmo
+pedaço variam só a opacidade, para dar relevo sem gastar uma segunda cor.
+
+**Por que `gap` e `gapY` são separados.** A profundidade recua na diagonal. Com
+folga igual nos três eixos, cada pedaço de trás pousa exatamente sobre a aresta
+da face superior do pedaço que está uma casa à frente na diagonal, e o rótulo
+dele fica pela metade — não adianta aumentar a folga, porque os dois andam na
+mesma diagonal. Separar as folgas quebra esse alinhamento. Os valores do exemplo
+acima foram escolhidos por busca, verificando pedaço a pedaço que nenhum rótulo
+cai dentro de um polígono desenhado depois; ao mexer neles, confira os oito.
 
 ## NumberLine
 

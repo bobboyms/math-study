@@ -3,6 +3,7 @@ title: Produtos notáveis
 ---
 
 import AreaModel from '@site/src/components/AreaModel';
+import CubeModel from '@site/src/components/CubeModel';
 
 # Produtos notáveis
 
@@ -948,6 +949,85 @@ $$
 1,\ 3,\ 3,\ 1
 $$
 
+### Modelo visual: o cubo que cresce
+
+A contagem acima explica os números, mas não os deixa **ver**. E há um desenho
+para eles — é o mesmo da abertura da página, com uma dimensão a mais.
+
+Lá, um terreno quadrado de lado 10 ganhava 2 metros em duas direções. Agora
+pense num depósito **cúbico** de aresta 10 que ganha 2 metros em três direções:
+2 de largura, 2 de profundidade e 2 de altura. O volume antigo era
+$10^3 = 1000$; o novo é $12^3 = 1728$. A pergunta é a mesma de antes: de que
+partes esses 728 a mais são feitos?
+
+<CubeModel
+  a={4}
+  b={2}
+  unit={30}
+  showPieceLabels={false}
+  baseLabel="a + b"
+  caption="O cubo de aresta a + b, com os três cortes à mostra: um em cada direção."
+/>
+
+Para descobrir, corte o cubo na altura $a$. Ele se separa em duas fatias, e cada
+fatia tem o mesmo piso: um quadrado de lado $a + b$. Esse piso é exatamente o
+quadrado da seção 6, de área $a^2 + 2ab + b^2$. O que muda de uma fatia para a
+outra é só a altura.
+
+A fatia de baixo tem altura $a$, então seu volume é o piso vezes $a$:
+
+$$
+a(a^2 + 2ab + b^2) = a^3 + 2a^2b + ab^2
+$$
+
+A fatia de cima tem altura $b$:
+
+$$
+b(a^2 + 2ab + b^2) = a^2b + 2ab^2 + b^3
+$$
+
+Somando as duas fatias:
+
+$$
+(a + b)^3 = a^3 + \underbrace{2a^2b + a^2b}_{3a^2b} + \underbrace{ab^2 + 2ab^2}_{3ab^2} + b^3
+$$
+
+E aqui o $3$ deixa de ser um número saído de uma tabela de oito linhas: ele é
+$2 + 1$ num caso e $1 + 2$ no outro. Das três lajes $a^2b$, duas vêm da fatia de
+baixo — são as duas faixas $ab$ do piso, esticadas na altura $a$ — e uma vem da
+fatia de cima, que é o quadrado $a^2$ do piso com altura $b$.
+
+Separando os pedaços, os oito aparecem de uma vez:
+
+<CubeModel
+  a={4}
+  b={2}
+  unit={30}
+  gap={4.4}
+  gapY={1.2}
+  depth={0.55}
+  showEdgeLabels={false}
+  caption="As três lajes a²b dividem a mesma cor porque são a mesma quantidade contada três vezes — como os dois retângulos ab no quadrado da soma."
+/>
+
+São oito pedaços de quatro tipos, e a cor marca o tipo:
+
+- um cubo de volume $a^3$ — o depósito antigo, que continua inteiro lá dentro;
+- três lajes de volume $a^2b$, uma para cada direção em que o cubo esticou;
+- três lajes de volume $ab^2$, uma para cada par de direções que esticaram
+  juntas;
+- um cubo de volume $b^3$, o cantinho onde as três esticadas se encontram.
+
+Conferindo com o depósito, onde $a = 10$ e $b = 2$:
+
+$$
+1000 + 3(100)(2) + 3(10)(4) + 8 = 1000 + 600 + 120 + 8 = 1728
+$$
+
+que é o mesmo $12^3$ calculado acima. ✓ Os 728 a mais são 600 das três lajes
+grandes, 120 das três lajes finas e 8 do cubinho. A conta ingênua
+$10^3 + 2^3 = 1008$ perde justamente as seis lajes, que somam 720.
+
 ### Exemplo
 
 Expanda $(x + 2)^3$.
@@ -964,6 +1044,45 @@ Logo:
 $$
 (x + 2)^3 = x^3 + 6x^2 + 12x + 8
 $$
+
+### Aplicação: o volume que cresce um pouco
+
+Uma caixa d'água cúbica tem 2 m de aresta, ou seja, $2^3 = 8$ m³ — 8000 litros.
+Uma reforma aumenta 10 cm em cada aresta. Quanta água a mais ela passa a
+comportar?
+
+Com $a = 2$ e $h = 0{,}1$, o aumento é o volume novo menos o antigo, e o cubo da
+soma diz de que partes ele é feito:
+
+$$
+(a + h)^3 - a^3 = 3a^2h + 3ah^2 + h^3
+$$
+
+$$
+= 3(4)(0{,}1) + 3(2)(0{,}01) + 0{,}001 = 1{,}2 + 0{,}06 + 0{,}001 = 1{,}261
+$$
+
+São $1{,}261$ m³, ou 1261 litros a mais — um aumento de quase 16% no volume a
+partir de 5% na aresta.
+
+Agora repare na hierarquia dos três termos: $1{,}2$, depois $0{,}06$, depois
+$0{,}001$. O primeiro sozinho explica 95% do aumento; o último é praticamente
+nada. Isso tem uma leitura geométrica direta no desenho de agora há pouco: com
+$h$ pequeno, as três lajes grandes ($3a^2h$) carregam quase todo o volume novo,
+as três lajes finas ($3ah^2$) contribuem pouco e o cubinho do canto ($h^3$) é
+desprezível.
+
+É a seção 10 um grau acima. Colocando as duas lado a lado:
+
+$$
+(x + h)^2 - x^2 = 2xh + h^2, \qquad (x + h)^3 - x^3 = 3x^2h + 3xh^2 + h^3
+$$
+
+Quando $h$ é pequeno, o aumento da área é praticamente $2xh$ e o do volume é
+praticamente $3x^2h$. Os fatores que acompanham o $h$ — $2x$ e $3x^2$ — são o
+que o cálculo diferencial chama de derivada de $x^2$ e de $x^3$. Você vai
+reencontrá-los lá com esse nome; aqui eles são apenas as faixas e as lajes que
+o crescimento acrescenta.
 
 ## 12. Cubo da diferença
 
@@ -1036,37 +1155,106 @@ $$
 O mesmo cuidado vale para $(a - b)^3$ e $a^3 - b^3$. Com $a = 2$ e $b = 1$, o
 primeiro dá $(2-1)^3 = 1$ e o segundo dá $8 - 1 = 7$.
 
+### Reconhecer um cubo
+
+Antes de aplicar qualquer padrão é preciso enxergar que os dois termos **são**
+cubos. Com quadrados isso costuma ser automático; com cubos, não — a lista é
+bem menos familiar, e vale tê-la à mão:
+
+| $n$ | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| $n^3$ | 1 | 8 | 27 | 64 | 125 | 216 | 343 | 512 | 729 | 1000 |
+
+Com letras, lembre que o expoente age sobre o termo inteiro, como em
+$(2x)^2 = 4x^2$: aqui, $(2x)^3 = 2^3x^3 = 8x^3$. Então $8x^3$, $27x^3$ e
+$125x^3$ são cubos de $2x$, $3x$ e $5x$.
+
+O reconhecimento tem três perguntas, como o trinômio quadrado perfeito:
+
+1. o primeiro termo é um cubo? quem é $a$?
+2. o último termo é um cubo? quem é $b$?
+3. eles estão sendo somados ou subtraídos?
+
+**Exemplo.** Em $8x^3 - 27$: $8x^3 = (2x)^3$ e $27 = 3^3$, subtraídos. É uma
+diferença de cubos, com $a = 2x$ e $b = 3$.
+
+**Contraexemplo.** Em $x^3 + 9$: $x^3$ é cubo, mas $9$ não é — $9$ é $3^2$, e os
+cubos vizinhos são $8$ e $27$. Nenhum padrão desta página fatora essa expressão.
+
+Repare que, na terceira pergunta, **as duas respostas servem**. É a diferença
+mais importante em relação aos quadrados, onde só a subtração fatorava, e a
+razão cabe numa linha: elevar ao cubo **preserva o sinal**, porque
+$(-b)^3 = -b^3$, enquanto elevar ao quadrado o apaga, porque $(-b)^2 = +b^2$.
+Uma diferença de cubos é, por isso, uma soma de cubos com $-b$ no lugar de $b$ —
+e um único padrão dá conta dos dois casos. É exatamente o que vamos usar daqui a
+pouco.
+
 ### Soma de cubos
 
-A soma de cubos fatorada é:
+Já sabemos expandir $(a + b)^3$. A pergunta agora é a inversa: dada a soma
+$a^3 + b^3$, dá para escrevê-la como um produto?
+
+Comece com números, antes de qualquer álgebra. Se essa soma fatora, algum fator
+deve reaparecer sempre. O candidato mais simples é $a + b$:
+
+| $a$ | $b$ | $a^3 + b^3$ | $a + b$ | quociente |
+| --- | --- | --- | --- | --- |
+| 1 | 1 | 2 | 2 | 1 |
+| 2 | 1 | 9 | 3 | 3 |
+| 3 | 2 | 35 | 5 | 7 |
+| 4 | 3 | 91 | 7 | 13 |
+| 5 | 1 | 126 | 6 | 21 |
+
+Em todos os casos a divisão é exata. Isso não é demonstração, mas é evidência
+forte o bastante para valer a pena procurar uma fatoração da forma
+$a^3 + b^3 = (a + b) \times (\text{algo})$.
+
+**Construindo o segundo fator.** Em vez de adivinhar esse "algo", monte-o pedaço
+por pedaço, corrigindo a cada passo o que o passo anterior deixou sobrando.
+
+O produto precisa começar com $a^3$, e para isso o segundo fator precisa começar
+com $a^2$:
+
+$$
+(a + b)a^2 = a^3 + a^2b
+$$
+
+O $a^3$ apareceu, mas veio junto um $a^2b$ indesejado. Para eliminá-lo,
+acrescente $-ab$ ao segundo fator:
+
+$$
+(a + b)(a^2 - ab) = a^3 - a^2b + a^2b - ab^2 = a^3 - ab^2
+$$
+
+O $a^2b$ sumiu, como planejado — só que a correção deixou o próprio rastro:
+$-ab^2$. Para eliminar esse, acrescente $+b^2$:
+
+$$
+(a + b)(a^2 - ab + b^2) = \underbrace{(a^3 - ab^2)}_{\text{o que já tínhamos}} + \underbrace{(ab^2 + b^3)}_{(a + b)b^2} = a^3 + b^3
+$$
+
+Agora não sobrou nada — e o último acréscimo ainda produziu de graça o $b^3$ que
+faltava. O segundo fator está pronto:
 
 $$
 a^3 + b^3 = (a + b)(a^2 - ab + b^2)
 $$
 
-Antes de conferir, repare no contraste com o que vimos há pouco: a **soma** de
-quadrados não fatora, mas a soma de cubos fatora. Não há incoerência. Lá, o
-segundo fator só podia ser outro binômio, e nenhum deles dava conta de sumir com
-o termo do meio. Aqui há mais espaço: o segundo fator tem três termos, e é essa
-folga que permite escolher sinais que cancelem tudo o que sobra no meio.
+E a tabela de agora há pouco fecha o círculo: com $a = 3$ e $b = 2$, o segundo
+fator vale $9 - 6 + 4 = 7$, que é exatamente o quociente que a divisão tinha
+dado. ✓ Aquela coluna de quocientes era o segundo fator o tempo todo.
 
-Por que o segundo fator tem esses sinais? Porque eles foram escolhidos para
-fazer os termos do meio se cancelarem — a mesma estratégia da diferença de
-quadrados. Conferindo pela multiplicação:
+Repare no que guiou cada passo: **cada termo novo do segundo fator existe para
+cancelar o que o anterior deixou sobrando.** Os sinais alternados não são
+enfeite nem regra a decorar — são o resultado desse cancelamento em cadeia. É a
+mesma estratégia da diferença de quadrados; a diferença é que lá bastou um
+cancelamento e aqui foram precisos dois.
 
-$$
-(a + b)(a^2 - ab + b^2) = a(a^2 - ab + b^2) + b(a^2 - ab + b^2)
-$$
-
-$$
-= a^3 - a^2b + ab^2 + a^2b - ab^2 + b^3
-$$
-
-Os termos do meio se anulam ($-a^2b + a^2b = 0$ e $ab^2 - ab^2 = 0$), sobrando:
-
-$$
-a^3 + b^3
-$$
+Vale também o contraste com o que vimos há pouco: a **soma** de quadrados não
+fatora, mas a soma de cubos fatora. Não há incoerência. Lá, o segundo fator só
+podia ser outro binômio, e nenhum deles dava conta de sumir com o termo do meio.
+Aqui há mais espaço: o segundo fator tem três termos, e é essa folga que permitiu
+a cadeia de correções acima chegar ao fim.
 
 #### Exemplo
 
@@ -1086,27 +1274,37 @@ $$
 
 ### Diferença de cubos
 
-A diferença de cubos fatorada é:
+A diferença de cubos não exige trabalho novo. Basta o truque da seção 12: trocar
+$b$ por $-b$.
+
+Como $(-b)^3 = -b^3$, subtrair $b^3$ é o mesmo que somar $(-b)^3$. Ou seja, toda
+diferença de cubos já é uma soma de cubos disfarçada:
+
+$$
+a^3 - b^3 = a^3 + (-b)^3
+$$
+
+Aplicando o padrão que acabamos de construir, com $-b$ no lugar de $b$:
+
+$$
+a^3 + (-b)^3 = \big(a + (-b)\big)\big(a^2 - a(-b) + (-b)^2\big)
+$$
+
+Agora só arrumar os sinais, com a regra da seção 4:
+
+$$
+a + (-b) = a - b, \qquad -a(-b) = +ab, \qquad (-b)^2 = +b^2
+$$
+
+Portanto:
 
 $$
 a^3 - b^3 = (a - b)(a^2 + ab + b^2)
 $$
 
-Conferindo pela multiplicação:
-
-$$
-(a - b)(a^2 + ab + b^2) = a(a^2 + ab + b^2) - b(a^2 + ab + b^2)
-$$
-
-$$
-= a^3 + a^2b + ab^2 - a^2b - ab^2 - b^3
-$$
-
-Os termos do meio se anulam ($a^2b - a^2b = 0$ e $ab^2 - ab^2 = 0$), sobrando:
-
-$$
-a^3 - b^3
-$$
+Compare os dois resultados: em relação à soma de cubos, **dois** sinais
+trocaram — o do primeiro fator e o do meio do segundo. O último termo do segundo
+fator continua positivo, porque $(-b)^2$ é positivo.
 
 #### Exemplo
 
@@ -1135,6 +1333,37 @@ Simplificando:
 $$
 27x^3 - 64 = (3x - 4)(9x^2 + 12x + 16)
 $$
+
+### O segundo fator é um quase-quadrado — e de propósito
+
+> **Erro comum:** ler $a^2 - ab + b^2$ como um trinômio quadrado perfeito e
+> escrever $(a - b)^2$. Não é. O quadrado perfeito exige o **dobro** do produto
+> no meio, $-2ab$; aqui o meio é $-ab$, metade disso. Teste com $a = 3$ e
+> $b = 2$: $a^2 - ab + b^2 = 9 - 6 + 4 = 7$, enquanto $(3 - 2)^2 = 1$.
+
+A semelhança é justamente o que torna o erro tentador — falta um fator 2 e nada
+mais. Mas esse "quase" é proposital: se o termo do meio fosse $-2ab$, a cadeia de
+cancelamentos que construímos não fecharia, e sobrariam termos intermediários no
+produto. O segundo fator tem que ser esse, e não outro.
+
+Uma consequência prática: depois de aplicar a soma ou a diferença de cubos, **o
+trabalho acabou**. Nenhum padrão desta página fatora o segundo fator de novo.
+
+### Como escolher entre os padrões de grau 3
+
+Como na seção 9, olhe primeiro para a estrutura externa:
+
+| Expressão | O que perguntar | Padrão |
+| --- | --- | --- |
+| $(a + b)^3$ | Uma soma inteira está ao cubo? | Cubo da soma |
+| $(a - b)^3$ | Uma diferença inteira está ao cubo? | Cubo da diferença |
+| $a^3 + b^3$ | Dois cubos estão sendo somados? | Soma de cubos |
+| $a^3 - b^3$ | Dois cubos estão sendo subtraídos? | Diferença de cubos |
+
+O teste mais rápido é **onde está o expoente**. Fora do parêntese, ele age sobre
+o bloco inteiro: a expressão é um produto disfarçado e o trabalho é expandir.
+Colado em cada termo, cada um já vem elevado por conta própria: a expressão é uma
+soma ou diferença e o trabalho é fatorar.
 
 ## 14. Mapa dos padrões
 
@@ -1276,6 +1505,31 @@ as duas faixas se encontram.
 
 </details>
 
+**10. No cubo de aresta $a + b$, que pedaços correspondem ao termo $3a^2b$?**
+
+<details>
+<summary>Resposta</summary>
+
+São três lajes de volume $a^2b$ — cada uma com duas arestas $a$ e uma aresta
+$b$. São três porque a aresta $b$ pode ser a largura, a profundidade ou a
+altura. No corte em duas fatias: duas dessas lajes são as faixas $ab$ do piso
+esticadas na altura $a$, e a terceira é o quadrado $a^2$ do piso com altura $b$.
+
+</details>
+
+**11. Por que a soma de cubos fatora, se a soma de quadrados não fatora?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque o segundo fator tem espaço para mais correções. Na soma de quadrados, o
+outro fator só poderia ser um binômio, e nenhum consegue eliminar o termo do
+meio que sobra. Na soma de cubos, o segundo fator tem três termos: o $-ab$
+cancela o $a^2b$ que o $a^2$ deixou, e o $+b^2$ cancela o $-ab^2$ que o $-ab$
+deixou. Com dois cancelamentos disponíveis, a cadeia fecha.
+
+</details>
+
 ## 16. Exercícios
 
 ### Reconhecimento
@@ -1290,6 +1544,7 @@ Identifique o padrão em cada expressão.
 6. $8x^3 - 27$
 7. $x^2 + 12x + 36$
 8. $x^2 + 16$
+9. $x^3 + 9$
 
 ### Explicação
 
@@ -1302,6 +1557,8 @@ está acontecendo, não chegar a um número.
 3. O que a palavra "perfeito" está dizendo em "trinômio quadrado perfeito"?
 4. Em $(x - 5)^2$, o último termo é $+25$. Por que ele é positivo, se dentro do
    parêntese havia uma subtração?
+5. No cubo de aresta $x + h$, por que o termo $3x^2h$ domina o aumento de volume
+   quando $h$ é pequeno?
 
 ### Aplicação direta
 
@@ -1343,13 +1600,17 @@ Estes combinam produtos notáveis com ideias de lições anteriores.
 2. Calcule $(\sqrt{7} + \sqrt{3})(\sqrt{7} - \sqrt{3})$.
 3. Simplifique $\dfrac{x^2 - 49}{x + 7}$, indicando para qual valor de $x$ a
    expressão original não faz sentido.
+4. Fatore $x^6 - 64$ o mais completamente que conseguir.
 
 <details>
-<summary>Dica para os itens 2 e 3</summary>
+<summary>Dica para os itens 2, 3 e 4</summary>
 
 No item 2, lembre de [Raízes](../numeros-e-operacoes/raizes) que $(\sqrt{7})^2 = 7$ — a raiz desfaz o
 quadrado. No item 3, fatore o numerador antes de tentar cortar qualquer coisa:
 em uma fração só é permitido cancelar **fatores**, nunca parcelas de uma soma.
+No item 4, repare que $x^6$ é ao mesmo tempo um quadrado e um cubo: $x^6 =
+(x^3)^2$ e também $x^6 = (x^2)^3$. Comece pelo padrão que enxergar primeiro e
+depois olhe se cada fator ainda fatora.
 
 </details>
 
@@ -1358,6 +1619,8 @@ em uma fração só é permitido cancelar **fatores**, nunca parcelas de uma som
 1. Explique, com suas palavras, por que $(x + 3)^2$ não é igual a $x^2 + 9$.
 2. Mostre, distribuindo, que $(a + b)(a - b) = a^2 - b^2$.
 3. Verifique, multiplicando, que $x^3 + 8 = (x + 2)(x^2 - 2x + 4)$.
+4. Obtenha a diferença de cubos a partir da soma de cubos, trocando $b$ por
+   $-b$. Justifique cada troca de sinal.
 
 ### Aplicação prática
 
@@ -1367,6 +1630,10 @@ em uma fração só é permitido cancelar **fatores**, nunca parcelas de uma som
 3. Uma placa quadrada de lado 50 cm recebe um aumento de 0,2 cm em cada lado.
    Use $(x + h)^2 - x^2$ para calcular o aumento exato da área. Depois compare
    com a estimativa $2xh$.
+4. Calcule $21^3$ escrevendo $21$ como $20 + 1$. Mostre de onde vem cada termo.
+5. Um cubo de gelo de 3 cm de aresta derrete até 2,9 cm. Use
+   $(x - h)^3$ para calcular quanto volume ele perdeu, e diga qual dos três
+   termos responde pela maior parte da perda.
 
 ## 17. Gabarito comentado
 
@@ -1387,6 +1654,10 @@ Confira um grupo de cada vez, logo depois de resolvê-lo.
 8. $x^2 + 16$: **nenhum padrão** desta página. É uma soma de quadrados, e ela
    não fatora. Se você respondeu $(x + 4)(x - 4)$, esse produto vale
    $x^2 - 16$ — a diferença de quadrados exige o sinal de menos.
+9. $x^3 + 9$: **nenhum padrão** desta página, mas por outro motivo que o item 8.
+   Aqui o sinal não é o problema — a soma de cubos fatora. O problema é que $9$
+   não é cubo de ninguém: os cubos vizinhos são $8$ e $27$. Se você respondeu
+   $(x + 3)(x^2 - 3x + 9)$, esse produto vale $x^3 + 27$.
 
 </details>
 
@@ -1409,6 +1680,11 @@ Confira um grupo de cada vez, logo depois de resolvê-lo.
 4. Porque o último termo vem de multiplicar o $-5$ por ele mesmo, e menos com
    menos dá mais: $(-5)(-5) = +25$. A subtração aparece no termo do meio,
    $-10x$, que é onde o sinal negativo entra uma vez só.
+5. Porque os três termos do aumento têm $h$ elevado a potências diferentes:
+   $3x^2h$ tem um $h$, $3xh^2$ tem dois e $h^3$ tem três. Com $h$ pequeno, cada
+   $h$ a mais encolhe o termo. No desenho: as três lajes grandes são finas mas
+   largas, as três lajes finas encostam só em duas direções, e o cubinho do
+   canto é pequeno nas três — por isso ele é o primeiro a virar desprezível.
 
 </details>
 
@@ -1466,6 +1742,24 @@ $4x^2 - 6x + 9$ o termo do meio é $-6x$, e o dobro do produto seria $-12x$. Ele
    denominador vale zero. Se você cortou o $x^2$ com o $x$ direto na fração
    inicial, cancelou uma parcela em vez de um fator: teste com $x = 1$, onde a
    expressão vale $\frac{-48}{8} = -6$, e de fato $1 - 7 = -6$.
+4. $x^6 - 64 = (x + 2)(x^2 - 2x + 4)(x - 2)(x^2 + 2x + 4)$.
+
+   O caminho importa aqui. Vendo primeiro como **diferença de quadrados**, com
+   $x^6 = (x^3)^2$ e $64 = 8^2$:
+
+   $$
+   x^6 - 64 = (x^3 + 8)(x^3 - 8)
+   $$
+
+   e agora cada fator é um caso de cubos: $x^3 + 8 = (x + 2)(x^2 - 2x + 4)$ e
+   $x^3 - 8 = (x - 2)(x^2 + 2x + 4)$.
+
+   Se você começou pela **diferença de cubos**, com $x^6 = (x^2)^3$ e
+   $64 = 4^3$, chegou a $(x^2 - 4)(x^4 + 4x^2 + 16)$. Não está errado — o
+   primeiro fator ainda abre em $(x + 2)(x - 2)$ —, mas o segundo não fatora por
+   nenhum padrão desta página, e a fatoração fica pela metade. Quando uma
+   expressão é quadrado **e** cubo ao mesmo tempo, começar pelos quadrados leva
+   mais longe.
 
 </details>
 
@@ -1482,6 +1776,12 @@ $4x^2 - 6x + 9$ o termo do meio é $-6x$, e o dobro do produto seria $-12x$. Ele
 3. $(x + 2)(x^2 - 2x + 4) = x(x^2 - 2x + 4) + 2(x^2 - 2x + 4) = x^3 - 2x^2 + 4x
    + 2x^2 - 4x + 8$. Os termos $-2x^2$ e $+2x^2$ se cancelam, e $+4x$ e $-4x$
    também, sobrando $x^3 + 8$.
+4. Como $(-b)^3 = -b^3$, vale $a^3 - b^3 = a^3 + (-b)^3$. Aplicando a soma de
+   cubos com $-b$ no lugar de $b$:
+   $\big(a + (-b)\big)\big(a^2 - a(-b) + (-b)^2\big)$. As três trocas:
+   $a + (-b) = a - b$, porque somar o oposto é subtrair; $-a(-b) = +ab$, porque
+   menos com menos dá mais; e $(-b)^2 = +b^2$, porque expoente par apaga o
+   sinal. Resultado: $(a - b)(a^2 + ab + b^2)$.
 
 </details>
 
@@ -1500,6 +1800,26 @@ $4x^2 - 6x + 9$ o termo do meio é $-6x$, e o dobro do produto seria $-12x$. Ele
    (0{,}2)^2 = 20 + 0{,}04 = 20{,}04\text{ cm}^2$. A estimativa $2xh = 20\text{
    cm}^2$ erra por apenas $h^2 = 0{,}04\text{ cm}^2$ — o quadradinho do canto,
    pequeno porque $h$ é pequeno.
+4. $21^3 = (20 + 1)^3 = 20^3 + 3(20^2)(1) + 3(20)(1^2) + 1^3 = 8000 + 1200 + 60
+   + 1 = 9261$. O $8000$ é o cubo grande, o $1200$ são as três lajes $a^2b$, o
+   $60$ são as três lajes $ab^2$ e o $1$ é o cubinho do canto. Repare como as
+   parcelas encolhem depressa — é a mesma hierarquia da caixa d'água.
+5. Aqui a aresta **diminui**, então o padrão é o cubo da diferença, com $x = 3$
+   e $h = 0{,}1$:
+
+   $$
+   x^3 - (x - h)^3 = 3x^2h - 3xh^2 + h^3
+   $$
+
+   $$
+   = 3(9)(0{,}1) - 3(3)(0{,}01) + 0{,}001 = 2{,}7 - 0{,}09 + 0{,}001 = 2{,}611
+   $$
+
+   O gelo perdeu $2{,}611\text{ cm}^3$ — confira direto: $27 - 24{,}389 =
+   2{,}611$. ✓ O termo $3x^2h = 2{,}7$ responde por quase toda a perda: são as
+   três faces que derreteram. Note que o sinal do meio ficou negativo aqui, e
+   era positivo na caixa d'água: quando a aresta encolhe, as lajes finas são
+   descontadas em vez de somadas.
 
 </details>
 
@@ -1522,9 +1842,12 @@ O fio condutor é este:
   menos que faz isso, por isso a **soma** de quadrados não fatora;
 - lido ao contrário, o quadrado da soma vira o reconhecimento do trinômio
   quadrado perfeito, em que o termo do meio precisa ser o dobro do produto;
-- nos cubos, as misturas aparecem mais vezes;
-- na soma e na diferença de cubos, fatoramos escolhendo um segundo fator que
-  cancela os termos intermediários.
+- nos cubos, as partes cruzadas aparecem três vezes cada, porque o crescimento
+  acontece em três direções — são as lajes do cubo de aresta $a + b$;
+- na soma e na diferença de cubos, o segundo fator é construído termo a termo,
+  cada um cancelando o que o anterior deixou sobrando;
+- e os cubos fatoram com os dois sinais, ao contrário dos quadrados, porque
+  $(-b)^3 = -b^3$ preserva o sinal que $(-b)^2 = +b^2$ apagaria.
 
 A pergunta principal não deve ser "qual fórmula decorei?". A pergunta deve ser:
 
