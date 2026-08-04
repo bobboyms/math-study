@@ -6,36 +6,62 @@ import GeoFigure from '@site/src/components/GeoFigure';
 
 # Racionalizar: tirar a raiz do denominador
 
-## 1. Problema motivador: o lado de uma peça quadrada
+## 1. Problema motivador: o tampo com metade do material
 
-Um marceneiro precisa cortar uma peça **quadrada** cuja diagonal meça exatamente
-10 cm — a diagonal é a medida que o projeto especifica, porque é ela que precisa
-caber num encaixe. Para cortar, porém, ele precisa do **lado**.
+Um marceneiro corta tampos **quadrados**. O modelo padrão tem 10 cm de lado, o
+que consome $10 \times 10 = 100$ cm² de madeira. O cliente pede um segundo
+tampo, também quadrado, que gaste **metade** do material — 50 cm². Quanto deve
+medir o lado dele?
+
+A resposta que salta à vista é 5 cm, metade do lado. Ela está errada: um
+quadrado de 5 cm de lado tem $5 \times 5 = 25$ cm², um **quarto** da madeira, e
+não metade. Lado e área não andam juntos na mesma proporção — dobrar o lado
+quadruplica a área.
 
 <GeoFigure
-  polygons={[{points: [[0, 0], [5, 0], [5, 5], [0, 5]], tone: 1}]}
-  segments={[{from: [0, 0], to: [5, 5], tone: 2}]}
-  angles={[{at: [0, 0], from: [5, 0], to: [0, 5], right: true}]}
-  dims={[{from: [0, 0], to: [5, 0], label: '\\ell', offset: 26}]}
-  labels={[{at: [2.5, 2.5], math: '10', tone: 2, dx: 26, dy: 18}]}
-  caption="A diagonal corta o quadrado em dois triângulos retângulos de catetos iguais."
+  unit={28}
+  padding={30}
+  bounds={[0, -1.6, 9.44, 5]}
+  polygons={[
+    {points: [[0, 0], [5, 0], [5, 5], [0, 5]], tone: 1},
+    {points: [[5.9, 0], [9.44, 0], [9.44, 3.54], [5.9, 3.54]], tone: 2},
+  ]}
+  dims={[
+    {from: [0, 0], to: [5, 0], label: '10', offset: 24},
+    {from: [5.9, 0], to: [9.44, 0], label: '\\ell', offset: 24, tone: 2},
+  ]}
+  labels={[
+    {at: [2.5, 2.5], math: '100\\ \\text{cm}^2', tone: 1},
+    {at: [7.67, 1.77], math: '50\\ \\text{cm}^2', tone: 2},
+  ]}
+  caption="O tampo pequeno gasta metade da madeira do padrão — mas o lado dele não é metade."
 />
 
-Pelo [teorema de Pitágoras](../geometria/teorema-de-pitagoras), a diagonal e os
-dois lados formam um triângulo retângulo:
+Chamando de $\ell$ o lado procurado, o que o cliente pediu é
 
 $$
-\ell^2 + \ell^2 = 10^2
-\quad\Longrightarrow\quad
-2\ell^2 = 100
-\quad\Longrightarrow\quad
-\ell^2 = 50
-\quad\Longrightarrow\quad
-\ell = \sqrt{50}.
+\ell \times \ell = 50.
 $$
 
-Mas o caminho mais natural é escrever direto: como a diagonal de um quadrado é
-$\ell\sqrt{2}$, temos $\ell\sqrt{2} = 10$, e portanto
+Existe uma relação entre os dois tampos que resolve isso sem tentativa e erro:
+**multiplicar o lado por $\sqrt2$ dobra a área do quadrado.** Conferindo, com a
+comutativa e com a definição de raiz quadrada ($\sqrt2 \times \sqrt2 = 2$):
+
+$$
+(\ell\sqrt2) \times (\ell\sqrt2)
+= \ell \times \ell \times \sqrt2 \times \sqrt2
+= 2 \times (\ell \times \ell).
+$$
+
+E o tampo padrão tem exatamente o dobro da área do pequeno. Então o lado do
+padrão é o lado do pequeno multiplicado por $\sqrt2$:
+
+$$
+\ell \times \sqrt{2} = 10.
+$$
+
+Achar $\ell$ é uma divisão — a pergunta “que número multiplicado por $\sqrt2$ dá
+10?”:
 
 $$
 \ell = \frac{10}{\sqrt{2}}.
@@ -330,9 +356,9 @@ Conferindo com $x = 2$: à esquerda,
 $\frac{2 - 1{,}4142136}{2} \approx 0{,}2928932$; à direita,
 $\frac{1}{2 + 1{,}4142136} \approx 0{,}2928932$.
 
-### Exemplo 6: de volta à peça do marceneiro
+### Exemplo 6: de volta ao tampo do marceneiro
 
-O lado da peça era $\ell = \frac{10}{\sqrt2}$. Racionalizando,
+O lado do tampo pequeno era $\ell = \frac{10}{\sqrt2}$. Racionalizando,
 $\ell = 5\sqrt2 \approx 7{,}07$ cm.
 
 Vale a pena ver a diferença de trabalho lado a lado:
@@ -342,9 +368,14 @@ Vale a pena ver a diferença de trabalho lado a lado:
 | $\dfrac{10}{\sqrt2}$ | $10 \div 1{,}41421356$ | divisão longa por decimal infinito |
 | $5\sqrt2$ | $5 \times 1{,}41421356$ | uma multiplicação |
 
-E, de quebra, a forma racionalizada responde a outra pergunta de imediato: a
-área da peça é $\ell^2 = (5\sqrt2)^2 = 25 \times 2 = 50$ cm², um número redondo
-que a primeira escrita não deixava ver.
+E, de quebra, a forma racionalizada **se confere sozinha**: a área do tampo
+pequeno é $\ell^2 = (5\sqrt2)^2 = 25 \times 2 = 50$ cm², exatamente a metade dos
+100 cm² do tampo padrão, como o cliente pediu. Elevar $\frac{10}{\sqrt2}$ ao
+quadrado daria o mesmo, mas sem que a conta ficasse óbvia à vista.
+
+Repare ainda que o outro caminho chega ao mesmo lugar: de
+$\ell \times \ell = 50$ sai $\ell = \sqrt{50} = \sqrt{25 \times 2} = 5\sqrt{2}$.
+Duas rotas, uma só resposta — e é isso que uma forma padrão faz por você.
 
 ## 9. Erros comuns
 
@@ -466,9 +497,11 @@ comum para cancelar.
 
 ### 5. Problema misto
 
-11. Uma peça quadrada tem diagonal de 6 cm. a) Escreva o lado como uma fração
-    com raiz no denominador. b) Racionalize e calcule o valor aproximado. c)
-    Calcule a área da peça usando a forma racionalizada.
+11. Um tampo quadrado tem 6 cm de lado. Um segundo tampo, também quadrado, deve
+    gastar metade do material. a) Escreva o lado do segundo tampo como uma
+    fração com raiz no denominador. b) Racionalize e calcule o valor aproximado.
+    c) Calcule a área do segundo tampo pela forma racionalizada e confirme que
+    ela é mesmo metade da primeira.
 12. Um retângulo tem área 12 cm² e um dos lados mede $\sqrt3$ cm. Escreva o
     outro lado, racionalize e dê o valor aproximado.
 
@@ -517,8 +550,11 @@ comum para cancelar.
     com $x \neq 0$. Em $x = 0$ a forma obtida vale
     $\frac{1}{2\sqrt2} = \frac{\sqrt2}{4} \approx 0{,}354$, enquanto a original
     daria $\frac{0}{0}$.
-11. a) $\ell = \frac{6}{\sqrt2}$. &nbsp; b) $\ell = 3\sqrt2 \approx 4{,}24$ cm.
-    &nbsp; c) $\ell^2 = (3\sqrt2)^2 = 9 \times 2 = 18$ cm².
+11. a) $\ell = \frac{6}{\sqrt2}$, porque $\ell \times \sqrt2 = 6$. &nbsp; b)
+    $\ell = \frac{6\sqrt2}{2} = 3\sqrt2 \approx 4{,}24$ cm. &nbsp; c)
+    $\ell^2 = (3\sqrt2)^2 = 9 \times 2 = 18$ cm², metade dos 36 cm² do primeiro
+    tampo. Se você respondeu 3 cm no item (b), caiu na armadilha da abertura:
+    metade da área não é metade do lado.
 12. O outro lado é
     $\frac{12}{\sqrt3} = \frac{12\sqrt3}{3} = 4\sqrt3 \approx 6{,}93$ cm.
 13. Multiplicando numerador e denominador por $\sqrt a + \sqrt b$, o denominador
