@@ -5,8 +5,9 @@ Docusaurus, escrito para um adulto autodidata que estuda sozinho.
 
 **As diretrizes didáticas — perfil do aluno, método de ensino, estrutura de
 lição, exercícios e gabarito — estão na skill `tutor-matematica`**
-(`.claude/skills/tutor-matematica/SKILL.md`). Leia-a antes de escrever, revisar
-ou explicar qualquer conteúdo de matemática. Este arquivo cobre apenas o
+(`.claude/skills/tutor-matematica/`). Leia o `SKILL.md` antes de escrever,
+revisar ou explicar qualquer conteúdo de matemática, e o `escrever-licao.md`
+antes de tocar numa página de `docs/`. Este arquivo cobre apenas o
 funcionamento técnico do repositório.
 
 ## Referência rápida
