@@ -114,7 +114,17 @@ O formato é relativo e sem o prefixo numérico:
 npm run start   # servidor local em http://localhost:3000
 npm run build   # validação de verdade: links, MDX, sidebar
 npm run clear   # limpa cache quando o start fica com conteúdo velho
+npm run quadro  # quadro branco do aluno em http://localhost:4123
 ```
+
+## Caderno do aluno
+
+`caderno/` é onde o aluno resolve exercícios — não é conteúdo do curso e não
+participa do build. `npm run quadro` sobe um quadro branco local cujo botão
+"Salvar para correção" grava PNGs em `caderno/imagens/` (pasta ignorada pelo
+git). A correção dessas imagens é o trabalho da skill `corrigir`: ela lê a
+imagem mais recente, confere cada conta com `python3` e responde no papel de
+tutor. Não edite nem apague os arquivos do caderno — são o registro do aluno.
 
 ## Fórmulas e notação
 
