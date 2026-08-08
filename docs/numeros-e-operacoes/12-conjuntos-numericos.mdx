@@ -1,0 +1,737 @@
+---
+title: Conjuntos numéricos
+---
+
+import NumberLine from '@site/src/components/NumberLine';
+
+# Conjuntos numéricos: os degraus que este capítulo subiu
+
+## Problema motivador: uma medida que nenhuma fração acerta
+
+Você vai cortar um tampo **quadrado** de madeira com exatamente 2 m² de área.
+Quanto precisa medir o lado?
+
+A conta é a da página de [raízes](./raizes): área de um quadrado é lado vezes
+lado, então o lado é o número que, multiplicado por si mesmo, dá 2. Ou seja,
+$\sqrt2$.
+
+Agora tente escrever esse número para passar ao serrote. Você precisa de uma
+medida em metros, com casas decimais — e aí começa o problema:
+
+| Tentativa | O quadrado dela | Passou ou faltou? |
+|---|---|---|
+| $1{,}4$ | $1{,}96$ | faltou |
+| $1{,}41$ | $1{,}9881$ | faltou |
+| $1{,}414$ | $1{,}999396$ | faltou |
+| $1{,}4142$ | $1{,}99996164$ | faltou |
+
+Cada casa decimal chega mais perto, e nenhuma acerta. Isso, sozinho, não seria
+novidade: $\frac{1}{3}$ também tem escrita decimal infinita, e nem por isso é um
+número estranho — ele é uma fração perfeitamente comum, e a página de
+[decimais](./decimais-e-porcentagem) já mostrou que $\frac{1}{3} = 0{,}333\ldots$
+
+Então a pergunta certa não é sobre casas decimais. É esta:
+
+> A pergunta central: existe **alguma** fração de números inteiros que dê
+> exatamente $\sqrt2$?
+
+Se existir, $\sqrt2$ é um número do mesmo tipo que $\frac{1}{3}$, e a dificuldade
+é só de escrita. Se não existir, então este capítulo inteiro esteve trabalhando
+com um tipo de número que nunca nomeou.
+
+A resposta é **não existe** — e não é uma suspeita nem um "ninguém conseguiu
+ainda". É uma certeza, com um argumento curto que usa só a decomposição em
+fatores primos que você estudou em [múltiplos, divisores e
+primos](./multiplos-divisores-primos). Esta página termina provando isso.
+
+## Mapa das ideias
+
+- **conjunto** — uma coleção de objetos com um critério claro de quem pertence e
+  quem não pertence;
+- **naturais** ($\mathbb{N}$) — os números de contar, incluindo o zero;
+- **inteiros** ($\mathbb{Z}$) — os naturais mais os negativos;
+- **racionais** ($\mathbb{Q}$) — todo número que se escreve como fração de dois
+  inteiros;
+- **irracional** — um número real que **não** é fração de inteiros, como
+  $\sqrt2$ e $\pi$;
+- **reais** ($\mathbb{R}$) — todos os anteriores juntos: tudo o que tem lugar na
+  reta numérica;
+- **dízima periódica** — escrita decimal infinita que repete um bloco para
+  sempre, como $0{,}333\ldots$ Ela é o disfarce mais comum de uma fração.
+
+## Para que isso serve?
+
+Esta é uma página de **organização**, não de técnica nova. Você já sabe operar
+com todos esses números; o que falta é o mapa deles. Isso rende em quatro
+lugares:
+
+- **entender uma resposta "feia".** Quando uma conta devolve $\sqrt{50}$ e não
+  um decimal exato, saber que a resposta é de outro tipo evita a suspeita de que
+  a conta deu errado;
+- **ler o vocabulário do resto do curso.** Daqui em diante, o material fala em
+  "números reais" e escreve $\mathbb{R}$ com naturalidade — em
+  [intervalos](../equacoes/intervalos), no domínio de uma função, nas
+  inequações;
+- **saber quando um resultado é exato.** $\sqrt2$ **é** um valor exato; $1{,}414$
+  é uma aproximação. Confundir os dois é o que produz erro acumulado em conta
+  encadeada;
+- **programar.** Todo tipo de dado numérico — inteiro, ponto flutuante, decimal
+  de precisão fixa — é uma escolha sobre qual desses conjuntos a máquina vai
+  representar, e sobre o que ela vai perder ao representar.
+
+## Ideias anteriores que voltam aqui
+
+Esta página não introduz operação nenhuma. Ela reorganiza o que as onze páginas
+anteriores construíram, e cada degrau vem de uma delas:
+
+- de [números negativos](./numeros-negativos), a reta estendida para a esquerda
+  do zero e a ideia de **oposto**;
+- de [múltiplos, divisores e primos](./multiplos-divisores-primos), a
+  **decomposição em fatores primos** — que é a ferramenta da demonstração no
+  fim desta página;
+- de [frações](./fracoes), escrever uma quantidade como parte de um inteiro, e
+  **simplificar** sem mudar a quantidade;
+- de [decimais e porcentagem](./decimais-e-porcentagem), a passagem entre fração
+  e escrita decimal, inclusive o caso $\frac{1}{3} = 0{,}333\ldots$;
+- de [raízes](./raizes), a raiz como pergunta inversa da potência, e o caso em
+  que ela "não é exata".
+
+Antes de continuar, responda mentalmente:
+
+1. Qual é a decomposição em fatores primos de $20$? E a de $400 = 20^2$?
+2. Quanto é $\frac{1}{3}$ em escrita decimal? E $\frac{1}{8}$?
+3. Por que $\sqrt{50}$ não é um número inteiro?
+
+As respostas: $20 = 2 \times 2 \times 5$, e $400 = 2 \times 2 \times 2 \times 2
+\times 5 \times 5$ — repare que **cada primo aparece o dobro de vezes**, e
+guarde essa observação, porque ela é a chave da demonstração;
+$\frac{1}{3} = 0{,}333\ldots$ e $\frac{1}{8} = 0{,}125$; e $\sqrt{50}$ não é
+inteiro porque $7^2 = 49$ e $8^2 = 64$, então ele está entre 7 e 8.
+
+## Intuição: a reta que foi crescendo
+
+Releia o capítulo pelo avesso. Cada página nova não acrescentou só uma técnica —
+ela **admitiu um tipo de número que antes não era aceito**, e sempre pelo mesmo
+motivo: uma operação que ficava sem resposta.
+
+Comece pelos números de contar. Com eles, somar e multiplicar funcionam sempre:
+some dois números de contar e o resultado é um número de contar. Mas subtrair,
+não:
+
+$$
+3 - 5 = \; ?
+$$
+
+Não há resposta entre os números de contar. A saída foi estender a reta para a
+esquerda do zero:
+
+<NumberLine
+  min={-4}
+  max={6}
+  unit={44}
+  jumps={[{from: 3, to: -2, label: '-5', tone: 1}]}
+  marks={[{at: 3, label: '3', tone: 2}, {at: -2, label: '-2', tone: 1}]}
+  caption="Tirar 5 de 3 exige o lado esquerdo do zero. Foi essa falta que criou os números negativos."
+/>
+
+Com os negativos, subtrair passa a funcionar sempre. Mas dividir, não:
+
+$$
+3 \div 2 = \; ?
+$$
+
+Não há resposta entre os inteiros. A saída foi admitir os pontos **entre** as
+marcas — as frações:
+
+<NumberLine
+  min={0}
+  max={2}
+  step={0.25}
+  labelEvery={4}
+  unit={180}
+  marks={[
+    {at: 0.5, label: '\\frac{1}{2}', tone: 1},
+    {at: 1.25, label: '\\frac{5}{4}', tone: 3},
+    {at: 1.75, label: '\\frac{7}{4}', tone: 2},
+  ]}
+  caption="Entre dois inteiros cabem infinitas frações — e entre duas frações, infinitas outras."
+/>
+
+E aqui vem a surpresa que dá nome a esta página. Depois das frações, a reta
+**parece** cheia. Entre quaisquer duas frações sempre cabe outra: basta somá-las
+e dividir por 2, o que dá exatamente o ponto do meio entre elas. E entre essa
+nova e qualquer uma das anteriores cabe mais uma, sem fim. Não sobra espaço
+visível em lugar nenhum.
+
+Mesmo assim, ela não está cheia. O $\sqrt2$ do tampo tem um lugar bem definido na
+reta — é a medida de um lado que existe, você pode cortar essa madeira — e esse
+lugar **não é ocupado por nenhuma fração**. A reta das frações, por mais densa
+que pareça, é cheia de buracos.
+
+É esse o degrau final do capítulo: tapar esses buracos. O resultado é a reta sem
+falhas, e é a ela que se dá o nome de **números reais**.
+
+## Modelo visual: quatro camadas na mesma reta
+
+Os quatro conjuntos não são quatro retas diferentes. São a **mesma** reta, vista
+com quatro critérios de admissão:
+
+<NumberLine
+  min={-4}
+  max={4}
+  unit={62}
+  marks={[
+    {at: 3, label: '3', tone: 1},
+    {at: -3, label: '-3', tone: 2},
+    {at: -0.5, label: '-\\frac{1}{2}', tone: 3},
+    {at: 1.414, label: '\\sqrt2', tone: 1},
+  ]}
+  caption="Um representante de cada degrau, todos na mesma reta: 3 é natural, −3 é inteiro, −1/2 é racional e √2 é irracional. O π também é irracional, e cairia logo à direita do 3."
+/>
+
+Repare no que a figura afirma, e que é o ponto mais importante da página: **o 3
+não mudou de lugar** em nenhum momento. Ele é natural, é inteiro, é racional e é
+real, tudo ao mesmo tempo. Os conjuntos não são gavetas separadas em que cada
+número mora numa só — são **camadas encaixadas**, cada uma contendo inteira a
+anterior.
+
+## Ponte para a formalização
+
+Antes dos símbolos, uma palavra sobre a palavra. **Conjunto** aqui não tem
+nenhum mistério: é uma coleção de objetos com um critério claro de pertencer.
+"Os divisores de 12" é um conjunto — dado um número, dá para responder sim ou não
+sem discussão. "Os números grandes" não é, porque o critério não decide nada.
+
+Cada conjunto abaixo é definido exatamente assim: por um critério de admissão. E
+a ordem em que eles aparecem é a ordem em que este capítulo os construiu — não é
+uma lista para decorar, é a história que você acabou de reler.
+
+## Formalização
+
+### Naturais: os números de contar
+
+> Os **naturais** são $\mathbb{N} = \{0, 1, 2, 3, \ldots\}$ — os números usados
+> para contar quantidades inteiras, mais o zero.
+
+Exemplo: $7$ é natural. Contraexemplos: $-7$ não é, porque contagem não vai para
+o lado negativo; $0{,}5$ não é, porque não se conta meia unidade.
+
+Uma nota de honestidade: **nem todo autor inclui o zero em $\mathbb{N}$**. No
+Brasil o costume é incluir, e é o que este curso faz. Se você encontrar um livro
+que não inclui, não é erro de nenhum dos dois — é convenção, e vale conferir
+qual está em uso antes de responder a um exercício.
+
+Nos naturais, somar e multiplicar sempre funcionam. Subtrair, não: $3 - 5$ fica
+sem resposta.
+
+### Inteiros: quando a subtração precisou de espaço
+
+> Os **inteiros** são $\mathbb{Z} = \{\ldots, -2, -1, 0, 1, 2, \ldots\}$ — os
+> naturais e seus opostos.
+
+Exemplo: $-7$ é inteiro, e $7$ também. Contraexemplo: $0{,}5$ não é.
+
+A letra é $\mathbb{Z}$ por *Zahlen*, "números" em alemão — não há nada a deduzir
+dela, é só a inicial que pegou.
+
+Nos inteiros, somar, subtrair e multiplicar sempre funcionam. Dividir, não:
+$3 \div 2$ fica sem resposta.
+
+### Racionais: quando a divisão precisou de espaço
+
+> Os **racionais** são os números que se escrevem como $\frac{a}{b}$, com $a$ e
+> $b$ inteiros e $b \neq 0$. O símbolo é $\mathbb{Q}$, de **quociente**.
+
+Exemplos: $\frac{3}{4}$ é racional; $0{,}75$ também, porque é a mesma coisa;
+$-7$ é racional, porque é $\frac{-7}{1}$; e $0{,}333\ldots$ é racional, porque é
+$\frac{1}{3}$.
+
+Contraexemplo: $\sqrt2$ **não** é racional, e é isso que a última seção
+demonstra.
+
+Repare que "racional" vem de **razão**, no sentido da página de [razão e
+proporção](./razao-e-proporcao) — um racional é um número que é a razão entre
+dois inteiros. Não tem relação com ser sensato.
+
+Nos racionais, as quatro operações sempre funcionam (menos dividir por zero).
+Extrair raiz, não: $\sqrt2$ fica sem resposta.
+
+### Reais: quando a raiz precisou de espaço
+
+> Os **reais** ($\mathbb{R}$) são todos os números que têm um lugar na reta
+> numérica: os racionais e, além deles, os **irracionais** — aqueles que não se
+> escrevem como fração de inteiros.
+
+Exemplos de irracionais: $\sqrt2$, $\sqrt3$, $\sqrt{50}$ e $\pi$.
+
+Contraexemplo, e é o mais importante desta página: $\sqrt9$ **não** é
+irracional, porque vale $3$. Ter uma raiz na escrita não torna um número
+irracional — o que decide é o valor, não a aparência.
+
+### A cadeia
+
+Cada conjunto contém inteiro o anterior:
+
+$$
+\mathbb{N} \subset \mathbb{Z} \subset \mathbb{Q} \subset \mathbb{R}
+$$
+
+O símbolo $\subset$ lê-se "está contido em". A cadeia afirma que todo natural é
+inteiro, todo inteiro é racional e todo racional é real — e que nenhuma dessas
+voltas vale: $-3$ é inteiro mas não natural, $\frac{1}{2}$ é racional mas não
+inteiro, $\sqrt2$ é real mas não racional.
+
+Por isso a pergunta "$5$ é natural ou é real?" está mal feita. Ele é os dois. A
+pergunta que faz sentido é qual é o **menor** conjunto que o contém.
+
+## Como reconhecer um racional pela escrita decimal
+
+Há um teste prático, e ele vem direto da página de decimais.
+
+Quando você divide um inteiro por outro, o resto de cada passo só pode assumir
+uma quantidade finita de valores — menos que o divisor. Então, mais cedo ou mais
+tarde, ou o resto dá zero, ou um resto se repete e a partir dali toda a sequência
+se repete. Não há terceira possibilidade. Isso dá duas escritas possíveis, e só
+duas:
+
+| Escrita decimal | Exemplo | É racional? |
+|---|---|---|
+| termina | $\frac{1}{8} = 0{,}125$ | sim |
+| não termina, mas **repete um bloco** | $\frac{1}{3} = 0{,}333\ldots$ | sim |
+| não termina e **nunca repete** | $\sqrt2 = 1{,}41421356\ldots$ | não — é irracional |
+
+O caso do meio se chama **dízima periódica**, e o bloco que se repete pode ser
+longo: $\frac{1}{7} = 0{,}142857142857\ldots$ repete `142857`, seis algarismos,
+para sempre.
+
+> O que distingue um racional de um irracional **não é** a escrita decimal ser
+> infinita. É ela repetir um bloco ou não.
+
+Essa é a confusão mais comum do assunto, e vale gastar uma frase a mais: uma
+escrita infinita e repetitiva é apenas um jeito desajeitado de escrever uma
+fração exata. $0{,}333\ldots$ e $\frac{1}{3}$ são o mesmo número, e o segundo é
+melhor escrito porque é finito e exato.
+
+## Por que $\sqrt2$ não é fração
+
+Agora a promessa da abertura. O argumento é curto e usa uma única ideia da página
+de primos: **ao elevar um número ao quadrado, cada primo da fatoração aparece o
+dobro de vezes.**
+
+Confira num caso concreto antes do geral. Como $20 = 2 \times 2 \times 5$,
+
+$$
+20^2 = 400 = 2 \times 2 \times 2 \times 2 \times 5 \times 5
+$$
+
+O 2 aparecia 2 vezes em 20 e aparece 4 vezes em 400; o 5 aparecia 1 vez e agora
+aparece 2. Faz sentido: elevar ao quadrado é multiplicar o número por ele mesmo,
+então a lista de fatores é a mesma lista, duas vezes.
+
+Disso decorre o fato de que precisamos:
+
+> Na fatoração de um **quadrado perfeito**, todo primo aparece um número **par**
+> de vezes.
+
+Agora suponha, para ver no que dá, que exista uma fração $\frac{a}{b}$ de
+inteiros com $\frac{a}{b} = \sqrt2$. Elevando os dois lados ao quadrado e
+multiplicando por $b^2$:
+
+$$
+\frac{a^2}{b^2} = 2 \qquad \Longrightarrow \qquad a^2 = 2b^2
+$$
+
+Conte quantas vezes o primo 2 aparece de cada lado dessa igualdade:
+
+- **à esquerda**, $a^2$ é um quadrado, então o 2 aparece um número **par** de
+  vezes (possivelmente zero, que também é par);
+- **à direita**, $b^2$ é um quadrado, então o 2 aparece um número par de vezes
+  nele — e o fator 2 escrito na frente acrescenta mais um. Total: um número
+  **ímpar** de vezes.
+
+Mas os dois lados são **o mesmo número**, escrito de duas formas. Um número tem
+uma única decomposição em primos, então o 2 não pode aparecer nele um número par
+e ímpar de vezes ao mesmo tempo.
+
+A suposição levou a um absurdo. Logo a fração $\frac{a}{b}$ **não existe**.
+
+$$
+\sqrt2 \ \text{ é irracional.}
+$$
+
+Um exemplo concreto do mesmo raciocínio, para você ver o mecanismo funcionando:
+$800 = 2 \times 2 \times 2 \times 2 \times 2 \times 5 \times 5$ tem o primo 2
+aparecendo **cinco** vezes, um número ímpar. Por isso 800 não é quadrado
+perfeito — e nenhuma conta precisa ser feita para saber disso.
+
+## Voltando ao tampo
+
+A pergunta da abertura era se alguma fração daria exatamente $\sqrt2$. A resposta
+é não, e agora ela é uma certeza demonstrada, não uma desistência.
+
+O que isso significa na prática, para quem vai cortar a madeira:
+
+- **a medida exata do lado é $\sqrt2$ metros.** Isso não é uma resposta pela
+  metade — é o valor exato, escrito da única forma que o expressa exatamente;
+- **para o serrote, você usa uma aproximação**, como $1{,}414$ m, e escolhe
+  quantas casas conforme a precisão que a ferramenta entrega. Nenhuma
+  aproximação é o número, e nenhuma precisa ser;
+- **nas contas intermediárias, mantenha $\sqrt2$.** Se você arredondar cedo e
+  encadear operações, o erro cresce. Essa disciplina é a razão de existir da
+  página de [racionalizar denominadores](../algebra/racionalizacao), no capítulo
+  seguinte.
+
+E o incômodo que você talvez esteja sentindo tem companhia histórica ilustre: a
+descoberta de que a diagonal do quadrado não é fração de lado nenhum foi um
+escândalo entre os gregos, que acreditavam que duas medidas quaisquer sempre
+teriam uma unidade comum. Não tinham. O nome "irracional" carrega esse desconforto
+até hoje.
+
+## Exemplos resolvidos
+
+### Exemplo 1: a que conjuntos um número pertence
+
+Classifique $-6$ nos quatro conjuntos.
+
+Não é natural (é negativo). É inteiro. É racional, porque
+$-6 = \frac{-6}{1}$. É real, porque todo racional é real.
+
+**Resposta:** inteiro, racional e real — e o menor conjunto que o contém é
+$\mathbb{Z}$.
+
+### Exemplo 2: uma raiz que engana
+
+$\sqrt{16}$ é irracional?
+
+*Pause e tente.*
+
+Não. $\sqrt{16} = 4$, que é natural. O símbolo de raiz não decide nada; o valor
+decide. Compare com $\sqrt{17}$, que fica entre 4 e 5 e é irracional.
+
+### Exemplo 3: uma dízima que engana
+
+$0{,}125125125\ldots$ é racional?
+
+*Pause e tente.*
+
+**Sim.** A escrita é infinita, mas repete o bloco `125` para sempre — é uma
+dízima periódica, e toda dízima periódica é fração. Compare com
+$0{,}1010010001\ldots$, em que o número de zeros cresce a cada passo: essa nunca
+repete um bloco fixo, e é irracional.
+
+### Exemplo 4: fração a partir do decimal
+
+Escreva $0{,}075$ como fração e diga o conjunto.
+
+A escrita termina na terceira casa, então o denominador é 1000:
+
+$$
+0{,}075 = \frac{75}{1000} = \frac{3}{40}
+$$
+
+simplificando por 25. É racional, e não é inteiro.
+
+### Exemplo 5: $\pi$ e a aproximação que virou lenda
+
+Muita gente aprendeu que $\pi = \frac{22}{7}$. Isso está errado, e dá para ver
+por quê sem teoria nenhuma:
+
+$$
+\frac{22}{7} = 3{,}142857\ldots \qquad \pi = 3{,}141592\ldots
+$$
+
+Eles já diferem na **terceira** casa decimal. E, mais de fundo: $\frac{22}{7}$ é
+uma fração de inteiros, logo é racional — enquanto $\pi$ é irracional, então
+**nenhuma** fração pode ser igual a ele. $\frac{22}{7}$ é uma aproximação útil,
+nada além disso.
+
+## Erros comuns
+
+### Achar que os conjuntos são gavetas separadas
+
+O erro mais frequente: responder "$5$ é natural" como se isso excluísse as outras
+opções. $5$ é natural **e** inteiro **e** racional **e** real. Os conjuntos se
+encaixam; um número pertence a todos os que o contêm. A pergunta útil é qual é o
+menor deles.
+
+### Achar que toda raiz é irracional
+
+$\sqrt9 = 3$ é natural. $\sqrt{0{,}25} = 0{,}5$ é racional. O símbolo $\sqrt{\;}$
+não é um carimbo de irracionalidade — ele é uma pergunta, e a resposta às vezes
+é um número bem comportado. O teste é simples: se o número dentro da raiz é um
+quadrado perfeito, a raiz é exata.
+
+### Achar que decimal infinito quer dizer irracional
+
+$\frac{1}{3} = 0{,}333\ldots$ é infinito e é racional. O que decide não é o
+tamanho da escrita, é a **repetição de um bloco**. Se você errou uma
+classificação nesta página, é provável que tenha sido por aqui.
+
+### Achar que irracional é um número inexato
+
+$\sqrt2$ é um valor exato e perfeitamente determinado — é o lado do tampo, uma
+medida que existe no mundo. O que não existe é uma escrita decimal finita para
+ele. Inexato é $1{,}414$, que é uma aproximação nossa, não o número.
+
+### Trocar "não é racional" por "não existe"
+
+Um irracional tem lugar na reta, tem tamanho, dá para compará-lo e operá-lo. Ele
+só não é razão entre dois inteiros. "Não pertence a $\mathbb{Q}$" é uma
+afirmação sobre a forma de escrever, não sobre a existência.
+
+## Perguntas de verificação
+
+<details>
+<summary>1. Por que cada conjunto novo apareceu? Qual foi a regra?</summary>
+
+Sempre a mesma: uma operação ficava sem resposta dentro do conjunto disponível.
+A subtração exigiu os inteiros ($3 - 5$), a divisão exigiu os racionais
+($3 \div 2$), a raiz exigiu os reais ($\sqrt2$). O conjunto novo é sempre o
+anterior mais o que faltava — nunca uma substituição.
+
+</details>
+
+<details>
+<summary>2. Um número pode ser racional e real ao mesmo tempo?</summary>
+
+Não só pode como sempre é: todo racional é real, porque $\mathbb{Q} \subset
+\mathbb{R}$. Os conjuntos são camadas encaixadas, não gavetas exclusivas. O
+contrário é que não vale — nem todo real é racional, e $\sqrt2$ é o exemplo.
+
+</details>
+
+<details>
+<summary>3. O que exatamente distingue a escrita decimal de um racional da de um irracional?</summary>
+
+A repetição, não o tamanho. A escrita de um racional ou termina ($0{,}125$) ou
+repete um bloco para sempre ($0{,}333\ldots$, $0{,}142857142857\ldots$). A de um
+irracional é infinita e nunca repete bloco algum. Isso vem da divisão: os restos
+possíveis são em quantidade finita, então eles necessariamente zeram ou se
+repetem.
+
+</details>
+
+<details>
+<summary>4. Qual é o passo central da demonstração de que $\sqrt2$ não é fração?</summary>
+
+Contar quantas vezes o primo 2 aparece nos dois lados de $a^2 = 2b^2$. Num
+quadrado, todo primo aparece um número par de vezes, porque a lista de fatores é
+duplicada. À esquerda o 2 aparece um número par de vezes; à direita, esse mesmo
+número par mais um, ou seja, ímpar. Como um número tem uma única decomposição em
+primos, os dois lados não podem ser o mesmo número.
+
+</details>
+
+<details>
+<summary>5. Por que dizer que "$\sqrt2$ é aproximadamente 1,414" não é a mesma coisa que dizer quanto ele vale?</summary>
+
+Porque $1{,}414$ é um número racional diferente de $\sqrt2$ — o quadrado dele é
+$1{,}999396$, não 2. $\sqrt2$ é o valor exato; $1{,}414$ é uma aproximação
+escolhida por conveniência. Manter o símbolo nas contas intermediárias evita
+acumular o erro dessa troca.
+
+</details>
+
+<details>
+<summary>6. A reta dos racionais parece não ter buracos, já que entre duas frações sempre cabe outra. Por que ela tem?</summary>
+
+Porque "sempre caber outra entre duas" não é o mesmo que "não faltar nenhum
+ponto". As frações são densas — chegam arbitrariamente perto de qualquer lugar —
+e ainda assim deixam posições vazias, como a de $\sqrt2$. Densidade e ausência de
+buracos são propriedades diferentes, e é exatamente a segunda que define os
+reais.
+
+</details>
+
+## Exercícios
+
+### 1. Reconhecimento
+
+1. Para cada número, diga **todos** os conjuntos a que ele pertence entre
+   $\mathbb{N}$, $\mathbb{Z}$, $\mathbb{Q}$ e $\mathbb{R}$:
+   a) $12$ · b) $-4$ · c) $\frac{2}{5}$ · d) $\sqrt{25}$ · e) $\sqrt{7}$ ·
+   f) $0$
+
+2. Quais destes são irracionais?
+   $\;\sqrt{36} \;\cdot\; \sqrt{2} \;\cdot\; 0{,}75 \;\cdot\; \pi \;\cdot\;
+   0{,}666\ldots \;\cdot\; \frac{22}{7}$
+
+3. Qual é o **menor** conjunto que contém $-\frac{9}{3}$?
+
+### 2. Explicação
+
+4. Explique, com suas palavras, por que os inteiros precisaram existir — e qual
+   operação ficaria sem resposta sem eles.
+
+5. Por que a pergunta "$7$ é natural ou racional?" está mal formulada?
+
+6. Uma pessoa diz: "$0{,}999\ldots$ tem escrita infinita, logo é irracional".
+   Onde está o erro do raciocínio dela?
+
+### 3. Aplicação direta
+
+7. Escreva como fração simplificada: a) $0{,}4$ · b) $0{,}125$ · c) $2{,}5$
+
+8. Sem calculadora, diga se a raiz é exata: a) $\sqrt{64}$ · b) $\sqrt{80}$ ·
+   c) $\sqrt{121}$ · d) $\sqrt{2{,}25}$
+
+9. Escreva os quatro conjuntos na ordem de continência, usando o símbolo
+   $\subset$.
+
+### 4. Variação
+
+10. Classifique como racional ou irracional, justificando pela escrita decimal:
+    a) $0{,}212121\ldots$ · b) $0{,}2122122212221\ldots$ (o número de dois
+    cresce a cada bloco) · c) $3{,}14$ · d) $\pi$
+
+11. Dê um exemplo de número que seja: a) inteiro mas não natural · b) racional
+    mas não inteiro · c) real mas não racional.
+
+12. Use a fatoração em primos para decidir, sem calcular a raiz, se $\sqrt{300}$
+    é exata.
+
+### 5. Problema misto
+
+13. Você precisa de um piso quadrado com 5 m² de área. Qual é a medida exata do
+    lado? Ela é racional? Que medida você levaria para a obra, e por quê ela
+    não é "a resposta"?
+
+14. Um colega afirma que a área de um círculo de raio 1 é $\frac{22}{7}$.
+    Corrija a afirmação em duas frases, dizendo o que está certo e o que está
+    errado nela.
+
+<details>
+<summary>Dica do 15</summary>
+
+Não tente achar a fatoração de $a$ e $b$. Repita o argumento do texto trocando o
+primo 2 pelo primo 3, e conte quantas vezes ele aparece de cada lado.
+
+</details>
+
+15. Adapte a demonstração do texto para mostrar que $\sqrt3$ também é
+    irracional.
+
+### 6. Justificativa
+
+16. Por que, na fatoração de um quadrado perfeito, todo primo aparece um número
+    par de vezes?
+
+17. Explique por que a escrita decimal de uma fração de inteiros nunca pode ser
+    infinita e não periódica.
+
+18. Por que a existência de números irracionais não torna a reta numérica
+    "furada"? O que exatamente os reais consertam?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) $12$: $\mathbb{N}$, $\mathbb{Z}$, $\mathbb{Q}$, $\mathbb{R}$ — todos.
+   b) $-4$: $\mathbb{Z}$, $\mathbb{Q}$, $\mathbb{R}$. c) $\frac{2}{5}$:
+   $\mathbb{Q}$ e $\mathbb{R}$. d) $\sqrt{25} = 5$: todos, é natural — se você
+   respondeu "irracional", caiu na armadilha do símbolo. e) $\sqrt7$: só
+   $\mathbb{R}$ (irracional). f) $0$: todos.
+
+2. Irracionais: $\sqrt2$ e $\pi$. Os outros: $\sqrt{36} = 6$ é natural;
+   $0{,}75 = \frac{3}{4}$; $0{,}666\ldots = \frac{2}{3}$ é dízima periódica;
+   $\frac{22}{7}$ é fração de inteiros por definição.
+
+3. $-\frac{9}{3} = -3$, então o menor é $\mathbb{Z}$. A aparência de fração não
+   decide — o valor decide.
+
+4. Porque a subtração não fecha nos naturais: $3 - 5$ não tem resposta entre os
+   números de contar. Os inteiros acrescentam os opostos e tornam a subtração
+   sempre possível, sem mudar nada do que já valia.
+
+5. Porque as duas coisas não são alternativas. $7$ é natural **e** racional, já
+   que $\mathbb{N} \subset \mathbb{Q}$. A pergunta bem formulada é qual é o menor
+   conjunto que o contém — no caso, $\mathbb{N}$.
+
+6. O erro é usar "infinita" como critério. O que decide é repetir um bloco, e
+   $0{,}999\ldots$ repete o `9` para sempre — é dízima periódica, portanto
+   racional. Qual fração? Chamando o número de $x$, temos $10x = 9{,}999\ldots$,
+   e subtrair $x$ dos dois lados elimina toda a parte decimal:
+   $10x - x = 9$, logo $9x = 9$ e $x = 1$. Ou seja, $0{,}999\ldots$ é outro jeito
+   de escrever o número $1$.
+
+7. a) $\frac{4}{10} = \frac{2}{5}$. b) $\frac{125}{1000} = \frac{1}{8}$.
+   c) $\frac{25}{10} = \frac{5}{2}$.
+
+8. a) exata, $8$. b) não exata — $80 = 2^4 \times 5$, e o 5 aparece uma vez só.
+   c) exata, $11$. d) exata, $1{,}5$, porque $1{,}5^2 = 2{,}25$.
+
+9. $\mathbb{N} \subset \mathbb{Z} \subset \mathbb{Q} \subset \mathbb{R}$.
+
+10. a) racional — repete o bloco `21`. b) irracional — a escrita é infinita e
+    nunca fixa um bloco, porque o número de dois muda sempre. c) racional —
+    termina, e vale $\frac{314}{100} = \frac{157}{50}$. d) irracional.
+
+11. Respostas possíveis: a) $-5$. b) $\frac{1}{2}$. c) $\sqrt2$ ou $\pi$.
+
+12. $300 = 2 \times 2 \times 3 \times 5 \times 5$. O 3 aparece uma única vez, um
+    número ímpar, então 300 não é quadrado perfeito e $\sqrt{300}$ não é exata.
+
+13. O lado exato é $\sqrt5$ metros, que é irracional — $2^2 = 4$ e $3^2 = 9$,
+    então ele está entre 2 e 3, e 5 não é quadrado perfeito. Para a obra
+    levaríamos algo como $2{,}236$ m, escolhendo as casas conforme a precisão da
+    ferramenta. Ela não é "a resposta" porque $2{,}236^2 = 4{,}999696$, e não 5:
+    é uma aproximação, e arredondar antes do fim das contas acumula erro.
+
+14. Está certo que a área é $\pi$ (raio 1, área $\pi r^2 = \pi$) e que
+    $\frac{22}{7}$ chega perto. Está errado dizer que é igual: $\frac{22}{7}$ é
+    racional e $\pi$ é irracional, então nenhuma fração pode valer $\pi$ — e as
+    duas já diferem na terceira casa decimal.
+
+15. Suponha $\sqrt3 = \frac{a}{b}$, logo $a^2 = 3b^2$. À esquerda, o primo 3
+    aparece um número par de vezes, porque $a^2$ é um quadrado. À direita, ele
+    aparece um número par (vindo de $b^2$) mais um, portanto ímpar. Mesmo número,
+    duas contagens diferentes do mesmo primo: impossível. Logo $\sqrt3$ é
+    irracional.
+
+16. Porque elevar ao quadrado é multiplicar o número por ele mesmo, e a fatoração
+    do produto é a junção das duas fatorações. Cada primo que aparecia $k$ vezes
+    passa a aparecer $2k$ vezes, e $2k$ é par para qualquer $k$.
+
+17. Porque a divisão de inteiros produz, a cada passo, um resto menor que o
+    divisor — logo há uma quantidade **finita** de restos possíveis. Ou algum
+    resto é zero, e a escrita termina, ou um resto se repete; e quando um resto
+    se repete, todos os passos seguintes repetem os anteriores, produzindo um
+    bloco periódico. Não sobra alternativa.
+
+18. Ao contrário: são eles que **tiram** os furos. Quem tinha furos era a reta
+    dos racionais, que deixava vazias posições como a de $\sqrt2$ — uma medida
+    que existe no mundo, mas não era razão entre inteiros. Os reais são
+    exatamente o conjunto que preenche essas posições, e por isso a reta real é
+    contínua.
+
+</details>
+
+## Revisão curta
+
+- Cada conjunto numérico nasceu de uma **operação que não fechava**: a subtração
+  pediu $\mathbb{Z}$, a divisão pediu $\mathbb{Q}$, a raiz pediu $\mathbb{R}$.
+  Nenhum deles substitui o anterior — todos o contêm.
+
+$$
+\mathbb{N} \subset \mathbb{Z} \subset \mathbb{Q} \subset \mathbb{R}
+$$
+
+- **Racional** é todo número que se escreve como fração de inteiros. O teste
+  prático é a escrita decimal: se ela termina ou repete um bloco, é racional; se
+  é infinita e nunca repete, é irracional.
+- Um número pertence a **todos** os conjuntos que o contêm, não a um só. $5$ é
+  natural, inteiro, racional e real ao mesmo tempo.
+- O símbolo de raiz não decide nada: $\sqrt9 = 3$ é natural. Quem decide é o
+  valor.
+- $\sqrt2$ **é** um valor exato; o que não existe é uma escrita decimal finita
+  para ele. A demonstração cabe em três linhas: em $a^2 = 2b^2$, o primo 2
+  apareceria um número par de vezes de um lado e ímpar do outro.
+- Existe um degrau além de $\mathbb{R}$, e ele não cabe nesta reta. Você vai
+  encontrá-lo quando uma equação exigir um número cujo quadrado seja negativo —
+  em [números complexos](../equacoes/numeros-complexos), no capítulo de
+  equações. Não vale a pena olhar agora: sem a equação que o obriga, ele parece
+  invenção gratuita.
+
+Com isto o capítulo fecha. O próximo, [Álgebra](../algebra/), troca o número
+conhecido pela letra — e trabalha com todos esses conjuntos ao mesmo tempo, já
+que uma regra escrita com letras precisa valer para qualquer número que a letra
+possa assumir.

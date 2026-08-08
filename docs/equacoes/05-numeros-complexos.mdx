@@ -1,0 +1,950 @@
+---
+title: Números complexos
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+import NumberLine from '@site/src/components/NumberLine';
+
+# Números complexos: o desvio obrigatório por um número que não existe
+
+## Problema motivador: a resposta você confere; o caminho até ela, não
+
+Esta página abre diferente das outras do capítulo. Até aqui, cada método nasceu
+de uma situação de fora da matemática — um terreno, um lucro, uma bancada. O
+problema desta página vem de dentro, e é de um tipo específico: **uma conta que
+chega no lugar certo por um caminho que não deveria existir**.
+
+Olhe para esta equação, de grau 3:
+
+$$
+x^3 - 15x - 4 = 0
+$$
+
+Ela tem uma raiz que você confere em dez segundos, sem teoria nenhuma. Teste
+$x = 4$:
+
+$$
+4^3 - 15 \times 4 - 4 = 64 - 60 - 4 = 0
+$$
+
+Zero. O 4 resolve, e não há dúvida possível: não é uma aproximação, não depende
+de método, é uma conta de aritmética que você acabou de fazer.
+
+Agora o problema. No século XVI, quando essa equação foi estudada, existia uma
+fórmula para equações do tipo $x^3 = px + q$ — a mesma ideia de Bhaskara, um
+grau acima. Você **não** precisa saber de onde ela vem, e este curso só vai
+tratar disso no capítulo de [funções](../funcoes/funcao-polinomial). O que
+importa aqui é só o que ela devolve:
+
+$$
+x = \sqrt[3]{\frac{q}{2} + \sqrt{\left(\frac{q}{2}\right)^2 - \left(\frac{p}{3}\right)^3}} \; + \; \sqrt[3]{\frac{q}{2} - \sqrt{\left(\frac{q}{2}\right)^2 - \left(\frac{p}{3}\right)^3}}
+$$
+
+Na nossa equação, $x^3 = 15x + 4$, temos $p = 15$ e $q = 4$. Então
+$\frac{q}{2} = 2$, e a conta sob a raiz do meio é:
+
+$$
+2^2 - 5^3 = 4 - 125 = -121
+$$
+
+A fórmula, aplicada a uma equação cuja resposta é o número 4, devolve isto:
+
+$$
+x = \sqrt[3]{2 + \sqrt{-121}} + \sqrt[3]{2 - \sqrt{-121}}
+$$
+
+E $\sqrt{-121}$ é exatamente o símbolo que a página da [fórmula de
+Bhaskara](./formula-de-bhaskara) mandou você **não** escrever.
+
+> A pergunta central: se a resposta é 4 — e você conferiu —, o que fazer com um
+> caminho correto que atravessa um número que não existe?
+
+Repare que a saída fácil está fechada. Não dá para dizer "a fórmula falhou, essa
+equação não tem solução", porque ela tem: você a verificou. Na verdade ela tem
+**três** raízes reais, como a página vai mostrar. Ou o caminho está errado — mas
+ele chega ao lugar certo —, ou o número é mais real do que o nome sugere.
+
+Foi assim que a história aconteceu de fato. Rafael Bombelli, em 1572, encarou
+exatamente esta equação e tomou a decisão que abriu esta página: seguir a conta
+até o fim, tratando $\sqrt{-121}$ como se fosse um número comum, para ver no que
+dava.
+
+## Mapa das ideias
+
+- **unidade imaginária** ($i$) — o número cujo quadrado é $-1$;
+- **número complexo** — todo número da forma $a + bi$, com $a$ e $b$ reais;
+- **parte real** e **parte imaginária** — os dois números $a$ e $b$ que compõem
+  $a + bi$;
+- **conjugado** — o par $a - bi$ de um complexo $a + bi$: mesma parte real,
+  parte imaginária com o sinal trocado;
+- **plano complexo** — o desenho em que cada complexo vira um ponto, porque uma
+  reta não tem mais lugar para todos eles.
+
+## Para que isso serve?
+
+Uma ressalva antes da lista, para você calibrar o esforço: **nada nesta página é
+pré-requisito para cálculo**, que é o destino deste curso. Ela está aqui por
+outro motivo — para fechar uma pergunta que o capítulo deixou aberta e não tinha
+como responder.
+
+Dentro da matemática, é onde o assunto rende mais:
+
+- **fecha o caso $\Delta < 0$.** A tabela de três casos da página de Bhaskara
+  vira um caso só: toda equação do 2º grau tem **exatamente duas** raízes;
+- **torna a fatoração universal.** Até aqui, "não fatora" era uma resposta
+  possível. Deixa de ser: todo trinômio do 2º grau se escreve como produto de
+  dois fatores;
+- e, em [funções](../funcoes/funcao-polinomial), transforma o desconfortável "no
+  máximo $n$ raízes" em "exatamente $n$ raízes" — um enunciado muito mais
+  simples do que o que ele substitui.
+
+Fora dela, o uso é concentrado em engenharia e em computação:
+
+- **corrente alternada**, onde tensão e corrente estão defasadas no tempo, e um
+  único número complexo guarda intensidade e defasagem juntas;
+- **processamento de sinais** — o que está por trás de compressão de áudio, de
+  imagem e de qualquer filtro de equalização;
+- **controle** — decidir se um sistema realimentado é estável ou vai oscilar sem
+  parar;
+- **computação gráfica**, onde multiplicar por um complexo é girar uma figura,
+  como a última figura desta página vai mostrar.
+
+## Ideias anteriores que voltam aqui
+
+Esta página quase não traz técnica nova. O que ela faz é aplicar, num terreno
+novo, três coisas que você já sabe:
+
+- de [produtos notáveis](../algebra/produtos-notaveis), o **quadrado da soma**,
+  $(a+b)^2 = a^2 + 2ab + b^2$, e principalmente a **diferença de quadrados**,
+  $(a+b)(a-b) = a^2 - b^2$. É ela que faz tudo funcionar aqui;
+- de [racionalizar denominadores](../algebra/racionalizacao), o **conjugado** —
+  o truque de limpar uma raiz do denominador multiplicando pelo par com o sinal
+  do meio trocado. Dividir por um número complexo é literalmente esse mesmo
+  gesto, sem uma vírgula de diferença;
+- de [números negativos](../numeros-e-operacoes/numeros-negativos), o argumento
+  que legitimou "menos com menos dá mais" — que é o mesmo argumento que vai
+  legitimar $i$;
+- de [conjuntos numéricos](../numeros-e-operacoes/conjuntos-numericos), a cadeia
+  $\mathbb{N} \subset \mathbb{Z} \subset \mathbb{Q} \subset \mathbb{R}$ e a
+  regra que a produziu: cada conjunto novo nasceu de uma operação que não fechava
+  no anterior. Esta página é o degrau seguinte dessa mesma escada;
+- da [fórmula de Bhaskara](./formula-de-bhaskara), o discriminante e o caso
+  $\Delta < 0$, que é a dívida que esta página vem pagar;
+- de [equações do 2º grau](./equacoes-do-segundo-grau), a propriedade do produto
+  nulo e a leitura das raízes na forma fatorada.
+
+Antes de continuar, responda mentalmente. Se alguma travar, releia a página
+correspondente **agora**, não no meio da lição:
+
+1. Como você limpa a raiz do denominador de $\frac{1}{2 + \sqrt3}$?
+2. Quanto é $(a+b)(a-b)$?
+3. Por que $(-3) \times (-2) = 6$? Qual foi o argumento, e não qual é a regra?
+
+As respostas: multiplicando as duas partes da fração pelo **conjugado**
+$2 - \sqrt3$, porque $(2+\sqrt3)(2-\sqrt3) = 4 - 3 = 1$, o que dá
+$\frac{1}{2+\sqrt3} = 2 - \sqrt3$; $a^2 - b^2$, porque os dois produtos cruzados
+saem com sinais opostos e se cancelam; e, na terceira, o argumento foi que $6$ é
+o **único** valor que mantém a distributiva funcionando — se fosse qualquer
+outro, uma regra antiga quebraria. Guarde especialmente esta terceira: ela é a
+espinha desta página.
+
+## Intuição: o mesmo teste que salvou o número negativo
+
+A objeção que todo mundo faz, e que está certa em fazer, é: *inventar um número
+para uma equação ter resposta é trapaça*. Se isso valesse, eu poderia inventar
+um número $z$ para $0 \times z = 1$ e me declarar satisfeito.
+
+A objeção é boa, e a resposta a ela não é nova — você já a viu neste curso. A
+página de [números negativos](../numeros-e-operacoes/numeros-negativos) fecha
+assim:
+
+> A regra "menos com menos dá mais" não é uma mágica; é a única forma de manter
+> a matemática funcionando sem quebrar as regras de adição e subtração.
+
+Esse é o teste, e ele é o critério de verdade aqui. Um número novo não vale
+porque alguém quis; vale se ele puder ser acrescentado **sem quebrar nada do que
+já valia**. O $z$ do parágrafo anterior é reprovado imediatamente: se
+$0 \times z = 1$, então $0 \times z = (0+0) \times z = 0 \times z + 0 \times z$,
+ou seja, $1 = 2$. A distributiva quebra, e o candidato está descartado.
+
+Agora aplique o mesmo teste ao $i$. Acrescente **um** símbolo, com **uma** regra:
+
+$$
+i^2 = -1
+$$
+
+e mantenha todo o resto exatamente como estava — distributiva, comutativa,
+produtos notáveis, as regras de sinal, tudo. O resultado é que nada quebra.
+Nenhuma conta que você já sabia fazer muda de resposta. $2 + 3$ continua $5$,
+$\sqrt{9}$ continua $3$, $(a+b)^2$ continua $a^2 + 2ab + b^2$. Só aparecem
+contas novas, que antes não tinham como ser escritas.
+
+Isso é o oposto de trapaça: é uma extensão que **paga o próprio custo**. E o
+curso já fez esse movimento três vezes antes de agora — é exatamente a cadeia
+que a página de [conjuntos numéricos](../numeros-e-operacoes/conjuntos-numericos)
+organizou:
+
+| A operação que travava | O número que a destravou | Como ele foi recebido |
+|---|---|---|
+| $3 - 5$, quando só havia contagem | o negativo | "absurdo" durante séculos |
+| $3 \div 2$, com números inteiros | a fração | natural hoje, nada óbvio antes |
+| $x^2 = 2$, com frações | o irracional $\sqrt2$ | escandaloso para os gregos |
+| $x^2 = -1$, com reais | $i$ | "imaginário" — o apelido pegou |
+
+O nome é o problema. "Imaginário" foi um **xingamento** de Descartes, que não
+acreditava nesses números, e a piada ficou colada neles por inércia histórica.
+Ela sugere que os outros números são concretos e este é de faz de conta — o que
+não se sustenta: $\sqrt2$ também não é o resultado de contar nada, e nem por
+isso alguém o chama de imaginário. Ele é a diagonal de um quadrado de lado 1; e
+$i$, como a figura do giro vai mostrar, também tem o que representar.
+
+## Modelo visual: onde $i$ moraria
+
+Comece pela pergunta mais honesta possível: **onde $i$ cabe na reta numérica?**
+
+<NumberLine
+  min={-4}
+  max={4}
+  unit={46}
+  marks={[
+    {at: -3, label: '-3', tone: 1},
+    {at: 0, label: '0', tone: 3},
+    {at: 2, label: '2', tone: 1},
+  ]}
+  caption="Todo número real tem um endereço nesta reta. Um número cujo quadrado é −1 não tem: à direita do zero os quadrados são positivos, à esquerda também."
+/>
+
+Em lugar nenhum, e o motivo é fechado: se um número está à direita do zero, seu
+quadrado é positivo; se está à esquerda, seu quadrado também é positivo, porque
+menos com menos dá mais; e o quadrado do zero é zero. A reta inteira está
+ocupada por números cujo quadrado não é negativo. Não sobrou vaga.
+
+A saída não é espremer $i$ entre dois números da reta — é reconhecer que a reta
+acabou. Foi o que aconteceu quando os negativos chegaram: a reta dos números de
+contagem terminava no zero, e a solução foi **estendê-la para a esquerda**.
+Agora ela precisa crescer de novo, e a única direção que sobra é para o lado:
+
+<CartesianPlane
+  xMin={-3}
+  xMax={4}
+  yMin={-4}
+  yMax={3}
+  xUnit={38}
+  points={[
+    {at: [3, 2], label: '3 + 2i', tone: 1},
+    {at: [-2, 1], label: '-2 + i', tone: 2},
+    {at: [2, -3], label: '2 - 3i', tone: 3},
+    {at: [3, 0], label: '3', tone: 1, dx: 20, dy: 5},
+    {at: [0, 1], label: 'i', tone: 2, dx: 16, dy: -4},
+  ]}
+  caption="Eixo horizontal: a parte real. Eixo vertical: a parte imaginária. O 3 continua exatamente onde estava."
+/>
+
+Três leituras que essa figura entrega de uma vez:
+
+- **a reta antiga não se mexeu.** Ela virou o eixo horizontal, e o 3 continua no
+  mesmo lugar de sempre. Nenhum número real mudou de endereço — é a versão
+  visual do "nada quebra";
+- **um complexo precisa de dois números** para ser localizado, e é exatamente
+  isso que $a + bi$ registra: $a$ diz quanto andar na horizontal, $b$ quanto
+  andar na vertical;
+- **os reais são os complexos com $b = 0$** — os que ficaram sobre o eixo
+  horizontal. Todo número real é um número complexo; o contrário é que não vale.
+
+### O que multiplicar por $i$ faz
+
+Esta última figura é a que dá a $i$ um significado, e não só uma regra. Comece
+no 1 e vá multiplicando por $i$, um passo de cada vez:
+
+$$
+1 \;\longrightarrow\; i \;\longrightarrow\; i^2 = -1 \;\longrightarrow\; i^3 = -i \;\longrightarrow\; i^4 = 1
+$$
+
+<CartesianPlane
+  xMin={-2}
+  xMax={2}
+  yMin={-2}
+  yMax={2}
+  xUnit={62}
+  showNumbers={false}
+  circles={[{center: [0, 0], r: 1, tone: 3, dashed: true}]}
+  points={[
+    {at: [1, 0], label: '1', tone: 1, dx: 18, dy: 18},
+    {at: [0, 1], label: 'i', tone: 2, dx: 16, dy: -12},
+    {at: [-1, 0], label: '-1', tone: 1, dx: -20, dy: 18},
+    {at: [0, -1], label: '-i', tone: 2, dx: 18, dy: 20},
+  ]}
+  caption="Da esquerda para a direita no eixo horizontal ficam os reais; na vertical, os imaginários. Cada multiplicação por i avança um quarto de volta no sentido anti-horário, e quatro passos voltam ao início."
+/>
+
+Quatro multiplicações por $i$ e você voltou ao 1 — uma volta completa. Ou seja,
+**multiplicar por $i$ é girar um quarto de volta**.
+
+E aí a regra $i^2 = -1$ deixa de ser uma imposição e vira uma observação: dois
+quartos de volta são meia volta, e meia volta é justamente o que multiplicar por
+$-1$ sempre fez — leva o 1 para o $-1$, leva o 5 para o $-5$, troca o lado.
+$i$ é a **metade** dessa operação: o giro que, feito duas vezes, inverte o
+sinal.
+
+Nenhum número real pode fazer isso, porque na reta só existem dois sentidos e
+qualquer giro dá meia volta ou volta nenhuma. Um quarto de volta exige sair da
+reta — e é por isso que $i$ não cabia nela.
+
+## Ponte para a formalização
+
+Já dá para escrever tudo, e o que autoriza a passagem é o que a intuição
+mostrou: **$i$ é um símbolo que obedece às regras que você já usa**, com uma
+única propriedade a mais. Isso significa que não há operação nova para aprender
+nesta página. Somar $3 + 2i$ com $1 - 5i$ é juntar termos semelhantes, como em
+[expressões algébricas](../algebra/expressoes-algebricas). Multiplicar é a
+distributiva. Dividir é o conjugado da racionalização.
+
+O único passo genuinamente novo é **um**: sempre que aparecer $i^2$ no meio da
+conta, troque por $-1$ e continue. Só isso.
+
+## Formalização
+
+### A unidade imaginária e a forma $a + bi$
+
+> A **unidade imaginária** $i$ é o número definido pela propriedade
+> $$i^2 = -1.$$
+> Um **número complexo** é todo número que se escreve como $a + bi$, com $a$ e
+> $b$ reais. $a$ é a **parte real** e $b$ é a **parte imaginária**.
+
+Exemplo: em $3 - 7i$, a parte real é $3$ e a parte imaginária é $-7$ — o sinal
+faz parte dela, como faz parte de um coeficiente.
+
+Contraexemplo, e é o que delimita a definição: $2 + 3i^2$ **não** está na forma
+$a + bi$. Não porque seja proibido escrever assim, mas porque $3i^2 = -3$, e a
+expressão inteira vale $2 - 3 = -1$. Ela é um número real disfarçado. Enquanto
+houver um $i^2$ na expressão, ela ainda não foi simplificada.
+
+Dois casos de borda que valem nomear:
+
+- se $b = 0$, o complexo é um número **real** — $5 + 0i$ é o velho $5$;
+- se $a = 0$ e $b \neq 0$, ele se chama **imaginário puro** — $5i$ é; $5 + i$
+  não é.
+
+### Somar, subtrair e multiplicar
+
+Somar é juntar parte real com parte real e parte imaginária com parte
+imaginária, exatamente como você junta $3x$ com $2x$:
+
+$$
+(3 + 2i) + (1 - 5i) = (3 + 1) + (2 - 5)i = 4 - 3i
+$$
+
+Multiplicar é a distributiva de sempre, com uma limpeza no fim:
+
+$$
+\begin{array}{rl}
+(3 + 2i)(1 - 5i) &= 3 - 15i + 2i - 10i^2 \\[4pt]
+&= 3 - 13i - 10(-1) \\[4pt]
+&= 3 - 13i + 10 \\[4pt]
+&= 13 - 13i
+\end{array}
+$$
+
+Repare no passo que faz o trabalho: $-10i^2$ virou $+10$. É aí, e só aí, que a
+regra nova entra. Todo o resto da conta é a distributiva que você já fazia com
+$(3 + 2x)(1 - 5x)$.
+
+### O conjugado, e a divisão que você já sabe fazer
+
+> O **conjugado** de $a + bi$ é $a - bi$: mesma parte real, sinal trocado só na
+> parte imaginária.
+
+Exemplo: o conjugado de $3 - 7i$ é $3 + 7i$. Contraexemplo: $-3 + 7i$ **não** é
+conjugado de $3 - 7i$ — quem troca de sinal é a parte imaginária, não a real.
+
+A propriedade que torna o conjugado útil é a mesma de sempre, a diferença de
+quadrados:
+
+$$
+(a + bi)(a - bi) = a^2 - (bi)^2 = a^2 - b^2 i^2 = a^2 + b^2
+$$
+
+O resultado é **real**, e é positivo. O produto de um complexo pelo seu
+conjugado limpa o $i$ inteiramente — que é precisamente o que o conjugado
+$2 - \sqrt3$ fazia com a raiz em $\frac{1}{2+\sqrt3}$.
+
+Compare os dois lado a lado; é a mesma conta duas vezes:
+
+| Racionalizar | Dividir complexos |
+|---|---|
+| $\dfrac{1}{2 + \sqrt3}$, conjugado $2 - \sqrt3$ | $\dfrac{1}{2 + i}$, conjugado $2 - i$ |
+| $(2+\sqrt3)(2-\sqrt3) = 4 - 3 = 1$ | $(2+i)(2-i) = 4 + 1 = 5$ |
+| resultado: $2 - \sqrt3$ | resultado: $\dfrac{2 - i}{5}$ |
+
+Um exemplo completo, com numerador não trivial:
+
+$$
+\frac{3 + 2i}{1 - 5i} = \frac{3 + 2i}{1 - 5i} \times \frac{1 + 5i}{1 + 5i}
+= \frac{3 + 17i - 10}{1 + 25} = \frac{-7 + 17i}{26}
+$$
+
+E aqui está o desenho do conjugado, que explica o nome melhor que qualquer
+definição — ele é o **reflexo** no espelho do eixo real:
+
+<CartesianPlane
+  xMin={-1}
+  xMax={5}
+  yMin={-4}
+  yMax={4}
+  xUnit={44}
+  segments={[{from: [3, 3], to: [3, -3], tone: 3, dashed: true}]}
+  points={[
+    {at: [3, 3], label: '3 + 3i', tone: 1, dy: -18},
+    {at: [3, -3], label: '3 - 3i', tone: 2, dy: 26},
+  ]}
+  caption="Um complexo e seu conjugado são simétricos em relação ao eixo horizontal, o dos reais."
+/>
+
+### Voltando à equação da abertura
+
+Com as ferramentas prontas, a promessa da abertura pode ser paga. Primeiro,
+$\sqrt{-121}$ deixa de ser um símbolo vazio: como $121 = 11^2$ e $i^2 = -1$,
+
+$$
+(11i)^2 = 121 i^2 = -121
+$$
+
+Então a fórmula estava pedindo $11i$, e o que ela devolveu foi:
+
+$$
+x = \sqrt[3]{2 + 11i} + \sqrt[3]{2 - 11i}
+$$
+
+Uma raiz cúbica ainda parece intransponível — mas não precisamos calculá-la.
+Basta ir na direção contrária, que é barata: **elevar ao cubo** um chute e ver
+se bate. Tente $2 + i$, usando o quadrado da soma e depois uma multiplicação:
+
+$$
+(2 + i)^2 = 4 + 4i + i^2 = 4 + 4i - 1 = 3 + 4i
+$$
+
+$$
+(2+i)^3 = (3 + 4i)(2 + i) = 6 + 3i + 8i + 4i^2 = 6 + 11i - 4 = 2 + 11i
+$$
+
+Bateu. Logo $\sqrt[3]{2 + 11i} = 2 + i$. A mesma conta com o conjugado dá
+$(2 - i)^3 = 2 - 11i$, então $\sqrt[3]{2 - 11i} = 2 - i$. Somando:
+
+$$
+x = (2 + i) + (2 - i) = 4
+$$
+
+**Quatro.** O mesmo 4 que você conferiu no primeiro parágrafo da página, antes
+de saber o que era $i$.
+
+Olhe o que aconteceu com as partes imaginárias: $+i$ e $-i$ se cancelaram. Elas
+existiram no meio do caminho e desapareceram no fim. A fórmula estava certa o
+tempo todo; o que faltava não era um método melhor, era permissão para
+atravessar o trecho onde a conta sai dos reais e volta.
+
+E o detalhe que fecha o argumento: as outras duas raízes dessa equação também
+são reais. Como $x^3 - 15x - 4 = (x - 4)(x^2 + 4x + 1)$, as demais saem por
+Bhaskara — $x = -2 \pm \sqrt3$. **As três raízes são reais**, e mesmo assim o
+único caminho geral até elas passa pelos complexos. Não é um caso doentio de
+equação sem solução: é o caso normal, e é por isso que ninguém conseguiu
+sustentar por muito tempo que esses números eram só um truque de escrita.
+
+## O que muda quando o discriminante é negativo
+
+Agora a dívida com a página de Bhaskara.
+
+Quando $\Delta < 0$, o número $-\Delta$ é positivo, e $\sqrt{-\Delta}$ é um
+número real comum. A raiz que travava a conta se escreve assim:
+
+$$
+\sqrt{\Delta} = \sqrt{-1} \times \sqrt{-\Delta} = i\sqrt{-\Delta}
+$$
+
+Substituindo na fórmula, ela vai até o fim:
+
+$$
+x = \frac{-b \pm i\sqrt{-\Delta}}{2a}
+$$
+
+Retome o Exemplo 3 daquela página, $3x^2 + 2x + 5 = 0$, que morria em
+$\Delta = -56$. Agora ele termina. Como $\sqrt{56} = 2\sqrt{14}$:
+
+$$
+x = \frac{-2 \pm i\,2\sqrt{14}}{6} = \frac{-1 \pm i\sqrt{14}}{3}
+$$
+
+Duas raízes, conjugadas uma da outra. E a tabela dos três casos encolhe:
+
+| $\Delta$ | antes | agora |
+|---|---|---|
+| $\Delta > 0$ | duas raízes reais | duas raízes reais |
+| $\Delta = 0$ | uma raiz (dupla) | duas raízes iguais |
+| $\Delta < 0$ | nenhuma — a conta para aqui | duas raízes complexas conjugadas |
+
+> **Toda** equação do 2º grau tem exatamente **duas** raízes complexas. O
+> discriminante deixou de contar quantas existem, e passou a dizer apenas de que
+> **tipo** elas são.
+
+Repare no que a mudança custou: uma regra a menos para lembrar. É raro uma ideia
+nova simplificar o que já estava aprendido em vez de acrescentar mais um caso, e
+esse é o principal argumento a favor desta página.
+
+### As raízes complexas vêm sempre em par
+
+Não é coincidência que $\frac{-1 + i\sqrt{14}}{3}$ e $\frac{-1 - i\sqrt{14}}{3}$
+tenham aparecido juntas. Olhe a fórmula: a única coisa que distingue as duas
+raízes é o $\pm$ na frente de $i\sqrt{-\Delta}$. Tudo o mais — o $-b$, o $2a$ —
+é idêntico.
+
+> Se uma equação do 2º grau **de coeficientes reais** tem uma raiz $a + bi$,
+> então $a - bi$ também é raiz.
+
+Uma consequência prática: nunca existe uma equação de coeficientes reais com
+*uma* raiz complexa e *uma* real. Ou as duas são reais, ou as duas são
+conjugadas. Se a sua conta produziu uma de cada, há um erro nela.
+
+### A fatoração que sempre existe
+
+Aqui está o fecho do capítulo — a resposta à pergunta que
+[equações do 2º grau](./equacoes-do-segundo-grau) deixou em aberto quando disse
+que $x^2 + 4 = 0$ não fatorava.
+
+Agora fatora, e pela diferença de quadrados de sempre:
+
+$$
+x^2 + 4 = x^2 - (-4) = x^2 - (2i)^2 = (x + 2i)(x - 2i)
+$$
+
+Confira com um número qualquer, digamos $x = 5$: à esquerda, $25 + 4 = 29$; à
+direita, $(5 + 2i)(5 - 2i) = 25 + 4 = 29$. ✓
+
+O caso geral usa as duas raízes, como já se fazia com raízes reais:
+
+$$
+ax^2 + bx + c = a(x - r_1)(x - r_2)
+$$
+
+Em $x^2 + 2x + 5 = 0$, temos $\Delta = 4 - 20 = -16$, e
+$x = \frac{-2 \pm 4i}{2} = -1 \pm 2i$. Então:
+
+$$
+x^2 + 2x + 5 = \big(x - (-1 + 2i)\big)\big(x - (-1 - 2i)\big) = (x + 1 - 2i)(x + 1 + 2i)
+$$
+
+E o produto se resolve pela diferença de quadrados, com $(x+1)$ no papel do
+primeiro termo:
+
+$$
+(x + 1)^2 - (2i)^2 = x^2 + 2x + 1 + 4 = x^2 + 2x + 5 \quad ✓
+$$
+
+> "Não fatora" deixou de ser uma resposta possível para trinômios do 2º grau.
+> Ela era uma afirmação sobre os **números disponíveis**, não sobre o trinômio.
+
+## Exemplos resolvidos
+
+### Exemplo 1: as potências de $i$
+
+Calcule $i^2$, $i^3$, $i^4$ e $i^{50}$.
+
+Os três primeiros saem da definição, um puxando o outro:
+
+$$
+i^2 = -1, \qquad i^3 = i^2 \times i = -i, \qquad i^4 = i^2 \times i^2 = (-1)(-1) = 1
+$$
+
+Como $i^4 = 1$, as potências se repetem de quatro em quatro — é o giro completo
+da figura. Para $i^{50}$, divida 50 por 4: dá 12 com resto 2. Então
+
+$$
+i^{50} = (i^4)^{12} \times i^2 = 1^{12} \times (-1) = -1
+$$
+
+**O que decide é o resto da divisão por 4.**
+
+### Exemplo 2: multiplicar e simplificar
+
+Calcule $(2 + 3i)(4 - i)$.
+
+*Pause e tente antes de ler.* É a distributiva, e depois a limpeza do $i^2$.
+
+$$
+(2 + 3i)(4 - i) = 8 - 2i + 12i - 3i^2 = 8 + 10i + 3 = 11 + 10i
+$$
+
+O $-3i^2$ virou $+3$ e foi somar com o 8, mudando a parte real. Esse é o erro
+mais comum da página: parar em $8 + 10i - 3i^2$ achando que terminou.
+
+### Exemplo 3: uma divisão
+
+Calcule $\dfrac{1 + i}{2 - i}$.
+
+*Pause e tente.* O denominador é $2 - i$, então o conjugado é $2 + i$, e ele
+multiplica as duas partes da fração:
+
+$$
+\frac{1 + i}{2 - i} \times \frac{2 + i}{2 + i} = \frac{2 + i + 2i + i^2}{4 + 1} = \frac{1 + 3i}{5}
+$$
+
+No numerador, $i^2 = -1$ derrubou o 2 para 1. No denominador, $(2-i)(2+i) = 4 + 1 = 5$ — real, como tinha que ser.
+
+Conferindo ao contrário: $\frac{1+3i}{5} \times (2 - i) = \frac{2 - i + 6i + 3}{5} = \frac{5 + 5i}{5} = 1 + i$ ✓
+
+### Exemplo 4: resolver com discriminante negativo
+
+Resolva $x^2 - 2x + 5 = 0$.
+
+*Pause e tente.* Com $a = 1$, $b = -2$, $c = 5$:
+
+$$
+\Delta = (-2)^2 - 4(1)(5) = 4 - 20 = -16
+$$
+
+Como $\Delta < 0$, escrevemos $\sqrt{-16} = 4i$:
+
+$$
+x = \frac{2 \pm 4i}{2} = 1 \pm 2i
+$$
+
+Duas raízes conjugadas: $1 + 2i$ e $1 - 2i$. Verificando a primeira:
+
+$$
+(1+2i)^2 - 2(1+2i) + 5 = (1 + 4i - 4) - 2 - 4i + 5 = 0 \quad ✓
+$$
+
+Note que $(1+2i)^2 = 1 + 4i + 4i^2 = -3 + 4i$, e $-3 + 4i - 2 - 4i + 5 = 0$.
+
+### Exemplo 5: a parábola continua não cruzando o eixo
+
+A equação do exemplo anterior tem duas raízes. O gráfico de $y = x^2 - 2x + 5$
+cruza o eixo horizontal em dois pontos?
+
+**Não.** E é importante que você não conclua o contrário.
+
+<CartesianPlane
+  xMin={-3}
+  xMax={5}
+  yMin={-1}
+  yMax={11}
+  xUnit={38}
+  yUnit={19}
+  yLabelEvery={2}
+  functions={[{f: (x) => x * x - 2 * x + 5, tone: 1}]}
+  points={[{at: [1, 4], label: '(1, 4)', tone: 2, dy: 26}]}
+  caption="y = x² − 2x + 5. O ponto mais baixo está em y = 4: a curva inteira passa acima do eixo."
+/>
+
+As raízes $1 \pm 2i$ não são pontos deste desenho, porque este plano tem $x$
+real nos dois eixos. A pergunta "onde a curva cruza o eixo" continua tendo a
+mesma resposta de antes: **em lugar nenhum**. O que mudou não foi o gráfico — foi
+a equação ter ganhado respostas fora da reta onde o gráfico mora.
+
+Guarde a distinção, porque ela decide qual resposta dar num problema:
+
+- se a pergunta é sobre uma **quantidade do mundo** — uma medida, um preço, um
+  tempo —, a resposta continua sendo "não existe", porque medida é número real;
+- se a pergunta é **sobre a equação**, agora existem duas raízes.
+
+## Erros comuns
+
+### Deixar $i^2$ na resposta
+
+$(2+3i)(4-i) = 8 + 10i - 3i^2$ **não** é a resposta final. Enquanto houver
+$i^2$, a conta não terminou: $-3i^2 = +3$, e esse 3 vai somar com a parte real.
+Resposta certa: $11 + 10i$. Quem para cedo erra a parte real, nunca a imaginária
+— se você errou só a parte real, provavelmente foi isto.
+
+### Multiplicar duas raízes de números negativos
+
+Esta é a armadilha séria da página, porque a regra parece inofensiva:
+
+$$
+\sqrt{-4} \times \sqrt{-9} \stackrel{?}{=} \sqrt{36} = 6
+$$
+
+Está **errado**. Faça pelo caminho correto, convertendo para $i$ antes de
+multiplicar:
+
+$$
+\sqrt{-4} \times \sqrt{-9} = (2i)(3i) = 6i^2 = -6
+$$
+
+Dá $-6$, não $6$. A regra $\sqrt{a}\sqrt{b} = \sqrt{ab}$ foi demonstrada para
+$a$ e $b$ **não negativos**, e ela não sobrevive fora desse território. A defesa
+é um hábito simples: **converta para $i$ primeiro, multiplique depois**. Nunca
+opere com raízes de números negativos deixando-as em forma de raiz.
+
+### Achar que "imaginário" quer dizer "falso"
+
+O nome é um acidente histórico, não uma descrição. Se o critério para um número
+ser legítimo é não quebrar as regras existentes, $i$ passa no teste — e é o
+mesmo critério pelo qual o negativo e o irracional passaram, ambos também
+chamados de absurdos na época.
+
+### Dizer que um discriminante negativo "tem solução" num problema concreto
+
+O erro espelhado do anterior, e o mais fácil de cometer logo depois de estudar
+esta página. Se o problema pergunta a largura de uma bancada e a equação dá
+$\Delta < 0$, a resposta ao **problema** continua sendo "não há bancada
+possível". Largura é um número real. A equação ganhou raízes; a situação não
+ganhou solução.
+
+### Comparar dois complexos por tamanho
+
+$2 + i$ é maior ou menor que $1 + 3i$? A pergunta não tem resposta — e não é por
+falta de conta. **Não existe ordem nos complexos** que respeite as regras de
+soma e produto, do jeito que existe na reta. Faz sentido perguntar se dois
+complexos são iguais, nunca qual é o maior.
+
+Isso importa já nas próximas páginas: [intervalos](./intervalos) e as
+inequações trabalham com "de tal valor até tal outro", e essa ideia depende da
+reta estar ordenada. **Inequação é assunto exclusivamente real.** Quando você vir
+$x < 3$, o $x$ ali é real, sempre.
+
+## Perguntas de verificação
+
+<details>
+<summary>1. Por que "inventar um número" não é trapaça neste caso?</summary>
+
+Porque o critério não é a vontade de quem inventa, é a consistência: um número
+novo vale se puder ser acrescentado sem quebrar nenhuma regra que já valia. $i$
+passa nesse teste — todas as contas antigas continuam com as mesmas respostas.
+Um candidato como "$z$ tal que $0 \times z = 1$" é reprovado, porque a
+distributiva leva dele a $1 = 2$. É o mesmo teste que legitimou o número
+negativo.
+
+</details>
+
+<details>
+<summary>2. Qual foi o passo, na equação da abertura, que os complexos tornaram possível — e o que eles não mudaram?</summary>
+
+Não mudaram a resposta: era 4 antes e é 4 depois, e ela sempre pôde ser
+conferida por aritmética. O que mudou foi o **caminho**: a fórmula geral produz
+$\sqrt{-121}$ no meio da conta, e sem os complexos esse trecho é intransponível,
+o que torna a fórmula inútil justamente onde ela mais era necessária. As partes
+imaginárias se cancelam no fim.
+
+</details>
+
+<details>
+<summary>3. Por que raízes complexas de uma equação de coeficientes reais aparecem sempre aos pares?</summary>
+
+Porque a única diferença entre as duas raízes na fórmula é o sinal $\pm$ diante
+de $i\sqrt{-\Delta}$. O $-b$ e o $2a$ são os mesmos nas duas. Uma delas é
+$\frac{-b + i\sqrt{-\Delta}}{2a}$ e a outra é o mesmo número com a parte
+imaginária trocada de sinal — a definição de conjugado.
+
+</details>
+
+<details>
+<summary>4. A equação $x^2 - 2x + 5 = 0$ tem duas raízes. Então a parábola $y = x^2 - 2x + 5$ cruza o eixo horizontal duas vezes?</summary>
+
+Não. As raízes $1 \pm 2i$ não moram no plano do gráfico, que tem $x$ real. A
+parábola continua inteiramente acima do eixo, com ponto mais baixo em $y = 4$. O
+gráfico não mudou nada; quem mudou foi o conjunto de números em que a equação
+está sendo resolvida.
+
+</details>
+
+<details>
+<summary>5. Por que $\sqrt{-4} \times \sqrt{-9}$ não é $6$?</summary>
+
+Porque a regra $\sqrt{a}\sqrt{b} = \sqrt{ab}$ vale para $a$ e $b$ não negativos,
+e foi demonstrada nessas condições. Convertendo primeiro para $i$, que é o
+caminho seguro: $(2i)(3i) = 6i^2 = -6$. Este é o exemplo que mostra que "manter
+as regras antigas" não significa aplicá-las fora do território onde foram
+provadas.
+
+</details>
+
+<details>
+<summary>6. O que o discriminante responde agora, que é diferente do que ele respondia antes?</summary>
+
+Antes, **quantas** raízes existiam: duas, uma ou nenhuma. Agora, o número é
+sempre dois, e o que $\Delta$ informa é o **tipo**: positivo dá duas reais
+distintas, zero dá duas reais iguais, negativo dá duas complexas conjugadas.
+
+</details>
+
+## Exercícios
+
+### 1. Reconhecimento
+
+1. Diga a parte real e a parte imaginária de cada um:
+   a) $3 - 7i$ · b) $i$ · c) $-4$ · d) $2i - 5$
+
+2. Qual destas expressões **não** está na forma $a + bi$, e por quê?
+   $\;5 - i \;\cdot\; 2 + 3i^2 \;\cdot\; \frac{2 - i}{5}$
+
+3. Escreva o conjugado de: a) $4 + 9i$ · b) $-2 - i$ · c) $7$ · d) $3i$
+
+### 2. Explicação
+
+4. Com suas palavras: qual é o critério que faz $i$ ser um número legítimo, e
+   por que "$z$ tal que $0 \times z = 1$" não passa nesse critério?
+
+5. Explique por que um número cujo quadrado é negativo não pode estar na reta
+   numérica.
+
+6. Por que multiplicar por $i$ duas vezes tem o mesmo efeito que multiplicar por
+   $-1$?
+
+### 3. Aplicação direta
+
+7. Calcule: a) $(2 + 3i) + (4 - i)$ · b) $(2 + 3i)(4 - i)$ · c) $(1 + i)^2$
+
+8. Calcule $i^3$, $i^4$ e $i^{27}$.
+
+9. Efetue $\dfrac{1 + i}{2 - i}$.
+
+### 4. Variação
+
+10. Resolva, indicando o $\Delta$: a) $x^2 + 9 = 0$ · b) $x^2 - 2x + 5 = 0$ ·
+    c) $2x^2 + x + 1 = 0$
+
+11. Fatore em dois fatores: a) $x^2 + 9$ · b) $x^2 - 2x + 5$
+
+12. Compare os dois cálculos e diga o que eles têm em comum:
+    $\dfrac{1}{2 + \sqrt3}$ e $\dfrac{1}{2 + i}$.
+
+### 5. Problema misto
+
+13. Verifique, elevando ao cubo, que $(2 - i)^3 = 2 - 11i$. Depois explique, em
+    duas frases, o que esse resultado tem a ver com a raiz $x = 4$ da equação da
+    abertura.
+
+14. A parábola $y = 2x^2 + x + 1$ cruza o eixo horizontal? E a equação
+    $2x^2 + x + 1 = 0$ tem raízes? As duas respostas se contradizem?
+
+<details>
+<summary>Dica do 15</summary>
+
+Você não precisa resolver a equação. Pense no que a fórmula de Bhaskara produz
+quando $\Delta < 0$, e no que distingue as duas raízes que ela devolve.
+
+</details>
+
+15. Uma equação do 2º grau de coeficientes reais tem $3 + 5i$ como uma de suas
+    raízes. Qual é a outra? E qual é a soma das duas?
+
+### 6. Justificativa
+
+16. Por que $(a + bi)(a - bi)$ é sempre um número real, e por que ele nunca é
+    negativo?
+
+17. Mostre que $\sqrt{-4} \times \sqrt{-9}$ vale $-6$, e explique em que ponto a
+    regra $\sqrt{a}\sqrt{b} = \sqrt{ab}$ deixa de valer.
+
+18. Justifique por que não faz sentido perguntar se $2 + i > 1 + 3i$, e qual
+    consequência isso tem para as páginas de inequações que vêm a seguir.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) real 3, imaginária $-7$ (o sinal faz parte). b) real 0, imaginária 1.
+   c) real $-4$, imaginária 0 — todo real é complexo. d) real $-5$, imaginária
+   2; a ordem em que está escrito não muda quem é quem.
+
+2. $2 + 3i^2$. Como $i^2 = -1$, ela vale $2 - 3 = -1$: é um número real
+   disfarçado, e ainda não foi simplificada. As outras duas estão na forma
+   ($\frac{2-i}{5}$ é $\frac{2}{5} - \frac{1}{5}i$).
+
+3. a) $4 - 9i$ · b) $-2 + i$ · c) $7$ — o conjugado de um real é ele mesmo,
+   porque a parte imaginária é 0 · d) $-3i$.
+
+4. O critério é a **consistência**: acrescentar o número novo não pode quebrar
+   nenhuma regra que já valia. Com $i$, nada quebra — toda conta antiga mantém
+   sua resposta. Já o $z$ quebra a distributiva:
+   $0 \times z = (0+0) \times z = 0 \times z + 0 \times z$ levaria a $1 = 2$.
+
+5. Porque todo número da reta tem quadrado positivo ou nulo: à direita do zero,
+   positivo vezes positivo; à esquerda, negativo vezes negativo, que também dá
+   positivo; e $0^2 = 0$. Não sobra posição para um número de quadrado negativo.
+
+6. Porque multiplicar por $i$ é girar um quarto de volta, e dois quartos de
+   volta são meia volta — que é exatamente o que multiplicar por $-1$ faz. Em
+   símbolos, é $i^2 = -1$ lido como movimento.
+
+7. a) $6 + 2i$. b) $8 - 2i + 12i - 3i^2 = 11 + 10i$ — se você respondeu
+   $8 + 10i$, esqueceu de trocar $-3i^2$ por $+3$. c)
+   $1 + 2i + i^2 = 2i$; a parte real some, e o resultado é imaginário puro.
+
+8. $i^3 = -i$; $i^4 = 1$; para $i^{27}$, $27 = 4 \times 6 + 3$, e o resto 3 dá
+   $i^{27} = i^3 = -i$.
+
+9. Multiplicando por $\frac{2+i}{2+i}$: numerador
+   $(1+i)(2+i) = 2 + i + 2i - 1 = 1 + 3i$; denominador $4 + 1 = 5$. Resposta:
+   $\frac{1 + 3i}{5}$. Conferência: $\frac{1+3i}{5}(2 - i) = \frac{5 + 5i}{5} = 1 + i$ ✓
+
+10. a) $\Delta = -36$, $x = \pm 3i$. b) $\Delta = -16$, $x = 1 \pm 2i$.
+    c) $\Delta = 1 - 8 = -7$, $x = \frac{-1 \pm i\sqrt7}{4}$. Nos três, as
+    raízes saíram conjugadas — como têm que sair.
+
+11. a) $x^2 + 9 = x^2 - (3i)^2 = (x + 3i)(x - 3i)$. Confira em $x = 4$: $25$ dos
+    dois lados. b) $(x - 1 - 2i)(x - 1 + 2i)$, que por diferença de quadrados é
+    $(x-1)^2 + 4 = x^2 - 2x + 5$ ✓
+
+12. Os dois são o **mesmo procedimento**: multiplicar as duas partes da fração
+    pelo conjugado do denominador, para que a diferença de quadrados elimine o
+    termo incômodo. Lá ela elimina a raiz ($4 - 3 = 1$), aqui elimina o $i$
+    ($4 + 1 = 5$). Resultados: $2 - \sqrt3$ e $\frac{2 - i}{5}$.
+
+13. $(2-i)^2 = 4 - 4i + i^2 = 3 - 4i$, e
+    $(3 - 4i)(2 - i) = 6 - 3i - 8i + 4i^2 = 2 - 11i$ ✓. Isso mostra que
+    $\sqrt[3]{2 - 11i} = 2 - i$, que é a segunda parcela da fórmula da abertura.
+    Somando com a primeira, $(2+i) + (2-i) = 4$: as partes imaginárias se
+    cancelam e sobra a raiz real que conferimos no início.
+
+14. A parábola **não** cruza o eixo ($\Delta = -7 < 0$), e a equação **tem**
+    duas raízes, $\frac{-1 \pm i\sqrt7}{4}$. Não há contradição: o gráfico vive
+    num plano de coordenadas reais, e as raízes não são números reais. As duas
+    afirmações respondem a perguntas diferentes — uma sobre o desenho, outra
+    sobre a equação.
+
+15. A outra é o conjugado, $3 - 5i$, porque raízes complexas de equações de
+    coeficientes reais vêm sempre em par. A soma é $6$ — real, como sempre
+    acontece, já que as partes imaginárias se cancelam.
+
+16. Pela diferença de quadrados, $(a+bi)(a-bi) = a^2 - (bi)^2 = a^2 - b^2i^2 = a^2 + b^2$.
+    É real porque o $i$ desapareceu, e nunca é negativo porque é uma soma de
+    dois quadrados de números reais.
+
+17. $\sqrt{-4} \times \sqrt{-9} = (2i)(3i) = 6i^2 = -6$. A regra
+    $\sqrt{a}\sqrt{b} = \sqrt{ab}$ foi demonstrada para $a$ e $b$ não negativos
+    e não se estende a negativos — aplicá-la aqui daria $\sqrt{36} = 6$, com o
+    sinal trocado. O procedimento seguro é converter para $i$ **antes** de
+    multiplicar.
+
+18. Porque não existe nos complexos uma ordem compatível com soma e produto: eles
+    formam um plano, e um plano não tem um "sentido de crescimento" único como a
+    reta tem. Consequência: toda inequação — e portanto os intervalos, o quadro
+    de sinais e tudo o que vem nas próximas páginas — trata exclusivamente de
+    números reais.
+
+</details>
+
+## Revisão curta
+
+- $i$ é o número definido por $i^2 = -1$, e um **número complexo** é qualquer
+  $a + bi$ com $a$ e $b$ reais. Todo real é complexo (com $b = 0$).
+- A legitimidade de $i$ vem do mesmo teste que legitimou o número negativo:
+  acrescentá-lo **não quebra nenhuma regra anterior**. Nenhuma conta que você já
+  sabia fazer muda de resposta.
+- Somar, subtrair e multiplicar são as operações de sempre; o único passo novo é
+  trocar $i^2$ por $-1$ ao final. **Dividir é a racionalização pelo conjugado**,
+  o mesmo gesto de $\frac{1}{2+\sqrt3}$.
+- $(a+bi)(a-bi) = a^2 + b^2$ — o produto pelo conjugado é real e não negativo. É
+  a diferença de quadrados fazendo o trabalho.
+- Com $\Delta < 0$, a fórmula de Bhaskara vai até o fim:
+  $x = \frac{-b \pm i\sqrt{-\Delta}}{2a}$, com as duas raízes **conjugadas**. Toda
+  equação do 2º grau passa a ter exatamente duas raízes, e $\Delta$ informa o
+  tipo delas, não mais a quantidade.
+- **Cuidado com dois limites.** $\sqrt{a}\sqrt{b} = \sqrt{ab}$ não vale para
+  negativos — converta para $i$ antes de multiplicar. E não existe ordem nos
+  complexos: as páginas de inequações que vêm a seguir são todas sobre números
+  reais.
+
+A próxima página, [equações com radical](./equacoes-com-radical), volta aos
+reais e ao 1º grau de dificuldade em outra direção: a incógnita presa **dentro**
+de uma raiz. Lá aparece uma armadilha de natureza oposta à desta página — em vez
+de um método que descarta respostas boas, um que produz respostas falsas.

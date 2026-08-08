@@ -82,6 +82,11 @@ const sidebars = {
           id: 'numeros-e-operacoes/valor-absoluto',
           label: '2.11 Valor absoluto',
         },
+        {
+          type: 'doc',
+          id: 'numeros-e-operacoes/conjuntos-numericos',
+          label: '2.12 Conjuntos numéricos',
+        },
       ],
     },
     {
@@ -169,33 +174,38 @@ const sidebars = {
         },
         {
           type: 'doc',
+          id: 'equacoes/numeros-complexos',
+          label: '4.6 Números complexos',
+        },
+        {
+          type: 'doc',
           id: 'equacoes/equacoes-com-radical',
-          label: '4.6 Equações com radical',
+          label: '4.7 Equações com radical',
         },
         {
           type: 'doc',
           id: 'equacoes/sistemas-de-duas-equacoes',
-          label: '4.7 Sistemas de duas equações',
+          label: '4.8 Sistemas de duas equações',
         },
         {
           type: 'doc',
           id: 'equacoes/intervalos',
-          label: '4.8 Intervalos',
+          label: '4.9 Intervalos',
         },
         {
           type: 'doc',
           id: 'equacoes/inequacoes-do-primeiro-grau',
-          label: '4.9 Inequações do 1º grau',
+          label: '4.10 Inequações do 1º grau',
         },
         {
           type: 'doc',
           id: 'equacoes/inequacoes-do-segundo-grau',
-          label: '4.10 Inequações do 2º grau',
+          label: '4.11 Inequações do 2º grau',
         },
         {
           type: 'doc',
           id: 'equacoes/inequacoes-racionais-e-modulares',
-          label: '4.11 Inequações com fração e módulo',
+          label: '4.12 Inequações com fração e módulo',
         },
       ],
     },

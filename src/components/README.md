@@ -391,6 +391,12 @@ O plano com eixos numerados e malha. É o irmão do `GeoFigure` para quando a
 | `lines` | `[{m, n}]`, `[{through: [p, q]}]` ou `[{x: 3}]` para vertical; aceita `dashed` |
 | `circles` | `[{center, r, tone, dashed}]` |
 | `points`, `segments`, `polygons`, `labels` | como no `GeoFigure`, mas em coordenadas do plano |
+
+**Atenção a uma diferença em relação ao `GeoFigure`:** aqui o rótulo de um ponto
+**não** aceita `place`. Passar `place` não dá erro — ele é simplesmente ignorado,
+e todo rótulo sai 18 pixels acima do ponto, que é o padrão. Para posicionar,
+use `dx` e `dy` em pixels (`dy` positivo desce). É o que evita o rótulo do ponto
+cair em cima da numeração do eixo.
 | `showGrid`, `showNumbers` | desligam malha e numeração |
 | `axisLabels` | `['x', 'y']` nas pontas dos eixos |
 

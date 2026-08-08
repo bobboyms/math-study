@@ -55,14 +55,15 @@ elas é sempre uma equação concreta que trava:
 | Equações do 1º grau | $8 + 3x = 23$ | $x^2 + 3x = 40$: o $x$ aparece em dois graus |
 | Equações do 2º grau por fatoração | $x^2 + 3x - 40 = 0$ | $x^2 + 3x + 1 = 0$: não fatora com inteiros |
 | Completar o quadrado | $x^2 + 3x + 1 = 0$ | refazer o mesmo trabalho a cada equação |
-| Fórmula de Bhaskara | qualquer $ax^2 + bx + c = 0$ | $\sqrt{x+3} = x-3$: a incógnita está dentro da raiz |
+| Fórmula de Bhaskara | qualquer $ax^2 + bx + c = 0$ com $\Delta \ge 0$ | $\Delta < 0$: a fórmula pede a raiz de um número negativo |
+| Números complexos | $x^2 + 4 = 0$, e todo caso $\Delta < 0$ | $\sqrt{x+3} = x-3$: a incógnita está dentro da raiz |
 | Equações com radical | $\sqrt{x+3} = x-3$ | $3c + 2p = 58$: duas incógnitas de uma vez |
 | Sistemas de duas equações | $3c + 2p = 58$ e $5c + 4p = 102$ | $50 < 20 + 0{,}60m$: não é igualdade |
 | Inequações do 1º grau | $50 < 20 + 0{,}60m$ | $-x^2 + 100x - 1600 > 0$: aparece o quadrado |
 | Inequações do 2º grau | $-x^2 + 100x - 1600 > 0$ | $\frac{200+4x}{x} < 6$: a incógnita está embaixo |
 | Inequações com fração e módulo | $\frac{200+4x}{x} < 6$ | — |
 
-Repare que a última página não traz método novo: ela executa o método da
+Repare que a página de Bhaskara não traz método novo: ela executa o método da
 anterior **uma única vez**, com letras no lugar dos números, e guarda o
 resultado. É por isso que Bhaskara não precisa ser decorada.
 
@@ -86,16 +87,18 @@ resultado. É por isso que Bhaskara não precisa ser decorada.
    a fatoração existir.
 4. [A fórmula de Bhaskara](./formula-de-bhaskara) — o método anterior resolvido
    de uma vez por todas.
-5. [Equações com radical](./equacoes-com-radical) — tirar a incógnita de dentro
+5. [Números complexos](./numeros-complexos) — o que fazer quando $\Delta < 0$, e
+   por que "não fatora" deixa de ser uma resposta possível.
+6. [Equações com radical](./equacoes-com-radical) — tirar a incógnita de dentro
    da raiz, e por que a verificação passa a ser obrigatória.
-6. [Sistemas de duas equações](./sistemas-de-duas-equacoes) — duas incógnitas
+7. [Sistemas de duas equações](./sistemas-de-duas-equacoes) — duas incógnitas
    exigem duas informações independentes.
-7. [Intervalos](./intervalos) — a notação que descreve uma faixa inteira de
+8. [Intervalos](./intervalos) — a notação que descreve uma faixa inteira de
    números sem ambiguidade.
-8. [Inequações do 1º grau](./inequacoes-do-primeiro-grau) — as mesmas regras das
+9. [Inequações do 1º grau](./inequacoes-do-primeiro-grau) — as mesmas regras das
    equações, com uma exceção: o sinal inverte ao multiplicar por negativo.
-9. [Inequações do 2º grau](./inequacoes-do-segundo-grau) — o quadro de sinais.
-10. [Inequações com fração e módulo](./inequacoes-racionais-e-modulares) — quando
+10. [Inequações do 2º grau](./inequacoes-do-segundo-grau) — o quadro de sinais.
+11. [Inequações com fração e módulo](./inequacoes-racionais-e-modulares) — quando
     multiplicar deixa de ser permitido.
 
 ## O que vem depois

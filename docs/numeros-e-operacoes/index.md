@@ -58,8 +58,11 @@ Primeiro aprendemos a operar com quantidades. Depois ampliamos o tipo de número
 que aceitamos: negativos, frações e decimais. Com esses em mãos, aprendemos a
 **comparar** duas quantidades por divisão — razão e proporção. Em seguida
 estudamos formas compactas de representar repetição e medida: potências e
-raízes. Juntamos essas duas linguagens com expoentes fracionários e, no fim,
-voltamos à reta numérica para medir distância com o valor absoluto.
+raízes. Juntamos essas duas linguagens com expoentes fracionários e voltamos à
+reta numérica para medir distância com o valor absoluto. A última página fecha o
+arco: ela dá nome aos tipos de número que o capítulo foi admitindo — naturais,
+inteiros, racionais e reais — e mostra que a ordem em que eles apareceram não foi
+escolha, e sim necessidade.
 
 Cada página amplia a anterior, e nenhuma delas fecha sozinha: raízes só fazem
 sentido depois de potências, porque raiz é a pergunta inversa da potência.
@@ -91,6 +94,7 @@ Estude na ordem. Cada uma aprofunda um degrau antes de passar para o próximo.
 8. [Raízes](./raizes)
 9. [Expoentes fracionários](./expoentes-fracionarios)
 10. [Valor absoluto](./valor-absoluto)
+11. [Conjuntos numéricos](./conjuntos-numericos)
 
 ## O que vem depois
 
