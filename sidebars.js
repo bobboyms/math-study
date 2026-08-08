@@ -124,18 +124,23 @@ const sidebars = {
         },
         {
           type: 'doc',
+          id: 'algebra/fatorar-comparando-coeficientes',
+          label: '3.6 Fatorar comparando coeficientes',
+        },
+        {
+          type: 'doc',
           id: 'algebra/fracoes-algebricas',
-          label: '3.6 Frações algébricas',
+          label: '3.7 Frações algébricas',
         },
         {
           type: 'doc',
           id: 'algebra/operacoes-com-fracoes-algebricas',
-          label: '3.7 Somar e multiplicar frações',
+          label: '3.8 Somar e multiplicar frações',
         },
         {
           type: 'doc',
           id: 'algebra/racionalizacao',
-          label: '3.8 Racionalizar denominadores',
+          label: '3.9 Racionalizar denominadores',
         },
       ],
     },

@@ -1,0 +1,1212 @@
+---
+title: Fatorar comparando coeficientes
+sidebar_label: Fatorar comparando coeficientes
+---
+
+import AreaModel from '@site/src/components/AreaModel';
+
+# Fatorar polinômios: desfazer a multiplicação
+
+## 1. Problema motivador: quando o caixa da oficina zera
+
+Você abriu uma pequena oficina e montou uma planilha para acompanhar o
+**saldo acumulado do caixa** — tudo o que entrou menos tudo o que saiu, desde o
+primeiro dia. Chamando de $x$ o número de meses desde a abertura e medindo o
+saldo em milhares de reais, a planilha resume os lançamentos numa fórmula só:
+
+$$
+S(x) = 2x^2 - 5x - 3
+$$
+
+Ela funciona. Basta escolher um mês e calcular:
+
+| Mês $x$ | 0 | 1 | 2 | 3 | 4 | 5 |
+|---|---|---|---|---|---|---|
+| Saldo $S(x)$ | $-3$ | $-6$ | $-5$ | $0$ | $9$ | $22$ |
+
+O $-3$ do mês zero é o investimento inicial: você começou três mil reais no
+vermelho. Nos primeiros meses o buraco ainda aumenta, depois a oficina reage.
+
+A pergunta que interessa é uma só:
+
+> **Em que mês o saldo chega a zero** — isto é, quando a oficina termina de
+> pagar o que custou para abrir?
+
+Na tabela dá para ver a resposta: mês 3. Mas a tabela só respondeu porque a
+resposta calhou de ser um número inteiro pequeno, dentro da faixa que você
+resolveu testar. Se o zero caísse entre o mês 3 e o mês 4, ou no mês 17, tabela
+nenhuma acharia.
+
+A forma **fatorada** responde de imediato, e você já sabe por quê: da página de
+[fator comum em evidência](./fator-comum-em-evidencia) em diante, um produto vale
+zero exatamente quando **um dos fatores** vale zero. No fim desta página vamos
+ter escrito:
+
+$$
+2x^2 - 5x - 3 = (2x + 1)(x - 3)
+$$
+
+e o mês procurado sai de $x - 3 = 0$, sem tabela e sem tentativa.
+
+Só que a página anterior, [Agrupamento e trinômios](./agrupamento-e-trinomios),
+deixou para este caso uma regra que é fácil de aplicar e fácil de **esquecer**:
+procure dois números que **somem o coeficiente do meio** e **multipliquem o
+coeficiente de $x^2$ vezes o termo constante** — a chamada regra do
+$a \times c$. Por que o produto dos dois extremos, e não só o termo constante?
+Por que soma, e não outra coisa? Quem estuda sozinho e volta ao assunto dois
+meses depois não tem a quem perguntar — e uma regra que não se reconstrói é uma
+regra perdida.
+
+Esta página é sobre **não precisar da regra**. Vamos fatorar $2x^2 - 5x - 3$
+sem lembrar nenhum atalho, a partir de uma única pergunta:
+
+> **Que multiplicação poderia ter produzido este polinômio?**
+
+E no caminho a regra do $a \times c$ vai aparecer sozinha, como consequência —
+não como mandamento.
+
+## 2. Mapa das ideias
+
+- **coeficiente** — o número que multiplica cada potência de $x$. Em
+  $2x^2 - 5x - 3$, os coeficientes são $2$, $-5$ e $-3$;
+- **forma do produto** — o esqueleto da resposta, escrito antes de saber os
+  números: $(2x + \underline{\ \ })(x + \underline{\ \ })$;
+- **coeficiente a determinar** — a letra que ocupa um desses lugares em branco
+  enquanto ainda não sabemos o valor dela;
+- **comparar coeficientes** — exigir que o produto desenvolvido tenha, termo a
+  termo, os mesmos coeficientes do polinômio que queremos fatorar;
+- **condição** — cada igualdade que essa comparação produz, como $ab = -3$;
+- **termos cruzados** — as duas parcelas com $x$ que nascem da multiplicação
+  "de fora para dentro" e "de dentro para fora"; a soma delas é o termo do meio;
+- **candidato** — um par de valores que satisfaz a condição do produto e que
+  ainda precisa ser testado na condição da soma.
+
+**Um aviso sobre as letras.** Na página anterior, $a$, $b$ e $c$ eram os
+**coeficientes** de $ax^2 + bx + c$. Aqui $a$ e $b$ vão ser outra coisa: os dois
+**valores desconhecidos** dentro dos parênteses.
+
+> Para que os dois usos nunca se cruzem, nesta página os coeficientes são sempre
+> chamados pelo nome — "coeficiente de $x^2$", "coeficiente do meio", "termo
+> constante" — e nunca por letra. As únicas letras soltas são $a$ e $b$, e elas
+> são sempre os desconhecidos.
+
+## 3. Para que serve
+
+- **Achar onde uma expressão vale zero** quando o coeficiente de $x^2$ não é 1 —
+  como o mês em que o caixa da oficina zera.
+- **Fatorar sem depender de memória.** O método é uma multiplicação seguida de
+  uma comparação; as duas coisas você já sabe fazer, e nenhuma delas se esquece.
+- **Entender de onde vem a regra do $a \times c$**, e com isso poder usá-la como
+  atalho consciente em vez de fórmula decorada.
+- **Simplificar frações algébricas** cujo numerador tem coeficiente diferente de
+  1 — a página de [frações algébricas](./fracoes-algebricas) vive disso.
+- **Reconstruir um produto a partir do resultado**, que é o mesmo raciocínio
+  usado adiante para dividir polinômios e para achar as raízes de uma
+  [função quadrática](../funcoes/funcao-quadratica).
+
+As três primeiras aparecem resolvidas com números nesta página.
+
+## 4. Ideias anteriores que voltam aqui
+
+Esta lição usa quatro blocos que você já tem. Responda cada pergunta antes de
+abrir a resposta — é agora, e não no meio da página, que vale a pena descobrir
+se algum deles precisa de releitura.
+
+**Multiplicar dois parênteses** (de [Produtos notáveis](./produtos-notaveis)).
+
+> Desenvolva $(3x + 2)(x + 4)$.
+
+Cada parcela do primeiro parêntese multiplica cada parcela do segundo:
+$3x \times x = 3x^2$, $3x \times 4 = 12x$, $2 \times x = 2x$ e
+$2 \times 4 = 8$. Somando e juntando os termos com $x$: $3x^2 + 14x + 8$.
+**Guarde isto:** o $14$ do meio veio de $12 + 2$, e o $12$ apareceu **maior que
+o 4** porque foi multiplicado pelo $3$ do $3x$. Esse detalhe é o assunto da
+página inteira.
+
+**Termos semelhantes** (de [Expressões algébricas](./expressoes-algebricas)).
+
+> Por que $12x + 2x$ vira $14x$, mas $12x + 2$ não vira $14x$?
+
+Porque $12x$ e $2x$ contam a mesma coisa — doze vezes $x$ mais duas vezes $x$
+são catorze vezes $x$, para qualquer $x$. Já $2$ não é uma quantidade de $x$, e
+não há o que juntar. **Guarde isto:** é essa junção que faz duas parcelas
+diferentes do produto virarem **um único** coeficiente do meio, e é por isso que
+uma comparação de coeficientes tem menos linhas que a multiplicação inteira.
+
+**Sinais na multiplicação** (de
+[Números negativos](../numeros-e-operacoes/numeros-negativos)).
+
+> Quais pares de inteiros têm produto $-3$?
+
+Como o produto é negativo, os dois números têm sinais diferentes. Os pares são
+$1$ e $-3$, $-1$ e $3$, $3$ e $-1$, $-3$ e $1$. **Guarde isto:** eles estão
+listados como **pares ordenados**, e adiante você vai ver que $1$ e $-3$ dá um
+resultado, enquanto $-3$ e $1$ dá outro — a ordem vai importar aqui, coisa que
+não acontecia na página anterior.
+
+**Divisores** (de
+[Múltiplos, divisores e primos](../numeros-e-operacoes/multiplos-divisores-primos)).
+
+> Quais são os divisores positivos de 12? E de 3?
+
+Os de 12 são $1, 2, 3, 4, 6, 12$; os de 3 são $1$ e $3$, porque 3 é primo.
+**Guarde isto:** é a lista de divisores que torna a busca desta página
+**finita**. Quando ela acaba sem que nenhum candidato sirva, a conclusão não é
+"não achei", e sim "não existe".
+
+## 5. Intuição: fatorar é desfazer uma multiplicação
+
+Comece pelo significado da palavra. **Fatorar** é escrever uma soma como
+produto — ou seja, é encontrar a multiplicação que, feita, devolveria aquela
+soma. Fatorar não é um procedimento novo: é uma multiplicação **lida de trás
+para frente**.
+
+Então a pergunta certa diante de $2x^2 - 5x - 3$ não é "qual regra se aplica
+aqui?". É:
+
+> Que multiplicação poderia ter produzido isto?
+
+### De onde vem o $2x^2$?
+
+Se o polinômio é o resultado de multiplicar dois parênteses, o termo $2x^2$ só
+pode ter nascido do produto dos dois primeiros termos — nenhuma outra
+combinação gera $x^2$. Então precisamos de dois pedaços cujo produto seja
+$2x^2$. Com coeficientes inteiros e positivos, a escolha natural é:
+
+$$
+2x \quad\text{e}\quad x, \qquad\text{porque}\qquad 2x \times x = 2x^2
+$$
+
+Isso já fixa metade do esqueleto da resposta:
+
+$$
+(2x + \underline{\ \ \ })(x + \underline{\ \ \ })
+$$
+
+Repare no que essa linha é e no que ela não é. Ela **não** é um chute sobre a
+resposta: é uma pergunta escrita em símbolos. Estamos afirmando apenas que, *se*
+o polinômio for um produto de dois fatores de grau 1 com coeficientes inteiros,
+ele tem essa cara. Falta descobrir o que vai nos dois lugares em branco.
+
+### Não adivinhe: multiplique e compare
+
+O passo decisivo é resistir à tentação de sair testando números. Em vez disso,
+dê **nomes** aos dois valores desconhecidos — chame-os de $a$ e $b$ — e
+multiplique como se já os conhecesse:
+
+$$
+(2x + a)(x + b)
+$$
+
+Pela distributiva, cada parcela do primeiro parêntese multiplica cada parcela do
+segundo:
+
+$$
+2x \cdot x \;+\; 2x \cdot b \;+\; a \cdot x \;+\; a \cdot b
+$$
+
+$$
+= 2x^2 + 2bx + ax + ab
+$$
+
+As duas parcelas do meio, $2bx$ e $ax$, são termos semelhantes — as duas contam
+quantidades de $x$ — então elas se juntam:
+
+$$
+(2x + a)(x + b) = 2x^2 + (2b + a)x + ab
+$$
+
+Agora ponha essa expressão ao lado do polinômio que queremos:
+
+$$
+2x^2 + (2b + a)x + ab
+\qquad\text{tem que ser}\qquad
+2x^2 - 5x - 3
+$$
+
+Duas expressões que representam a mesma quantidade para qualquer $x$ precisam
+ter os mesmos coeficientes. E aí as condições aparecem sozinhas:
+
+$$
+\boxed{2b + a = -5}
+\qquad\text{e}\qquad
+\boxed{ab = -3}
+$$
+
+**É aqui que está toda a lógica da fatoração.** Não sobrou nada para decorar: as
+duas condições foram *produzidas* por uma multiplicação que você sabe fazer
+desde a página de produtos notáveis.
+
+E repare no que **não** ficou escrito. A condição do meio não é $a + b = -5$. É
+$2b + a = -5$, porque o $b$ está sendo multiplicado pelo $2x$ e, por isso, entra
+na conta **dobrado**. Essa é exatamente a diferença entre esta página e a
+anterior, e é o erro mais comum do assunto.
+
+## 6. Modelo visual: o retângulo com dois lugares em branco
+
+A página anterior desenhou a fatoração como **montar um retângulo**: a área
+total é o polinômio, e os dois lados são os fatores. O mesmo desenho serve aqui,
+com uma mudança — os lados agora carregam letras nos lugares que ainda não
+conhecemos.
+
+<AreaModel
+  rows={[{size: 6, label: '2x'}, {size: 3, label: 'a'}]}
+  cols={[{size: 6, label: 'x'}, {size: 3, label: 'b'}]}
+  cells={[['2x^2', '2bx'], ['ax', 'ab']]}
+  baseLabel="x + b"
+  unit={32}
+  labelWidth={40}
+  caption="O retângulo de lados 2x + a e x + b. Os quatro pedaços são exatamente as quatro multiplicações da distributiva."
+/>
+
+Leia o desenho duas vezes, de dois jeitos:
+
+- **pelos lados:** a área é largura vezes altura, ou seja $(2x + a)(x + b)$;
+- **pelos pedaços:** a área é a soma dos quatro retângulos, $2x^2 + 2bx + ax +
+  ab$.
+
+É a mesma área contada de duas maneiras, então as duas escritas valem o mesmo
+para qualquer $x$. **O que muda:** de produto de dois lados para soma de quatro
+pedaços. **O que permanece igual:** a área.
+
+Os dois pedaços do meio, $2bx$ e $ax$, são os **termos cruzados** — e o desenho
+mostra por que eles saem diferentes. O de cima é o $b$ multiplicado pela altura
+$2x$; o de baixo é o $a$ multiplicado pela largura $x$. Alturas diferentes,
+contribuições diferentes: o $b$ entra dobrado, o $a$ entra simples. Daí
+$2b + a$, e não $a + b$.
+
+O pedaço do canto, $ab$, é o único sem $x$ nenhum — ele é o termo constante.
+
+### Um caso concreto, para ancorar
+
+Antes de voltar ao problema da oficina, veja o mesmo desenho com números que
+fecham bonito. Tome $a = 1$ e $b = 3$:
+
+<AreaModel
+  rows={[{size: 6, label: '2x'}, {size: 3, label: '1'}]}
+  cols={[{size: 6, label: 'x'}, {size: 3, label: '3'}]}
+  cells={[['2x^2', '6x'], ['x', '3']]}
+  baseLabel="x + 3"
+  unit={32}
+  labelWidth={40}
+  caption="Com a = 1 e b = 3: os termos cruzados são 6x e x, que somam 7x."
+/>
+
+Os termos cruzados são $6x$ (o $3$ vezes a altura $2x$) e $x$ (o $1$ vezes a
+largura $x$). Somados, $7x$. E o canto vale $1 \times 3 = 3$. Logo:
+
+$$
+(2x + 1)(x + 3) = 2x^2 + 7x + 3
+$$
+
+Confira com $x = 2$: o produto vale $5 \times 5 = 25$, e a soma vale
+$8 + 14 + 3 = 25$. ✓
+
+### Onde o desenho para de acompanhar
+
+No problema da oficina, $b$ vai valer $-3$ — e comprimento negativo não existe,
+então esse retângulo não pode ser desenhado. Vale dizer isso com todas as
+letras, porque é o mesmo limite que a página anterior já encontrou: **peça tem
+área, e área não é negativa.**
+
+O que sobrevive ao limite é a conta. A igualdade
+
+$$
+(2x + a)(x + b) = 2x^2 + (2b + a)x + ab
+$$
+
+não foi provada pelo desenho: foi provada pela **distributiva**, que vale para
+qualquer $a$ e qualquer $b$, positivos ou negativos. O retângulo serviu para
+**descobrir** a estrutura; a distributiva garante que ela continua valendo onde
+o retângulo não alcança. Saber até onde um modelo vai faz parte de usá-lo.
+
+## 7. Ponte para a formalização
+
+Falta justificar o passo que parece o mais inocente de todos: por que temos o
+direito de comparar coeficiente com coeficiente?
+
+O raciocínio é mais simples do que parece, porque estamos usando a comparação no
+sentido fácil. Não estamos afirmando "as expressões são iguais, logo os
+coeficientes são iguais". Estamos fazendo o contrário: **impondo** que os
+coeficientes sejam iguais, e daí concluindo que as expressões são iguais.
+
+Se conseguirmos $a$ e $b$ com $2b + a = -5$ e $ab = -3$, então
+$2x^2 + (2b+a)x + ab$ é, letra por letra, a mesma expressão que
+$2x^2 - 5x - 3$. E como a distributiva garante que $(2x+a)(x+b)$ vale
+$2x^2 + (2b+a)x + ab$, o produto encontrado **é** o polinômio original — não
+"parece ser", é.
+
+Isso tem uma consequência prática ótima: a verificação é gratuita e definitiva.
+Achou $a$ e $b$? Multiplique de volta. Se der o polinômio original, acabou, e
+nenhuma dúvida sobre o método pode invalidar o resultado.
+
+## 8. Formalização: o método dos coeficientes a determinar
+
+> Para fatorar um polinômio, **escreva a forma do produto que poderia tê-lo
+> gerado**, com letras nos lugares desconhecidos; multiplique; e compare os
+> coeficientes termo a termo. Cada comparação vira uma condição, e as condições
+> determinam as letras.
+
+O procedimento, para um polinômio de grau 2 com coeficientes inteiros:
+
+1. **Antes de tudo, retire o fator comum**, se houver. Números menores, busca
+   mais curta — e sem esse passo a fatoração pode ficar incompleta.
+2. **Escreva a forma do produto.** Parta o coeficiente de $x^2$ num par de
+   fatores; cada partição dá uma forma a testar.
+3. **Dê nomes aos lugares em branco** e multiplique.
+4. **Compare os coeficientes** e escreva as condições.
+5. **Liste os candidatos** que satisfazem a condição do produto — são os pares
+   de divisores do termo constante, com sinais.
+6. **Teste cada candidato** na condição do meio.
+7. **Confira multiplicando de volta.**
+
+### Resolvendo as condições da oficina
+
+Volte às duas condições:
+
+$$
+2b + a = -5
+\qquad\text{e}\qquad
+ab = -3
+$$
+
+Comece pela do **produto**, porque ela é a que tem poucas soluções. Precisamos
+de $ab = -3$ com $a$ e $b$ inteiros. Como 3 é primo, os divisores são $1$ e $3$,
+e o sinal negativo do produto obriga os dois números a terem sinais diferentes.
+Sobram quatro possibilidades — quatro, e não duas, porque **a ordem importa**:
+
+| $a$ | $b$ | $ab$ | $2b + a$ | serve? |
+|---|---|---|---|---|
+| $1$ | $-3$ | $-3$ | $2(-3) + 1 = -5$ | **sim** |
+| $-1$ | $3$ | $-3$ | $2(3) - 1 = 5$ | não |
+| $3$ | $-1$ | $-3$ | $2(-1) + 3 = 1$ | não |
+| $-3$ | $1$ | $-3$ | $2(1) - 3 = -1$ | não |
+
+Só a primeira linha satisfaz as duas condições ao mesmo tempo. Portanto
+$a = 1$ e $b = -3$, e:
+
+$$
+\boxed{2x^2 - 5x - 3 = (2x + 1)(x - 3)}
+$$
+
+Repare que a tabela tem quatro linhas, mas só dois pares de números: a primeira
+e a quarta usam $1$ e $-3$; a segunda e a terceira usam $-1$ e $3$. Cada par
+aparece duas vezes porque pode ser colocado nos dois lugares de duas maneiras —
+e as duas maneiras dão resultados diferentes ($-5$ contra $-1$, $5$ contra
+$1$). Na
+página anterior, com coeficiente 1 na frente do $x^2$, trocar os dois números de
+lugar não mudava nada, porque $(x+3)(x+5)$ e $(x+5)(x+3)$ são o mesmo produto.
+Aqui muda, porque os dois lugares não são mais equivalentes: um deles multiplica
+$2x$ e o outro multiplica $x$.
+
+### Veja exatamente de onde nasceu o $-5x$
+
+Multiplique os fatores encontrados, com calma, sem juntar nada ainda:
+
+$$
+(2x + 1)(x - 3)
+$$
+
+São quatro multiplicações:
+
+$$
+2x \cdot x = 2x^2
+\qquad
+2x \cdot (-3) = -6x
+$$
+$$
+1 \cdot x = x
+\qquad
+1 \cdot (-3) = -3
+$$
+
+Somando as quatro:
+
+$$
+2x^2 - 6x + x - 3
+$$
+
+e os dois termos do meio se juntam:
+
+$$
+-6x + x = -5x
+$$
+
+portanto
+
+$$
+2x^2 - 5x - 3
+$$
+
+A parte que costuma parecer mágica na página anterior é justamente esta:
+
+$$
+\boxed{-5x = -6x + x}
+$$
+
+Por que partir o $-5x$ assim, e não em $-2x - 3x$ ou em $-10x + 5x$? Agora dá
+para responder: porque $-6x$ e $+x$ são **os dois termos cruzados** que aparecem
+quando se multiplica $(2x+1)(x-3)$. A decomposição não foi escolhida; ela foi
+**encontrada**, e o que a encontrou foram as duas condições.
+
+### Um exemplo e um contraexemplo
+
+O exemplo é o próprio $2x^2 - 5x - 3$: existe um par de inteiros satisfazendo as
+duas condições, e o polinômio se escreve como produto de dois fatores de
+coeficientes inteiros.
+
+O contraexemplo é $2x^2 - 5x - 4$, que difere do anterior só no último número.
+A forma do produto é a mesma, $(2x + a)(x + b)$, porque 2 é primo e só se parte
+de um jeito. As condições passam a ser $2b + a = -5$ e $ab = -4$. Os divisores de
+4 são $1, 2, 4$, e com sinais diferentes sobram seis candidatos:
+
+| $a$ | $b$ | $2b + a$ |
+|---|---|---|
+| $1$ | $-4$ | $-7$ |
+| $-1$ | $4$ | $7$ |
+| $2$ | $-2$ | $-2$ |
+| $-2$ | $2$ | $2$ |
+| $4$ | $-1$ | $2$ |
+| $-4$ | $1$ | $-2$ |
+
+Nenhum dá $-5$. E a lista **acabou** — não há sétimo candidato, porque não há
+sétimo par de divisores. A conclusão correta é: $2x^2 - 5x - 4$ **não** se
+fatora com coeficientes inteiros. Isso é um resultado, não um fracasso. O
+polinômio continua existindo e continua valendo o que vale; ele apenas não é
+produto de dois fatores de coeficientes inteiros.
+
+## 9. Voltando ao caixa da oficina
+
+Com a forma fatorada em mãos, a pergunta da abertura vira uma linha:
+
+$$
+S(x) = 2x^2 - 5x - 3 = (2x + 1)(x - 3)
+$$
+
+Um produto vale zero quando um dos fatores vale zero. São dois casos:
+
+- $x - 3 = 0$, ou seja $x = 3$;
+- $2x + 1 = 0$, ou seja $x = -\frac{1}{2}$.
+
+O segundo é um número perfeitamente legítimo, mas não descreve nada nesta
+oficina: $x$ conta meses desde a abertura, e não existe meio mês antes de
+abrir. **O saldo zera no mês 3** — que é exatamente o que a tabela da abertura
+mostrava, agora obtido sem tabela nenhuma.
+
+Confira que as duas escritas são a mesma coisa em outro ponto, longe do zero.
+Com $x = 5$: a forma somada dá $2(25) - 25 - 3 = 22$, e a fatorada dá
+$11 \times 2 = 22$. ✓ Com $x = 0$: a somada dá $-3$, e a fatorada dá
+$1 \times (-3) = -3$. ✓
+
+E a forma fatorada ainda conta uma coisa que a tabela não contava. Como
+$2x + 1$ é positivo para todo mês $x \ge 0$, o sinal do saldo é decidido
+sozinho pelo fator $x - 3$: negativo antes do mês 3, positivo depois. Nenhum
+mês do futuro volta ao vermelho.
+
+## 10. De onde vem a regra do $a \times c$
+
+Agora a regra da página anterior pode ser **deduzida**, e não lembrada.
+
+Olhe de novo os dois termos cruzados do produto geral $(2x + a)(x + b)$:
+
+$$
+2bx \qquad\text{e}\qquad ax
+$$
+
+Duas coisas valem a pena calcular sobre esse par de coeficientes, $2b$ e $a$:
+
+- **a soma:** $2b + a$, que é o coeficiente do meio — é a condição que já
+  usamos;
+- **o produto:** $2b \times a = 2ab$. E como $ab$ é o termo constante, isso é
+  $2 \times (\text{termo constante})$ — ou seja, o coeficiente de $x^2$ vezes o
+  termo constante.
+
+Nos números da oficina: os cruzados são $-6$ e $1$. A soma é $-5$, o coeficiente
+do meio ✓. O produto é $-6$, e $2 \times (-3) = -6$ ✓.
+
+Nada nesse argumento dependeu de o coeficiente de $x^2$ ser 2. Trocando o 2 por
+qualquer outro número, a conta se repete igual, e o resultado geral é:
+
+> Os coeficientes dos dois termos cruzados **somam o coeficiente do meio** e
+> **multiplicam o coeficiente de $x^2$ vezes o termo constante**.
+
+Essa é, palavra por palavra, a regra do $a \times c$ da página anterior — onde
+$a$ e $c$ eram o nome dado ao primeiro e ao último coeficiente. Ela não caiu do
+céu: acabou de ser deduzida de uma multiplicação.
+
+> A regra do $a \times c$ não é um mandamento: é um **atalho para achar os dois
+> termos cruzados**, que é o que a comparação de coeficientes procura de
+> qualquer jeito.
+
+Vale a pena ver a mesma coisa no retângulo, porque lá ela fica óbvia. Os quatro
+pedaços são $2x^2$, $2bx$, $ax$ e $ab$. Multiplicando os das **pontas**:
+$2x^2 \times ab = 2ab\,x^2$. Multiplicando os do **meio**:
+$2bx \times ax = 2ab\,x^2$. São iguais porque, nos dois casos, multiplicamos as
+mesmas quatro medidas do retângulo — só que agrupadas em pares diferentes.
+
+Os dois caminhos chegam ao mesmo lugar, e vale saber quando usar cada um:
+
+| | Comparar coeficientes | Regra do $a \times c$ |
+|---|---|---|
+| O que exige | multiplicar e comparar | lembrar a regra |
+| Passos | mais longos | mais curtos |
+| Se você esquecer | nada a esquecer | trava |
+| Quando usar | ao aprender, ao conferir, e sempre que a regra escapar | no dia a dia, depois que ela virou sua |
+
+## 11. Quando o coeficiente de $x^2$ se parte de mais de um jeito
+
+Até aqui o coeficiente de $x^2$ foi 2, que é primo e só se parte como
+$2 \times 1$. Quando ele tem mais divisores, o passo 2 do procedimento — escrever
+a forma do produto — passa a oferecer **mais de uma forma**, e cada uma precisa
+ser testada.
+
+Tome $4x^2 - 8x + 3$. O coeficiente 4 se parte de dois jeitos:
+$4 \times 1$ e $2 \times 2$.
+
+**Primeira forma:** $(4x + a)(x + b)$. Desenvolvendo,
+$4x^2 + (4b + a)x + ab$, então as condições são $4b + a = -8$ e $ab = 3$.
+Produto positivo com soma negativa: os dois números são negativos, e os
+candidatos são poucos:
+
+| $a$ | $b$ | $4b + a$ |
+|---|---|---|
+| $-1$ | $-3$ | $-13$ |
+| $-3$ | $-1$ | $-7$ |
+
+(Os pares positivos, $1$ e $3$ ou $3$ e $1$, dariam $13$ e $7$ — todos com o
+sinal errado.) Nenhum candidato dá $-8$, então **esta forma não funciona**.
+
+**Segunda forma:** $(2x + a)(2x + b)$. Desenvolvendo:
+
+$$
+(2x + a)(2x + b) = 4x^2 + 2bx + 2ax + ab = 4x^2 + 2(a + b)x + ab
+$$
+
+As condições agora são $2(a + b) = -8$, isto é $a + b = -4$, e $ab = 3$. O par
+$-1$ e $-3$ serve: soma $-4$ ✓ e produto $3$ ✓. Logo:
+
+$$
+4x^2 - 8x + 3 = (2x - 1)(2x - 3)
+$$
+
+Confira com $x = 2$: a original vale $16 - 16 + 3 = 3$, e a fatorada vale
+$3 \times 1 = 3$. ✓ Com $x = 0$: $3$ e $(-1)(-3) = 3$ ✓.
+
+Duas lições ficam deste exemplo. A primeira: **uma forma falhar não prova que o
+polinômio não fatora** — só prova que aquela partição do coeficiente não serve.
+Só depois de esgotar todas as formas é que a conclusão "não fatora" fica de pé.
+A segunda: quando os dois primeiros termos são iguais, como nos dois $2x$ acima,
+a condição do meio volta a ser uma soma simples, $a + b$. O caso "$a + b$" da
+página anterior é o caso particular em que os dois pesos coincidem.
+
+## 12. Exemplos resolvidos
+
+### Exemplo 1: o esqueleto completo, passo a passo
+
+Fatore $3x^2 + 5x - 2$.
+
+Não há fator comum: 3, 5 e 2 não têm divisor comum além de 1. O coeficiente 3 é
+primo, então a única forma é $(3x + a)(x + b)$. Desenvolvendo:
+
+$$
+(3x + a)(x + b) = 3x^2 + 3bx + ax + ab = 3x^2 + (3b + a)x + ab
+$$
+
+Condições: $3b + a = 5$ e $ab = -2$. Produto negativo, sinais diferentes:
+
+| $a$ | $b$ | $3b + a$ |
+|---|---|---|
+| $1$ | $-2$ | $-5$ |
+| $-1$ | $2$ | $5$ |
+| $2$ | $-1$ | $-1$ |
+| $-2$ | $1$ | $1$ |
+
+A segunda linha serve: $a = -1$, $b = 2$.
+
+$$
+3x^2 + 5x - 2 = (3x - 1)(x + 2)
+$$
+
+Conferindo por multiplicação: $3x^2 + 6x - x - 2 = 3x^2 + 5x - 2$. ✓
+
+### Exemplo 2: sinais diferentes nos dois lugares
+
+> **Pause e tente antes de ler.** Fatore $2x^2 - 7x - 15$.
+
+Sem fator comum; a forma é $(2x + a)(x + b)$, com condições $2b + a = -7$ e
+$ab = -15$. Os divisores de 15 são $1, 3, 5, 15$, e o produto negativo obriga
+sinais diferentes. Em vez de listar os dezesseis pares ordenados, repare que o
+$b$ pesa o dobro: para chegar a $-7$, convém que $b$ seja pequeno e negativo.
+Testando $b = -5$: então $a = -7 - 2(-5) = 3$, e $ab = 3 \times (-5) = -15$ ✓.
+
+$$
+2x^2 - 7x - 15 = (2x + 3)(x - 5)
+$$
+
+Conferindo: $2x^2 - 10x + 3x - 15 = 2x^2 - 7x - 15$. ✓
+
+Esse atalho vale registrar: escolhido um valor para $b$, a condição do meio
+**entrega** o $a$ correspondente, e aí só falta checar o produto. Isso corta a
+lista pela metade.
+
+### Exemplo 3: o coeficiente com dois divisores
+
+> **Pause e tente antes de ler.** Fatore $6x^2 + x - 12$.
+
+Sem fator comum. O 6 se parte de dois jeitos: $6 \times 1$ e $2 \times 3$.
+
+Comece pela forma $(2x + a)(3x + b)$, que costuma dar números menores.
+Desenvolvendo:
+
+$$
+(2x + a)(3x + b) = 6x^2 + 2bx + 3ax + ab = 6x^2 + (2b + 3a)x + ab
+$$
+
+Condições: $2b + 3a = 1$ e $ab = -12$. Testando $a = 3$: então
+$2b = 1 - 9 = -8$, logo $b = -4$, e $ab = 3 \times (-4) = -12$ ✓.
+
+$$
+6x^2 + x - 12 = (2x + 3)(3x - 4)
+$$
+
+Conferindo: $6x^2 - 8x + 9x - 12 = 6x^2 + x - 12$. ✓ Como esta forma funcionou,
+não é preciso testar a outra.
+
+Conferindo também com número, em $x = 2$: a original vale $24 + 2 - 12 = 14$, e
+a fatorada vale $7 \times 2 = 14$. ✓
+
+### Exemplo 4: comece sempre pelo fator comum
+
+> **Pause e tente antes de ler.** Fatore $4x^2 - 10x - 6$.
+
+Os três coeficientes são pares: $\operatorname{mdc}(4, 10, 6) = 2$. Retirando:
+
+$$
+4x^2 - 10x - 6 = 2(2x^2 - 5x - 3)
+$$
+
+O que sobrou dentro é o polinômio da oficina, já fatorado:
+
+$$
+4x^2 - 10x - 6 = 2(2x + 1)(x - 3)
+$$
+
+Conferindo com $x = 1$: a original vale $4 - 10 - 6 = -12$, e a fatorada vale
+$2 \times 3 \times (-2) = -12$. ✓
+
+Se você tivesse pulado o fator comum, o coeficiente 4 se partiria de dois
+jeitos e o termo constante $-6$ teria mais divisores — mais formas, mais
+candidatos, mesmo resultado. Pior: seria fácil parar em $(2x - 6)(2x + 1)$,
+que está **correto mas incompleto**, porque o primeiro fator ainda tem o 2 em
+comum.
+
+### Exemplo 5: para que a forma fatorada serve
+
+Simplifique $\dfrac{2x^2 - 5x - 3}{x - 3}$.
+
+Somado, o numerador não oferece nada para cancelar — e cancelar o 3 de cima com
+o 3 de baixo seria cancelar **parcela**, não fator, o erro que a página de fator
+comum desmontou. Fatorado, o numerador entrega um fator inteiro:
+
+$$
+\frac{2x^2 - 5x - 3}{x - 3} = \frac{(2x + 1)(x - 3)}{x - 3} = 2x + 1
+$$
+
+desde que $x \ne 3$, porque com $x = 3$ o denominador original seria zero.
+Confira com $x = 5$: $\frac{22}{2} = 11$, e $2(5) + 1 = 11$. ✓
+
+## 13. Erros comuns
+
+### Erro 1: usar $a + b$ no lugar de $2b + a$
+
+É o erro central deste assunto. Quem tenta fatorar $2x^2 - 5x - 3$ procurando
+"dois números que somam $-5$ e multiplicam $-3$" não encontra nada — e conclui,
+errado, que o polinômio não fatora.
+
+O motivo é visível no retângulo: os dois lugares em branco **não têm o mesmo
+peso**. O $b$ multiplica $2x$ e entra dobrado; o $a$ multiplica $x$ e entra
+simples. A condição do meio é $2b + a$, e ela só vira $a + b$ quando o
+coeficiente de $x^2$ é 1.
+
+### Erro 2: trocar os dois números de lugar
+
+Com $a$ e $b$ achados, $1$ e $-3$, é tentador escrever $(2x - 3)(x + 1)$.
+Multiplique e veja:
+
+$$
+(2x - 3)(x + 1) = 2x^2 + 2x - 3x - 3 = 2x^2 - x - 3
+$$
+
+O termo do meio saiu $-x$, e não $-5x$. Está errado — e o erro nem é de conta,
+é de posição. Quando o coeficiente de $x^2$ não é 1, os dois lugares são
+diferentes, e trocar os números de lugar produz **outro polinômio**.
+
+Na página anterior isso não acontecia: $(x+3)(x+5)$ e $(x+5)(x+3)$ dão o mesmo
+resultado, porque os dois lugares eram idênticos.
+
+### Erro 3: testar só uma forma do produto
+
+Em $4x^2 - 8x + 3$, a forma $(4x + a)(x + b)$ não fecha com nenhum candidato.
+Quem para aí conclui que o polinômio não fatora — mas a forma $(2x + a)(2x + b)$
+fecha, e a resposta é $(2x - 1)(2x - 3)$.
+
+A conclusão "não fatora" só vale depois de esgotar **todas** as partições do
+coeficiente de $x^2$ e, em cada uma, todos os candidatos.
+
+### Erro 4: esquecer o fator comum
+
+Em $4x^2 - 10x - 6$, atacar direto pode levar a $(2x - 6)(2x + 1)$. Multiplique:
+$4x^2 + 2x - 12x - 6 = 4x^2 - 10x - 6$ ✓ — está certo, e mesmo assim está
+**incompleto**, porque $2x - 6$ ainda é $2(x - 3)$. A forma final é
+$2(2x + 1)(x - 3)$.
+
+Fator comum primeiro evita isso e encolhe a busca de quebra.
+
+### Erro 5: parar antes de fatorar
+
+$2x^2 - 6x + x - 3$ **não** é uma forma fatorada: é uma soma de quatro parcelas.
+$2x(x - 3) + 1(x - 3)$ também não: é uma soma de dois produtos. Só
+$(2x + 1)(x - 3)$ é um produto.
+
+O teste é simples: uma expressão está fatorada quando a **última** operação a
+ser feita é uma multiplicação, não uma soma.
+
+### Erro 6: achar que o método falhou quando ele respondeu
+
+Percorrer os seis candidatos de $2x^2 - 5x - 4$ e não achar nenhum não é ficar
+sem resposta. É **ter** a resposta: com coeficientes inteiros, esse polinômio
+não é produto de dois fatores. A busca é finita porque a lista de divisores é
+finita — e uma busca finita esgotada é uma prova.
+
+## 14. Perguntas de verificação
+
+Responda com suas palavras antes de abrir cada resposta.
+
+**1. Por que a condição do termo do meio é $2b + a$, e não $a + b$?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque os dois lugares em branco são multiplicados por coisas diferentes. Ao
+desenvolver $(2x + a)(x + b)$, o $b$ é multiplicado por $2x$ e produz $2bx$,
+enquanto o $a$ é multiplicado por $x$ e produz $ax$. Os dois termos cruzados são
+$2bx$ e $ax$, e juntá-los dá $(2b + a)x$. No retângulo: o pedaço de cima tem
+altura $2x$ e o de baixo tem altura $x$, então o mesmo número contribui com o
+dobro num lugar e com o simples no outro. Quando o coeficiente de $x^2$ é 1, os
+dois pesos são iguais e a condição vira $a + b$ — que é o caso da página
+anterior.
+
+</details>
+
+**2. Por que temos o direito de comparar os coeficientes um a um?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque estamos usando a comparação no sentido fácil: **impomos** que os
+coeficientes coincidam e daí concluímos que as expressões coincidem. Se
+$2b + a = -5$ e $ab = -3$, então $2x^2 + (2b+a)x + ab$ é literalmente a mesma
+escrita que $2x^2 - 5x - 3$; e a distributiva garante que $(2x+a)(x+b)$ vale
+$2x^2 + (2b+a)x + ab$. Juntando as duas coisas, o produto encontrado é o
+polinômio original. Por isso a conferência final — multiplicar de volta —
+resolve qualquer dúvida: ela testa exatamente aquilo que se quer.
+
+</details>
+
+**3. Em $2x^2 - 5x - 3$, por que há quatro candidatos a testar e não dois?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque a ordem importa. Os pares de inteiros com produto $-3$ são $\{1, -3\}$ e
+$\{-1, 3\}$ — dois conjuntos —, mas cada um pode ser colocado nos dois lugares
+de duas maneiras, e os dois lugares não são equivalentes: um multiplica $2x$ e o
+outro multiplica $x$. Colocar $a = 1$, $b = -3$ dá $2b + a = -5$; colocar
+$a = -3$, $b = 1$ dá $2b + a = -1$. São candidatos diferentes, com respostas
+diferentes.
+
+</details>
+
+**4. O que muda e o que permanece igual ao escrever $-5x$ como $-6x + x$?**
+
+<details>
+<summary>Resposta</summary>
+
+Permanece igual o **valor**: $-6x + x$ e $-5x$ são a mesma quantidade para
+qualquer $x$, porque são termos semelhantes. Muda o **número de parcelas** — de
+três passamos a quatro —, e isso abre a porta para o agrupamento. O que esta
+página acrescenta é a **razão da escolha**: $-6x$ e $x$ não foram escolhidos por
+tentativa, são os dois termos cruzados de $(2x+1)(x-3)$.
+
+</details>
+
+**5. De onde vem a regra do $a \times c$ da página anterior?**
+
+<details>
+<summary>Resposta</summary>
+
+Dos dois termos cruzados. Em $(2x + a)(x + b)$ eles são $2bx$ e $ax$; os
+coeficientes deles, $2b$ e $a$, somam $2b + a$ — o coeficiente do meio — e
+multiplicam $2ab$, que é o coeficiente de $x^2$ vezes o termo constante $ab$. No
+retângulo é a mesma conta: multiplicar os dois pedaços das pontas ou os dois
+pedaços do meio dá o mesmo, porque em ambos os casos estamos multiplicando as
+mesmas quatro medidas, agrupadas de outro jeito. A regra é um atalho para achar
+os cruzados, não um axioma.
+
+</details>
+
+**6. Uma forma do produto falhou. Já dá para dizer que o polinômio não fatora?**
+
+<details>
+<summary>Resposta</summary>
+
+Não. Falhou aquela partição do coeficiente de $x^2$, e só ela. Em
+$4x^2 - 8x + 3$, a forma $(4x+a)(x+b)$ não tem candidato que sirva, e mesmo
+assim o polinômio fatora — pela forma $(2x+a)(2x+b)$, que dá
+$(2x-1)(2x-3)$. A conclusão "não fatora com inteiros" exige esgotar todas as
+partições, e em cada uma todos os candidatos. Quando o coeficiente de $x^2$ é
+primo, como 2 ou 3, só existe uma partição, e aí uma forma esgotada já basta.
+
+</details>
+
+**7. Por que retirar o fator comum antes de tudo não é apenas economia de
+esforço?**
+
+<details>
+<summary>Resposta</summary>
+
+Porque sem esse passo a fatoração pode terminar **incompleta**. Em
+$4x^2 - 10x - 6$ é fácil chegar a $(2x - 6)(2x + 1)$, que multiplicado de volta
+dá o polinômio certo — e ainda assim não é a resposta final, porque $2x - 6$
+guarda um fator 2. Além disso, o fator comum encolhe os coeficientes, o que
+reduz o número de partições e o número de candidatos a testar.
+
+</details>
+
+**8. A forma fatorada disse alguma coisa sobre a oficina que a tabela não
+dizia?**
+
+<details>
+<summary>Resposta</summary>
+
+Disse duas. Primeiro, **onde** o saldo zera, sem depender de o zero cair num mês
+inteiro que alguém tenha resolvido testar. Segundo, o **sinal**: como $2x + 1$ é
+positivo para todo $x \ge 0$, quem decide o sinal do saldo é o fator $x - 3$
+sozinho — negativo antes do mês 3, positivo depois, e nunca mais negativo. A
+tabela mostrava seis meses; a forma fatorada descreve todos.
+
+</details>
+
+## 15. Exercícios
+
+### 1. Reconhecimento
+
+1. Escreva **todas** as formas do produto a testar, sem preencher os lugares em
+   branco, para um polinômio cujo coeficiente de $x^2$ seja:
+   a) 3
+   b) 6
+   c) 4
+   d) 5
+
+2. Desenvolva $(5x + a)(x + b)$ e escreva as duas condições sobre $a$ e $b$ para
+   que o resultado seja $5x^2 - 13x + 6$.
+
+3. Quais destas expressões já estão fatoradas?
+   a) $(2x + 1)(x - 3)$
+   b) $2x^2 - 6x + x - 3$
+   c) $2x(x - 3) + 1(x - 3)$
+   d) $2(2x + 1)(x - 3)$
+
+### 2. Explicação
+
+4. Explique, usando o retângulo da seção 6, por que o coeficiente do meio de
+   $(2x + a)(x + b)$ é $2b + a$ e não $a + b$.
+
+5. $(2x + 1)(x - 3)$ e $(2x - 3)(x + 1)$ usam os mesmos dois números. Desenvolva
+   os dois e explique por que dão polinômios diferentes.
+
+6. Por que a lista de candidatos é sempre finita? O que garante isso?
+
+### 3. Aplicação direta
+
+7. Fatore usando a forma $(2x + a)(x + b)$, escrevendo as duas condições antes
+   de testar:
+   a) $2x^2 + 9x + 4$
+   b) $2x^2 - 7x - 15$
+   c) $2x^2 - x - 3$
+
+8. Fatore:
+   a) $3x^2 + 5x - 2$
+   b) $5x^2 + 8x - 4$
+   c) $3x^2 - 11x + 6$
+
+9. Fatore e confira cada resultado multiplicando de volta:
+   a) $2x^2 + 5x - 12$
+   b) $5x^2 - 13x + 6$
+   c) $2x^2 + 5x + 3$
+
+### 4. Variação
+
+10. Agora o coeficiente de $x^2$ se parte de mais de um jeito. Diga quais formas
+    você testou, mesmo as que falharam:
+    a) $6x^2 + x - 12$
+    b) $4x^2 - 8x + 3$
+    c) $6x^2 - 13x + 6$
+
+11. Comece pelo fator comum:
+    a) $4x^2 - 10x - 6$
+    b) $12x^2 + 26x + 10$
+    c) $6x^3 - x^2 - 2x$
+
+12. Uma destas três não fatora com números inteiros. Descubra qual e mostre
+    **como você sabe** — não basta dizer que não achou:
+    a) $2x^2 + 7x + 3$
+    b) $2x^2 + 3x + 4$
+    c) $2x^2 + 5x + 3$
+
+### 5. Problema misto
+
+13. Uma segunda oficina tem saldo acumulado $S(x) = 3x^2 - 11x + 6$, em milhares
+    de reais, $x$ meses após abrir.
+    a) escreva a forma fatorada;
+    b) em que valores de $x$ o saldo vale zero?
+    c) um dos dois valores não é um mês inteiro. Isso invalida a resposta?
+    Explique o que ele significa;
+    d) confira a fatoração calculando as duas formas em $x = 4$.
+
+14. Simplifique, fatorando primeiro, e diga qual valor precisa ser excluído:
+    a) $\dfrac{2x^2 - 5x - 3}{x - 3}$
+    b) $\dfrac{3x^2 + 5x - 2}{3x - 1}$
+    c) $\dfrac{6x^2 - 13x + 6}{2x - 3}$
+
+15. Para quais valores de $x$ a expressão $2x^2 - 7x - 15$ vale zero?
+
+16. Fatore $4x^4 - 8x^2 + 3$ o máximo que der com coeficientes inteiros.
+
+<details>
+<summary>Dica para o exercício 16</summary>
+
+Repare que $x^4 = (x^2)^2$. Se você chamar $x^2$ de uma letra só — digamos $u$ —
+a expressão vira um polinômio de grau 2 em $u$, que é exatamente o tipo que esta
+página fatora. Fatore nele, volte a escrever $x^2$ no lugar de $u$, e então
+pergunte se cada fator que apareceu ainda fatora com inteiros.
+
+</details>
+
+### 6. Justificativa
+
+17. Por que comparar coeficientes é um passo legítimo, e não um chute
+    organizado?
+
+18. Mostre, a partir do desenvolvimento de $(3x + a)(x + b)$, que os
+    coeficientes dos dois termos cruzados somam o coeficiente do meio e
+    multiplicam o coeficiente de $x^2$ vezes o termo constante — ou seja, que a
+    regra do $a \times c$ vale também quando o coeficiente de $x^2$ é 3.
+
+19. Alguém afirma: "se o coeficiente de $x^2$ é 1, tanto faz a ordem dos dois
+    números; se não é, a ordem importa". Explique por quê, usando os
+    desenvolvimentos gerais.
+
+20. Alguém fatorou $6x^2 + x - 12$ como $(2x - 3)(3x + 4)$. Mostre que está
+    errado **sem** desenvolver o produto inteiro, e corrija.
+
+## 16. Gabarito comentado
+
+Confira um grupo de cada vez, logo depois de resolvê-lo.
+
+<details>
+<summary>Respostas — Reconhecimento</summary>
+
+1. a) Só uma: $(3x + \underline{\ })(x + \underline{\ })$, porque 3 é primo.
+   b) Duas: $(6x + \underline{\ })(x + \underline{\ })$ e
+   $(2x + \underline{\ })(3x + \underline{\ })$.
+   c) Duas: $(4x + \underline{\ })(x + \underline{\ })$ e
+   $(2x + \underline{\ })(2x + \underline{\ })$.
+   d) Só uma: $(5x + \underline{\ })(x + \underline{\ })$, porque 5 é primo.
+2. $(5x + a)(x + b) = 5x^2 + 5bx + ax + ab = 5x^2 + (5b + a)x + ab$. As
+   condições são $5b + a = -13$ e $ab = 6$. (A resposta, se você foi adiante:
+   $a = -3$ e $b = -2$, ou seja $(5x - 3)(x - 2)$.)
+3. Fatoradas: **a** e **d**, porque em ambas a última operação a ser feita é uma
+   multiplicação. **b** é uma soma de quatro parcelas. **c** é o caso
+   interessante — está no meio do caminho: é uma **soma de dois produtos**, e só
+   vira produto depois de colocar $(x - 3)$ em evidência, chegando a
+   $(x - 3)(2x + 1)$.
+
+</details>
+
+<details>
+<summary>Respostas — Explicação</summary>
+
+4. No retângulo de lados $2x + a$ e $x + b$, os quatro pedaços são $2x^2$,
+   $2bx$, $ax$ e $ab$. Os dois pedaços do meio são os cruzados, e eles têm
+   alturas diferentes: o de cima tem altura $2x$ e largura $b$, valendo $2bx$; o
+   de baixo tem altura $a$ e largura $x$, valendo $ax$. Juntos valem
+   $(2b + a)x$. O $b$ entra dobrado porque foi multiplicado pelo lado que vale
+   $2x$. Só quando o coeficiente de $x^2$ é 1 as duas alturas coincidem e a
+   condição vira $a + b$.
+5. $(2x + 1)(x - 3) = 2x^2 - 6x + x - 3 = 2x^2 - 5x - 3$, enquanto
+   $(2x - 3)(x + 1) = 2x^2 + 2x - 3x - 3 = 2x^2 - x - 3$. Os termos das pontas
+   são iguais nos dois ($2x^2$ e $-3$), e o que muda é o meio: no primeiro os
+   cruzados são $-6x$ e $x$; no segundo são $2x$ e $-3x$. A diferença vem de
+   qual dos dois números foi multiplicado pelo $2x$ — o que pesa dobrado é o que
+   está no segundo parêntese.
+6. Porque a condição do produto, $ab = c$, só admite pares de **divisores** de
+   $c$, e todo inteiro diferente de zero tem uma quantidade finita de divisores.
+   Somando a isso o número finito de partições do coeficiente de $x^2$, a busca
+   inteira é finita. É por isso que esgotá-la sem achar nada é uma conclusão, e
+   não uma desistência.
+
+</details>
+
+<details>
+<summary>Respostas — Aplicação direta</summary>
+
+7. Em todos, as condições vêm de
+   $(2x + a)(x + b) = 2x^2 + (2b + a)x + ab$.
+   a) $2b + a = 9$ e $ab = 4$: o par $a = 1$, $b = 4$ dá $8 + 1 = 9$ ✓. Logo
+   $(2x + 1)(x + 4)$.
+   b) $2b + a = -7$ e $ab = -15$: o par $a = 3$, $b = -5$ dá $-10 + 3 = -7$ ✓.
+   Logo $(2x + 3)(x - 5)$.
+   c) $2b + a = -1$ e $ab = -3$: o par $a = -3$, $b = 1$ dá $2 - 3 = -1$ ✓. Logo
+   $(2x - 3)(x + 1)$. Compare com o polinômio da lição, $2x^2 - 5x - 3$: mesmos
+   números, posições trocadas, meio diferente.
+8. a) $(3x - 1)(x + 2)$. b) $(5x - 2)(x + 2)$. c) $(3x - 2)(x - 3)$.
+9. a) $(2x - 3)(x + 4)$; conferindo, $2x^2 + 8x - 3x - 12 = 2x^2 + 5x - 12$ ✓.
+   b) $(5x - 3)(x - 2)$; conferindo, $5x^2 - 10x - 3x + 6 = 5x^2 - 13x + 6$ ✓.
+   c) $(2x + 3)(x + 1)$; conferindo, $2x^2 + 2x + 3x + 3 = 2x^2 + 5x + 3$ ✓.
+
+</details>
+
+<details>
+<summary>Respostas — Variação</summary>
+
+10. a) Pela forma $(2x + a)(3x + b)$, as condições são $2b + 3a = 1$ e
+    $ab = -12$; o par $a = 3$, $b = -4$ serve, e sai
+    $6x^2 + x - 12 = (2x + 3)(3x - 4)$. Como essa forma funcionou, não é preciso
+    testar $(6x + a)(x + b)$.
+    b) A forma $(4x + a)(x + b)$ pede $4b + a = -8$ e $ab = 3$, e nenhum dos
+    quatro candidatos serve ($-13$, $-7$, $13$, $7$). A forma
+    $(2x + a)(2x + b)$ pede $2(a + b) = -8$ e $ab = 3$, ou seja $a + b = -4$ e
+    $ab = 3$: o par $-1$ e $-3$ serve. Resposta: $(2x - 1)(2x - 3)$.
+    c) Pela forma $(2x + a)(3x + b)$: $2b + 3a = -13$ e $ab = 6$. O par
+    $a = -3$, $b = -2$ dá $-4 - 9 = -13$ ✓. Resposta: $(2x - 3)(3x - 2)$.
+    Conferindo com $x = 1$: a original vale $6 - 13 + 6 = -1$, e a fatorada vale
+    $(-1) \times 1 = -1$ ✓.
+11. a) $2(2x^2 - 5x - 3) = 2(2x + 1)(x - 3)$.
+    b) $\operatorname{mdc}(12, 26, 10) = 2$, então
+    $2(6x^2 + 13x + 5) = 2(3x + 5)(2x + 1)$. Conferindo com $x = 1$: a original
+    vale $12 + 26 + 10 = 48$, e a fatorada vale $2 \times 8 \times 3 = 48$ ✓.
+    c) O fator comum é $x$: $x(6x^2 - x - 2) = x(3x - 2)(2x + 1)$. Sem retirar o
+    $x$ primeiro, o polinômio tem grau 3 e o método desta página nem se aplica.
+12. A **b**, $2x^2 + 3x + 4$. Como 2 é primo, a única forma é $(2x + a)(x + b)$,
+    com $2b + a = 3$ e $ab = 4$. O produto é positivo e a soma também, então os
+    dois números são positivos, e os pares ordenados de divisores de 4 são
+    $(1,4)$, $(4,1)$ e $(2,2)$, com $2b + a$ valendo $9$, $6$ e $6$. A lista
+    acabou e nenhum dá 3 — está provado que não fatora. As outras duas fatoram:
+    a) $(2x + 1)(x + 3)$; c) $(2x + 3)(x + 1)$.
+
+</details>
+
+<details>
+<summary>Respostas — Problema misto</summary>
+
+13. a) $3x^2 - 11x + 6 = (3x - 2)(x - 3)$. Conferindo:
+    $3x^2 - 9x - 2x + 6 = 3x^2 - 11x + 6$ ✓.
+    b) O produto vale zero quando um dos fatores vale zero: $x = \frac{2}{3}$ ou
+    $x = 3$.
+    c) Não invalida nada. $x = \frac{2}{3}$ é um instante real — dois terços de
+    mês, cerca de vinte dias — em que o saldo passou por zero na descida. A
+    fórmula descreve o saldo continuamente; nada obriga o zero a cair num mês
+    fechado. O que a fatoração acrescenta é que **entre** os dois zeros o saldo
+    é negativo, e depois do mês 3 ele é positivo para sempre.
+    d) Com $x = 4$: a forma somada dá $48 - 44 + 6 = 10$; a fatorada dá
+    $10 \times 1 = 10$ ✓.
+14. a) $\frac{(2x+1)(x-3)}{x-3} = 2x + 1$, com $x \ne 3$.
+    b) $\frac{(3x-1)(x+2)}{3x-1} = x + 2$, com $x \ne \frac{1}{3}$.
+    c) $\frac{(2x-3)(3x-2)}{2x-3} = 3x - 2$, com $x \ne \frac{3}{2}$.
+    Nos três, o valor excluído é o que zeraria o denominador original.
+15. $2x^2 - 7x - 15 = (2x + 3)(x - 5)$, então $x = -\frac{3}{2}$ ou $x = 5$.
+    Conferindo em $x = 5$: $50 - 35 - 15 = 0$ ✓. Em $x = -\frac{3}{2}$:
+    $2 \cdot \frac{9}{4} + \frac{21}{2} - 15 = \frac{9}{2} + \frac{21}{2} - 15 =
+    15 - 15 = 0$ ✓.
+16. Chamando $x^2$ de $u$: $4u^2 - 8u + 3$, que é o polinômio da seção 11 —
+    $(2u - 1)(2u - 3)$. Voltando:
+    $$4x^4 - 8x^2 + 3 = (2x^2 - 1)(2x^2 - 3)$$
+    E aqui **para**. Teste $2x^2 - 1$ pelo método da página: escrito como
+    $2x^2 + 0x - 1$, ele pede $ab = -1$ e $2b + a = 0$; os dois candidatos,
+    $(1, -1)$ e $(-1, 1)$, dão $-1$ e $1$, e nenhum dá 0. Em $2x^2 - 3$ os
+    quatro candidatos dão $-5$, $5$, $1$ e $-1$ — nenhum dá 0 tampouco.
+    Nenhum dos dois fatores abre com inteiros. Conferindo
+    com $x = 2$: a original vale $64 - 32 + 3 = 35$, e a fatorada vale
+    $7 \times 5 = 35$ ✓. Note a diferença em relação ao exercício parecido da
+    página anterior, em que os dois fatores ainda abriam: quando a fatoração
+    para, ela para — e reconhecer isso faz parte da resposta.
+
+</details>
+
+<details>
+<summary>Respostas — Justificativa</summary>
+
+17. Porque nada é adivinhado: as condições são **produzidas** por uma
+    multiplicação. Desenvolvendo $(2x + a)(x + b)$ pela distributiva, sai
+    $2x^2 + (2b + a)x + ab$; exigir que isso seja $2x^2 - 5x - 3$ obriga
+    $2b + a = -5$ e $ab = -3$. E, no sentido em que usamos, a conclusão é
+    imediata: se os coeficientes coincidem, as expressões coincidem, e o produto
+    encontrado é o polinômio original. A conferência final confirma isso
+    diretamente, sem depender do método.
+18. $(3x + a)(x + b) = 3x^2 + 3bx + ax + ab = 3x^2 + (3b + a)x + ab$. Os
+    coeficientes dos termos cruzados são $3b$ e $a$. Eles **somam** $3b + a$,
+    que é o coeficiente do meio, e **multiplicam** $3b \times a = 3ab$, que é
+    $3$ vezes o termo constante $ab$ — ou seja, o coeficiente de $x^2$ vezes o
+    termo constante — que é exatamente o que a regra do $a \times c$ afirma.
+19. Com coeficiente 1, o desenvolvimento é
+    $(x + p)(x + q) = x^2 + (p + q)x + pq$: as duas condições, $p + q$ e $pq$,
+    são simétricas — trocar $p$ com $q$ não muda nada, porque soma e produto não
+    dependem da ordem. Com coeficiente diferente de 1, o desenvolvimento é
+    $(2x + a)(x + b) = 2x^2 + (2b + a)x + ab$: a condição do produto continua
+    simétrica, mas a do meio **não é** — $2b + a$ e $2a + b$ são coisas
+    diferentes. Como só um dos dois lugares é multiplicado pelo $2x$, os lugares
+    deixam de ser intercambiáveis.
+20. Basta olhar um coeficiente. O termo do meio de $(2x - 3)(3x + 4)$ vem dos
+    dois cruzados, $2x \cdot 4 = 8x$ e $-3 \cdot 3x = -9x$, que somam $-x$ — mas
+    o polinômio pede $+x$. O sinal do meio já denuncia, e não foi preciso
+    desenvolver o produto inteiro. Um teste ainda mais rápido: avalie em
+    $x = 1$; a expressão vale $6 + 1 - 12 = -5$, e a proposta vale
+    $(-1) \times 7 = -7$. A correção é trocar os sinais de lugar:
+    $6x^2 + x - 12 = (2x + 3)(3x - 4)$, cujos cruzados são $-8x$ e $9x$,
+    somando $+x$ ✓.
+
+</details>
+
+## 17. Revisão curta
+
+- **Fatorar é desfazer uma multiplicação.** A pergunta que abre qualquer
+  fatoração é "que multiplicação poderia ter produzido isto?", e não "que regra
+  se aplica aqui?".
+- **Escreva a forma do produto antes de saber os números.** Partir o coeficiente
+  de $x^2$ dá o esqueleto; letras ocupam os lugares em branco.
+- **Multiplique e compare.** Desenvolver $(2x + a)(x + b)$ dá
+  $2x^2 + (2b + a)x + ab$, e comparar com o polinômio produz as condições —
+  nada a decorar.
+- **O termo do meio é a soma dos dois termos cruzados**, e os cruzados têm pesos
+  diferentes: em $(2x + a)(x + b)$ a condição é $2b + a$, não $a + b$.
+- **A ordem importa** quando o coeficiente de $x^2$ não é 1, porque os dois
+  lugares não são equivalentes: $(2x + 1)(x - 3)$ e $(2x - 3)(x + 1)$ dão
+  polinômios diferentes.
+- **A regra do $a \times c$ é consequência, não axioma:** os coeficientes dos
+  cruzados somam o coeficiente do meio e multiplicam o coeficiente de $x^2$
+  vezes o termo constante. Use-a como atalho depois de entendê-la; reconstrua o
+  método quando ela escapar.
+- **Comece sempre pelo fator comum**, e teste **todas** as partições do
+  coeficiente de $x^2$ antes de concluir que algo não fatora.
+- **A busca é finita**, porque a lista de divisores é finita. Esgotá-la sem
+  achar candidato é uma prova de que o polinômio não fatora com inteiros.
+- **A conferência é gratuita:** multiplique de volta, ou avalie as duas formas
+  num número qualquer.
+
+Antes de avançar, verifique se você consegue explicar **por que** a condição do
+meio é $2b + a$ e **de onde** sai a regra do $a \times c$ — sem consultar a
+página. Com isso firme, as [frações algébricas](./fracoes-algebricas) ganham o
+que faltava para simplificar quocientes com coeficiente diferente de 1, e o
+capítulo de [equações](../equacoes/equacoes-do-segundo-grau) pode resolver
+$2x^2 - 5x - 3 = 0$ sem fórmula nenhuma — apenas lendo os dois fatores.

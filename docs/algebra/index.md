@@ -75,11 +75,14 @@ trabalhar sobre frações.
    de trás para frente.
 4. [Agrupamento e trinômios](./agrupamento-e-trinomios) — fatorar quando não há
    fator comum em todos os termos.
-5. [Frações algébricas](./fracoes-algebricas) — simplificar um quociente de
+5. [Fatorar comparando coeficientes](./fatorar-comparando-coeficientes) — que
+   multiplicação poderia ter produzido este polinômio, e por que a regra do
+   $a \times c$ funciona.
+6. [Frações algébricas](./fracoes-algebricas) — simplificar um quociente de
    polinômios, e por que só se cancela fator.
-6. [Operações com frações algébricas](./operacoes-com-fracoes-algebricas) —
+7. [Operações com frações algébricas](./operacoes-com-fracoes-algebricas) —
    multiplicar, dividir e, o caso difícil, somar com denominador comum.
-7. [Racionalizar denominadores](./racionalizacao) — tirar a raiz de baixo, e o
+8. [Racionalizar denominadores](./racionalizacao) — tirar a raiz de baixo, e o
    conjugado que faz isso quando há uma soma.
 
 ## O que vem depois
