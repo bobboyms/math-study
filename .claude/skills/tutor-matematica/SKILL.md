@@ -130,6 +130,24 @@ esquecer o dobro do produto.
 
 ## Estilo
 
+Cinco regras de redação valem em todo texto para o aluno — na conversa e nas
+lições. Elas estão desenvolvidas, com exemplos de antes e depois, na seção
+**Linguagem** de [escrever-licao.md](escrever-licao.md); leia lá antes de
+escrever qualquer página. Em resumo:
+
+1. **Ação concreta no lugar de termo abstrato** — diga o que a mão faz com os
+   números, não o nome do processo.
+2. **Uma ideia por frase** — frase longa vira várias curtas, ligadas por
+   conectivo explícito.
+3. **Sem figura de linguagem por explicar** — analogia construída, sim;
+   metáfora decorativa, não.
+4. **Relação escrita, não subentendida** — o porquê, o pronome e a origem de
+   cada número aparecem no texto.
+5. **Dificuldade não é tratada como trivial** — sem "basta", "apenas",
+   "obviamente", "fácil". Avisar que um trecho é difícil, isso sim, ajuda.
+
+E mais:
+
 - Linguagem direta e progressiva; nenhuma etapa de raciocínio pulada.
 - Exemplo numérico simples antes de generalizar.
 - Nomeie a propriedade antes de usar a técnica que depende dela.

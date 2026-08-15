@@ -75,13 +75,16 @@ Essa segunda pergunta é o que dá origem ao logaritmo.
    é proporcional ao que já existe.
 2. [Decaimento e o número $e$](./decaimento-e-o-numero-e) — o que muda quando a
    base é menor que 1, e de onde vem a constante 2,718…
-3. [O logaritmo](./logaritmo) — a pergunta invertida: qual expoente produz este
+3. [Misturas e trocas sucessivas](./misturas-e-trocas-sucessivas) — como
+   frações, proporções e um fator de permanência descrevem diluições feitas em
+   etapas.
+4. [O logaritmo](./logaritmo) — a pergunta invertida: qual expoente produz este
    número?
-4. [Propriedades do logaritmo](./propriedades-do-logaritmo) — as três regras que
+5. [Propriedades do logaritmo](./propriedades-do-logaritmo) — as três regras que
    transformam produtos em somas, e a mudança de base.
-5. [Função logarítmica](./funcao-logaritmica) — o gráfico, o domínio e a
+6. [Função logarítmica](./funcao-logaritmica) — o gráfico, o domínio e a
    simetria com a exponencial.
-6. [Equações exponenciais e
+7. [Equações exponenciais e
    logarítmicas](./equacoes-exponenciais-e-logaritmicas) — resolver, e verificar
    por que algumas soluções precisam ser descartadas.
 

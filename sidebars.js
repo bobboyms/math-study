@@ -314,23 +314,28 @@ const sidebars = {
         },
         {
           type: 'doc',
+          id: 'exponenciais-e-logaritmos/misturas-e-trocas-sucessivas',
+          label: '6.4 Misturas e trocas sucessivas',
+        },
+        {
+          type: 'doc',
           id: 'exponenciais-e-logaritmos/logaritmo',
-          label: '6.4 O logaritmo',
+          label: '6.5 O logaritmo',
         },
         {
           type: 'doc',
           id: 'exponenciais-e-logaritmos/propriedades-do-logaritmo',
-          label: '6.5 Propriedades do logaritmo',
+          label: '6.6 Propriedades do logaritmo',
         },
         {
           type: 'doc',
           id: 'exponenciais-e-logaritmos/funcao-logaritmica',
-          label: '6.6 Função logarítmica',
+          label: '6.7 Função logarítmica',
         },
         {
           type: 'doc',
           id: 'exponenciais-e-logaritmos/equacoes-exponenciais-e-logaritmicas',
-          label: '6.7 Equações exponenciais e logarítmicas',
+          label: '6.8 Equações exponenciais e logarítmicas',
         },
       ],
     },

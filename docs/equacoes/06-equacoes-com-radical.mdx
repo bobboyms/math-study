@@ -1,5 +1,5 @@
 ---
-title: Equações com radical
+title: "Equações com radical: por que a verificação é obrigatória"
 ---
 
 import CartesianPlane from '@site/src/components/CartesianPlane';
@@ -35,13 +35,23 @@ que não existia em nenhuma equação anterior: um método que produz respostas 
   raiz, como $\sqrt{x + 3} = x - 3$;
 - **isolar o radical** é deixar a raiz sozinha de um lado, antes de qualquer
   outra coisa;
+- **condições necessárias** são os filtros que todo candidato precisa respeitar:
+  o radicando deve ser não negativo e uma raiz isolada não pode ser igual a um
+  número negativo;
 - **elevar ao quadrado** os dois lados é o passo que desfaz a raiz;
 - **raiz estranha** é um valor que aparece no fim das contas mas **não** resolve
-  a equação original — e só a verificação a denuncia.
+  a equação original — um filtro pode antecipar o descarte, e a verificação na
+  equação original dá a decisão final.
 
 Por exemplo, resolver $\sqrt{x+3} = x-3$ produz dois candidatos, 1 e 6. O 6
 funciona; o 1 não. Nenhuma conta errada foi feita — o método é assim mesmo, e é
 por isso que a verificação faz parte dele.
+
+Compare um exemplo com um contraexemplo da definição. Em
+$\sqrt{x+3}=x-3$, a incógnita está sob a raiz; portanto, essa é uma equação com
+radical. Em $\sqrt{5}\,x=10$, o radicando é o número 5, enquanto $x$ está fora
+da raiz. Nesse segundo caso, $\sqrt{5}$ funciona como um coeficiente, e a
+equação é do 1º grau.
 
 ## 3. Para que serve
 
@@ -129,8 +139,8 @@ curva; resolver a equação é achar onde as duas se encontram.
     {f: (x) => 3 - x, tone: 3, dashed: true},
   ]}
   points={[
-    {at: [6, 3], label: 'x=6', tone: 2, place: 'above-left'},
-    {at: [1, 2], label: 'x=1', tone: 3, place: 'below-right'},
+    {at: [6, 3], label: 'x=6', tone: 2, dx: -24, dy: -20},
+    {at: [1, 2], label: 'x=1', tone: 3, dx: 26, dy: 24},
   ]}
   axisLabels={['x', 'y']}
   caption="A curva da raiz encontra a reta y = x − 3 em x = 6 — a solução verdadeira. Em x = 1 ela encontra a reta tracejada y = 3 − x, que é a outra reta refletida. Elevar ao quadrado não distingue as duas."
@@ -153,11 +163,63 @@ equação, que o quadrado tornou indistinguível da nossa.
 
 ## 7. O método
 
+Antes da lista de passos, vale registrar exatamente o que acontece quando a
+raiz está isolada. Na forma
+
+$$
+\sqrt{A(x)} = B(x),
+$$
+
+a equação original impõe duas condições: $A(x) \ge 0$, para a raiz existir nos
+reais, e $B(x) \ge 0$, porque a raiz quadrada nunca devolve um número negativo.
+Essas condições são **filtros antecipados**: podem eliminar candidatos sem
+conta longa, mas, sozinhas, não substituem o teste final.
+
+Agora compare as duas direções:
+
+$$
+\sqrt{A(x)} = B(x)
+\quad\Longrightarrow\quad
+A(x) = B(x)^2,
+$$
+
+mas
+
+$$
+A(x) = B(x)^2
+\quad\not\Longrightarrow\quad
+\sqrt{A(x)} = B(x).
+$$
+
+A seta de mão única é o motivo lógico da verificação. A equação elevada ao
+quadrado é uma condição que toda solução verdadeira cumpre, mas também pode
+aceitar valores com $B(x) < 0$. Quando juntamos a equação elevada ao quadrado
+com o filtro de sinal, recuperamos a equivalência:
+
+$$
+\sqrt{A(x)} = B(x)
+\quad\Longleftrightarrow\quad
+\begin{cases}
+A(x) = B(x)^2,\\
+B(x) \ge 0.
+\end{cases}
+$$
+
+No caso de um único radical, acompanhar esse sistema com rigor já prova quais
+valores servem. A substituição final continua sendo o fechamento adotado nesta
+página porque reúne, numa conta curta, o teste do domínio, do sinal e da
+igualdade. Quando há mais de um radical e mais de um quadrado, ela evita que uma
+restrição esquecida no meio do caminho vire resposta.
+
 > Para resolver uma equação com radical:
-> 1. **isole o radical** de um lado;
+> 1. **isole o radical** de um lado e anote as condições necessárias;
 > 2. **eleve os dois lados ao quadrado**;
 > 3. resolva a equação que sobrou;
 > 4. **teste cada candidato na equação original** e descarte os que falharem.
+
+No passo 3, use a palavra **candidato**, não “solução”. O quadrado garante que o
+valor encontrado resolve a equação transformada. Depois do teste do passo 4, os
+candidatos que passarem podem ser chamados de soluções da equação original.
 
 O passo 1 vem antes do 2 por um motivo prático. Com a raiz isolada, elevar ao
 quadrado a elimina de vez. Sem isolar, o quadrado de uma soma reproduz a raiz no
@@ -172,6 +234,12 @@ melhor.
 
 O passo 4 não é conferência de aluno cuidadoso: é **parte do método**. Sem ele,
 a resposta está incompleta.
+
+Esta página trabalha com equações em que uma etapa de isolamento deixa um
+radical sozinho — ou um radical de cada lado. Em equações com vários radicais,
+pode ser necessário isolar e elevar ao quadrado mais de uma vez. Cada vez que o
+quadrado aparece, novos candidatos podem entrar; por isso todos são testados no
+enunciado original ao final.
 
 ## 8. Resolvendo o problema do pêndulo
 
@@ -234,6 +302,10 @@ Verificando: $\sqrt{2 \times 12 + 1} = \sqrt{25} = 5$. Confere.
 O radical está isolado. Elevando os dois lados ao quadrado — e lembrando que o
 lado direito é um **quadrado da diferença**, não $x^2 - 9$:
 
+Antes da conta, os filtros dão $x+3\ge0$ e $x-3\ge0$. Juntos, eles exigem
+$x\ge3$. Portanto, já sabemos que qualquer candidato menor que 3 terá de ser
+descartado; a substituição final mostrará a falha diretamente na equação.
+
 $$
 x + 3 = (x-3)^2 = x^2 - 6x + 9.
 $$
@@ -271,6 +343,12 @@ $$
 \sqrt{x-1} = x - 3.
 $$
 
+Antes de elevar, a raiz isolada já informa que $x - 3 \ge 0$, portanto
+$x \ge 3$. O radicando também exige $x-1\ge0$, ou seja, $x\ge1$. A condição
+mais restritiva é $x\ge3$, e ela antecipa que qualquer candidato menor que 3 vai
+falhar. Ainda faremos a substituição na equação original: ela reúne todos os
+testes num procedimento único, inclusive quando houver mais de um quadrado.
+
 Agora eleve ao quadrado:
 
 $$
@@ -281,7 +359,7 @@ $$
 
 Soma 7 e produto 10: os números são 2 e 5. Candidatos: $x = 2$ e $x = 5$.
 
-Testando na equação **original** — a com o $+3$, não a intermediária:
+Testando na equação **original**, a que ainda contém o $+3$:
 
 | Candidato | $\sqrt{x-1} + 3$ | $x$ | Veredito |
 |---:|---:|---:|---|
@@ -289,6 +367,13 @@ Testando na equação **original** — a com o $+3$, não a intermediária:
 | $x = 5$ | $\sqrt{4} + 3 = 5$ | 5 | confere |
 
 A solução é **$x = 5$**.
+
+Neste exemplo, testar na forma isolada $\sqrt{x-1}=x-3$ também daria uma decisão
+correta, porque chegamos a ela subtraindo 3 dos dois lados, uma operação
+reversível. Já testar em $x-1=(x-3)^2$ não serve: os dois candidatos foram
+obtidos justamente dessa equação e, por isso, ambos passam nela. Voltar ao
+enunciado original evita ter de lembrar qual etapa intermediária ainda era
+equivalente.
 
 ### Exemplo 4: quando os dois candidatos servem
 
@@ -335,22 +420,33 @@ E testando: $\sqrt{11 - 2} = \sqrt{9} = 3$, que não é $-3$. O candidato falha,
 a resposta correta — “não há solução” — só aparece porque a verificação foi
 feita. Quem pula o passo 4 responde 11, que está errado.
 
-### Exemplo 6: radical dos dois lados
+### Exemplo 6: dois radicais e um candidato fora do domínio
 
-*Pause e tente.* Resolva $\sqrt{x + 7} = \sqrt{2x - 1}$.
+*Pause e tente.* Resolva $\sqrt{x + 1} = \sqrt{2x + 3}$.
 
 Elevando ao quadrado, as duas raízes somem de uma vez:
 
 $$
-x + 7 = 2x - 1 \quad\Longrightarrow\quad x = 8.
+x + 1 = 2x + 3 \quad\Longrightarrow\quad x = -2.
 $$
 
-Verificando: $\sqrt{15}$ dos dois lados. Confere.
+O valor $x=-2$ é candidato, mas não é solução. Na equação original, os dois
+radicandos valem $-1$:
 
-Aqui a verificação tem um papel a mais: garantir que os dois radicandos sejam
-**não negativos**. Com $x = 8$, temos $x + 7 = 15$ e $2x - 1 = 15$, ambos
-positivos, então as duas raízes existem. Se o candidato tornasse algum radicando
-negativo, ele estaria descartado mesmo que a igualdade numérica batesse.
+$$
+\sqrt{-2+1}=\sqrt{-1}
+\qquad\text{e}\qquad
+\sqrt{2(-2)+3}=\sqrt{-1}.
+$$
+
+Como $\sqrt{-1}$ não é um número real, a equação original nem está definida
+nesse ponto. Portanto, a equação não tem solução real.
+
+Há uma diferença importante em relação aos exemplos anteriores. Quando os dois
+lados são raízes reais, ambos já são não negativos. Nesse domínio, elevar ao
+quadrado não cria uma possibilidade de sinais opostos. O único risco vem de a
+equação sem raízes aceitar um valor fora do domínio, isto é, um valor que torne
+algum radicando negativo. Foi exatamente o que ocorreu com $x=-2$.
 
 ## 10. Erros comuns
 
@@ -366,9 +462,10 @@ negativo, ele estaria descartado mesmo que a igualdade numérica batesse.
 > $(x-3)^2 = x^2 - 9$. Teste com $x = 0$: $(0-3)^2 = 9$, e $0 - 9 = -9$. O
 > correto é $x^2 - 6x + 9$ — o dobro do produto não pode faltar.
 
-> **Erro 4: testar no lugar errado.** No Exemplo 3, testar em $\sqrt{x-1} = x-3$
-> em vez de na equação original. A equação intermediária já é resultado de uma
-> manipulação; a única referência confiável é o enunciado.
+> **Erro 4: testar depois do quadrado.** No Exemplo 3, os dois candidatos
+> satisfazem $x-1=(x-3)^2$, pois foi dessa equação que eles vieram. Esse teste
+> não elimina nada. A forma isolada anterior ao quadrado ainda é equivalente à
+> original, mas voltar ao enunciado é a regra segura em qualquer resolução.
 
 > **Erro 5: aceitar candidato que torna o radicando negativo.** Um valor que
 > faça $x - 2$ ficar negativo não pode ser solução de nada que envolva
@@ -377,6 +474,12 @@ negativo, ele estaria descartado mesmo que a igualdade numérica batesse.
 > **Erro 6: concluir que sempre sobra um candidato só.** O Exemplo 4 mostra os
 > dois passando. A verificação é um teste, não uma cota.
 
+> **Erro 7: verificar só o sinal.** Saber que $B(x) \ge 0$ elimina candidatos
+> impossíveis, mas o sinal sozinho não compara os valores dos dois lados. Para
+> um radical isolado, o filtro junto da equação elevada ao quadrado forma uma
+> equivalência. A substituição na equação original é o fechamento mais direto e
+> continua funcionando quando a resolução exige vários quadrados.
+
 ## 11. Perguntas de verificação
 
 1. Por que somar 5 aos dois lados nunca cria solução falsa, e elevar ao quadrado
@@ -384,12 +487,14 @@ negativo, ele estaria descartado mesmo que a igualdade numérica batesse.
 2. O que exatamente se perde ao elevar os dois lados ao quadrado?
 3. De onde vem, geometricamente, a raiz estranha da equação $\sqrt{x+3} = x-3$?
 4. Por que é preciso isolar o radical antes de elevar ao quadrado?
-5. Por que o teste tem de ser feito na equação **original**, e não na
-   intermediária?
+5. Por que testar na equação obtida **depois do quadrado** não detecta uma raiz
+   estranha? Por que voltar à original é a regra mais segura?
 6. Como se pode saber, antes de qualquer conta, que $\sqrt{x-2} = -3$ não tem
    solução?
 7. No Exemplo 4, por que nenhum dos dois candidatos falhou?
 8. Elevar ao quadrado pode fazer uma solução verdadeira **desaparecer**?
+9. Na forma $\sqrt{A(x)} = B(x)$, quais condições podem ser anotadas antes de
+   elevar ao quadrado? Como elas se relacionam com a verificação final?
 
 <details>
 <summary>Respostas para conferência</summary>
@@ -408,9 +513,11 @@ negativo, ele estaria descartado mesmo que a igualdade numérica batesse.
 4. Porque com a raiz isolada o quadrado a elimina por completo. Sem isolar, o
    quadrado de uma soma produz o termo do meio $2ab$, que reintroduz a raiz — a
    equação fica mais complicada, não menos.
-5. Porque toda equação intermediária já é fruto de uma manipulação que pode ter
-   ampliado o conjunto de soluções. A referência confiável é o enunciado, que
-   ninguém alterou.
+5. Porque os candidatos foram calculados para satisfazer a equação obtida depois
+   do quadrado; testá-los nela repete uma informação já conhecida. Uma forma
+   intermediária alcançada por operações reversíveis ainda tem as
+   mesmas soluções da original. Voltar ao enunciado é mais seguro porque não
+   exige localizar o primeiro passo que deixou de ser reversível.
 6. Porque uma raiz quadrada nunca devolve valor negativo, por convenção da
    operação. Um lado é sempre maior ou igual a zero e o outro é $-3$; a
    igualdade é impossível para qualquer $x$.
@@ -420,6 +527,12 @@ negativo, ele estaria descartado mesmo que a igualdade numérica batesse.
 8. Não. Se $a = b$ é verdade, então $a^2 = b^2$ também é — toda solução
    verdadeira continua sendo solução depois do quadrado. O risco é só o
    contrário: ganhar soluções que não valiam.
+9. É preciso ter $A(x) \ge 0$, para a raiz existir nos reais, e $B(x) \ge 0$,
+   porque uma raiz quadrada não é negativa. Essas condições eliminam valores
+   impossíveis. Com um radical isolado, $A(x)=B(x)^2$ junto de $B(x)\ge0$ já é
+   equivalente à equação original. Mesmo assim, substituir no enunciado é a
+   forma mais curta de conferir ao mesmo tempo domínio, sinal e igualdade — e
+   serve também quando houve vários quadrados.
 
 </details>
 
@@ -430,8 +543,9 @@ negativo, ele estaria descartado mesmo que a igualdade numérica batesse.
 1. Diga em quais equações a incógnita está **dentro** de um radical: a)
    $\sqrt{5} \, x = 10$ &nbsp; b) $\sqrt{x} = 5$ &nbsp; c) $x^2 = 7$ &nbsp; d)
    $\sqrt{x - 1} = 4$
-2. Isole o radical em cada caso, sem resolver: a) $\sqrt{x+1} - 2 = 5$ &nbsp; b)
-   $3\sqrt{x} = 12$ &nbsp; c) $\sqrt{2x} + x = 7$
+2. Isole o radical e anote as condições necessárias, sem resolver: a)
+   $\sqrt{x+1} - 2 = 5$ &nbsp; b) $3\sqrt{x} = 12$ &nbsp; c)
+   $\sqrt{2x} + x = 7$
 3. Qual passo do método é o que pode criar raízes estranhas? Por quê?
 
 ### 2. Explicação
@@ -439,7 +553,8 @@ negativo, ele estaria descartado mesmo que a igualdade numérica batesse.
 4. Explique por que $\sqrt{x} = -4$ não tem solução, sem elevar ao quadrado.
 5. Um colega resolveu $\sqrt{x+3} = x - 3$ e respondeu “$x = 1$ ou $x = 6$”.
    Onde está o erro, e como ele seria evitado?
-6. Explique por que a equação intermediária não serve para verificar.
+6. Explique por que a equação obtida depois de elevar ao quadrado não serve para
+   verificar. Uma forma intermediária anterior ao quadrado poderia servir?
 
 ### 3. Aplicação direta
 
@@ -482,7 +597,9 @@ um lado — e depois lembre de testar na equação com o $+2$, não na intermedi
 1. Em (b) e (d). Em (a) a raiz é apenas um coeficiente — $\sqrt5$ é um número, e
    a equação é do 1º grau. Em (c) a incógnita está elevada ao quadrado, não
    dentro de uma raiz.
-2. a) $\sqrt{x+1} = 7$ &nbsp; b) $\sqrt{x} = 4$ &nbsp; c) $\sqrt{2x} = 7 - x$.
+2. a) $\sqrt{x+1} = 7$, com $x \ge -1$. &nbsp; b) $\sqrt{x} = 4$, com
+   $x \ge 0$. &nbsp; c) $\sqrt{2x} = 7 - x$, com $x \ge 0$ e $x \le 7$;
+   juntas, as condições dão $0 \le x \le 7$.
 3. Elevar os dois lados ao quadrado. Ele não é reversível: apaga o sinal, e a
    equação resultante passa a valer também para o caso em que os dois lados eram
    opostos.
@@ -492,10 +609,11 @@ um lado — e depois lembre de testar na equação com o $+2$, não na intermedi
 5. O erro é ter parado no passo 3. Testando na equação original, $x = 1$ dá
    $\sqrt4 = 2$ de um lado e $-2$ do outro — não confere. A resposta é só
    $x = 6$. Seria evitado fazendo o passo 4, que é parte do método.
-6. Porque ela já é resultado de uma manipulação que pode ter ampliado o conjunto
-   de soluções. Uma raiz estranha, por definição, satisfaz alguma equação
-   intermediária — testá-la ali sempre daria “confere”, e o teste não filtraria
-   nada.
+6. A equação obtida depois do quadrado foi usada para calcular os candidatos;
+   todos eles já a satisfazem, inclusive os estranhos. Uma forma anterior ao
+   quadrado poderia servir se tivesse sido obtida apenas por operações
+   reversíveis. Mesmo assim, testar no enunciado original é o procedimento que
+   funciona sem precisar reconstruir o histórico das transformações.
 7. a) $x = 81$; conferindo, $\sqrt{81} = 9$. &nbsp; b) $3x - 2 = 16$, logo
    $x = 6$; conferindo, $\sqrt{16} = 4$. &nbsp; c) $x + 1 = x^2 - 2x + 1$, logo
    $x^2 - 3x = 0$ e os candidatos são 0 e 3. Testando: $x = 0$ dá $\sqrt1 = 1$
@@ -552,7 +670,12 @@ um lado — e depois lembre de testar na equação com o $+2$, não na intermedi
   falsas.
 - **Isolar antes de elevar**: o quadrado de uma soma reintroduz a raiz no termo
   do meio.
-- O teste é feito na **equação original**, não na intermediária.
+- O teste é feito na **equação original**. Uma forma anterior ao quadrado e
+  obtida por operações reversíveis também seria válida, mas a equação
+  original é a referência que sempre funciona.
+- Depois de isolar $\sqrt{A(x)} = B(x)$, anote $A(x) \ge 0$ e $B(x) \ge 0$.
+  Esses filtros podem antecipar descartes; a substituição no enunciado é o
+  fechamento único adotado pelo método da página.
 - Uma raiz quadrada nunca é negativa. Se um lado é uma raiz isolada e o outro é
   negativo, não há solução — e isso se vê sem conta nenhuma.
 - Nem sempre a verificação elimina alguém: às vezes todos os candidatos passam.

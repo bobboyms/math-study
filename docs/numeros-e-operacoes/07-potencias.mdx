@@ -3,6 +3,7 @@ title: Potencias
 ---
 
 import DotArray from '@site/src/components/DotArray';
+import FractionBar from '@site/src/components/FractionBar';
 
 # Potencias
 
@@ -374,6 +375,149 @@ $$
 
 e divisao por zero nao e definida.
 
+### Base fracionária: o expoente vale para os dois andares
+
+Até aqui a base foi sempre um número inteiro. Nada na definição exige isso: a
+base é o fator que se repete, e um fator pode perfeitamente ser uma fração.
+
+Uma máquina de embalagem custou R\$ 27.000 e, a cada ano, passa a valer
+$\frac{2}{3}$ do que valia no ano anterior. Que parte do valor inicial sobra
+depois de 3 anos?
+
+Cada ano multiplica o valor pelo mesmo fator $\frac{2}{3}$. Três anos são três
+fatores iguais — exatamente a situação que a potência registra:
+
+$$
+\left(\frac{2}{3}\right)^3 = \frac{2}{3} \times \frac{2}{3} \times \frac{2}{3}
+$$
+
+Para resolver isso não precisamos de regra nova. Basta a
+[multiplicação de frações](./fracoes), onde numerador multiplica numerador e
+denominador multiplica denominador:
+
+$$
+\frac{2}{3} \times \frac{2}{3} \times \frac{2}{3}
+= \frac{2 \times 2 \times 2}{3 \times 3 \times 3}
+= \frac{2^3}{3^3}
+= \frac{8}{27}
+$$
+
+Vale separar o que mudou do que permaneceu. **Mudou a escrita**: saímos de uma
+fração elevada ao cubo e chegamos a duas potências de inteiros, uma em cima e
+outra embaixo. **Não mudou a quantidade**: nenhum passo fez mais do que
+reagrupar os mesmos fatores que já estavam lá.
+
+Conferindo com o valor da máquina pelos dois caminhos:
+
+$$
+\frac{8}{27} \times 27\,000 = 8\,000
+$$
+
+e, ano a ano, R\$ 27.000, R\$ 18.000, R\$ 12.000, R\$ 8.000. Os dois caminhos
+chegam ao mesmo número.
+
+De modo geral, com $b \neq 0$:
+
+$$
+\left(\frac{a}{b}\right)^n = \frac{a^n}{b^n}
+$$
+
+O mesmo raciocínio vale quando a base é um produto. Em $(2 \times 3)^3$, o bloco
+$2 \times 3$ aparece três vezes:
+
+$$
+(2 \times 3)^3 = (2 \times 3)(2 \times 3)(2 \times 3)
+$$
+
+A multiplicação permite reordenar e reagrupar fatores — são as propriedades
+comutativa e associativa. Então podemos juntar os 2 de um lado e os 3 do outro:
+
+$$
+(2 \times 2 \times 2)(3 \times 3 \times 3) = 2^3 \times 3^3 = 8 \times 27 = 216
+$$
+
+E $6^3 = 216$ confirma. Em geral:
+
+$$
+(a \times b)^n = a^n \times b^n
+$$
+
+Repare que estas duas regras tratam de algo diferente das anteriores.
+$a^m \times a^n$ e $\frac{a^m}{a^n}$ falam de **expoentes** diferentes sobre a
+mesma base. Estas falam de uma **base** que é ela mesma um produto ou um
+quociente: o expoente alcança cada pedaço dessa base.
+
+> **Erro comum:** $\left(\frac{2}{3}\right)^2$ não é $\frac{4}{3}$ nem
+> $\frac{2}{9}$. O que se repete é a fração inteira, os dois andares juntos:
+> $\frac{2}{3} \times \frac{2}{3} = \frac{4}{9}$. Elevar só um dos andares seria
+> repetir metade do fator.
+
+O expoente também não atravessa uma soma na base: $(2 + 3)^2 = 25$, enquanto
+$2^2 + 3^2 = 13$. Uma base formada por multiplicação ou divisão se separa em
+pedaços; uma base formada por soma, não.
+
+### Uma base entre 0 e 1 encolhe a cada expoente
+
+Com base 2, a potência cresce depressa. Com base $\frac{1}{2}$, ela faz o
+contrário:
+
+| Expoente $n$ | $2^n$ | $\left(\frac{1}{2}\right)^n$ |
+| --- | --- | --- |
+| 1 | 2 | $\frac{1}{2}$ |
+| 2 | 4 | $\frac{1}{4}$ |
+| 3 | 8 | $\frac{1}{8}$ |
+| 4 | 16 | $\frac{1}{16}$ |
+| 10 | 1024 | $\frac{1}{1024}$ |
+
+Isso não é uma exceção estranha, é consequência direta da multiplicação de
+frações: multiplicar por uma fração menor que 1 é tomar **uma parte** do que se
+tinha. Repetir isso só pode diminuir. O desenho abaixo mostra os três primeiros
+passos da máquina que perde valor:
+
+<FractionBar
+  bars={[
+    {parts: 3, filled: 2, label: '\\left(\\frac{2}{3}\\right)^1 = \\frac{2}{3}', tone: 1},
+    {parts: 9, filled: 4, label: '\\left(\\frac{2}{3}\\right)^2 = \\frac{4}{9}', tone: 2},
+    {parts: 27, filled: 8, label: '\\left(\\frac{2}{3}\\right)^3 = \\frac{8}{27}', tone: 3},
+  ]}
+  caption="As barras têm a mesma largura total, então a comparação é honesta: a cada ano sobra menos, embora o numerador 8 seja maior que o 2 do começo."
+/>
+
+O detalhe que confunde é o numerador crescendo — 2, 4, 8 — enquanto a quantidade
+diminui. É que o denominador cresce mais rápido: 3, 9, 27. O tamanho da parte
+está encolhendo mais do que a contagem de partes está aumentando.
+
+### Expoente negativo com base fracionária
+
+Juntando as duas ideias mais recentes, aparece um atalho útil. Pela regra do
+expoente negativo:
+
+$$
+\left(\frac{2}{3}\right)^{-1} = \frac{1}{\left(\frac{2}{3}\right)^1} = \frac{1}{\frac{2}{3}}
+$$
+
+E dividir 1 por $\frac{2}{3}$ é multiplicar pelo inverso — a
+[divisão de frações](./fracoes) de novo:
+
+$$
+\frac{1}{\frac{2}{3}} = 1 \times \frac{3}{2} = \frac{3}{2}
+$$
+
+Ou seja, expoente $-1$ numa base fracionária vira a fração de cabeça para baixo.
+Com expoente $-n$, o mesmo acontece antes de elevar:
+
+$$
+\left(\frac{a}{b}\right)^{-n} = \left(\frac{b}{a}\right)^{n}
+$$
+
+Conferindo com $n = 2$: $\left(\frac{2}{3}\right)^{-2} = \frac{1}{\frac{4}{9}} =
+\frac{9}{4}$, e $\left(\frac{3}{2}\right)^2 = \frac{9}{4}$ também.
+
+Isso tem leitura concreta no exemplo da máquina: o expoente positivo anda para o
+futuro, e o negativo anda para o passado. Se hoje ela vale R\$ 12.000, um ano
+atrás valia $\frac{3}{2}$ disso, R\$ 18.000 — que é exatamente o valor da
+tabela.
+
 ### Breve historia da notacao
 
 A ideia de potencia e mais antiga do que a notacao moderna. Povos antigos ja
@@ -485,6 +629,12 @@ $$
 - Por que $2^0 = 1$?
 - Por que $2^{-3}$ nao e igual a $-8$?
 - Por que uma potencia com base zero nao pode ter expoente negativo?
+- Por que o expoente de $\left(\frac{2}{3}\right)^3$ alcança o numerador **e** o
+  denominador?
+- Por que $\left(\frac{1}{2}\right)^4$ é menor que $\frac{1}{2}$, se em $2^4$ a
+  potência aumenta?
+- Por que $(a \times b)^n$ pode ser separado em $a^n \times b^n$, mas
+  $(a + b)^n$ não pode ser separado em $a^n + b^n$?
 
 ## Exercicios de dominio
 
@@ -493,6 +643,41 @@ $$
 3. Explique a diferenca entre $2^3 \times 2^2$ e $(2^3)^2$.
 4. Calcule $5^0$ e justifique usando a ideia de cancelamento.
 5. Calcule $2^{-4}$ e explique por que o resultado nao e negativo.
+6. Calcule $\left(\frac{3}{4}\right)^2$ e $\left(\frac{2}{5}\right)^3$.
+7. Um estoque perde $\frac{1}{4}$ das unidades por mês, ou seja, sobram
+   $\frac{3}{4}$ a cada mês. Que fração do estoque inicial resta depois de
+   3 meses? Confira com um estoque de 64 unidades.
+8. Calcule $\left(\frac{5}{2}\right)^{-2}$ e explique por que a fração vira de
+   cabeça para baixo.
+9. Mostre com números que $(3 \times 5)^2 = 3^2 \times 5^2$, mas
+   $(3 + 5)^2 \neq 3^2 + 5^2$.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. $4^3 = 4 \times 4 \times 4 = 64$.
+2. $3^2$ traz dois fatores 3 e $3^4$ traz quatro; juntos são seis fatores 3,
+   logo $3^6$. Os expoentes somam porque as cadeias de fatores se emendam.
+3. Em $2^3 \times 2^2$ juntamos 3 fatores com mais 2 fatores, e os expoentes
+   somam: $2^5$. Em $(2^3)^2$ repetimos um bloco de 3 fatores duas vezes, e os
+   expoentes multiplicam: $2^6$.
+4. $5^0 = 1$. Em $\frac{5^3}{5^3}$, todos os fatores se cancelam e sobra o
+   elemento neutro da multiplicação, 1.
+5. $2^{-4} = \frac{1}{2^4} = \frac{1}{16}$. O sinal do expoente diz para tomar o
+   inverso, não para trocar o sinal do resultado.
+6. $\left(\frac{3}{4}\right)^2 = \frac{3^2}{4^2} = \frac{9}{16}$ e
+   $\left(\frac{2}{5}\right)^3 = \frac{2^3}{5^3} = \frac{8}{125}$. Se você
+   encontrou $\frac{9}{4}$ ou $\frac{8}{5}$, o expoente ficou preso num andar só.
+7. $\left(\frac{3}{4}\right)^3 = \frac{27}{64}$. Com 64 unidades:
+   $\frac{27}{64} \times 64 = 27$, e mês a mês são 64, 48, 36, 27 — bate.
+8. $\left(\frac{5}{2}\right)^{-2} = \left(\frac{2}{5}\right)^2 = \frac{4}{25}$.
+   O expoente negativo pede o inverso da potência, e o inverso de uma fração é
+   ela invertida.
+9. $(3 \times 5)^2 = 15^2 = 225$ e $3^2 \times 5^2 = 9 \times 25 = 225$ — iguais,
+   porque os fatores podem ser reordenados. Já $(3 + 5)^2 = 64$, enquanto
+   $3^2 + 5^2 = 34$: aqui não há fatores para reagrupar, e a separação não vale.
+
+</details>
 
 ## Revisao curta
 
@@ -501,4 +686,7 @@ quantas vezes esse fator aparece. Quando multiplicamos potencias de mesma base,
 somamos expoentes porque juntamos fatores. Quando elevamos uma potencia a outra
 potencia, multiplicamos expoentes porque repetimos um bloco de fatores. O
 expoente zero aparece quando todos os fatores se cancelam e sobra o neutro 1.
-O expoente negativo representa o inverso multiplicativo de uma potencia.
+O expoente negativo representa o inverso multiplicativo de uma potencia. Quando
+a base é um produto ou uma fração, o expoente alcança cada pedaço dela —
+$(ab)^n = a^n b^n$ e $\left(\frac{a}{b}\right)^n = \frac{a^n}{b^n}$ — e uma base
+entre 0 e 1 faz a potência encolher em vez de crescer.

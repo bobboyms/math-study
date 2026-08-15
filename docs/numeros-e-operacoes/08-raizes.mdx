@@ -4,6 +4,7 @@ title: Raizes
 
 import DotArray from '@site/src/components/DotArray';
 import FunctionMachine from '@site/src/components/FunctionMachine';
+import FractionBar from '@site/src/components/FractionBar';
 
 # Raizes
 
@@ -315,6 +316,156 @@ O indice da raiz indica qual potencia estamos desfazendo:
 | $\sqrt[3]{27}$ | que numero ao cubo da 27? | 3 |
 | $\sqrt[4]{81}$ | que numero elevado a 4 da 81? | 3 |
 
+### Raiz de uma fração e raiz de um produto
+
+Todos os exemplos até aqui usaram números inteiros dentro da raiz. Mas a
+pergunta que a raiz faz não exige isso, e a prática também não: uma bancada
+quadrada pode ter área de $\frac{9}{16}$ de metro quadrado. Quanto mede o lado?
+
+A pergunta é a mesma de sempre:
+
+> que número não negativo, elevado ao quadrado, dá $\frac{9}{16}$?
+
+O que voltou a ser preciso é a página anterior. Em
+[potências](./potencias) vimos que, numa base fracionária, o expoente alcança os
+dois andares:
+
+$$
+\left(\frac{a}{b}\right)^n = \frac{a^n}{b^n}
+$$
+
+Com isso dá para testar um candidato. O numerador 9 é o quadrado de 3, e o
+denominador 16 é o quadrado de 4. Então vale experimentar $\frac{3}{4}$:
+
+$$
+\left(\frac{3}{4}\right)^2 = \frac{3^2}{4^2} = \frac{9}{16}
+$$
+
+Deu certo, e $\frac{3}{4}$ não é negativo. Logo:
+
+$$
+\sqrt{\frac{9}{16}} = \frac{3}{4}
+$$
+
+A bancada tem $\frac{3}{4}$ de metro de lado — 75 centímetros.
+
+Isso não foi sorte com esses números. O argumento funciona sempre. Suponha
+$\sqrt{a} = p$ e $\sqrt{b} = q$, com $a \ge 0$ e $b > 0$. Elevando a fração
+$\frac{p}{q}$ ao quadrado:
+
+$$
+\left(\frac{p}{q}\right)^2 = \frac{p^2}{q^2} = \frac{a}{b}
+$$
+
+Ou seja, $\frac{p}{q}$ é um número não negativo cujo quadrado é $\frac{a}{b}$ —
+que é exatamente a definição da raiz quadrada principal de $\frac{a}{b}$.
+Portanto:
+
+$$
+\sqrt{\frac{a}{b}} = \frac{\sqrt{a}}{\sqrt{b}}
+$$
+
+Trocando a fração por um produto, o mesmo raciocínio dá a regra irmã. Se
+$\sqrt{a} = p$ e $\sqrt{b} = q$, então $(pq)^2 = p^2 q^2 = ab$, e $pq \ge 0$:
+
+$$
+\sqrt{a \times b} = \sqrt{a} \times \sqrt{b}
+$$
+
+Repare no que cada regra permite e no que ela não permite:
+
+| Escrita | Pode separar? | Verificação |
+| --- | --- | --- |
+| $\sqrt{4 \times 9}$ | sim | $\sqrt{36} = 6$ e $2 \times 3 = 6$ |
+| $\sqrt{\frac{4}{9}}$ | sim | $\left(\frac{2}{3}\right)^2 = \frac{4}{9}$ |
+| $\sqrt{9 + 16}$ | **não** | $\sqrt{25} = 5$, mas $3 + 4 = 7$ |
+
+> **Erro comum:** a raiz **não** se distribui sobre uma soma.
+> $\sqrt{9 + 16} = \sqrt{25} = 5$, e não $\sqrt{9} + \sqrt{16} = 7$. O erro é
+> tentador porque a separação funciona logo acima, com multiplicação e divisão —
+> mas ali havia fatores para reagrupar, e numa soma não há. É a mesma fronteira
+> vista em potências, onde $(a \times b)^2 = a^2 b^2$ vale e $(a+b)^2 = a^2+b^2$
+> não vale.
+
+O mesmo argumento vale para qualquer índice. Como
+$\left(\frac{2}{3}\right)^3 = \frac{8}{27}$:
+
+$$
+\sqrt[3]{\frac{8}{27}} = \frac{\sqrt[3]{8}}{\sqrt[3]{27}} = \frac{2}{3}
+$$
+
+E a raiz de cada andar não precisa ser exata para a separação valer. Em
+$\sqrt{\frac{2}{9}}$, o denominador é quadrado perfeito e o numerador não:
+
+$$
+\sqrt{\frac{2}{9}} = \frac{\sqrt{2}}{\sqrt{9}} = \frac{\sqrt{2}}{3}
+$$
+
+Quando é o **denominador** que não tem raiz exata, como em
+$\frac{1}{\sqrt{2}}$, costuma-se reescrever a expressão para tirar a raiz de
+baixo. Essa técnica tem página própria mais adiante no curso,
+[racionalização](../algebra/racionalizacao); aqui basta saber que a separação
+continua correta.
+
+### A raiz de um número entre 0 e 1 é maior que ele
+
+Este resultado surpreende quase todo mundo na primeira vez:
+
+$$
+\sqrt{\frac{9}{16}} = \frac{3}{4}
+$$
+
+e $\frac{3}{4}$ é **maior** que $\frac{9}{16}$. Escrevendo os dois com o mesmo
+denominador, $\frac{3}{4} = \frac{12}{16}$, a comparação fica direta: 12 partes
+contra 9 partes.
+
+<FractionBar
+  bars={[
+    {parts: 16, filled: 9, label: '\\frac{9}{16} \\text{ (a área)}', tone: 1},
+    {parts: 4, filled: 3, label: '\\frac{3}{4} \\text{ (o lado)}', tone: 2},
+  ]}
+  caption="As duas barras têm a mesma largura total: o lado do quadrado é maior que a área dele, quando a área é menor que 1."
+/>
+
+Não há nada de errado aí, e a razão está na página anterior. Vimos que uma base
+entre 0 e 1 **encolhe** quando é elevada ao quadrado: $\frac{3}{4}$ ao quadrado
+vira $\frac{9}{16}$, menor que ele. Se o caminho de ida encolhe, o caminho de
+volta — que é a raiz — precisa aumentar. A raiz só "diminui" o número quando ele
+é maior que 1.
+
+Vale comparar os dois lados dessa fronteira:
+
+| Número $x$ | $x^2$ | $\sqrt{x}$ |
+| --- | --- | --- |
+| $\frac{1}{4}$ | $\frac{1}{16}$ (menor) | $\frac{1}{2}$ (maior) |
+| 1 | 1 | 1 |
+| 4 | 16 (maior) | 2 (menor) |
+
+O número 1 é o ponto de virada, porque $1^2 = 1$ e $\sqrt{1} = 1$.
+
+### Raiz de um número decimal
+
+Como todo decimal é uma fração de denominador 10, 100, 1000, a regra da fração
+resolve também esse caso. Basta reescrever o decimal como fração, coisa que a
+página de [decimais e porcentagem](./decimais-e-porcentagem) já fazia:
+
+$$
+\sqrt{0{,}25} = \sqrt{\frac{25}{100}} = \frac{\sqrt{25}}{\sqrt{100}} = \frac{5}{10} = 0{,}5
+$$
+
+Conferindo pelo caminho de ida: $0{,}5 \times 0{,}5 = 0{,}25$. E de novo o
+número cresceu, porque $0{,}25$ é menor que 1.
+
+Isso dá uma forma rápida de conferir a resposta pelas casas decimais. Ao elevar
+ao quadrado, o número de casas **dobra**: $0{,}5$ tem uma casa e $0{,}25$ tem
+duas; $0{,}2$ tem uma casa e $0{,}04$ tem duas. Logo, ao tirar a raiz quadrada, o
+número de casas cai pela metade.
+
+> **Erro comum:** $\sqrt{0{,}04}$ não é $0{,}02$. Quem pensa "metade das casas"
+> como "metade do número" erra por um fator de 10. Confira:
+> $0{,}02^2 = 0{,}0004$, que tem quatro casas, não duas. A resposta certa é
+> $0{,}2$, porque $0{,}2^2 = 0{,}04$.
+
 ### Quando a raiz nao e exata
 
 Algumas raizes dao numeros inteiros:
@@ -344,20 +495,23 @@ $$
 Entao $\sqrt{50}$ esta entre 7 e 8. Em muitos problemas, podemos deixar a
 resposta como $\sqrt{50}$ ou aproximar com calculadora, dependendo do objetivo.
 
-Como $50 = 25 \times 2$, tambem podemos simplificar:
+Mesmo assim, dá para escrevê-la melhor, usando a regra do produto que acabamos
+de justificar. Como $50 = 25 \times 2$:
 
 $$
-\sqrt{50} = \sqrt{25 \times 2}
+\sqrt{50} = \sqrt{25 \times 2} = \sqrt{25} \times \sqrt{2}
 $$
 
-Como $25$ e um quadrado perfeito:
+O fator $25$ é quadrado perfeito, então sua raiz sai da raiz como o inteiro 5:
 
 $$
 \sqrt{50} = 5\sqrt{2}
 $$
 
-Essa simplificacao nao muda o valor. Ela apenas escreve a raiz de um jeito mais
-organizado.
+Essa simplificação **não muda o valor** — a regra do produto garante isso, e a
+calculadora confirma: $\sqrt{50} \approx 7{,}071$ e $5 \times 1{,}414 \approx
+7{,}071$. O que muda é só a escrita, que agora separa a parte exata (o 5) da
+parte que não fecha (o $\sqrt{2}$).
 
 Vale saber desde já que $\sqrt{50}$ não é "uma conta que ficou pela metade". Ele
 é um número de um tipo que ainda não foi nomeado neste capítulo: um número
@@ -447,6 +601,23 @@ $$
 Aqui aparece o $\pm$ porque estamos resolvendo uma equacao. Se a pergunta fosse
 apenas $\sqrt{25}$, a resposta seria 5.
 
+### Exemplo 4: um lado que não é inteiro
+
+Um azulejo quadrado tem área de $0{,}36$ metro quadrado. Quanto mede o lado?
+
+Pause e tente antes de ler: o lado é maior ou menor que $0{,}36$?
+
+O lado $l$ satisfaz $l^2 = 0{,}36$, então $l = \sqrt{0{,}36}$. Escrevendo o
+decimal como fração e separando os andares:
+
+$$
+\sqrt{0{,}36} = \sqrt{\frac{36}{100}} = \frac{\sqrt{36}}{\sqrt{100}} = \frac{6}{10} = 0{,}6
+$$
+
+O lado mede $0{,}6$ metro, ou 60 centímetros. Ele é **maior** que a área,
+porque $0{,}36$ é menor que 1 — e a conferência fecha: $0{,}6 \times 0{,}6 =
+0{,}36$.
+
 ## Perguntas de verificacao
 
 - Por que raiz quadrada esta ligada a area de quadrados?
@@ -455,6 +626,9 @@ apenas $\sqrt{25}$, a resposta seria 5.
 - Qual e a diferenca entre $\sqrt{49}$ e resolver $x^2 = 49$?
 - Que potencia a raiz cubica desfaz?
 - Por que $\sqrt{50}$ esta entre 7 e 8?
+- Por que $\sqrt{\frac{a}{b}}$ pode ser separado em $\frac{\sqrt{a}}{\sqrt{b}}$,
+  mas $\sqrt{a + b}$ não pode ser separado em $\sqrt{a} + \sqrt{b}$?
+- Por que $\sqrt{0{,}25}$ é maior que $0{,}25$, se $\sqrt{25}$ é menor que 25?
 
 ## Exercicios de dominio
 
@@ -462,6 +636,39 @@ apenas $\sqrt{25}$, a resposta seria 5.
 2. Calcule $\sqrt[3]{125}$ e justifique com uma potencia.
 3. Resolva $x^2 = 81$ e explique por que ha duas solucoes.
 4. Explique a diferenca entre $\sqrt{81}$ e $x^2 = 81$.
+5. Calcule $\sqrt{\frac{49}{64}}$ e confira elevando a resposta ao quadrado.
+6. Calcule $\sqrt[3]{\frac{27}{1000}}$.
+7. Uma placa quadrada tem área de $0{,}81$ metro quadrado. Quanto mede o lado?
+   Antes de calcular, decida se o lado será maior ou menor que $0{,}81$.
+8. Mostre com números que $\sqrt{16 \times 25} = \sqrt{16} \times \sqrt{25}$, mas
+   $\sqrt{16 + 9} \neq \sqrt{16} + \sqrt{9}$.
+9. Escreva $\sqrt{\frac{5}{36}}$ separando os dois andares. A resposta é exata?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Um quadrado de área 36 precisa de 6 unidades em cada lado, porque
+   $6 \times 6 = 36$. A raiz quadrada é justamente a pergunta "que lado gera esta
+   área?".
+2. $\sqrt[3]{125} = 5$, porque $5^3 = 125$.
+3. $x = 9$ e $x = -9$, porque $9^2 = 81$ e $(-9)^2 = 81$: um número negativo
+   elevado ao quadrado dá positivo.
+4. $\sqrt{81}$ é um valor único, o não negativo: 9. Já $x^2 = 81$ é uma equação,
+   e pede **todos** os números cujo quadrado é 81: $9$ e $-9$.
+5. $\sqrt{\frac{49}{64}} = \frac{\sqrt{49}}{\sqrt{64}} = \frac{7}{8}$, e
+   $\left(\frac{7}{8}\right)^2 = \frac{49}{64}$.
+6. $\sqrt[3]{\frac{27}{1000}} = \frac{3}{10}$, ou $0{,}3$, porque
+   $\left(\frac{3}{10}\right)^3 = \frac{27}{1000}$.
+7. Maior, porque $0{,}81$ é menor que 1. O lado é
+   $\sqrt{\frac{81}{100}} = \frac{9}{10} = 0{,}9$ metro. Se você respondeu
+   $0{,}09$, contou casas decimais a mais: $0{,}09^2 = 0{,}0081$.
+8. $\sqrt{16 \times 25} = \sqrt{400} = 20$ e $4 \times 5 = 20$ — iguais. Já
+   $\sqrt{16 + 9} = \sqrt{25} = 5$, enquanto $4 + 3 = 7$.
+9. $\sqrt{\frac{5}{36}} = \frac{\sqrt{5}}{6}$. A separação é exata e sempre vale;
+   o que não é exato é $\sqrt{5}$, que fica indicado — do mesmo jeito que
+   $5\sqrt{2}$ ficou.
+
+</details>
 
 ## Revisao curta
 
@@ -469,4 +676,9 @@ Raiz desfaz potencia. A raiz quadrada recupera o numero que foi elevado ao
 quadrado; a raiz cubica recupera o numero que foi elevado ao cubo; e
 $\sqrt[n]{a}$ recupera o numero que, elevado a $n$, produz $a$. A raiz quadrada
 principal sempre devolve o valor nao negativo. Por isso, $\sqrt{49} = 7$, mas a
-equacao $x^2 = 49$ tem duas solucoes: $7$ e $-7$.
+equacao $x^2 = 49$ tem duas solucoes: $7$ e $-7$. O número dentro da raiz não
+precisa ser inteiro: a raiz atravessa produto e fração —
+$\sqrt{ab} = \sqrt{a}\sqrt{b}$ e $\sqrt{\frac{a}{b}} =
+\frac{\sqrt{a}}{\sqrt{b}}$, mas nunca uma soma — e é assim que se resolve
+$\sqrt{\frac{9}{16}} = \frac{3}{4}$ ou $\sqrt{0{,}25} = 0{,}5$. Quando o número é
+menor que 1, a raiz dele é **maior** que ele.
