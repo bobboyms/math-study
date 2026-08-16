@@ -29,8 +29,8 @@ $x^2$ é o que faz a curva ser uma parábola, e não uma reta.
 
 ## Roteiro das páginas
 
-A primeira metade constrói o vocabulário geral; a segunda percorre as famílias
-de funções, uma a uma.
+A primeira parte constrói o vocabulário geral; a segunda percorre as famílias
+de funções, uma a uma; a última página reúne tudo numa ponte para o cálculo.
 
 1. [Funções](./funcoes) — a regra que associa entrada e saída, a notação $f(x)$,
    o plano cartesiano e a leitura de um gráfico.
@@ -38,27 +38,40 @@ de funções, uma a uma.
    quais saídas ela produz.
 3. [Crescimento, sinal e simetria](./crescimento-sinal-e-simetria) — o
    vocabulário para descrever uma função olhando o gráfico.
-4. [Função quadrática](./funcao-quadratica) — a parábola, o vértice e a forma
+4. [Função afim](./funcao-afim) — taxa constante, inclinação e construção da
+   reta a partir de dois pontos.
+5. [Função quadrática](./funcao-quadratica) — a parábola, o vértice e a forma
    canônica.
-5. [Transformações de gráficos](./transformacoes-de-graficos) — mover, esticar e
+6. [Transformações de gráficos](./transformacoes-de-graficos) — mover, esticar e
    refletir uma curva conhecida.
-6. [Função modular e por partes](./funcao-modular-e-por-partes) — quando uma
+7. [Funções potência e radicais](./funcoes-potencia-e-radicais) — como o
+   expoente determina o gráfico, o domínio e a função inversa.
+8. [Função modular e por partes](./funcao-modular-e-por-partes) — quando uma
    fórmula só não basta.
-7. [Composição de funções](./composicao-de-funcoes) — encaixar uma regra dentro
+9. [Composição de funções](./composicao-de-funcoes) — encaixar uma regra dentro
    de outra.
-8. [Função inversa](./funcao-inversa) — desfazer a regra.
-9. [Função polinomial](./funcao-polinomial) — o que acontece com grau maior que
+10. [Função inversa](./funcao-inversa) — desfazer a regra.
+11. [Função polinomial](./funcao-polinomial) — o que acontece com grau maior que
    dois.
-10. [Divisão de polinômios](./divisao-de-polinomios) — o teorema do resto e o
+12. [Divisão de polinômios](./divisao-de-polinomios) — o teorema do resto e o
     dispositivo de Briot-Ruffini.
-11. [Raízes racionais](./raizes-racionais) — como achar a primeira raiz de um
+13. [Raízes racionais](./raizes-racionais) — como achar a primeira raiz de um
     polinômio de grau alto.
-12. [Funções racionais](./funcoes-racionais) — quociente de polinômios,
+14. [Funções racionais](./funcoes-racionais) — quociente de polinômios,
     assíntotas e buracos.
+15. [Taxa média de variação](./taxa-media-de-variacao) — medir uma curva com
+    retas secantes e chegar ao quociente de diferenças.
 
 ## Para onde isso leva
 
-Função é o objeto central de tudo o que vem depois: taxa de variação,
-crescimento, otimização e, adiante, cálculo. É por isso que os capítulos
-anteriores insistiram tanto em fatoração e em raízes — as duas ferramentas
-reaparecem aqui como informação sobre a **forma da curva**.
+Função é o objeto central de tudo o que vem depois: crescimento, otimização e,
+adiante, cálculo. É por isso que os capítulos anteriores insistiram tanto em
+fatoração e em raízes — as duas ferramentas reaparecem aqui como informação
+sobre a **forma da curva**.
+
+Ao fim do roteiro, você saberá reconhecer e analisar as principais famílias
+algébricas que o Cálculo I pressupõe. Os capítulos seguintes completam a base
+com [exponenciais e logaritmos](../exponenciais-e-logaritmos/) e com as
+[funções trigonométricas](../geometria/graficos-seno-e-cosseno). Não existe uma
+lista de “todas as funções”: o objetivo é dominar as famílias fundamentais e as
+ferramentas que permitem estudar uma função nova.

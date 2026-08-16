@@ -1,0 +1,497 @@
+---
+title: "Funções potência e radicais: o expoente desenha a curva"
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Funções potência e radicais: o expoente desenha a curva
+
+## 1. Problema motivador: da área para o lado
+
+Uma oficina corta placas quadradas. Se o lado mede $x$ metros, a área é
+
+$$
+A(x)=x^2.
+$$
+
+Essa regra vai do lado para a área. Na produção ocorre também a pergunta
+inversa: se o cliente pede uma placa com área de 9 m², quanto deve medir o lado?
+A regra que volta da área para o lado é
+
+$$
+L(A)=\sqrt{A}=A^{1/2}.
+$$
+
+Quadrado e raiz quadrada não são duas ideias isoladas. São funções potência com
+expoentes diferentes, e uma desfaz a outra quando usamos comprimentos não
+negativos.
+
+Esta página organiza numa mesma família curvas que já apareceram separadas:
+$x^2$, $x^3$, $\sqrt{x}$, $\sqrt[3]{x}$ e $\frac1x$.
+
+## 2. Mapa das ideias
+
+- uma **função potência** tem a forma $f(x)=x^p$, com expoente fixo $p$;
+- expoente inteiro positivo produz potências como $x^2$ e $x^3$;
+- expoente inteiro negativo produz recíprocos como $x^{-1}=\frac1x$;
+- expoente fracionário produz radicais como
+  $x^{1/2}=\sqrt{x}$;
+- o expoente determina domínio, simetria, crescimento e formato do gráfico;
+- a função radical desfaz uma potência depois que o domínio adequado é
+  escolhido.
+
+## 3. Para que serve
+
+- converter área em lado e volume em aresta;
+- descrever leis de escala: dobrar uma medida pode multiplicar área por 4 e
+  volume por 8;
+- modelar relações físicas com potências, como energia cinética e intensidade;
+- reconhecer rapidamente domínios antes de calcular;
+- preparar a **regra da potência** do cálculo, usada para derivar $x^p$.
+
+O objetivo não é decorar muitos desenhos. É prever a curva lendo o expoente.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [expoentes fracionários](../numeros-e-operacoes/expoentes-fracionarios):
+o que significa $x^{1/n}$?** Significa $\sqrt[n]{x}$. O denominador do expoente
+indica a raiz.
+
+**2. De [domínio e imagem](./dominio-e-imagem): por que $\sqrt{x}$ exige
+$x\geq0$ nos reais?** Porque nenhum número real elevado ao quadrado produz um
+número negativo.
+
+**3. De [função inversa](./funcao-inversa): por que é preciso restringir
+$x^2$ antes de invertê-la?** Porque $x^2$ repete saídas:
+$(-3)^2=3^2=9$. No domínio $x\geq0$, cada área positiva corresponde a um único
+lado.
+
+**4. De [transformações de gráficos](./transformacoes-de-graficos): o que
+$f(x-3)+2$ faz?** Move o gráfico de $f$ três unidades para a direita e duas
+para cima.
+
+## 5. Intuição: o expoente muda o efeito de aumentar a entrada
+
+Compare as potências positivas em entradas inteiras:
+
+| $x$ | $x$ | $x^2$ | $x^3$ |
+|---:|---:|---:|---:|
+| 0 | 0 | 0 | 0 |
+| 1 | 1 | 1 | 1 |
+| 2 | 2 | 4 | 8 |
+| 3 | 3 | 9 | 27 |
+| 4 | 4 | 16 | 64 |
+
+Para $x>1$, aumentar o expoente aumenta o efeito da entrada. Mas entre 0 e 1
+acontece o contrário:
+
+| $x$ | $x$ | $x^2$ | $x^3$ |
+|---:|---:|---:|---:|
+| $\frac12$ | $\frac12$ | $\frac14$ | $\frac18$ |
+
+Multiplicar repetidamente por uma fração positiva a torna menor. Essa mudança
+de comportamento perto de 1 será importante ao comparar funções no cálculo.
+
+<CartesianPlane
+  xMin={-3}
+  xMax={3}
+  yMin={-5}
+  yMax={9}
+  xUnit={52}
+  yUnit={26}
+  functions={[
+    {f: (x) => x * x, tone: 1},
+    {f: (x) => x * x * x, tone: 2},
+  ]}
+  labels={[
+    {at: [2.25, 5.3], math: 'x^2', tone: 1, dx: 18},
+    {at: [1.55, 4.2], math: 'x^3', tone: 2, dx: 18},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="x² repete a mesma altura nos lados opostos; x³ preserva o sinal e atravessa a origem."
+/>
+
+## 6. Expoentes inteiros positivos
+
+> Para um inteiro positivo $n$, a função potência $f(x)=x^n$ está definida para
+> todo número real.
+
+O fato de $n$ ser par ou ímpar organiza o gráfico.
+
+| Expoente | Sinal | Simetria | Comportamento dos extremos |
+|---|---|---|---|
+| par | $x^n\geq0$ | função par | os dois lados sobem |
+| ímpar | preserva o sinal de $x$ | função ímpar | um lado desce e o outro sobe |
+
+**Exemplo par.** $f(x)=x^4$ satisfaz $f(-x)=(-x)^4=x^4=f(x)$. Seu gráfico é
+simétrico em relação ao eixo vertical.
+
+**Exemplo ímpar.** $g(x)=x^3$ satisfaz $g(-x)=(-x)^3=-x^3=-g(x)$. Seu gráfico
+tem simetria em relação à origem.
+
+**Contraexemplo para delimitar.** $h(x)=x^2+x$ é polinomial, mas não é uma
+função potência: há uma soma de duas potências. A família desta página tem um
+único termo do tipo $x^p$, antes das transformações.
+
+## 7. Expoentes negativos: o zero sai do domínio
+
+Pela propriedade dos expoentes,
+
+$$
+x^{-n}=\frac{1}{x^n}.
+$$
+
+Por isso, toda potência com expoente inteiro negativo exclui $x=0$: a escrita
+equivalente teria divisão por zero.
+
+Compare:
+
+$$
+x^{-1}=\frac1x,
+\qquad
+x^{-2}=\frac1{x^2}.
+$$
+
+$x^{-1}$ é ímpar e tem sinais diferentes nos dois lados. $x^{-2}$ é par e
+positiva nos dois lados. As duas crescem sem limite em módulo perto de zero e
+se aproximam de zero quando $\lvert x\rvert$ aumenta.
+
+**Exemplo.** Em $f(x)=x^{-2}$,
+
+$$
+f(-2)=\frac1{(-2)^2}=\frac14,
+\qquad
+f(2)=\frac14.
+$$
+
+**Contraexemplo.** $0^{-2}$ não vale zero. A forma
+$0^{-2}=\frac1{0^2}$ mostra uma divisão impossível; portanto, zero não pertence
+ao domínio.
+
+## 8. Expoentes fracionários: aparecem as raízes
+
+A igualdade estudada anteriormente agora vira uma função:
+
+$$
+x^{1/n}=\sqrt[n]{x}.
+$$
+
+O domínio depende da paridade do índice:
+
+- se $n$ é **par**, exigimos $x\geq0$;
+- se $n$ é **ímpar**, aceitamos todos os reais.
+
+Assim, $\sqrt{x}$ começa na origem e segue para a direita. Já
+$\sqrt[3]{x}$ atravessa a origem e também aceita entradas negativas.
+
+<CartesianPlane
+  xMin={-8}
+  xMax={9}
+  yMin={-3}
+  yMax={4}
+  xUnit={24}
+  yUnit={46}
+  functions={[
+    {f: (x) => Math.sqrt(x), domain: [0, 9], tone: 1},
+    {f: (x) => Math.cbrt(x), domain: [-8, 9], tone: 2},
+  ]}
+  points={[
+    {at: [4, 2], label: '(4,\ 2)', tone: 1, dx: 26, dy: -12},
+    {at: [-8, -2], label: '(-8,\ -2)', tone: 2, dx: 38, dy: 22},
+  ]}
+  labels={[
+    {at: [7, 2.65], math: '\\sqrt{x}', tone: 1, dx: 20},
+    {at: [6.5, 1.85], math: '\\sqrt[3]{x}', tone: 2, dx: 30, dy: 16},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A raiz quadrada aceita somente x ≥ 0; a raiz cúbica aceita entradas negativas e positivas."
+/>
+
+Para um expoente racional $\frac{m}{n}$ escrito na forma irredutível,
+
+$$
+x^{m/n}=\left(\sqrt[n]{x}\right)^m.
+$$
+
+Se $n$ for par, continuamos exigindo $x\geq0$. Se houver também expoente
+negativo, o zero precisa ser retirado do domínio.
+
+**Exemplo.** $f(x)=x^{3/2}=(\sqrt{x})^3$ tem domínio $[0,+\infty[$.
+
+**Exemplo com expoente negativo.** $g(x)=x^{-1/2}=\frac1{\sqrt{x}}$ exige
+$x>0$: a raiz pede $x\geq0$, e o denominador retira o zero.
+
+## 9. A raiz como função inversa
+
+No domínio real inteiro, $f(x)=x^2$ não tem inversa, pois $f(-2)=f(2)=4$.
+Restringindo a entrada a $x\geq0$, a função fica um a um. Então podemos inverter
+a relação:
+
+$$
+y=x^2
+\quad\Longleftrightarrow\quad
+x=\sqrt{y},
+\qquad x\geq0.
+$$
+
+As composições confirmam os dois sentidos:
+
+$$
+\sqrt{x^2}=x \quad\text{se }x\geq0,
+$$
+
+e
+
+$$
+(\sqrt{x})^2=x \quad\text{se }x\geq0.
+$$
+
+Sem a restrição, a primeira igualdade seria
+$\sqrt{x^2}=\lvert x\rvert$, não $x$. Por exemplo,
+$\sqrt{(-3)^2}=\sqrt9=3$.
+
+Para potências ímpares, a restrição não é necessária. A função $x^3$ já é um a
+um em todos os reais, e sua inversa é $\sqrt[3]{x}$.
+
+### Resolvendo o problema da placa
+
+O cliente pediu área de 9 m². Como o lado é um comprimento, usamos o ramo não
+negativo da inversa:
+
+$$
+L(9)=\sqrt9=3\text{ m}.
+$$
+
+A verificação retorna à grandeza original: uma placa quadrada de lado 3 m tem
+área $3^2=9$ m². O valor $-3$ não entra como medida de lado, e a função raiz já
+faz essa escolha ao devolver o resultado não negativo.
+
+## 10. Transformações e domínio
+
+Partindo de $f(x)=\sqrt{x}$, considere
+
+$$
+g(x)=2\sqrt{x-3}-1.
+$$
+
+O $x-3$ move o gráfico 3 unidades para a direita; o fator 2 estica as alturas;
+o $-1$ move tudo uma unidade para baixo.
+
+O domínio vem da condição dentro da raiz:
+
+$$
+x-3\geq0
+\quad\Longrightarrow\quad
+x\geq3.
+$$
+
+O ponto inicial, que era $(0,0)$, passa a ser $(3,-1)$. A imagem é
+$[-1,+\infty[$ porque a raiz é não negativa, o fator 2 mantém esse sinal e a
+translação abaixa o mínimo para $-1$.
+
+> A transformação move o gráfico, mas não revoga as restrições da operação. Em
+> uma raiz par, o radicando continua precisando ser não negativo.
+
+## 11. Exemplos resolvidos
+
+### Exemplo 1: classificar pelo expoente
+
+Classifique domínio e simetria de $f(x)=x^6$.
+
+O expoente é inteiro positivo e par. O domínio é $\mathbb{R}$, a imagem é
+$[0,+\infty[$ e a função é par.
+
+### Exemplo 2: potência negativa
+
+*Pause e tente antes de ler.* Determine o domínio e calcule
+$g(-2)$ para $g(x)=x^{-3}$.
+
+Como $x^{-3}=\frac1{x^3}$, o domínio exclui zero. Além disso,
+
+$$
+g(-2)=\frac1{(-2)^3}=-\frac18.
+$$
+
+### Exemplo 3: raiz deslocada
+
+*Pause e tente.* Determine domínio e imagem de
+$h(x)=\sqrt{x+4}+2$.
+
+O radicando exige $x+4\geq0$, então $x\geq-4$. A raiz é não negativa; somando
+2, a menor saída passa a ser 2. Logo:
+
+$$
+D_h=[-4,+\infty[,
+\qquad
+\operatorname{Im}(h)=[2,+\infty[.
+$$
+
+### Exemplo 4: recuperar uma medida
+
+*Pause e tente.* Uma praça quadrada tem área de 180 m². Qual é o lado exato e
+qual aproximação decimal faz sentido?
+
+$$
+L=\sqrt{180}=\sqrt{36\times5}=6\sqrt5\approx13{,}42\text{ m}.
+$$
+
+Conferindo a forma exata:
+
+$$
+(6\sqrt5)^2=36\times5=180.
+$$
+
+### Exemplo 5: compor potência e raiz
+
+Para $f(x)=x^2$ e $g(x)=\sqrt{x}$,
+
+$$
+(g\circ f)(-4)=\sqrt{(-4)^2}=4,
+$$
+
+mas
+
+$$
+(f\circ g)(9)=(\sqrt9)^2=9.
+$$
+
+A primeira composição devolve $\lvert x\rvert$, pois $g$ sempre escolhe a raiz
+não negativa. A segunda devolve $x$ em todo o domínio $x\geq0$ de $g$.
+
+## 12. Erros comuns
+
+> **Erro 1: concluir que expoente maior sempre produz valor maior.** Para
+> $x=\frac12$, temos $x^3=\frac18<x^2=\frac14$. O efeito depende também de a
+> base estar abaixo ou acima de 1.
+
+> **Erro 2: aceitar entrada negativa em raiz de índice par.** Nos reais,
+> $\sqrt{-4}$ não existe. Raiz cúbica é diferente:
+> $\sqrt[3]{-8}=-2$.
+
+> **Erro 3: incluir zero em $x^{-n}$.** O expoente negativo cria um
+> denominador. Em zero, haveria divisão por zero.
+
+> **Erro 4: escrever $\sqrt{x^2}=x$ para todo real.** Para $x=-3$, o lado
+> esquerdo vale 3 e o direito vale $-3$. A igualdade correta é
+> $\sqrt{x^2}=\lvert x\rvert$.
+
+> **Erro 5: mover o domínio na direção errada.** Em $\sqrt{x-3}$, o começo vai
+> para $x=3$, à direita. A condição $x-3\geq0$ confirma a direção.
+
+## 13. Perguntas de verificação
+
+1. O que torna $x^p$ uma função potência?
+2. Como a paridade de um expoente inteiro positivo afeta o gráfico?
+3. Por que expoente negativo exclui zero?
+4. Por que $\sqrt{x}$ e $\sqrt[3]{x}$ têm domínios diferentes?
+5. Por que $\sqrt{x}$ é inversa de $x^2$ somente depois de uma restrição?
+6. Como encontrar o domínio de $\sqrt{x-h}$?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. A variável está na base e o expoente $p$ permanece fixo. A função básica tem
+   um único termo $x^p$.
+2. Expoente par apaga o sinal da entrada e produz simetria em relação ao eixo
+   vertical. Expoente ímpar preserva o sinal e produz simetria em relação à
+   origem.
+3. Porque $x^{-n}=\frac1{x^n}$. Em $x=0$, o denominador seria zero.
+4. Uma potência de índice par nunca produz número negativo nos reais, por isso
+   $\sqrt{x}$ exige $x\geq0$. Uma potência ímpar preserva o sinal, então todo
+   real tem raiz cúbica real.
+5. Porque $x^2$ repete saídas em entradas opostas. Restringindo a $x\geq0$, cada
+   saída tem uma única entrada, que a raiz quadrada recupera.
+6. Impõe-se $x-h\geq0$, portanto $x\geq h$.
+
+</details>
+
+## 14. Exercícios
+
+### 1. Reconhecimento
+
+1. Diga quais são funções potência: a) $x^5$; b) $x^2+x$; c) $x^{-3}$;
+   d) $\sqrt{x}$; e) $3^x$.
+2. Para cada função, dê o domínio real: a) $x^7$; b) $x^{-4}$;
+   c) $x^{1/2}$; d) $x^{1/3}$; e) $x^{-1/2}$.
+3. Classifique como par, ímpar ou nenhuma: a) $x^8$; b) $x^5$;
+   c) $\sqrt{x}$.
+
+### 2. Explicação
+
+4. Explique por que $(-2)^4$ e $2^4$ são iguais, mas $(-2)^3$ e $2^3$ não.
+5. Explique por que $x^{-2}$ é positiva tanto para $x>0$ quanto para $x<0$.
+6. Explique com um número por que $\sqrt{x^2}$ não pode ser substituído por
+   $x$ sem uma condição.
+
+### 3. Aplicação direta
+
+7. Calcule: a) $16^{3/2}$; b) $27^{2/3}$; c) $(-8)^{1/3}$;
+   d) $4^{-3/2}$.
+8. Determine domínio e imagem: a) $\sqrt{x-5}$; b) $-\sqrt{x+2}+3$.
+9. Encontre o ponto inicial do gráfico de $2\sqrt{x-4}-5$.
+
+### 4. Variação
+
+10. Determine o domínio de $\frac1{\sqrt{x-1}}$.
+11. Compare $x^2$ e $x^3$ em $x=\frac14$ e em $x=4$. Em qual caso o maior
+    expoente produz o menor valor?
+12. Determine domínio e simetria de $f(x)=x^{-5}$.
+
+### 5. Problema misto
+
+13. Um cubo tem volume de 250 cm³. Escreva a aresta na forma exata simplificada
+    e dê uma aproximação com duas casas decimais.
+14. O período $T$, em segundos, de certo pêndulo é modelado por
+    $T(L)=2\sqrt{L}$, com $L$ em metros. a) Qual é o domínio físico?
+    b) Calcule $T(0{,}25)$ e $T(2{,}25)$. c) Que comprimento produz período de
+    4 segundos?
+
+### 6. Justificativa
+
+15. Mostre que $x^3$ e $\sqrt[3]{x}$ desfazem uma à outra para todo real.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a), c) e d). A expressão $x^2+x$ soma duas potências; em $3^x$, a variável
+   está no expoente, portanto a função é exponencial.
+2. a) $\mathbb{R}$. b) $\mathbb{R}\setminus\{0\}$. c) $[0,+\infty[$.
+   d) $\mathbb{R}$. e) $]0,+\infty[$.
+3. a) par. b) ímpar. c) nenhuma: seu domínio não é simétrico em torno de zero.
+4. Expoente par usa um número par de fatores negativos, que se agrupam em
+   produtos positivos. Expoente ímpar deixa um fator negativo sem par. De fato,
+   $(-2)^4=16=2^4$, enquanto $(-2)^3=-8$ e $2^3=8$.
+5. Porque $x^{-2}=\frac1{x^2}$, e $x^2$ é positivo para todo $x\neq0$.
+6. Com $x=-3$, $\sqrt{x^2}=\sqrt9=3$, enquanto $x=-3$. A expressão correta é
+   $\sqrt{x^2}=\lvert x\rvert$.
+7. a) $16^{3/2}=(\sqrt{16})^3=64$. b)
+   $27^{2/3}=(\sqrt[3]{27})^2=9$. c) $-2$. d)
+   $4^{-3/2}=\frac1{(\sqrt4)^3}=\frac18$.
+8. a) Domínio $[5,+\infty[$ e imagem $[0,+\infty[$. b) Domínio
+   $[-2,+\infty[$ e imagem $]-\infty,3]$.
+9. $(4,-5)$.
+10. A raiz exige $x-1\geq0$, mas o denominador não pode zerar. Logo,
+    $x>1$.
+11. Em $x=\frac14$, $x^2=\frac1{16}$ e $x^3=\frac1{64}$: o maior expoente
+    produz o menor valor. Em $x=4$, $x^2=16$ e $x^3=64$.
+12. Domínio $\mathbb{R}\setminus\{0\}$. Como o expoente é ímpar,
+    $f(-x)=-f(x)$; a função é ímpar.
+13. $a=\sqrt[3]{250}=\sqrt[3]{125\times2}=5\sqrt[3]{2}\approx6{,}30$ cm.
+14. a) $L\geq0$. b) $T(0{,}25)=1$ s e $T(2{,}25)=3$ s. c)
+    $2\sqrt L=4$, então $\sqrt L=2$ e $L=4$ m.
+15. Para todo real $x$, $(\sqrt[3]{x})^3=x$. No outro sentido,
+    $\sqrt[3]{x^3}=x$, pois a raiz de índice ímpar preserva o sinal. Logo, as
+    duas composições devolvem a entrada.
+
+</details>
+
+## 15. Revisão curta
+
+Em $f(x)=x^p$, o expoente fixo governa a curva. Expoentes inteiros positivos
+produzem as potências conhecidas; negativos criam recíprocos e retiram zero do
+domínio; fracionários criam radicais. Expoente par apaga o sinal, enquanto
+expoente ímpar o preserva. A raiz desfaz a potência correspondente quando o
+domínio permite uma única resposta.
+
+Essa família reaparecerá no cálculo inteiro: a derivada de uma potência ainda é
+construída a partir de outra potência.

@@ -98,17 +98,35 @@ export default function NumberLine({
         />
         <path className={styles.axisArrow} d={arrowHead(PAD.x - 14, yLine, -1, 0)} />
 
-        {spans.map((item, index) => (
-          <line
-            key={`span-${index}`}
-            className={styles.span}
-            style={{'--tone': `var(--mv-tone-${item.tone ?? 3})`}}
-            x1={px(item.from)}
-            y1={yLine}
-            x2={px(item.to)}
-            y2={yLine}
-          />
-        ))}
+        {spans.map((item, index) => {
+          const tone = `var(--mv-tone-${item.tone ?? 3})`;
+          const x1 = px(item.from);
+          const x2 = px(item.to);
+
+          return (
+            <g key={`span-${index}`} style={{'--tone': tone}}>
+              <line
+                className={styles.span}
+                x1={x1}
+                y1={yLine}
+                x2={x2}
+                y2={yLine}
+              />
+              {item.continuesLeft && (
+                <path
+                  className={styles.spanArrow}
+                  d={arrowHead(x1 - 2, yLine, -1, 0, 9)}
+                />
+              )}
+              {item.continuesRight && (
+                <path
+                  className={styles.spanArrow}
+                  d={arrowHead(x2 + 2, yLine, 1, 0, 9)}
+                />
+              )}
+            </g>
+          );
+        })}
 
         {ticks.map((value, index) => (
           <g key={`tick-${value}`}>

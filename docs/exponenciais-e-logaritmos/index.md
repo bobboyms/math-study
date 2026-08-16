@@ -53,7 +53,8 @@ acréscimo é **proporcional ao que já existe**: 10% do saldo, todo ano.
 
 No começo mal se distinguem. Em vinte anos, a diferença passa de R\$ 3.700.
 
-A primeira coluna é uma **função afim**, e o capítulo de funções já a descreveu.
+A primeira coluna é uma **função afim**, e o capítulo de funções já a estudou em
+detalhe.
 A segunda é uma **função exponencial**, e é o objeto deste capítulo — junto com
 a pergunta inversa, que é tão importante quanto: **quanto tempo até dobrar?**
 Essa segunda pergunta é o que dá origem ao logaritmo.
@@ -95,5 +96,6 @@ O capítulo de [Geometria e trigonometria](../geometria/) segue por outro caminh
 o seno e o cosseno também são funções que se estudam pelo gráfico, pelo domínio
 e pela inversa.
 
-Ao terminar este capítulo, o conjunto de funções que você conhece cobre
-essencialmente tudo o que um curso de cálculo assume de antemão.
+Ao terminar este capítulo, você conhecerá as principais famílias algébricas que
+um curso de cálculo assume de antemão. A trigonometria do capítulo seguinte
+completará essa base com seno, cosseno, tangente e suas inversas.

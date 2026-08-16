@@ -91,8 +91,8 @@ resultado. É por isso que Bhaskara não precisa ser decorada.
    por que "não fatora" deixa de ser uma resposta possível.
 6. [Equações com radical](./equacoes-com-radical) — tirar a incógnita de dentro
    da raiz, e por que a verificação passa a ser obrigatória.
-7. [Sistemas de duas equações](./sistemas-de-duas-equacoes) — duas incógnitas
-   exigem duas informações independentes.
+7. [Sistemas de duas equações](./sistemas-de-duas-equacoes) — como duas
+   equações lineares não paralelas determinam um único par.
 8. [Intervalos](./intervalos) — a notação que descreve uma faixa inteira de
    números sem ambiguidade.
 9. [Inequações do 1º grau](./inequacoes-do-primeiro-grau) — as mesmas regras das

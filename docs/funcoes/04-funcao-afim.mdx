@@ -1,0 +1,455 @@
+---
+title: "Função afim: transformar uma taxa constante em reta"
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Função afim: transformar uma taxa constante em reta
+
+## 1. Problema motivador: duas corridas, uma tabela incompleta
+
+Um serviço de transporte cobra uma taxa inicial de R\$ 6 mais um valor fixo por
+quilômetro. Uma corrida de 3 km custa R\$ 18, e uma de 7 km custa R\$ 34.
+
+Com esses dois recibos, queremos responder três perguntas:
+
+- quanto o serviço cobra por quilômetro;
+- qual fórmula produz o preço de qualquer corrida;
+- quanto custaria uma corrida de 10 km.
+
+Os preços não crescem ao acaso. A cada quilômetro acrescentado, a conta sobe o
+mesmo valor. Quando uma quantidade muda a um **ritmo constante**, a relação é
+uma função afim e o gráfico é uma reta.
+
+## 2. Mapa das ideias
+
+- uma **função afim** tem a forma $f(x)=ax+b$;
+- $a$ é a **taxa de variação**: quanto a saída muda quando a entrada aumenta
+  uma unidade;
+- $b=f(0)$ é o **valor inicial**, onde a reta corta o eixo vertical;
+- a taxa entre dois pontos é $\frac{\Delta y}{\Delta x}$;
+- dois pontos com entradas diferentes determinam uma única reta.
+
+Na corrida, $x$ mede quilômetros e $f(x)$ mede reais. Por isso, a unidade de
+$a$ será reais por quilômetro, enquanto $b$ será medido em reais.
+
+## 3. Para que serve
+
+Funções afins aparecem quando existe uma parcela fixa e cada unidade acrescenta
+sempre a mesma parcela variável:
+
+- tarifa de transporte: bandeirada mais preço por quilômetro;
+- salário: valor fixo mais comissão por venda;
+- aluguel de equipamento: taxa de retirada mais preço por dia;
+- conversão de temperatura entre Celsius e Fahrenheit;
+- distância percorrida com velocidade constante.
+
+Dentro da matemática, a função afim é a referência para medir qualquer outra
+curva. No cálculo, uma curva será comparada com retas cada vez mais próximas de
+um ponto. Por isso, compreender a taxa de uma reta prepara o significado de
+derivada.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [funções](./funcoes): o que a altura $f(x)$ representa?** A saída
+associada à entrada $x$. O ponto correspondente no gráfico é $(x,f(x))$.
+
+**2. De [crescimento, sinal e simetria](./crescimento-sinal-e-simetria): como o
+sinal de uma taxa aparece no gráfico?** Taxa positiva produz crescimento;
+taxa negativa produz decrescimento; taxa zero produz uma reta horizontal.
+
+**3. De [equações do primeiro grau](../equacoes/equacoes-do-primeiro-grau):
+como encontrar o ponto em que $f(x)=0$?** Substituindo a saída por zero e
+resolvendo $ax+b=0$.
+
+A novidade é juntar essas três leituras: fórmula, taxa e desenho passam a
+descrever a mesma relação.
+
+## 5. Intuição: a escada escondida na reta
+
+Considere $f(x)=4x+6$. Começamos em 6 e acrescentamos 4 a cada passo:
+
+| Distância $x$ | 0 | 1 | 2 | 3 | 4 |
+|---:|---:|---:|---:|---:|---:|
+| Preço $f(x)$ | 6 | 10 | 14 | 18 | 22 |
+| Acréscimo | — | $+4$ | $+4$ | $+4$ | $+4$ |
+
+No gráfico, cada passo horizontal de 1 vem acompanhado de uma subida vertical
+de 4. A reta é a versão contínua dessa escada de acréscimos iguais.
+
+<CartesianPlane
+  xMin={-1}
+  xMax={8}
+  yMin={-4}
+  yMax={40}
+  xUnit={38}
+  yUnit={8}
+  yStep={5}
+  functions={[{f: (x) => 4 * x + 6, tone: 1}]}
+  points={[
+    {at: [0, 6], label: '(0,\ 6)', tone: 2, dx: 24, dy: -10},
+    {at: [3, 18], label: '(3,\ 18)', tone: 3, dx: 30, dy: -12},
+    {at: [4, 22], label: '(4,\ 22)', tone: 3, dx: 28, dy: -12},
+  ]}
+  segments={[
+    {from: [3, 18], to: [4, 18], tone: 2},
+    {from: [4, 18], to: [4, 22], tone: 2},
+  ]}
+  labels={[
+    {at: [3.5, 18], math: '\\Delta x=1', tone: 2, dy: 18},
+    {at: [4, 20], math: '\\Delta y=4', tone: 2, dx: 42},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Em f(x) = 4x + 6, avançar 1 unidade faz a saída subir 4. O ponto (0, 6) mostra o valor inicial."
+/>
+
+O desenho não cria a taxa. Ele mostra geometricamente a mesma comparação que a
+tabela mostrou numericamente.
+
+## 6. A fórmula e o papel dos parâmetros
+
+> Uma **função afim** é uma função que pode ser escrita como
+> $$
+> f(x)=ax+b,
+> $$
+> com $a$ e $b$ reais.
+
+O parâmetro $b$ é encontrado colocando $x=0$:
+
+$$
+f(0)=a\times0+b=b.
+$$
+
+Por isso, o gráfico passa por $(0,b)$. Esse ponto é o **intercepto vertical**.
+
+O parâmetro $a$ controla o que acontece quando aumentamos a entrada em 1:
+
+$$
+f(x+1)-f(x)
+=a(x+1)+b-(ax+b)
+=a.
+$$
+
+O $b$ se cancela porque o valor inicial é o mesmo nas duas medições. Sobra $a$,
+o acréscimo por unidade.
+
+**Exemplo.** $f(x)=-3x+8$ é afim. A taxa é $-3$, então a reta desce 3 unidades
+a cada passo para a direita. O valor inicial é 8.
+
+**Contraexemplo.** $g(x)=x^2+8$ não é afim. De $x=0$ para $x=1$, a saída sobe
+1; de $x=1$ para $x=2$, sobe 3. O ritmo muda, e o gráfico não pode ser uma reta.
+
+### Afim, linear e constante
+
+Na nomenclatura escolar usada neste curso:
+
+- $f(x)=ax+b$ é **afim**;
+- se $b=0$, $f(x)=ax$ também recebe o nome de **linear** e passa pela origem;
+- se $a=0$, $f(x)=b$ é **constante** e seu gráfico é horizontal;
+- quando $a\neq0$, a expressão $ax+b$ é de primeiro grau.
+
+Assim, $f(x)=4x$ é linear e afim; $g(x)=4x+6$ é afim, mas não linear; e
+$h(x)=6$ é constante e afim.
+
+## 7. A taxa entre dois pontos
+
+Se conhecemos dois pontos $(x_1,y_1)$ e $(x_2,y_2)$ da reta, com
+$x_1\neq x_2$, a taxa é
+
+$$
+a=\frac{\text{variação da saída}}{\text{variação da entrada}}
+=\frac{y_2-y_1}{x_2-x_1}.
+$$
+
+O símbolo $\Delta$ significa “variação”. Por isso, a mesma fórmula aparece como
+
+$$
+a=\frac{\Delta y}{\Delta x}.
+$$
+
+A ordem precisa ser a mesma em cima e embaixo. Se calcularmos $y_2-y_1$ no
+numerador, calculamos $x_2-x_1$ no denominador.
+
+Voltando aos recibos, os pontos são $(3,18)$ e $(7,34)$:
+
+$$
+a=\frac{34-18}{7-3}=\frac{16}{4}=4.
+$$
+
+O preço cresce R\$ 4 por quilômetro. Agora usamos um ponto para encontrar $b$.
+Com $(3,18)$:
+
+$$
+18=4\times3+b
+\quad\Longrightarrow\quad
+18=12+b
+\quad\Longrightarrow\quad
+b=6.
+$$
+
+Logo,
+
+$$
+f(x)=4x+6.
+$$
+
+O valor $b=6$ confirma a taxa inicial informada. Para 10 km,
+$f(10)=4\times10+6=46$: a corrida custa R\$ 46.
+
+## 8. Raiz, crescimento e imagem
+
+Para $a\neq0$, a raiz é o ponto em que a reta cruza o eixo horizontal:
+
+$$
+ax+b=0
+\quad\Longrightarrow\quad
+x=-\frac{b}{a}.
+$$
+
+O sinal de $a$ resume o comportamento:
+
+| Condição | Comportamento | Imagem, com domínio real |
+|---|---|---|
+| $a>0$ | crescente | todos os reais |
+| $a<0$ | decrescente | todos os reais |
+| $a=0$ | constante | somente $\{b\}$ |
+
+**Exemplo.** Em $g(x)=-2x+6$, a raiz é
+$x=-\frac{6}{-2}=3$. A função é decrescente porque $a=-2<0$.
+
+No problema da corrida, porém, o domínio não é todos os reais: distância
+negativa não faz sentido. Com $x\geq0$, o preço começa em R\$ 6 e cresce. A
+situação concreta pode restringir uma fórmula que, isoladamente, aceitaria
+qualquer número real.
+
+## 9. Exemplos resolvidos
+
+### Exemplo 1: ler a fórmula
+
+Para $f(x)=5x-12$, identifique taxa, valor inicial e raiz.
+
+A taxa é 5 e o valor inicial é $-12$. Para a raiz:
+
+$$
+5x-12=0
+\quad\Longrightarrow\quad
+x=\frac{12}{5}=2{,}4.
+$$
+
+### Exemplo 2: construir a partir de dois pontos
+
+*Pause e tente antes de ler.* Encontre a função afim que passa por $(2,11)$ e
+$(6,23)$.
+
+Primeiro, a taxa:
+
+$$
+a=\frac{23-11}{6-2}=\frac{12}{4}=3.
+$$
+
+Depois, substitua $(2,11)$ em $y=3x+b$:
+
+$$
+11=3\times2+b
+\quad\Longrightarrow\quad
+b=5.
+$$
+
+Portanto, $f(x)=3x+5$. Conferindo no outro ponto:
+$f(6)=18+5=23$.
+
+### Exemplo 3: reconhecer pela tabela
+
+*Pause e tente.* A tabela representa uma função afim?
+
+| $x$ | $-1$ | 1 | 3 | 5 |
+|---:|---:|---:|---:|---:|
+| $f(x)$ | 10 | 6 | 2 | $-2$ |
+
+A entrada cresce 2 a cada coluna e a saída diminui 4. Logo,
+$a=\frac{-4}{2}=-2$. A taxa permanece constante, então a função é afim.
+
+Usando $(1,6)$:
+
+$$
+6=-2\times1+b
+\quad\Longrightarrow\quad
+b=8.
+$$
+
+Assim, $f(x)=-2x+8$.
+
+### Exemplo 4: unidades revelam o significado
+
+*Pause e tente.* Um reservatório contém 500 L e perde 12 L por minuto. Escreva
+o volume após $t$ minutos e descubra quando ele esvazia.
+
+O valor inicial é 500 L. A taxa é $-12$ L/min, pois o volume diminui:
+
+$$
+V(t)=500-12t.
+$$
+
+Para esvaziar, $V(t)=0$:
+
+$$
+500-12t=0
+\quad\Longrightarrow\quad
+t=\frac{500}{12}=\frac{125}{3}\approx41{,}67\text{ min}.
+$$
+
+O modelo físico vale de $t=0$ até esse instante. Depois disso, a fórmula daria
+volume negativo, mas o reservatório vazio não continua perdendo água.
+
+### Exemplo 5: mesma taxa, valores iniciais diferentes
+
+As funções $f(x)=2x+1$ e $g(x)=2x-4$ têm a mesma taxa. Por isso, suas retas são
+paralelas. A diferença
+
+$$
+f(x)-g(x)=(2x+1)-(2x-4)=5
+$$
+
+é constante: o gráfico de $f$ fica sempre 5 unidades acima do gráfico de $g$.
+
+## 10. Erros comuns
+
+> **Erro 1: usar $\frac{x_2-x_1}{y_2-y_1}$.** A taxa mede saída por entrada,
+> então a variação da saída fica no numerador. As unidades ajudam: reais por
+> quilômetro, não quilômetros por real.
+
+> **Erro 2: trocar a ordem em uma só parte.** Se o numerador usa $y_2-y_1$, o
+> denominador precisa usar $x_2-x_1$. Inverter ambos não muda a resposta;
+> inverter somente um muda o sinal.
+
+> **Erro 3: identificar $b$ como a raiz.** $b$ é a saída quando $x=0$, portanto
+> marca o eixo vertical. A raiz é a entrada em que a saída vale zero.
+
+> **Erro 4: achar que $a=-3$ torna todos os valores negativos.** O sinal de $a$
+> diz que a função decresce. O valor de $f(x)$ também depende de $b$ e de $x$.
+
+> **Erro 5: aceitar o domínio algébrico sem olhar a situação.** A fórmula do
+> reservatório continua produzindo números depois de 41,67 minutos, mas esses
+> números negativos não representam volumes possíveis.
+
+## 11. Perguntas de verificação
+
+1. Por que uma taxa constante produz uma reta?
+2. Como se leem $a$ e $b$ em $f(x)=ax+b$?
+3. Por que a unidade de $a$ é “unidade da saída por unidade da entrada”?
+4. Qual é a diferença entre função afim e função linear?
+5. Por que dois pontos com a mesma entrada não servem para calcular a taxa?
+6. O que o sinal de $a$ informa?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque cada avanço horizontal igual vem acompanhado do mesmo avanço
+   vertical. Repetir esse deslocamento mantém todos os pontos alinhados.
+2. $a$ é a variação da saída por unidade de entrada; $b=f(0)$ é o valor inicial
+   e o intercepto vertical.
+3. Porque $a=\frac{\Delta y}{\Delta x}$ divide uma variação da saída por uma
+   variação da entrada. Na corrida, reais divididos por quilômetros produzem
+   reais por quilômetro.
+4. Toda função linear tem a forma $f(x)=ax$, portanto é uma função afim com
+   $b=0$. Uma função afim com $b\neq0$ não é linear nessa nomenclatura.
+5. Porque $x_2-x_1$ seria zero. Além de a divisão por zero não existir, os dois
+   pontos estariam na mesma vertical, o que não pode ocorrer no gráfico de uma
+   função se as saídas forem diferentes.
+6. $a>0$ indica crescimento, $a<0$ indica decrescimento e $a=0$ indica uma
+   função constante.
+
+</details>
+
+## 12. Exercícios
+
+### 1. Reconhecimento
+
+1. Em cada função, indique $a$, $b$ e se ela cresce, decresce ou permanece
+   constante: a) $f(x)=3x-7$; b) $g(x)=-\frac12x+4$; c) $h(x)=9$.
+2. Quais são lineares? a) $2x$; b) $2x+1$; c) $-x$; d) 5.
+3. Encontre a raiz de: a) $4x-12$; b) $-3x-6$; c) $\frac25x+4$.
+
+### 2. Explicação
+
+4. Explique por que $f(0)=b$ em toda função afim.
+5. Explique por que duas retas com a mesma taxa e valores iniciais diferentes
+   não se encontram.
+6. Uma função tem taxa negativa. Isso obriga todos os seus valores a serem
+   negativos? Justifique com um exemplo.
+
+### 3. Aplicação direta
+
+7. Encontre a função afim que passa por $(1,5)$ e $(4,17)$.
+8. Encontre a função afim que passa por $(-2,7)$ e $(3,-8)$.
+9. Complete a tabela de $f(x)=-2x+5$ para $x=-1,0,2,5$.
+
+### 4. Variação
+
+10. Uma função afim satisfaz $f(2)=9$ e $f(5)=9$. Determine sua fórmula.
+11. A tabela abaixo representa uma função afim? Justifique pela taxa.
+
+| $x$ | 0 | 2 | 5 |
+|---:|---:|---:|---:|
+| $f(x)$ | 1 | 7 | 16 |
+
+12. A reta de uma função afim tem raiz 4 e passa por $(2,6)$. Encontre a
+    fórmula.
+
+### 5. Problema misto
+
+13. Uma locadora cobra R\$ 45 de retirada e R\$ 18 por dia. a) Escreva $C(d)$.
+    b) Calcule o custo de 6 dias. c) Com R\$ 225, por quantos dias se pode
+    alugar?
+14. Às 8h, um tanque contém 900 L. Ele recebe água a uma taxa constante de
+    35 L/min. a) Escreva o volume após $t$ minutos. b) Qual o volume às 8h12?
+    c) Quando atingirá 1 600 L?
+
+### 6. Justificativa
+
+15. Mostre algebricamente que a taxa entre quaisquer dois pontos de
+    $f(x)=ax+b$ é sempre $a$.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) $a=3$, $b=-7$, crescente. b) $a=-\frac12$, $b=4$, decrescente.
+   c) $a=0$, $b=9$, constante.
+2. a) e c), porque têm $b=0$ e a forma $f(x)=ax$.
+3. a) $x=3$. b) $x=-2$. c) $x=-10$.
+4. Substituindo $x=0$: $f(0)=a\times0+b=b$.
+5. A diferença entre elas permanece constante. Se $f(x)=ax+b_1$ e
+   $g(x)=ax+b_2$, então $f(x)-g(x)=b_1-b_2\neq0$ para todo $x$.
+6. Não. A taxa negativa informa que os valores diminuem quando $x$ aumenta.
+   Por exemplo, $f(x)=-x+10$ tem taxa negativa e $f(0)=10>0$.
+7. $a=\frac{17-5}{4-1}=4$ e $b=1$, portanto $f(x)=4x+1$.
+8. $a=\frac{-8-7}{3-(-2)}=-3$ e $b=1$, portanto $f(x)=-3x+1$.
+9. $f(-1)=7$, $f(0)=5$, $f(2)=1$ e $f(5)=-5$.
+10. A saída não muda entre entradas diferentes, então $a=0$ e $f(x)=9$.
+11. Sim. De 0 a 2, a taxa é $\frac{7-1}{2-0}=3$; de 2 a 5, é
+    $\frac{16-7}{5-2}=3$. Logo, $f(x)=3x+1$.
+12. Os pontos são $(4,0)$ e $(2,6)$. A taxa é
+    $\frac{0-6}{4-2}=-3$. Usando $(4,0)$, obtemos $f(x)=-3x+12$.
+13. a) $C(d)=45+18d$. b) $C(6)=153$ reais. c)
+    $45+18d=225$, então $d=10$ dias.
+14. a) $V(t)=900+35t$. b) $V(12)=1\,320$ L. c)
+    $900+35t=1\,600$, então $t=20$ minutos, às 8h20.
+15. Para $x_1\neq x_2$,
+    $\frac{f(x_2)-f(x_1)}{x_2-x_1}
+    =\frac{(ax_2+b)-(ax_1+b)}{x_2-x_1}
+    =\frac{a(x_2-x_1)}{x_2-x_1}=a$.
+
+</details>
+
+## 13. Revisão curta
+
+Uma função afim transforma taxa constante em reta:
+
+$$
+f(x)=ax+b.
+$$
+
+$a=\frac{\Delta y}{\Delta x}$ mede quanto a saída varia por unidade de entrada;
+$b=f(0)$ é o valor inicial. Dois pontos com entradas diferentes permitem
+encontrar $a$ e depois $b$. Essa taxa constante será a referência para estudar
+curvas, cujas taxas mudam de um trecho para outro.

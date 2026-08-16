@@ -1,0 +1,489 @@
+---
+title: "Taxa média de variação: da reta secante à ideia de derivada"
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Taxa média de variação: da reta secante à ideia de derivada
+
+## 1. Problema motivador: o velocímetro e o trajeto inteiro
+
+Um veículo de teste parte do repouso, e sua posição após $t$ segundos é
+modelada por
+
+$$
+s(t)=t^2,
+$$
+
+com $s$ em metros. No instante 1 s, ele está em 1 m; no instante 3 s, em 9 m.
+Durante esses dois segundos, percorreu 8 metros. Sua velocidade média foi
+
+$$
+\frac{9-1}{3-1}=\frac82=4\text{ m/s}.
+$$
+
+Mas o velocímetro não marca 4 m/s o tempo inteiro. A posição cresce cada vez
+mais depressa. Como passar da velocidade média em um intervalo para a velocidade
+em um instante?
+
+Essa pergunta abre a porta do cálculo. Antes de aproximar os dois instantes,
+precisamos compreender com precisão o que a taxa média mede.
+
+## 2. Mapa das ideias
+
+- a **variação da entrada** entre $a$ e $b$ é $b-a$;
+- a **variação da saída** é $f(b)-f(a)$;
+- a **taxa média de variação** é
+  $\frac{f(b)-f(a)}{b-a}$, com $a\neq b$;
+- no gráfico, essa taxa é a inclinação da **reta secante** que passa pelos dois
+  pontos da curva;
+- aproximar o segundo ponto do primeiro revela a ideia de taxa instantânea;
+- o **quociente de diferenças** escreve essa aproximação com uma distância
+  variável $h$.
+
+## 3. Para que serve
+
+- calcular velocidade média em um trecho;
+- medir a variação média de preço, temperatura, população ou consumo;
+- comparar intervalos de tamanhos diferentes usando uma taxa “por unidade”;
+- decidir em qual trecho uma função cresceu mais rapidamente;
+- preparar limites e derivadas sem transformar a nova ideia numa fórmula sem
+  significado.
+
+As unidades são parte da resposta. Se $f$ mede reais e $x$ mede unidades
+vendidas, a taxa mede reais por unidade vendida.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [função afim](./funcao-afim): como se calcula a inclinação de uma
+reta?** Pela razão $\frac{\Delta y}{\Delta x}$. Numa reta, essa taxa é a mesma
+em qualquer par de pontos.
+
+**2. De [função quadrática](./funcao-quadratica): o que muda em uma curva?** Os
+acréscimos deixam de ser constantes. Em $x^2$, passos iguais produzem
+acréscimos cada vez maiores.
+
+**3. De [funções racionais](./funcoes-racionais): o que significa aproximar-se
+sem necessariamente atingir?** Significa observar uma tendência. Essa ideia
+será usada quando a distância entre os dois pontos se aproximar de zero.
+
+O pré-requisito central continua sendo a taxa de uma reta. A novidade é usar
+uma reta para medir um trecho de uma curva.
+
+## 5. Intuição: substituir um trecho pela sua subida média
+
+Entre os pontos $(1,1)$ e $(3,9)$ da parábola $s(t)=t^2$, a curva não mantém a
+mesma inclinação. Mesmo assim, podemos ligar os extremos por uma reta. Essa reta
+representa um movimento imaginário que parte e chega nos mesmos lugares, no
+mesmo tempo, mas mantém velocidade constante de 4 m/s.
+
+<CartesianPlane
+  xMin={0}
+  xMax={4}
+  yMin={-2}
+  yMax={16}
+  xUnit={82}
+  yUnit={22}
+  functions={[{f: (x) => x * x, tone: 1}]}
+  lines={[{through: [[1, 1], [3, 9]], tone: 2}]}
+  points={[
+    {at: [1, 1], label: 'A(1,\ 1)', tone: 3, dx: -26, dy: 24},
+    {at: [3, 9], label: 'B(3,\ 9)', tone: 3, dx: 28, dy: -14},
+  ]}
+  segments={[
+    {from: [1, 1], to: [3, 1], tone: 3},
+    {from: [3, 1], to: [3, 9], tone: 3},
+  ]}
+  labels={[
+    {at: [2, 1], math: '\\Delta t=2', tone: 3, dy: 18},
+    {at: [3, 5], math: '\\Delta s=8', tone: 3, dx: 42},
+  ]}
+  axisLabels={['t', 's']}
+  caption="A secante liga dois pontos da curva. Sua inclinação 8/2 = 4 representa a velocidade média entre 1 s e 3 s."
+/>
+
+> Uma **reta secante** corta a curva em dois pontos. Sua inclinação mede a taxa
+> média da função entre as duas entradas.
+
+A secante não afirma que a curva virou reta. Ela resume o efeito total do
+trecho: mesma variação de entrada, mesma variação total de saída.
+
+## 6. Definição da taxa média
+
+Para uma função $f$, entre duas entradas distintas $a$ e $b$:
+
+$$
+\boxed{
+\text{taxa média de variação}
+=\frac{f(b)-f(a)}{b-a}
+}
+$$
+
+Cada parte tem um papel:
+
+- $f(b)-f(a)$ mede quanto a saída mudou;
+- $b-a$ mede o tamanho do intervalo de entrada;
+- a divisão transforma a mudança total em mudança **por unidade**.
+
+**Exemplo.** Para $f(x)=x^2$, entre 2 e 5:
+
+$$
+\frac{f(5)-f(2)}{5-2}
+=\frac{25-4}{3}
+=7.
+$$
+
+**Contraexemplo.** $f(5)-f(2)=21$ não é uma taxa. É a variação total da saída.
+Sem dividir pela largura 3 do intervalo, não sabemos quanto variou por unidade.
+
+Também não podemos usar $a=b$. Nesse caso, o denominador seria zero. A taxa em
+um único ponto exigirá outro raciocínio: calcular taxas em intervalos não nulos
+e observar o que acontece quando esses intervalos encolhem.
+
+## 7. Sinal e unidades
+
+O sinal informa o comportamento médio do trecho:
+
+- taxa positiva: a saída final é maior que a inicial;
+- taxa negativa: a saída final é menor que a inicial;
+- taxa zero: as saídas dos extremos são iguais.
+
+Taxa média zero não significa que a função permaneceu constante entre os
+extremos. Em $f(x)=x^2$, entre $-2$ e 2:
+
+$$
+\frac{f(2)-f(-2)}{2-(-2)}
+=\frac{4-4}{4}=0.
+$$
+
+A curva desceu de 4 até 0 e depois subiu até 4. A taxa média vê o saldo entre os
+extremos, não cada movimento interno.
+
+As unidades ajudam a interpretar e a detectar inversões:
+
+| Entrada | Saída | Unidade da taxa |
+|---|---|---|
+| segundos | metros | metros por segundo |
+| unidades vendidas | reais | reais por unidade |
+| horas | graus Celsius | graus Celsius por hora |
+
+## 8. Numa reta, média e ritmo local coincidem
+
+Para $f(x)=mx+n$, entre quaisquer $a$ e $b$ distintos:
+
+$$
+\begin{aligned}
+\frac{f(b)-f(a)}{b-a}
+&=\frac{(mb+n)-(ma+n)}{b-a}\\
+&=\frac{m(b-a)}{b-a}\\
+&=m.
+\end{aligned}
+$$
+
+O valor inicial $n$ se cancela, e a taxa é sempre $m$. Por isso, uma reta não
+precisa de aproximação para revelar seu ritmo em um ponto: o ritmo é o mesmo em
+todos.
+
+Numa curva, pares diferentes geralmente produzem taxas diferentes. É essa
+mudança de taxa que o cálculo estuda.
+
+## 9. O quociente de diferenças
+
+Para observar a taxa perto de uma entrada $a$, escolhemos outra entrada
+$a+h$. A distância horizontal entre elas é $h$, pois
+
+$$
+(a+h)-a=h.
+$$
+
+Substituindo $b=a+h$ na taxa média, obtemos:
+
+$$
+\boxed{
+\frac{f(a+h)-f(a)}{h}
+},
+\qquad h\neq0.
+$$
+
+Essa expressão chama-se **quociente de diferenças**. Ela ainda mede uma taxa
+média entre dois pontos. A diferença é que podemos escolher $h$ cada vez menor.
+
+Para $f(x)=x^2$ perto de $a=2$:
+
+$$
+\begin{aligned}
+\frac{f(2+h)-f(2)}{h}
+&=\frac{(2+h)^2-2^2}{h}\\
+&=\frac{4+4h+h^2-4}{h}\\
+&=\frac{h(4+h)}{h}\\
+&=4+h,
+\qquad h\neq0.
+\end{aligned}
+$$
+
+O cancelamento é permitido porque $h\neq0$: os pontos ainda são distintos.
+Agora podemos observar a tendência:
+
+| $h$ | segundo ponto | taxa $4+h$ |
+|---:|---:|---:|
+| 1 | 3 | 5 |
+| $0{,}5$ | $2{,}5$ | $4{,}5$ |
+| $0{,}1$ | $2{,}1$ | $4{,}1$ |
+| $-0{,}1$ | $1{,}9$ | $3{,}9$ |
+| $-0{,}01$ | $1{,}99$ | $3{,}99$ |
+
+Quando $h$ se aproxima de zero pelos dois lados, $4+h$ se aproxima de 4. Esse
+valor é a velocidade instantânea de $s(t)=t^2$ em $t=2$ e a inclinação da reta
+tangente à parábola nesse ponto.
+
+> Ainda não colocamos $h=0$. Observamos o valor de que as taxas se aproximam
+> enquanto $h$ continua diferente de zero. Formalizar essa passagem é o papel
+> dos **limites**.
+
+## 10. Da secante à tangente
+
+Uma secante precisa de dois pontos. Conforme o segundo ponto se aproxima do
+primeiro:
+
+1. o intervalo horizontal $h$ encolhe;
+2. a taxa média descreve um trecho menor;
+3. a secante gira e se aproxima de uma posição;
+4. essa posição limite é a **reta tangente**;
+5. sua inclinação é a **taxa instantânea**, chamada derivada.
+
+A tangente não é definida como “uma reta que toca a curva uma vez”. Uma reta
+pode tocar ou até cruzar uma curva de maneiras diferentes. O que a define aqui
+é ser a posição para a qual as secantes tendem quando os dois pontos se
+aproximam.
+
+## 11. Exemplos resolvidos
+
+### Exemplo 1: uma função afim
+
+Calcule a taxa média de $f(x)=-3x+10$ entre $x=2$ e $x=7$.
+
+$$
+f(2)=4,
+\qquad
+f(7)=-11,
+$$
+
+então
+
+$$
+\frac{-11-4}{7-2}=\frac{-15}{5}=-3.
+$$
+
+O resultado coincide com o coeficiente de $x$, como deve ocorrer em toda reta.
+
+### Exemplo 2: comparar dois trechos da parábola
+
+*Pause e tente antes de ler.* Para $f(x)=x^2$, compare as taxas médias em
+$[0,2]$ e $[2,4]$.
+
+$$
+\text{em }[0,2]:\quad\frac{4-0}{2-0}=2,
+$$
+
+$$
+\text{em }[2,4]:\quad\frac{16-4}{4-2}=6.
+$$
+
+Os intervalos têm a mesma largura, mas a segunda taxa é maior. A parábola fica
+mais inclinada à direita.
+
+### Exemplo 3: uma taxa com unidade
+
+*Pause e tente.* A temperatura de uma peça cai de 180 °C para 84 °C em 12
+minutos. Qual é a taxa média?
+
+$$
+\frac{84-180}{12-0}=\frac{-96}{12}=-8\ ^\circ\text{C/min}.
+$$
+
+O sinal negativo registra a queda; a unidade diz que a temperatura diminuiu,
+em média, 8 °C por minuto.
+
+### Exemplo 4: uma função radical
+
+*Pause e tente.* Calcule a taxa média de $f(x)=\sqrt{x}$ entre 1 e 4.
+
+$$
+\frac{\sqrt4-\sqrt1}{4-1}
+=\frac{2-1}{3}
+=\frac13.
+$$
+
+A taxa não é $\sqrt{\frac{4-1}{4-1}}$. A subtração ocorre **depois** de avaliar
+a função nos extremos.
+
+### Exemplo 5: simplificar antes de aproximar
+
+Para $f(x)=x^2+3x$, encontre o quociente de diferenças em torno de $a$.
+
+$$
+\begin{aligned}
+\frac{f(a+h)-f(a)}{h}
+&=\frac{(a+h)^2+3(a+h)-(a^2+3a)}{h}\\
+&=\frac{2ah+h^2+3h}{h}\\
+&=2a+h+3,
+\qquad h\neq0.
+\end{aligned}
+$$
+
+Quando $h$ se aproxima de zero, a taxa se aproxima de $2a+3$. O cálculo dará
+um significado formal a essa última passagem.
+
+## 12. Erros comuns
+
+> **Erro 1: dividir valores em vez de variações.** A taxa não é
+> $\frac{f(b)}{b}$. Ela compara mudanças:
+> $\frac{f(b)-f(a)}{b-a}$.
+
+> **Erro 2: trocar a ordem somente no denominador.** Se o numerador é
+> $f(b)-f(a)$, o denominador precisa ser $b-a$. Trocar a ordem nos dois mantém
+> a taxa; trocar em um só muda o sinal.
+
+> **Erro 3: esquecer os parênteses em $f(a+h)$.** Em $f(x)=x^2$, temos
+> $f(a+h)=(a+h)^2$, não $a+h^2$.
+
+> **Erro 4: substituir $h=0$ no começo.** Isso cria $\frac00$, que não tem
+> valor. Primeiro simplificamos para $h\neq0$; depois observamos a tendência
+> quando $h$ se aproxima de zero.
+
+> **Erro 5: achar que taxa média zero significa função constante.** A taxa
+> considera somente o saldo entre os extremos. A função pode descer e voltar à
+> mesma altura.
+
+> **Erro 6: confundir secante com a própria curva.** A secante é uma reta de
+> comparação. Ela coincide com os extremos escolhidos, não com todos os pontos
+> intermediários da curva.
+
+## 13. Perguntas de verificação
+
+1. Por que dividimos a variação da saída pela variação da entrada?
+2. O que a inclinação da secante representa?
+3. Por que a taxa média de uma função afim é sempre o coeficiente de $x$?
+4. Como uma taxa média pode ser zero mesmo que a função varie?
+5. O que $h$ representa no quociente de diferenças?
+6. Por que simplificamos com $h\neq0$ antes de observar $h$ próximo de zero?
+7. Qual é a ponte entre reta secante e derivada?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. A divisão transforma a mudança total em mudança por unidade de entrada e
+   permite comparar intervalos de tamanhos diferentes.
+2. A taxa média da função entre as entradas dos dois pontos.
+3. Porque os valores iniciais se cancelam e o numerador fica
+   $m(b-a)$. Dividindo por $b-a$, sobra $m$.
+4. As saídas dos extremos podem ser iguais mesmo que a função tenha descido e
+   subido no interior do intervalo. A taxa média registra o saldo.
+5. A distância horizontal, com sinal, entre a entrada $a$ e a segunda entrada
+   $a+h$.
+6. Porque $h=0$ faria os pontos coincidirem e criaria divisão por zero. Com
+   $h\neq0$, o cancelamento é legítimo; depois estudamos a tendência das taxas.
+7. Quando o segundo ponto se aproxima do primeiro, as secantes podem se
+   aproximar de uma reta tangente. A inclinação limite dessas secantes é a taxa
+   instantânea, isto é, a derivada.
+
+</details>
+
+## 14. Exercícios
+
+### 1. Reconhecimento
+
+1. Em cada situação, identifique a unidade da taxa: a) distância em quilômetros
+   e tempo em horas; b) custo em reais e produção em peças; c) temperatura em
+   graus Celsius e tempo em minutos.
+2. Escreva, sem calcular, a taxa média de $f$ entre 3 e 8.
+3. Para $f(x)=x^2$, quais pontos da curva determinam a secante entre $x=-1$ e
+   $x=4$?
+
+### 2. Explicação
+
+4. Explique por que $f(b)-f(a)$ sozinho não é uma taxa.
+5. Explique por que não se pode calcular a taxa média em um intervalo de largura
+   zero.
+6. Dê um exemplo em que a taxa média é zero, mas a função não é constante no
+   intervalo.
+
+### 3. Aplicação direta
+
+7. Calcule a taxa média de $f(x)=3x-5$ entre $-2$ e 6.
+8. Calcule a taxa média de $g(x)=x^2-1$ em: a) $[1,3]$; b) $[-3,-1]$.
+9. Calcule a taxa média de $h(x)=\frac1x$ entre 1 e 4.
+
+### 4. Variação
+
+10. Para $f(x)=x^2$, mostre que a taxa média entre $a$ e $b$ é $a+b$.
+11. Simplifique o quociente de diferenças de $f(x)=x^2-4x$ em torno de $a$.
+12. Para $f(x)=x^3$, calcule o quociente de diferenças em torno de $a=1$ e
+    descreva de que valor ele se aproxima quando $h$ se aproxima de zero.
+
+### 5. Problema misto
+
+13. A posição de uma bicicleta é $s(t)=2t^2+3t$, em metros. a) Calcule a
+    velocidade média entre 1 s e 4 s. b) Calcule entre 2 s e $2+h$ s.
+    c) De que valor essa segunda taxa se aproxima quando $h$ se aproxima de
+    zero?
+14. Uma empresa teve receita de R\$ 48.000 com 200 unidades e R\$ 61.500 com
+    250 unidades. a) Qual foi a taxa média da receita nesse intervalo?
+    b) Interprete a unidade. c) A conta prova que cada unidade adicional foi
+    vendida por esse mesmo valor? Explique.
+
+### 6. Justificativa
+
+15. Demonstre que inverter simultaneamente a ordem dos extremos no numerador e
+    no denominador não altera a taxa média.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) quilômetros por hora. b) reais por peça. c) graus Celsius por minuto.
+2. $\frac{f(8)-f(3)}{8-3}$.
+3. $(-1,f(-1))=(-1,1)$ e $(4,f(4))=(4,16)$.
+4. Porque $f(b)-f(a)$ mede a mudança total, mas não considera em quantas
+   unidades de entrada ela ocorreu. Dividir por $b-a$ produz a mudança por
+   unidade.
+5. Porque as entradas seriam iguais e o denominador $b-a$ valeria zero. Uma
+   taxa em um ponto será definida por uma tendência, não por divisão direta por
+   zero.
+6. Em $f(x)=x^2$ no intervalo $[-2,2]$, as duas saídas valem 4 e a taxa média é
+   zero, embora a função desça até 0 e volte a subir.
+7. $\frac{f(6)-f(-2)}{6-(-2)}=\frac{13-(-11)}8=3$.
+8. a) $\frac{8-0}{3-1}=4$. b)
+   $\frac{0-8}{-1-(-3)}=-4$.
+9. $\frac{\frac14-1}{4-1}=\frac{-3/4}{3}=-\frac14$.
+10. $\frac{b^2-a^2}{b-a}=\frac{(b-a)(b+a)}{b-a}=a+b$, com $a\neq b$.
+11. $\frac{(a+h)^2-4(a+h)-(a^2-4a)}h
+    =\frac{2ah+h^2-4h}{h}=2a+h-4$, com $h\neq0$.
+12. $\frac{(1+h)^3-1}{h}=3+3h+h^2$, com $h\neq0$. Quando $h$ se aproxima de
+    zero, a expressão se aproxima de 3.
+13. a) $s(1)=5$ e $s(4)=44$, então a taxa é
+    $\frac{44-5}{4-1}=13$ m/s. b)
+    $\frac{s(2+h)-s(2)}h=11+2h$ m/s. c) Aproxima-se de 11 m/s.
+14. a) $\frac{61\,500-48\,000}{250-200}=270$ reais por unidade. b) A receita
+    aumentou, em média, R\$ 270 para cada unidade adicional dentro desse
+    intervalo. c) Não. A taxa média resume o aumento total; preços, descontos ou
+    combinações de produtos podem ter variado dentro do intervalo.
+15. Como $f(a)-f(b)=-(f(b)-f(a))$ e $a-b=-(b-a)$,
+    $\frac{f(a)-f(b)}{a-b}
+    =\frac{-(f(b)-f(a))}{-(b-a)}
+    =\frac{f(b)-f(a)}{b-a}$.
+
+</details>
+
+## 15. Revisão curta
+
+A taxa média entre $a$ e $b$ é
+
+$$
+\frac{f(b)-f(a)}{b-a}.
+$$
+
+Ela mede mudança da saída por unidade de entrada e aparece no gráfico como a
+inclinação de uma secante. Escrevendo o segundo ponto como $a+h$, obtemos o
+quociente de diferenças $\frac{f(a+h)-f(a)}h$. Quando $h$ se aproxima de zero,
+as secantes podem se aproximar de uma tangente. A inclinação dessa tangente é a
+taxa instantânea — a derivada que o cálculo formalizará.

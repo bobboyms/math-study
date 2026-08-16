@@ -4,7 +4,7 @@ title: Sistemas de duas equações
 
 import CartesianPlane from '@site/src/components/CartesianPlane';
 
-# Sistemas: duas incógnitas exigem duas informações
+# Sistemas de duas equações
 
 ## 1. Problema motivador: dois recibos da papelaria
 
@@ -22,8 +22,9 @@ $$
 3c + 2p = 58.
 $$
 
-Uma equação, duas incógnitas. E aqui está o problema: **essa equação não decide
-nada sozinha.** Vários pares de preços a satisfazem:
+Uma equação, duas incógnitas. E aqui está o problema: **essa equação não
+determina os dois preços de modo único.** Ela elimina muitas combinações, mas
+vários pares de preços ainda a satisfazem:
 
 | Caderno $c$ | Caneta $p$ | Confere? |
 |---:|---:|---|
@@ -31,13 +32,14 @@ nada sozinha.** Vários pares de preços a satisfazem:
 | R\$ 14 | R\$ 8 | $42 + 16 = 58$ |
 | R\$ 16 | R\$ 5 | $48 + 10 = 58$ |
 
-Todos passam no teste. Um único recibo é compatível com infinitas tabelas de
-preço, porque ele mistura as duas informações num total só.
+Todos passam no teste. Neste modelo, um único recibo é compatível com infinitas
+tabelas de preço: ele relaciona os dois preços, mas não informa cada um
+separadamente.
 
 É por isso que o segundo recibo importa. Ele traz uma **segunda restrição**, e a
 pergunta vira: qual par de preços satisfaz as duas ao mesmo tempo? Esta página
-mostra como responder — e por que duas incógnitas precisam, em geral, de
-exatamente duas informações.
+mostra como responder no caso dos **sistemas lineares**: aqueles em que as
+incógnitas aparecem somente no primeiro grau e não são multiplicadas entre si.
 
 ## 2. Mapa das ideias
 
@@ -50,8 +52,13 @@ exatamente duas informações.
 - **eliminação** (ou adição) é combinar as duas equações de modo que uma
   incógnita se cancele.
 
-Os dois métodos fazem a mesma coisa por caminhos diferentes: **reduzir duas
-incógnitas a uma**. Depois disso, o que sobra é uma equação do 1º grau comum.
+Nos recibos, $(14,8)$ é um exemplo de solução: o par satisfaz os dois totais. Já
+$(10,14)$ é um contraexemplo: satisfaz $3c+2p=58$, mas no segundo recibo produz
+$5(10)+4(14)=106$, não 102. Satisfazer uma equação só não resolve o sistema.
+
+Os dois métodos fazem a mesma coisa por caminhos diferentes nos sistemas
+lineares desta página: **reduzir duas incógnitas a uma**. Depois disso, o que
+sobra é uma equação do 1º grau comum.
 
 ## 3. Para que serve
 
@@ -92,19 +99,22 @@ uma infinidade de pares, mas já é menos que antes.
 A segunda equação, $5c + 4p = 102$, aplica outro filtro sobre a mesma lista. E o
 par que passa nos **dois** filtros é, em geral, um só.
 
-> Duas incógnitas desconhecidas exigem duas informações independentes. Uma
-> equação sozinha relaciona; duas equações determinam.
+> Em um sistema linear com duas incógnitas, duas equações cujas retas não são
+> paralelas determinam um único par.
 
-A palavra **independentes** faz trabalho aqui. Se o segundo recibo fosse “6
-cadernos e 4 canetas por R\$ 116”, ele não acrescentaria nada: é exatamente o
-primeiro recibo em dobro. O mesmo filtro aplicado duas vezes não estreita mais
-nada. Voltaremos a esse caso na seção 9.
+É nesse sentido que as informações precisam ser **independentes**: uma equação
+deve cortar as possibilidades numa direção diferente da outra. Se o segundo
+recibo fosse “6 cadernos e 4 canetas por R\$ 116”, ele seria exatamente o
+primeiro em dobro. As duas equações formariam a mesma reta. Se os itens fossem
+dobrados, mas o total fosse R\$ 120, as retas seriam paralelas e as informações
+se contradiriam. Em nenhum desses casos haveria um único par. Voltaremos aos
+dois desfechos na seção 9.
 
 ## 6. Modelo visual: duas retas no plano
 
 Existe uma imagem que torna tudo isso evidente, e ela usa uma ideia que o
 [capítulo de geometria](../geometria/plano-cartesiano-e-distancia) desenvolve
-com cuidado. Por ora, basta o essencial: um **par** de números pode ser
+com cuidado. Por ora, use o essencial: um **par** de números pode ser
 desenhado como um **ponto**, marcando o primeiro valor na horizontal e o segundo
 na vertical.
 
@@ -126,9 +136,17 @@ segunda equação.
     {f: (c) => (58 - 3 * c) / 2, tone: 1},
     {f: (c) => (102 - 5 * c) / 4, tone: 2},
   ]}
-  points={[{at: [14, 8], label: '(14,\\ 8)', tone: 3, place: 'below-left'}]}
+  points={[
+    {at: [10, 14], tone: 1, r: 4},
+    {at: [16, 5], tone: 1, r: 4},
+    {at: [14, 8], label: '(14,\\ 8)', tone: 3, r: 6, dx: -36, dy: 27},
+  ]}
+  labels={[
+    {at: [8, 17], math: '3c + 2p = 58', tone: 1, dx: 58, dy: -9},
+    {at: [6, 18], math: '5c + 4p = 102', tone: 2, dx: -2, dy: -13},
+  ]}
   axisLabels={['c', 'p']}
-  caption="Cada equação é uma reta de pares possíveis. O único par que está nas duas retas ao mesmo tempo é o cruzamento: caderno a 14 e caneta a 8."
+  caption="Os pontos da tabela pertencem à reta 3c + 2p = 58. O par que também pertence à reta 5c + 4p = 102 é o cruzamento: caderno a 14 e caneta a 8."
 />
 
 Resolver o sistema é achar o **cruzamento**. Um ponto que está na primeira reta
@@ -176,6 +194,33 @@ $$
 
 **Verificando nas duas**: a primeira dá $5 = 2(2)+1$, confere; a segunda dá
 $3(2) + 5 = 11$, confere. A solução é o par $(x, y) = (2, 5)$.
+
+**Tente agora, antes de abrir a resposta.** Resolva por substituição:
+
+$$
+\begin{cases}
+x - y = 2 \\
+3x + y = 14
+\end{cases}
+$$
+
+<details>
+<summary>Resposta para conferência</summary>
+
+Da primeira equação, $x=y+2$. Levando essa expressão para a segunda:
+
+$$
+3(y+2)+y=14
+\quad\Longrightarrow\quad
+4y+6=14
+\quad\Longrightarrow\quad
+y=2.
+$$
+
+Então $x=2+2=4$. O par $(4,2)$ satisfaz as duas equações:
+$4-2=2$ e $3(4)+2=14$.
+
+</details>
 
 A substituição é o método natural quando **alguma incógnita já está isolada**,
 ou quando isolar é barato — quando ela aparece com coeficiente 1.
@@ -274,12 +319,15 @@ equação original: $5(2) - 2(4) = 10 - 8 = 2$. Confere.
 | coeficientes “redondos” nos dois lados | eliminação |
 | coeficientes opostos já prontos ($+2y$ e $-2y$) | eliminação |
 
-Os dois sempre funcionam. A escolha é só de economia de trabalho — e, na dúvida,
-o método que você domina melhor é o certo.
+Nos sistemas lineares estudados aqui, os dois métodos podem ser aplicados. A
+escolha muda a quantidade de trabalho, não o conjunto de soluções, desde que
+cada transformação preserve a igualdade. Na dúvida, escolha o método cujos
+passos você consegue registrar e verificar com mais segurança.
 
 ## 9. Os três desfechos possíveis
 
-Nem todo sistema tem solução única. A leitura das retas explica os três casos.
+Em um sistema linear como os desta página, cada equação representa uma reta.
+Por isso, há exatamente três casos possíveis.
 
 **Uma solução.** As retas se cruzam num ponto. É o caso comum, e o dos recibos.
 
@@ -392,6 +440,14 @@ fato 5 a mais que 6.
 
 ### Exemplo 5: uma reta e uma parábola
 
+:::note Além dos sistemas lineares
+
+Os três desfechos da seção 9 valem para **duas retas**. O próximo exemplo troca
+uma das retas por uma parábola. Ele é uma extensão para mostrar que sistemas não
+lineares podem ter outro número de soluções.
+
+:::
+
 *Pause e tente.* Onde a reta $y = x + 2$ encontra a curva $y = x^2$?
 
 Este sistema não é do 1º grau, mas a substituição funciona igual: os dois lados
@@ -436,15 +492,19 @@ precisa ser um.
 > não é sinal de conta errada: é a resposta “não há solução”. Chegar a $0 = 0$ é
 > a resposta “infinitas soluções”.
 
-> **Erro 6: substituir de volta na equação já modificada.** Depois de
-> multiplicar a primeira equação por 2, use a **original** para achar a segunda
-> incógnita, ou ao menos confira nela. Trabalhar sempre sobre a versão
-> modificada esconde erros de multiplicação.
+> **Cuidado 6: conferir só na equação modificada.** Se uma equação foi
+> multiplicada corretamente por um número não nulo, ela continua equivalente à
+> original e pode ser usada para achar a segunda incógnita. O risco é de
+> conferir o resultado somente nela: um erro cometido na multiplicação pode
+> passar despercebido. Para verificar o sistema, teste o par nas duas equações
+> originais.
 
 ## 12. Perguntas de verificação
 
-1. Por que uma equação com duas incógnitas não determina os dois valores?
-2. O que significa dizer que as duas equações precisam ser **independentes**?
+1. Por que uma equação linear como $3c+2p=58$ não determina os dois valores de
+   modo único?
+2. O que significa dizer que duas equações lineares são **independentes** neste
+   contexto?
 3. Por que é legítimo somar duas equações membro a membro?
 4. Por que é legítimo multiplicar uma equação inteira por um número?
 5. Geometricamente, o que é a solução de um sistema de duas equações do 1º grau?
@@ -455,14 +515,15 @@ precisa ser um.
 <details>
 <summary>Respostas para conferência</summary>
 
-1. Porque ela relaciona as duas incógnitas sem fixar nenhuma: infinitos pares a
-   satisfazem. No caso dos recibos, o total 58 é compatível com caderno a 10 e
-   caneta a 14, com caderno a 14 e caneta a 8, e com uma infinidade de outras
-   combinações.
-2. Que a segunda equação acrescenta uma restrição **nova**, e não repete a
-   primeira de outra forma. Um recibo de “6 cadernos e 4 canetas por R\$ 116” é
-   o primeiro em dobro: filtra exatamente os mesmos pares, e por isso não ajuda
-   a decidir.
+1. Porque ela impõe uma relação entre as incógnitas, mas ainda deixa uma delas
+   variar. Para cada valor escolhido de uma incógnita, a equação determina o
+   valor correspondente da outra. No caso dos recibos, o total 58 é compatível
+   com caderno a 10 e caneta a 14, com caderno a 14 e caneta a 8, e com uma
+   infinidade de outras combinações reais.
+2. Que as duas retas cortam o plano em direções diferentes, isto é, não são
+   paralelas. Se uma equação for múltipla exata da outra, as retas coincidem e a
+   informação se repete. Se somente os coeficientes forem proporcionais, mas os
+   totais não, as retas são paralelas e as informações são incompatíveis.
 3. Porque somar duas igualdades é acrescentar a mesma quantidade aos dois lados
    da primeira — de um lado escrita como $C$, do outro como $D$, que valem o
    mesmo por serem os dois lados da segunda igualdade. É a regra da balança.
@@ -550,8 +611,8 @@ coeficientes dela para decidir por quanto multiplicar cada equação.
 
 1. Sim. Na primeira, $2 + 3 = 5$; na segunda, $2(2) - 3 = 1$. Passa nas duas — e
    é por isso que o teste precisa ser feito nas duas.
-2. a) O $y$, que já está isolado. &nbsp; b) O $y$, cujo coeficiente é 1: basta
-   passar o $3x$ para o outro lado, sem dividir nada. &nbsp; c) Nenhuma sai
+2. a) O $y$, que já está isolado. &nbsp; b) O $y$, cujo coeficiente é 1:
+   subtraia $3x$ dos dois lados, sem dividir. &nbsp; c) Nenhuma sai
    barata, porque isolar qualquer uma exige dividir por 4 ou por 6 e produz
    frações. Este é caso para eliminação.
 3. No (a): os coeficientes de $y$ são $+1$ e $-1$, então somar as equações já
@@ -604,9 +665,11 @@ coeficientes dela para decidir por quanto multiplicar cada equação.
 
 ## 14. Revisão curta
 
-- Uma equação com duas incógnitas **relaciona**, mas não determina: infinitos
-  pares a satisfazem. Duas incógnitas exigem, em geral, duas informações
-  **independentes**.
+- Uma equação linear como $3c+2p=58$ **relaciona** duas incógnitas, mas não
+  determina um único par: infinitos pares reais a satisfazem.
+- Duas equações lineares determinam um único par quando suas retas não são
+  paralelas. Se coincidem, há infinitas soluções; se são paralelas distintas,
+  não há solução.
 - **Solução do sistema** é o par que satisfaz **todas** as equações — por isso a
   verificação é sempre nas duas.
 - **Substituição**: isole uma incógnita numa equação e leve a expressão para a
@@ -616,15 +679,15 @@ coeficientes dela para decidir por quanto multiplicar cada equação.
 - Os dois métodos fazem a mesma coisa: **reduzir duas incógnitas a uma**.
 - Multiplicar uma equação é multiplicar os **dois lados**. Somar duas equações é
   legítimo porque os dois lados da segunda valem o mesmo.
-- Geometricamente, cada equação é uma **reta**, e a solução é o cruzamento. Daí
-  os três desfechos: uma solução, nenhuma (retas paralelas) ou infinitas (retas
-  coincidentes).
+- Geometricamente, cada equação **linear** desta página é uma reta, e a solução
+  é o cruzamento. Daí os três desfechos: uma solução, nenhuma (retas paralelas)
+  ou infinitas (retas coincidentes).
 - Se as incógnitas somem e resta $0 = 3$, não há solução; se resta $0 = 0$, há
   infinitas.
 - A substituição também resolve sistemas que não são do 1º grau — é assim que se
   acha onde uma reta cruza uma parábola.
 
 Antes de avançar, verifique se você consegue explicar por que dois recibos
-idênticos não resolvem o problema da papelaria. A próxima página troca o sinal
-de igual pelo de desigualdade, e com isso a resposta deixa de ser um valor e
-passa a ser uma faixa inteira.
+idênticos não resolvem o problema da papelaria. A próxima página apresenta a
+notação de **intervalos**, usada para escrever faixas de números. Depois dela,
+as inequações produzirão essas faixas como resposta.

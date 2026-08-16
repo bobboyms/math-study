@@ -222,7 +222,7 @@ Reta numérica com saltos, pontos e intervalos.
 | `unit` | pixels por unidade (padrão 44) |
 | `jumps` | `[{from, to, label?, tone?, level?}]` — seta curva com ponta na direção do movimento. `level` (0, 1, 2…) empilha arcos que se cruzariam |
 | `marks` | `[{at, label?, tone?, open?}]` — ponto sobre a reta; `open: true` desenha a bola vazia |
-| `spans` | `[{from, to, tone?}]` — faixa grossa translúcida sobre a reta |
+| `spans` | `[{from, to, tone?, continuesLeft?, continuesRight?}]` — faixa grossa translúcida; as opções `continuesLeft` e `continuesRight` acrescentam uma seta colorida quando a faixa não termina naquele lado |
 | `caption` | texto simples |
 
 Dois saltos que se cruzam precisam de `level` diferente, senão os arcos se
