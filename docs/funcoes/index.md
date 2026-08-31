@@ -44,15 +44,16 @@ de funções, uma a uma; a última página reúne tudo numa ponte para o cálcul
    canônica.
 6. [Transformações de gráficos](./transformacoes-de-graficos) — mover, esticar e
    refletir uma curva conhecida.
-7. [Funções potência e radicais](./funcoes-potencia-e-radicais) — como o
-   expoente determina o gráfico, o domínio e a função inversa.
-8. [Função modular e por partes](./funcao-modular-e-por-partes) — quando uma
-   fórmula só não basta.
-9. [Composição de funções](./composicao-de-funcoes) — encaixar uma regra dentro
+7. [Função modular e por partes](./funcao-modular-e-por-partes) — quando uma
+   fórmula só não descreve a regra.
+8. [Composição de funções](./composicao-de-funcoes) — encaixar uma regra dentro
    de outra.
-10. [Função inversa](./funcao-inversa) — desfazer a regra.
+9. [Função inversa](./funcao-inversa) — desfazer a regra.
+10. [Funções potência e radicais](./funcoes-potencia-e-radicais) — como o
+    expoente determina o gráfico e o domínio, e por que a raiz é a inversa da
+    potência.
 11. [Função polinomial](./funcao-polinomial) — o que acontece com grau maior que
-   dois.
+    dois.
 12. [Divisão de polinômios](./divisao-de-polinomios) — o teorema do resto e o
     dispositivo de Briot-Ruffini.
 13. [Raízes racionais](./raizes-racionais) — como achar a primeira raiz de um

@@ -63,6 +63,12 @@ elas é sempre uma equação concreta que trava:
 | Inequações do 2º grau | $-x^2 + 100x - 1600 > 0$ | $\frac{200+4x}{x} < 6$: a incógnita está embaixo |
 | Inequações com fração e módulo | $\frac{200+4x}{x} < 6$ | — |
 
+Duas páginas do capítulo ficam de fora dessa tabela porque não resolvem um caso
+novo de equação: elas entregam ferramentas que as outras usam. [O plano
+cartesiano](./plano-cartesiano) transforma uma expressão em curva, e é o que dá
+sentido à frase “onde o gráfico cruza o eixo horizontal”. [Intervalos](./intervalos)
+dá a notação para escrever uma faixa de números sem ambiguidade.
+
 Repare que a página de Bhaskara não traz método novo: ela executa o método da
 anterior **uma única vez**, com letras no lugar dos números, e guarda o
 resultado. É por isso que Bhaskara não precisa ser decorada.
@@ -87,18 +93,20 @@ resultado. É por isso que Bhaskara não precisa ser decorada.
    a fatoração existir.
 4. [A fórmula de Bhaskara](./formula-de-bhaskara) — o método anterior resolvido
    de uma vez por todas.
-5. [Números complexos](./numeros-complexos) — o que fazer quando $\Delta < 0$, e
+5. [O plano cartesiano](./plano-cartesiano) — o endereço de um ponto, e como
+   uma expressão vira uma curva.
+6. [Números complexos](./numeros-complexos) — o que fazer quando $\Delta < 0$, e
    por que "não fatora" deixa de ser uma resposta possível.
-6. [Equações com radical](./equacoes-com-radical) — tirar a incógnita de dentro
+7. [Equações com radical](./equacoes-com-radical) — tirar a incógnita de dentro
    da raiz, e por que a verificação passa a ser obrigatória.
-7. [Sistemas de duas equações](./sistemas-de-duas-equacoes) — como duas
+8. [Sistemas de duas equações](./sistemas-de-duas-equacoes) — como duas
    equações lineares não paralelas determinam um único par.
-8. [Intervalos](./intervalos) — a notação que descreve uma faixa inteira de
+9. [Intervalos](./intervalos) — a notação que descreve uma faixa inteira de
    números sem ambiguidade.
-9. [Inequações do 1º grau](./inequacoes-do-primeiro-grau) — as mesmas regras das
-   equações, com uma exceção: o sinal inverte ao multiplicar por negativo.
-10. [Inequações do 2º grau](./inequacoes-do-segundo-grau) — o quadro de sinais.
-11. [Inequações com fração e módulo](./inequacoes-racionais-e-modulares) — quando
+10. [Inequações do 1º grau](./inequacoes-do-primeiro-grau) — as mesmas regras
+    das equações, com uma exceção: o sinal inverte ao multiplicar por negativo.
+11. [Inequações do 2º grau](./inequacoes-do-segundo-grau) — o quadro de sinais.
+12. [Inequações com fração e módulo](./inequacoes-racionais-e-modulares) — quando
     multiplicar deixa de ser permitido.
 
 ## O que vem depois

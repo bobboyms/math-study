@@ -13,9 +13,10 @@ Uma academia cobra **R\$ 50 por mês** de mensalidade mais **R\$ 10 por aula
 avulsa** de treino personalizado.
 
 Com o que já sabemos, dá para responder perguntas isoladas. Quanto custa um mês
-com 3 aulas avulsas? Basta calcular $50 + 10 \times 3 = 80$ reais. Quantas aulas
-cabem num orçamento de R\$ 120? Basta resolver a equação $50 + 10x = 120$, que
-dá $x = 7$.
+com 3 aulas avulsas? Multiplique 3 pelo preço da aula e some a mensalidade:
+$50 + 10 \times 3 = 80$ reais. Quantas aulas cabem num orçamento de R\$ 120? Aí
+a pergunta vem ao contrário — sabemos o total e queremos o número de aulas —, e
+isso é uma equação: $50 + 10x = 120$, que dá $x = 7$.
 
 Mas repare no que essas duas perguntas têm em comum: cada uma devolve **um
 número**, e cada uma exige refazer a conta do zero. Se o aluno quiser saber
@@ -107,8 +108,12 @@ faz sempre o mesmo processamento, e sai um número.
 
 Duas exigências definem a máquina, e vale entender por que cada uma existe.
 
-**A máquina não pode travar.** Se você põe um número que ela aceita, ela tem de
-devolver alguma coisa.
+**A máquina não pode travar.** Para todo número que ela aceita, ela devolve uma
+saída. Repare que isso não obriga a máquina a aceitar qualquer número: uma
+máquina que divide por $x - 3$ trava se você puser o 3, porque dividir por zero
+não é uma operação definida. A exigência é outra — que a lista de entradas
+aceitas seja conhecida de antemão, e que dentro dela a máquina nunca falhe.
+Montar essa lista é o assunto da próxima página.
 
 **A máquina não pode hesitar.** Para a mesma entrada, ela devolve **sempre** a
 mesma saída. Não pode devolver 80 numa vez e 90 na outra.
@@ -188,18 +193,18 @@ para medir distâncias; aqui precisamos só do endereço.
 
 <CartesianPlane
   xMin={-1}
-  xMax={7}
-  yMin={-10}
-  yMax={110}
-  xUnit={44}
-  yUnit={1.6}
+  xMax={8}
+  yMin={-20}
+  yMax={140}
+  xUnit={40}
+  yUnit={1.5}
   yStep={10}
   yLabelEvery={2}
   points={[
     {at: [0, 50], tone: 1},
     {at: [1, 60], tone: 1},
     {at: [2, 70], tone: 1},
-    {at: [3, 80], label: '(3,\\ 80)', tone: 2, place: 'above-left'},
+    {at: [3, 80], label: '(3,\\ 80)', tone: 2, dx: -38, dy: -6},
     {at: [4, 90], tone: 1},
   ]}
   axisLabels={['x', 'y']}
@@ -212,44 +217,84 @@ não é coincidência — é a regra aparecendo como forma.
 ## 8. O gráfico: a regra vista de uma vez
 
 O **gráfico** de uma função é o conjunto de **todos** os pontos $(x, f(x))$, e
-não apenas os da tabela. Preenchendo os buracos entre os cinco pontos, obtemos
-uma reta:
+não só os cinco da tabela.
+
+Antes de desenhar, uma pergunta que merece resposta: por que temos o direito de
+ligar os pontos com uma linha? Marcar os cinco pontos é fiel à tabela. A linha
+contínua entre eles afirma uma coisa a mais — que existe um ponto do gráfico
+sobre **cada** número do caminho, inclusive sobre $x = 2{,}5$. E existe: a regra
+“multiplique por 10 e some 50” funciona com qualquer número que se ponha nela, e
+devolve $f(2{,}5) = 75$.
+
+Se meia aula avulsa faz sentido para a academia é outra pergunta — essa é sobre
+a situação, não sobre a regra, e a próxima página cuida dela. Aqui desenhamos a
+regra inteira, e o desenho é uma reta:
 
 <CartesianPlane
   xMin={-1}
-  xMax={7}
-  yMin={-10}
-  yMax={110}
-  xUnit={44}
-  yUnit={1.6}
+  xMax={8}
+  yMin={-20}
+  yMax={140}
+  xUnit={40}
+  yUnit={1.5}
   yStep={10}
   yLabelEvery={2}
-  functions={[{f: (x) => 50 + 10 * x, domain: [0, 7], tone: 1}]}
+  functions={[{f: (x) => 50 + 10 * x, domain: [0, 8], tone: 1}]}
   points={[
-    {at: [0, 50], label: '50', tone: 2, place: 'left'},
-    {at: [7, 120], label: '(7,\\ 120)', tone: 3, place: 'above-left'},
+    {at: [0, 50], label: '50', tone: 2, dx: -22, dy: 4},
+    {at: [7, 120], label: '(7,\\ 120)', tone: 3, dx: -40, dy: -4},
   ]}
   axisLabels={['x', 'y']}
   caption="O gráfico de f(x) = 50 + 10x. A altura da curva sobre cada x é o valor de f(x)."
 />
 
-O gráfico responde de olho a todas as perguntas do início da página.
+Com o desenho pronto, as perguntas do início da página se respondem por
+leitura, sem refazer conta nenhuma.
 
-**“Quanto custa com 3 aulas?”** Suba de $x = 3$ até a curva e leia a altura: 80.
+**“Quanto custa com 3 aulas?”** Saia de $x = 3$ no eixo horizontal, suba até
+encontrar a reta e leia a altura desse encontro: 80.
 
-**“Quantas aulas cabem em R\$ 120?”** Percurso inverso: ache a altura 120, ande
-até a curva, desça e leia $x = 7$. Esta é exatamente a equação que resolvemos no
-início — resolver uma equação é achar **onde** o gráfico atinge certa altura.
+**“Quantas aulas cabem em R\$ 120?”** É o mesmo caminho percorrido ao contrário.
+Saia da altura 120 no eixo vertical, ande na horizontal até encontrar a reta e
+desça até o eixo de baixo: $x = 7$. Esta é exatamente a equação que resolvemos
+no início — resolver uma equação é achar **onde** o gráfico atinge certa altura.
+
+Os dois percursos estão desenhados abaixo, cada um com uma cor:
+
+<CartesianPlane
+  xMin={-1}
+  xMax={8}
+  yMin={-20}
+  yMax={140}
+  xUnit={40}
+  yUnit={1.5}
+  yStep={10}
+  yLabelEvery={2}
+  functions={[{f: (x) => 50 + 10 * x, domain: [0, 8], tone: 1}]}
+  segments={[
+    {from: [3, 0], to: [3, 80], tone: 2, dashed: true},
+    {from: [3, 80], to: [0, 80], tone: 2, dashed: true},
+    {from: [0, 120], to: [7, 120], tone: 3, dashed: true},
+    {from: [7, 120], to: [7, 0], tone: 3, dashed: true},
+  ]}
+  points={[
+    {at: [3, 80], tone: 2},
+    {at: [7, 120], tone: 3},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Calcular f(3) é o percurso que sobe do eixo horizontal até a reta. Resolver f(x) = 120 é o percurso inverso: parte da altura e desce até o eixo horizontal."
+/>
 
 **“Quanto custa sem nenhuma aula avulsa?”** É a altura em $x = 0$: 50 reais, a
 mensalidade pura. O ponto em que o gráfico corta o eixo vertical é sempre o
 valor da função em zero.
 
 **“De quanto sobe a cada aula a mais?”** É a inclinação: andando 1 para a
-direita, a curva sobe 10.
+direita, a reta sobe 10.
 
 Nenhuma dessas leituras exigiu conta. É esse o ganho de olhar para a regra
-inteira em vez de para casos isolados.
+inteira em vez de para casos isolados. Falta uma pergunta do início — “o custo
+cresce sempre no mesmo ritmo, ou acelera?” —, e é dela que trata a seção 10.
 
 ## 9. O teste da reta vertical
 
@@ -310,16 +355,75 @@ f(x) = ax + b,
 $$
 
 onde $a$ é a taxa de variação e $b$ é o valor em $x = 0$. Na academia, $a = 10$
-(o preço da aula) e $b = 50$ (a mensalidade).
+(o preço da aula) e $b = 50$ (a mensalidade). O caminho de volta — mostrar que
+uma fórmula escrita como $ax + b$ tem mesmo taxa constante, meça-se entre quais
+pontos for — é uma conta curta, e ela é o exercício 16 desta página.
 
 A geometria estuda essa mesma reta pelo lado da forma, na página de [equação da
 reta](../geometria/equacao-da-reta), onde $a$ ganha o nome de **coeficiente
 angular**. É a mesma coisa vista de dois ângulos: aqui, o ritmo de crescimento
 de uma grandeza; lá, a inclinação de uma linha.
 
-Nem toda função tem taxa constante — a maioria não tem. É justamente aí que
-começa o interesse, e a próxima página do capítulo já traz um caso em que o
-ritmo muda.
+### Quando o ritmo muda
+
+Nem toda função tem taxa constante — a maioria não tem. Vale ver o que acontece
+sem sair da academia, mudando uma coisa só no plano.
+
+Suponha que ela passe a dar desconto para quem treina muito: as cinco primeiras
+aulas avulsas do mês continuam a R\$ 10, e da sexta em diante cada aula sai por
+R\$ 7. Até a quinta aula nada muda, e $f(5) = 50 + 50 = 100$. Da sexta em
+diante, cada aula a mais acrescenta 7 em vez de 10:
+
+| Aulas $x$ | 3 | 4 | 5 | 6 | 7 | 8 |
+|---|---:|---:|---:|---:|---:|---:|
+| Custo $f(x)$ | 80 | 90 | 100 | 107 | 114 | 121 |
+| Acréscimo | — | 10 | 10 | 7 | 7 | 7 |
+
+A linha de baixo é a taxa de variação medida de aula em aula, e ela não é mais
+um número só. O gráfico mostra isso como uma dobra em $x = 5$: até ali a subida
+é a do plano antigo, desenhada tracejada para comparação; depois dali a linha
+sobe mais devagar.
+
+<CartesianPlane
+  xMin={-1}
+  xMax={10}
+  yMin={-20}
+  yMax={160}
+  xUnit={34}
+  yUnit={1.3}
+  yStep={10}
+  yLabelEvery={4}
+  functions={[
+    {f: (x) => 50 + 10 * x, domain: [0, 10], tone: 3, dashed: true},
+    {f: (x) => (x <= 5 ? 50 + 10 * x : 100 + 7 * (x - 5)), domain: [0, 10], tone: 1},
+  ]}
+  points={[{at: [5, 100], label: '(5,\\ 100)', tone: 2, dx: -42, dy: 2}]}
+  axisLabels={['x', 'y']}
+  caption="Com desconto a partir da sexta aula, o gráfico dobra em x = 5. A linha tracejada é o plano sem desconto, que continuaria subindo 10 por aula."
+/>
+
+Isso responde a pergunta que ficou pendente lá do início: **no plano original o
+custo cresce sempre no mesmo ritmo; com o desconto, não.** E a mudança de ritmo
+traz uma consequência que vale guardar, porque ela reaparece no capítulo inteiro
+e, mais tarde, no cálculo.
+
+Meça a taxa entre $x = 3$ e $x = 8$, ou seja, por cima dos dois trechos:
+
+$$
+\frac{f(8) - f(3)}{8 - 3} = \frac{121 - 80}{5} = \frac{41}{5} = 8{,}2.
+$$
+
+Esse 8,2 não é o preço de nenhuma aula — nenhuma custa 8,20. Ele é a média dos
+dois ritmos, 10 e 7, pesada pelo número de aulas em cada trecho: um resumo do
+que aconteceu entre a terceira e a oitava aula, e não uma descrição do que
+acontece em cada ponto do caminho.
+
+Daí a diferença que separa a função afim de todas as outras: quando o gráfico é
+uma reta, a pergunta “qual é a taxa desta função?” tem uma resposta só. Quando
+não é, a resposta honesta é “depende do trecho que você mediu”. Medir trechos
+cada vez menores, até a resposta valer para um ponto, é o problema que a última
+página do capítulo, [taxa média de variação](./taxa-media-de-variacao),
+transforma na porta de entrada do cálculo.
 
 ## 11. Exemplos resolvidos
 
@@ -446,6 +550,8 @@ Responda com suas palavras antes de abrir.
 7. Por que a raiz quadrada foi definida devolvendo só o valor não negativo?
 8. O que significa a taxa de variação ser constante, e o que isso produz no
    gráfico?
+9. No plano com desconto, por que a taxa de variação deixa de ter uma resposta
+   única?
 
 <details>
 <summary>Respostas para conferência</summary>
@@ -476,6 +582,11 @@ Responda com suas palavras antes de abrir.
 8. Significa que a saída sobe (ou desce) sempre a mesma quantidade a cada passo
    da entrada, independentemente de onde se comece. No gráfico isso produz uma
    **reta**: qualquer mudança de ritmo entortaria a curva.
+9. Porque ali existem dois ritmos, 10 até a quinta aula e 7 depois dela. A taxa
+   passa a depender de onde ela é medida: dá 10 num trecho antes de $x = 5$, dá
+   7 num trecho depois, e dá um valor intermediário em qualquer trecho que
+   atravesse a dobra — 8,2 entre $x = 3$ e $x = 8$. Uma resposta só existe
+   quando o gráfico é uma reta.
 
 </details>
 
@@ -565,10 +676,9 @@ outro padrão regular entre os valores.
    Se a mesma entrada pudesse produzir saídas diferentes, não haveria previsão,
    e a regra não teria utilidade nenhuma. É essa exigência que separa função de
    associação qualquer.
-5. Porque $f$ é a regra, não um número — não faz sentido dizer que uma regra
-   vale
-   12. Ele provavelmente queria dizer que $f(x) = 12$ para algum $x$ específico,
-       ou seja, que a saída vale 12 em determinada entrada.
+5. Porque $f$ é a regra, e regra não é número: dizer que uma regra “vale 12” não
+   significa nada. Ele provavelmente queria dizer $f(x) = 12$ para algum $x$
+   específico, ou seja, que a saída vale 12 em determinada entrada.
 6. Calcular $f(5)$ é **aplicar** a regra: entra 5, sai um número. Resolver
    $f(x) = 5$ é **desfazê-la**: sabemos que saiu 5 e procuramos o que entrou. No
    gráfico, um é subir do eixo horizontal até a curva; o outro é partir da
@@ -622,6 +732,8 @@ outro padrão regular entre os valores.
 - $f(0)$ é sempre a altura em que o gráfico cruza o eixo vertical.
 - A **taxa de variação** mede quanto a saída muda por unidade de entrada. Quando
   ela é constante, a função é **afim**, $f(x) = ax + b$, e o gráfico é uma reta.
+- Quando o ritmo muda, a taxa passa a **depender do trecho medido**, e o gráfico
+  deixa de ser uma reta. Medir trechos cada vez menores é o que leva ao cálculo.
 - Função não precisa de fórmula: tabela, gráfico ou descrição servem, desde que
   determinem uma saída por entrada.
 

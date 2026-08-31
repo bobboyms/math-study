@@ -49,7 +49,8 @@ entradas a máquina realmente aceita?**
 - o **domínio** de uma função é o conjunto de todas as entradas aceitas;
 - a **imagem** é o conjunto de todas as saídas que a função de fato produz;
 - há duas fontes de restrição: as **matemáticas**, que valem sempre, e as do
-  **contexto**, que vêm do problema.
+  **contexto**, que vêm do problema;
+- $D(f)$ e $\operatorname{Im}(f)$ são os nomes curtos desses dois conjuntos.
 
 Por exemplo, $f(x) = \frac{1}{x-3}$ tem domínio “todos os reais menos o 3”,
 porque em $x = 3$ a divisão é por zero. Já a caixa tem domínio $\,]0, 10[$ — não
@@ -84,9 +85,10 @@ raiz quadrada exige radicando maior ou igual a zero.
 [intervalos](../equacoes/intervalos): como se escreve o conjunto dos $x$ com
 $x - 5 \ge 0$?** Resolvendo, $x \ge 5$, ou seja, $[5, +\infty[$.
 
-Os itens 2 e 3 são as **duas** únicas restrições matemáticas que aparecem neste
-curso, e o item 4 é a ferramenta para escrever a resposta. Determinar um domínio
-é, quase sempre, resolver uma inequação.
+Os itens 2 e 3 são as duas restrições matemáticas que valem daqui até o capítulo
+de logaritmos — lá aparece uma terceira, porque o logaritmando também não pode
+ser zero nem negativo. O item 4 é a ferramenta para escrever a resposta:
+determinar um domínio é, quase sempre, resolver uma inequação.
 
 ## 5. Intuição: o domínio é a lista do que a máquina aceita
 
@@ -108,11 +110,33 @@ As duas não são simétricas em dificuldade. O domínio se determina olhando a
 fórmula e listando os impedimentos — é um trabalho mecânico. A imagem exige
 saber como a função se comporta, e muitas vezes só o gráfico responde.
 
+### Como se escreve
+
+Os dois conjuntos aparecem tanto que ganharam nome curto: $D(f)$ é o domínio de
+$f$, e $\operatorname{Im}(f)$ é a imagem de $f$. Escrever
+“$D(f) = [5, +\infty[$” é dizer, em símbolos, “as entradas que $f$ aceita são os
+números maiores ou iguais a 5”.
+
+Um mesmo domínio pode ser escrito de três formas, e as três dizem exatamente a
+mesma coisa:
+
+| Escrita | Como se lê |
+|---|---|
+| todos os reais menos o 3 | em português |
+| $\,]-\infty,\ 3[\ \cup\ ]3,\ +\infty[$ | como união de [intervalos](../equacoes/intervalos) |
+| $\mathbb{R} \setminus \{3\}$ | “os reais, tirando o 3” |
+
+A terceira usa a barra invertida como sinal de subtração **entre conjuntos**:
+$\mathbb{R} \setminus \{3\}$ é o conjunto dos reais do qual se retirou o número
+3. Ela é a escrita mais curta quando o que falta são poucos números soltos.
+Quando o domínio é um pedaço inteiro da reta, como $[5, +\infty[$, a escrita de
+intervalo diz mais, porque mostra onde o pedaço começa e onde termina.
+
 ## 6. As duas restrições matemáticas
 
 Só há dois motivos, neste curso, para um número ficar fora do domínio:
 
-> **1. Denominador zero.** Se a fórmula tem $\frac{\ \cdot\ }{Q(x)}$, exija
+> **1. Denominador zero.** Se a fórmula tem $\frac{\text{algo}}{Q(x)}$, exija
 > $Q(x) \neq 0$.
 >
 > **2. Radicando negativo.** Se a fórmula tem $\sqrt{R(x)}$, exija $R(x) \ge 0$.
@@ -138,7 +162,42 @@ o $-2$.
 
 E funções sem denominador nem raiz — como $f(x) = 3x + 7$ ou $f(x) = x^2 - 5$ —
 **não têm restrição nenhuma**: o domínio é todo o conjunto dos reais. É o caso
-mais comum, e não deve ser esquecido por parecer trivial demais.
+mais comum, e não deve ser esquecido por parecer simples demais.
+
+### Simplificar não devolve o ponto ao domínio
+
+Este trecho costuma pegar quem já sabe fatorar. Tome
+
+$$
+f(x) = \frac{x^2 - 9}{x - 3}.
+$$
+
+O numerador é uma diferença de quadrados, e
+[fatorar](../algebra/produtos-notaveis) escreve $x^2 - 9$ como $(x-3)(x+3)$. Com
+o numerador nessa forma, aparece um fator $x - 3$ em cima e outro embaixo:
+
+$$
+f(x) = \frac{(x-3)(x+3)}{x-3} = x + 3.
+$$
+
+Cortar esse fator é legítimo — é a simplificação de
+[frações algébricas](../algebra/fracoes-algebricas). Mas repare na condição sob
+a qual ela vale: cortar $x-3$ de cima e de baixo é dividir numerador e
+denominador por $x-3$, e dividir só é permitido quando o divisor **não é zero**.
+O corte, portanto, vale para $x \neq 3$. Em $x = 3$, a fórmula original manda
+dividir $0$ por $0$, e isso não é número nenhum.
+
+Então $f$ e a função $g(x) = x + 3$ **não são a mesma função**. As duas devolvem
+o mesmo valor em todo ponto onde ambas existem, e diferem num lugar só: o 3
+pertence ao domínio de $g$ e não pertence ao de $f$.
+
+$$
+D(f) = \mathbb{R} \setminus \{3\}, \qquad D(g) = \mathbb{R}.
+$$
+
+A conclusão que vale guardar: o domínio se lê na fórmula **como ela chegou**,
+antes de qualquer simplificação. Cortar o fator apaga o rastro do impedimento no
+papel, mas não apaga o impedimento.
 
 ## 7. A restrição que vem do problema
 
@@ -171,7 +230,7 @@ $$
     {f: (x) => x * (30 - 2 * x) * (20 - 2 * x), domain: [0, 10], tone: 1},
     {f: (x) => x * (30 - 2 * x) * (20 - 2 * x), domain: [10, 13], tone: 2, dashed: true},
   ]}
-  points={[{at: [5, 1000], label: '(5,\\ 1000)', tone: 3, place: 'above-left'}]}
+  points={[{at: [5, 1000], label: '(5,\\ 1000)', tone: 3, dx: -36, dy: -12}]}
   axisLabels={['x', 'V']}
   caption="A parte cheia é o domínio real do problema. A parte tracejada é o que a fórmula continua calculando fora dele — e onde o volume sai negativo."
 />
@@ -182,11 +241,89 @@ caixa deixou de existir. **É o domínio que carrega essa informação**, e por 
 ele faz parte da resposta.
 
 Repare de passagem no que o gráfico já entrega: o volume sobe, atinge um máximo
-perto de $x = 5$ e volta a cair. Com corte de 5 cm sai uma caixa de 1000 cm³ —
-que, aliás, é o maior valor entre os que testamos. Achar esse ponto com precisão
-é assunto de mais adiante.
+perto de $x = 4$ e volta a cair. Com corte de 5 cm sai uma caixa de 1000 cm³ —
+o maior valor **entre os que testamos**, o que não é o mesmo que o maior valor
+possível. A página de [função polinomial](./funcao-polinomial) volta a este
+gráfico e mostra que um corte um pouco menor rende mais.
 
-## 8. A imagem
+## 8. Modelo visual: domínio e imagem são as duas sombras do gráfico
+
+Os dois conjuntos podem ser lidos de uma vez só, no mesmo desenho.
+
+Imagine uma luz vinda de cima, apontada para o gráfico. A sombra que a curva
+projeta no eixo horizontal cobre exatamente os valores de $x$ em que existe
+curva. Essa sombra é o **domínio**. Agora troque a luz de lugar e ilumine de
+lado, na horizontal. A sombra que a curva projeta no eixo vertical cobre as
+alturas que ela chega a ocupar. Essa outra sombra é a **imagem**.
+
+A função desenhada abaixo é $f(x) = x^2 - 4$, com o domínio limitado de
+propósito a $[-3, 2]$ — nada na fórmula impede outros valores, e é quem escreveu
+a função que resolveu parar ali.
+
+<CartesianPlane
+  xMin={-4.6}
+  xMax={3.6}
+  yMin={-5.5}
+  yMax={6.5}
+  xUnit={44}
+  yUnit={30}
+  segments={[
+    {from: [-3, 0], to: [2, 0], tone: 2},
+    {from: [0, -4], to: [0, 5], tone: 3},
+    {from: [-3, 0], to: [-3, 5], dashed: true, tone: 0},
+    {from: [-3, 5], to: [0, 5], dashed: true, tone: 0},
+  ]}
+  functions={[{f: (x) => x * x - 4, domain: [-3, 2], tone: 1}]}
+  points={[
+    {at: [-3, 5], label: '(-3,\\ 5)', tone: 1, dy: -16},
+    {at: [2, 0], label: '(2,\\ 0)', tone: 1, dx: 34, dy: -8},
+    {at: [0, -4], label: '(0,\\ -4)', tone: 1, dx: 44, dy: 2},
+  ]}
+  labels={[
+    {at: [-1.5, 0], math: '\\text{domínio}', tone: 2, dy: -14},
+    {at: [0, 3.4], math: '\\text{imagem}', tone: 3, dx: 44},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A faixa no eixo horizontal é o domínio, [−3, 2]. A faixa no eixo vertical é a imagem, [−4, 5]. Cada uma é a sombra da curva num dos eixos."
+/>
+
+Leia primeiro o eixo horizontal. A curva começa em $x = -3$ e termina em
+$x = 2$, e é por isso que a faixa ali vai de $-3$ a $2$. Nenhum valor de $x$ fora
+desse trecho tem curva acima ou abaixo dele, então nenhum deles entra no
+domínio.
+
+Agora leia o eixo vertical. A altura mais baixa que a curva alcança é $-4$,
+atingida em $x = 0$. A mais alta é $5$, atingida em $x = -3$. Entre essas duas
+alturas a curva passa por todas as outras, sem saltar nenhuma, porque ela é
+desenhada sem tirar o lápis do papel. Por isso a imagem é o intervalo cheio
+$[-4, 5]$.
+
+$$
+D(f) = [-3,\ 2], \qquad \operatorname{Im}(f) = [-4,\ 5].
+$$
+
+### O erro que este desenho evita
+
+Este é o ponto que mais engana nesta página. É tentador achar a imagem
+calculando $f$ nas duas pontas do domínio. Essa conta dá $f(-3) = 5$ e
+$f(2) = 0$, o que sugeriria a imagem $[0, 5]$.
+
+O desenho mostra que essa resposta está errada. A curva desce até $-4$ antes de
+voltar a subir, e $-4$ é bem menor que $0$. Alturas como $-2$ e $-3{,}5$ são
+produzidas pela função, embora não apareçam em nenhuma das duas pontas.
+
+Por que a conta das pontas falha aqui? Porque a função não segue numa direção só
+dentro do domínio. Ela desce de $x = -3$ até $x = 0$, e sobe de $x = 0$ até
+$x = 2$. Quando existe uma virada dessas no meio do caminho, o valor extremo
+pode estar **na virada**, e não na borda — foi o que aconteceu com o $-4$.
+
+A conta das pontas é confiável num caso: quando a função sobe do começo ao fim
+do domínio, ou desce do começo ao fim, sem virada nenhuma. É o que acontece com
+$f(x) = 2x - 3$ no domínio $[0, 6]$, que aparece no exercício 12. Descrever onde
+uma função sobe e onde desce é justamente o assunto da
+[próxima página](./crescimento-sinal-e-simetria).
+
+## 9. A imagem
 
 A **imagem** é o conjunto das saídas efetivamente produzidas quando a entrada
 percorre todo o domínio.
@@ -202,12 +339,11 @@ $x = 0$. E produz qualquer número positivo, porque $\sqrt{k}$ é uma entrada qu
 devolve $k$. Logo:
 
 $$
-\text{Imagem de } f(x) = x^2 \ \text{ é } \ [0, +\infty[.
+\operatorname{Im}(f) = [0, +\infty[.
 $$
 
-Repare no que isso significa no gráfico: a curva ocupa alturas de 0 para cima, e
-nenhuma altura negativa. **A imagem é a “sombra” do gráfico projetada no eixo
-vertical**, assim como o domínio é a sombra projetada no eixo horizontal.
+No desenho, isso é a sombra vertical da seção anterior: a curva de $x^2$ ocupa
+alturas de 0 para cima e nenhuma altura negativa.
 
 Alguns casos que vale reconhecer de imediato:
 
@@ -228,7 +364,61 @@ E a última linha guarda uma surpresa: $\frac{1}{x}$ nunca devolve zero. Para qu
 uma fração valha zero, o numerador precisaria ser zero, e aqui ele é sempre 1. O
 valor 0 fica fora tanto do domínio quanto da imagem, por motivos diferentes.
 
-## 9. Exemplos resolvidos
+### Três caminhos para achar a imagem
+
+Determinar o domínio tem um procedimento fixo: listar os impedimentos e resolver
+as inequações que eles produzem. A imagem não tem procedimento único, e por isso
+vale conhecer três caminhos e saber quando cada um serve.
+
+**Caminho 1: partir de um bloco cuja imagem já conhecemos.** Escolha dentro da
+fórmula uma parte cujas saídas você já sabe listar, e acompanhe o que cada
+operação seguinte faz com elas. Veja em $h(x) = 3 - \sqrt{x-1}$, cujo domínio é
+$[1, +\infty[$:
+
+- a raiz $\sqrt{x-1}$ produz de 0 para cima, ou seja, $[0, +\infty[$ — é o bloco
+  conhecido, e ele produz o 0 quando $x = 1$;
+- o sinal de menos troca cada saída pela oposta. As saídas de $-\sqrt{x-1}$ vão,
+  então, de 0 para **baixo**: $\,]-\infty, 0]$. Repare que o extremo continua
+  sendo o 0, mas ele deixou de ser o menor valor e passou a ser o maior;
+- somar 3 desloca cada uma dessas saídas 3 unidades para cima, e o extremo 0
+  vira 3.
+
+$$
+\operatorname{Im}(h) = \,]-\infty,\ 3].
+$$
+
+**Conferindo**: $h(1) = 3 - 0 = 3$, o maior valor; $h(5) = 3 - 2 = 1$;
+$h(10) = 3 - 3 = 0$. E nenhuma entrada passa de 3, porque isso exigiria subtrair
+um número negativo — coisa que a raiz não produz.
+
+**Caminho 2: ler a sombra vertical do gráfico.** É o caminho da seção 8, e serve
+quando a curva já é conhecida ou rápida de esboçar. Ele é o mais direto e o mais
+seguro contra o erro das pontas do domínio, porque o desenho mostra a virada.
+
+**Caminho 3: perguntar quais alturas têm entrada correspondente.** Um número $y$
+pertence à imagem quando existe pelo menos um $x$ do domínio com $f(x) = y$.
+Então escreva a equação $f(x) = y$ e resolva-a **para $x$**, tratando $y$ como um
+número qualquer. Os valores de $y$ para os quais essa equação tem solução são
+exatamente a imagem.
+
+Aplique isso a $f(x) = \frac{1}{x}$, que produziu a surpresa da tabela:
+
+$$
+y = \frac{1}{x} \quad\Longrightarrow\quad xy = 1 \quad\Longrightarrow\quad
+x = \frac{1}{y}.
+$$
+
+A última igualdade só faz sentido para $y \neq 0$. Para qualquer outro $y$, ela
+entrega a entrada que produz aquela altura — por exemplo, a altura $y = 4$ vem
+da entrada $x = \frac{1}{4}$. Logo $\operatorname{Im}(f) = \mathbb{R} \setminus
+\{0\}$, e agora sabemos disso por conta, não por inspeção.
+
+Este terceiro caminho é o mais trabalhoso dos três e o mais poderoso, porque não
+depende de enxergar o gráfico. Ele volta, com outro nome, na página de
+[função inversa](./funcao-inversa): resolver $f(x) = y$ para $x$ é exatamente o
+que se faz para inverter uma função.
+
+## 10. Exemplos resolvidos
 
 ### Exemplo 1: apenas denominador
 
@@ -321,7 +511,63 @@ $$
 **Conferindo**: $f(0) = -4$, o mínimo; $f(2) = 0$; $f(10) = 96$. Nenhuma entrada
 produz algo menor que $-4$, porque isso exigiria $x^2$ negativo.
 
-## 10. Erros comuns
+### Exemplo 7: imagem resolvendo a equação
+
+*Pause e tente.* Qual é a imagem de $f(x) = \dfrac{2x+1}{x-3}$?
+
+Este é o exemplo mais difícil da página. Se ele não fechar na primeira leitura,
+siga em frente e volte a ele depois dos exercícios.
+
+O gráfico dessa função ainda não é conhecido, e não há dentro dela um bloco
+simples cuja imagem já saibamos. Sobram os caminhos 1 e 2 descartados, e resta o
+caminho 3: descobrir para quais alturas $y$ a equação $f(x) = y$ tem solução.
+
+$$
+y = \frac{2x+1}{x-3}.
+$$
+
+Multiplique os dois lados por $x - 3$. Isso é permitido porque, no domínio,
+$x \neq 3$, e portanto $x - 3$ não é zero:
+
+$$
+y(x-3) = 2x+1 \quad\Longrightarrow\quad yx - 3y = 2x + 1.
+$$
+
+Queremos isolar o $x$, então junte de um lado os termos que têm $x$ e do outro
+os que não têm. Depois ponha o $x$ em evidência:
+
+$$
+yx - 2x = 1 + 3y \quad\Longrightarrow\quad x(y-2) = 1 + 3y.
+$$
+
+Agora vem o passo decisivo. Para tirar o $x$ sozinho, dividimos os dois lados
+por $y - 2$ — e essa divisão exige $y - 2 \neq 0$, ou seja, $y \neq 2$. Guardada
+essa condição:
+
+$$
+x = \frac{1 + 3y}{y - 2}.
+$$
+
+Leia o que essas duas linhas dizem sobre a imagem:
+
+- para $y \neq 2$, a fórmula entrega a entrada que produz a altura $y$ — logo
+  toda altura diferente de 2 é alcançada;
+- para $y = 2$, o lado esquerdo $x(y-2)$ vale 0 seja qual for o $x$, e a equação
+  passa a exigir $0 = 1 + 3 \times 2 = 7$, que é falso. Nenhuma entrada produz a
+  altura 2.
+
+$$
+\operatorname{Im}(f) = \mathbb{R} \setminus \{2\}.
+$$
+
+**Conferindo**: para $y = 5$, a fórmula dá $x = \frac{16}{3}$, e de fato
+$f\left(\frac{16}{3}\right) = \frac{\frac{32}{3} + 1}{\frac{16}{3} - 3} =
+\frac{\frac{35}{3}}{\frac{7}{3}} = 5$. Já entradas grandes chegam perto de 2 sem
+alcançar: $f(100) \approx 2{,}07$ e $f(-100) \approx 1{,}93$. Essa aproximação
+sem encontro tem nome — assíntota — e é assunto da página de
+[funções racionais](./funcoes-racionais).
+
+## 11. Erros comuns
 
 > **Erro 1: procurar restrição no numerador.** Em $\frac{x-1}{x+2}$, o valor 1 é
 > aceito e apenas zera a função. A proibição vem do **denominador**:
@@ -348,7 +594,18 @@ produz algo menor que $-4$, porque isso exigiria $x^2$ negativo.
 > $f(x) = \sqrt{x}$ os dois coincidem, o que é coincidência dessa função, não
 > regra.
 
-## 11. Perguntas de verificação
+> **Erro 7: achar a imagem calculando $f$ nas pontas do domínio.** Em
+> $f(x) = x^2 - 4$ com domínio $[-3, 2]$, as pontas dão $f(-3) = 5$ e
+> $f(2) = 0$, mas a imagem é $[-4, 5]$: o menor valor está na virada, em
+> $x = 0$. A conta das pontas só é confiável quando a função sobe do começo ao
+> fim do domínio, ou desce do começo ao fim.
+
+> **Erro 8: simplificar e devolver o valor proibido ao domínio.** Depois do
+> corte, $\frac{x^2-9}{x-3}$ vira $x+3$ — mas o corte só valia para
+> $x \neq 3$. O domínio continua sendo $\mathbb{R} \setminus \{3\}$, e quem
+> responde “todos os reais” está lendo a fórmula depois de ela ter mudado.
+
+## 12. Perguntas de verificação
 
 1. Por que a fórmula da caixa devolve um número em $x = 12$, se a caixa não
    existe?
@@ -359,6 +616,12 @@ produz algo menor que $-4$, porque isso exigiria $x^2$ negativo.
 6. Como se lê o domínio num gráfico? E a imagem?
 7. Por que a imagem de $\frac{1}{x}$ não contém o zero?
 8. Por que determinar um domínio quase sempre vira resolver uma inequação?
+9. Por que $\dfrac{x^2-9}{x-3}$ e $x+3$ não são a mesma função, se as duas dão o
+   mesmo resultado em todo ponto que você testar?
+10. Uma função tem domínio $[-3, 2]$, e você calculou $f(-3)$ e $f(2)$. Por que
+    esses dois valores podem não ser as pontas da imagem?
+11. Por que resolver a equação $f(x) = y$ para $x$ responde à pergunta da
+    imagem?
 
 <details>
 <summary>Respostas para conferência</summary>
@@ -388,10 +651,25 @@ produz algo menor que $-4$, porque isso exigiria $x^2$ negativo.
    uma equação para depois excluir, e “$R(x) \ge 0$” é literalmente uma
    inequação. Quando o radicando é do 2º grau, é o quadro de sinais que dá a
    resposta.
+9. Porque elas não têm o mesmo domínio. Em $x = 3$, a primeira manda dividir 0
+   por 0 e não devolve nada, enquanto a segunda devolve 6. Duas funções só são
+   iguais quando aceitam as mesmas entradas **e** devolvem a mesma saída em cada
+   uma delas. O teste em outros pontos não revela a diferença justamente porque
+   ela mora num ponto só.
+10. Porque a função pode virar dentro do domínio, subindo até certo ponto e
+    descendo depois — ou o contrário. Quando isso acontece, o maior ou o menor
+    valor está na virada, e não na borda. Em $f(x) = x^2 - 4$ com domínio
+    $[-3, 2]$, o menor valor é $-4$, atingido em $x = 0$, que não é ponta de
+    nada.
+11. Porque a pergunta da imagem é “que alturas a função produz?”, e uma altura
+    $y$ é produzida exatamente quando existe alguma entrada $x$ do domínio com
+    $f(x) = y$. Resolver essa equação para $x$ mostra, para cada $y$, se essa
+    entrada existe. Os $y$ que deixam a equação sem solução são os que ficam de
+    fora da imagem.
 
 </details>
 
-## 12. Exercícios
+## 13. Exercícios
 
 ### 1. Reconhecimento
 
@@ -498,12 +776,12 @@ crescente, os extremos da imagem vêm dos extremos do domínio — calcule os do
 14. O menor valor de $x^2$ é 0, atingido em $x = 0$, e daí $f(0) = k$. Como
     $x^2$ nunca é negativo, $f(x) = x^2 + k$ nunca é menor que $k$. E como $x^2$
     cresce sem limite, qualquer altura acima de $k$ é alcançada: para atingir
-    $k + c$ com $c > 0$, basta tomar $x = \sqrt{c}$. Logo a imagem é exatamente
-    $[k, +\infty[$.
+    $k + c$ com $c > 0$, tome $x = \sqrt{c}$, e a função devolve
+    $(\sqrt{c})^2 + k = c + k$. Logo a imagem é exatamente $[k, +\infty[$.
 
 </details>
 
-## 13. Revisão curta
+## 14. Revisão curta
 
 - O **domínio** é o conjunto das entradas aceitas; a **imagem**, o das saídas
   produzidas.

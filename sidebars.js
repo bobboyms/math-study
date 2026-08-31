@@ -179,38 +179,43 @@ const sidebars = {
         },
         {
           type: 'doc',
+          id: 'equacoes/plano-cartesiano',
+          label: '4.6 Plano cartesiano',
+        },
+        {
+          type: 'doc',
           id: 'equacoes/numeros-complexos',
-          label: '4.6 Números complexos',
+          label: '4.7 Números complexos',
         },
         {
           type: 'doc',
           id: 'equacoes/equacoes-com-radical',
-          label: '4.7 Equações com radical',
+          label: '4.8 Equações com radical',
         },
         {
           type: 'doc',
           id: 'equacoes/sistemas-de-duas-equacoes',
-          label: '4.8 Sistemas de duas equações',
+          label: '4.9 Sistemas de duas equações',
         },
         {
           type: 'doc',
           id: 'equacoes/intervalos',
-          label: '4.9 Intervalos',
+          label: '4.10 Intervalos',
         },
         {
           type: 'doc',
           id: 'equacoes/inequacoes-do-primeiro-grau',
-          label: '4.10 Inequações do 1º grau',
+          label: '4.11 Inequações do 1º grau',
         },
         {
           type: 'doc',
           id: 'equacoes/inequacoes-do-segundo-grau',
-          label: '4.11 Inequações do 2º grau',
+          label: '4.12 Inequações do 2º grau',
         },
         {
           type: 'doc',
           id: 'equacoes/inequacoes-racionais-e-modulares',
-          label: '4.12 Inequações com fração e módulo',
+          label: '4.13 Inequações com fração e módulo',
         },
       ],
     },
@@ -259,23 +264,23 @@ const sidebars = {
         },
         {
           type: 'doc',
-          id: 'funcoes/funcoes-potencia-e-radicais',
-          label: '5.8 Funções potência e radicais',
-        },
-        {
-          type: 'doc',
           id: 'funcoes/funcao-modular-e-por-partes',
-          label: '5.9 Função modular e por partes',
+          label: '5.8 Função modular e por partes',
         },
         {
           type: 'doc',
           id: 'funcoes/composicao-de-funcoes',
-          label: '5.10 Composição de funções',
+          label: '5.9 Composição de funções',
         },
         {
           type: 'doc',
           id: 'funcoes/funcao-inversa',
-          label: '5.11 Função inversa',
+          label: '5.10 Função inversa',
+        },
+        {
+          type: 'doc',
+          id: 'funcoes/funcoes-potencia-e-radicais',
+          label: '5.11 Funções potência e radicais',
         },
         {
           type: 'doc',

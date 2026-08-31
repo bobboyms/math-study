@@ -297,7 +297,7 @@ export default function CartesianPlane({
         {axisLabels && (
           <g>
             <SvgMath
-              x={viewW - padding + 6}
+              x={viewW - padding + 18}
               y={axisY + 20}
               math={axisLabels[0]}
               fontSize={14}

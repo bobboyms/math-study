@@ -1,0 +1,610 @@
+---
+title: O plano cartesiano
+sidebar_label: Plano cartesiano
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# O plano cartesiano: dois números viram um ponto, uma expressão vira uma curva
+
+## 1. Problema motivador: doze números que não respondem nada
+
+Você administra um servidor. Ele registra a temperatura do processador de hora
+em hora, e no fim do expediente entrega esta lista:
+
+| Hora | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Temperatura (°C) | 52 | 55 | 61 | 68 | 74 | 78 | 81 | 76 | 71 | 65 | 58 | 54 |
+
+Três perguntas que interessam a quem cuida da máquina:
+
+1. em que hora a temperatura foi maior?
+2. houve um pico só, ou a máquina esquentou e esfriou mais de uma vez?
+3. o fabricante recomenda não passar de 70 °C. Durante quanto tempo o servidor
+   ficou acima disso?
+
+As três respostas estão na tabela. O problema é que, para achá-las, você precisa
+varrer os doze números com o dedo, comparando um a um — e, com 24 horas de
+registro em vez de 12, ou com uma semana inteira, isso deixa de ser viável.
+
+Existe uma forma de olhar esses mesmos doze pares e responder às três perguntas
+de relance. Ela é o assunto desta página, e no fim dela vamos resolver este
+problema.
+
+Há um segundo motivo, mais próximo do que este capítulo vem fazendo. As páginas
+anteriores acharam **raízes**: valores de $x$ que zeram uma expressão. A página
+de [Bhaskara](./formula-de-bhaskara) fechou o assunto para o 2º grau. Mas ela
+terminou com uma frase que ficou devendo explicação — a de que as raízes são
+“os pontos em que a curva cruza o eixo horizontal”. Que curva? Cruza o quê?
+Enquanto essa frase não tiver significado, ela é só uma promessa. Esta página
+paga a promessa.
+
+## 2. Mapa das ideias
+
+- **plano cartesiano** é o papel em que dois eixos numerados se cruzam, e onde
+  cada ponto tem um endereço formado por dois números;
+- **par ordenado** é esse endereço, escrito $(x, y)$: primeiro o número do eixo
+  horizontal, depois o do eixo vertical;
+- **coordenadas** são os dois números do par, cada um lido no seu eixo;
+- **origem** é o ponto $(0, 0)$, onde os dois eixos se cruzam;
+- **quadrantes** são as quatro regiões em que os eixos partem o plano;
+- **gráfico de uma expressão** é o conjunto dos pontos $(x, y)$ em que $y$ é o
+  valor que a expressão assume naquele $x$.
+
+Por exemplo, $(3, 2)$ e $(2, 3)$ são pares ordenados **diferentes**, e por isso
+apontam para pontos diferentes do plano. Como contraexemplo, o número $3$
+sozinho não é um par ordenado: ele localiza um ponto numa reta, e não no plano.
+Um endereço no plano precisa dos dois números, e precisa deles em ordem.
+
+## 3. Para que serve
+
+- ver de relance o que uma tabela de números só entrega depois de uma varredura:
+  pico, queda, ponto de virada;
+- ler um gráfico de planilha, de painel de monitoramento ou de notícia sabendo o
+  que cada eixo está dizendo;
+- localizar um ponto na tela, num mapa ou num jogo, que é o que cada pixel e
+  cada coordenada de GPS fazem;
+- dentro da matemática, transformar uma **expressão** numa **curva**, o que
+  torna visível onde ela vale zero, onde é positiva e onde é negativa;
+- e, por causa disso, sustentar as quatro páginas seguintes deste capítulo, que
+  desenham curvas o tempo todo.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [números negativos](../numeros-e-operacoes/numeros-negativos): o que a
+reta numérica faz?** Ela dá a cada número um lugar. Escolhemos um ponto para o
+zero, um tamanho para a unidade, e cada número passa a ter uma posição: os
+positivos à direita do zero, os negativos à esquerda. Um número, uma posição.
+
+**2. De [expressões algébricas](../algebra/expressoes-algebricas): o que
+acontece quando você substitui um número na letra?** A expressão vira uma conta
+com número, e essa conta tem um resultado. Em $x^2 - 5x + 6$, trocar o $x$ por
+4 dá $16 - 20 + 6$, que é 2. Cada valor de $x$ produz **um** valor da expressão.
+
+**3. De [equações do 2º grau](./equacoes-do-segundo-grau): o que é uma raiz?** É
+um valor da incógnita que faz a expressão valer zero. As raízes de
+$x^2 - 5x + 6$ são 2 e 3, porque nesses dois valores a conta dá zero.
+
+**4. De [Bhaskara](./formula-de-bhaskara): o que o discriminante conta?** Com
+$\Delta > 0$ existem duas raízes reais, com $\Delta = 0$ existe uma, e com
+$\Delta < 0$ não existe nenhuma.
+
+O item 1 é o ponto de partida desta página: vamos usar **duas** retas numéricas
+em vez de uma. O item 2 é o que enche o desenho de pontos. Os itens 3 e 4 são a
+recompensa: no fim da página, “raiz” e “cruzamento com o eixo horizontal” vão
+ser a mesma coisa dita de dois jeitos.
+
+## 5. Intuição: duas retas numéricas cruzadas
+
+Uma reta numérica localiza um número. Ela não consegue localizar um **par** de
+números — e é de pares que a tabela do servidor é feita: hora 14, temperatura
+81. São duas informações que andam juntas, e uma reta só tem lugar para uma.
+
+A saída é usar duas retas numéricas ao mesmo tempo, cruzadas em ângulo reto:
+uma deitada, para a primeira informação, e uma em pé, para a segunda. Elas se
+cruzam no zero das duas.
+
+Com isso, “hora 14, temperatura 81” deixa de ser duas medidas soltas e vira uma
+instrução de caminho: ande até o 14 na reta deitada, suba até a altura 81 na
+direção da reta em pé, e pare. Você parou num lugar do papel — e nenhum outro
+par de números leva a esse mesmo lugar.
+
+É essa a ideia inteira. Dois números viram uma posição, e uma tabela de pares
+vira um punhado de posições no papel. O olho compara posições muito mais rápido
+do que compara números escritos, e é daí que vem toda a vantagem.
+
+## 6. Modelo visual: o endereço de um ponto
+
+A reta deitada se chama **eixo horizontal**, e a reta em pé, **eixo vertical**.
+O ponto onde elas se cruzam é a **origem**, que é o zero das duas ao mesmo
+tempo.
+
+Para localizar o ponto $(3, 2)$: ande 3 para a direita a partir da origem, e daí
+suba 2. Para localizar $(2, 3)$: ande 2 para a direita, e daí suba 3. São dois
+caminhos diferentes, e param em lugares diferentes.
+
+<CartesianPlane
+  xMin={-1}
+  xMax={5.5}
+  yMin={-1}
+  yMax={4.5}
+  xUnit={54}
+  points={[
+    {at: [3, 2], label: '(3,2)', tone: 1, dx: 30, dy: -10},
+    {at: [2, 3], label: '(2,3)', tone: 2, dx: 30, dy: -10},
+  ]}
+  segments={[
+    {from: [0, 0], to: [3, 0], tone: 1},
+    {from: [3, 0], to: [3, 2], tone: 1},
+    {from: [0, 0], to: [2, 0], tone: 2},
+    {from: [2, 0], to: [2, 3], tone: 2},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Os dois caminhos param em pontos diferentes. Trocar a ordem dos dois números muda o endereço."
+/>
+
+> Um **par ordenado** $(x, y)$ é um endereço no plano. O primeiro número é lido
+> no eixo horizontal, o segundo no eixo vertical. A palavra “ordenado” está aí
+> para avisar que a ordem faz parte do endereço.
+
+Por convenção, o eixo horizontal costuma ser chamado de **eixo $x$** e o
+vertical de **eixo $y$**. Os nomes são só rótulos: nada impede de chamá-los de
+“hora” e “temperatura”, e é o que faremos daqui a pouco.
+
+### Os quatro quadrantes
+
+Cada eixo tem lado positivo e lado negativo, exatamente como a reta numérica da
+página de números negativos. No eixo horizontal, positivo é à direita; no
+vertical, positivo é para cima. Cruzando os dois, o papel fica partido em quatro
+regiões, chamadas **quadrantes**, e cada uma tem uma combinação de sinais:
+
+<CartesianPlane
+  xMin={-4}
+  xMax={4}
+  yMin={-4}
+  yMax={4}
+  xUnit={44}
+  points={[
+    {at: [3, 2], label: '(3,2)', tone: 1, dx: 26, dy: -10},
+    {at: [-3, 2], label: '(-3,2)', tone: 2, dx: -28, dy: -10},
+    {at: [-3, -2], label: '(-3,-2)', tone: 3, dx: -30, dy: 22},
+    {at: [3, -2], label: '(3,-2)', tone: 1, dx: 28, dy: 22},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Os quatro quadrantes. À direita e acima, os dois números são positivos; à esquerda, o primeiro é negativo; abaixo, o segundo é negativo."
+/>
+
+Um ponto que cai **sobre** um eixo não pertence a nenhum quadrante. O ponto
+$(4, 0)$ está sobre o eixo horizontal, porque a altura dele é zero — ele não
+subiu nem desceu. Guarde essa observação: ela é a que vai fechar a página.
+
+## 7. Resolvendo o problema do servidor
+
+Volte à tabela. Cada coluna dela é um par: hora e temperatura. Use a hora no
+eixo horizontal e a temperatura no eixo vertical, e marque os doze pontos.
+
+<CartesianPlane
+  xMin={7}
+  xMax={20.5}
+  yMin={45}
+  yMax={85}
+  xUnit={40}
+  yUnit={6}
+  yStep={5}
+  points={[
+    {at: [8, 52], tone: 1},
+    {at: [9, 55], tone: 1},
+    {at: [10, 61], tone: 1},
+    {at: [11, 68], tone: 1},
+    {at: [12, 74], tone: 1},
+    {at: [13, 78], tone: 1},
+    {at: [14, 81], tone: 1},
+    {at: [15, 76], tone: 1},
+    {at: [16, 71], tone: 1},
+    {at: [17, 65], tone: 1},
+    {at: [18, 58], tone: 1},
+    {at: [19, 54], tone: 1},
+  ]}
+  lines={[{m: 0, n: 70, tone: 2, dashed: true}]}
+  axisLabels={['h', 'T']}
+  caption="As doze leituras. O eixo horizontal marca a hora; o vertical, a temperatura em graus. A linha tracejada é o limite de 70 °C recomendado pelo fabricante."
+/>
+
+As três perguntas agora se respondem olhando:
+
+1. **Em que hora a temperatura foi maior?** No ponto mais alto do desenho, que
+   está sobre a hora 14.
+2. **Um pico só, ou vários?** Um só. Os pontos sobem até as 14h e descem
+   daí em diante, sem voltar a subir. Numa tabela, garantir isso exige comparar
+   onze diferenças; no desenho, é a forma da subida e da descida.
+3. **Quanto tempo acima de 70 °C?** Os pontos acima da linha tracejada são os
+   das horas 12, 13, 14, 15 e 16 — cinco leituras. A temperatura passou de 70
+   em algum momento entre 11h e 12h, e voltou a ficar abaixo entre 16h e 17h.
+
+Repare no cuidado da última resposta. Nós **medimos** de hora em hora, então não
+sabemos o que aconteceu entre uma medida e outra. Dizer “passou dos 70 às 11h30”
+seria inventar um dado. O que o desenho autoriza é dizer entre quais medidas a
+passagem aconteceu.
+
+> **Ponto de atenção:** ligar os pontos medidos com um traço é uma suposição
+> sobre o que houve no meio, não uma medida. Para dados coletados, o traço é um
+> palpite razoável — a temperatura não salta. Já para uma **fórmula**, como
+> veremos agora, o traço não é palpite nenhum: podemos calcular quantos pontos
+> intermediários quisermos.
+
+## 8. Ponte: de uma expressão para uma curva
+
+O servidor nos deu os pares prontos, medidos. Uma expressão algébrica faz o
+mesmo serviço sem precisar de medição nenhuma, e é esse o uso que interessa ao
+capítulo.
+
+Pegue $x^2 - 5x + 6$. Pela reativação 2, cada valor de $x$ que você substituir
+produz **um** valor da expressão. Isso já é um par: o $x$ que entrou e o
+resultado que saiu. Chame o resultado de $y$ e escreva
+
+$$
+y = x^2 - 5x + 6.
+$$
+
+Essa igualdade não é uma equação a resolver. Ela é uma **regra de fabricação de
+pares**: escolha um $x$, faça a conta, e o resultado é o $y$ que acompanha esse
+$x$.
+
+| $x$ | conta | $y$ |
+|---:|---|---:|
+| 0 | $0 - 0 + 6$ | 6 |
+| 1 | $1 - 5 + 6$ | 2 |
+| 2 | $4 - 10 + 6$ | 0 |
+| 3 | $9 - 15 + 6$ | 0 |
+| 4 | $16 - 20 + 6$ | 2 |
+| 5 | $25 - 25 + 6$ | 6 |
+
+Cada linha da tabela é um par ordenado, e cada par é um ponto:
+
+<CartesianPlane
+  xMin={-1}
+  xMax={6.5}
+  yMin={-2}
+  yMax={7}
+  xUnit={52}
+  yUnit={28}
+  points={[
+    {at: [0, 6], tone: 1},
+    {at: [1, 2], tone: 1},
+    {at: [2, 0], tone: 2},
+    {at: [3, 0], tone: 2},
+    {at: [4, 2], tone: 1},
+    {at: [5, 6], tone: 1},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Os seis pares da tabela, marcados como pontos. Os dois pontos em laranja são os que têm altura zero."
+/>
+
+Seis pontos deixam entrever uma forma, mas com buracos. E aqui está a diferença
+em relação ao servidor: nada nos impede de calcular mais pares. Em $x = 2{,}5$ a
+conta dá $6{,}25 - 12{,}5 + 6 = -0{,}25$; em $x = 1{,}5$ dá
+$2{,}25 - 7{,}5 + 6 = 0{,}75$. Podemos preencher os buracos com quantos pontos
+quisermos, e é isso que legitima o traço contínuo:
+
+<CartesianPlane
+  xMin={-1}
+  xMax={6.5}
+  yMin={-2}
+  yMax={7}
+  xUnit={52}
+  yUnit={28}
+  functions={[{f: (x) => x * x - 5 * x + 6, tone: 1}]}
+  points={[
+    {at: [2, 0], tone: 2},
+    {at: [3, 0], tone: 2},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A mesma expressão com os buracos preenchidos. A curva passa pelos seis pontos da tabela e por todos os intermediários."
+/>
+
+> O **gráfico** de uma expressão é o conjunto de todos os pontos $(x, y)$ em que
+> $y$ é o valor que a expressão assume naquele $x$.
+
+Dois exemplos delimitam a definição. O ponto $(4, 2)$ **está** no gráfico de
+$x^2 - 5x + 6$, porque a conta em $x = 4$ dá exatamente 2. Já o ponto $(4, 5)$
+**não** está: a conta em $x = 4$ continua dando 2, e 5 não é 2. Para decidir,
+não é preciso olhar o desenho — faça a conta e compare com a segunda coordenada.
+
+### As duas leituras que o capítulo vai usar
+
+**Primeira: a altura da curva sobre um ponto $x$ é o valor da expressão nesse
+$x$.** Não é uma propriedade nova; é a definição de gráfico lida de trás para
+frente. Se você quer saber quanto vale $x^2 - 5x + 6$ em $x = 1$, pode fazer a
+conta, ou pode subir do 1 até a curva e ler a altura: 2. As duas coisas são a
+mesma.
+
+**Segunda: onde a curva cruza o eixo horizontal, a expressão vale zero.** Um
+ponto está sobre o eixo horizontal quando a altura dele é zero — foi a
+observação guardada no fim da seção 6. Altura zero quer dizer $y = 0$, e $y$ é o
+valor da expressão. Então cruzar o eixo horizontal é a expressão valer zero
+naquele $x$, o que é exatamente a definição de **raiz**.
+
+No desenho acima, a curva encosta no eixo horizontal em $x = 2$ e em $x = 3$. E
+2 e 3 são as raízes de $x^2 - 5x + 6$, que a página de equações do 2º grau achou
+por fatoração e a de Bhaskara acharia pela fórmula. **A promessa da página de
+Bhaskara está paga:** os dois métodos respondem à mesma pergunta, um com conta e
+outro com desenho.
+
+Isso também dá significado ao discriminante. Se $\Delta < 0$ não existe raiz
+real, então não existe $x$ em que a expressão valha zero, então a curva **nunca
+toca** o eixo horizontal. É o caso que a próxima página, sobre
+[números complexos](./numeros-complexos), vai retomar por outro caminho.
+
+## 9. Exemplos resolvidos
+
+### Exemplo 1: localizar e classificar
+
+Diga em que quadrante está cada ponto: $A(4, 1)$, $B(-3, 2)$, $C(-2, -3)$,
+$D(0, -2)$.
+
+- $A(4, 1)$: primeiro número positivo, segundo positivo — direita e acima, o
+  **1º quadrante**.
+- $B(-3, 2)$: primeiro negativo, segundo positivo — esquerda e acima, o **2º
+  quadrante**.
+- $C(-2, -3)$: os dois negativos — esquerda e abaixo, o **3º quadrante**.
+- $D(0, -2)$: o primeiro número é zero, então o ponto não andou nem para a
+  direita nem para a esquerda. Ele está **sobre o eixo vertical**, e por isso
+  não está em quadrante nenhum.
+
+### Exemplo 2: o ponto está no gráfico?
+
+*Pause e tente antes de ler.* O ponto $(5, 0)$ está no gráfico de
+$y = x^2 - 5x$? E o ponto $(2, 0)$?
+
+Faça a conta e compare com a segunda coordenada.
+
+Em $x = 5$: $25 - 25 = 0$. A segunda coordenada do par é 0, e a conta deu 0.
+Batem, então $(5, 0)$ **está** no gráfico.
+
+Em $x = 2$: $4 - 10 = -6$. A segunda coordenada do par é 0, mas a conta deu
+$-6$. Não batem, então $(2, 0)$ **não está** no gráfico. O ponto do gráfico com
+$x = 2$ é $(2, -6)$.
+
+Repare no que o primeiro item significa: como a altura em $x = 5$ é zero, o
+número 5 é uma raiz de $x^2 - 5x$. Confirmando por fatoração: $x(x - 5) = 0$ tem
+as raízes 0 e 5.
+
+### Exemplo 3: da tabela ao desenho, com uma expressão do 1º grau
+
+*Pause e tente.* Monte a tabela de $y = 10 - 2x$ para $x$ de 0 a 5, e diga onde
+essa curva cruza o eixo horizontal.
+
+| $x$ | 0 | 1 | 2 | 3 | 4 | 5 |
+|---|---:|---:|---:|---:|---:|---:|
+| $y$ | 10 | 8 | 6 | 4 | 2 | 0 |
+
+Os pontos caem todos numa **reta**: a cada passo de 1 para a direita, a altura
+cai sempre 2. A altura chega a zero em $x = 5$, e é ali que a reta cruza o eixo
+horizontal.
+
+Confira pela conta, que é a página de [equações do 1º
+grau](./equacoes-do-primeiro-grau): resolver $10 - 2x = 0$ dá $x = 5$. Mesma
+resposta. A leitura “cruzamento com o eixo horizontal é raiz” não vale só para o
+2º grau — ela vale para qualquer expressão.
+
+### Exemplo 4: lendo desigualdade num desenho
+
+*Pause e tente.* A curva de $y = x^2 - 4$ cruza o eixo horizontal em $x = -2$ e
+em $x = 2$, e tem a forma de um U. Para que valores de $x$ ela está **abaixo**
+do eixo horizontal?
+
+Estar abaixo do eixo é ter altura negativa, e altura é o valor da expressão.
+Então a pergunta é: para que $x$ vale $x^2 - 4 < 0$?
+
+O U desce, toca o eixo em $-2$, faz a barriga e volta a tocar em 2. A parte
+abaixo do eixo é a barriga, entre os dois cruzamentos:
+
+$$
+-2 < x < 2.
+$$
+
+Conferindo com dois números: em $x = 0$, a expressão vale $-4$, negativa —
+está na barriga. Em $x = 3$, vale $5$, positiva — está fora. Confere.
+
+Este exemplo é uma prévia: a página de [inequações do 2º
+grau](./inequacoes-do-segundo-grau) é feita inteira dessa leitura.
+
+## 10. Erros comuns
+
+> **Erro 1: trocar a ordem do par.** $(3, 2)$ e $(2, 3)$ são pontos diferentes,
+> como mostra a primeira figura. A regra é sempre a mesma: **horizontal
+> primeiro, vertical depois**. Quem inverte lê o gráfico refletido.
+
+> **Erro 2: confundir a raiz com a altura.** A raiz é o valor de $x$ onde a
+> curva cruza o eixo horizontal — é uma medida **horizontal**. No gráfico de
+> $x^2 - 5x + 6$, as raízes são 2 e 3, não os pontos $(2,0)$ e $(3,0)$ inteiros
+> e muito menos o 6. Responder “a raiz é $(2,0)$” confunde o ponto com a
+> coordenada dele.
+
+> **Erro 3: tratar o traço entre pontos medidos como dado.** Com doze medições
+> de hora em hora, o que aconteceu às 11h30 não foi medido. Para uma fórmula é
+> diferente: ali qualquer ponto intermediário pode ser calculado.
+
+> **Erro 4: comparar dois desenhos sem olhar a escala.** A mesma curva desenhada
+> com o eixo vertical espremido parece quase plana, e esticada parece um pico
+> agudo. Antes de dizer “subiu muito”, veja de quanto em quanto os números do
+> eixo andam.
+
+> **Erro 5: achar que toda curva cruza o eixo horizontal.** A curva de
+> $y = x^2 + 1$ nunca cruza, porque $x^2$ nunca é negativo e a soma com 1
+> deixa o resultado sempre maior que zero. Isso corresponde a
+> $\Delta = 0 - 4 = -4$, negativo: nenhuma raiz real.
+
+## 11. Perguntas de verificação
+
+1. Por que a ordem dos dois números do par importa?
+2. O que significa, em palavras, a altura da curva sobre um ponto $x$?
+3. Por que todo ponto que está sobre o eixo horizontal tem a segunda coordenada
+   igual a zero?
+4. Por que os cruzamentos da curva com o eixo horizontal são exatamente as
+   raízes da expressão?
+5. Como você decide se o ponto $(3, 1)$ está no gráfico de $y = x^2 - 5x + 6$,
+   sem desenhar nada?
+6. Por que ligar os pontos de uma **medição** com um traço é uma suposição,
+   enquanto ligar os pontos de uma **fórmula** não é?
+7. Uma expressão pode não cruzar o eixo horizontal nenhuma vez. O que isso diz
+   sobre a equação correspondente?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque os dois números são lidos em eixos diferentes: o primeiro conta o
+   deslocamento horizontal e o segundo, o vertical. Trocar a ordem troca as
+   instruções de caminho, e o caminho para num lugar diferente do papel.
+2. Significa o valor que a expressão assume naquele $x$. Subir do $x$ até a
+   curva e ler a altura é outra forma de fazer a conta da substituição.
+3. Porque a segunda coordenada é justamente a altura em relação ao eixo
+   horizontal. Um ponto que está **sobre** esse eixo não subiu nem desceu, então
+   a altura dele é zero.
+4. Porque a altura da curva é o valor da expressão. Cruzar o eixo horizontal é
+   ter altura zero, e ter altura zero é a expressão valer zero naquele $x$ — que
+   é a definição de raiz.
+5. Substituindo: em $x = 3$, a conta $9 - 15 + 6$ dá 0. A segunda coordenada do
+   par é 1, e 1 não é 0. Então $(3, 1)$ não está no gráfico. O ponto do gráfico
+   com $x = 3$ é $(3, 0)$.
+6. Porque na medição você conhece só os instantes em que mediu, e o que houve
+   entre duas medidas não foi observado — o traço é um palpite sobre isso. Com
+   uma fórmula, qualquer ponto intermediário pode ser calculado, então o traço
+   representa pontos que existem de fato.
+7. Que a equação “expressão $= 0$” não tem solução real. No caso do 2º grau,
+   isso corresponde a $\Delta < 0$.
+
+</details>
+
+## 12. Exercícios
+
+### 1. Reconhecimento
+
+1. Diga em que quadrante está cada ponto, ou sobre qual eixo ele cai:
+   a) $(3, -5)$ &nbsp; b) $(-1, -1)$ &nbsp; c) $(0, 4)$ &nbsp; d) $(-2, 6)$
+2. Quais destes pontos estão no gráfico de $y = 2x + 1$?
+   a) $(0, 1)$ &nbsp; b) $(3, 7)$ &nbsp; c) $(-2, -3)$ &nbsp; d) $(1, 4)$
+3. No gráfico de $y = x^2 - 5x + 6$ desenhado na seção 8, qual é a altura da
+   curva em $x = 0$? E em $x = 5$?
+
+### 2. Explicação
+
+4. Explique por que $(2, 5)$ e $(5, 2)$ são pontos diferentes.
+5. Explique, com suas palavras, por que a altura da curva sobre $x = 4$ é o
+   mesmo número que a substituição de 4 na expressão produz.
+
+### 3. Aplicação direta
+
+6. Monte a tabela de $y = x^2 - 4$ para $x$ de $-3$ a 3, e diga quais pontos têm
+   altura zero.
+7. Uma van de entregas gasta $C = 40 + 1{,}2x$ reais para rodar $x$
+   quilômetros. Monte a tabela para $x = 0$, 10, 20 e 30. Onde essa reta cruza o
+   eixo vertical, e o que esse ponto significa no problema?
+
+### 4. Variação
+
+8. Monte a tabela de $y = -x^2 + 4$ para $x$ de $-3$ a 3. Compare com o
+   exercício 6: o que mudou nas alturas, e o que permaneceu igual nos
+   cruzamentos com o eixo horizontal?
+9. Sem desenhar, diga se a curva de $y = x^2 + 1$ cruza o eixo horizontal em
+   algum ponto. Justifique de duas formas: por um argumento sobre $x^2$, e pelo
+   discriminante.
+
+### 5. Problema misto
+
+10. Use a fórmula de Bhaskara para achar onde a curva de $y = x^2 - 6x + 8$
+    cruza o eixo horizontal.
+11. Volte à tabela do servidor da seção 1. Se o fabricante baixasse o limite
+    recomendado de 70 °C para 60 °C, quantas das doze leituras estariam acima do
+    limite? Entre quais horas a temperatura passaria do novo limite?
+
+<details>
+<summary>Dica para o 10</summary>
+
+“Cruzar o eixo horizontal” quer dizer ter altura zero. E a altura é o valor da
+expressão. Escreva isso como equação antes de aplicar a fórmula.
+
+</details>
+
+### 6. Justificativa
+
+12. Explique por que a pergunta “onde a curva cruza o eixo horizontal?” e a
+    pergunta “quais são as raízes da expressão?” têm sempre a mesma resposta.
+13. Na seção 7, afirmamos que o servidor teve **um** pico. Que informação o
+    desenho oferece que a tabela também tem, mas de forma mais difícil de
+    enxergar?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) 4º quadrante (primeiro positivo, segundo negativo). &nbsp; b) 3º quadrante
+   (os dois negativos). &nbsp; c) Sobre o eixo vertical, porque a primeira
+   coordenada é zero; não está em quadrante nenhum. &nbsp; d) 2º quadrante
+   (primeiro negativo, segundo positivo).
+2. a) Sim: $2(0) + 1 = 1$. &nbsp; b) Sim: $2(3) + 1 = 7$. &nbsp; c) Sim:
+   $2(-2) + 1 = -3$. &nbsp; d) Não: $2(1) + 1 = 3$, e 3 não é 4. O ponto do
+   gráfico com $x = 1$ é $(1, 3)$.
+3. Em $x = 0$ a altura é 6, e em $x = 5$ também é 6 — as duas pontas da tabela
+   da seção 8.
+4. Porque o primeiro número é lido no eixo horizontal e o segundo no vertical.
+   Em $(2, 5)$ você anda 2 e sobe 5; em $(5, 2)$ você anda 5 e sobe 2. Os dois
+   caminhos terminam em lugares diferentes do papel.
+5. Porque a curva foi construída exatamente assim: para cada $x$, calculou-se o
+   valor da expressão e marcou-se um ponto naquela altura. Ler a altura é
+   recuperar o número que foi usado para marcar o ponto.
+6. As alturas são, de $x = -3$ até $x = 3$: 5, 0, $-3$, $-4$, $-3$, 0, 5. Os
+   pontos com altura zero são $(-2, 0)$ e $(2, 0)$.
+7. Os custos são 40, 52, 64 e 76 reais. A reta cruza o eixo vertical no ponto
+   $(0, 40)$, porque em $x = 0$ o custo é 40. Esse ponto é o custo que existe
+   mesmo sem rodar nenhum quilômetro — a parte fixa da despesa.
+8. As alturas são $-5$, 0, 3, 4, 3, 0, $-5$. Cada altura é a do exercício 6 com
+   o sinal trocado, e por isso o desenho fica espelhado em relação ao eixo
+   horizontal: onde havia barriga para baixo, há corcova para cima. Os
+   cruzamentos permanecem em $x = -2$ e $x = 2$, porque trocar o sinal de zero
+   continua dando zero.
+9. Não cruza. Primeiro argumento: $x^2$ é um quadrado e nunca é negativo, então
+   $x^2 + 1$ vale no mínimo 1, e nunca chega a zero. Segundo argumento: em
+   $x^2 + 1$ temos $a = 1$, $b = 0$ e $c = 1$, então
+   $\Delta = 0 - 4(1)(1) = -4$, negativo — nenhuma raiz real.
+10. Cruzar o eixo horizontal é ter altura zero, então a equação é
+    $x^2 - 6x + 8 = 0$. Com $\Delta = 36 - 32 = 4$ e $\sqrt{\Delta} = 2$, as
+    raízes são $\frac{6 \pm 2}{2}$, isto é, 4 e 2. A curva cruza o eixo
+    horizontal nos pontos $(2, 0)$ e $(4, 0)$.
+11. Acima de 60 °C estão as leituras das horas 10, 11, 12, 13, 14, 15, 16 e 17 —
+    oito leituras. A temperatura passaria de 60 entre 9h e 10h, e voltaria a
+    ficar abaixo entre 17h e 18h. Como a medição é de hora em hora, não dá para
+    precisar o instante exato dentro desses intervalos.
+12. Porque a altura da curva sobre um $x$ é o valor da expressão naquele $x$.
+    Cruzar o eixo horizontal é ter altura zero; ter altura zero é a expressão
+    valer zero; e valer zero é a definição de raiz. As três frases descrevem a
+    mesma condição.
+13. A informação é a mesma: a sequência sobe até as 14h e desce daí em diante.
+    Na tabela, verificar isso exige comparar cada número com o seguinte, onze
+    vezes. No desenho, a subida e a descida são uma forma só, vista de uma vez.
+
+</details>
+
+## 13. Revisão curta
+
+- O **plano cartesiano** são duas retas numéricas cruzadas em ângulo reto. Elas
+  dão a cada ponto do papel um endereço formado por dois números.
+- Esse endereço é o **par ordenado** $(x, y)$: primeiro o número do eixo
+  horizontal, depois o do vertical. Trocar a ordem muda o ponto.
+- Uma tabela de pares vira um punhado de pontos, e o olho compara posições mais
+  rápido do que compara números escritos.
+- Uma expressão fabrica pares: escolha um $x$, faça a conta, e o resultado é o
+  $y$. O conjunto de todos esses pontos é o **gráfico** da expressão.
+- **A altura da curva sobre um $x$ é o valor da expressão nesse $x$.**
+- **Onde a curva cruza o eixo horizontal, a expressão vale zero** — e esses
+  cruzamentos são as raízes que as páginas anteriores aprenderam a calcular.
+- Com dados medidos, o traço entre dois pontos é uma suposição sobre o que houve
+  no meio. Com uma fórmula, não: qualquer ponto intermediário pode ser
+  calculado.
+
+As próximas páginas deste capítulo usam o desenho o tempo todo: para localizar
+[números complexos](./numeros-complexos) num plano, para ver o encontro de duas
+curvas em [equações com radical](./equacoes-com-radical) e em [sistemas de duas
+equações](./sistemas-de-duas-equacoes), e para ler o sinal de uma expressão em
+[inequações do 2º grau](./inequacoes-do-segundo-grau). O estudo completo das
+curvas — como a forma delas depende da fórmula — é o capítulo de
+[funções](../funcoes/).

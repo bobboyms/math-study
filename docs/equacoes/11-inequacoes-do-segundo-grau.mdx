@@ -113,9 +113,19 @@ raízes e, quando elas são reais, usamos a forma fatorada para ler o sinal.
 
 ## 5. Intuição: o sinal de um produto se lê fator a fator
 
-A pergunta “para que valores $x^2 - 5x + 6$ é positivo?” é difícil como está
-escrita, porque uma **soma** de três termos não tem sinal previsível: os termos
-brigam entre si.
+Antes de qualquer conta, vale traduzir o símbolo. A pergunta
+
+$$
+x^2 - 5x + 6 > 0
+$$
+
+não pede **o** valor de $x$. Ela pede **todos** os valores de $x$ que fazem essa
+expressão dar um número positivo. Não é “quanto vale $x$”, é “de que lado o
+resultado cai”. Essa troca de pergunta é a primeira coisa que destrava a página.
+
+Do jeito que está escrita, ela é difícil de responder, porque uma **soma** de
+três termos não tem sinal previsível: em $x = 1$, o $-5x$ puxa o resultado para
+baixo e o $+6$ puxa para cima, e não dá para saber quem ganha sem calcular.
 
 Fatore, e a pergunta muda de natureza:
 
@@ -123,42 +133,26 @@ $$
 x^2 - 5x + 6 = (x - 2)(x - 3).
 $$
 
-Agora é um **produto**, e a regra dos sinais permite combinar o sinal dos dois
-parênteses.
+Agora é um **produto**, e sobre produto existe uma regra de sinais que você já
+tem: sinais iguais dão positivo, sinais diferentes dão negativo. O sinal do
+todo passa a ser decidido pelo sinal das partes.
 
-O sinal de cada parêntese vem de uma inequação do 1º grau: $x - 2$ é negativo
-quando $x < 2$, zero em $x = 2$ e positivo quando $x > 2$. Um fator do 1º grau
-troca de sinal **uma vez**, na própria raiz.
+O sinal de cada parte vem de uma inequação do 1º grau, que é a página anterior:
+$x - 2$ é negativo quando $x < 2$, zero em $x = 2$ e positivo quando $x > 2$. Um
+fator do 1º grau troca de sinal **uma vez só**, na própria raiz.
 
 > As raízes são os únicos pontos onde a expressão pode trocar de sinal. Entre
 > duas raízes consecutivas, o sinal é sempre o mesmo.
 
-Isso é o que torna o problema finito. Em vez de testar infinitos números,
-marcamos as raízes na reta, o que a divide em poucos trechos, e descobrimos o
-sinal em **cada trecho**. Um número de amostra revela o sinal do trecho inteiro,
-porque nenhum fator troca de sinal dentro dele.
+É isso que torna o problema finito. Em vez de testar infinitos números, marcamos
+as raízes na reta, o que a divide em poucos trechos, e descobrimos o sinal em
+**cada trecho**. Um número de amostra revela o sinal do trecho inteiro, porque
+nenhum fator troca de sinal dentro dele.
 
 ## 6. O quadro de sinais
 
 Vamos organizar isso numa tabela. As raízes de $(x-2)(x-3)$ são 2 e 3, e elas
 partem a reta em três trechos: antes do 2, entre 2 e 3, depois do 3.
-
-A forma fatorada completa é
-
-$$
-x^2 - 5x + 6 = 1(x-2)(x-3).
-$$
-
-O fator 1 é o coeficiente $a$. Ele é positivo e não muda com $x$, por isso não
-altera os sinais deste exemplo. Em geral, se as raízes reais distintas são
-$r_1$ e $r_2$, então
-
-$$
-ax^2 + bx + c = a(x-r_1)(x-r_2).
-$$
-
-O coeficiente $a$ precisa participar da leitura: se ele for negativo, inverte o
-sinal produzido pelos dois fatores variáveis.
 
 | Trecho | $x - 2$ | $x - 3$ | Produto $(x-2)(x-3)$ |
 |---|:---:|:---:|:---:|
@@ -172,6 +166,25 @@ Cada linha se confere com um número de amostra:
 - em $x = 2{,}5$: $(0{,}5)(-0{,}5) = -0{,}25$, negativo;
 - em $x = 4$: $(2)(1) = 2$, positivo.
 
+A última coluna é o resultado de tudo. Ela diz: **positivo, negativo,
+positivo**. Postos na reta, os três trechos ficam assim:
+
+<NumberLine
+  min={0}
+  max={5}
+  unit={70}
+  spans={[
+    {from: 0, to: 2, tone: 1, continuesLeft: true},
+    {from: 2, to: 3, tone: 2},
+    {from: 3, to: 5, tone: 1, continuesRight: true},
+  ]}
+  marks={[
+    {at: 2, tone: 3},
+    {at: 3, tone: 3},
+  ]}
+  caption="Os três trechos de x² − 5x + 6. Nos dois de fora a expressão é positiva; no do meio, negativa. Nos pontos 2 e 3 ela vale zero."
+/>
+
 Com o quadro pronto, qualquer pergunta sobre esse trinômio se responde de
 imediato:
 
@@ -184,30 +197,51 @@ imediato:
 Repare no padrão: as fronteiras são as mesmas nas quatro perguntas. O que muda é
 **quais trechos entram** e se as próprias raízes entram.
 
-<NumberLine
-  min={-1}
-  max={6}
-  unit={70}
-  spans={[
-    {from: -1, to: 2, tone: 1, continuesLeft: true},
-    {from: 3, to: 6, tone: 1, continuesRight: true},
-  ]}
-  marks={[
-    {at: 2, tone: 1, open: true},
-    {at: 3, tone: 1, open: true},
-  ]}
-  caption="A solução de x² − 5x + 6 > 0: os dois trechos onde o produto é positivo. O pedaço entre as raízes fica de fora."
-/>
+### O papel do coeficiente $a$
 
-## 7. O atalho da parábola
+Neste exemplo o coeficiente de $x^2$ é 1, e por isso ele não apareceu. A forma
+fatorada completa dele é
 
-Existe uma leitura mais rápida, e ela vem do desenho da curva. O gráfico de
-$y = x^2 - 5x + 6$ é uma parábola que cruza o eixo horizontal exatamente nas
-raízes:
+$$
+x^2 - 5x + 6 = 1(x-2)(x-3),
+$$
+
+e, em geral, se as raízes reais distintas são $r_1$ e $r_2$, então
+
+$$
+ax^2 + bx + c = a(x-r_1)(x-r_2).
+$$
+
+Esse $a$ multiplica o produto inteiro, e ele **não depende de $x$**: é o mesmo
+número em todos os trechos. Então ele não cria nem apaga troca de sinal — ele
+só decide se o resultado do produto vale como está ou virado.
+
+Confira com dois números, ambos em $x = 0$:
+
+- $1(x-2)(x-3)$ vale $(-2)(-3) = 6$, positivo;
+- $-1(x-2)(x-3)$ vale $-6$, negativo.
+
+Mesmas raízes, mesmos trechos, todos os sinais trocados. Com $a$ negativo, a
+última coluna do quadro vira $-$, $+$, $-$.
+
+## 7. O mesmo quadro, desenhado
+
+O quadro dá a resposta, mas linha a linha. Existe um jeito de guardar as três
+linhas numa imagem só — e ele **não é um método novo**: é o mesmo quadro,
+desenhado.
+
+Volte à última coluna: $+$, $-$, $+$. Imagine um traço que represente o valor da
+expressão a cada $x$: quando o valor é positivo, o traço fica **acima** do eixo;
+quando é negativo, fica **abaixo**; nas raízes o valor é zero, e o traço
+**toca** o eixo.
+
+Siga a sequência da esquerda para a direita. O traço vem por cima, desce e toca
+o eixo em 2, segue por baixo, sobe e toca o eixo de novo em 3, e volta a subir.
+Ele desce de um lado, faz uma barriga no meio e sobe do outro: um **U**.
 
 <CartesianPlane
   xMin={-1}
-  xMax={6}
+  xMax={6.5}
   yMin={-2}
   yMax={7}
   xUnit={52}
@@ -218,21 +252,85 @@ raízes:
     {at: [3, 0], tone: 2},
   ]}
   axisLabels={['x', 'y']}
-  caption="A parábola está acima do eixo (valores positivos) fora das raízes, e abaixo dele (valores negativos) entre elas."
+  caption="O traço do valor de x² − 5x + 6. Acima do eixo nos trechos de fora, abaixo dele entre as raízes — exatamente as três linhas do quadro."
 />
 
-Onde a curva está **acima** do eixo, a expressão é positiva; onde está
-**abaixo**, é negativa. O desenho diz de uma vez o que o quadro diz linha a
-linha.
+Essa curva tem nome, **parábola**, e o capítulo de funções vai estudá-la
+inteira. Por enquanto ela é só isto: o quadro de sinais guardado numa figura em
+vez de numa tabela.
 
-Quando há **duas raízes reais distintas**, a concavidade produz a regra:
+> Onde o traço está **acima** do eixo, a expressão é positiva. Onde está
+> **abaixo**, é negativa. Nas raízes, vale zero.
 
-> Se $a > 0$, a parábola abre para cima: a expressão é **negativa entre as
-> raízes** e **positiva fora** delas. Se $a < 0$, abre para baixo, e tudo se
-> inverte.
+### Intervalo ou dois pedaços? Você não decide — você lê
 
-A frase que resume esse caso: **o sinal contrário ao de $a$ fica entre as
-raízes.** A restrição “duas raízes distintas” importa. Os três casos são:
+Esta é a dúvida que mais atrapalha nesta página, e o desenho a dissolve. Depois
+de desenhar, pinte no eixo horizontal os pedaços onde o traço está do lado que a
+pergunta pediu:
+
+- pediu **positivo** ($>0$), com o **U** de boca para cima: sobram as duas
+  pontas, porque a barriga do meio está do lado errado. São **dois pedaços**,
+  escritos com $\cup$;
+- pediu **negativo** ($<0$): sobra só a barriga. É **um intervalo**.
+
+Não há nada a decidir nem a decorar: a quantidade de pedaços é o que a figura
+mostra depois de pintada.
+
+### Quando $a$ é negativo, o U vira
+
+Vimos na seção anterior que $a$ negativo troca todos os sinais do quadro. No
+desenho, trocar todos os sinais é espelhar a curva no eixo horizontal: o **U**
+fica de boca para baixo.
+
+<CartesianPlane
+  xMin={0}
+  xMax={5.5}
+  yMin={-3}
+  yMax={3}
+  xUnit={62}
+  yUnit={34}
+  functions={[
+    {f: (x) => (x - 2) * (x - 3), tone: 1},
+    {f: (x) => -(x - 2) * (x - 3), tone: 2},
+  ]}
+  points={[
+    {at: [2, 0], tone: 3},
+    {at: [3, 0], tone: 3},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Em azul, (x−2)(x−3); em laranja, o mesmo produto com sinal trocado. As raízes são as mesmas; o que muda é de que lado do eixo cada trecho cai."
+/>
+
+Daí sai a frase que resume o caso de duas raízes distintas: **o sinal contrário
+ao de $a$ fica entre as raízes.** Guarde-a como resumo, não como ponto de
+partida — se ela escapar na hora da prova, desenhe o **U** na posição certa e
+olhe.
+
+### E quando as raízes não são duas
+
+O desenho até aqui supôs **duas raízes distintas**. O discriminante
+$\Delta = b^2 - 4ac$, da página de Bhaskara, diz quando isso vale. Os outros
+dois casos também são desenhos:
+
+<CartesianPlane
+  xMin={0}
+  xMax={4.5}
+  yMin={-1}
+  yMax={6}
+  xUnit={62}
+  yUnit={32}
+  functions={[
+    {f: (x) => (x - 2) * (x - 2), tone: 1},
+    {f: (x) => (x - 2) * (x - 2) + 2, tone: 2},
+  ]}
+  points={[{at: [2, 0], tone: 3}]}
+  axisLabels={['x', 'y']}
+  caption="Em azul, raiz dupla: o U encosta no eixo num ponto só e volta para cima. Em laranja, nenhuma raiz real: o U nem chega ao eixo e fica inteiro acima dele."
+/>
+
+Nos dois casos não existe um trecho “entre duas raízes distintas”, e por isso a
+expressão não troca de sinal em lugar nenhum: ela conserva o sinal de $a$ em
+toda a reta — exceto na raiz dupla, onde vale zero.
 
 | Discriminante | Encontro com o eixo | Sinal da expressão |
 |---|---|---|
@@ -240,26 +338,28 @@ raízes.** A restrição “duas raízes distintas” importa. Os três casos s�
 | $\Delta = 0$ | uma raiz dupla | zero na raiz; sinal de $a$ em todo o restante |
 | $\Delta < 0$ | nenhuma raiz real | sinal de $a$ em todos os números reais |
 
-Nos dois últimos casos não existe um intervalo “entre duas raízes distintas”.
-Com raiz dupla, a parábola encosta no eixo e volta para o mesmo lado. Sem raiz
-real, ela permanece inteira do lado indicado pelo sinal de $a$.
+### O método, do começo ao fim
 
-### Um método que cobre os três casos
+É sempre o mesmo caminho, e o miolo dele são três gestos: **achar as raízes**,
+**desenhar**, **pintar**.
 
-1. Leve todos os termos para um lado e escreva a comparação com zero. Registre
-   também restrições do contexto, como $x$ ser inteiro ou representar tempo.
-2. Identifique $a$, $b$ e $c$. Calcule $\Delta$ e as raízes reais, se existirem.
-3. Se houver duas raízes distintas, ordene-as e determine o sinal em cada
-   trecho pela forma fatorada, pela parábola ou por números de amostra. Com raiz
-   dupla ou sem raízes, use a tabela acima.
-4. Selecione os trechos que satisfazem a desigualdade. Inclua as raízes somente
-   quando aparecer $\le$ ou $\ge$.
-5. Teste um valor de cada parte da resposta na inequação original e, por fim,
+1. **Zere um lado.** Leve todos os termos para o mesmo lado, deixando a
+   comparação com zero. Anote também as restrições do contexto, como $x$ ser
+   inteiro ou representar tempo.
+2. **Ache as raízes** da equação correspondente, por fatoração ou por Bhaskara,
+   e anote o sinal de $a$.
+3. **Desenhe.** Eixo horizontal, raízes marcadas, e o **U** passando por elas —
+   boca para cima se $a > 0$, boca para baixo se $a < 0$. Sem raiz real, o U não
+   toca o eixo; com raiz dupla, ele encosta e volta.
+4. **Pinte** no eixo os pedaços onde o traço está do lado pedido, e leia o
+   conjunto solução da figura. As raízes entram somente quando a desigualdade
+   for $\le$ ou $\ge$.
+5. **Confira.** Teste um número de cada pedaço na inequação original e, por fim,
    aplique as restrições do problema.
 
-Use o gráfico para conferir a leitura da expressão quadrática. Domine também o
-quadro de sinais, porque a próxima página vai estendê-lo a quocientes e a
-expressões com mais de dois fatores.
+O quadro de sinais continua valendo, e vale a pena saber montá-lo: a próxima
+página estende exatamente esse quadro a quocientes e a expressões com mais de
+dois fatores, onde o desenho do **U** não serve.
 
 ## 8. Resolvendo o problema da serigrafia
 
@@ -269,16 +369,28 @@ $$
 -x^2 + 100x - 1600 > 0.
 $$
 
-É possível trabalhar com o coeficiente negativo, mas deixá-lo positivo torna a
-leitura da parábola mais familiar. Multiplique os dois lados por $-1$. Todos os
-termos trocam de sinal e, como o multiplicador é negativo, o sentido da
-desigualdade também se inverte. O conjunto solução permanece o mesmo:
+**Passo 1 — zerar um lado.** Já está: todos os termos de um lado, comparação com
+zero. A restrição do contexto fica anotada: $x$ conta camisetas, então é
+inteiro.
+
+Aqui cabe uma escolha. Dá para trabalhar com o coeficiente negativo do jeito que
+está, e faremos isso no fim. Mas é comum deixar o $a$ positivo antes, porque o
+**U** de boca para cima é o desenho mais familiar. Para isso, multiplique os
+dois lados por $-1$:
 
 $$
 x^2 - 100x + 1600 < 0.
 $$
 
-Agora as raízes, por Bhaskara:
+Repare que o sentido da desigualdade virou. Por quê? Reative com números:
+$3 > 2$ é verdadeiro. Multiplicando os dois lados por $-1$, ficaria
+$-3 > -2$ — falso, porque $-3$ está à **esquerda** de $-2$ na reta. Multiplicar
+por um número negativo espelha a reta em torno do zero, e o que estava à direita
+passa a estar à esquerda. Para a afirmação continuar verdadeira, o $>$ tem que
+virar $<$. Os valores de $x$ que resolvem são exatamente os mesmos; só a escrita
+mudou.
+
+**Passo 2 — as raízes**, por Bhaskara:
 
 $$
 \begin{aligned}
@@ -293,15 +405,23 @@ $$
 x = \frac{100 \pm 60}{2} \quad\Longrightarrow\quad x = 80 \ \text{ ou } \ x = 20.
 $$
 
-Como $a = 1 > 0$ e queremos onde a expressão é **negativa**, a resposta é o
-trecho **entre** as raízes:
+São duas raízes distintas, e $a = 1 > 0$.
+
+**Passo 3 — desenhar.** Eixo horizontal, marcas em 20 e 80, e o **U** de boca
+para cima passando pelas duas.
+
+**Passo 4 — pintar.** A pergunta, depois da multiplicação por $-1$, é onde a
+expressão é **negativa**: onde o traço está abaixo do eixo. Isso é a barriga do
+U, e a barriga fica entre as raízes. É **um** intervalo, e as raízes ficam de
+fora porque a desigualdade é estrita:
 
 $$
 20 < x < 80.
 $$
 
-Nos números reais, a solução é $\,]20, 80[$. No problema, porém, $x$ conta
-camisetas. Portanto, os tamanhos possíveis são
+**Passo 5 — conferir e aplicar o contexto.** Em $x = 50$, o lucro original é
+$-2500 + 5000 - 1600 = 900$, positivo: confere. Nos números reais a solução é
+$\,]20, 80[$; como $x$ conta camisetas, os tamanhos possíveis são
 
 $$
 x \in \{21, 22, 23, \ldots, 79\}.
@@ -326,9 +446,20 @@ Confere com a tabela do início: 10 e 90 dão prejuízo, 20 e 80 dão lucro zero
 50 dá lucro. As pontas ficam **fora** porque a pergunta era “tem lucro”, e lucro
 zero não é lucro.
 
-Repare no que o resultado significa na prática: existe um tamanho de lote ótimo
-em algum lugar do meio, e passar dele é tão ruim quanto não chegar lá. Descobrir
-**qual** é esse ponto ótimo é assunto do capítulo de funções.
+### O mesmo problema sem multiplicar por $-1$
+
+Vale ver que o passo do $-1$ era conveniência, não obrigação. Mantendo
+$-x^2 + 100x - 1600 > 0$, temos $a = -1 < 0$ e as mesmas raízes 20 e 80 — o
+sinal de $a$ não muda onde a expressão zera. O desenho é o **U de boca para
+baixo** passando por 20 e 80, e a pergunta é onde o traço está **acima** do
+eixo: o topo, que fica entre as raízes. Mesma resposta, $20 < x < 80$, com um
+passo a menos e um desenho a mais.
+
+Se o $-1$ costuma te derrubar, este é o caminho a preferir.
+
+Repare, por fim, no que o resultado significa na prática: existe um tamanho de
+lote ótimo em algum lugar do meio, e passar dele é tão ruim quanto não chegar
+lá. Descobrir **qual** é esse ponto ótimo é assunto do capítulo de funções.
 
 ## 9. Exemplos resolvidos
 
@@ -468,9 +599,9 @@ teria sumido.
 > entram. No problema da serigrafia, 20 e 80 dão lucro **zero**, e por isso
 > ficam fora.
 
-> **Erro 6: aplicar o atalho da parábola sem olhar o sinal de $a$.** Com $a < 0$
-> tudo se inverte: o sinal positivo fica entre as raízes. Na dúvida, teste um
-> número — é mais rápido que reconstruir a regra.
+> **Erro 6: desenhar o U sem olhar o sinal de $a$.** Com $a < 0$ a boca do U é
+> para baixo, e tudo se inverte: o sinal positivo fica entre as raízes. Na
+> dúvida, teste um número — é mais rápido que reconstruir a regra.
 
 ## 11. Perguntas de verificação
 
@@ -637,9 +768,13 @@ tanto.
   pela regra do produto: sinais iguais dão positivo, diferentes dão negativo.
 - Um número de amostra por trecho é suficiente para preencher o quadro e serve
   de conferência.
-- **Atalho da parábola, quando $\Delta>0$**: com $a>0$, a expressão é negativa
-  entre as raízes e positiva fora; com $a<0$, o contrário. Com $\Delta=0$, a
-  expressão toca o zero e volta; com $\Delta<0$, conserva o sinal de $a$.
+- O **desenho** guarda o quadro numa figura: marque as raízes e passe por elas
+  um **U**, de boca para cima se $a>0$ e para baixo se $a<0$. Onde o traço está
+  acima do eixo, a expressão é positiva; abaixo, negativa.
+- Pintar o desenho responde sozinho se a solução é um intervalo ou dois
+  pedaços — não é uma decisão, é uma leitura.
+- Com $\Delta=0$ o U encosta no eixo e volta; com $\Delta<0$ ele não chega ao
+  eixo. Nos dois casos a expressão conserva o sinal de $a$.
 - A resposta pode ser um **intervalo** ou **dois pedaços** unidos por $\cup$ —
   nunca se escreve isso como desigualdade dupla.
 - As raízes entram no conjunto solução quando a desigualdade admite igualdade.

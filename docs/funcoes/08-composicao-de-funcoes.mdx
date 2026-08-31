@@ -3,6 +3,7 @@ title: Composição de funções
 ---
 
 import FunctionMachine from '@site/src/components/FunctionMachine';
+import CartesianPlane from '@site/src/components/CartesianPlane';
 
 # Composição: encaixar uma função dentro de outra
 
@@ -40,7 +41,10 @@ sobretudo, por que a ordem importa.
 - **a ordem de leitura é de dentro para fora**: em $f(g(x))$, quem age primeiro
   é $g$;
 - **a composição não é comutativa**: em geral $f(g(x))$ e $g(f(x))$ são funções
-  diferentes.
+  diferentes;
+- funções também se **somam, subtraem, multiplicam e dividem** ponto a ponto, e
+  essas quatro operações são de outra natureza: nelas as duas máquinas recebem a
+  mesma entrada, em vez de trabalhar em série.
 
 ## 3. Para que serve
 
@@ -49,7 +53,10 @@ sobretudo, por que a ordem importa.
   metros;
 - descrever processos em cadeia: o custo depende da produção, que depende das
   horas trabalhadas;
-- em programação, é a chamada de uma função com o resultado de outra.
+- em programação, é a chamada de uma função com o resultado de outra;
+- e, com as quatro operações aritméticas, montar um modelo a partir de peças:
+  lucro é receita **menos** custo, receita é preço **vezes** quantidade, custo
+  médio é custo **dividido por** quantidade.
 
 Dentro da matemática, compor é o que permite construir funções complicadas a
 partir de simples — e reconhecer a composição escondida numa fórmula é o passo
@@ -122,13 +129,13 @@ regra de $f$, escreva $g(x)$ inteiro, entre parênteses.
 **Exemplo.** Com $d(p) = p - 30$ e $t(q) = 1{,}1q$:
 
 $$
-t(d(p)) = 1{,}1 \cdot \big(d(p)\big) = 1{,}1(p - 30) = 1{,}1p - 33.
+t(d(p)) = 1{,}1 \times \big(d(p)\big) = 1{,}1(p - 30) = 1{,}1p - 33.
 $$
 
 **Conferindo com $p = 100$**: $1{,}1(70) = 77$. Bate com a conta do início.
 
 **Contraexemplo, para delimitar.** A composta **não** é o produto das duas
-funções. $t(d(p))$ é $1{,}1p - 33$, enquanto $t(p) \cdot d(p)$ seria
+funções. $t(d(p))$ é $1{,}1p - 33$, enquanto $t(p) \times d(p)$ seria
 $1{,}1p(p-30)$, uma função do 2º grau. Compor é encadear, não multiplicar.
 
 ### A ordem importa
@@ -157,7 +164,123 @@ Isso contrasta com a soma e a multiplicação de números, em que a ordem não
 importa. Vale reservar espaço na memória para essa diferença: quase toda
 operação da aritmética é comutativa, e a composição não é.
 
-## 7. Domínio de uma composta
+## 7. As outras quatro maneiras de combinar funções
+
+A composição não é a única forma de juntar duas funções, e vale ver as outras
+antes de continuar — inclusive porque é o contraste entre elas que fixa o que a
+composição tem de particular.
+
+As quatro primeiras vêm da aritmética. Se $f$ e $g$ aceitam a mesma entrada,
+podemos aplicar as duas **ao mesmo $x$** e depois somar, subtrair, multiplicar
+ou dividir os dois resultados:
+
+> $$
+> (f+g)(x) = f(x)+g(x), \qquad (f-g)(x) = f(x)-g(x),
+> $$
+> $$
+> (f \times g)(x) = f(x) \times g(x), \qquad
+> \left(\frac{f}{g}\right)(x) = \frac{f(x)}{g(x)}.
+> $$
+>
+> O domínio de cada uma é a **interseção** dos domínios de $f$ e $g$ — a entrada
+> precisa servir para as duas. No quociente, exclui-se também todo $x$ com
+> $g(x) = 0$.
+
+A exigência da interseção sai da definição, não de uma regra nova: para somar
+$f(x)$ com $g(x)$, os dois números precisam existir. É a mesma leitura que a
+página de [domínio e imagem](./dominio-e-imagem) fez ao juntar duas restrições.
+
+### Você já usou isso sem o nome
+
+Volte ao lucro da serigrafia, que acompanha o capítulo desde a página de
+[crescimento e sinal](./crescimento-sinal-e-simetria):
+
+$$
+L(x) = -x^2 + 100x - 1600.
+$$
+
+Esse polinômio não caiu do céu. A serigrafia tem **duas** funções por trás. A
+receita de um lote de $x$ camisetas é o preço vezes a quantidade, e o preço cai
+conforme o lote cresce:
+
+$$
+R(x) = x(100 - x) = 100x - x^2.
+$$
+
+E o custo é fixo:
+
+$$
+C(x) = 1600.
+$$
+
+O lucro é a **diferença** entre as duas:
+
+$$
+L(x) = (R - C)(x) = R(x) - C(x) = 100x - x^2 - 1600.
+$$
+
+**Conferindo em $x = 50$**: $R(50) = 50 \times 50 = 2500$ reais de receita,
+$C(50) = 1600$ de custo, e $L(50) = 900$ — exatamente o lucro máximo que a
+página de função quadrática calculou. Confere.
+
+Repare também que a própria receita foi construída por um **produto**: preço
+vezes quantidade. Combinar funções é o que se faz o tempo todo em qualquer
+modelo; o que faltava era o nome e a regra do domínio.
+
+### Um exemplo com domínios diferentes
+
+*Pause e tente antes de ler.* Com $f(x) = \sqrt{x}$ e $g(x) = x - 2$, escreva
+$(f+g)(x)$ e $\left(\frac{f}{g}\right)(x)$, com os domínios.
+
+O domínio de $f$ é $[0, +\infty[$; o de $g$ é todos os reais. A interseção é
+$[0, +\infty[$.
+
+$$
+(f+g)(x) = \sqrt{x} + x - 2, \qquad D = [0, +\infty[.
+$$
+
+$$
+\left(\frac{f}{g}\right)(x) = \frac{\sqrt{x}}{x-2},
+\qquad D = [0, 2[ \ \cup \ ]2, +\infty[.
+$$
+
+No quociente, o 2 saiu por um motivo novo: ele está no domínio das duas
+funções, mas anula o denominador. **Conferindo em $x = 4$**:
+$(f+g)(4) = 2 + 2 = 4$ e $\left(\frac{f}{g}\right)(4) = \frac{2}{2} = 1$.
+
+### O que separa as quatro da quinta
+
+Agora o contraste que interessa. Tome $f(x) = x^2$ e $g(x) = x+3$, e calcule
+tudo em $x = 1$:
+
+| Operação | Como se calcula em $x=1$ | Resultado |
+|---|---|---:|
+| $(f+g)(1)$ | $f(1) + g(1) = 1 + 4$ | 5 |
+| $(f \times g)(1)$ | $f(1) \times g(1) = 1 \times 4$ | 4 |
+| $(f \circ g)(1)$ | $f\big(g(1)\big) = f(4)$ | 16 |
+
+Três números diferentes, das mesmas duas funções e da mesma entrada. E a
+diferença não é de conta, é de **estrutura**:
+
+- nas quatro operações aritméticas, o $x$ entra nas **duas** máquinas em
+  paralelo, e os dois resultados são combinados no fim;
+- na composição, o $x$ entra em **uma** máquina, e o que sai dela entra na
+  outra — as máquinas estão em série, não lado a lado.
+
+> Somar, subtrair, multiplicar e dividir funções são operações **ponto a
+> ponto**: fazem com as saídas o que a aritmética já fazia com números.
+> **Compor é outra coisa**: é encadear, e não tem análogo na aritmética de
+> números. É por isso que a composição não é comutativa, enquanto a soma e o
+> produto de funções são.
+
+Essa última observação vale conferir. Como $f(x)+g(x)$ e $g(x)+f(x)$ são somas
+dos mesmos dois números, $f+g$ e $g+f$ são a mesma função — a comutatividade da
+soma de números sobe direto para as funções. Já $f \circ g$ e $g \circ f$
+deram R\$ 77 e R\$ 80 no problema da loja, porque ali não há dois números sendo
+somados: há um número passando por duas máquinas, e trocar a ordem das máquinas
+troca o que a segunda recebe.
+
+## 8. Domínio de uma composta
 
 Aqui há um cuidado que passa despercebido. Para que $f(g(x))$ exista, duas
 condições precisam valer ao mesmo tempo:
@@ -178,7 +301,41 @@ Na ordem inversa, $g(f(x)) = \sqrt{x} - 5$, com domínio $x \ge 0$. **Fórmulas
 diferentes e domínios diferentes** — mais uma evidência de que a ordem muda
 tudo.
 
-## 8. Reconhecer uma composição
+O desenho torna visível de onde vem o $x \ge 5$:
+
+<CartesianPlane
+  xMin={-1}
+  xMax={12.5}
+  yMin={-6}
+  yMax={5}
+  xUnit={34}
+  yUnit={30}
+  functions={[
+    {f: (x) => Math.sqrt(x), domain: [0, 12], tone: 1},
+    {f: (x) => x - 5, domain: [-1, 10], tone: 2},
+    {f: (x) => Math.sqrt(x - 5), domain: [5, 12], tone: 3},
+  ]}
+  lines={[{x: 5, dashed: true, tone: 0}]}
+  labels={[
+    {at: [10, 3.16], math: '\\sqrt{x}', tone: 1, dy: -18},
+    {at: [4, -4], math: 'x-5', tone: 2, dy: 0},
+    {at: [11, 2.45], math: '\\sqrt{x-5}', tone: 3, dy: 20},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Em azul, √x; em laranja, a reta x − 5; em verde, a composta √(x−5). A composta só começa em x = 5, que é exatamente onde a reta laranja cruza o eixo — antes dali, a primeira máquina entrega um número negativo, que a raiz recusa."
+/>
+
+Acompanhe uma entrada pelo desenho. Em $x = 2$, a reta laranja está em $-3$:
+esse é o número que $g$ entrega. A raiz não aceita $-3$, e por isso a curva
+verde não existe em $x = 2$. Em $x = 9$, a reta está em $4$, a raiz aceita, e a
+curva verde vale $\sqrt4 = 2$.
+
+A reta tracejada marca a fronteira. Ela passa por $x = 5$, que é onde a laranja
+cruza o eixo horizontal — ou seja, onde $g(x)$ deixa de ser negativo. **É a
+saída da primeira máquina, e não a entrada, que decide onde a composta existe**,
+e é isso que a condição 2 desta seção dizia em símbolos.
+
+## 9. Reconhecer uma composição
 
 Tão útil quanto compor é o movimento inverso: olhar uma fórmula complicada e
 enxergar as funções simples que a formam.
@@ -206,7 +363,7 @@ Repare que a página de transformações já fazia isso sem dar nome: $f(x - 3)$
 composição de $f$ com a função $x \mapsto x - 3$. Toda transformação horizontal
 é uma composição.
 
-## 9. Exemplos resolvidos
+## 10. Exemplos resolvidos
 
 ### Exemplo 1: calcular num ponto
 
@@ -270,7 +427,7 @@ $$
 
 Repare que o domínio de $h$ é **todos os reais**, embora a raiz seja exigente:
 $x^2 + 1$ é sempre pelo menos 1, então a saída de $g$ nunca é negativa. A
-condição 2 da seção 7 é satisfeita automaticamente.
+condição 2 da seção 8 é satisfeita automaticamente.
 
 ### Exemplo 5: uma cadeia com significado
 
@@ -282,7 +439,7 @@ O custo depende das peças, que dependem das horas — uma cadeia. A composiçã
 certa é $C(P(h))$:
 
 $$
-C(P(h)) = 40 \cdot (12h) + 500 = 480h + 500.
+C(P(h)) = 40 \times (12h) + 500 = 480h + 500.
 $$
 
 Para 8 horas: $480 \times 8 + 500 = 3840 + 500 = 4340$ reais.
@@ -294,7 +451,7 @@ A composta na ordem inversa, $P(C(n))$, seria $12(40n + 500)$ — um número que
 não significa nada aqui, porque estaria interpretando reais como horas. **A
 ordem correta é ditada pelo problema**, não pela conveniência algébrica.
 
-## 10. Erros comuns
+## 11. Erros comuns
 
 > **Erro 1: inverter a ordem.** Em $f(g(x))$, quem age primeiro é $g$, o de
 > dentro. Vale a imagem da linha de montagem: o parêntese mais interno é a
@@ -305,7 +462,13 @@ ordem correta é ditada pelo problema**, não pela conveniência algébrica.
 > **inteira**, entre parênteses.
 
 > **Erro 3: confundir composição com multiplicação.** $f(g(x))$ não é
-> $f(x) \cdot g(x)$. O símbolo $\circ$ não é um produto.
+> $f(x) \times g(x)$. O símbolo $\circ$ não é um produto. Com $f(x)=x^2$ e
+> $g(x)=x+3$ em $x=1$: a composta dá 16 e o produto dá 4.
+
+> **Erro 3b: esquecer a interseção dos domínios nas operações aritméticas.** Em
+> $(f+g)(x)$, a entrada precisa servir para **as duas** funções. Com
+> $f(x)=\sqrt{x}$ e $g(x)=x-2$, a soma $\sqrt{x}+x-2$ só existe para
+> $x \ge 0$, embora a fórmula final não denuncie isso.
 
 > **Erro 4: supor que a ordem não muda nada.** Soma e multiplicação de números
 > são comutativas; composição não é. Desconto antes do imposto e depois dele dão
@@ -319,18 +482,24 @@ ordem correta é ditada pelo problema**, não pela conveniência algébrica.
 > das peças e as peças dependem das horas, a composta útil é $C(P(h))$. A outra
 > ordem produz uma fórmula sem significado.
 
-## 11. Perguntas de verificação
+## 12. Perguntas de verificação
 
 1. Em $f(g(x))$, qual das duas funções age primeiro?
 2. Por que a ordem do desconto e do imposto muda o valor pago?
 3. Por que a diferença entre as duas ordens é sempre R\$ 3, qualquer que seja o
    preço?
-4. Por que $f(g(x))$ não é $f(x) \cdot g(x)$?
+4. Por que $f(g(x))$ não é $f(x) \times g(x)$?
 5. Como se descobre o domínio de uma composta?
 6. Por que $\sqrt{x^2+1}$ tem domínio igual a todos os reais, se a raiz é
    exigente?
 7. Como se reconhece, numa fórmula, qual é a função “de dentro”?
-8. Que relação existe entre composição e as transformações da página 5.7?
+8. Que relação existe entre composição e as transformações de gráficos?
+9. Qual é a diferença **estrutural** entre $(f+g)(x)$ e $(f \circ g)(x)$, em
+   termos de por onde o $x$ passa?
+10. Por que $f+g$ e $g+f$ são sempre a mesma função, enquanto $f \circ g$ e
+    $g \circ f$ em geral não são?
+11. Por que o domínio de $\frac{f}{g}$ pode ser menor que a interseção dos
+    domínios de $f$ e $g$?
 
 <details>
 <summary>Respostas para conferência</summary>
@@ -359,11 +528,25 @@ ordem correta é ditada pelo problema**, não pela conveniência algébrica.
    dentro.
 8. Toda transformação horizontal é uma composição. $f(x-3)$ é $f$ composta com a
    função que subtrai 3, e $f(-x)$ é $f$ composta com a que troca o sinal. A
-   página 5.7 já usava composição sem dar o nome.
+   página de [transformações de gráficos](./transformacoes-de-graficos) já usava
+   composição sem dar o nome.
+9. Em $(f+g)(x)$, o **mesmo** $x$ entra nas duas máquinas, que trabalham lado a
+   lado, e só no fim os dois resultados são somados. Em $(f \circ g)(x)$, o $x$
+   entra só em $g$; o que sai de $g$ é que entra em $f$. As máquinas estão em
+   série, e a segunda nunca vê o $x$ original.
+10. Porque $f+g$ termina numa **soma de dois números**, e a soma de números é
+    comutativa: $f(x)+g(x)$ e $g(x)+f(x)$ são o mesmo número para cada $x$. Na
+    composição não há dois números sendo combinados — há um número atravessando
+    duas máquinas. Trocar a ordem muda o que a segunda máquina recebe, e por
+    isso muda o resultado.
+11. Porque, além de a entrada precisar servir para as duas funções, ela não pode
+    zerar o denominador. Esse é um impedimento novo, que não vem de nenhum dos
+    dois domínios: em $\frac{\sqrt{x}}{x-2}$, o valor 2 é aceito por $\sqrt{x}$
+    e por $x-2$, e mesmo assim sai do domínio do quociente.
 
 </details>
 
-## 12. Exercícios
+## 13. Exercícios
 
 ### 1. Reconhecimento
 
@@ -373,34 +556,47 @@ ordem correta é ditada pelo problema**, não pela conveniência algébrica.
    &nbsp; b) $\sqrt{x + 7}$ &nbsp; c) $\lvert 3x \rvert$ &nbsp; d)
    $\frac{1}{x^2 + 1}$
 3. Escreva, em notação de composição, “aplicar $g$ e depois $f$”.
+4. Ainda com $f(x) = x^2$ e $g(x) = x+3$, calcule em $x = 2$: a) $(f+g)(2)$
+   &nbsp; b) $(f-g)(2)$ &nbsp; c) $(f \times g)(2)$ &nbsp; d)
+   $\left(\frac{f}{g}\right)(2)$ &nbsp; e) $(f \circ g)(2)$
 
 ### 2. Explicação
 
-4. Explique por que a ordem das operações muda o valor pago no problema da loja.
-5. Explique por que $f(g(x))$ e $f(x) \cdot g(x)$ são coisas diferentes, com um
+5. Explique por que a ordem das operações muda o valor pago no problema da loja.
+6. Explique por que $f(g(x))$ e $f(x) \times g(x)$ são coisas diferentes, com um
    exemplo.
-6. Um colega escreveu, para $f(x) = x^2$ e $g(x) = x+3$, que
+7. Um colega escreveu, para $f(x) = x^2$ e $g(x) = x+3$, que
    $f(g(x)) = x^2 + 9$. Aponte o erro e corrija.
+8. Explique por que o domínio de $(f+g)$ é a **interseção** dos domínios de $f$
+   e $g$, e por que o de $\frac{f}{g}$ pode ser ainda menor.
 
 ### 3. Aplicação direta
 
-7. Com $f(x) = 2x - 1$ e $g(x) = x^2$, encontre as fórmulas de: a) $f(g(x))$
+9. Com $f(x) = 2x - 1$ e $g(x) = x^2$, encontre as fórmulas de: a) $f(g(x))$
    &nbsp; b) $g(f(x))$
-8. Com $f(x) = \sqrt{x}$ e $g(x) = x - 5$, encontre $f(g(x))$ e $g(f(x))$ com os
-   respectivos domínios.
-9. Escreva $h(x) = (3x + 1)^5$ como composição de duas funções.
+10. Com $f(x) = \sqrt{x}$ e $g(x) = x - 5$, encontre $f(g(x))$ e $g(f(x))$ com os
+    respectivos domínios.
+11. Escreva $h(x) = (3x + 1)^5$ como composição de duas funções.
+12. Com $f(x) = x^2 - 1$ e $g(x) = x + 1$, escreva $(f+g)(x)$, $(f-g)(x)$,
+    $(f \times g)(x)$ e $\left(\frac{f}{g}\right)(x)$. Simplifique o quociente
+    e diga o domínio dele.
 
 ### 4. Variação
 
-10. Com $d(p) = p - 30$ e $t(q) = 1{,}1q$, calcule $t(d(250))$ e $d(t(250))$, e
+13. Com $d(p) = p - 30$ e $t(q) = 1{,}1q$, calcule $t(d(250))$ e $d(t(250))$, e
     confirme que a diferença é R\$ 3.
-11. Sejam $f(x) = \frac{1}{x}$ e $g(x) = x - 2$. Encontre $f(g(x))$, o domínio,
+14. Sejam $f(x) = \frac{1}{x}$ e $g(x) = x - 2$. Encontre $f(g(x))$, o domínio,
     e explique de onde vem a restrição.
-12. Encontre uma função $g$ tal que $f(g(x)) = \sqrt{2x+1}$, sabendo que
+15. Encontre uma função $g$ tal que $f(g(x)) = \sqrt{2x+1}$, sabendo que
     $f(u) = \sqrt{u}$.
+16. Uma oficina vende $x$ peças por lote. O preço cai com o tamanho do lote, de
+    modo que a receita é $R(x) = x(100 - 2x)$, e o custo é
+    $C(x) = 200 + 20x$. a) Escreva o lucro $L = R - C$ na forma $ax^2+bx+c$.
+    b) Qual é o lote de lucro máximo, e quanto ele rende? c) Confira o resultado
+    de (b) calculando $R$ e $C$ separadamente naquele lote.
 
 <details>
-<summary>Dica para o 11</summary>
+<summary>Dica para o 14</summary>
 
 A fórmula final terá um denominador. Pergunte que valor de $x$ faz esse
 denominador se anular — e note que essa restrição vem da **segunda** máquina,
@@ -410,21 +606,25 @@ não da primeira.
 
 ### 5. Problema misto
 
-13. Uma fábrica produz $P(h) = 12h$ peças em $h$ horas, e o custo de $n$ peças é
+17. Uma fábrica produz $P(h) = 12h$ peças em $h$ horas, e o custo de $n$ peças é
     $C(n) = 40n + 500$ reais. a) Escreva o custo em função das horas. b) Calcule
     para 8 horas, conferindo pelos dois caminhos. c) Explique por que $P(C(n))$
     não tem significado neste problema.
-14. Uma temperatura em graus Celsius se converte para Fahrenheit por
+18. Uma temperatura em graus Celsius se converte para Fahrenheit por
     $F(c) = \frac{9c}{5} + 32$. Um sensor registra a temperatura em Celsius como
     $c(t) = 20 + 2t$, com $t$ em horas após as 6h. a) Escreva a temperatura em
     Fahrenheit em função de $t$. b) Calcule a temperatura em Fahrenheit às 9h.
 
 ### 6. Justificativa
 
-15. Mostre que, se $f(x) = x + a$ e $g(x) = x + b$, então $f(g(x)) = g(f(x))$.
+19. Mostre que, se $f(x) = x + a$ e $g(x) = x + b$, então $f(g(x)) = g(f(x))$.
     Por que estas comutam, se em geral a composição não comuta?
-16. Explique por que a restrição de domínio de uma composta pode não aparecer na
+20. Explique por que a restrição de domínio de uma composta pode não aparecer na
     fórmula simplificada, dando um exemplo.
+21. Sejam $f(x) = a_1x + b_1$ e $g(x) = a_2x + b_2$ duas funções afins, com
+    $a_1 \neq 0$ e $a_2 \neq 0$. a) Mostre que $f+g$ é afim. b) Mostre que
+    $f \times g$ é **quadrática**. c) O que isso diz sobre “combinar funções de
+    uma família sempre devolve a mesma família”?
 
 <details>
 <summary>Respostas para conferência</summary>
@@ -436,51 +636,85 @@ não da primeira.
    c) dentro $3x$, fora $\lvert u \rvert$ &nbsp; d) dentro $x^2+1$, fora
    $\frac{1}{u}$.
 3. $(f \circ g)(x) = f(g(x))$. A que age primeiro fica **dentro**.
-4. Porque o imposto de 10% incide sobre bases diferentes. Com o desconto antes,
+4. Com $f(2) = 4$ e $g(2) = 5$: a) $9$ &nbsp; b) $-1$ &nbsp; c) $20$ &nbsp; d)
+   $\frac{4}{5} = 0{,}8$ &nbsp; e) $f(5) = 25$. Repare que os cinco resultados
+   são diferentes, e que só o último não usa $f(2)$ — na composição, $f$ nunca
+   vê o 2.
+5. Porque o imposto de 10% incide sobre bases diferentes. Com o desconto antes,
    a base é R\$ 70; com o imposto antes, é R\$ 100, e o desconto é retirado
    depois de o valor já ter sido inflado. A diferença é o imposto sobre os 30
    reais de desconto.
-5. Compor é encadear; multiplicar é aplicar as duas ao mesmo valor e multiplicar
+6. Compor é encadear; multiplicar é aplicar as duas ao mesmo valor e multiplicar
    os resultados. Com $f(x) = x^2$ e $g(x) = x + 3$ em $x = 1$: a composta dá
    $f(4) = 16$, e o produto dá $1 \times 4 = 4$.
-6. Ele substituiu sem parênteses. O correto é $f(g(x)) = (x+3)^2 = x^2 + 6x + 9$
+7. Ele substituiu sem parênteses. O correto é $f(g(x)) = (x+3)^2 = x^2 + 6x + 9$
    — falta o dobro do produto. Conferindo em $x = 1$: $16$, e não $1 + 9 = 10$.
-7. a) $f(g(x)) = 2x^2 - 1$ &nbsp; b) $g(f(x)) = (2x-1)^2 = 4x^2 - 4x + 1$.
-8. $f(g(x)) = \sqrt{x-5}$, com $D = [5, +\infty[$; $g(f(x)) = \sqrt{x} - 5$, com
-   $D = [0, +\infty[$.
-9. $g(x) = 3x+1$ e $f(u) = u^5$, com $h = f \circ g$.
-10. $t(d(250)) = 1{,}1 \times 220 = 242$ reais; $d(t(250)) = 275 - 30 = 245$
+8. Porque, para somar $f(x)$ com $g(x)$, os **dois** números precisam existir:
+   uma entrada que sirva só para uma das funções não produz soma nenhuma. Por
+   isso a entrada tem de estar nos dois domínios ao mesmo tempo, que é a
+   definição de interseção. O quociente carrega uma exigência a mais, que não
+   vem de nenhum dos dois domínios: o denominador não pode ser zero. Em
+   $\frac{\sqrt{x}}{x-2}$, o 2 é aceito pelas duas funções e ainda assim sai.
+9. a) $f(g(x)) = 2x^2 - 1$ &nbsp; b) $g(f(x)) = (2x-1)^2 = 4x^2 - 4x + 1$.
+10. $f(g(x)) = \sqrt{x-5}$, com $D = [5, +\infty[$; $g(f(x)) = \sqrt{x} - 5$, com
+    $D = [0, +\infty[$.
+11. $g(x) = 3x+1$ e $f(u) = u^5$, com $h = f \circ g$.
+12. $(f+g)(x) = x^2 + x$; $(f-g)(x) = x^2 - x - 2$;
+    $(f \times g)(x) = (x^2-1)(x+1) = x^3 + x^2 - x - 1$. As três têm domínio
+    igual a todos os reais. Já o quociente:
+    $$\left(\frac{f}{g}\right)(x) = \frac{x^2-1}{x+1}
+    = \frac{(x-1)(x+1)}{x+1} = x - 1, \qquad x \neq -1.$$
+    O domínio é $\mathbb{R} \setminus \{-1\}$. O corte simplificou a escrita e
+    **não** devolveu o $-1$ ao domínio — é a lição da página de
+    [domínio e imagem](./dominio-e-imagem), e o gráfico dessa função é a reta
+    $y = x-1$ com um buraco em $(-1,-2)$.
+13. $t(d(250)) = 1{,}1 \times 220 = 242$ reais; $d(t(250)) = 275 - 30 = 245$
     reais. A diferença é 3, como em qualquer preço.
-11. $f(g(x)) = \frac{1}{x-2}$, com $D$ excluindo $x = 2$. A restrição vem de
+14. $f(g(x)) = \frac{1}{x-2}$, com $D$ excluindo $x = 2$. A restrição vem de
     $f$, que não aceita zero na entrada: como $g(2) = 0$, esse valor trava a
     segunda máquina. Repare que $g$ sozinha aceitaria o 2 sem problema.
-12. $g(x) = 2x + 1$. Assim $f(g(x)) = \sqrt{2x+1}$.
-13. a) $C(P(h)) = 40(12h) + 500 = 480h + 500$. &nbsp; b) Pela fórmula,
+15. $g(x) = 2x + 1$. Assim $f(g(x)) = \sqrt{2x+1}$.
+16. a) $L(x) = R(x) - C(x) = (100x - 2x^2) - (200 + 20x) = -2x^2 + 80x - 200$.
+    &nbsp; b) Como $a = -2 < 0$, há máximo, em
+    $x_v = -\frac{80}{2(-2)} = 20$ peças, com
+    $L(20) = -800 + 1600 - 200 = 600$ reais. &nbsp; c) Separadamente:
+    $R(20) = 20 \times 60 = 1200$ e $C(20) = 200 + 400 = 600$, cuja diferença é
+    600. Confere — e repare que o lucro máximo não é a receita máxima: $R$
+    sozinha teria vértice em $x = 25$.
+17. a) $C(P(h)) = 40(12h) + 500 = 480h + 500$. &nbsp; b) Pela fórmula,
     $480 \times 8 + 500 = 4340$ reais. Pelo caminho longo: $P(8) = 96$ peças e
     $C(96) = 3840 + 500 = 4340$. &nbsp; c) Porque $C(n)$ devolve **reais**, e
     $P$ espera receber **horas**. A composta $P(C(n))$ multiplicaria um valor em
     reais por 12 e chamaria o resultado de peças — as unidades não se encaixam.
-14. a)
+18. a)
     $F(c(t)) = \frac{9(20+2t)}{5} + 32 = \frac{180 + 18t}{5} + 32 = 3{,}6t + 68$.
     &nbsp; b) Às 9h temos $t = 3$, então
     $3{,}6 \times 3 + 68 = 10{,}8 + 68 = 78{,}8$ °F. Conferindo: $c(3) = 26$ °C,
     e $F(26) = \frac{234}{5} + 32 = 46{,}8 + 32 = 78{,}8$.
-15. $f(g(x)) = (x + b) + a = x + a + b$, e $g(f(x)) = (x + a) + b = x + a + b$.
+19. $f(g(x)) = (x + b) + a = x + a + b$, e $g(f(x)) = (x + a) + b = x + a + b$.
     São iguais. Elas comutam porque as duas operações são somas, e a soma de
     números é comutativa — a ordem em que se acrescenta $a$ e $b$ não importa. A
     composição em geral não comuta porque as funções costumam ser de tipos
     diferentes, como somar e multiplicar, e aí a ordem altera a base sobre a
     qual a segunda opera.
-16. Porque a exigência pode vir da **segunda** função aplicada a um valor
+20. Porque a exigência pode vir da **segunda** função aplicada a um valor
     intermediário, e o resultado simplificado nem sempre a exibe. Exemplo: com
     $f(u) = \frac{1}{u}$ e $g(x) = x - 2$, a composta é $\frac{1}{x-2}$ — aqui a
     restrição ainda aparece. Já com $f(u) = (\sqrt{u})^2$ e $g(x) = x$, a
     composta simplifica para $x$, mas continua exigindo $x \ge 0$, que a fórmula
     final não mostra.
+21. a) $(f+g)(x) = (a_1+a_2)x + (b_1+b_2)$, que tem a forma $ax+b$: é afim.
+    &nbsp; b) Multiplicando,
+    $$(f \times g)(x) = a_1a_2x^2 + (a_1b_2 + a_2b_1)x + b_1b_2,$$
+    e o coeficiente de $x^2$ é $a_1a_2$, que não é zero porque nem $a_1$ nem
+    $a_2$ são. Pela definição da página de função quadrática, isso é uma
+    quadrática. &nbsp; c) Que a afirmação é **falsa**. Somar duas afins devolve
+    uma afim, mas multiplicá-las sobe de família. Cada operação tem o seu efeito
+    sobre o grau: a soma mantém o maior dos dois graus, e o produto os soma.
 
 </details>
 
-## 13. Revisão curta
+## 14. Revisão curta
 
 - **Compor** é aplicar duas funções em sequência: a saída de uma é a entrada da
   outra.
@@ -490,7 +724,13 @@ não da primeira.
   lugar da letra.
 - A composição **não é comutativa**: $f \circ g$ e $g \circ f$ costumam ser
   funções diferentes — como desconto antes e depois do imposto.
-- Compor **não é multiplicar**.
+- Compor **não é multiplicar**. Funções também se **somam, subtraem,
+  multiplicam e dividem** ponto a ponto — $(f+g)(x)=f(x)+g(x)$, e assim por
+  diante —, e o domínio dessas quatro é a **interseção** dos domínios, menos os
+  zeros do denominador no caso do quociente.
+- A diferença é estrutural: nas quatro operações aritméticas as duas máquinas
+  recebem o **mesmo** $x$ e os resultados se combinam no fim; na composição elas
+  ficam **em série**. Daí a soma de funções ser comutativa e a composição não.
 - O **domínio** exige duas condições: $x$ serve para $g$, e $g(x)$ serve para
   $f$. A segunda é a que escapa.
 - Para reconhecer uma composição numa fórmula, pergunte **o que se calcularia

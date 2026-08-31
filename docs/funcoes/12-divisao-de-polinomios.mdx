@@ -2,6 +2,8 @@
 title: Divisão de polinômios
 ---
 
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
 # Divisão de polinômios: o teorema do resto e Briot-Ruffini
 
 ## 1. Problema motivador: fatorar um polinômio de grau 3
@@ -48,7 +50,9 @@ essa divisão em uma linha de contas.
 - disso decorre o **teorema do fator**: $(x-a)$ divide $P$ exatamente quando $a$
   é raiz;
 - o **dispositivo de Briot-Ruffini** executa a divisão por $(x-a)$ com uma linha
-  de multiplicações e somas.
+  de multiplicações e somas;
+- a **divisão longa** é o método geral, que funciona com divisor de qualquer
+  grau — Briot-Ruffini é o atalho dela para o caso $(x-a)$.
 
 ## 3. Para que serve
 
@@ -86,7 +90,7 @@ Com polinômios é igual, trocando “tamanho” por “grau”:
 
 > Dividindo $P(x)$ por $D(x)$, obtemos $Q(x)$ e $R(x)$ com
 > $$
-> P(x) = D(x) \cdot Q(x) + R(x),
+> P(x) = D(x) \times Q(x) + R(x),
 > $$
 > onde o grau de $R$ é **menor** que o grau de $D$.
 
@@ -95,7 +99,7 @@ Quando o divisor é $(x - a)$, de grau 1, o resto tem grau menor que 1 — ou se
 próxima seção.
 
 E o caso que nos interessa é aquele em que o resto é **zero**: aí
-$P(x) = (x-a) \cdot Q(x)$, e conseguimos fatorar.
+$P(x) = (x-a) \times Q(x)$, e conseguimos fatorar.
 
 ## 6. O teorema do resto
 
@@ -105,20 +109,20 @@ Escreva a identidade da divisão por $(x-a)$, lembrando que o resto é uma
 constante $r$:
 
 $$
-P(x) = (x - a) \cdot Q(x) + r.
+P(x) = (x - a) \times Q(x) + r.
 $$
 
 Essa igualdade vale para **todo** $x$. Então vale, em particular, para $x = a$ —
 e esse valor foi escolhido a dedo, porque anula o primeiro parêntese:
 
 $$
-P(a) = \underbrace{(a - a)}_{0} \cdot Q(a) + r = 0 + r = r.
+P(a) = \underbrace{(a - a)}_{0} \times Q(a) + r = 0 + r = r.
 $$
 
 > **Teorema do resto.** O resto da divisão de $P(x)$ por $(x - a)$ é $P(a)$.
 
-Ou seja: para saber o resto, **não é preciso dividir**. Basta calcular o
-polinômio no ponto.
+Ou seja: para saber o resto, **não é preciso dividir**. Uma única substituição
+resolve — calcule o polinômio no ponto $a$, e o número que sair é o resto.
 
 **Exemplo.** Qual o resto de $R(x) = x^3 - 4x + 1$ dividido por $(x - 2)$?
 
@@ -132,8 +136,10 @@ $(-2)(0) + 1 = 1$; à esquerda, $1$. Confere.
 
 ### O teorema do fator
 
-A consequência que buscávamos sai de graça. Se o resto é zero, a divisão é exata
-e $(x-a)$ é fator. E o resto é $P(a)$. Logo:
+A consequência que buscávamos já está pronta, e não exige conta nova: ela sai de
+juntar dois fatos que já temos. O primeiro é que resto zero significa divisão
+exata, e portanto $(x-a)$ é fator. O segundo é que esse resto vale $P(a)$.
+Juntando os dois:
 
 > **Teorema do fator.** $(x - a)$ é fator de $P(x)$ **se, e somente se**,
 > $P(a) = 0$ — isto é, se $a$ é raiz.
@@ -209,6 +215,38 @@ $P(3) = 27 - 54 + 33 - 6 = 0$. Confere.
 > Achar **uma** raiz rebaixa o problema em um grau. Repetindo, um polinômio de
 > grau alto se decompõe em fatores do 1º e do 2º grau, que já sabemos tratar.
 
+Vale ver no desenho o que a fatoração acabou de revelar. Cada fator $(x - r)$
+corresponde a um ponto em que a curva cruza o eixo horizontal:
+
+<CartesianPlane
+  xMin={0.4}
+  xMax={3.8}
+  yMin={-1.6}
+  yMax={1.6}
+  xUnit={108}
+  yUnit={88}
+  yStep={0.5}
+  functions={[{f: (x) => x ** 3 - 6 * x ** 2 + 11 * x - 6, domain: [0.58, 3.42], tone: 1}]}
+  points={[
+    {at: [1, 0], tone: 2},
+    {at: [2, 0], tone: 2},
+    {at: [3, 0], tone: 2},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="P(x) = x³ − 6x² + 11x − 6, ampliado perto do eixo. Os três pontos de cruzamento são 1, 2 e 3 — exatamente os números que aparecem nos fatores (x−1)(x−2)(x−3)."
+/>
+
+O desenho e a fórmula dizem a mesma coisa em duas línguas. Onde a fórmula
+fatorada mostra o fator $(x-2)$, o gráfico mostra um cruzamento em $x = 2$;
+onde o teorema do resto calcula $P(2) = 0$, o gráfico mostra a curva na altura
+zero. **Achar um fator, achar uma raiz e achar um cruzamento são o mesmo
+trabalho**, feito com três ferramentas diferentes.
+
+Repare também na escala vertical: entre as raízes, a curva sobe e desce menos
+de meia unidade. Foi preciso ampliar bastante para os três cruzamentos caberem
+no mesmo desenho — testar valores ao acaso num polinômio assim tem grande chance
+de cair longe de qualquer raiz.
+
 ### Cuidado com os coeficientes ausentes
 
 O dispositivo lê os coeficientes **em ordem**, sem pular graus. Se algum grau
@@ -230,13 +268,172 @@ Quociente $x^2 + 2x + 0$, resto 1 — exatamente o que o teorema do resto previu
 Esquecer o zero é o segundo erro mais comum do dispositivo, e ele desloca todos
 os coeficientes seguintes.
 
-## 8. Exemplos resolvidos
+## 8. Quando o divisor não é $(x-a)$: a divisão longa
+
+Briot-Ruffini é rápido, e é limitado: ele só sabe dividir por $(x-a)$. A linha
+de multiplicações e somas do dispositivo depende de o divisor ter grau 1 e
+coeficiente principal 1 — mude isso e o mecanismo não se aplica.
+
+Só que dividir por um polinômio de grau maior aparece na prática. Ao estudar
+[funções racionais](./funcoes-racionais), na página depois da próxima, vamos
+precisar reescrever $\dfrac{x^2}{x+1}$ como “um polinômio mais um resto
+pequeno”, e é uma divisão que faz isso. Adiante, no cálculo, a mesma reescrita
+é o primeiro passo de várias técnicas de integração.
+
+O método geral existe, e ele é **a divisão longa que você aprendeu com
+números**, com as mesmas quatro instruções — divida, multiplique, subtraia,
+desça — trocando “tamanho” por “grau”.
+
+### A ideia, em números primeiro
+
+Reative como se divide $487$ por $32$. A pergunta a cada passo é: **quantas
+vezes o divisor cabe no que sobrou até agora?** Divide-se, multiplica-se,
+subtrai-se, desce-se o próximo algarismo, e para-se quando o que sobrou é
+**menor** que o divisor.
+
+Com polinômios muda uma coisa só: a comparação não é de tamanho, é de **grau**.
+Olha-se sempre o termo de maior grau, e para-se quando o que sobrou tem grau
+**menor** que o do divisor.
+
+### O procedimento
+
+Tome
+
+$$
+P(x) = 2x^3 - 3x^2 + 4x - 5,
+\qquad
+D(x) = x^2 - x + 2.
+$$
+
+**Passo 1 — divida os termos de maior grau.** O de $P$ é $2x^3$; o de $D$ é
+$x^2$. Como $\dfrac{2x^3}{x^2} = 2x$, o primeiro termo do quociente é $2x$.
+
+**Passo 2 — multiplique o divisor inteiro por esse termo.**
+
+$$
+2x \times (x^2 - x + 2) = 2x^3 - 2x^2 + 4x.
+$$
+
+**Passo 3 — subtraia esse produto do dividendo.**
+
+$$
+(2x^3 - 3x^2 + 4x - 5) - (2x^3 - 2x^2 + 4x) = -x^2 - 5.
+$$
+
+Repare no que a subtração conseguiu: o $2x^3$ **sumiu**. Era esse o objetivo do
+passo 1 — escolher o multiplicador que faz o maior grau cancelar. O que sobra
+tem grau 2, menor que os 3 do começo, e por isso o processo avança.
+
+**Passo 4 — repita com o que sobrou.** Agora o termo de maior grau é $-x^2$, e
+$\dfrac{-x^2}{x^2} = -1$. Esse é o segundo termo do quociente:
+
+$$
+-1 \times (x^2 - x + 2) = -x^2 + x - 2,
+$$
+
+$$
+(-x^2 - 5) - (-x^2 + x - 2) = -x - 3.
+$$
+
+**Passo 5 — pare quando o grau cair abaixo do divisor.** O que sobrou, $-x-3$,
+tem grau 1; o divisor tem grau 2. Não há mais o que dividir, e $-x-3$ é o
+**resto**.
+
+O mesmo trabalho, na disposição compacta em que ele costuma ser escrito — o
+dividendo à esquerda, o divisor à direita, o quociente embaixo do divisor, e
+cada linha subtraída já com os sinais trocados:
+
+$$
+\begin{array}{r r r r | l}
+2x^3 & -3x^2 & +4x & -5 & x^2 - x + 2 \\
+-2x^3 & +2x^2 & -4x & & \overline{\;2x - 1\;} \\
+\hline
+ & -x^2 & & -5 & \\
+ & +x^2 & -x & +2 & \\
+\hline
+ & & -x & -3 &
+\end{array}
+$$
+
+Cada coluna guarda um grau: $x^3$, $x^2$, $x$ e o termo independente. Manter as
+colunas alinhadas é o que impede somar um $x^2$ com um $x$ — é a mesma
+disciplina de alinhar unidades com unidades na divisão de números.
+
+O resultado se escreve na identidade de sempre:
+
+$$
+2x^3 - 3x^2 + 4x - 5 = (x^2 - x + 2)(2x - 1) + (-x - 3).
+$$
+
+**Conferindo em $x = 0$**: à esquerda, $-5$; à direita,
+$2 \times (-1) + (-3) = -5$. Confere. **E em $x = 1$**: à esquerda,
+$2 - 3 + 4 - 5 = -2$; à direita, $(1 - 1 + 2)(2 - 1) + (-1 - 3) = 2 - 4 = -2$.
+Confere.
+
+> Na divisão longa, o resto tem **grau menor que o do divisor** — que é a mesma
+> condição da seção 5, agora em ação. Dividindo por um polinômio de grau 2, o
+> resto tem grau 1 ou 0.
+
+### O caso em que o resto dá zero
+
+Quando o resto é zero, a divisão longa fatora, exatamente como Briot-Ruffini
+fazia. Divida $x^3 - 7x + 6$ por $x^2 + x - 6$:
+
+**Primeiro termo:** $\dfrac{x^3}{x^2} = x$, e
+$x(x^2 + x - 6) = x^3 + x^2 - 6x$. Subtraindo — e lembrando que o termo em $x^2$
+do dividendo é **zero**:
+
+$$
+(x^3 + 0x^2 - 7x + 6) - (x^3 + x^2 - 6x) = -x^2 - x + 6.
+$$
+
+**Segundo termo:** $\dfrac{-x^2}{x^2} = -1$, e
+$-1(x^2 + x - 6) = -x^2 - x + 6$. Subtraindo:
+
+$$
+(-x^2 - x + 6) - (-x^2 - x + 6) = 0.
+$$
+
+Resto zero, quociente $x - 1$:
+
+$$
+x^3 - 7x + 6 = (x^2 + x - 6)(x - 1).
+$$
+
+**Conferindo**: $x^2 + x - 6$ fatora como $(x+3)(x-2)$, então
+$x^3 - 7x + 6 = (x+3)(x-2)(x-1)$, com raízes $-3$, 2 e 1. E de fato
+$1 - 7 + 6 = 0$, $8 - 14 + 6 = 0$ e $-27 + 21 + 6 = 0$. Confere.
+
+Repare no cuidado que reapareceu: o coeficiente do termo em $x^2$ é zero e
+**precisou entrar na conta**, do mesmo jeito que precisava entrar na linha do
+dispositivo. Alinhar colunas por grau é o que torna esse zero visível.
+
+### Briot-Ruffini é esta mesma conta, comprimida
+
+Vale ver que os dois métodos não são ideias diferentes. Divida
+$x^3 - 6x^2 + 11x - 6$ por $(x-1)$ pela divisão longa:
+
+- $\dfrac{x^3}{x} = x^2$; &nbsp; $x^2(x-1) = x^3 - x^2$; &nbsp; sobra
+  $-5x^2 + 11x - 6$;
+- $\dfrac{-5x^2}{x} = -5x$; &nbsp; $-5x(x-1) = -5x^2 + 5x$; &nbsp; sobra
+  $6x - 6$;
+- $\dfrac{6x}{x} = 6$; &nbsp; $6(x-1) = 6x - 6$; &nbsp; sobra $0$.
+
+Quociente $x^2 - 5x + 6$, resto 0 — os mesmos números $1,\ -5,\ 6,\ 0$ que a
+linha do dispositivo produziu na seção 7.
+
+> A divisão longa é o método **geral**; Briot-Ruffini é o atalho para o caso
+> particular $(x-a)$, em que cada passo se reduz a uma multiplicação e uma soma.
+> Use o dispositivo quando o divisor for $(x-a)$, e a divisão longa no resto dos
+> casos.
+
+## 9. Exemplos resolvidos
 
 ### Exemplo 1: resto sem dividir
 
 Qual o resto de $P(x) = 2x^3 - x^2 + 5$ dividido por $(x - 1)$?
 
-Pelo teorema do resto, basta calcular $P(1) = 2 - 1 + 5 = 6$. O resto é **6**.
+Pelo teorema do resto, calculamos $P(1) = 2 - 1 + 5 = 6$. O resto é **6**.
 
 Repare que nem precisamos do quociente — a pergunta era só sobre o resto.
 
@@ -317,7 +514,7 @@ Confere.
 Repare como o teorema do resto transformou uma pergunta sobre divisibilidade
 numa equação do 1º grau.
 
-## 9. Erros comuns
+## 10. Erros comuns
 
 > **Erro 1: trocar o sinal da raiz.** Para testar o fator $(x + 3)$, calcule
 > $P(-3)$. O teorema fala de $(x - a)$, então $a$ é o valor que **anula** o
@@ -338,10 +535,20 @@ numa equação do 1º grau.
 > completamente fatorado. O trinômio que sobra costuma fatorar mais.
 
 > **Erro 6: usar Briot-Ruffini com divisor de grau maior que 1.** O dispositivo
-> serve só para $(x - a)$. Para dividir por $x^2 + 1$, é preciso a divisão
-> longa.
+> serve só para $(x - a)$. Para dividir por $x^2 + 1$, use a **divisão longa**
+> da seção 8.
 
-## 10. Perguntas de verificação
+> **Erro 7: parar a divisão longa cedo ou tarde demais.** O critério é o grau do
+> que sobrou: continue enquanto ele for **maior ou igual** ao grau do divisor, e
+> pare assim que ficar menor. Dividindo por um polinômio de grau 2, um resto de
+> grau 2 ainda pode ser dividido; um de grau 1 já é o resto final.
+
+> **Erro 8: desalinhar as colunas.** Cada coluna da divisão longa guarda um
+> grau. Escrever um termo em $x$ na coluna do $x^2$ faz a subtração somar
+> parcelas que não são semelhantes, e o resultado sai errado sem que nada
+> denuncie.
+
+## 11. Perguntas de verificação
 
 1. Por que a divisão de polinômios segue a mesma identidade da divisão de
    números?
@@ -352,12 +559,17 @@ numa equação do 1º grau.
 6. Por que os coeficientes ausentes precisam entrar como zero no dispositivo?
 7. Por que achar uma raiz “rebaixa o problema em um grau”?
 8. Se o resto de $P(x)$ por $(x-3)$ é 7, o que se pode afirmar sobre $P(3)$?
+9. Na divisão longa, como se escolhe cada termo do quociente?
+10. Qual é o critério para parar a divisão longa, e por que ele é o análogo de
+    “o resto é menor que o divisor” na divisão de números?
+11. Dividindo um polinômio de grau 5 por um de grau 2, que graus podem ter o
+    quociente e o resto?
 
 <details>
 <summary>Respostas para conferência</summary>
 
 1. Porque a estrutura é a mesma: procura-se quantas vezes o divisor cabe no
-   dividendo e o que sobra. A identidade $P = D \cdot Q + R$ é idêntica à de
+   dividendo e o que sobra. A identidade $P = D \times Q + R$ é idêntica à de
    números; só a condição sobre o resto muda, de “menor que o divisor” para “de
    **grau** menor que o divisor”.
 2. Porque o divisor $(x-a)$ tem grau 1, e o resto precisa ter grau **menor** que
@@ -378,10 +590,21 @@ numa equação do 1º grau.
    fatoração ou Bhaskara.
 8. Que $P(3) = 7$. Pelo teorema do resto, o resto da divisão por $(x-3)$ **é** o
    valor do polinômio em 3. E, como não é zero, 3 não é raiz.
+9. Dividindo o termo de **maior grau** do que sobrou pelo termo de maior grau do
+   divisor. Essa escolha não é arbitrária: ela é exatamente o multiplicador que
+   faz o maior grau cancelar na subtração seguinte, e é o cancelamento que faz o
+   processo avançar.
+10. Para-se quando o grau do que sobrou fica **menor** que o grau do divisor. É
+    o análogo direto porque, com números, continuar dividindo só faz sentido
+    enquanto o que sobrou ainda comporta o divisor; com polinômios, “comportar”
+    virou “ter grau pelo menos igual”.
+11. O quociente tem grau $5 - 2 = 3$, porque num produto os graus se somam e o
+    produto precisa voltar ao grau 5. O resto tem grau **menor que 2**, ou seja,
+    1 ou 0 — ou o resto é zero, caso em que nem se fala em grau.
 
 </details>
 
-## 11. Exercícios
+## 12. Exercícios
 
 ### 1. Reconhecimento
 
@@ -390,31 +613,53 @@ numa equação do 1º grau.
 2. Escreva os coeficientes que entram no dispositivo, em ordem: a)
    $x^3 - 4x + 1$ &nbsp; b) $2x^4 + 3x^2 - 5$ &nbsp; c) $x^3 + x^2$
 3. Qual valor testar para saber se $(x + 5)$ é fator de um polinômio?
+4. Para cada divisor, diga se Briot-Ruffini serve ou se é preciso a divisão
+   longa: a) $(x-7)$ &nbsp; b) $(x^2+x+1)$ &nbsp; c) $(x+2)$ &nbsp; d)
+   $(x^3-1)$
 
 ### 2. Explicação
 
-4. Explique por que o resto da divisão por $(x-a)$ é uma constante.
-5. Demonstre o teorema do resto substituindo $x = a$ na identidade da divisão.
-6. Explique por que esquecer um coeficiente zero estraga o dispositivo.
+5. Explique por que o resto da divisão por $(x-a)$ é uma constante.
+6. Demonstre o teorema do resto substituindo $x = a$ na identidade da divisão.
+7. Explique por que esquecer um coeficiente zero estraga o dispositivo.
+8. Na divisão longa, cada termo do quociente sai da divisão dos termos de
+   **maior** grau. Explique por que dividir quaisquer outros dois termos não
+   faria o processo avançar.
 
 ### 3. Aplicação direta
 
-7. Verifique se $(x-1)$ é fator de $P(x) = x^3 - 6x^2 + 11x - 6$ e, em caso
+9. Verifique se $(x-1)$ é fator de $P(x) = x^3 - 6x^2 + 11x - 6$ e, em caso
    afirmativo, complete a fatoração.
-8. Divida $x^3 - 4x + 1$ por $(x-2)$ usando Briot-Ruffini e escreva a identidade
-   completa.
-9. $(x+2)$ é fator de $P(x) = x^3 + 3x^2 - 4$? Justifique e, se for, fatore
-   completamente.
+10. Divida $x^3 - 4x + 1$ por $(x-2)$ usando Briot-Ruffini e escreva a identidade
+    completa.
+11. $(x+2)$ é fator de $P(x) = x^3 + 3x^2 - 4$? Justifique e, se for, fatore
+    completamente.
+12. Use a divisão longa para dividir $x^3 + 2x^2 - 5x - 6$ por $x^2 - x - 2$.
+    Depois fatore o divisor e escreva $P$ como produto de três fatores do 1º
+    grau.
+13. Use a divisão longa para dividir $x^4 + 3x^2 - 2$ por $x^2 + 1$, e escreva a
+    identidade completa.
+
+<details>
+<summary>Dica para o 13</summary>
+
+Antes de armar a conta, escreva o dividendo com **todos** os graus, inclusive os
+que valem zero: $x^4 + 0x^3 + 3x^2 + 0x - 2$. Sem isso as colunas saem
+desalinhadas.
+
+</details>
 
 ### 4. Variação
 
-10. Fatore $P(x) = x^3 - 7x + 6$ completamente, testando primeiro os valores
+14. Fatore $P(x) = x^3 - 7x + 6$ completamente, testando primeiro os valores
     $1$, $-1$, $2$ e $-2$.
-11. Determine $k$ para que $x^3 + kx - 10$ seja divisível por $(x-2)$.
-12. Determine $m$ para que o resto de $x^3 + mx^2 - 3$ por $(x+1)$ seja 2.
+15. Determine $k$ para que $x^3 + kx - 10$ seja divisível por $(x-2)$.
+16. Determine $m$ para que o resto de $x^3 + mx^2 - 3$ por $(x+1)$ seja 2.
+17. Um polinômio de grau 6 é dividido por um de grau 3. Que grau tem o
+    quociente? E que graus o resto pode ter?
 
 <details>
-<summary>Dica para o 12</summary>
+<summary>Dica para o 16</summary>
 
 O resto por $(x+1)$ é o valor do polinômio no ponto que anula o parêntese.
 Calcule esse valor, deixe o $m$ aparecer, e iguale ao resto pedido.
@@ -423,19 +668,22 @@ Calcule esse valor, deixe o $m$ aparecer, e iguale ao resto pedido.
 
 ### 5. Problema misto
 
-13. O volume de uma caixa é $V(x) = x^3 - 9x^2 + 20x$ cm³. a) Fatore $V$
+18. O volume de uma caixa é $V(x) = x^3 - 9x^2 + 20x$ cm³. a) Fatore $V$
     completamente. b) Dê as raízes e interprete-as. c) Qual é o domínio da
     situação?
-14. Um polinômio de grau 3 tem raízes 2, $-1$ e 4, e coeficiente principal 1. a)
+19. Um polinômio de grau 3 tem raízes 2, $-1$ e 4, e coeficiente principal 1. a)
     Escreva sua forma fatorada. b) Expanda para a forma somada. c) Verifique que
     $P(2) = 0$ usando a forma expandida.
 
 ### 6. Justificativa
 
-15. Explique por que um polinômio de grau 3 com uma raiz conhecida pode sempre
+20. Explique por que um polinômio de grau 3 com uma raiz conhecida pode sempre
     ser completamente resolvido, enquanto um de grau 5 pode não ser.
-16. Mostre que, se $a$ é raiz de $P$, então $P(x) = (x-a)Q(x)$, e explique por
+21. Mostre que, se $a$ é raiz de $P$, então $P(x) = (x-a)Q(x)$, e explique por
     que o grau de $Q$ é uma unidade menor.
+22. Divida $x^3 + 2x^2 - 5x - 6$ por $(x-2)$ das duas maneiras — por
+    Briot-Ruffini e pela divisão longa — e compare os resultados. O que a
+    coincidência mostra sobre a relação entre os dois métodos?
 
 <details>
 <summary>Respostas para conferência</summary>
@@ -444,53 +692,94 @@ Calcule esse valor, deixe o $m$ aparecer, e iguale ao resto pedido.
    fator &nbsp; c) $P(-1) = -2 - 1 = -3$.
 2. a) $1,\ 0,\ -4,\ 1$ &nbsp; b) $2,\ 0,\ 3,\ 0,\ -5$ &nbsp; c) $1,\ 1,\ 0,\ 0$.
 3. O valor $-5$, que é o que anula $x + 5$.
-4. Porque o divisor tem grau 1, e a divisão exige que o resto tenha grau
+4. a) Briot-Ruffini serve: o divisor é $(x-a)$ com $a=7$. &nbsp; b) Divisão
+   longa: o divisor tem grau 2. &nbsp; c) Briot-Ruffini, com $a=-2$. &nbsp; d)
+   Divisão longa: o divisor tem grau 3.
+5. Porque o divisor tem grau 1, e a divisão exige que o resto tenha grau
    estritamente menor. Abaixo de 1 só há o grau 0, que é uma constante.
-5. Partindo de $P(x) = (x-a)Q(x) + r$, que vale para todo $x$, substitua
-   $x = a$: $P(a) = (a-a)Q(a) + r = 0 \cdot Q(a) + r = r$. Logo o resto é
+6. Partindo de $P(x) = (x-a)Q(x) + r$, que vale para todo $x$, substitua
+   $x = a$: $P(a) = (a-a)Q(a) + r = 0 \times Q(a) + r = r$. Logo o resto é
    $P(a)$.
-6. Porque o dispositivo identifica cada coeficiente pela **posição**, do maior
+7. Porque o dispositivo identifica cada coeficiente pela **posição**, do maior
    grau ao menor. Sem o zero, o coeficiente de grau menor ocuparia o lugar de um
    grau maior, e todas as multiplicações seguintes seriam feitas com os números
    errados.
-7. $P(1) = 1 - 6 + 11 - 6 = 0$, então **é** fator. O dispositivo com
+8. Porque o objetivo de cada passo é **fazer o maior grau desaparecer** na
+   subtração seguinte, e só o quociente dos termos de maior grau produz um
+   multiplicador que consegue isso. Dividindo dois termos quaisquer, o produto
+   não cancelaria o topo, o que sobrou continuaria com o mesmo grau, e o
+   processo não desceria nunca — a conta entraria em repetição sem fim.
+9. $P(1) = 1 - 6 + 11 - 6 = 0$, então **é** fator. O dispositivo com
    $1,\ -6,\ 11,\ -6$ dá quociente $x^2 - 5x + 6$ e resto 0. Fatorando o
    trinômio, $P(x) = (x-1)(x-2)(x-3)$.
-8. Com coeficientes $1,\ 0,\ -4,\ 1$ e raiz 2, o dispositivo dá $1,\ 2,\ 0$ e
-   resto 1. A identidade é $x^3 - 4x + 1 = (x-2)(x^2+2x) + 1$.
-9. $P(-2) = -8 + 12 - 4 = 0$, então **é** fator. O dispositivo com
-   $1,\ 3,\ 0,\ -4$ e raiz $-2$ dá quociente $x^2 + x - 2$, que fatora como
-   $(x+2)(x-1)$. Logo $P(x) = (x+2)^2(x-1)$.
-10. $P(1) = 1 - 7 + 6 = 0$: raiz. O dispositivo com $1,\ 0,\ -7,\ 6$ e raiz 1 dá
+10. Com coeficientes $1,\ 0,\ -4,\ 1$ e raiz 2, o dispositivo dá $1,\ 2,\ 0$ e
+    resto 1. A identidade é $x^3 - 4x + 1 = (x-2)(x^2+2x) + 1$.
+11. $P(-2) = -8 + 12 - 4 = 0$, então **é** fator. O dispositivo com
+    $1,\ 3,\ 0,\ -4$ e raiz $-2$ dá quociente $x^2 + x - 2$, que fatora como
+    $(x+2)(x-1)$. Logo $P(x) = (x+2)^2(x-1)$.
+12. Primeiro termo: $\frac{x^3}{x^2}=x$, e $x(x^2-x-2)=x^3-x^2-2x$; subtraindo,
+    sobra $3x^2 - 3x - 6$. Segundo termo: $\frac{3x^2}{x^2}=3$, e
+    $3(x^2-x-2)=3x^2-3x-6$; subtraindo, sobra **zero**. Então
+    $$x^3 + 2x^2 - 5x - 6 = (x^2-x-2)(x+3).$$
+    O divisor fatora como $(x-2)(x+1)$ — dois números de soma 1 e produto $-2$ —,
+    logo $P(x) = (x-2)(x+1)(x+3)$, com raízes 2, $-1$ e $-3$. Conferindo:
+    $P(2) = 8 + 8 - 10 - 6 = 0$. Confere.
+13. Escrevendo o dividendo completo, $x^4 + 0x^3 + 3x^2 + 0x - 2$: o primeiro
+    termo do quociente é $\frac{x^4}{x^2}=x^2$, e $x^2(x^2+1)=x^4+x^2$;
+    subtraindo, sobra $2x^2 + 0x - 2$. O segundo é $\frac{2x^2}{x^2}=2$, e
+    $2(x^2+1)=2x^2+2$; subtraindo, sobra $-4$, de grau 0, menor que o grau 2 do
+    divisor. Logo
+    $$x^4 + 3x^2 - 2 = (x^2+1)(x^2+2) - 4.$$
+    Conferindo em $x = 1$: à esquerda, $1 + 3 - 2 = 2$; à direita,
+    $2 \times 3 - 4 = 2$. Confere.
+14. $P(1) = 1 - 7 + 6 = 0$: raiz. O dispositivo com $1,\ 0,\ -7,\ 6$ e raiz 1 dá
     quociente $x^2 + x - 6$, que fatora como $(x+3)(x-2)$. Logo
     $P(x) = (x-1)(x-2)(x+3)$, com raízes 1, 2 e $-3$.
-11. $P(2) = 8 + 2k - 10 = 2k - 2$. Igualando a zero, $k = 1$. Conferindo:
+15. $P(2) = 8 + 2k - 10 = 2k - 2$. Igualando a zero, $k = 1$. Conferindo:
     $x^3 + x - 10$ em $x = 2$ dá $8 + 2 - 10 = 0$.
-12. O resto por $(x+1)$ é $P(-1) = -1 + m - 3 = m - 4$. Igualando a 2, vem
+16. O resto por $(x+1)$ é $P(-1) = -1 + m - 3 = m - 4$. Igualando a 2, vem
     $m = 6$. Conferindo: $x^3 + 6x^2 - 3$ em $x = -1$ dá $-1 + 6 - 3 = 2$.
-13. a) O fator comum $x$ sai de imediato: $V(x) = x(x^2 - 9x + 20)$, e o
+17. O quociente tem grau $6 - 3 = 3$, porque num produto os graus se somam e
+    $D \times Q$ precisa voltar ao grau 6. O resto tem grau **menor que 3**:
+    pode ser 2, 1 ou 0 — ou ser o polinômio nulo, se a divisão for exata.
+18. a) O fator comum $x$ sai de imediato: $V(x) = x(x^2 - 9x + 20)$, e o
     trinômio fatora como $(x-4)(x-5)$. Logo $V(x) = x(x-4)(x-5)$. &nbsp; b)
     Raízes 0, 4 e 5 — os cortes que produzem volume nulo, seja por altura zero
     ou por alguma dimensão da base se anular. &nbsp; c) O domínio é $\,]0, 4[$:
     a primeira dimensão a acabar é a que manda, e depois de 4 a fórmula
     produziria volume negativo.
-14. a) $P(x) = (x-2)(x+1)(x-4)$. &nbsp; b) Multiplicando os dois primeiros,
+19. a) $P(x) = (x-2)(x+1)(x-4)$. &nbsp; b) Multiplicando os dois primeiros,
     $(x^2 - x - 2)$; multiplicando por $(x-4)$: $x^3 - 5x^2 + 2x + 8$. &nbsp; c)
     $P(2) = 8 - 20 + 4 + 8 = 0$. Confere.
-15. Porque, dividindo o grau 3 por $(x-a)$, sobra um quociente de grau **2** — e
+20. Porque, dividindo o grau 3 por $(x-a)$, sobra um quociente de grau **2** — e
     toda equação do 2º grau se resolve por Bhaskara, sempre. Já num polinômio de
     grau 5, remover uma raiz deixa um quociente de grau 4, para o qual não há
     método elementar garantido: pode ser preciso encontrar outra raiz por
     tentativa, e ela pode nem ser racional.
-16. Pelo teorema do resto, o resto da divisão de $P$ por $(x-a)$ é $P(a)$; sendo
+21. Pelo teorema do resto, o resto da divisão de $P$ por $(x-a)$ é $P(a)$; sendo
     $a$ raiz, esse resto é zero, e a identidade $P(x) = (x-a)Q(x) + 0$ dá o
     resultado. O grau de $Q$ é uma unidade menor porque, num produto, os graus
     se somam: se $P$ tem grau $n$ e $(x-a)$ tem grau 1, então $Q$ precisa ter
     grau $n - 1$ para que o produto volte a ter grau $n$.
+22. **Briot-Ruffini**, com coeficientes $1,\ 2,\ -5,\ -6$ e raiz 2: baixa o 1;
+    $1 \times 2 + 2 = 4$; $4 \times 2 - 5 = 3$; $3 \times 2 - 6 = 0$. Quociente
+    $x^2 + 4x + 3$, resto 0.
+
+    **Divisão longa**: $\frac{x^3}{x}=x^2$ e $x^2(x-2)=x^3-2x^2$, sobrando
+    $4x^2 - 5x - 6$; depois $\frac{4x^2}{x}=4x$ e $4x(x-2)=4x^2-8x$, sobrando
+    $3x - 6$; por fim $\frac{3x}{x}=3$ e $3(x-2)=3x-6$, sobrando 0. Quociente
+    $x^2 + 4x + 3$, resto 0.
+
+    Os mesmos números, na mesma ordem. A coincidência mostra que **não são dois
+    métodos diferentes**: Briot-Ruffini é a divisão longa com o divisor $(x-a)$,
+    escrita sem repetir o que é sempre igual. Cada “multiplique pela raiz e
+    some” do dispositivo é um passo inteiro da divisão longa comprimido em uma
+    conta. Repare, de quebra, que $x^2+4x+3=(x+1)(x+3)$, o que reproduz a
+    fatoração do exercício 12.
 
 </details>
 
-## 12. Revisão curta
+## 13. Revisão curta
 
 - A divisão de polinômios segue a identidade $P(x) = D(x)Q(x) + R(x)$, com o
   resto de **grau menor** que o divisor.
@@ -500,13 +789,22 @@ Calcule esse valor, deixe o $m$ aparecer, e iguale ao resto pedido.
 - Atenção ao sinal: para testar $(x+3)$, calcule $P(-3)$.
 - **Briot-Ruffini** faz a divisão por $(x-a)$ em uma linha: baixe o primeiro
   coeficiente, multiplique pela raiz, some ao seguinte, repita.
+- Quando o divisor **não** é $(x-a)$, use a **divisão longa**: divida os termos
+  de maior grau, multiplique o divisor inteiro, subtraia, repita — e pare quando
+  o grau do que sobrou ficar menor que o do divisor.
+- Os dois não são métodos rivais: Briot-Ruffini é a divisão longa comprimida
+  para o caso $(x-a)$.
 - O **último** número é o resto; os anteriores são o quociente, de grau uma
   unidade menor.
 - **Coeficientes ausentes entram como zero.**
 - Achar uma raiz **rebaixa o problema em um grau** — e é assim que um polinômio
   de grau alto se decompõe em fatores tratáveis.
 
-Antes de avançar, verifique se você consegue dividir um cúbico por $(x-a)$ e
-explicar por que o resto é $P(a)$. Ficou, porém, uma pergunta sem resposta: no
-motivador, **testamos** $x = 1$ e deu certo — mas por sorte. A próxima página
-mostra como saber **quais** valores vale a pena testar.
+Antes de avançar, verifique se você consegue fazer duas coisas: dividir um
+cúbico por $(x-a)$ pelo dispositivo, explicando por que o resto é $P(a)$; e
+dividir um cúbico por um divisor de grau 2 pela divisão longa, sabendo dizer
+quando parar.
+
+Ficou, porém, uma pergunta sem resposta: no motivador, **testamos** $x = 1$ e
+deu certo — mas por sorte. A próxima página mostra como saber **quais** valores
+vale a pena testar.

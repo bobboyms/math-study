@@ -2,6 +2,8 @@
 title: Raízes racionais
 ---
 
+import NumberLine from '@site/src/components/NumberLine';
+
 # Raízes racionais: quais valores vale a pena testar
 
 ## 1. Problema motivador: por onde começar
@@ -94,9 +96,44 @@ candidatos são $\pm 1, \pm 2, \pm 3, \pm 6$ — oito, e não mais.
 **Conferindo**: as raízes eram 1, 2 e 3, e o produto é 6. Todas dividem 6, como
 previsto.
 
-Quando o coeficiente principal não é 1, aparecem raízes fracionárias, e o
-denominador delas também é controlado — pelo coeficiente principal. É o que o
-teorema geral formaliza.
+### E quando o coeficiente principal não é 1
+
+Aqui a lista ganha frações, e vale ver **de onde vem o denominador** em vez de
+aceitá-lo pronto.
+
+Quando o coeficiente principal é 1, cada fator do 1º grau tem a forma $(x - r)$,
+com o $x$ sozinho. Quando não é, algum fator precisa carregar um número na
+frente do $x$ — é de lá que o coeficiente principal aparece. Veja no polinômio
+que esta página vai resolver:
+
+$$
+2x^3 - 3x^2 - 8x - 3 = (x+1)(2x+1)(x-3).
+$$
+
+**De onde vem o 2 da frente?** Multiplicando os três termos de maior grau,
+$x \times 2x \times x = 2x^3$. O único fator que contribui com um número
+diferente de 1 é o $(2x+1)$ — e é justamente ele que produz uma raiz
+fracionária, porque $2x + 1 = 0$ dá $x = -\frac{1}{2}$.
+
+**De onde vem o $-3$ do fim?** Multiplicando os três termos constantes:
+$1 \times 1 \times (-3) = -3$.
+
+Agora olhe as três raízes, cada uma escrita como $\frac{p}{q}$:
+
+| Fator | Raiz $\frac{p}{q}$ | $p$ divide $-3$? | $q$ divide 2? |
+|---|---|:---:|:---:|
+| $(x+1)$ | $\frac{-1}{1}$ | sim | sim |
+| $(2x+1)$ | $\frac{-1}{2}$ | sim | sim |
+| $(x-3)$ | $\frac{3}{1}$ | sim | sim |
+
+O padrão é este: **o numerador de cada raiz vem dos termos constantes**, cujo
+produto é o termo independente; **o denominador vem dos números na frente dos
+$x$**, cujo produto é o coeficiente principal. Como cada um é um pedaço de um
+produto, cada um divide o total.
+
+É essa observação que o teorema geral transforma em enunciado — e ele vale mesmo
+quando o polinômio não fatora bonito assim, o que a demonstração completa
+garante.
 
 ## 6. O teorema das raízes racionais
 
@@ -147,6 +184,31 @@ Oito candidatos. Infinitos números viraram uma lista que cabe numa linha — e
 repare que $\frac{1}{2}$ e $\frac{3}{2}$ jamais ocorreriam a quem testa só
 inteiros.
 
+Vale ver esse encolhimento desenhado. Antes do teorema, qualquer ponto da reta
+era candidato; depois dele, sobraram oito:
+
+<NumberLine
+  min={-4}
+  max={4}
+  unit={46}
+  marks={[
+    {at: -3, tone: 2},
+    {at: -1.5, tone: 2},
+    {at: -1, tone: 2},
+    {at: -0.5, tone: 2},
+    {at: 0.5, tone: 2},
+    {at: 1, tone: 2},
+    {at: 1.5, tone: 2},
+    {at: 3, tone: 2},
+  ]}
+  caption="Os oito candidatos a raiz racional de S(x) = 2x³ − 3x² − 8x − 3: ±1, ±3, ±1/2 e ±3/2. Todo o resto da reta foi descartado sem uma única substituição."
+/>
+
+Repare no que o desenho **não** promete. Os oito pontos não são raízes: são os
+únicos lugares da reta onde uma raiz **racional** pode estar. Pode não haver
+nenhuma ali — e, mesmo assim, ainda pode existir raiz irracional em algum ponto
+não marcado. O teorema estreita a busca; quem decide é o teste.
+
 **Passo 4 — testar.** Comece pelos mais simples:
 
 | Candidato | $S(x)$ | |
@@ -185,9 +247,10 @@ $$
 **Conferindo em $x = 0$**: à esquerda, $-3$; à direita,
 $1 \times 1 \times (-3) = -3$. Confere.
 
-As três raízes — $-1$, $-\frac12$ e 3 — estão todas na lista de candidatos, como
-o teorema garantia. E uma delas é fracionária, o que confirma a necessidade dos
-denominadores.
+As três raízes — $-1$, $-\frac{1}{2}$ e 3 — estão todas na lista de candidatos, como
+o teorema garantia. Volte ao desenho dos oito pontos: três deles eram raízes, e
+os outros cinco não. Uma das três é fracionária, o que confirma a necessidade
+dos denominadores — testar só inteiros teria achado uma raiz e perdido duas.
 
 ## 8. Estratégias para testar menos
 
@@ -285,7 +348,7 @@ $$
 Quociente $3x^2 - 4x - 4$. Por Bhaskara, $\Delta = 16 + 48 = 64$ e
 $x = \frac{4 \pm 8}{6}$, dando $x = 2$ e $x = -\frac{2}{3}$.
 
-Raízes: $-1$, 2 e $-\frac23$ — todas na lista.
+Raízes: $-1$, 2 e $-\frac{2}{3}$ — todas na lista.
 
 ### Exemplo 4: descartar pelo sinal
 
@@ -351,7 +414,7 @@ Confere.
 > raiz estar justamente ali.
 
 > **Erro 2: esquecer os denominadores.** Quando o coeficiente principal não é 1,
-> há candidatos fracionários. Em $2x^3 - 3x^2 - 8x - 3$, a raiz $-\frac12$ nunca
+> há candidatos fracionários. Em $2x^3 - 3x^2 - 8x - 3$, a raiz $-\frac{1}{2}$ nunca
 > apareceria testando só inteiros.
 
 > **Erro 3: trocar $p$ com $q$.** O numerador divide o **termo independente**; o
@@ -379,6 +442,10 @@ Confere.
 6. Por que $P(1)$ é a soma dos coeficientes?
 7. Por que se deve rebaixar o grau assim que uma raiz aparece?
 8. Por que o teorema exige coeficientes inteiros?
+9. Numa fatoração como $(x+1)(2x+1)(x-3)$, de onde vem o coeficiente principal
+   do polinômio? E o termo independente?
+10. Por que o denominador de uma raiz racional tem de dividir o coeficiente
+    principal, e não o termo independente?
 
 <details>
 <summary>Respostas para conferência</summary>
@@ -410,6 +477,16 @@ Confere.
    inteiros. Com coeficientes fracionários, não faz sentido falar em “divisores
    do termo independente”. O conserto é multiplicar a equação toda pelo mmc dos
    denominadores antes de aplicar o teorema.
+9. O **coeficiente principal** vem do produto dos termos de maior grau de cada
+   fator: $x \times 2x \times x = 2x^3$. O **termo independente** vem do produto
+   dos termos constantes: $1 \times 1 \times (-3) = -3$. Cada um é um produto, e
+   por isso cada pedaço dele o divide.
+10. Porque o denominador de uma raiz é o número que aparece **na frente do $x$**
+    no fator correspondente: a raiz $-\frac{1}{2}$ veio de $(2x+1)$, e o 2 do
+    denominador é o mesmo 2 daquele fator. Como os números da frente se
+    multiplicam para formar o coeficiente principal, cada um deles o divide. O
+    termo independente é formado pelos outros pedaços dos fatores — os termos
+    constantes —, e é por isso que ele controla os **numeradores**.
 
 </details>
 
@@ -468,14 +545,18 @@ atalho: repare que só aparecem potências pares de $x$.)
     Verifique em $(x-1)(x-2)(x-3)$.
 15. Um colega quer aplicar o teorema a $\frac{1}{2}x^3 + x - 3$. Explique o que
     ele precisa fazer antes, e por quê.
+16. O polinômio $3x^2 - 5x - 2$ fatora como $(3x+1)(x-2)$. a) Confirme
+    multiplicando. b) Diga as duas raízes na forma $\frac{p}{q}$. c) Mostre, em
+    cada uma, que $p$ divide o termo independente e $q$ divide o coeficiente
+    principal.
 
 <details>
 <summary>Respostas para conferência</summary>
 
 1. a) Divisores de 3 sobre divisores de 1: $\pm 1, \pm 3$. &nbsp; b) Divisores
-   de 3 sobre divisores de 2: $\pm 1, \pm 3, \pm \frac12, \pm \frac32$. &nbsp;
+   de 3 sobre divisores de 2: $\pm 1, \pm 3, \pm \frac{1}{2}, \pm \frac{3}{2}$. &nbsp;
    c) Divisores de $-4$ sobre divisores de 3:
-   $\pm 1, \pm 2, \pm 4, \pm \frac13, \pm \frac23, \pm \frac43$.
+   $\pm 1, \pm 2, \pm 4, \pm \frac{1}{3}, \pm \frac{2}{3}, \pm \frac{4}{3}$.
 2. Os numeradores vêm dos divisores de **6**: $\pm 1, \pm 2, \pm 3, \pm 6$. Os
    denominadores, dos divisores de **5**: $1$ e $5$.
 3. $1 - 3 + 0 + 2 - 5 = -5$. (O coeficiente de $x^2$ é zero.)
@@ -486,19 +567,19 @@ atalho: repare que só aparecem potências pares de $x$.)
    ter raiz irracional, como $x^3 - 2$, cuja raiz é $\sqrt[3]{2}$. O teorema
    decide sobre racionais, e só.
 6. Do **coeficiente principal**. Quando ele não é 1, a fatoração pode conter
-   fatores como $(2x+1)$, que produzem raiz $-\frac12$ — e o 2 desse fator é
+   fatores como $(2x+1)$, que produzem raiz $-\frac{1}{2}$ — e o 2 desse fator é
    justamente um divisor do coeficiente principal.
 7. a) Candidatos $\pm 1, \pm 2, \pm 3, \pm 6$. Como $P(1) = 0$, dividindo
    obtemos $x^2 + x - 6$, e $P(x) = (x-1)(x-2)(x+3)$. &nbsp; b) Mesmos
    candidatos. $P(1) = 0$, e dividindo sai $x^2 - 5x + 6$, logo
    $P(x) = (x-1)(x-2)(x-3)$.
-8. Candidatos $\pm 1, \pm 3, \pm \frac12, \pm \frac32$. Como $S(-1) = 0$,
+8. Candidatos $\pm 1, \pm 3, \pm \frac{1}{2}, \pm \frac{3}{2}$. Como $S(-1) = 0$,
    dividindo obtemos $2x^2 - 5x - 3$, cujas raízes por Bhaskara são 3 e
-   $-\frac12$. As raízes de $S$ são $-1$, $3$ e $-\frac12$, e
+   $-\frac{1}{2}$. As raízes de $S$ são $-1$, $3$ e $-\frac{1}{2}$, e
    $S(x) = (x+1)(2x+1)(x-3)$.
 9. $P(-1) = -3 - 1 + 8 - 4 = 0$. Dividindo, o quociente é $3x^2 - 4x - 4$, com
-   $\Delta = 64$ e raízes $\frac{4 \pm 8}{6}$, isto é, 2 e $-\frac23$. As raízes
-   são $-1$, 2 e $-\frac23$.
+   $\Delta = 64$ e raízes $\frac{4 \pm 8}{6}$, isto é, 2 e $-\frac{2}{3}$. As raízes
+   são $-1$, 2 e $-\frac{2}{3}$.
 10. Candidatos $\pm 1, \pm 2$. Calculando: $-1$, $-3$, $6$ e $-10$ — nenhum
     zera. Logo não há raiz racional. A raiz real é $\sqrt[3]{2} \approx 1{,}26$,
     que é irracional.
@@ -513,10 +594,10 @@ atalho: repare que só aparecem potências pares de $x$.)
     $V(3) = 3 \times 1 \times (-1) = -3$, negativo — sem significado físico, e
     por isso 3 está fora do domínio.
 13. a) Divisores de 6 sobre divisores de 2:
-    $\pm 1, \pm 2, \pm 3, \pm 6, \pm \frac12, \pm \frac32$. &nbsp; b)
+    $\pm 1, \pm 2, \pm 3, \pm 6, \pm \frac{1}{2}, \pm \frac{3}{2}$. &nbsp; b)
     $P(2) = 16 + 4 - 26 + 6 = 0$. Dividindo por $(x-2)$, o quociente é
     $2x^2 + 5x - 3$, com $\Delta = 25 + 24 = 49$ e raízes $\frac{-5 \pm 7}{4}$,
-    isto é, $\frac12$ e $-3$. As raízes são 2, $\frac12$ e $-3$. &nbsp; c) Só as
+    isto é, $\frac{1}{2}$ e $-3$. As raízes são 2, $\frac{1}{2}$ e $-3$. &nbsp; c) Só as
     positivas: 2 m e 0,5 m. Uma medida negativa não descreve comprimento nenhum.
 14. Multiplicando $(x-r_1)(x-r_2)(x-r_3)$, o termo sem $x$ é o produto dos três
     termos constantes: $(-r_1)(-r_2)(-r_3) = -r_1r_2r_3$. Comparando com o
@@ -527,6 +608,11 @@ atalho: repare que só aparecem potências pares de $x$.)
     obtendo $x^3 + 2x - 6$. O teorema exige coeficientes inteiros porque se
     apoia em divisibilidade, que só faz sentido entre inteiros. Multiplicar por
     uma constante não altera as raízes, então o conserto é seguro.
+16. a) $(3x+1)(x-2) = 3x^2 - 6x + x - 2 = 3x^2 - 5x - 2$. Confere. &nbsp; b)
+    $3x + 1 = 0$ dá $x = -\frac{1}{3}$, e $x - 2 = 0$ dá $x = \frac{2}{1}$. &nbsp; c)
+    Para $-\frac{1}{3}$: $p = -1$ divide $-2$, e $q = 3$ divide 3. Para $\frac{2}{1}$:
+    $p = 2$ divide $-2$, e $q = 1$ divide 3. As duas estão na lista de
+    candidatos, que é $\pm 1, \pm 2, \pm \frac{1}{3}, \pm \frac{2}{3}$.
 
 </details>
 

@@ -44,6 +44,10 @@ entrada.
 - a **função inversa** de $f$, escrita $f^{-1}$, desfaz o que $f$ faz;
 - para achar a fórmula: escreva $y = f(x)$, **isole o $x$** e troque os nomes;
 - nem toda função tem inversa — só as que **não repetem saídas**;
+- quando a função repete, o conserto é **restringir o domínio**, e a escolha do
+  trecho é uma decisão, não uma lei;
+- o **domínio de $f^{-1}$ é a imagem de $f$**, e não se lê na fórmula da
+  inversa;
 - os gráficos de $f$ e $f^{-1}$ são **espelhos** em relação à reta $y = x$.
 
 Por exemplo, $F(c) = \frac{9c}{5}+32$ tem inversa
@@ -97,8 +101,8 @@ recebe a saída e devolve a entrada original.
     {f: (x) => x, domain: [-1, 9], tone: 0, dashed: true},
   ]}
   points={[
-    {at: [3, 7], label: '(3,\\ 7)', tone: 1, place: 'above-left'},
-    {at: [7, 3], label: '(7,\\ 3)', tone: 2, place: 'below-right'},
+    {at: [3, 7], label: '(3,\\ 7)', tone: 1, dx: -34, dy: -14},
+    {at: [7, 3], label: '(7,\\ 3)', tone: 2, dx: 32, dy: 24},
   ]}
   axisLabels={['x', 'y']}
   caption="f(x) = 2x + 1 e sua inversa. O ponto (3, 7) de uma vira (7, 3) na outra — as duas curvas são espelhos na reta tracejada y = x."
@@ -145,9 +149,33 @@ No gráfico, isso tem um teste visual, irmão do teste da reta vertical:
 > **Teste da reta horizontal:** $f$ tem inversa se, e somente se, nenhuma reta
 > horizontal cruza seu gráfico em mais de um ponto.
 
-A parábola falha: a horizontal na altura 9 a corta em $x = 3$ e $x = -3$. Faz
-sentido — refletir a parábola na reta $y = x$ produziria uma curva deitada, que
-falharia no teste da **vertical** e portanto nem seria função.
+A parábola falha, e o desenho mostra por quê:
+
+<CartesianPlane
+  xMin={-4}
+  xMax={4}
+  yMin={-1.5}
+  yMax={11}
+  xUnit={42}
+  yUnit={22}
+  yStep={2}
+  functions={[{f: (x) => x * x, domain: [-3.4, 3.4], tone: 1}]}
+  lines={[{m: 0, n: 9, dashed: true, tone: 2}]}
+  points={[
+    {at: [-3, 9], tone: 2},
+    {at: [3, 9], tone: 2},
+  ]}
+  labels={[{at: [-2, 10.2], math: 'y = 9', tone: 2, dy: 0}]}
+  axisLabels={['x', 'y']}
+  caption="A reta horizontal y = 9 corta a parábola em dois pontos, −3 e 3. Como a altura 9 vem de duas entradas, a máquina reversa não teria como escolher qual devolver."
+/>
+
+A horizontal na altura 9 corta a curva em $x = 3$ e $x = -3$. Faz sentido —
+refletir a parábola na reta $y = x$ produziria uma curva deitada, que falharia
+no teste da **vertical** e portanto nem seria função.
+
+Repare que qualquer outra altura positiva daria o mesmo problema: o teste falha
+não num ponto isolado, mas em toda a metade de cima do eixo vertical.
 
 ### O conserto: restringir o domínio
 
@@ -161,11 +189,66 @@ f(x) = x^2 \text{ com } x \ge 0
 f^{-1}(y) = \sqrt{y}.
 $$
 
+Com a restrição, as duas curvas viram o par de espelhos de sempre:
+
+<CartesianPlane
+  xMin={-1}
+  xMax={6}
+  yMin={-1}
+  yMax={6}
+  xUnit={46}
+  yUnit={46}
+  functions={[
+    {f: (x) => x * x, domain: [0, 2.4], tone: 1},
+    {f: (x) => Math.sqrt(x), domain: [0, 6], tone: 2},
+    {f: (x) => x, domain: [-1, 6], tone: 0, dashed: true},
+  ]}
+  points={[
+    {at: [2, 4], label: '(2,\\ 4)', tone: 1, dx: -32, dy: -6},
+    {at: [4, 2], label: '(4,\\ 2)', tone: 2, dx: -30, dy: 22},
+  ]}
+  labels={[
+    {at: [1.9, 5.2], math: 'x^2', tone: 1, dy: 0},
+    {at: [5.2, 1.6], math: '\\sqrt{x}', tone: 2, dy: 0},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="x² restrito a x ≥ 0, em azul, e √x, em laranja. O ponto (2, 4) de uma vira (4, 2) na outra, e as duas curvas são espelhos na reta tracejada y = x."
+/>
+
+Repare que a metade esquerda da parábola **não** está no desenho, e essa
+ausência é a restrição em forma de figura: foi jogando fora aquele ramo que a
+função passou no teste da reta horizontal.
+
 Essa é a origem da convenção que a página de funções mencionou. $\sqrt{9} = 3$,
 e não $\pm 3$, porque a raiz foi definida como inversa da parábola **restrita ao
-lado direito**. A escolha do lado é arbitrária — poderia ter sido o esquerdo, e
-aí a raiz devolveria valores negativos —, mas alguma escolha precisava ser
-feita.
+lado direito**.
+
+### O outro ramo é uma escolha, não uma lei
+
+Vale ver que a escolha do lado direito foi mesmo uma escolha, e não uma
+necessidade. Restrinja $f(x) = x^2$ ao lado **esquerdo**, isto é, a $x \le 0$.
+Ali a função também nunca repete saídas: $-3$ e $-5$ dão 9 e 25, e nenhum par de
+entradas negativas distintas produz a mesma saída.
+
+Essa restrição também tem inversa, e ela é
+
+$$
+f^{-1}(x) = -\sqrt{x}.
+$$
+
+**Conferindo**: $f(-3) = 9$, e $f^{-1}(9) = -\sqrt{9} = -3$, que é a entrada de
+onde partimos. Confere. Compondo na outra ordem, $f^{-1}(f(-5)) = -\sqrt{25}
+= -5$. Confere.
+
+Então $x^2$ tem **duas** inversas possíveis, uma para cada metade — e nenhuma
+delas é a inversa de $x^2$ inteira, que não existe. O que a matemática fez foi
+padronizar: o símbolo $\sqrt{\ }$ ficou reservado à metade direita, para que
+todo mundo escreva a mesma coisa. Fosse a outra convenção, $\sqrt{9}$ valeria
+$-3$ e nada mais mudaria.
+
+> Restringir o domínio não é um truque para “consertar” a função. É **escolher
+> uma função nova**, com o mesmo formato e domínio menor, que passa no teste da
+> reta horizontal.
 
 ## 7. Como encontrar a fórmula
 
@@ -185,7 +268,7 @@ $$
 y = \frac{9c}{5} + 32.
 $$
 
-Desfazendo na ordem inversa — primeiro o $+32$, depois o $\times\frac95$:
+Desfazendo na ordem inversa — primeiro o $+32$, depois o $\times\frac{9}{5}$:
 
 $$
 y - 32 = \frac{9c}{5}
@@ -214,6 +297,59 @@ $\frac{5 \times 368}{9} \approx 204{,}4$ °C.
 **Verificando pela composição**:
 $F(176{,}7) = \frac{9 \times 176{,}7}{5} + 32 = 318{,}06 + 32 \approx 350$.
 Confere.
+
+### O domínio da inversa não se lê na fórmula dela
+
+Há um detalhe que o passo 3 esconde, e ele engana com frequência. A fórmula da
+inversa muitas vezes aceita mais números do que a inversa aceita de verdade —
+porque o domínio dela **não** vem da fórmula, e sim da **imagem** da função
+original.
+
+Tome $f(x) = \sqrt{x-1} + 2$. Da página de
+[domínio e imagem](./dominio-e-imagem): a raiz exige $x \ge 1$, e como
+$\sqrt{x-1}$ vai de 0 para cima, somar 2 leva as saídas de 2 para cima. Ou seja,
+
+$$
+D(f) = [1, +\infty[, \qquad \operatorname{Im}(f) = [2, +\infty[.
+$$
+
+Isolando o $x$, como manda o procedimento:
+
+$$
+y = \sqrt{x-1} + 2
+\ \Longrightarrow\
+y - 2 = \sqrt{x-1}
+\ \Longrightarrow\
+(y-2)^2 = x - 1
+\ \Longrightarrow\
+x = (y-2)^2 + 1,
+$$
+
+e trocando os nomes, $f^{-1}(x) = (x-2)^2 + 1$.
+
+Agora repare na armadilha. Essa fórmula é uma parábola, e uma parábola aceita
+**qualquer** número real. Calculada em $x = 0$, ela devolve
+$(0-2)^2 + 1 = 5$. Mas $f^{-1}(0)$ **não existe**: a inversa recebe saídas de
+$f$, e $f$ nunca produz 0 — a menor saída dela é 2. A fórmula continua
+calculando fora do lugar, exatamente como a fórmula da caixa de papelão
+continuava produzindo volumes negativos.
+
+> O domínio de $f^{-1}$ é a **imagem** de $f$, e a imagem de $f^{-1}$ é o
+> **domínio** de $f$. Isso não se lê na fórmula da inversa: vem de onde ela
+> nasceu.
+
+$$
+D(f^{-1}) = [2, +\infty[, \qquad \operatorname{Im}(f^{-1}) = [1, +\infty[.
+$$
+
+**Conferindo**: $f(5) = \sqrt4 + 2 = 4$, e $f^{-1}(4) = (4-2)^2 + 1 = 5$. Ida e
+volta ✓. E o menor valor do domínio da inversa, o 2, devolve
+$f^{-1}(2) = 0 + 1 = 1$, que é o menor valor do domínio de $f$ — as duas pontas
+também trocaram de lugar.
+
+Nos exemplos afins da próxima seção esse cuidado não aparece, porque uma reta
+inclinada tem domínio e imagem iguais a todos os reais, e não há nada a herdar.
+Ele volta a importar sempre que a função original for restrita.
 
 ## 8. Exemplos resolvidos
 
@@ -271,8 +407,9 @@ $$
 
 Então $A^{-1}(x) = \sqrt{\dfrac{x}{\pi}}$, que recebe a área e devolve o raio.
 
-**Por que existe**, se $r^2$ em geral não é invertível? Porque o domínio já é
-naturalmente restrito: **raio é positivo**. Não existe círculo de raio $-3$,
+**Por que existe**, se $r^2$ em geral não é invertível? Porque o domínio já vem
+restrito pelo próprio problema: **raio é positivo**. Não existe círculo de raio
+$-3$,
 então a função nunca repete saídas, e o problema de $x^2$ não aparece.
 
 Este é o padrão de quase todo problema aplicado: o contexto restringe o domínio
@@ -337,6 +474,11 @@ inversa. Como $f$ multiplica e depois soma, a inversa precisa subtrair primeiro.
 > $[0,+\infty[$ e imagem $[3,+\infty[$, então $f^{-1}$ tem domínio $[3,+\infty[$
 > e imagem $[0,+\infty[$.
 
+> **Erro 4b: ler o domínio da inversa na fórmula dela.** A inversa de
+> $\sqrt{x-1}+2$ é $(x-2)^2+1$, e essa parábola aceitaria qualquer número. Só
+> que o domínio dela é $[2,+\infty[$, herdado da **imagem** da função original.
+> A fórmula calcula fora do domínio sem avisar.
+
 > **Erro 5: inverter sem restringir quando é preciso.** Escrever “a inversa de
 > $x^2$ é $\sqrt{x}$” só está correto se ficar dito que o domínio foi restrito a
 > $x \ge 0$. Sem isso, a afirmação é falsa.
@@ -356,6 +498,11 @@ inversa. Como $f$ multiplica e depois soma, a inversa precisa subtrair primeiro.
 7. Por que funções sempre crescentes têm inversa?
 8. Por que a inversa da área do círculo existe sem precisar restringir nada
    explicitamente?
+9. Por que $x^2$ tem duas inversas possíveis, e por que o símbolo $\sqrt{\ }$
+   corresponde a só uma delas?
+10. De onde vem o domínio de $f^{-1}$, se não da fórmula dela?
+11. A inversa de $f(x)=\sqrt{x-1}+2$ é $(x-2)^2+1$. Por que $f^{-1}(0)$ não
+    existe, se a fórmula devolve 5 nesse ponto?
 
 <details>
 <summary>Respostas para conferência</summary>
@@ -387,7 +534,21 @@ inversa. Como $f$ multiplica e depois soma, a inversa precisa subtrair primeiro.
    inversa. O mesmo vale para as sempre decrescentes.
 8. Porque o contexto já restringe o domínio: **raio é positivo**. A função
    $\pi r^2$ restrita a $r > 0$ nunca repete saídas, então o problema de $x^2$
-   simplesmente não ocorre. É o que acontece na maioria dos problemas aplicados.
+   não chega a ocorrer. É o que acontece na maioria dos problemas aplicados.
+9. Porque cada metade da parábola, sozinha, não repete saídas. Restrita a
+   $x \ge 0$, a inversa é $\sqrt{x}$; restrita a $x \le 0$, é $-\sqrt{x}$. As
+   duas são legítimas, e nenhuma delas inverte a parábola inteira, que não tem
+   inversa. O símbolo $\sqrt{\ }$ ficou reservado à metade direita por
+   **convenção**, para que todo mundo escreva a mesma coisa — se a escolha
+   tivesse sido a outra, $\sqrt{9}$ valeria $-3$.
+10. Da **imagem** de $f$. A inversa recebe as saídas de $f$ e devolve as
+    entradas, então o que entra nela é exatamente o que saía da original. Pelo
+    mesmo motivo, a imagem de $f^{-1}$ é o domínio de $f$.
+11. Porque 0 não é uma saída de $f$: a menor altura que $\sqrt{x-1}+2$ atinge é
+    2. Como a inversa só aceita saídas de $f$, o 0 está fora do domínio dela. A
+    fórmula $(x-2)^2+1$ é uma parábola e continua calculando em qualquer número,
+    mas o resultado não significa nada ali — é a mesma situação da fórmula da
+    caixa de papelão produzindo volume negativo.
 
 </details>
 
@@ -401,53 +562,85 @@ inversa. Como $f$ multiplica e depois soma, a inversa precisa subtrair primeiro.
 2. Sabendo que $f(2) = 9$, quanto vale $f^{-1}(9)$?
 3. Uma função tem domínio $[0, 5]$ e imagem $[2, 12]$. Qual é o domínio e a
    imagem da inversa?
+4. Qual é a inversa de $f(x) = x^2$ restrita a $x \le 0$? E a $x \ge 0$?
 
 ### 2. Explicação
 
-4. Explique por que $f^{-1}$ não é o mesmo que $\frac{1}{f}$, com um exemplo
+5. Explique por que $f^{-1}$ não é o mesmo que $\frac{1}{f}$, com um exemplo
    numérico.
-5. Explique, com a analogia das meias e sapatos, por que a ordem das operações
+6. Explique, com a analogia das meias e sapatos, por que a ordem das operações
    se inverte.
-6. Explique por que $\sqrt{9}$ vale 3 e não $\pm 3$, usando a ideia de inversa.
+7. Explique por que $\sqrt{9}$ vale 3 e não $\pm 3$, usando a ideia de inversa.
+8. Um colega escreve: “a inversa de $\sqrt{x-1}+2$ é $(x-2)^2+1$, e como toda
+   parábola aceita qualquer número, o domínio da inversa é $\mathbb{R}$”.
+   Aponte o erro e diga qual é o domínio correto.
 
 ### 3. Aplicação direta
 
-7. Encontre a inversa de cada função: a) $f(x) = 2x + 1$ &nbsp; b)
+9. Encontre a inversa de cada função: a) $f(x) = 2x + 1$ &nbsp; b)
    $g(x) = 3x - 6$ &nbsp; c) $h(x) = \frac{x}{4} + 2$ &nbsp; d) $p(x) = x^3$
-8. Verifique, compondo, que sua resposta ao item (b) está correta.
-
-### 4. Variação
-
-9. Encontre a inversa de $F(c) = \frac{9c}{5} + 32$ e calcule quantos graus
-   Celsius correspondem a 212 °F e a 98,6 °F.
-10. Encontre a inversa de $A(r) = \pi r^2$ para $r > 0$, e calcule o raio de um
-    círculo de área $16\pi$.
-11. Alguém afirma que a inversa de $f(x) = 5x - 2$ é $g(x) = \frac{x}{5} - 2$.
-    Verifique compondo e corrija se necessário.
+10. Verifique, compondo, que sua resposta ao item (b) está correta.
+11. Para $f(x) = \sqrt{x+3}$: a) dê o domínio e a imagem de $f$. b) Encontre
+    $f^{-1}$. c) Dê o domínio e a imagem de $f^{-1}$, e explique de onde vêm.
 
 <details>
 <summary>Dica para o 11</summary>
+
+Determine primeiro o **domínio e a imagem de $f$**, antes de inverter. O domínio
+de $f^{-1}$ é a imagem de $f$, e não o que a fórmula da inversa aceitaria
+sozinha.
+
+</details>
+
+### 4. Variação
+
+12. Encontre a inversa de $F(c) = \frac{9c}{5} + 32$ e calcule quantos graus
+    Celsius correspondem a 212 °F e a 98,6 °F.
+13. Encontre a inversa de $A(r) = \pi r^2$ para $r > 0$, e calcule o raio de um
+    círculo de área $16\pi$.
+14. Alguém afirma que a inversa de $f(x) = 5x - 2$ é $g(x) = \frac{x}{5} - 2$.
+    Verifique compondo e corrija se necessário.
+
+<details>
+<summary>Dica para o 14</summary>
 
 Componha $g(f(x))$ e veja se sobra exatamente $x$. Se sobrar $x$ mais alguma
 coisa, a proposta desfez as operações fora de ordem.
 
 </details>
 
+15. A função $f(x) = x^2 - 4$ não tem inversa em todo o domínio real. a) Por
+    quê? b) Restrinja-a a $x \ge 0$ e encontre a inversa. c) Restrinja-a a
+    $x \le 0$ e encontre a outra inversa. d) Compare os domínios e as imagens
+    das duas.
+
 ### 5. Problema misto
 
-12. Uma operadora cobra $C(m) = 40 + 0{,}50m$ reais por $m$ minutos. a) Encontre
+16. Uma operadora cobra $C(m) = 40 + 0{,}50m$ reais por $m$ minutos. a) Encontre
     $C^{-1}$ e diga o que ela representa. b) Quantos minutos correspondem a uma
     conta de R\$ 95? c) Verifique a resposta pela função original.
-13. O volume de um cubo de aresta $a$ é $V(a) = a^3$. a) Encontre a inversa e
+17. O volume de um cubo de aresta $a$ é $V(a) = a^3$. a) Encontre a inversa e
     explique por que ela existe sem restrição extra. b) Qual é a aresta de um
     cubo de 64 cm³? c) E de um cubo de 1000 cm³?
 
 ### 6. Justificativa
 
-14. Mostre que, se $f(x) = ax + b$ com $a \neq 0$, então
+18. Mostre que, se $f(x) = ax + b$ com $a \neq 0$, então
     $f^{-1}(x) = \frac{x - b}{a}$, e verifique compondo.
-15. Explique por que os gráficos de $f$ e $f^{-1}$ se cruzam sobre a reta
-    $y = x$, quando se cruzam.
+19. Suponha que $f$ seja **crescente**. Mostre que, se um ponto $(a, b)$ está
+    ao mesmo tempo no gráfico de $f$ e no de $f^{-1}$, então $a = b$ — isto é, o
+    encontro acontece sobre a reta $y = x$.
+20. Explique por que o domínio de $f^{-1}$ tem de ser a imagem de $f$,
+    argumentando pelo que a máquina reversa recebe.
+
+<details>
+<summary>Dica para o 19</summary>
+
+Estar nos dois gráficos significa duas igualdades ao mesmo tempo: $f(a) = b$ e
+$f(b) = a$. Suponha que $a < b$ e aplique a definição de função crescente aos
+dois valores.
+
+</details>
 
 <details>
 <summary>Respostas para conferência</summary>
@@ -459,45 +652,92 @@ coisa, a proposta desfez as operações fora de ordem.
 2. $f^{-1}(9) = 2$. A inversa desfaz o caminho: se $f$ levou 2 até 9, ela leva 9
    de volta a 2.
 3. Domínio $[2, 12]$ e imagem $[0, 5]$ — os dois trocam de papel.
-4. Com $f(x) = 4x$: a inversa é $f^{-1}(x) = \frac{x}{4}$, então
+4. Restrita a $x \le 0$, a inversa é $f^{-1}(x) = -\sqrt{x}$; restrita a
+   $x \ge 0$, é $f^{-1}(x) = \sqrt{x}$. Nos dois casos o domínio da inversa é
+   $[0, +\infty[$, que é a imagem de $x^2$; o que muda é a imagem dela, que
+   acompanha o lado escolhido. Conferindo o primeiro caso: $f(-4) = 16$ e
+   $-\sqrt{16} = -4$.
+5. Com $f(x) = 4x$: a inversa é $f^{-1}(x) = \frac{x}{4}$, então
    $f^{-1}(8) = 2$. Já $\frac{1}{f(8)} = \frac{1}{32}$. São números
    completamente diferentes, e $\frac{1}{f}$ nem desfaz coisa alguma.
-5. Para desfazer uma sequência de ações, desmonta-se de trás para frente: quem
+6. Para desfazer uma sequência de ações, desmonta-se de trás para frente: quem
    calçou meias e depois sapatos precisa tirar os sapatos primeiro. Numa função
    que multiplica e depois soma, a última coisa feita foi somar — então é a
    primeira a ser desfeita, subtraindo.
-6. Porque a raiz foi definida como a **inversa de $x^2$ restrita a $x \ge 0$**.
+7. Porque a raiz foi definida como a **inversa de $x^2$ restrita a $x \ge 0$**.
    Sem essa restrição a parábola repete saídas e não tem inversa; com ela, cada
    saída vem de uma entrada só, e essa entrada é não negativa. Daí $\sqrt9 = 3$.
-7. a) $f^{-1}(x) = \frac{x-1}{2}$ &nbsp; b) $g^{-1}(x) = \frac{x+6}{3}$ &nbsp;
+8. O erro é ler o domínio da inversa **na fórmula dela**. O domínio de
+   $f^{-1}$ é a **imagem** de $f$, e $f(x) = \sqrt{x-1}+2$ produz apenas saídas
+   a partir de 2. Logo $D(f^{-1}) = [2, +\infty[$, e não todos os reais. A
+   parábola $(x-2)^2+1$ continua calculando fora disso — em $x=0$ ela devolve 5
+   —, mas o resultado não corresponde a nenhuma entrada devolvida por $f$.
+9. a) $f^{-1}(x) = \frac{x-1}{2}$ &nbsp; b) $g^{-1}(x) = \frac{x+6}{3}$ &nbsp;
    c) $h^{-1}(x) = 4(x - 2)$ &nbsp; d) $p^{-1}(x) = \sqrt[3]{x}$.
-8. $g^{-1}(g(x)) = \frac{(3x-6)+6}{3} = \frac{3x}{3} = x$. Confere.
-9. $F^{-1}(x) = \frac{5(x-32)}{9}$. Para 212 °F: $\frac{5 \times 180}{9} = 100$
-   °C. Para 98,6 °F: $\frac{5 \times 66{,}6}{9} = 37$ °C — a temperatura do
-   corpo humano.
-10. $A^{-1}(x) = \sqrt{\frac{x}{\pi}}$. Para área $16\pi$:
+10. $g^{-1}(g(x)) = \frac{(3x-6)+6}{3} = \frac{3x}{3} = x$. Confere.
+11. a) A raiz exige $x + 3 \ge 0$, então $D(f) = [-3, +\infty[$; e como
+    $\sqrt{\ }$ produz de 0 para cima, $\operatorname{Im}(f) = [0, +\infty[$.
+    &nbsp; b) De $y = \sqrt{x+3}$ vem $y^2 = x+3$ e $x = y^2 - 3$, logo
+    $f^{-1}(x) = x^2 - 3$. &nbsp; c) $D(f^{-1}) = [0, +\infty[$ e
+    $\operatorname{Im}(f^{-1}) = [-3, +\infty[$ — o domínio e a imagem de $f$
+    trocados. Repare que a fórmula $x^2 - 3$ aceitaria qualquer real e, em
+    $x = -2$, devolveria 1; mas $-2$ não é saída de $f$, então está fora do
+    domínio da inversa. Conferindo: $f(1) = 2$ e $f^{-1}(2) = 4 - 3 = 1$.
+12. $F^{-1}(x) = \frac{5(x-32)}{9}$. Para 212 °F: $\frac{5 \times 180}{9} = 100$
+    °C. Para 98,6 °F: $\frac{5 \times 66{,}6}{9} = 37$ °C — a temperatura do
+    corpo humano.
+13. $A^{-1}(x) = \sqrt{\frac{x}{\pi}}$. Para área $16\pi$:
     $\sqrt{\frac{16\pi}{\pi}} = \sqrt{16} = 4$. O raio é 4.
-11. Compondo: $g(f(x)) = \frac{5x-2}{5} - 2 = x - \frac{2}{5} - 2$, que **não**
+14. Compondo: $g(f(x)) = \frac{5x-2}{5} - 2 = x - \frac{2}{5} - 2$, que **não**
     é $x$. A proposta está errada. O correto é $f^{-1}(x) = \frac{x+2}{5}$;
     conferindo, $\frac{(5x-2)+2}{5} = x$.
-12. a) $C^{-1}(x) = \frac{x - 40}{0{,}50} = 2(x - 40)$. Ela recebe o **valor da
+15. a) Porque ela repete saídas: $f(3) = f(-3) = 5$, e a máquina reversa não
+    saberia qual devolver. &nbsp; b) Com $x \ge 0$: de $y = x^2 - 4$ vem
+    $x^2 = y + 4$ e $x = \sqrt{y+4}$, logo $f^{-1}(x) = \sqrt{x+4}$. &nbsp; c)
+    Com $x \le 0$, a raiz precisa devolver o valor negativo:
+    $f^{-1}(x) = -\sqrt{x+4}$. &nbsp; d) As duas inversas têm o **mesmo
+    domínio**, $[-4, +\infty[$, que é a imagem de $f$ nos dois casos — o menor
+    valor de $x^2-4$ é $-4$. O que muda é a imagem: $[0, +\infty[$ para a
+    primeira e $\,]-\infty, 0]$ para a segunda, refletindo o lado que foi
+    escolhido. Conferindo a segunda: $f(-3) = 5$ e $-\sqrt{5+4} = -3$.
+16. a) $C^{-1}(x) = \frac{x - 40}{0{,}50} = 2(x - 40)$. Ela recebe o **valor da
     conta** e devolve os **minutos falados**. &nbsp; b)
     $C^{-1}(95) = 2 \times 55 = 110$ minutos. &nbsp; c) Conferindo:
     $C(110) = 40 + 55 = 95$ reais.
-13. a) $V^{-1}(x) = \sqrt[3]{x}$. Ela existe sem restrição extra porque $x^3$ é
+17. a) $V^{-1}(x) = \sqrt[3]{x}$. Ela existe sem restrição extra porque $x^3$ é
     **sempre crescente**: nunca repete saídas, nem incluindo os negativos. Ao
     contrário do quadrado, o cubo preserva o sinal. &nbsp; b) $\sqrt[3]{64} = 4$
     cm. &nbsp; c) $\sqrt[3]{1000} = 10$ cm.
-14. De $y = ax + b$ vem $y - b = ax$ e, como $a \neq 0$, $x = \frac{y-b}{a}$.
+18. De $y = ax + b$ vem $y - b = ax$ e, como $a \neq 0$, $x = \frac{y-b}{a}$.
     Trocando os nomes, $f^{-1}(x) = \frac{x-b}{a}$. Compondo:
     $f^{-1}(f(x)) = \frac{(ax+b)-b}{a} = \frac{ax}{a} = x$. A exigência
     $a \neq 0$ é essencial: com $a = 0$ a função seria constante e repetiria
     todas as saídas.
-15. Porque um ponto comum aos dois gráficos satisfaz $y = f(x)$ e
-    $y = f^{-1}(x)$ ao mesmo tempo. Como os dois gráficos são reflexos um do
-    outro na reta $y = x$, um ponto que pertence aos dois precisa coincidir com
-    o seu próprio reflexo — e os únicos pontos que coincidem com o próprio
-    reflexo são os que estão **sobre** o espelho, isto é, sobre a reta $y = x$.
+19. Estar no gráfico de $f$ significa $f(a) = b$. Estar no de $f^{-1}$
+    significa $f^{-1}(a) = b$, e aplicar $f$ nos dois lados dá $a = f(b)$.
+    Guardamos então duas igualdades: $f(a) = b$ e $f(b) = a$.
+
+    Agora suponha $a < b$. Como $f$ é crescente, entradas maiores dão saídas
+    maiores, então $f(a) < f(b)$. Trocando pelos valores que acabamos de anotar,
+    isso é $b < a$ — o contrário do que supusemos. Logo $a < b$ é impossível.
+
+    Suponha agora $a > b$. Pelo mesmo caminho, $f(a) > f(b)$, ou seja, $b > a$ —
+    impossível também. Sobra $a = b$, e o ponto está sobre a reta $y = x$.
+
+    **A hipótese de $f$ ser crescente é essencial**, e vale ver o que acontece
+    sem ela. Tome $f(x) = -x^3$, que é decrescente, e cuja inversa é
+    $f^{-1}(x) = -\sqrt[3]{x}$. Conferindo o ponto $(1, -1)$: pela primeira,
+    $f(1) = -1$; pela segunda, $f^{-1}(1) = -\sqrt[3]{1} = -1$. O ponto está nos
+    dois gráficos, e não está sobre a reta $y = x$. Duas curvas simétricas em
+    relação a um espelho podem, sim, se cruzar fora dele — o que o espelho
+    garante é que cada cruzamento tenha o seu reflexo também nos dois gráficos,
+    e de fato $(-1, 1)$ também está nos dois.
+20. Porque a máquina reversa recebe **exatamente o que a máquina original
+    entrega**. Se um número nunca sai de $f$, não há de onde ele ter vindo, e a
+    inversa não teria o que devolver para ele. O conjunto das saídas de $f$ é a
+    imagem de $f$, e é ele, portanto, que forma o domínio de $f^{-1}$. Pelo
+    mesmo raciocínio na direção oposta, tudo o que $f^{-1}$ devolve é uma
+    entrada de $f$, então a imagem de $f^{-1}$ é o domínio de $f$.
 
 </details>
 
@@ -515,11 +755,16 @@ coisa, a proposta desfez as operações fora de ordem.
   $\sqrt{x}$ nasce como inversa de $x^2$ com $x \ge 0$.
 - Em problemas aplicados, o contexto costuma restringir sozinho: raio, volume e
   tempo são positivos.
-- **Domínio e imagem trocam de papel**, e os gráficos são espelhos na reta
-  $y = x$.
+- **Domínio e imagem trocam de papel**: o domínio de $f^{-1}$ é a imagem de
+  $f$. Isso **não** se lê na fórmula da inversa, que costuma aceitar mais
+  números do que deveria.
+- Restringir é escolher: $x^2$ tem duas inversas possíveis, $\sqrt{x}$ e
+  $-\sqrt{x}$, e o símbolo da raiz aponta para a primeira por convenção.
+- Os gráficos de $f$ e $f^{-1}$ são espelhos na reta $y = x$.
 - A conferência é sempre a mesma e é barata: componha as duas e veja se sobra
   $x$.
 
 Com esta página, o capítulo fecha a parte geral: você já sabe descrever, mover,
 encadear e desfazer funções. As próximas páginas aplicam isso a famílias
-específicas — começando pelos polinômios de grau maior que dois.
+específicas, e a primeira delas usa a inversa que acabamos de construir: as
+**funções potência**, em que a raiz aparece como a inversa da potência.

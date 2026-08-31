@@ -36,7 +36,10 @@ esconde duas fórmulas dentro de um símbolo só: o **módulo**.
 - a **função modular** $f(x) = \lvert x \rvert$ é o exemplo mais importante: seu
   gráfico é um **V**;
 - toda função modular **é** uma função por partes disfarçada — a definição de
-  valor absoluto já tinha dois casos.
+  valor absoluto já tinha dois casos;
+- uma função é **contínua** num ponto quando o traço passa por ele sem se
+  romper; numa função por partes, isso é as duas fórmulas darem o mesmo valor na
+  fronteira.
 
 ## 3. Para que serve
 
@@ -121,7 +124,7 @@ A chave agrupa as partes, e cada linha traz a fórmula e a condição.
     {f: (x) => 0.5 * x, domain: [0, 100], tone: 1},
     {f: (x) => 50 + 0.8 * (x - 100), domain: [100, 200], tone: 2},
   ]}
-  points={[{at: [100, 50], label: '(100,\\ 50)', tone: 3, place: 'above-left'}]}
+  points={[{at: [100, 50], label: '(100,\\ 50)', tone: 3, dx: -46, dy: -12}]}
   axisLabels={['kWh', 'R\\$']}
   caption="Duas retas coladas em 100 kWh. A segunda é mais íngreme, porque o kWh excedente custa mais."
 />
@@ -135,15 +138,56 @@ não tem salto — a conta não pula de repente quando se cruza a faixa.
 **A inclinação muda.** Antes de 100, o gráfico sobe R\$ 0,50 por kWh; depois,
 R\$ 0,80. É exatamente a diferença de tarifa, visível como uma dobra.
 
-**Há um bico em $x = 100$.** A curva é contínua, mas muda de direção
-bruscamente. Nenhuma função dada por uma fórmula polinomial faz isso.
+**Há um bico em $x = 100$.** A curva muda de direção bruscamente. Nenhuma
+função dada por uma fórmula polinomial faz isso.
 
 **Conferindo os valores do início**: $C(80) = 40$ pela primeira parte, e
 $C(150) = 50 + 0{,}80(50) = 90$ pela segunda. Confere.
 
-Nem toda função por partes é contínua, aliás. Se a distribuidora cobrasse uma
-taxa extra de R\$ 10 ao ultrapassar os 100 kWh, o gráfico daria um **salto** ali
-— e o consumidor teria interesse real em não cruzar a fronteira.
+### Continuidade: quando o traço não se rompe
+
+A primeira das três observações merece um nome, porque ele vai reaparecer no
+resto do curso e no cálculo inteiro.
+
+Quando as duas partes se encontram na fronteira, o gráfico atravessa aquele
+ponto **sem se romper**. Quando não se encontram, ele dá um salto: há um
+degrau, e o traço se parte em dois pedaços.
+
+> Uma função é **contínua** num ponto quando os valores dela, chegando pela
+> esquerda e pela direita, se aproximam do mesmo número — e esse número é o
+> valor da função ali. Ela é **contínua num intervalo** quando é contínua em
+> cada ponto dele. Quando isso falha em algum ponto, a função é
+> **descontínua** ali.
+
+Numa função por partes, a definição vira uma conta de duas linhas: calcule a
+fronteira pelas **duas** fórmulas e veja se dão o mesmo número.
+
+**Exemplo.** A conta de luz é contínua em $x = 100$, porque a primeira fórmula
+dá $0{,}50 \times 100 = 50$ e a segunda dá $50 + 0{,}80 \times 0 = 50$.
+
+**Contraexemplo, para delimitar.** Se a distribuidora cobrasse uma taxa extra de
+R\$ 10 ao ultrapassar os 100 kWh, a segunda fórmula viraria
+$60 + 0{,}80(x - 100)$, e na fronteira daria 60 contra os 50 da primeira. As
+duas partes não se encontrariam, e o gráfico daria um **salto** de 10 reais ali
+— o consumidor teria interesse real em não cruzar a linha. Essa função seria
+descontínua em $x = 100$, e contínua em todos os outros pontos.
+
+**E o bico?** Um bico **não** rompe o traço. Em $x = 100$ a conta de luz muda de
+direção, mas o valor continua o mesmo pelos dois lados, e por isso ela é
+contínua ali. Vale guardar a distinção, porque as duas coisas se parecem no
+desenho e o cálculo trata cada uma de um jeito:
+
+| | O traço se rompe? | Exemplo |
+|---|---|---|
+| **bico** | não — a função é contínua | a conta de luz em 100 kWh; o V de $\lvert x \rvert$ na origem |
+| **salto** | sim — a função é descontínua | a taxa extra de R\$ 10 na fronteira |
+
+A imagem de “desenhar sem tirar o lápis do papel” é um bom guia para o traço se
+romper ou não, e foi ela que a página de
+[domínio e imagem](./dominio-e-imagem) usou para garantir que a imagem era um
+intervalo cheio. Ela não é a definição — o cálculo vai precisar de uma versão
+mais exata, escrita com limites —, mas para tudo o que faremos aqui ela é
+suficiente.
 
 ## 7. A função modular
 
@@ -168,9 +212,9 @@ um **V**.
   xUnit={44}
   yUnit={44}
   functions={[{f: (x) => Math.abs(x), domain: [-4, 4], tone: 1}]}
-  points={[{at: [0, 0], label: '(0,\\ 0)', tone: 3, place: 'below-right'}]}
+  points={[{at: [0, 0], label: '(0,\\ 0)', tone: 3, dx: 0, dy: 38}]}
   axisLabels={['x', 'y']}
-  caption="O gráfico de |x|: duas semirretas encontrando-se num bico na origem. A altura sobre cada x é a distância de x até o zero."
+  caption="O gráfico do valor absoluto: duas semirretas encontrando-se num bico na origem. A altura sobre cada x é a distância de x até o zero."
 />
 
 O desenho confirma o que a página de valor absoluto dizia: a altura sobre cada
@@ -197,6 +241,38 @@ V inteiro subiu, a função nunca chega a zero.
 
 $-\lvert x \rvert$ reflete no eixo horizontal: o V vira um Λ, com **máximo** na
 origem.
+
+<CartesianPlane
+  xMin={-5}
+  xMax={6.5}
+  yMin={-4.5}
+  yMax={5.5}
+  xUnit={38}
+  yUnit={32}
+  functions={[
+    {f: (x) => Math.abs(x), domain: [-4, 4], tone: 0, dashed: true},
+    {f: (x) => Math.abs(x - 3), domain: [-0.5, 6], tone: 1},
+    {f: (x) => Math.abs(x) + 2, domain: [-3, 3], tone: 2},
+    {f: (x) => -Math.abs(x), domain: [-4, 4], tone: 3},
+  ]}
+  points={[
+    {at: [3, 0], tone: 1},
+    {at: [0, 2], tone: 2},
+  ]}
+  labels={[
+    {at: [-3.5, 4.6], math: '\\lvert x \\rvert', tone: 0, dy: 0},
+    {at: [4.6, 3], math: '\\lvert x-3 \\rvert', tone: 1, dy: 0},
+    {at: [0.9, 4.2], math: '\\lvert x \\rvert + 2', tone: 2, dy: 0},
+    {at: [-3.5, -3.5], math: '-\\lvert x \\rvert', tone: 3, dy: 18},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="O V básico, tracejado, e as três transformações. |x−3| leva o bico para (3, 0); |x|+2 leva o bico para (0, 2); −|x| vira o V de cabeça para baixo, com máximo na origem."
+/>
+
+Os três bicos resumem o que mudou. O de $\lvert x - 3 \rvert$ andou para o lado
+e continua na altura zero. O de $\lvert x \rvert + 2$ subiu e continua sobre o
+eixo vertical. O de $-\lvert x \rvert$ ficou onde estava, e o que mudou foi o
+sentido dos dois braços — de mínimo, ele virou máximo.
 
 ## 8. Reescrever um módulo sem barras
 
@@ -248,6 +324,37 @@ O primeiro passo é sempre **decidir qual linha usar**.
 
 Repare que esta função **salta** em $x = 2$: a primeira parte chega a 5, e a
 segunda começa em valores próximos de 4. O gráfico é descontínuo ali.
+
+<CartesianPlane
+  xMin={-1}
+  xMax={4.2}
+  yMin={-2}
+  yMax={17}
+  xUnit={56}
+  yUnit={16}
+  yStep={2}
+  functions={[
+    {f: (x) => 2 * x + 1, domain: [-1, 2], tone: 1},
+    {f: (x) => x * x, domain: [2.03, 4], tone: 2},
+  ]}
+  points={[
+    {at: [2, 5], label: '(2,\\ 5)', tone: 1, dx: -40, dy: -12},
+    {at: [2, 4], label: '(2,\\ 4)', tone: 2, dx: 46, dy: 16, open: true},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A função do Exemplo 1. Em x = 2 a primeira parte fecha em 5 (bolinha cheia) e a segunda começaria em 4 (bolinha vazia, que não pertence ao gráfico). O degrau de uma unidade entre os dois é o salto."
+/>
+
+As duas bolinhas contam a história. A **cheia**, em $(2,5)$, é o valor que a
+função realmente assume ali, porque a condição $x \le 2$ inclui o 2. A
+**vazia**, em $(2,4)$, marca onde a segunda parte *começaria* se o 2 estivesse
+nela — e ele não está, porque a condição é $x > 2$. Entre as duas há um degrau
+de uma unidade, e nenhum traço liga um lado ao outro.
+
+Compare com a conta de luz da seção 6, em que as duas partes se encontravam no
+mesmo ponto. Lá o gráfico tinha um **bico**; aqui ele tem um **salto**. São
+coisas diferentes: no bico a curva muda de direção sem se romper, e no salto ela
+se rompe.
 
 ### Exemplo 2: tirar as barras
 
@@ -347,6 +454,12 @@ $\,]5, 12]$ e $\,]12, +\infty[$. Agora cada peso cai em exatamente uma.
 > se encontrar. A conta de luz é contínua porque foi projetada assim, mas o
 > Exemplo 1 salta em $x = 2$.
 
+> **Erro 5b: confundir bico com salto.** No **bico** o traço não se rompe, e a
+> função é contínua — é o caso do V de $\lvert x \rvert$ na origem. No
+> **salto** o traço se parte, e a função é descontínua. Para decidir, calcule a
+> fronteira pelas duas fórmulas: valores iguais, bico; valores diferentes,
+> salto.
+
 > **Erro 6: esquecer que o bico é um ponto especial.** Na dobra, a função muda
 > de direção bruscamente. Mais adiante isso importa: é exatamente ali que o
 > cálculo encontra dificuldade.
@@ -362,6 +475,10 @@ $\,]5, 12]$ e $\,]12, +\infty[$. Agora cada peso cai em exatamente uma.
 7. Por que faz sentido que a conta de luz seja contínua na fronteira das faixas?
 8. Quantos zeros pode ter uma função da forma $\lvert x - a \rvert + k$? De que
    depende?
+9. O que significa dizer que uma função é **contínua** num ponto, e como se
+   testa isso numa função por partes?
+10. O gráfico de $\lvert x \rvert$ tem um bico na origem. Ele é contínuo ali?
+    Por quê?
 
 <details>
 <summary>Respostas para conferência</summary>
@@ -392,6 +509,15 @@ $\,]5, 12]$ e $\,]12, +\infty[$. Agora cada peso cai em exatamente uma.
    $k < 0$, o V desceu abaixo do eixo e o corta duas vezes. Se $k = 0$, o bico
    toca o eixo: um zero só. Se $k > 0$, o V inteiro está acima do eixo e não há
    zero nenhum.
+9. Significa que o traço passa por aquele ponto **sem se romper**: chegando
+   pelos dois lados, os valores se aproximam do mesmo número, e esse número é o
+   valor da função ali. Numa função por partes, testa-se calculando a fronteira
+   pelas **duas** fórmulas: se derem o mesmo valor, a função é contínua ali; se
+   derem valores diferentes, há um salto.
+10. **É contínuo, sim.** Bico e salto são coisas diferentes. Em $x = 0$, as duas
+    partes de $\lvert x \rvert$ dão o mesmo valor — a de baixo, $-0 = 0$; a de
+    cima, $0$ —, então o traço não se rompe. O que muda bruscamente ali é a
+    **direção**, não a altura.
 
 </details>
 
@@ -541,8 +667,13 @@ ali. Calcule o que cada fórmula dá em $x = 2$ e compare.
   para baixo.
 - Um V pode ter **dois, um ou nenhum** zero, conforme desça, toque ou fique
   acima do eixo.
-- Nem toda função por partes é **contínua**: as partes podem não se encontrar.
-  Em tarifas e impostos, a continuidade é uma escolha deliberada de projeto.
+- Uma função é **contínua** num ponto quando o traço passa por ele sem se
+  romper. Numa função por partes, o teste é calcular a fronteira pelas **duas**
+  fórmulas e ver se dão o mesmo número.
+- **Bico não é salto.** No bico a função continua contínua e só muda de
+  direção; no salto ela se rompe e é descontínua.
+- Nem toda função por partes é contínua: as partes podem não se encontrar. Em
+  tarifas e impostos, a continuidade é uma escolha deliberada de projeto.
 
 Antes de avançar, verifique se você consegue esboçar $\lvert x - 4 \rvert - 1$ e
 dizer seus zeros sem tabela. A próxima página trata de encaixar uma função
