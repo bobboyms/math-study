@@ -119,6 +119,11 @@ npm run clear   # limpa cache quando o start fica com conteúdo velho
 npm run quadro  # quadro branco do aluno em http://localhost:4123
 ```
 
+O site já não cabe no heap padrão do node: `npm run build` sozinho estoura com
+`Ineffective mark-compacts near heap limit`. Rode
+`NODE_OPTIONS=--max-old-space-size=10240 npm run build`, e `npm run clear`
+antes se vier de outros builds na mesma sessão. O deploy usa 12288.
+
 ## Caderno do aluno
 
 `caderno/` é onde o aluno resolve exercícios — não é conteúdo do curso e não
@@ -149,6 +154,12 @@ $$
 - **Em arquivos `.mdx`**, `{` e `<` no texto corrido são sintaxe JSX e quebram a
   compilação — escreva `\{` e `\<`. Dentro de `$...$` e `$$...$$` não há
   problema: `\frac{-b}{2a}` funciona normalmente.
+- **Nunca use `<` ou `>` num título (`##`), nem dentro de fórmula.** Aqui a
+  exceção acima não vale: o Docusaurus copia o texto do título para o índice
+  lateral **sem passar pelo KaTeX**, e o `<` cru chega ao minificador de HTML,
+  que falha com um erro de parse difícil de ligar à causa. Um título como
+  `## A cadeia $\sen x < x < \tg x$` derruba o build. Escreva a relação em
+  palavras: "seno, arco e tangente em ordem".
 
 ### Notação da casa
 
