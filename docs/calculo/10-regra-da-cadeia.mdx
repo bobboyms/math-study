@@ -1,0 +1,748 @@
+---
+title: "Regra da cadeia: a taxa de uma composição"
+---
+
+import FunctionMachine from '@site/src/components/FunctionMachine';
+
+# Regra da cadeia: a taxa de uma composição
+
+## 1. Problema motivador: o balão e o preço do quilômetro
+
+**Primeiro problema.** Um balão esférico está sendo inflado. O raio cresce a
+**2 cm por segundo**, num ritmo constante. Em que ritmo o **volume** cresce no
+instante em que o raio mede 10 cm?
+
+O volume de uma esfera de raio $r$ é $V = \frac{4}{3}\pi r^3$, fórmula da
+lição de [volumes e superfícies](../geometria/volumes-e-superficies). O que a
+pergunta quer é uma taxa em **centímetros cúbicos por segundo**. Mas a
+fórmula liga o volume ao **raio**, não ao tempo. E o dado do problema liga o
+raio ao tempo. Há duas ligações em série:
+
+- o tempo determina o raio (2 cm a cada segundo);
+- o raio determina o volume (pela fórmula).
+
+A resposta tem que atravessar as duas.
+
+**Segundo problema, mais simples.** Um carro gasta **0,08 litro por
+quilômetro** e o combustível custa **R\$ 6 por litro**. Quanto custa cada
+quilômetro rodado?
+
+Aqui a resposta sai de cabeça: R\$ 6 por litro vezes 0,08 litro por
+quilômetro dá **R\$ 0,48 por quilômetro**. Repare no que aconteceu com as
+unidades. O “litro” do primeiro fator cancelou com o “litro” do segundo, e
+sobrou reais por quilômetro:
+
+$$
+\frac{\text{reais}}{\text{litro}} \times \frac{\text{litro}}{\text{km}}
+= \frac{\text{reais}}{\text{km}}.
+$$
+
+Também aqui há duas ligações em série: o quilômetro determina o litro, e o
+litro determina o real. E a taxa da cadeia inteira foi o **produto** das duas
+taxas.
+
+O balão é a mesma situação, com uma diferença: a taxa do volume em relação ao
+raio não é um número fixo, porque o volume não cresce em linha reta com o
+raio. É uma derivada. Esta página mostra que o produto continua valendo, e
+resolve o balão com ele.
+
+## 2. Mapa das ideias
+
+- **função composta**: $f(g(x))$, a saída de $g$ entra em $f$; a lição de
+  composição chamou $g$ de função **de dentro** e $f$ de função **de fora**;
+- **regra da cadeia**: a derivada da composta é a derivada de fora, calculada
+  na saída de dentro, vezes a derivada de dentro:
+  $(f \circ g)'(x) = f'(g(x)) \times g'(x)$;
+- na notação de Leibniz, com $y = f(u)$ e $u = g(x)$:
+  $\frac{dy}{dx} = \frac{dy}{du} \times \frac{du}{dx}$;
+- **potência de função**: $(g^n)' = n\,g^{n-1}\,g'$, o caso mais frequente
+  da regra;
+- **cadeia de três**: com três camadas, o produto tem três fatores.
+
+## 3. Para que serve
+
+- taxas em cadeia: o custo depende da produção, a produção depende das horas
+  trabalhadas, e a pergunta é reais por hora;
+- conversão de unidades feita com derivadas: metros por segundo a partir de
+  metros por volta e voltas por segundo;
+- derivar qualquer função escrita como “alguma coisa elevada a um expoente”,
+  “raiz de alguma coisa”, “um sobre alguma coisa”;
+- é o que vai permitir derivar $\sen(3x)$, $e^{-0{,}2t}$ e $\ln(x^2+1)$ nas
+  duas lições seguintes;
+- e, lida ao contrário, é a técnica de substituição da Parte IV, que desfaz
+  derivadas.
+
+Dentro da matemática, ela fecha uma lista. Com soma, produto, quociente e
+agora composição, toda função montada a partir das funções básicas do curso
+pode ser derivada sem voltar à definição.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [composição de funções](../funcoes/composicao-de-funcoes): em
+$f(g(x))$, quem age primeiro?** Quem está mais perto do $x$: o $g$. Ele
+recebe $x$ e produz $g(x)$; só então $f$ recebe esse resultado. Em
+$\sqrt{x^2+1}$, a função de dentro é $x^2+1$ e a de fora é a raiz. E
+reconhecer as duas camadas numa fórmula é um passo que vale fazer com calma
+antes de derivar. Se ele estiver enferrujado, releia a seção “Reconhecer uma
+composição” daquela lição antes de seguir.
+
+**2. De [A derivada](./a-derivada): o que $\frac{dy}{dx}$ quer dizer?** A
+mesma coisa que $f'(x)$: o limite de $\frac{\Delta y}{\Delta x}$ quando
+$\Delta x$ encolhe. A lição avisou que não é uma fração comum, e que uma
+regra adiante ficaria mais legível com essa notação. A regra é esta.
+
+**3. De [regras de derivação](./regras-de-derivacao): qual é a derivada de
+$x^5$? E de $u^5$?** $5x^4$, pela regra da potência. E $5u^4$, pela mesma
+regra, se $u$ for a variável. O cuidado desta página é o que fazer quando $u$
+**não** é a variável, e sim uma função de $x$.
+
+**4. De [A derivada](./a-derivada): como conferir uma derivada com um
+número?** Com o quociente centrado $\frac{f(a+h)-f(a-h)}{2h}$ e $h = 0{,}001$.
+Cada derivada desta página passa por essa conferência.
+
+**5. De [volumes e superfícies](../geometria/volumes-e-superficies): qual é
+o volume da esfera?** $V = \frac{4}{3}\pi r^3$. Para $r = 10$ cm, isso dá
+$\frac{4000\pi}{3} \approx 4188{,}8$ cm³.
+
+O item 1 é o que decide tudo. A regra da cadeia é curta; o que dá trabalho é
+enxergar, numa fórmula, qual é a camada de dentro e qual é a de fora.
+
+## 5. Intuição: cada camada multiplica a variação que recebe
+
+Pense em duas correias transportadoras em série. A primeira recebe uma
+variação em $x$ e entrega uma variação em $u$. A segunda recebe essa variação
+em $u$ e entrega uma variação em $y$. Cada correia **amplia ou reduz** o que
+recebe por um fator fixo, que é a taxa dela. A variação que sai no fim é a
+variação que entrou multiplicada pelos dois fatores, um depois do outro.
+
+O exemplo do combustível é exatamente isso. Rodar 1 km a mais consome 0,08 L
+a mais (primeiro fator); consumir 0,08 L a mais custa $0{,}08 \times 6 = 0{,}48$
+real a mais (segundo fator). O quilômetro extra custou 0,48 real, e a conta
+foi um produto.
+
+Agora um caso em que a segunda taxa não é fixa. Tome $u = 3x + 1$ e
+$y = u^2$, ou seja, $y = (3x+1)^2$. Perto de $x = 1$, onde $u = 4$ e $y = 16$,
+dê um passo pequeno $\Delta x$ e acompanhe o que cada camada faz:
+
+| $\Delta x$ | $\Delta u$ | $\Delta y$ | $\frac{\Delta y}{\Delta u}$ | $\frac{\Delta u}{\Delta x}$ | $\frac{\Delta y}{\Delta x}$ |
+|---:|---:|---:|---:|---:|---:|
+| $0{,}1$ | $0{,}3$ | $2{,}49$ | $8{,}3$ | $3$ | $24{,}9$ |
+| $0{,}01$ | $0{,}03$ | $0{,}2409$ | $8{,}03$ | $3$ | $24{,}09$ |
+| $0{,}001$ | $0{,}003$ | $0{,}024009$ | $8{,}003$ | $3$ | $24{,}009$ |
+
+Leia uma linha. Com $\Delta x = 0{,}01$, a camada de dentro produz
+$\Delta u = 0{,}03$: triplicou a variação, porque a taxa de $3x+1$ é 3. A
+camada de fora recebeu $0{,}03$ e produziu $0{,}2409$: multiplicou por $8{,}03$,
+que é quase $2u = 8$, a taxa de $u^2$ em $u = 4$. A variação final, dividida
+pela inicial, deu $24{,}09$ — e $8{,}03 \times 3 = 24{,}09$. **A taxa da
+cadeia é o produto das taxas das camadas.** Conforme $\Delta x$ encolhe, as
+duas colunas do meio se aproximam de 8 e de 3, e a última se aproxima de 24.
+
+## 6. Modelo visual: as taxas escritas sobre as setas
+
+A figura das máquinas em série, da lição de composição, ganha uma anotação
+nova: sobre cada seta vai a taxa daquela etapa.
+
+<FunctionMachine
+  input="x"
+  steps={[
+    {op: '\\dfrac{du}{dx} = 3', value: 'u = 3x+1', tone: 1},
+    {op: '\\dfrac{dy}{du} = 2u', value: 'y = u^2', tone: 2},
+  ]}
+  caption="Duas etapas em série: x vira u = 3x + 1, e u vira y = u². Sobre cada seta, a taxa daquela etapa. A taxa total, de x até y, é o produto 3 × 2u."
+/>
+
+A leitura é da esquerda para a direita, como o número percorre a cadeia. A
+taxa total, de $x$ até $y$, é o produto do que está escrito nas duas setas:
+$3 \times 2u = 6u = 6(3x+1)$. Em $x = 1$, isso dá $6 \times 4 = 24$, o número
+de que a tabela se aproximava.
+
+Um detalhe importante está no $2u$ da segunda seta: a taxa da camada de fora
+é calculada **no valor que chega até ela**, que é $u = 3x+1$, e não em $x$.
+A máquina $u^2$ não sabe que existe um $x$; ela só vê o $u$ que recebeu.
+
+## 7. Ponte para a formalização: por que o produto é legítimo
+
+A tabela sugere que $\frac{\Delta y}{\Delta x}$ é o produto de
+$\frac{\Delta y}{\Delta u}$ por $\frac{\Delta u}{\Delta x}$. Isso não é
+coincidência: é uma identidade de frações, válida sempre que $\Delta u \neq 0$.
+Multiplicar uma fração por $\frac{\Delta u}{\Delta u}$ é multiplicar por 1, e
+não muda o valor:
+
+$$
+\frac{\Delta y}{\Delta x}
+= \frac{\Delta y}{\Delta x} \times \frac{\Delta u}{\Delta u}
+= \frac{\Delta y}{\Delta u} \times \frac{\Delta u}{\Delta x}.
+$$
+
+**O que muda na escrita:** a taxa de $x$ até $y$ passa a ser um produto de
+duas taxas, cada uma medindo uma camada. **O que permanece:** o valor do
+quociente, porque só multiplicamos por 1 e rearranjamos os fatores.
+
+Agora deixe $\Delta x$ encolher. A segunda fração, $\frac{\Delta u}{\Delta x}$,
+se aproxima de $g'(x)$: é a definição da derivada de $u = g(x)$. E, como $g$ é
+derivável, ela é contínua, o que a lição sobre [quando a derivada não
+existe](./quando-a-derivada-nao-existe) demonstrou. Continuidade significa
+que $\Delta u$ também encolhe quando $\Delta x$ encolhe. Por isso a primeira
+fração, $\frac{\Delta y}{\Delta u}$, se aproxima da derivada de $f$ calculada
+em $u$, isto é, $f'(g(x))$. O produto das duas se aproxima do produto dos
+limites, pela propriedade do produto da lição de [calculando
+limites](./calculo-de-limites).
+
+Uma honestidade que o texto deve a você: o argumento acima divide por
+$\Delta u$, e $\Delta u$ pode ser zero para alguns passos $\Delta x$ mesmo que
+$\Delta x \neq 0$ (quando $g$ fica parada por um instante). A demonstração
+completa contorna esse caso com um ajuste técnico que não muda o resultado;
+o curso aceita a regra com o argumento das frações, que é o que carrega a
+ideia.
+
+## 8. Formalização: a regra da cadeia
+
+> **Regra da cadeia.** Se $g$ é derivável em $x$ e $f$ é derivável em $g(x)$,
+> então a composta $f \circ g$ é derivável em $x$, e
+> $$
+> (f \circ g)'(x) = f'\big(g(x)\big) \times g'(x).
+> $$
+> Em palavras: **derivada de fora, calculada em dentro, vezes derivada de
+> dentro.**
+
+**Exemplo.** $y = (3x+1)^5$. A função de dentro é $g(x) = 3x+1$, com
+$g'(x) = 3$. A de fora é $f(u) = u^5$, com $f'(u) = 5u^4$. Então:
+
+$$
+y' = f'(g(x)) \times g'(x) = 5(3x+1)^4 \times 3 = 15(3x+1)^4.
+$$
+
+Conferindo com um número em $x = 1$: a fórmula dá $15 \times 4^4 = 3840$. O
+quociente centrado com $h = 0{,}001$ dá $3840{,}0$. Confere.
+
+**Contraexemplo, para delimitar o que a regra não é.** Tome $f(x) = x^2$ e
+$g(x) = 3x$, de modo que $f(g(x)) = (3x)^2 = 9x^2$. Sem a regra, pela
+potência, a derivada é $18x$. Compare com três contas:
+
+| Conta | Resultado | Bate com $18x$? |
+|---|---|---|
+| $f'(g(x)) \times g'(x) = 2(3x) \times 3$ | $18x$ | sim |
+| $f'(x) \times g'(x) = 2x \times 3$ | $6x$ | não |
+| $f'(g'(x)) = 2 \times 3$ | $6$ | não |
+
+A segunda linha calcula a derivada de fora em $x$ em vez de em $g(x)$. A
+terceira, mais estranha, coloca a derivada de dentro **dentro** da derivada
+de fora. Só a primeira é a regra. Os dois erros aparecem com frequência, e a
+seção de erros comuns volta a eles.
+
+### A notação de Leibniz
+
+Chamando $u = g(x)$ e $y = f(u)$, a mesma regra se escreve
+
+$$
+\frac{dy}{dx} = \frac{dy}{du} \times \frac{du}{dx}.
+$$
+
+Escrita assim, ela **parece** uma simplificação de frações: o $du$ de cima
+cancela com o $du$ de baixo. A lição de [A derivada](./a-derivada) avisou que
+$\frac{dy}{dx}$ não é uma fração, então esse cancelamento não é uma
+justificativa. O que justifica a fórmula é a seção anterior, feita com
+$\Delta$, onde as frações são de verdade. A notação foi desenhada para que a
+regra seja lembrada e aplicada com pouco esforço, e funciona bem para isso:
+as unidades se encaixam do mesmo jeito que “reais por litro vezes litros por
+quilômetro”.
+
+No exemplo de $y = (3x+1)^5$: $u = 3x+1$, $\frac{du}{dx} = 3$;
+$y = u^5$, $\frac{dy}{du} = 5u^4$; logo
+$\frac{dy}{dx} = 5u^4 \times 3 = 15(3x+1)^4$, com o $u$ trocado de volta por
+$3x+1$ no fim. É a mesma conta, com outra roupa.
+
+### Quando a derivada de dentro vale 1
+
+Em $y = (x+1)^5$, a função de dentro é $x + 1$, cuja derivada é 1. A regra dá
+$5(x+1)^4 \times 1 = 5(x+1)^4$, e o fator 1 some sem deixar rastro. É por isso
+que a lição de [regras de derivação](./regras-de-derivacao) conseguiu derivar
+expressões como $(x+1)^2$ expandindo, sem falar em cadeia: a derivada de
+dentro estava lá, valendo 1.
+
+Troque $x+1$ por $2x+1$ e o fator aparece: $y = (2x+1)^5$ tem
+derivada $5(2x+1)^4 \times 2 = 10(2x+1)^4$. Em $x = 0$, as duas fórmulas dão
+5 e 10, e os quocientes centrados confirmam: $5{,}000$ e $10{,}000$.
+
+## 9. Os casos que mais aparecem
+
+### Potência de função
+
+Quando a função de fora é $u^n$, a regra fica
+
+> $$
+> \big(g(x)^n\big)' = n\,g(x)^{n-1} \times g'(x).
+> $$
+
+É a regra da potência com um fator a mais no fim. Vale para qualquer
+expoente $n$ que a lição de regras de derivação aceitou, inclusive negativo e
+fracionário. Isso cobre três escritas que parecem diferentes:
+
+| Escrita | Como potência | Derivada |
+|---|---|---|
+| $\dfrac{1}{x^2+1}$ | $(x^2+1)^{-1}$ | $-1 \times (x^2+1)^{-2} \times 2x = -\dfrac{2x}{(x^2+1)^2}$ |
+| $\sqrt{x^2+9}$ | $(x^2+9)^{1/2}$ | $\dfrac{1}{2}(x^2+9)^{-1/2} \times 2x = \dfrac{x}{\sqrt{x^2+9}}$ |
+| $\dfrac{1}{\sqrt{x^2+1}}$ | $(x^2+1)^{-1/2}$ | $-\dfrac{1}{2}(x^2+1)^{-3/2} \times 2x = -\dfrac{x}{(x^2+1)^{3/2}}$ |
+
+Conferindo a segunda linha em $x = 4$: a fórmula dá $\frac{4}{5} = 0{,}8$, e o
+quociente centrado dá $0{,}8000$. Confere. E repare no que aconteceria sem o
+fator de dentro: $\frac{1}{2\sqrt{25}} = 0{,}1$, oito vezes menor. O $2x$ não é
+detalhe.
+
+### A regra confere com a regra da potência
+
+Um teste que vale fazer uma vez: $(x^2)^3$ é $x^6$, cuja derivada é $6x^5$. A
+cadeia tem que dar o mesmo número. Com $u = x^2$ e $y = u^3$:
+
+$$
+y' = 3u^2 \times 2x = 3(x^2)^2 \times 2x = 3x^4 \times 2x = 6x^5.
+$$
+
+Bate. Em $x = 2$, os dois caminhos dão 192, e o quociente centrado também.
+Quando duas regras cobrem o mesmo caso, elas precisam concordar; se não
+concordassem, uma delas estaria errada.
+
+### Três camadas
+
+A cadeia não para em duas. Em $y = \left(\sqrt{x} + 1\right)^3$ há três
+funções em série: $x \to \sqrt{x} \to \sqrt{x} + 1 \to (\ldots)^3$. A regra
+se aplica de fora para dentro, uma camada de cada vez, e cada camada
+contribui com um fator:
+
+$$
+y' = 3\left(\sqrt{x}+1\right)^2 \times \underbrace{1}_{(\sqrt{x}+1)'} \times
+\underbrace{\frac{1}{2\sqrt{x}}}_{(\sqrt{x})'}
+= \frac{3\left(\sqrt{x}+1\right)^2}{2\sqrt{x}}.
+$$
+
+Em $x = 4$: $\frac{3 \times 9}{4} = 6{,}75$; quociente centrado, $6{,}750$.
+Confere. A ordem de aplicação é sempre a mesma: derive a camada mais externa
+como se o que está dentro dela fosse uma variável, e multiplique pela
+derivada do que está dentro, repetindo até chegar ao $x$.
+
+## 10. Resolvendo o problema do balão
+
+Voltemos ao balão com a regra pronta. O volume depende do raio, e o raio
+depende do tempo:
+
+$$
+V = \frac{4}{3}\pi r^3, \qquad \frac{dr}{dt} = 2 \text{ cm/s}.
+$$
+
+A taxa que queremos é $\frac{dV}{dt}$, em centímetros cúbicos por segundo. Na
+notação de Leibniz, a cadeia diz:
+
+$$
+\frac{dV}{dt} = \frac{dV}{dr} \times \frac{dr}{dt}.
+$$
+
+A primeira taxa é a derivada do volume em relação ao raio. Pela regra da
+potência, com a constante $\frac{4}{3}\pi$ na frente:
+
+$$
+\frac{dV}{dr} = \frac{4}{3}\pi \times 3r^2 = 4\pi r^2.
+$$
+
+Esse resultado tem uma leitura bonita: $4\pi r^2$ é a **área da superfície**
+da esfera, da mesma tabela da lição de volumes. Faz sentido: inflar o balão
+um pouquinho acrescenta uma casca fina, e o volume da casca é a área dela
+vezes a espessura.
+
+No instante em que $r = 10$ cm, a primeira taxa vale
+$4\pi \times 100 = 400\pi \approx 1256{,}6$ cm³ por centímetro de raio. A
+segunda vale 2 cm por segundo. O produto:
+
+$$
+\frac{dV}{dt} = 400\pi \times 2 = 800\pi \approx 2513{,}3 \text{ cm}^3\text{/s}.
+$$
+
+Confira as unidades, como no combustível: centímetros cúbicos por centímetro,
+vezes centímetros por segundo, dá centímetros cúbicos por segundo. O
+“centímetro” do raio cancelou.
+
+**Conferência por outro caminho.** Se o raio começa em zero, $r = 2t$, e dá
+para escrever o volume diretamente em função do tempo:
+$V(t) = \frac{4}{3}\pi (2t)^3 = \frac{32}{3}\pi t^3$. Derivando,
+$V'(t) = 32\pi t^2$; em $t = 5$ s, quando $r = 10$, isso dá
+$32\pi \times 25 = 800\pi$. O mesmo número por um caminho sem cadeia — o que
+mostra que a regra não inventou nada.
+
+E uma leitura do resultado: com o mesmo ritmo de 2 cm/s no raio, quando o
+raio media 5 cm o volume crescia a $4\pi \times 25 \times 2 = 200\pi \approx
+628$ cm³/s, quatro vezes menos. O raio cresce sempre igual; o volume, não.
+Encher a segunda metade de um balão exige muito mais ar por segundo que a
+primeira.
+
+## 11. Exemplos resolvidos
+
+### Exemplo 1: uma potência de função
+
+Derive $y = (x^2+1)^{10}$.
+
+Dentro: $x^2+1$, derivada $2x$. Fora: $u^{10}$, derivada $10u^9$. Produto:
+
+$$
+y' = 10(x^2+1)^9 \times 2x = 20x\,(x^2+1)^9.
+$$
+
+Expandir $(x^2+1)^{10}$ para derivar termo a termo daria onze parcelas. A
+cadeia dá a resposta em uma linha, e ainda **fatorada**, o que vai importar
+quando a lição do [sinal da derivada](./sinal-da-derivada) precisar saber onde
+$y'$ é positiva. Em $x = 1$: $20 \times 2^9 = 10\,240$; quociente centrado,
+$10\,240{,}0$.
+
+### Exemplo 2: raiz de uma função
+
+*Pause e tente antes de ler.* Derive $y = \sqrt{3x+4}$ e calcule $y'(4)$.
+
+Escreva a raiz como potência: $y = (3x+4)^{1/2}$. Dentro: $3x+4$, derivada 3.
+Fora: $u^{1/2}$, derivada $\frac{1}{2}u^{-1/2}$. Produto:
+
+$$
+y' = \frac{1}{2}(3x+4)^{-1/2} \times 3 = \frac{3}{2\sqrt{3x+4}}.
+$$
+
+Em $x = 4$: $\frac{3}{2 \times 4} = \frac{3}{8} = 0{,}375$; quociente centrado,
+$0{,}3750$. Sem o 3 de dentro, a resposta sairia $0{,}125$, três vezes menor.
+
+### Exemplo 3: um sobre uma função
+
+*Pause e tente.* Derive $y = \dfrac{1}{(x^2-3)^2}$ e calcule $y'(2)$.
+
+Como potência: $y = (x^2-3)^{-2}$. Dentro: $x^2-3$, derivada $2x$. Fora:
+$u^{-2}$, derivada $-2u^{-3}$. Produto:
+
+$$
+y' = -2(x^2-3)^{-3} \times 2x = -\frac{4x}{(x^2-3)^3}.
+$$
+
+Em $x = 2$: $-\frac{8}{1} = -8$; quociente centrado, $-8{,}000$. A lição de
+[produto e quociente](./regras-do-produto-e-do-quociente) resolveria o mesmo
+exemplo pela regra do quociente, com mais contas; quando o numerador é uma
+constante, a cadeia com expoente negativo é o caminho curto.
+
+### Exemplo 4: a cadeia com a notação de Leibniz
+
+*Pause e tente.* Se $y = u^3$ e $u = 4x - 1$, calcule $\frac{dy}{dx}$ em
+$x = 1$.
+
+$$
+\frac{dy}{du} = 3u^2, \qquad \frac{du}{dx} = 4,
+\qquad
+\frac{dy}{dx} = 3u^2 \times 4 = 12u^2 = 12(4x-1)^2.
+$$
+
+Em $x = 1$, $u = 3$ e $\frac{dy}{dx} = 12 \times 9 = 108$. Quociente centrado
+de $(4x-1)^3$ em 1: $108{,}00$. Repare que a taxa de fora, $3u^2$, foi
+avaliada em $u = 3$, e não em $x = 1$: $3 \times 1^2 = 3$ daria $12$, errado.
+
+### Exemplo 5: custo por hora numa cadeia de produção
+
+*Pause e tente.* O custo diário de uma oficina, em reais, depende da
+quantidade $q$ de peças produzidas: $C(q) = 500 + 20q + 0{,}1q^2$. A
+quantidade produzida cresce com as horas $t$ de máquina ligada:
+$q(t) = 40 + 3t$. Em que ritmo o custo está subindo, em reais por hora, na
+quinta hora?
+
+As unidades já dizem a conta: reais por peça, vezes peças por hora.
+
+$$
+\frac{dC}{dq} = 20 + 0{,}2q, \qquad \frac{dq}{dt} = 3.
+$$
+
+Na quinta hora, $q = 40 + 15 = 55$ peças, e $\frac{dC}{dq} = 20 + 11 = 31$
+reais por peça. Então:
+
+$$
+\frac{dC}{dt} = 31 \times 3 = 93 \text{ reais por hora}.
+$$
+
+Conferindo: escrevendo $C(q(t))$ e derivando numericamente em $t = 5$, o
+quociente centrado dá $93{,}00$. E a leitura: cada hora a mais de máquina
+acrescenta 3 peças, e cada peça a mais, nesse ponto, custa R\$ 31, porque o
+custo por peça sobe conforme a produção cresce.
+
+### Exemplo 6: uma conversão de unidades escondida
+
+*Pause e tente.* Uma sonda sobe a 0,5 km por minuto. A temperatura do ar, em
+graus Celsius, cai com a altitude $a$ em quilômetros segundo
+$T(a) = 20 - 6{,}5a$. Em que ritmo a temperatura medida pela sonda está
+caindo, em graus por minuto?
+
+$$
+\frac{dT}{dt} = \frac{dT}{da} \times \frac{da}{dt} = (-6{,}5) \times 0{,}5
+= -3{,}25 \ ^\circ\text{C/min}.
+$$
+
+O sinal negativo diz que a temperatura cai. Aqui as duas taxas são
+constantes, e a cadeia vira uma conta de conversão como a do combustível: a
+regra é geral, e as conversões de unidade são o caso particular em que as
+camadas são retas.
+
+## 12. Erros comuns
+
+> **Erro 1: esquecer a derivada de dentro.** Derivar $(3x+1)^5$ como
+> $5(3x+1)^4$. Em $x = 1$ isso dá 1280; o valor correto é 3840, três vezes
+> maior. O teste é sempre o mesmo: se a camada de dentro não for exatamente
+> $x$, ela tem uma derivada, e essa derivada multiplica o resultado.
+
+> **Erro 2: avaliar a derivada de fora em $x$ em vez de em $g(x)$.** Em
+> $(3x)^2$, escrever $2x \times 3 = 6x$. A derivada de $u^2$ é $2u$, e o $u$
+> aqui é $3x$, não $x$: $2(3x) \times 3 = 18x$. A máquina de fora só enxerga o
+> que chegou até ela.
+
+> **Erro 3: colocar a derivada de dentro dentro da de fora.** Escrever
+> $f'(g'(x))$: em $(3x)^2$, isso seria $2 \times 3 = 6$, uma constante, quando
+> a derivada é $18x$. A regra compõe $f'$ com $g$, não com $g'$.
+
+> **Erro 4: confundir a composição com o produto.** $\sqrt{x^2+9}$ não é
+> $\sqrt{x} \times$ alguma coisa, e a derivada não sai da regra do produto. A
+> lição de composição já separou as duas operações: no produto, as duas
+> funções recebem o mesmo $x$; na composição, uma recebe a saída da outra.
+
+> **Erro 5: derivar de dentro para fora.** Começar por $3x+1$, derivar, e
+> depois elevar o resultado à quinta. A ordem é de fora para dentro: primeiro
+> a potência, mantendo o conteúdo intacto; depois o conteúdo.
+
+> **Erro 6: trocar $(g(x))^2$ por $g(x^2)$.** São composições diferentes,
+> em ordens diferentes. Em $g(x) = x + 1$: $(x+1)^2$ tem derivada $2(x+1)$,
+> enquanto $x^2 + 1$ tem derivada $2x$. Na próxima lição, o mesmo par aparece
+> como $(\sen x)^2$ contra $\sen(x^2)$, e é a confusão mais frequente da
+> derivação de seno.
+
+## 13. Perguntas de verificação
+
+1. Por que a taxa de uma composição é o produto das taxas, e não a soma?
+2. Na regra $f'(g(x)) \times g'(x)$, em que valor a derivada de fora é
+   calculada, e por quê?
+3. Por que $(x+1)^5$ pôde ser derivada sem falar em cadeia na lição de regras
+   de derivação?
+4. O que a notação $\frac{dy}{dx} = \frac{dy}{du}\frac{du}{dx}$ sugere, e
+   por que essa sugestão não é a justificativa?
+5. Qual ideia anterior garante que $\Delta u$ encolhe quando $\Delta x$
+   encolhe?
+6. Como as unidades ajudam a montar a cadeia num problema de taxas?
+7. Por que $\frac{dV}{dr} = 4\pi r^2$ é a área da superfície da esfera?
+8. Com três camadas, quantos fatores tem a derivada? Em que ordem eles são
+   obtidos?
+9. Como conferir com um número que a derivada de $(2x+1)^5$ precisa do fator
+   2?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque cada camada **multiplica** a variação que recebe por um fator (a
+   taxa dela). Uma variação que passa por duas ampliações em série é
+   multiplicada pelas duas, e o fator total é o produto. A tabela da seção 5
+   mostra isso com números: $8{,}03 \times 3 = 24{,}09$.
+2. Em $g(x)$, a saída da função de dentro. A função de fora recebe $g(x)$ e
+   só conhece esse valor; a taxa dela tem que ser medida ali. Em $(3x)^2$,
+   avaliar $2u$ em $u = x$ daria $6x$ em vez de $18x$.
+3. Porque a derivada de dentro, de $x + 1$, vale 1, e o fator 1 não altera o
+   produto. A cadeia estava lá; o fator dela era invisível.
+4. Sugere um cancelamento de $du$, como em frações. Não é justificativa
+   porque $\frac{dy}{dx}$ não é uma fração; é um limite. A justificativa está
+   na versão com $\Delta$, em que as frações são frações de verdade e
+   multiplicar por $\frac{\Delta u}{\Delta u}$ é multiplicar por 1.
+5. A continuidade de $g$, que decorre de $g$ ser derivável (lição sobre
+   quando a derivada não existe). Contínua significa que uma variação pequena
+   na entrada produz uma variação pequena na saída.
+6. A unidade da resposta diz quais taxas multiplicar: reais por hora exige
+   reais por peça vezes peças por hora. Se a unidade não fechar, a cadeia
+   está montada errado.
+7. Aumentar o raio em uma espessura fina acrescenta uma casca, cujo volume é
+   a área da superfície vezes a espessura. A taxa de volume por unidade de
+   raio é essa área.
+8. Três fatores, um por camada. Obtidos de fora para dentro: a derivada da
+   camada mais externa, com o conteúdo intacto, vezes a derivada da camada do
+   meio, vezes a derivada da mais interna.
+9. Calculando o quociente centrado de $(2x+1)^5$ em $x = 0$ com
+   $h = 0{,}001$: dá $10{,}000$. A fórmula sem o fator 2 daria 5. O número
+   escolhe.
+
+</details>
+
+## 14. Exercícios
+
+### 1. Reconhecimento
+
+1. Em cada função, diga qual é a camada de dentro e qual é a de fora:
+   a) $(x^2+3)^4$; b) $\sqrt{5x-1}$; c) $\dfrac{1}{(2x+7)^3}$;
+   d) $(x^3-x)^{10}$.
+2. Quais destas derivadas precisam da regra da cadeia com um fator diferente
+   de 1? a) $x^5$; b) $(x+1)^5$; c) $3x^2+1$; d) $(3x^2+1)^2$.
+3. Complete as unidades: a) reais por hora $\times$ horas por dia $=$ ?;
+   b) litros por quilômetro $\times$ quilômetros por hora $=$ ?;
+   c) metros por volta $\times$ voltas por segundo $=$ ?
+
+### 2. Explicação
+
+4. Explique, com a imagem das duas correias em série, por que a taxa da
+   cadeia é o produto das taxas e não a soma.
+5. Um colega diz que a regra da cadeia é “derivar e depois multiplicar pelo
+   que está dentro”. Corrija a frase.
+
+### 3. Aplicação direta
+
+6. Derive e calcule no ponto indicado: a) $(2x+5)^3$ em $x = 0$;
+   b) $\sqrt{3x+4}$ em $x = 4$; c) $(x^2+1)^{10}$ em $x = 1$;
+   d) $\dfrac{1}{(x^2-3)^2}$ em $x = 2$.
+7. Se $y = u^3$ e $u = 4x-1$, calcule $\frac{dy}{dx}$ em $x = 1$ pela notação
+   de Leibniz.
+
+### 4. Variação
+
+8. Derive $\sqrt{x^2+9}$ em $x = 4$ de dois modos: com a cadeia, e esquecendo
+   a derivada de dentro. Compare os dois números com o quociente centrado.
+9. Derive $(x^2)^3$ pela cadeia e pela regra da potência aplicada a $x^6$.
+   Os resultados batem?
+10. Derive $\left(\sqrt{x}+1\right)^3$ e calcule em $x = 4$. Quantas camadas
+    há?
+11. Derive $y = \dfrac{1}{\sqrt{x^2+1}}$ e calcule $y'(0)$ e $y'(1)$.
+
+<details>
+<summary>Dica para o 11</summary>
+
+Escreva a função como uma única potência, $(x^2+1)^{-1/2}$, antes de
+derivar. Aí ela é uma potência de função, com expoente $-\frac{1}{2}$.
+
+</details>
+
+### 5. Problema misto
+
+12. Uma mancha de óleo circular cresce com o raio aumentando 3 metros por
+    minuto. Em que ritmo a área cresce quando o raio mede 20 m?
+13. O custo de uma oficina é $C(q) = 500 + 20q + 0{,}1q^2$ reais para $q$
+    peças, e a produção é $q(t) = 40 + 3t$ peças após $t$ horas. Calcule o
+    ritmo do custo, em reais por hora, na oitava hora.
+14. O balão da seção 10 tem raio $r = 2t$ (em cm, com $t$ em segundos).
+    Escreva $V$ diretamente em função de $t$, derive, e confira que em $t = 5$
+    o resultado é $800\pi$.
+15. A aresta de um cubo cresce 0,2 cm por segundo. Quando a aresta mede
+    10 cm, em que ritmo crescem: a) o volume; b) a área total da superfície?
+16. Um carro faz 12,5 km por litro e o combustível custa R\$ 6 por litro.
+    a) Qual é o custo por quilômetro? b) Quanto custa uma viagem de 250 km?
+    c) Em qual das duas perguntas a cadeia de taxas foi usada?
+
+<details>
+<summary>Dica para o 15</summary>
+
+Nomeie a aresta de $a$. O volume é $a^3$ e a superfície é $6a^2$; a taxa
+$\frac{da}{dt}$ é o dado do problema. Monte $\frac{dV}{dt}$ e
+$\frac{dS}{dt}$ pela cadeia.
+
+</details>
+
+### 6. Justificativa
+
+17. Deduza a fórmula da potência de função, $(g^n)' = n g^{n-1} g'$, a partir
+    da regra da cadeia com $f(u) = u^n$.
+18. Mostre que a derivada de $f(kx)$ é $k\,f'(kx)$, para uma constante $k$.
+    Depois confira o resultado com $f(x) = x^2$ e $k = 2$, comparando com a
+    derivada de $4x^2$ obtida pela regra da potência.
+19. Escreva a equação da reta tangente a $y = (x^2-3)^3$ no ponto de
+    abscissa $x = 2$.
+20. Na demonstração da seção 7, onde exatamente entra a hipótese de que $g$
+    é contínua? O que falharia sem ela?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) dentro $x^2+3$, fora $u^4$; b) dentro $5x-1$, fora $\sqrt{u}$;
+   c) dentro $2x+7$, fora $u^{-3}$; d) dentro $x^3-x$, fora $u^{10}$.
+2. Só a **d)**. Em a) e c) não há composição; em b) a derivada de dentro vale
+   1, e a cadeia não deixa fator.
+3. a) reais por dia; b) litros por hora; c) metros por segundo. Em cada caso
+   a unidade do meio cancela.
+4. A primeira correia multiplica a variação de entrada pela taxa dela; a
+   segunda recebe esse resultado e multiplica pela taxa dela. Duas
+   multiplicações em série são uma multiplicação pelo produto. Somar as taxas
+   descreveria duas correias trabalhando lado a lado sobre a mesma entrada,
+   que é outra situação.
+5. Faltam duas coisas. A derivada de fora é calculada **na saída de dentro**,
+   não em $x$; e o que multiplica é a **derivada** do que está dentro, não o
+   que está dentro. A frase correta: derivada de fora, calculada em dentro,
+   vezes derivada de dentro.
+6. a) $6(2x+5)^2$; em 0, $150$. b) $\dfrac{3}{2\sqrt{3x+4}}$; em 4,
+   $\dfrac{3}{8} = 0{,}375$. c) $20x(x^2+1)^9$; em 1, $10\,240$.
+   d) $-\dfrac{4x}{(x^2-3)^3}$; em 2, $-8$. Se você encontrou 75 em a),
+   esqueceu o fator 2 de dentro; se encontrou $-4$ em d), o mesmo.
+7. $\frac{dy}{du} = 3u^2$ e $\frac{du}{dx} = 4$, logo
+   $\frac{dy}{dx} = 12u^2 = 12(4x-1)^2$. Em $x = 1$, $u = 3$ e o valor é
+   $108$. Se você encontrou 12, avaliou $3u^2$ em $u = 1$ em vez de $u = 3$.
+8. Com a cadeia: $\dfrac{x}{\sqrt{x^2+9}}$, que em 4 vale $0{,}8$. Sem a
+   derivada de dentro: $\dfrac{1}{2\sqrt{x^2+9}}$, que em 4 vale $0{,}1$. O
+   quociente centrado dá $0{,}8000$: o primeiro está certo, e o erro não é
+   pequeno.
+9. Pela cadeia: $3(x^2)^2 \times 2x = 6x^5$. Pela potência: $6x^5$. Batem, e
+   têm que bater: são duas regras corretas aplicadas à mesma função.
+10. Três camadas: raiz, soma de 1, cubo. A derivada é
+    $\dfrac{3\left(\sqrt{x}+1\right)^2}{2\sqrt{x}}$; em 4, $6{,}75$.
+11. $y = (x^2+1)^{-1/2}$, logo $y' = -\dfrac{1}{2}(x^2+1)^{-3/2} \times 2x =
+    -\dfrac{x}{(x^2+1)^{3/2}}$. Em 0, $y' = 0$ (a curva tem tangente
+    horizontal no topo). Em 1, $y' = -\dfrac{1}{2\sqrt{2}} \approx -0{,}354$.
+12. $A = \pi r^2$, $\frac{dA}{dr} = 2\pi r$, e
+    $\frac{dA}{dt} = 2\pi r \times 3$. Em $r = 20$: $120\pi \approx 377$ m²
+    por minuto. Unidades: metros quadrados por metro vezes metros por minuto.
+13. Na oitava hora, $q = 64$ e $\frac{dC}{dq} = 20 + 12{,}8 = 32{,}8$ reais
+    por peça. Então $\frac{dC}{dt} = 32{,}8 \times 3 = 98{,}4$ reais por hora.
+    Compare com os R\$ 93 por hora da quinta hora: o custo acelera, porque
+    cada peça extra custa mais que a anterior.
+14. $V(t) = \frac{4}{3}\pi(2t)^3 = \frac{32}{3}\pi t^3$, e
+    $V'(t) = 32\pi t^2$. Em $t = 5$: $32\pi \times 25 = 800\pi$. O mesmo
+    valor que a cadeia deu, sem cadeia. Se você encontrou $\frac{8}{3}\pi t^3$,
+    esqueceu de elevar o 2 ao cubo.
+15. Com $a = 10$ e $\frac{da}{dt} = 0{,}2$: a) $\frac{dV}{dt} = 3a^2 \times
+    0{,}2 = 300 \times 0{,}2 = 60$ cm³/s; b) $\frac{dS}{dt} = 12a \times 0{,}2
+    = 24$ cm²/s.
+16. a) 12,5 km por litro é o mesmo que $\frac{1}{12{,}5} = 0{,}08$ litro por
+    quilômetro; vezes R\$ 6 por litro dá **R\$ 0,48 por quilômetro**.
+    b) $250 \times 0{,}48 = $ R\$ 120. c) Na a): a cadeia liga quilômetro a
+    litro e litro a real. A b) é uma multiplicação simples pela taxa já
+    obtida.
+17. Com $f(u) = u^n$, a derivada de fora é $f'(u) = n u^{n-1}$. A regra da
+    cadeia dá $(f \circ g)'(x) = f'(g(x)) \times g'(x) = n\,g(x)^{n-1} \times
+    g'(x)$. É a regra da potência com o fator $g'$ no fim.
+18. A função de dentro é $kx$, com derivada $k$; a de fora é $f$. A cadeia
+    dá $f'(kx) \times k$. Com $f(x) = x^2$ e $k = 2$: $2(2x) \times 2 = 8x$.
+    Pela potência, $(2x)^2 = 4x^2$ tem derivada $8x$. Batem.
+19. Em $x = 2$: $y = (4-3)^3 = 1$. A derivada é $y' = 3(x^2-3)^2 \times 2x$,
+    que em 2 vale $3 \times 1 \times 4 = 12$. A tangente é
+    $y = 1 + 12(x-2)$, isto é, $y = 12x - 23$. Se você encontrou inclinação
+    3, faltou o fator $2x = 4$ de dentro.
+20. Entra na passagem em que $\frac{\Delta y}{\Delta u}$ é substituída por
+    $f'(g(x))$: esse limite só é a derivada de $f$ em $g(x)$ se $\Delta u$
+    estiver encolhendo, e é a continuidade de $g$ que garante que $\Delta u$
+    encolhe quando $\Delta x$ encolhe. Sem ela, $\Delta u$ poderia ficar longe
+    de zero, e a fração $\frac{\Delta y}{\Delta u}$ não teria por que se
+    aproximar de uma derivada.
+
+</details>
+
+## 15. Revisão curta
+
+- A **regra da cadeia** deriva uma composição: derivada de fora, calculada na
+  saída de dentro, vezes derivada de dentro. Na notação de Leibniz,
+  $\frac{dy}{dx} = \frac{dy}{du}\frac{du}{dx}$.
+- O motivo é que cada camada **multiplica** a variação que recebe; a tabela
+  com $\Delta$ e o exemplo do combustível mostram o produto acontecendo.
+- O caso mais frequente é a **potência de função**, $(g^n)' = n g^{n-1} g'$,
+  que cobre raízes e frações com denominador elevado.
+- As **unidades** montam a cadeia sozinhas: reais por peça vezes peças por
+  hora dá reais por hora.
+- Com três camadas, três fatores, de fora para dentro.
+
+Antes de avançar, verifique se você consegue fazer três coisas: apontar a
+camada de dentro e a de fora em $\sqrt{x^2+9}$ e derivar; explicar por que
+$(3x+1)^5$ precisa do fator 3 e $(x+1)^5$ não; e montar, só pelas unidades,
+a cadeia de um problema de custo por hora.
+
+A regra fecha a Parte II no que diz respeito a **combinar** funções. O que
+falta são as derivadas das famílias que ainda não foram derivadas — [seno e
+cosseno](./derivadas-de-seno-e-cosseno) na próxima lição, [exponencial e
+logaritmo](./derivadas-de-exponencial-e-logaritmo) na seguinte —, e a cadeia
+aparece nas duas, porque $\sen(3x)$ e $e^{-0{,}2t}$ são composições. Mais
+adiante, a lição de [taxas relacionadas](./taxas-relacionadas) transforma o
+balão desta página num método, e a de [primitivas e
+substituição](./primitivas-e-substituicao) lê a regra da cadeia ao contrário.

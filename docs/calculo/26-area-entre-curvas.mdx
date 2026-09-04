@@ -1,0 +1,1099 @@
+---
+title: "Área entre curvas: a integral da diferença"
+sidebar_label: Área entre curvas
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Área entre curvas: a integral da diferença
+
+## 1. Problema motivador: até onde vale a pena produzir
+
+Uma oficina de serigrafia estampa camisetas. Duas grandezas mudam conforme a
+produção aumenta, e as duas são medidas **por camiseta**:
+
+- a **receita marginal** $r(x)$ é quanto entra de dinheiro ao produzir a
+  camiseta de número $x$. Ela cai à medida que a produção cresce, porque
+  vender mais exige baixar o preço: $r(x) = 60 - 2x$ reais por camiseta;
+- o **custo marginal** $c(x)$ é quanto sai de dinheiro para produzir essa mesma
+  camiseta. Ele sobe, porque a partir de certo ponto entram horas extras e
+  material mais caro: $c(x) = 12 + x$ reais por camiseta.
+
+Repare que as duas são **taxas**, em reais por camiseta, e não valores totais.
+A lição de [integral como área](./a-integral-como-area) ensinou o que fazer com
+uma taxa: integrar recupera o total acumulado. A integral de $r$ dá a receita
+acumulada; a integral de $c$ dá o custo acumulado.
+
+Veja o que acontece com as duas ao longo da produção:
+
+| Camiseta $x$ | 0 | 5 | 10 | 16 | 20 |
+|---:|---:|---:|---:|---:|---:|
+| Receita marginal $r(x)$ | 60 | 50 | 40 | 28 | 20 |
+| Custo marginal $c(x)$ | 12 | 17 | 22 | 28 | 32 |
+
+No começo, cada camiseta traz 60 e custa 12: sobram 48 reais. A folga vai
+encolhendo. Na camiseta 16, receita e custo se igualam em 28 reais. Depois
+disso, cada camiseta produzida **custa mais do que rende**.
+
+Duas perguntas:
+
+- **Quanto lucro a oficina acumula produzindo 16 camisetas?**
+- **E se ela produzir 20, ignorando o sinal de alerta da camiseta 16?**
+
+A resposta da primeira é a área da região entre as duas curvas, de 0 a 16.
+A resposta da segunda mostra por que **área** e **integral da diferença** não
+são a mesma coisa quando as curvas se cruzam — e essa distinção é o assunto
+central desta página.
+
+## 2. Mapa das ideias
+
+- a **região entre duas curvas** é o conjunto de pontos que ficam acima de uma
+  e abaixo da outra, dentro de um intervalo de $x$;
+- quando $f(x) \ge g(x)$ em todo o intervalo, a área dessa região é
+  $\int_a^b [f(x) - g(x)]\,dx$: a integral da **altura da faixa**;
+- os **pontos de cruzamento** são as soluções de $f(x) = g(x)$, e é onde a
+  função "de cima" pode trocar com a "de baixo";
+- se as curvas se cruzam dentro do intervalo, a integral de $f - g$ dá a
+  **diferença de áreas**, e a área pede $\lvert f - g \rvert$, calculada trecho
+  a trecho;
+- a área entre duas curvas **não depende** de a região estar acima ou abaixo do
+  eixo horizontal: só a diferença entre as alturas conta;
+- às vezes é mais simples integrar **em $y$**, com faixas horizontais.
+
+## 3. Para que serve
+
+- comparar duas taxas ao longo do tempo e medir o saldo acumulado entre elas:
+  receita contra custo, entrada contra saída, produção de duas máquinas;
+- calcular a área de uma região limitada por duas curvas — uma peça vazada, um
+  terreno entre dois cursos d'água, uma seção de projeto;
+- medir o excedente do consumidor e o excedente do produtor em economia, que
+  são exatamente áreas entre uma curva de demanda e uma reta de preço;
+- comparar dois cenários projetados no tempo: quanto uma alternativa rende a
+  mais que a outra ao longo de um período;
+- e, dentro da matemática, generalizar a integral: a região sob uma curva era o
+  caso particular em que a curva de baixo é o eixo, ou seja, $g(x) = 0$.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [a integral definida](./a-integral-definida): o que a integral faz com
+o que está abaixo do eixo?** Conta como negativo. A integral é área **com
+sinal**, e por isso $\int_{-1}^{1} x\,dx = 0$ mesmo com a região tendo área 1.
+Aquela lição também mostrou a saída: quando a pergunta é sobre a área, integra-se
+o valor absoluto, separando o intervalo nos pontos em que a função troca de
+sinal. Esta página faz a mesma coisa, com $f - g$ no lugar de $f$.
+
+**2. Do [teorema fundamental do cálculo](./teorema-fundamental-do-calculo):
+como se calcula $\int_a^b f(x)\,dx$ sem retângulos?** Achando uma função $F$ cuja
+derivada seja $f$ e calculando $F(b) - F(a)$, escrito
+$\Big[F(x)\Big]_a^b$. Todas as integrais desta página saem assim, e as
+primitivas de que elas precisam — de $x^n$, de $\sen x$ e de $\cos x$ — estão
+na tabela da lição de [primitivas e substituição](./primitivas-e-substituicao).
+
+**3. De [sistemas de duas equações](../equacoes/sistemas-de-duas-equacoes) e de
+[função quadrática](../funcoes/funcao-quadratica): como se acham os pontos em
+que duas curvas se encontram?** Resolvendo $f(x) = g(x)$. Para a reta $y = x+2$
+e a parábola $y = x^2$, isso dá $x^2 = x + 2$, ou seja, $x^2 - x - 2 = 0$, cujas
+raízes são $-1$ e $2$. É a mesma conta do exemplo 5 daquela lição de sistemas,
+e ela vai decidir os limites de integração aqui.
+
+**4. De [a integral como área](./a-integral-como-area): o que é a faixa fina de
+largura $\Delta x$?** É o retângulo da soma de Riemann: altura lida na curva,
+largura $\Delta x$, área igual ao produto. Somar as faixas e apertar a largura
+dá a integral. Aqui a única mudança é a altura da faixa: em vez de ir do eixo
+até a curva, ela vai de uma curva até a outra.
+
+**5. De [máximos e mínimos](./maximos-e-minimos): o que acontece com uma
+grandeza quando a taxa dela troca de sinal?** Ela para de crescer e passa a
+decrescer. No motivador, o lucro acumulado cresce enquanto $r(x)$ é maior que
+$c(x)$ e decresce depois — então a produção de maior lucro é justamente o ponto
+de cruzamento.
+
+Os itens 1 e 3 são os que mais decidem acertos e erros nesta página. O primeiro
+diz por que a integral pode dar um número menor que a área; o terceiro dá os
+limites de integração, que quase nunca vêm de graça no enunciado.
+
+## 5. Intuição: a altura da faixa é a diferença
+
+Pense na região entre duas curvas como um monte de tiras verticais finas, uma
+ao lado da outra, cobrindo o intervalo de $a$ até $b$.
+
+Escolha uma abscissa $x$ qualquer dentro do intervalo e suba uma reta vertical
+por ela. Essa reta corta a curva de baixo na altura $g(x)$ e a curva de cima na
+altura $f(x)$. O pedaço de reta que fica **dentro** da região vai de uma altura
+até a outra, e o comprimento dele é
+
+$$
+f(x) - g(x).
+$$
+
+Essa subtração é a ideia inteira da página. Se a faixa tem largura $\Delta x$,
+a área dela é
+
+$$
+\big(f(x) - g(x)\big) \times \Delta x,
+$$
+
+que é a área de um retângulo: altura vezes base. Somar as faixas e apertar a
+largura até zero é exatamente o processo da soma de Riemann, e o resultado é
+uma integral — só que da **diferença** das duas funções, em vez de uma função
+só.
+
+Um caso conhecido cabe aqui dentro. Quando a curva de baixo é o próprio eixo
+horizontal, temos $g(x) = 0$, e a altura da faixa é $f(x) - 0 = f(x)$. A
+integral vira $\int_a^b f(x)\,dx$, que é a área sob a curva das duas lições
+anteriores. A área entre curvas não é um assunto novo: é o mesmo assunto, com o
+eixo trocado por outra curva.
+
+## 6. Modelo visual: a região e uma de suas faixas
+
+O desenho abaixo mostra a região entre a reta $y = x + 2$ e a parábola
+$y = x^2$, com uma faixa vertical destacada em $x = 0{,}5$.
+
+<CartesianPlane
+  xMin={-2}
+  xMax={3}
+  yMin={-0.6}
+  yMax={5}
+  xUnit={72}
+  yUnit={44}
+  polygons={[
+    {
+      points: [
+        ...Array.from({length: 61}, (_, i) => {
+          const x = -1 + (3 * i) / 60;
+          return [x, x + 2];
+        }),
+        ...Array.from({length: 61}, (_, i) => {
+          const x = 2 - (3 * i) / 60;
+          return [x, x * x];
+        }),
+      ],
+      tone: 2,
+    },
+    {points: [[0.5, 0.25], [0.65, 0.4225], [0.65, 2.65], [0.5, 2.5]], tone: 3},
+  ]}
+  functions={[
+    {f: (x) => x + 2, domain: [-1.8, 2.8], tone: 1},
+    {f: (x) => x * x, domain: [-1.8, 2.2], tone: 1},
+  ]}
+  points={[
+    {at: [-1, 1], label: '(-1,\\ 1)', tone: 1, dx: -34, dy: -6},
+    {at: [2, 4], label: '(2,\\ 4)', tone: 1, dx: 32, dy: -8},
+  ]}
+  labels={[
+    {at: [0.58, 1.45], math: 'f(x) - g(x)', tone: 3, dx: 62},
+    {at: [2.35, 4.6], math: 'y = x + 2', tone: 1, dx: -18},
+    {at: [-1.55, 3.1], math: 'y = x^2', tone: 1},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A região entre a reta e a parábola, de x = −1 a x = 2. A faixa vertical destacada tem altura f(x) − g(x); somar todas as faixas dá a área."
+/>
+
+Três coisas para observar no desenho, porque cada uma vira um passo do método:
+
+**As pontas da região são os cruzamentos.** À esquerda, a reta e a parábola se
+encontram em $(-1, 1)$; à direita, em $(2, 4)$. A região "fecha" nesses dois
+pontos, e eles são os limites da integral. Ninguém precisou informá-los: eles
+saem de resolver $x^2 = x + 2$.
+
+**Dentro do intervalo, a reta está sempre por cima.** Em $x = 0{,}5$, a reta
+está em $2{,}5$ e a parábola em $0{,}25$: a faixa tem altura $2{,}25$. Isso vale
+para todo $x$ entre $-1$ e $2$, e é o que autoriza escrever a altura como
+"reta menos parábola" no intervalo inteiro.
+
+**A altura da faixa varia.** Ela é zero nas pontas, onde as curvas se tocam, e
+máxima em algum ponto do meio. É por isso que a área não sai de uma
+multiplicação: a faixa não tem sempre a mesma altura, e é a integral que soma
+alturas diferentes.
+
+## 7. Ponte para a formalização: de duas integrais para uma
+
+Há um segundo caminho para chegar à mesma fórmula, e vale percorrê-lo porque
+ele mostra que nada aqui é novo.
+
+Suponha, por um momento, que as duas curvas estejam **acima do eixo** no
+intervalo, como acontece com $y = x + 2$ e $y = x^2$ entre 0 e 2. Então:
+
+- a região sob a curva de cima, do eixo até $f$, tem área $\int_a^b f(x)\,dx$;
+- a região sob a curva de baixo, do eixo até $g$, tem área $\int_a^b g(x)\,dx$.
+
+A região **entre** as curvas é o que sobra da primeira quando se retira dela a
+segunda. Foi o que a lição de
+[figuras compostas](../geometria/figuras-compostas) fez ao vazar um pedaço de
+uma figura: a área que resta é a diferença das duas.
+
+$$
+\text{área entre as curvas} = \int_a^b f(x)\,dx - \int_a^b g(x)\,dx.
+$$
+
+E agora entra uma propriedade da lição anterior: a integral de uma diferença é a
+diferença das integrais. Lendo a igualdade de trás para a frente, as duas
+integrais viram uma só:
+
+$$
+\int_a^b f(x)\,dx - \int_a^b g(x)\,dx = \int_a^b \big[f(x) - g(x)\big]\,dx.
+$$
+
+**O que muda na escrita.** Duas integrais viraram uma, e o que se integra passa
+a ser a diferença das funções.
+
+**O que permanece.** O número. As duas escritas calculam a mesma área, e a
+propriedade da soma garante a igualdade — ela não foi inventada aqui, veio da
+[integral definida](./a-integral-definida).
+
+**Por que vale a pena a troca.** Porque a segunda escrita continua fazendo
+sentido quando as curvas **não** estão acima do eixo, e a primeira não. A
+subtração de áreas exige que as duas regiões estejam sob o eixo; a integral da
+diferença só usa a altura da faixa, e essa altura não muda quando a região sobe
+ou desce. A seção 10 desenvolve esse ponto.
+
+**Como conferir com um caso concreto.** Entre $x = 0$ e $x = 2$:
+$\int_0^2 (x+2)\,dx = 6$ (trapézio de bases 2 e 4, altura 2) e
+$\int_0^2 x^2\,dx = \frac{8}{3}$ (calculada na lição da integral como área).
+A diferença é $6 - \frac{8}{3} = \frac{10}{3}$. Pela integral da diferença:
+
+$$
+\int_0^2 \big[(x+2) - x^2\big]\,dx
+= \Big[\tfrac{x^2}{2} + 2x - \tfrac{x^3}{3}\Big]_0^2
+= 2 + 4 - \tfrac{8}{3} = \tfrac{10}{3}.
+$$
+
+Os dois caminhos dão $\frac{10}{3} \approx 3{,}333$, e uma soma de Riemann com
+$200\,000$ faixas dá 3,3333. Confere.
+
+## 8. A área entre duas curvas
+
+> Se $f$ e $g$ são contínuas em $[a, b]$ e $f(x) \ge g(x)$ para **todo** $x$ do
+> intervalo, a área da região entre os dois gráficos é
+> $$A = \int_a^b \big[f(x) - g(x)\big]\,dx.$$
+> A função $f$ é a de cima; a $g$, a de baixo.
+
+A hipótese "para todo $x$ do intervalo" não é enfeite, e a seção 9 mostra o que
+acontece quando ela falha.
+
+**Exemplo.** A área entre $y = x + 2$ e $y = x^2$, na região que elas fecham.
+
+Primeiro, os limites. As curvas se encontram onde $x^2 = x + 2$, isto é,
+$x^2 - x - 2 = 0$. Fatorando, $(x - 2)(x + 1) = 0$, e as raízes são $-1$ e $2$.
+
+Segundo, quem está em cima. Teste um ponto do meio, $x = 0$: a reta vale 2 e a
+parábola vale 0. A reta está por cima, e o desenho da seção 6 confirma que isso
+vale no intervalo inteiro.
+
+Terceiro, a integral:
+
+$$
+\begin{aligned}
+A &= \int_{-1}^{2} \big[(x + 2) - x^2\big]\,dx \\[4pt]
+&= \Big[\frac{x^2}{2} + 2x - \frac{x^3}{3}\Big]_{-1}^{2} \\[4pt]
+&= \left(2 + 4 - \frac{8}{3}\right) - \left(\frac{1}{2} - 2 + \frac{1}{3}\right) \\[4pt]
+&= \frac{10}{3} - \left(-\frac{7}{6}\right) = \frac{20}{6} + \frac{7}{6} = \frac{27}{6} = \frac{9}{2}.
+\end{aligned}
+$$
+
+A área é $\frac{9}{2} = 4{,}5$. Uma soma de Riemann com $200\,000$ faixas dá
+4,5000. Confere.
+
+**Contraexemplo, para delimitar a ideia.** Troque as curvas por
+$f(x) = x$ e $g(x) = x^2$, no intervalo $[0, 2]$, e calcule a integral da
+diferença:
+
+$$
+\int_0^2 (x - x^2)\,dx = \Big[\frac{x^2}{2} - \frac{x^3}{3}\Big]_0^2
+= 2 - \frac{8}{3} = -\frac{2}{3}.
+$$
+
+O resultado é **negativo**, e área nenhuma é negativa. O problema é que a
+hipótese falhou: $x \ge x^2$ vale em $[0, 1]$, mas em $[1, 2]$ é o contrário —
+em $x = 1{,}5$, temos $x = 1{,}5$ e $x^2 = 2{,}25$. A fórmula foi aplicada onde
+não valia, e o número que ela devolveu não é a área. A próxima seção diz o que
+esse número é e como obter a área.
+
+## 9. Quando as curvas se cruzam dentro do intervalo
+
+O contraexemplo acima não é um acidente: ele acontece sempre que as curvas
+trocam de posição no meio do caminho. Vale entender exatamente o que a integral
+devolveu ali.
+
+Separando o intervalo no ponto de cruzamento $x = 1$:
+
+$$
+\int_0^1 (x - x^2)\,dx = \Big[\frac{x^2}{2} - \frac{x^3}{3}\Big]_0^1
+= \frac{1}{2} - \frac{1}{3} = \frac{1}{6},
+$$
+
+$$
+\int_1^2 (x - x^2)\,dx = \left(2 - \frac{8}{3}\right) - \left(\frac{1}{2} - \frac{1}{3}\right)
+= -\frac{2}{3} - \frac{1}{6} = -\frac{5}{6}.
+$$
+
+Os dois pedaços somam $\frac{1}{6} - \frac{5}{6} = -\frac{2}{3}$, o número de
+antes. Ou seja: **a integral de $f - g$ conta o primeiro trecho positivo e o
+segundo negativo**, exatamente como a integral de uma função conta como negativa
+a parte abaixo do eixo. Ela deu a diferença entre as duas áreas, $\frac{1}{6}$ e
+$\frac{5}{6}$, e não a soma.
+
+Para a **área**, os dois pedaços entram positivos:
+
+$$
+A = \frac{1}{6} + \frac{5}{6} = 1.
+$$
+
+Uma soma de Riemann de $\lvert x - x^2 \rvert$ em $[0, 2]$ dá 1,0000. Confere.
+
+A forma compacta de escrever isso usa o valor absoluto:
+
+$$
+A = \int_a^b \big\lvert f(x) - g(x) \big\rvert\,dx,
+$$
+
+com o entendimento de que, para calcular, o intervalo é cortado nos pontos de
+cruzamento e cada trecho é integrado com a ordem certa. É o mesmo passo que a
+lição anterior usou para separar distância percorrida de deslocamento: lá, o
+corte era onde a velocidade zerava; aqui, é onde a diferença zera.
+
+### O roteiro
+
+1. **Esboce** as duas curvas, ainda que grosseiramente. Sem o desenho, não há
+   como saber quem está em cima; e, para uma curva que você não reconhece de
+   imediato, o roteiro da lição de [esboço de gráficos](./esboco-de-graficos)
+   resolve.
+2. **Ache os cruzamentos** resolvendo $f(x) = g(x)$. Eles serão os limites, se o
+   enunciado não der outros, ou os pontos de corte, se der.
+3. **Descarte os cruzamentos fora do intervalo** pedido, e mantenha os de
+   dentro.
+4. **Decida quem está em cima em cada trecho**, testando um ponto no interior
+   dele. Um ponto por trecho é suficiente: entre dois cruzamentos consecutivos,
+   a diferença $f - g$ não troca de sinal.
+5. **Integre a diferença em cada trecho**, sempre "de cima menos de baixo", e
+   **some** os resultados. Todos os pedaços saem positivos.
+
+O passo 4 merece uma justificativa. Por que um único ponto de teste decide o
+trecho inteiro? Porque a função $d(x) = f(x) - g(x)$ é contínua, e uma função
+contínua só troca de sinal passando pelo zero — foi o teorema do valor
+intermediário da lição de [continuidade](./continuidade). Os zeros de $d$ são
+justamente os cruzamentos, e entre dois deles não há troca de sinal possível. É
+o mesmo argumento do quadro de sinais das inequações.
+
+## 10. A região não precisa estar acima do eixo
+
+Uma dúvida comum: e se as duas curvas estiverem abaixo do eixo horizontal, ou
+uma de cada lado? A resposta é que **não muda nada**, e vale ver por quê, porque
+o motivo é curto e desfaz a dúvida de vez.
+
+Tome a região entre $y = x + 2$ e $y = x^2$, de área $\frac{9}{2}$, e desça as
+duas curvas cinco unidades. As novas funções são $f_1(x) = x + 2 - 5 = x - 3$ e
+$g_1(x) = x^2 - 5$. Boa parte da região agora está abaixo do eixo. A altura da
+faixa em cada $x$ é
+
+$$
+f_1(x) - g_1(x) = (x + 2 - 5) - (x^2 - 5) = x + 2 - x^2,
+$$
+
+que é exatamente a altura de antes: os dois $-5$ se cancelaram na subtração.
+Confira num ponto: em $x = 1{,}3$, a altura antiga é $1{,}3 + 2 - 1{,}69 =
+1{,}61$, e a nova é $(1{,}3 - 3) - (1{,}69 - 5) = -1{,}7 + 3{,}31 = 1{,}61$.
+Iguais.
+
+Como as alturas são as mesmas ponto a ponto, e os cruzamentos também
+(descer as duas curvas não muda onde elas se encontram), a integral é a mesma:
+a área continua $\frac{9}{2}$. Faz sentido geométrico: transladar uma figura não
+muda o tamanho dela.
+
+**O que isso dispensa.** Não é preciso verificar se a região está acima do eixo,
+nem quebrar a conta nos pontos em que as curvas cruzam o eixo. Os cruzamentos
+com o **eixo** são irrelevantes aqui; o que importa são os cruzamentos **entre
+as curvas**.
+
+**O que isso não dispensa.** Continua sendo preciso saber quem está em cima. A
+subtração é "de cima menos de baixo", e isso depende da posição relativa das
+curvas, não da posição delas em relação ao eixo.
+
+## 11. Faixas horizontais: integrar em y
+
+Algumas regiões são desconfortáveis de descrever com faixas verticais e ficam
+simples com faixas horizontais. O caso típico é uma parábola deitada.
+
+Tome a região limitada por $x = y^2$ e $x = y + 2$.
+
+Com faixas verticais, a região teria de ser cortada em dois pedaços, porque à
+esquerda a faixa vai de um ramo da parábola ao outro, e à direita ela vai da
+parábola até a reta. São duas contas.
+
+Com faixas **horizontais**, é uma só. Troque os papéis das letras: para cada
+altura $y$, a faixa horizontal vai da curva mais à esquerda até a mais à
+direita, e o comprimento dela é "direita menos esquerda". Os limites saem de
+resolver a equação em $y$:
+
+$$
+y^2 = y + 2 \;\Longrightarrow\; y^2 - y - 2 = 0 \;\Longrightarrow\; (y-2)(y+1) = 0,
+$$
+
+o que dá $y = -1$ e $y = 2$. Testando em $y = 0$: a reta dá $x = 2$ e a parábola
+dá $x = 0$, então a reta está à direita.
+
+$$
+A = \int_{-1}^{2} \big[(y + 2) - y^2\big]\,dy
+= \Big[\frac{y^2}{2} + 2y - \frac{y^3}{3}\Big]_{-1}^{2}
+= \frac{9}{2}.
+$$
+
+A conta é idêntica à do exemplo da seção 8, com $y$ no lugar de $x$ — e o
+resultado, $4{,}5$, foi conferido por soma de Riemann.
+
+A regra prática: se resolver a fronteira para $x$ em função de $y$ for mais
+simples do que o contrário, ou se as faixas verticais exigirem cortar a região,
+experimente integrar em $y$. Tudo o mais permanece: achar cruzamentos, decidir
+quem está de que lado, integrar a diferença.
+
+## 12. Resolvendo o problema da produção
+
+Voltemos à oficina. A receita marginal é $r(x) = 60 - 2x$ e o custo marginal é
+$c(x) = 12 + x$, ambos em reais por camiseta.
+
+**Onde as curvas se cruzam.** Resolvendo $r(x) = c(x)$:
+
+$$
+60 - 2x = 12 + x \;\Longrightarrow\; 48 = 3x \;\Longrightarrow\; x = 16.
+$$
+
+Na camiseta 16, ambas valem $28$ reais. Antes disso, $r$ está por cima; depois,
+$c$ está por cima. Um ponto de teste confirma: em $x = 10$, $r = 40$ e $c = 22$;
+em $x = 20$, $r = 20$ e $c = 32$.
+
+<CartesianPlane
+  xMin={-1}
+  xMax={22}
+  yMin={-4}
+  yMax={64}
+  xUnit={17}
+  yUnit={5.2}
+  xStep={2}
+  xLabelEvery={2}
+  yStep={10}
+  polygons={[
+    {points: [[0, 60], [16, 28], [0, 12]], tone: 1},
+    {points: [[16, 28], [20, 20], [20, 32]], tone: 2},
+  ]}
+  functions={[
+    {f: (x) => 60 - 2 * x, domain: [0, 21], tone: 1},
+    {f: (x) => 12 + x, domain: [0, 21], tone: 3},
+  ]}
+  points={[{at: [16, 28], label: '(16,\\ 28)', tone: 2, dx: 4, dy: -18}]}
+  labels={[
+    {at: [4.5, 36], math: '+384', tone: 1},
+    {at: [20.5, 26], math: '-24', tone: 2, dx: 14},
+    {at: [3, 57], math: 'r(x) = 60 - 2x', tone: 1, dx: 42},
+    {at: [3.6, 15.6], math: 'c(x) = 12 + x', tone: 3, dx: 40},
+  ]}
+  axisLabels={['x', 'R\\$/\\text{camiseta}']}
+  caption="Receita marginal e custo marginal por camiseta. Até a camiseta 16 a receita está por cima, e a região vale +384 reais de lucro; depois dela o custo está por cima, e a região vale −24 reais."
+/>
+
+**Primeira pergunta: o lucro ao produzir 16 camisetas.** No intervalo $[0, 16]$
+a receita marginal está sempre acima, então o lucro acumulado é a área da
+região:
+
+$$
+\begin{aligned}
+L(16) &= \int_0^{16} \big[(60 - 2x) - (12 + x)\big]\,dx \\[4pt]
+&= \int_0^{16} (48 - 3x)\,dx \\[4pt]
+&= \Big[48x - \frac{3x^2}{2}\Big]_0^{16} \\[4pt]
+&= 48 \times 16 - \frac{3 \times 256}{2} = 768 - 384 = 384.
+\end{aligned}
+$$
+
+O lucro é de **R\$ 384**. Confere pela geometria: a região é um triângulo de
+base 16 e altura 48 (a folga inicial entre 60 e 12), e $\frac{16 \times 48}{2} =
+384$. Uma soma de Riemann com $200\,000$ faixas dá 384,00.
+
+**Segunda pergunta: produzir 20 camisetas.** Da camiseta 16 à 20, o custo
+marginal está por cima, e cada camiseta produzida subtrai do lucro. Aqui a
+distinção da seção 9 decide qual conta fazer, e a resposta depende da pergunta:
+
+Se a pergunta é **quanto lucro sobra**, a conta é a integral da diferença, com
+o segundo trecho entrando negativo:
+
+$$
+L(20) = \int_0^{20} \big[r(x) - c(x)\big]\,dx = 384 + \int_{16}^{20} (48 - 3x)\,dx
+= 384 + (-24) = 360.
+$$
+
+O segundo pedaço vale $-24$: as quatro últimas camisetas destruíram R\$ 24 de
+lucro. Produzir 20 rende **R\$ 360**, menos que os R\$ 384 de produzir 16.
+
+Se a pergunta fosse **qual é a área entre as duas curvas em $[0, 20]$**, a
+resposta seria outra: $384 + 24 = 408$. Esse 408 não é lucro nenhum — ele soma
+o que a oficina ganhou com o que ela perdeu, em vez de descontar.
+
+**A leitura econômica.** O lucro acumulado é máximo exatamente onde as curvas se
+cruzam, porque ali a taxa de lucro $r(x) - c(x)$ troca de positiva para
+negativa. É o critério da lição de [máximos e mínimos](./maximos-e-minimos), com
+$L'(x) = r(x) - c(x)$: o ponto crítico é onde a receita marginal iguala o custo
+marginal. Produzir a camiseta 17 é escolher pagar 29 reais para receber 26.
+
+## 13. Exemplos resolvidos
+
+### Exemplo 1: duas parábolas
+
+Calcule a área da região entre $y = x^2$ e $y = 8 - x^2$.
+
+**Cruzamentos.** $x^2 = 8 - x^2$ dá $2x^2 = 8$, isto é, $x^2 = 4$ e $x = \pm 2$.
+
+**Quem está em cima.** Em $x = 0$: a primeira vale 0, a segunda vale 8. A curva
+$y = 8 - x^2$ está por cima.
+
+$$
+A = \int_{-2}^{2} \big[(8 - x^2) - x^2\big]\,dx
+= \int_{-2}^{2} (8 - 2x^2)\,dx
+= \Big[8x - \frac{2x^3}{3}\Big]_{-2}^{2}.
+$$
+
+$$
+A = \left(16 - \frac{16}{3}\right) - \left(-16 + \frac{16}{3}\right)
+= 32 - \frac{32}{3} = \frac{64}{3} \approx 21{,}33.
+$$
+
+A soma de Riemann dá 21,333. Confere.
+
+Uma abreviação possível: a função $8 - 2x^2$ é **par**, e o intervalo é
+simétrico, então a integral é o dobro da metade direita:
+$2 \int_0^2 (8 - 2x^2)\,dx = 2 \times \frac{32}{3} = \frac{64}{3}$. É a
+propriedade da simetria da lição anterior, aplicada à diferença.
+
+### Exemplo 2: seno e cosseno, com cruzamento no meio
+
+*Pause e tente antes de ler.* Calcule a área da região entre $y = \sen x$ e
+$y = \cos x$, de $x = 0$ a $x = \pi$.
+
+Aqui os limites vêm do enunciado, mas é preciso verificar se há cruzamento
+dentro deles. Resolvendo $\sen x = \cos x$ em $[0, \pi]$: dividindo os dois
+lados por $\cos x$ onde ele não zera, $\tg x = 1$, e a solução no intervalo é
+$x = \frac{\pi}{4}$.
+
+Testando de cada lado: em $x = 0$, $\sen 0 = 0$ e $\cos 0 = 1$, então o
+**cosseno** está por cima. Em $x = \frac{\pi}{2}$, $\sen = 1$ e $\cos = 0$: o
+**seno** está por cima. Dois trechos, com ordens diferentes.
+
+<CartesianPlane
+  xMin={-0.25}
+  xMax={3.5}
+  yMin={-1.35}
+  yMax={1.35}
+  xUnit={150}
+  yUnit={78}
+  xTicks={[
+    {at: Math.PI / 4, label: '\\frac{\\pi}{4}'},
+    {at: Math.PI / 2, label: '\\frac{\\pi}{2}'},
+    {at: Math.PI, label: '\\pi'},
+  ]}
+  yStep={0.5}
+  polygons={[
+    {
+      points: [
+        ...Array.from({length: 31}, (_, i) => {
+          const x = (Math.PI / 4) * (i / 30);
+          return [x, Math.cos(x)];
+        }),
+        ...Array.from({length: 31}, (_, i) => {
+          const x = (Math.PI / 4) * (1 - i / 30);
+          return [x, Math.sin(x)];
+        }),
+      ],
+      tone: 2,
+    },
+    {
+      points: [
+        ...Array.from({length: 41}, (_, i) => {
+          const x = Math.PI / 4 + ((3 * Math.PI) / 4) * (i / 40);
+          return [x, Math.sin(x)];
+        }),
+        ...Array.from({length: 41}, (_, i) => {
+          const x = Math.PI - ((3 * Math.PI) / 4) * (i / 40);
+          return [x, Math.cos(x)];
+        }),
+      ],
+      tone: 3,
+    },
+  ]}
+  functions={[
+    {f: (x) => Math.sin(x), domain: [-0.2, 3.45], tone: 1},
+    {f: (x) => Math.cos(x), domain: [-0.2, 3.45], tone: 1, dashed: true},
+  ]}
+  points={[{at: [Math.PI / 4, Math.SQRT1_2], tone: 2}]}
+  labels={[
+    {at: [0.42, 0.45], math: 'A_1', tone: 2, dy: 4},
+    {at: [1.9, 0.15], math: 'A_2', tone: 3},
+    {at: [2.1, 0.98], math: '\\sen x', tone: 1, dx: -6},
+    {at: [2.75, -0.98], math: '\\cos x', tone: 1, dx: 10},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Seno (cheio) e cosseno (tracejado) em [0, π]. Até π/4 o cosseno está por cima; depois, o seno. São dois trechos, e cada um tem sua própria ordem de subtração."
+/>
+
+$$
+A_1 = \int_0^{\pi/4} (\cos x - \sen x)\,dx
+= \Big[\sen x + \cos x\Big]_0^{\pi/4}
+= \left(\frac{\sqrt2}{2} + \frac{\sqrt2}{2}\right) - (0 + 1) = \sqrt2 - 1.
+$$
+
+$$
+A_2 = \int_{\pi/4}^{\pi} (\sen x - \cos x)\,dx
+= \Big[-\cos x - \sen x\Big]_{\pi/4}^{\pi}
+= (1 - 0) - \left(-\frac{\sqrt2}{2} - \frac{\sqrt2}{2}\right) = 1 + \sqrt2.
+$$
+
+$$
+A = A_1 + A_2 = (\sqrt2 - 1) + (1 + \sqrt2) = 2\sqrt2 \approx 2{,}828.
+$$
+
+As somas de Riemann dão 0,4142 e 2,4142, com total 2,8284. Confere.
+
+**O erro que este exemplo previne.** Quem integrasse $\sen x - \cos x$ no
+intervalo inteiro obteria
+
+$$
+\Big[-\cos x - \sen x\Big]_0^{\pi} = (1 - 0) - (-1 - 0) = 2,
+$$
+
+que não é a área. O 2 é a diferença $A_2 - A_1 = (1+\sqrt2) - (\sqrt2 - 1)$,
+com o primeiro trecho descontado por estar com a ordem invertida.
+
+### Exemplo 3: quando a área é o pedaço fechado pelas curvas
+
+*Pause e tente.* Calcule a área da região fechada entre $y = x$ e
+$y = x^2 - 2x$.
+
+O enunciado não dá intervalo: ele diz "a região fechada", e são as próprias
+curvas que a fecham. Os limites, então, são os cruzamentos.
+
+$$
+x = x^2 - 2x \;\Longrightarrow\; x^2 - 3x = 0 \;\Longrightarrow\; x(x - 3) = 0,
+$$
+
+com raízes 0 e 3. Em $x = 1$: a reta vale 1, a parábola vale $-1$. A reta está
+por cima.
+
+$$
+A = \int_0^3 \big[x - (x^2 - 2x)\big]\,dx
+= \int_0^3 (3x - x^2)\,dx
+= \Big[\frac{3x^2}{2} - \frac{x^3}{3}\Big]_0^3
+= \frac{27}{2} - 9 = \frac{9}{2}.
+$$
+
+A área é $4{,}5$, e a soma de Riemann confirma. Repare que boa parte da região
+está **abaixo do eixo horizontal**, onde a parábola é negativa — e isso não
+entrou na conta em momento nenhum, pelo motivo da seção 10.
+
+### Exemplo 4: duas máquinas
+
+*Pause e tente.* Duas máquinas produzem peças. A máquina A produz à taxa
+$a(t) = 50 - 5t$ peças por hora, porque vai perdendo rendimento com o
+aquecimento. A máquina B produz à taxa $b(t) = 20 + t$ peças por hora, porque
+vai entrando em regime. As duas trabalham 8 horas. Quantas peças a mais a
+máquina A produz no total?
+
+A pergunta é sobre o **saldo**, então é a integral da diferença — sem valor
+absoluto.
+
+Cruzamento: $50 - 5t = 20 + t$ dá $30 = 6t$, ou seja, $t = 5$ horas, quando
+ambas produzem 25 peças por hora.
+
+$$
+\int_0^8 \big[a(t) - b(t)\big]\,dt = \int_0^8 (30 - 6t)\,dt
+= \Big[30t - 3t^2\Big]_0^8 = 240 - 192 = 48.
+$$
+
+A máquina A produz **48 peças a mais** nas 8 horas. Conferindo em separado:
+A produz $\int_0^8 (50 - 5t)\,dt = 400 - 160 = 240$ peças, e B produz
+$\int_0^8 (20 + t)\,dt = 160 + 32 = 192$. A diferença é 48. Confere.
+
+E se a pergunta fosse "qual é a área entre as duas curvas"? Seriam
+$\int_0^5 (30 - 6t)\,dt = 150 - 75 = 75$ mais
+$\int_5^8 (6t - 30)\,dt = (192 - 240) - (75 - 150) = 27$, total 102. Esse 102
+mede o **desencontro acumulado** entre as duas máquinas, não a vantagem de
+nenhuma delas.
+
+### Exemplo 5: excedente do consumidor
+
+*Pause e tente.* Numa feira, a curva de demanda por um produto é
+$p = 90 - 3q$, com $p$ em reais e $q$ em unidades. O preço praticado é R\$ 30.
+O **excedente do consumidor** é a área entre a curva de demanda e a reta do
+preço, de $q = 0$ até a quantidade vendida. Calcule-o.
+
+A curva de demanda diz quanto um comprador estaria disposto a pagar pela
+unidade de número $q$. O primeiro comprador pagaria 90 e paga 30: economizou 60.
+O excedente soma essas economias.
+
+Primeiro, a quantidade vendida: $90 - 3q = 30$ dá $q = 20$. É o cruzamento
+entre a curva de demanda e a reta horizontal do preço.
+
+$$
+E = \int_0^{20} \big[(90 - 3q) - 30\big]\,dq
+= \int_0^{20} (60 - 3q)\,dq
+= \Big[60q - \frac{3q^2}{2}\Big]_0^{20} = 1200 - 600 = 600.
+$$
+
+O excedente é **R\$ 600**. Pela geometria: triângulo de base 20 e altura 60,
+área $\frac{20 \times 60}{2} = 600$. Confere.
+
+## 14. Erros comuns
+
+> **Erro 1: integrar $f - g$ sem verificar quem está em cima.** Para $x$ e
+> $x^2$ em $[0, 2]$, a integral da diferença dá $-\frac{2}{3}$ e a área é 1. Se
+> a sua conta de área der número negativo, a ordem foi trocada em algum trecho.
+> Um resultado negativo é o aviso; a correção é achar o cruzamento e separar.
+
+> **Erro 2: esquecer um cruzamento dentro do intervalo.** Em $[0, \pi]$, seno e
+> cosseno se cruzam em $\frac{\pi}{4}$. Quem integra $\sen x - \cos x$ direto
+> obtém 2 em vez de $2\sqrt2 \approx 2{,}83$. Antes de integrar, resolva
+> $f(x) = g(x)$ e veja quais soluções caem dentro do intervalo.
+
+> **Erro 3: achar que a área pode ser negativa.** Área é uma medida de tamanho,
+> e não tem sinal. A **integral** pode ser negativa, e é isso que a lição
+> anterior chamou de área com sinal. Se a pergunta é "qual é a área", a resposta
+> é positiva sempre.
+
+> **Erro 4: usar $\lvert f \rvert - \lvert g \rvert$ em vez de
+> $\lvert f - g \rvert$.** São coisas diferentes. Em $x = 1{,}5$, com
+> $f(x) = x$ e $g(x) = -x$, temos $\lvert f - g \rvert = 3$, que é a altura
+> correta da faixa, enquanto $\lvert f \rvert - \lvert g \rvert = 0$. O valor
+> absoluto entra **depois** da subtração, nunca antes.
+
+> **Erro 5: chutar os limites de integração.** Quando o enunciado fala em
+> "região fechada pelas curvas", os limites são os cruzamentos, e é preciso
+> resolver $f(x) = g(x)$ para achá-los. Escolher 0 e 1 porque parecem
+> razoáveis dá a área de outra região.
+
+> **Erro 6: quebrar a conta onde as curvas cruzam o eixo.** O que importa são os
+> cruzamentos **entre as curvas**, não os cruzamentos delas com o eixo
+> horizontal. No exemplo 3, a parábola cruza o eixo em 0 e 2, e nenhum desses
+> pontos aparece na conta.
+
+> **Erro 7: responder a pergunta errada nos problemas aplicados.** "Quanto
+> lucro sobrou" pede a integral da diferença, com o trecho de prejuízo
+> descontando. "Qual é a área entre as curvas" soma os dois trechos. No
+> motivador, 360 e 408 são as duas respostas, e só uma delas é dinheiro no
+> caixa.
+
+## 15. Perguntas de verificação
+
+1. Por que a altura da faixa vertical é $f(x) - g(x)$, e não $f(x) + g(x)$ ou
+   $\lvert f(x) \rvert - \lvert g(x) \rvert$?
+2. Como a área sob uma curva, das lições anteriores, é um caso particular da
+   área entre curvas?
+3. De onde vêm os limites de integração quando o enunciado pede "a região
+   fechada pelas duas curvas"?
+4. Por que um único ponto de teste revela quem está em cima em todo o trecho
+   entre dois cruzamentos consecutivos? Que teorema garante isso?
+5. A região está inteiramente abaixo do eixo horizontal. Isso muda a conta da
+   área entre as curvas? Por quê?
+6. Qual é a diferença entre $\int_a^b (f - g)\,dx$ e
+   $\int_a^b \lvert f - g \rvert\,dx$, e quando cada uma responde à pergunta?
+7. No motivador, por que o lucro é máximo justamente onde as curvas se cruzam?
+8. Quando vale a pena integrar em $y$ em vez de em $x$?
+9. Se a integral da diferença de duas funções em $[a, b]$ deu zero, o que se
+   pode concluir sobre as curvas nesse intervalo?
+10. Por que a integral de $\sen x - \cos x$ em $[0, \pi]$ dá 2, e não a área
+    $2\sqrt2$? O que o 2 mede?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque a faixa vai da curva de baixo até a de cima, e o comprimento de um
+   segmento vertical entre as alturas $g(x)$ e $f(x)$ é a diferença delas. A
+   soma mediria outra coisa, e os valores absolutos separados destruiriam a
+   subtração: com $f = x$ e $g = -x$ em $x = 1{,}5$, a altura é 3, mas
+   $\lvert f \rvert - \lvert g \rvert$ dá 0.
+2. Tome $g(x) = 0$: a curva de baixo passa a ser o próprio eixo horizontal, a
+   altura da faixa vira $f(x)$, e a integral vira $\int_a^b f(x)\,dx$.
+3. Dos **cruzamentos**, resolvendo $f(x) = g(x)$. São as próprias curvas que
+   fecham a região, e elas se encontram exatamente onde os valores coincidem.
+4. Porque $d(x) = f(x) - g(x)$ é contínua e se anula só nos cruzamentos. Pelo
+   teorema do valor intermediário, para trocar de sinal ela teria de passar por
+   zero, e não há zero dentro do trecho. É o mesmo argumento do quadro de sinais.
+5. Não muda nada. Descer as duas curvas pela mesma quantidade não altera a
+   diferença $f - g$, porque as duas parcelas iguais se cancelam na subtração —
+   e transladar uma figura não muda a área dela.
+6. A primeira conta os trechos com sinal: onde $g$ está por cima, a contribuição
+   é negativa. Ela responde a perguntas de **saldo** (lucro, vantagem líquida).
+   A segunda conta tudo positivo e responde a perguntas de **área** ou de total
+   acumulado sem cancelamento.
+7. Porque a taxa de crescimento do lucro é $r(x) - c(x)$, que é positiva antes
+   do cruzamento e negativa depois. Uma função que sobe e passa a descer tem
+   máximo onde a derivada troca de sinal.
+8. Quando descrever a fronteira como $x$ em função de $y$ for mais simples, ou
+   quando as faixas verticais obrigarem a cortar a região em vários pedaços. A
+   região entre $x = y^2$ e $x = y + 2$ é o caso típico.
+9. Que as áreas acima e abaixo se compensaram: as curvas se cruzam no intervalo
+   e a região de um lado tem a mesma área que a do outro. Não significa que as
+   curvas coincidem.
+10. Porque as curvas se cruzam em $\frac{\pi}{4}$, e no primeiro trecho o
+    cosseno está por cima. Ao integrar $\sen x - \cos x$ no intervalo inteiro, o
+    primeiro trecho entra com sinal trocado. O 2 é a diferença entre as duas
+    áreas, $(1+\sqrt2) - (\sqrt2 - 1)$, e não a soma.
+
+</details>
+
+## 16. Exercícios
+
+### 1. Reconhecimento
+
+1. Em cada par, diga qual função está por cima no intervalo indicado, testando
+   um ponto: a) $y = 4$ e $y = x^2$ em $[-1, 1]$; b) $y = x$ e $y = x^3$ em
+   $[0{,}5;\ 0{,}9]$; c) $y = -x^2$ e $y = -4$ em $[-1, 1]$.
+2. Escreva, sem calcular, a integral que dá a área da região entre $y = x^2$ e
+   $y = 2x$, sabendo que elas se cruzam em $x = 0$ e $x = 2$ e que a reta está
+   por cima entre esses pontos.
+3. Duas curvas se cruzam em $x = 1$ e $x = 4$, e a região pedida é a que elas
+   fecham. Quais são os limites de integração?
+
+### 2. Explicação
+
+4. Explique por que a área da região entre duas curvas não muda quando as duas
+   são deslocadas 10 unidades para baixo.
+5. Um colega calculou a área entre $y = x$ e $y = x^2$ em $[0, 2]$ integrando
+   $x - x^2$ e obteve $-\frac{2}{3}$. Diga onde está o erro e qual é a área.
+6. Por que a área sob uma curva é um caso particular da área entre curvas?
+   Escreva as duas fórmulas e mostre a passagem.
+
+### 3. Aplicação direta
+
+7. Calcule a área da região entre cada par de curvas, achando primeiro os
+   cruzamentos: a) $y = x$ e $y = x^2$ na região que elas fecham; b) $y = x + 6$
+   e $y = x^2$; c) $y = 2x$ e $y = x^2$; d) $y = \sqrt{x}$ e $y = x^2$.
+8. Calcule a área da região entre $y = 4 - x^2$ e o eixo horizontal.
+9. Calcule a área da região fechada entre $y = x$ e $y = x^2 - 2x$, refazendo o
+   exemplo 3 por conta própria e conferindo o resultado.
+
+### 4. Variação
+
+10. Calcule a área da região entre $y = x^3$ e $y = x$ no intervalo $[-1, 1]$.
+    Atenção: há um cruzamento no meio.
+11. Calcule a área da região limitada por $x = 4 - y^2$ e o eixo vertical,
+    integrando em $y$.
+12. Para as curvas do exercício 10, calcule também $\int_{-1}^{1} (x^3 - x)\,dx$
+    e explique por que o resultado difere da área.
+13. A região entre $y = x + 2$ e $y = x^2$ tem área $\frac{9}{2}$. Sem refazer a
+    integral, diga a área da região entre $y = x + 7$ e $y = x^2 + 5$, e
+    justifique.
+
+### 5. Problema misto
+
+14. Duas máquinas produzem peças. A máquina A tem taxa $a(t) = 50 - 5t$ peças
+    por hora e a B tem taxa $b(t) = 20 + t$, com $t$ em horas, num turno de 8
+    horas. a) Em que instante as taxas se igualam? b) Quantas peças cada uma
+    produz no turno? c) Quantas peças A produz a mais que B? d) Qual é a área
+    entre as duas curvas, e o que ela mede?
+15. Numa feira, a demanda por um produto é $p = 90 - 3q$ reais e o preço
+    praticado é R\$ 30. a) Quantas unidades são vendidas? b) Calcule o excedente
+    do consumidor. c) Se o preço subisse para R\$ 45, o que aconteceria com o
+    excedente?
+16. A receita marginal de uma oficina é $r(x) = 60 - 2x$ e o custo marginal é
+    $c(x) = 12 + x$, ambos em reais por unidade. a) Qual é o lucro acumulado ao
+    produzir 10 unidades? b) E ao produzir 16? c) E ao produzir 24? d) Explique
+    por que a resposta de (c) é menor que a de (b).
+17. Um terreno é limitado ao norte pela curva $y = 8 - x^2$ e ao sul pela curva
+    $y = x^2$, com $x$ e $y$ em centenas de metros. Calcule a área do terreno em
+    quilômetros quadrados.
+
+### 6. Justificativa
+
+18. Mostre, a partir da propriedade da soma de integrais, que
+    $\int_a^b f\,dx - \int_a^b g\,dx = \int_a^b (f - g)\,dx$, e explique por que
+    a segunda escrita continua valendo quando as curvas estão abaixo do eixo e a
+    primeira leitura como "subtração de áreas" não.
+19. Explique por que um único ponto de teste decide quem está em cima em todo o
+    trecho entre dois cruzamentos consecutivos. Qual teorema do capítulo
+    sustenta o argumento?
+20. Duas funções contínuas têm $\int_a^b (f - g)\,dx = 0$. Isso obriga $f$ e $g$
+    a coincidirem em $[a, b]$? Justifique com um exemplo.
+
+<details>
+<summary>Dica para o exercício 10</summary>
+
+Ache primeiro os pontos em que $x^3 = x$. São três, e um deles está no meio do
+intervalo. Em cada trecho, teste um ponto para descobrir quem está por cima:
+para $x$ negativo entre $-1$ e 0, compare $(-0{,}5)^3$ com $-0{,}5$.
+
+</details>
+
+<details>
+<summary>Dica para o exercício 17</summary>
+
+As curvas se cruzam onde $8 - x^2 = x^2$. Depois de calcular a área nas unidades
+do enunciado, lembre que cada unidade de $x$ e de $y$ vale 100 metros, então
+uma unidade de área vale $100 \times 100 = 10\,000$ m².
+
+</details>
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) $y = 4$: em $x = 0$, vale 4 contra 0. b) $y = x$: em $x = 0{,}7$, vale 0,7
+   contra $0{,}343$. c) $y = -x^2$: em $x = 0$, vale 0 contra $-4$. Em (c), as
+   duas curvas estão abaixo do eixo em boa parte do intervalo, e isso não
+   interfere: quem está "em cima" é quem tem o valor maior.
+2. $\int_0^2 (2x - x^2)\,dx$. (O valor é $\frac{4}{3}$, mas o exercício pedia só
+   a escrita.)
+3. Os limites são 1 e 4, os próprios cruzamentos. Quando a região é a que as
+   curvas fecham, não há intervalo externo a respeitar.
+4. Porque a altura da faixa em cada $x$ é $\big(f(x) - 10\big) - \big(g(x) -
+   10\big) = f(x) - g(x)$: os dois deslocamentos se cancelam na subtração. Como
+   os cruzamentos também não mudam, a integral é a mesma. Geometricamente,
+   transladar uma figura não muda a área.
+5. O erro foi supor que $x \ge x^2$ no intervalo inteiro. Isso vale só em
+   $[0, 1]$; em $[1, 2]$ a parábola passa por cima (em $x = 1{,}5$, $2{,}25$
+   contra $1{,}5$). Separando: $\int_0^1 (x - x^2)\,dx = \frac{1}{6}$ e
+   $\int_1^2 (x^2 - x)\,dx = \frac{5}{6}$, e a área é $\frac{1}{6} + \frac{5}{6}
+   = 1$. O $-\frac{2}{3}$ é a diferença entre as duas áreas.
+6. Com $g(x) = 0$, a fórmula $A = \int_a^b [f(x) - g(x)]\,dx$ vira
+   $A = \int_a^b f(x)\,dx$. A curva de baixo passa a ser o eixo horizontal, e a
+   altura da faixa, que ia de $g$ até $f$, passa a ir do eixo até $f$.
+7. a) Cruzam em 0 e 1; a reta está por cima ($x = 0{,}5$ dá 0,5 contra 0,25);
+   $\int_0^1 (x - x^2)\,dx = \frac{1}{2} - \frac{1}{3} = \frac{1}{6} \approx
+   0{,}167$. &nbsp; b) $x^2 = x + 6$ dá $x^2 - x - 6 = 0$, raízes $-2$ e 3; a
+   reta está por cima; $\int_{-2}^{3} (x + 6 - x^2)\,dx = \frac{125}{6} \approx
+   20{,}83$. &nbsp; c) Cruzam em 0 e 2; a reta está por cima;
+   $\int_0^2 (2x - x^2)\,dx = 4 - \frac{8}{3} = \frac{4}{3} \approx 1{,}33$.
+   &nbsp; d) Cruzam em 0 e 1; a raiz está por cima ($x = 0{,}25$ dá 0,5 contra
+   0,0625); $\int_0^1 (\sqrt{x} - x^2)\,dx = \frac{2}{3} - \frac{1}{3} =
+   \frac{1}{3}$.
+8. A parábola cruza o eixo em $x = \pm 2$ e está acima dele entre eles.
+   $\int_{-2}^{2} (4 - x^2)\,dx = \Big[4x - \frac{x^3}{3}\Big]_{-2}^{2} =
+   \frac{32}{3} \approx 10{,}67$.
+9. Cruzam em 0 e 3; a reta está por cima; $\int_0^3 (3x - x^2)\,dx =
+   \frac{27}{2} - 9 = \frac{9}{2} = 4{,}5$.
+10. $x^3 = x$ dá $x(x^2 - 1) = 0$, com raízes $-1$, 0 e 1. Em $[-1, 0]$, teste
+    $x = -0{,}5$: $x^3 = -0{,}125$ e $x = -0{,}5$, então **$x^3$ está por
+    cima**. Em $[0, 1]$, teste $x = 0{,}5$: $0{,}5$ contra $0{,}125$, e **$x$
+    está por cima**.
+    $\int_{-1}^{0} (x^3 - x)\,dx = \frac{1}{4}$ e
+    $\int_0^1 (x - x^3)\,dx = \frac{1}{4}$. Área total $\frac{1}{2}$. Se você
+    encontrou zero, integrou $x^3 - x$ no intervalo inteiro sem separar.
+11. As fronteiras se encontram onde $4 - y^2 = 0$, isto é, $y = \pm 2$. A faixa
+    horizontal vai de $x = 0$ até $x = 4 - y^2$.
+    $\int_{-2}^{2} (4 - y^2)\,dy = \frac{32}{3} \approx 10{,}67$ — a mesma conta
+    do exercício 8, deitada.
+12. $\int_{-1}^{1} (x^3 - x)\,dx = 0$, porque $x^3 - x$ é ímpar e o intervalo é
+    simétrico. O resultado difere da área $\frac{1}{2}$ porque a integral conta
+    o trecho $[0, 1]$ com sinal negativo, já que ali a ordem "de cima menos de
+    baixo" é a inversa. Zero significa que as duas metades se compensaram.
+13. A área é a mesma, $\frac{9}{2}$. A altura da faixa é
+    $(x + 7) - (x^2 + 5) = x + 2 - x^2$, idêntica à de antes; e os cruzamentos
+    também não mudam, porque somar 5 aos dois lados de $x + 2 = x^2$ não altera
+    as soluções. Conferindo em $x = 1{,}3$: $8{,}3 - 6{,}69 = 1{,}61$, e
+    $3{,}3 - 1{,}69 = 1{,}61$.
+14. a) $50 - 5t = 20 + t$ dá $t = 5$ h, com ambas a 25 peças por hora. &nbsp;
+    b) $\int_0^8 (50 - 5t)\,dt = 400 - 160 = 240$ peças para A;
+    $\int_0^8 (20 + t)\,dt = 160 + 32 = 192$ para B. &nbsp; c)
+    $\int_0^8 (30 - 6t)\,dt = 240 - 192 = 48$ peças a mais. &nbsp; d) A área é
+    $75 + 27 = 102$. Ela mede o desencontro acumulado entre as duas taxas —
+    quanto uma esteve à frente da outra, somando os dois períodos —, e **não** a
+    vantagem de A, que é 48.
+15. a) $90 - 3q = 30$ dá $q = 20$ unidades. &nbsp; b)
+    $\int_0^{20} (60 - 3q)\,dq = 1200 - 600 = 600$ reais; pela geometria,
+    triângulo de base 20 e altura 60. &nbsp; c) Com preço 45, a quantidade cai
+    para $q = 15$ e o excedente vira $\int_0^{15} (45 - 3q)\,dq = 675 - 337{,}5
+    = 337{,}5$ reais. O excedente **cai**, porque o triângulo fica menor nas
+    duas dimensões.
+16. a) $\int_0^{10} (48 - 3x)\,dx = 480 - 150 = 330$ reais. &nbsp; b)
+    $\int_0^{16} (48 - 3x)\,dx = 768 - 384 = 384$ reais. &nbsp; c)
+    $\int_0^{24} (48 - 3x)\,dx = 1152 - 864 = 288$ reais. &nbsp; d) Porque a
+    partir da unidade 16 o custo marginal ultrapassa a receita marginal, e cada
+    unidade a mais **subtrai** do lucro acumulado. De 16 a 24 o prejuízo
+    acumulado é $384 - 288 = 96$ reais.
+17. $8 - x^2 = x^2$ dá $x = \pm 2$, e a curva $8 - x^2$ está por cima.
+    $\int_{-2}^{2} (8 - 2x^2)\,dx = \frac{64}{3} \approx 21{,}33$ unidades de
+    área. Cada unidade vale $10\,000$ m², então são $213\,333$ m², ou seja,
+    **0,213 km²** — cerca de 21,3 hectares.
+18. A propriedade da soma diz $\int (u + v) = \int u + \int v$. Tomando
+    $u = f - g$ e $v = g$, temos $u + v = f$, logo
+    $\int f = \int (f - g) + \int g$, e isolando,
+    $\int (f - g) = \int f - \int g$. A primeira escrita, lida como "área sob
+    $f$ menos área sob $g$", pressupõe que as duas regiões estejam acima do
+    eixo; se $g$ for negativa, $\int g$ é negativa e não é a área de região
+    nenhuma. A integral da diferença não tem esse problema, porque ela só usa a
+    altura da faixa, que é a mesma em qualquer posição.
+19. Porque $d(x) = f(x) - g(x)$ é contínua e seus zeros são exatamente os
+    cruzamentos. Pelo **teorema do valor intermediário**, para passar de
+    positiva a negativa ela teria de valer zero em algum ponto do trecho, e não
+    há nenhum ali. Logo o sinal é constante no trecho, e um ponto revela esse
+    sinal.
+20. **Não obriga.** É suficiente que as áreas acima e abaixo se compensem.
+    Exemplo:
+    $f(x) = x^3$ e $g(x) = x$ em $[-1, 1]$ têm integral da diferença igual a
+    zero, e as curvas só coincidem em três pontos. A área entre elas é
+    $\frac{1}{2}$, bem diferente de zero.
+
+</details>
+
+## 17. Revisão curta
+
+- A **altura da faixa** entre duas curvas é $f(x) - g(x)$, "de cima menos de
+  baixo". Somar as faixas dá $A = \int_a^b [f(x) - g(x)]\,dx$, válida quando
+  $f \ge g$ no intervalo inteiro.
+- Os **limites** vêm dos cruzamentos, achados resolvendo $f(x) = g(x)$ — a mesma
+  equação que o curso resolve desde o capítulo de equações.
+- Se as curvas **se cruzam dentro** do intervalo, a integral de $f - g$ dá a
+  diferença de áreas. Para a área, corte nos cruzamentos, integre cada trecho na
+  ordem certa e some.
+- A posição em relação ao **eixo horizontal é irrelevante**: descer as duas
+  curvas não muda a diferença nem os cruzamentos.
+- **Integrar em $y$** é a mesma ideia com faixas horizontais, e simplifica as
+  regiões deitadas.
+- Nos problemas aplicados, decida antes qual pergunta está sendo feita: saldo
+  pede a integral da diferença; total sem cancelamento pede a área.
+
+Antes de encerrar, verifique se você consegue fazer três coisas: achar os
+cruzamentos de uma reta com uma parábola e escrever a integral da área que elas
+fecham; explicar por que a área não muda quando as duas curvas descem juntas; e
+dizer, num problema de receita e custo marginais, quando a resposta é 360 e
+quando é 408.
+
+### O fim do capítulo, e o fim do curso
+
+Vale olhar para trás. O capítulo abriu com um veículo de teste e duas perguntas
+opostas. Dada a posição, qual é a velocidade **agora**? A Parte I construiu o
+limite para dar sentido a "agora", e a Parte II transformou isso na derivada,
+com regras que derivam qualquer combinação de polinômios, raízes, senos,
+exponenciais e logaritmos. A Parte III usou a derivada para responder onde uma
+curva sobe, onde ela é máxima e como ela é desenhada — e pagou, uma a uma, as
+promessas que o curso vinha acumulando: o corte ótimo da caixa, o limite de
+$\frac{\sen x}{x}$, a razão de $e$ ser a base preferida.
+
+A Parte IV inverteu tudo. Dada a velocidade, qual é a distância? A resposta veio
+por retângulos cada vez mais finos, e a conta era penosa até o **teorema
+fundamental** mostrar que derivar e integrar se desfazem. Depois dele, mil
+retângulos viraram uma subtração, e esta última página estendeu a ideia: a
+região entre duas curvas é a integral da diferença entre elas.
+
+O que um curso de **Cálculo 2** faria a seguir, com as mesmas ferramentas:
+
+- **técnicas de integração** além da substituição — integração por partes, que
+  lê a regra do produto ao contrário, e frações parciais, que decompõe uma
+  função racional em pedaços que a tabela já sabe integrar;
+- **integrais impróprias**, em que um dos limites é $+\infty$ ou a função
+  dispara numa ponta. É a integral encontrando os limites no infinito da Parte I;
+- **volumes por integração**, fatiando um sólido em discos ou cascas finas — a
+  mesma soma de Riemann, com áreas no lugar de comprimentos;
+- **sequências e séries**, que somam infinitas parcelas e permitem escrever
+  $\sen x$, $\cos x$ e $e^x$ como somas infinitas de potências de $x$. É onde
+  a tabela de derivadas da Parte II reaparece com outro papel.
+
+Nada disso exige uma ideia nova de fundo. Exige as mesmas duas que este capítulo
+construiu: aproximar por algo que se sabe medir e apertar a aproximação até
+sobrar um número só.
+
+E vale registrar o que atravessou o curso inteiro, do primeiro capítulo até
+aqui: **reescrever sem mudar o valor**. Frações equivalentes, fatoração, forma
+canônica, racionalização, logaritmo de um produto — e, no cálculo, o
+cancelamento que destrava um limite, a substituição que reconhece a cadeia ao
+contrário, a primitiva que troca uma soma infinita por uma subtração. Em nenhum
+desses passos a quantidade mudou. Mudou o que a escrita deixa visível, e essa
+escolha é o que torna uma pergunta respondível.
+
+Se você chegou até aqui entendendo, e não decorando, a
+[Revisão geral](../revisao-geral) continua sendo o melhor lugar para testar o
+conjunto: os exercícios de lá não dizem qual técnica usar, e agora o limite, a
+derivada e a integral entraram na lista de técnicas disponíveis.

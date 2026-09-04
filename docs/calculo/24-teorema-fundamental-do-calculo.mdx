@@ -1,0 +1,1069 @@
+---
+title: "O teorema fundamental do cálculo: derivar e integrar se desfazem"
+sidebar_label: Teorema fundamental
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+import FunctionMachine from '@site/src/components/FunctionMachine';
+
+# O teorema fundamental do cálculo: derivar e integrar se desfazem
+
+## 1. Problema motivador: nove metros, e o preço que eles custaram
+
+A lição [a integral como área](./a-integral-como-area) terminou com um
+resultado exato:
+
+$$
+\int_0^3 t^2\,dt = 9.
+$$
+
+O carro cuja velocidade era $t^2$ metros por segundo andou nove metros nos
+primeiros três segundos. O número está certo. O que incomoda é o **caminho** até
+ele. Foi preciso escrever a soma de $n$ retângulos e lembrar a fórmula
+$1^2 + 2^2 + \ldots + n^2 = \frac{n(n+1)(2n+1)}{6}$. Depois disso, ainda faltava
+simplificar a fração e calcular um limite no infinito. Uma página inteira, para
+uma das funções mais simples que existem.
+
+E aquela lição foi honesta sobre o limite do método: para $\sqrt{t}$ ou
+$\frac{1}{t}$ não existe fórmula de soma tão limpa. Pelo caminho dos
+retângulos, essas integrais ficariam sem resposta exata.
+
+Agora compare com o que a lição [a integral definida](./a-integral-definida)
+observou de passagem, ao conferir o deslocamento do carro que dá ré. Ela
+calculou $\int_0^5 (6 - 2t)\,dt = 5$ pela área dos dois triângulos. Depois
+verificou o resultado por outro caminho. A posição do carro é
+$s(t) = 6t - t^2$, porque a derivada dessa expressão é $6 - 2t$. E
+$s(5) - s(0) = 30 - 25 = 5$. Os dois números bateram.
+
+Faça a mesma verificação no problema dos nove metros. Qual função tem derivada
+$t^2$? A regra da potência, lida ao contrário, sugere $\frac{t^3}{3}$: sua
+derivada é $\frac{3t^2}{3} = t^2$. E então:
+
+$$
+\frac{3^3}{3} - \frac{0^3}{3} = \frac{27}{3} - 0 = 9.
+$$
+
+Nove. O mesmo nove, em uma linha, sem retângulo nenhum.
+
+> Isso é coincidência, ou a integral de uma função é sempre a variação de
+> alguma outra função cuja derivada é ela?
+
+Não é coincidência, e a resposta é o resultado central deste capítulo. Ele
+liga as duas metades do cálculo — a derivada da Parte II e a integral da Parte
+IV — e diz que uma desfaz a outra. O nome dele já anuncia a importância:
+**teorema fundamental do cálculo**.
+
+## 2. Mapa das ideias
+
+- uma **primitiva** de $f$ é qualquer função $F$ com $F'(x) = f(x)$; é a
+  pergunta da derivada, feita ao contrário;
+- se $F$ é uma primitiva de $f$, então $F + C$ também é, para qualquer
+  constante $C$ — e **todas** as primitivas de $f$ têm essa forma;
+- a **função área** $A(x) = \int_a^x f(t)\,dt$ acumula a área desde $a$ até um
+  extremo móvel $x$;
+- **primeira parte do teorema:** $A'(x) = f(x)$. A função área é uma primitiva
+  de $f$: derivar desfaz integrar;
+- **segunda parte do teorema:** $\int_a^b f(x)\,dx = F(b) - F(a)$, para
+  **qualquer** primitiva $F$ de $f$. A notação para essa diferença é
+  $\Big[F(x)\Big]_a^b$;
+- a **tabela de primitivas** é a tabela de derivadas da Parte II lida de trás
+  para a frente.
+
+## 3. Para que serve
+
+- calcular exatamente integrais que os retângulos só aproximavam: área,
+  distância, volume acumulado, consumo total;
+- recuperar uma grandeza a partir da taxa com que ela varia — posição a partir
+  da velocidade, custo total a partir do custo marginal, população a partir da
+  taxa de crescimento;
+- responder à pergunta que abriu o capítulo, na direção inversa: dada a
+  velocidade, achar a distância;
+- transformar todo o trabalho da Parte II em trabalho de integração, sem
+  aprender uma segunda tabela;
+- e, dentro da matemática, tornar a integral uma ferramenta prática, e não só
+  uma definição. Sem este teorema, cada integral exigiria uma soma nova.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [raízes](../numeros-e-operacoes/raizes) e de [função
+inversa](../funcoes/funcao-inversa): o que significa uma operação desfazer
+outra?** Elevar 7 ao quadrado dá 49; a raiz quadrada de 49 devolve o 7. Uma
+operação leva, a outra traz de volta. A lição de função inversa deu a versão
+geral: $f^{-1}$ desfaz $f$ quando $f^{-1}(f(x)) = x$. Aqui o par de operações
+que se desfazem é **derivar e integrar**, e o "desfazer" tem uma ressalva que
+a seção 8 explica.
+
+**2. Da Parte II: quais derivadas já conhecemos?** Estas, e todas foram
+demonstradas:
+
+| Função | Derivada | Onde foi demonstrada |
+|---|---|---|
+| $x^n$ | $n\,x^{n-1}$ | [regras de derivação](./regras-de-derivacao) |
+| $\sen x$ | $\cos x$ | [derivadas de seno e cosseno](./derivadas-de-seno-e-cosseno) |
+| $\cos x$ | $-\sen x$ | idem |
+| $e^x$ | $e^x$ | [exponencial e logaritmo](./derivadas-de-exponencial-e-logaritmo) |
+| $\ln x$ | $\frac{1}{x}$ | idem |
+
+Esta página vai ler essa tabela na direção contrária, e é daí que sai toda a
+capacidade de calcular integrais.
+
+**3. Do [teorema do valor médio](./teorema-do-valor-medio): o que se conclui de
+duas funções que têm a mesma derivada?** Que elas diferem por uma constante.
+Se $f' = g'$ em um intervalo, então $f - g$ tem derivada zero, e uma função de
+derivada zero num intervalo é constante. Aquela lição já avisou: "este
+corolário é o que vai dar sentido ao $+C$ das primitivas". Chegou a hora.
+
+**4. De [a integral como área](./a-integral-como-area): o que é
+$\int_a^b f(x)\,dx$?** É o limite das somas de Riemann $\sum f(x_i)\,\Delta x$
+quando o número de retângulos cresce sem parar. Para $f$ positiva, é a área
+entre o gráfico e o eixo.
+
+**5. De [a integral definida](./a-integral-definida): quais propriedades da
+integral vamos usar?** Três, principalmente. A **divisão do intervalo**,
+$\int_a^b + \int_b^c = \int_a^c$, que permite falar de "área acumulada até
+aqui" e "o pedaço a mais". As **cotas**, $m(b-a) \le \int_a^b f \le M(b-a)$,
+que prendem uma integral entre dois retângulos. E $\int_a^a f = 0$.
+
+**6. Do [teorema do confronto](./teorema-do-confronto): o que ele garante?**
+Que uma função presa entre duas outras que se aproximam do mesmo valor se
+aproxima desse valor também. A demonstração da primeira parte do teorema
+fundamental usa exatamente isso, com as cotas do item 5 fazendo o papel das
+duas funções de fora.
+
+Os itens 3 e 5 são os que fazem a máquina funcionar. Se o corolário do valor
+médio ou a divisão do intervalo estiverem nebulosos, vale reler aquelas
+páginas antes de seguir.
+
+## 5. Intuição: a área que cresce enquanto a fronteira avança
+
+Toda integral que calculamos até agora tinha os dois extremos fixos. A ideia
+que destrava esta página é **soltar o extremo direito** e olhar a área como
+uma função dele.
+
+Imagine um terreno com uma margem curva, medido a partir de uma cerca fixa à
+esquerda. Você caminha para a direita carregando uma trena, e a cada passo
+anota quanta área já ficou para trás. O que você está construindo é uma
+função: entrada, a posição $x$ em que você está; saída, a área acumulada até
+ali.
+
+Agora a pergunta que interessa: **com que rapidez essa área cresce?**
+
+Dê um passo curtinho, de comprimento $h$, a partir da posição $x$. A área
+ganha uma faixa estreita: largura $h$, e altura aproximadamente igual à altura
+da curva em $x$, porque num pedaço curto a curva quase não muda de altura.
+Então
+
+$$
+\text{área ganha} \approx f(x) \times h.
+$$
+
+Divida pelo comprimento do passo, e obtenha a área ganha **por unidade de
+avanço**:
+
+$$
+\frac{\text{área ganha}}{h} \approx f(x).
+$$
+
+Esse quociente é exatamente o quociente de diferenças da função área. Quando o
+passo encolhe, ele vira a derivada dela. E o que acabamos de descobrir é que
+essa derivada é a própria $f$:
+
+> **A área acumulada cresce a um ritmo igual à altura da curva naquele ponto.**
+
+Faz sentido antes de qualquer conta. Onde a curva é alta, cada passo agrega
+uma faixa alta, e a área dispara. Onde a curva é baixa, cada passo agrega
+pouco. Onde a curva vale zero, a área para de crescer.
+
+Repare no que isso significa para o problema do carro. A área acumulada sob a
+curva da velocidade é a distância percorrida, e a altura da curva é a
+velocidade. A frase acima vira: **a distância cresce a um ritmo igual à
+velocidade** — que é a definição de velocidade, lida ao contrário. O teorema
+está dizendo, em geral, algo que no caso do movimento já era evidente.
+
+<FunctionMachine
+  input="s(t)"
+  steps={[{op: '\\text{derivar}', value: 'v(t)'}]}
+  back="\text{integrar}"
+  caption="Da posição para a velocidade, deriva-se. Da velocidade de volta para a posição, integra-se. As duas setas são o teorema fundamental."
+/>
+
+## 6. Modelo visual: a função área
+
+Fixe $f(t) = t^2$ e comece a acumular a partir de $t = 0$. A **função área** é
+
+$$
+A(x) = \int_0^x t^2\,dt,
+$$
+
+a área da região sombreada abaixo, que cresce conforme $x$ se desloca para a
+direita.
+
+<CartesianPlane
+  xMin={-0.4}
+  xMax={3.4}
+  yMin={-0.8}
+  yMax={9.6}
+  xUnit={78}
+  yUnit={19}
+  polygons={[
+    {points: [[0, 0], [0.4, 0.16], [0.8, 0.64], [1.2, 1.44], [1.6, 2.56], [2, 4], [2, 0]], tone: 2},
+  ]}
+  functions={[{f: (t) => t * t, domain: [-0.3, 3.1], tone: 1}]}
+  lines={[{x: 2, dashed: true, tone: 0}]}
+  points={[{at: [2, 4], tone: 1}]}
+  labels={[
+    {at: [1.25, 0.9], math: 'A(2)', tone: 2},
+    {at: [2.55, 7.2], math: 'f(t) = t^2', tone: 1},
+    {at: [2, -0.45], math: 'x = 2', tone: 0, dy: 4},
+  ]}
+  axisLabels={['t', 'y']}
+  caption="A função área acumula desde 0 até o extremo móvel x. Na figura, x vale 2, e a região sombreada é A(2)."
+/>
+
+Neste caso sabemos calcular $A$ para alguns valores, porque a lição anterior
+fez a conta geral para $t^2$: a área de 0 até $x$ vale $\frac{x^3}{3}$. Vamos
+usar isso só para **conferir** o que a intuição prevê, e não como parte do
+argumento.
+
+| $x$ | 0 | 1 | 2 | 3 |
+|---:|---:|---:|---:|---:|
+| $A(x) = \frac{x^3}{3}$ | 0 | $0{,}333$ | $2{,}667$ | 9 |
+| $f(x) = x^2$ | 0 | 1 | 4 | 9 |
+
+Olhe as duas linhas juntas. Em $x = 1$, a área acumulada é pequena e cresce
+devagar. Em $x = 3$, a área é grande e cresce depressa. A afirmação da intuição
+é mais precisa que isso: o **ritmo** de crescimento de $A$ em cada $x$ é o
+valor de $f$ ali. Derivando $A(x) = \frac{x^3}{3}$ pela regra da potência,
+
+$$
+A'(x) = \frac{3x^2}{3} = x^2 = f(x).
+$$
+
+Confere. Falta ver por que isso vale para qualquer $f$, e não só para esta.
+
+## 7. Ponte para a formalização: a faixa é quase um retângulo
+
+Tome a função área $A(x) = \int_a^x f(t)\,dt$ de uma função contínua qualquer,
+e avance o extremo de $x$ para $x + h$, com $h$ pequeno e positivo.
+
+**O que queremos.** Saber quanto $A$ cresce nesse avanço, para depois dividir
+por $h$ e obter o quociente de diferenças.
+
+**Qual propriedade autoriza a conta.** A divisão do intervalo, da lição da
+integral definida: a área de $a$ até $x + h$ é a área de $a$ até $x$ mais a
+área de $x$ até $x + h$. Em símbolos,
+
+$$
+A(x + h) = A(x) + \int_x^{x+h} f(t)\,dt,
+$$
+
+e portanto
+
+$$
+A(x + h) - A(x) = \int_x^{x+h} f(t)\,dt.
+$$
+
+**O que isso significa.** A diferença entre duas áreas acumuladas é a área da
+**faixa** entre $x$ e $x + h$. Não é uma aproximação: é a propriedade da
+divisão do intervalo, escrita com os nomes desta página.
+
+<CartesianPlane
+  xMin={-0.4}
+  xMax={3.4}
+  yMin={-0.8}
+  yMax={9.6}
+  xUnit={78}
+  yUnit={19}
+  polygons={[
+    {points: [[0, 0], [0.4, 0.16], [0.8, 0.64], [1.2, 1.44], [1.6, 2.56], [2, 4], [2, 0]], tone: 2},
+    {points: [[2, 0], [2, 4], [2.3, 5.29], [2.3, 0]], tone: 3},
+  ]}
+  functions={[{f: (t) => t * t, domain: [-0.3, 3.1], tone: 1}]}
+  points={[{at: [2, 4], tone: 1}, {at: [2.3, 5.29], tone: 1}]}
+  labels={[
+    {at: [1.25, 0.9], math: 'A(x)', tone: 2},
+    {at: [2.15, 6.6], math: 'A(x+h) - A(x)', tone: 3, dx: 30},
+    {at: [2, -0.45], math: 'x', tone: 0, dy: 4},
+    {at: [2.3, -0.45], math: 'x+h', tone: 0, dx: 16, dy: 4},
+  ]}
+  axisLabels={['t', 'y']}
+  caption="A faixa entre x e x + h é a diferença entre as duas áreas acumuladas. No desenho ela está exagerada para ficar visível; na conta, h encolhe até zero."
+/>
+
+**A aproximação.** A faixa tem largura $h$ e altura que varia de $f(x)$ até
+$f(x+h)$. Se $f$ é contínua, essas duas alturas ficam próximas quando $h$ é
+pequeno, e a faixa é quase um retângulo de base $h$ e altura $f(x)$:
+
+$$
+A(x + h) - A(x) \approx f(x) \times h.
+$$
+
+Confira com números, na função da figura. Com $f(t) = t^2$, $x = 2$ e
+$A(x) = \frac{x^3}{3}$:
+
+| $h$ | $A(2+h) - A(2)$ | $f(2) \times h$ | quociente $\frac{A(2+h)-A(2)}{h}$ |
+|---:|---:|---:|---:|
+| $0{,}3$ | $1{,}38900$ | $1{,}2$ | $4{,}630$ |
+| $0{,}1$ | $0{,}42033$ | $0{,}4$ | $4{,}203$ |
+| $0{,}01$ | $0{,}04020$ | $0{,}04$ | $4{,}020$ |
+| $0{,}001$ | $0{,}004002$ | $0{,}004$ | $4{,}002$ |
+
+A última coluna se aproxima de 4, que é $f(2)$. Com $h$ grande a aproximação é
+ruim, e ela melhora conforme $h$ encolhe — exatamente o comportamento que o
+quociente de diferenças teve na lição da derivada.
+
+**O que muda e o que permanece.** A escrita muda: a diferença de duas áreas
+virou uma área só, e depois um produto aproximado. A quantidade não muda em
+nenhum dos dois passos — o primeiro é uma igualdade exata, e o segundo é uma
+aproximação cujo erro encolhe com $h$. O que a próxima seção faz é trocar o
+"aproximadamente" por um limite, e aí a igualdade volta a ser exata.
+
+## 8. Primitiva: a pergunta da derivada, invertida
+
+Antes do teorema, o vocabulário. Até aqui o curso sempre perguntou: dada $F$,
+qual é $F'$? A pergunta invertida é:
+
+> Dada $f$, qual função tem $f$ como derivada?
+
+> Uma função $F$ é uma **primitiva** de $f$ num intervalo quando
+> $$F'(x) = f(x)$$
+> para todo $x$ do intervalo. Também se diz **antiderivada**.
+
+**Exemplo.** $F(x) = \frac{x^3}{3}$ é uma primitiva de $f(x) = x^2$, porque
+$F'(x) = \frac{3x^2}{3} = x^2$. A verificação de uma primitiva é sempre essa:
+**derive a candidata e veja se dá a função de partida.** Não é preciso saber
+como ela foi encontrada.
+
+**Contraexemplo.** $G(x) = \frac{x^3}{2}$ **não** é primitiva de $x^2$, porque
+$G'(x) = \frac{3x^2}{2}$, que é uma vez e meia o $x^2$ pedido. O denominador 3
+não é enfeite: ele existe para cancelar o 3 que a regra da potência traz para
+a frente.
+
+**Segundo contraexemplo, mais sutil.** $x^3$ não é primitiva de $x^2$, ainda
+que "pareça a operação inversa da potência". A derivada de $x^3$ é $3x^2$.
+Achar uma primitiva não é subir o expoente e parar: é subir o expoente **e
+dividir pelo novo expoente**, para desfazer o fator que a derivação criou.
+
+### Uma família inteira, não uma função
+
+Repare que $\frac{x^3}{3} + 5$ também é primitiva de $x^2$: a derivada da
+constante 5 é zero, e some. O mesmo vale para $\frac{x^3}{3} - 1$, para
+$\frac{x^3}{3} + \pi$, para qualquer constante somada. Ou seja, uma função tem
+**infinitas** primitivas.
+
+Será que existem outras, fora dessa família? Não, e a razão é o corolário do
+teorema do valor médio. Se $F$ e $G$ são duas primitivas de $f$ no mesmo
+intervalo, então $F' = G' = f$, e duas funções com a mesma derivada num
+intervalo diferem por uma constante. Logo $F(x) = G(x) + C$.
+
+> Se $F$ é uma primitiva de $f$ num intervalo, então **todas** as primitivas de
+> $f$ nesse intervalo são as funções $F(x) + C$, com $C$ constante.
+
+É por isso que se escreve a **primitiva geral** com o $+C$ pendurado:
+
+$$
+\int x^2\,dx = \frac{x^3}{3} + C.
+$$
+
+Essa escrita sem extremos chama-se **integral indefinida**, e não é um número:
+é a família de todas as primitivas. A integral **definida**, com os extremos
+$a$ e $b$, é um número. Duas coisas diferentes com o mesmo símbolo, e a seção
+de erros comuns volta a essa distinção.
+
+Geometricamente, a família $F + C$ é uma pilha de cópias do mesmo gráfico,
+deslocadas verticalmente — as translações verticais da lição de
+transformações. Todas têm a mesma inclinação em cada $x$, porque deslocar para
+cima não muda a inclinação de nada. Por isso todas têm a mesma derivada.
+
+## 9. Primeira parte: a função área é uma primitiva
+
+Com o vocabulário pronto, o primeiro enunciado.
+
+> **Teorema fundamental do cálculo, primeira parte.** Seja $f$ contínua num
+> intervalo, e seja
+> $$A(x) = \int_a^x f(t)\,dt.$$
+> Então $A$ é derivável e
+> $$A'(x) = f(x).$$
+> Isto é: a função área é uma primitiva de $f$.
+
+**A ideia da prova.** É a seção 7, com o "aproximadamente" trocado por um
+limite. Já sabemos que
+
+$$
+A(x + h) - A(x) = \int_x^{x+h} f(t)\,dt.
+$$
+
+Falta prender essa faixa entre dois retângulos. Chame de $m$ o menor valor de
+$f$ no pedaço $[x, x+h]$ e de $M$ o maior. As cotas da lição da integral
+definida dão
+
+$$
+m\,h \le \int_x^{x+h} f(t)\,dt \le M\,h.
+$$
+
+Dividindo tudo por $h$, que é positivo e portanto não inverte as
+desigualdades,
+
+$$
+m \le \frac{A(x + h) - A(x)}{h} \le M.
+$$
+
+Agora observe o que acontece quando $h$ se aproxima de zero. O pedaço
+$[x, x+h]$ encolhe até virar o ponto $x$. Como $f$ é **contínua**, seus valores
+nesse pedaço ficam todos próximos de $f(x)$: tanto o menor deles, $m$, quanto o
+maior, $M$, se aproximam de $f(x)$. O quociente do meio está preso entre duas
+quantidades que vão para o mesmo lugar, e o [teorema do
+confronto](./teorema-do-confronto) obriga o quociente a ir junto:
+
+$$
+A'(x) = \lim_{h \to 0} \frac{A(x+h) - A(x)}{h} = f(x).
+$$
+
+Confira na tabela da seção 7: com $f(t) = t^2$ e $x = 2$, os quocientes foram
+4,630; 4,203; 4,020; 4,002 — descendo para $f(2) = 4$.
+
+**Onde a continuidade entrou.** No passo em que $m$ e $M$ se aproximam de
+$f(x)$. Se $f$ tivesse um salto em $x$, os valores à direita não se
+aproximariam de $f(x)$, e o quociente poderia ir para outro lugar. Essa é a
+hipótese do teorema, e ela não é enfeite: a lição de
+[continuidade](./continuidade) mostrou que uma função com salto se comporta de
+forma diferente nos dois lados de um ponto.
+
+**Exemplo.** $\frac{d}{dx}\int_0^x \sen(t^2)\,dt = \sen(x^2)$. Ninguém sabe
+escrever uma primitiva de $\sen(t^2)$ com as funções deste curso, e mesmo
+assim a derivada da função área sai imediatamente: é a própria função no
+extremo. Conferindo numericamente em $x = 1{,}2$: a derivada da função área
+dá 0,99146, e $\sen(1{,}44) = 0{,}99146$.
+
+**Contraexemplo, para delimitar.** A primeira parte fala da derivada em
+relação ao **extremo superior**. A expressão $\int_0^3 f(t)\,dt$ é um número
+fixo, e a derivada de um número é zero, não $f$. Só há o que derivar quando o
+extremo é variável.
+
+## 10. Segunda parte: a integral pela variação da primitiva
+
+A primeira parte diz que uma primitiva existe: a função área. A segunda parte
+é a que dá o atalho de cálculo, e vale para **qualquer** primitiva, não só
+para a função área.
+
+> **Teorema fundamental do cálculo, segunda parte.** Se $f$ é contínua em
+> $[a, b]$ e $F$ é **qualquer** primitiva de $f$, então
+> $$\int_a^b f(x)\,dx = F(b) - F(a).$$
+
+**A dedução, a partir da primeira parte.** Seja $A(x) = \int_a^x f(t)\,dt$ a
+função área. Pela primeira parte, $A$ é uma primitiva de $f$. Tome agora uma
+primitiva qualquer $F$. Duas primitivas da mesma função diferem por uma
+constante — é o corolário do valor médio da seção 8 —, então existe um número
+$C$ com
+
+$$
+A(x) = F(x) + C.
+$$
+
+Avalie nos dois extremos e subtraia:
+
+$$
+A(b) - A(a) = \big(F(b) + C\big) - \big(F(a) + C\big) = F(b) - F(a).
+$$
+
+**O $C$ se cancelou na subtração.** É esse cancelamento que torna o teorema
+utilizável: não importa qual primitiva você escolheu, porque a escolha some.
+
+Falta identificar o lado esquerdo. Por definição, $A(b) = \int_a^b f(t)\,dt$,
+que é a integral procurada. E $A(a) = \int_a^a f(t)\,dt = 0$, porque um
+intervalo de largura zero não tem área. Logo
+
+$$
+\int_a^b f(x)\,dx = A(b) - A(a) = F(b) - F(a).
+$$
+
+### A notação da subtração
+
+Escrever a primitiva duas vezes cansa. A abreviação padrão é um colchete com
+os extremos:
+
+$$
+\Big[F(x)\Big]_a^b = F(b) - F(a).
+$$
+
+Assim, a conta do motivador fica em três símbolos:
+
+$$
+\int_0^3 t^2\,dt = \Big[\frac{t^3}{3}\Big]_0^3 = \frac{27}{3} - \frac{0}{3} = 9.
+$$
+
+**Por que o $+C$ não aparece aqui.** Ele apareceria, e se cancelaria:
+
+$$
+\Big[\frac{t^3}{3} + C\Big]_0^3 = \left(\frac{27}{3} + C\right) - \left(0 + C\right) = 9.
+$$
+
+Na integral **definida**, escrever o $C$ é trabalho perdido. Na **indefinida**,
+omiti-lo é erro, porque ali a resposta é a família inteira.
+
+### As duas partes, lado a lado
+
+| | O que diz | Para que serve |
+|---|---|---|
+| **Primeira parte** | derivar a função área devolve $f$ | garante que toda função contínua **tem** primitiva |
+| **Segunda parte** | $\int_a^b f = F(b) - F(a)$ | **calcula** a integral a partir de uma primitiva qualquer |
+
+As duas juntas são a frase que dá nome à página: **derivar e integrar se
+desfazem**. A primeira parte desfaz numa ordem (integrar e depois derivar
+devolve a função); a segunda, na outra (derivar e depois integrar devolve a
+variação da função).
+
+Vale registrar a ressalva do "desfazer", prometida na seção 4. Integrar $f$ e
+depois derivar devolve $f$ exatamente. Derivar $F$ e depois integrar devolve
+$F(b) - F(a)$, e não $F$: a derivada apaga a constante, e a integração não tem
+como adivinhá-la. É a mesma perda de informação que o $+C$ registra.
+
+## 11. Resolvendo os problemas do motivador
+
+**Os nove metros.** Uma primitiva de $t^2$ é $\frac{t^3}{3}$:
+
+$$
+\int_0^3 t^2\,dt = \Big[\frac{t^3}{3}\Big]_0^3 = 9.
+$$
+
+Uma linha. A lição anterior gastou uma página, uma fórmula de soma de
+quadrados e um limite no infinito para chegar ao mesmo número. Os dois
+caminhos concordam, o que era obrigatório: o teorema não muda o valor da
+integral, muda o modo de obtê-lo.
+
+**As integrais que ficaram sem resposta.** A lição da integral como área disse
+que para $\sqrt{t}$ e $\frac{1}{t}$ não havia fórmula de soma. Agora não faz
+falta:
+
+$$
+\int_1^4 \sqrt{x}\,dx = \Big[\frac{2}{3}x^{3/2}\Big]_1^4 = \frac{2}{3}(8 - 1) = \frac{14}{3} \approx 4{,}667.
+$$
+
+A primitiva veio da regra da potência com expoente $\frac{1}{2}$: subir o
+expoente para $\frac{3}{2}$ e dividir por $\frac{3}{2}$, o que equivale a
+multiplicar por $\frac{2}{3}$. Conferindo por soma de Riemann com $2 \times
+10^5$ retângulos: 4,66667.
+
+E a promessa guardada. O exemplo 3 daquela lição estimou
+$\int_1^2 \frac{1}{x}\,dx \approx 0{,}6912$ com quatro retângulos, e pediu para
+guardar o número. Uma primitiva de $\frac{1}{x}$ é $\ln x$, porque
+$(\ln x)' = \frac{1}{x}$:
+
+$$
+\int_1^2 \frac{1}{x}\,dx = \Big[\ln x\Big]_1^2 = \ln 2 - \ln 1 = \ln 2 \approx 0{,}6931.
+$$
+
+O 0,6912 dos quatro retângulos errou por dois milésimos. Agora o valor exato
+tem nome: é o logaritmo natural de 2.
+
+**O carro que dá ré.** A lição da integral definida calculou o deslocamento
+pela área de dois triângulos e conferiu com a posição. Com o teorema, a conta
+é direta. Uma primitiva de $6 - 2t$ é $6t - t^2$:
+
+$$
+\int_0^5 (6 - 2t)\,dt = \Big[6t - t^2\Big]_0^5 = (30 - 25) - 0 = 5 \text{ m}.
+$$
+
+A distância percorrida é $\int_0^5 \lvert 6 - 2t \rvert\,dt$, e ela continua
+pedindo a divisão do intervalo em $t = 3$. O motivo é que o teorema calcula a
+integral de **uma** fórmula, e $\lvert 6 - 2t \rvert$ tem fórmulas diferentes
+nos dois trechos:
+
+$$
+\int_0^3 (6 - 2t)\,dt + \int_3^5 (2t - 6)\,dt
+= \Big[6t - t^2\Big]_0^3 + \Big[t^2 - 6t\Big]_3^5
+= 9 + \big(-5 - (-9)\big) = 9 + 4 = 13 \text{ m}.
+$$
+
+Os mesmos 5 e 13 de antes, sem desenhar triângulo nenhum.
+
+## 12. A tabela de derivadas lida de trás para a frente
+
+Cada linha da tabela de derivadas da Parte II vira uma linha de primitivas,
+com a divisão que desfaz o fator criado pela derivação.
+
+| $f(x)$ | Uma primitiva $F(x)$ | Vem da derivada de |
+|---|---|---|
+| $k$ (constante) | $kx$ | $kx$ |
+| $x^n$, com $n \neq -1$ | $\frac{x^{n+1}}{n+1}$ | $x^{n+1}$ |
+| $\frac{1}{x}$ | $\ln \lvert x \rvert$ | $\ln x$ |
+| $e^x$ | $e^x$ | $e^x$ |
+| $\sen x$ | $-\cos x$ | $\cos x$ |
+| $\cos x$ | $\sen x$ | $\sen x$ |
+
+Três observações sobre a tabela, e cada uma evita um erro.
+
+**A regra da potência ao contrário.** Para achar uma primitiva de $x^n$,
+**suba o expoente e divida pelo novo expoente**. Conferindo:
+$\left(\frac{x^{n+1}}{n+1}\right)' = \frac{(n+1)x^n}{n+1} = x^n$. O
+denominador existe para cancelar o fator que a derivação traz para a frente.
+
+**Por que $n \neq -1$.** Com $n = -1$ o novo expoente seria zero, e a fórmula
+pediria divisão por zero. Esse é justamente o caso $\frac{1}{x}$, e ele tem
+linha própria: a primitiva é o logaritmo. A tabela de derivadas já avisava
+disso, porque nenhuma potência tem derivada $\frac{1}{x}$ — quem tem é $\ln x$.
+
+**Por que o valor absoluto no logaritmo.** Para $x$ positivo, $(\ln x)' =
+\frac{1}{x}$. Para $x$ negativo, $\ln x$ não existe, mas $\ln(-x)$ existe, e
+pela regra da cadeia sua derivada é $\frac{-1}{-x} = \frac{1}{x}$ também. As
+duas metades se escrevem juntas como $\ln \lvert x \rvert$. Nos exercícios
+desta página os intervalos são positivos, e escrever $\ln x$ dá certo; a
+barra importa quando o intervalo está do lado negativo.
+
+**O sinal do cosseno.** A primitiva de $\sen x$ é $-\cos x$, com menos. Confira
+derivando: $(-\cos x)' = -(-\sen x) = \sen x$. Quem esquece o sinal está
+lendo a linha errada da tabela de derivadas.
+
+Primitivas de somas e de constantes multiplicando saem das regras
+correspondentes das derivadas: a primitiva de uma soma é a soma das
+primitivas, e uma constante multiplicando atravessa. Produtos, quocientes e
+composições **não** têm regra tão simples — a lição de [primitivas e
+substituição](./primitivas-e-substituicao) trata do caso que a regra da cadeia
+resolve, e os demais ficam para um curso posterior.
+
+## 13. Exemplos resolvidos
+
+### Exemplo 1: um polinômio
+
+Calcule $\int_0^3 (x^2 + 2x + 1)\,dx$.
+
+Primitiva termo a termo: $\frac{x^3}{3}$ para $x^2$; $x^2$ para $2x$; $x$ para
+1.
+
+$$
+\int_0^3 (x^2 + 2x + 1)\,dx = \Big[\frac{x^3}{3} + x^2 + x\Big]_0^3
+= (9 + 9 + 3) - 0 = 21.
+$$
+
+Conferindo por soma de Riemann: 21,000. E confere também com a propriedade da
+soma da lição anterior, que dava $9 + 9 + 3$.
+
+### Exemplo 2: uma raiz e um inverso
+
+*Pause e tente antes de ler.* Calcule $\int_1^4 \frac{1}{\sqrt{x}}\,dx$.
+
+Reescreva a função como potência: $\frac{1}{\sqrt{x}} = x^{-1/2}$. Como o
+expoente não é $-1$, a regra da potência serve. Subindo o expoente:
+$-\frac{1}{2} + 1 = \frac{1}{2}$. Dividindo por $\frac{1}{2}$, que é
+multiplicar por 2:
+
+$$
+\int_1^4 x^{-1/2}\,dx = \Big[2\sqrt{x}\Big]_1^4 = 2 \times 2 - 2 \times 1 = 2.
+$$
+
+Conferindo derivando a primitiva: $(2x^{1/2})' = 2 \times \frac{1}{2}x^{-1/2}
+= x^{-1/2}$. Certo. E por soma de Riemann: 2,000.
+
+### Exemplo 3: uma integral com resultado negativo
+
+*Pause e tente.* Calcule $\int_0^2 (2x - 4)\,dx$ e interprete o sinal.
+
+$$
+\int_0^2 (2x - 4)\,dx = \Big[x^2 - 4x\Big]_0^2 = (4 - 8) - 0 = -4.
+$$
+
+O resultado é negativo porque $2x - 4$ é negativa em todo o intervalo $[0, 2[$:
+a região fica abaixo do eixo, e a integral é área com sinal. É o mesmo $-4$ que
+a lição anterior obteve pela área do triângulo, agora sem desenho.
+
+### Exemplo 4: seno e cosseno
+
+*Pause e tente.* Calcule $\int_0^{\pi} \sen x\,dx$ e $\int_0^{2\pi} \sen x\,dx$.
+
+A primitiva de $\sen x$ é $-\cos x$.
+
+$$
+\int_0^{\pi} \sen x\,dx = \Big[-\cos x\Big]_0^{\pi} = -\cos\pi + \cos 0 = 1 + 1 = 2.
+$$
+
+$$
+\int_0^{2\pi} \sen x\,dx = \Big[-\cos x\Big]_0^{2\pi} = -\cos 2\pi + \cos 0 = -1 + 1 = 0.
+$$
+
+O primeiro resultado é a área do arco de seno acima do eixo. O segundo é zero
+porque, na volta completa, o arco de baixo cancela o de cima — o seno é ímpar
+em torno de $\pi$. Conferindo numericamente: 2,000 e 0,000.
+
+### Exemplo 5: recuperar o custo a partir do custo marginal
+
+*Pause e tente.* Uma fábrica tem custo marginal $C'(x) = 0{,}02x + 5$ reais por
+peça, com $x$ o número de peças. Quanto custa produzir da peça 0 até a peça
+100, além do custo fixo?
+
+Custo marginal é a derivada do custo total. Pelo teorema, a integral do custo
+marginal é a **variação** do custo total:
+
+$$
+C(100) - C(0) = \int_0^{100} (0{,}02x + 5)\,dx
+= \Big[0{,}01x^2 + 5x\Big]_0^{100}
+= 100 + 500 = 600.
+$$
+
+São R\$ 600 além do custo fixo. Repare que o teorema devolve a **variação**, e
+não o custo total: o custo fixo $C(0)$ é a constante que a derivação apagou, e
+nenhuma integral pode recuperá-la. Para saber $C(100)$ é preciso conhecer
+$C(0)$ à parte. É o $+C$ aparecendo num problema concreto.
+
+### Exemplo 6: derivar uma função área
+
+*Pause e tente.* Calcule $\frac{d}{dx}\int_1^x \sqrt{1 + t^3}\,dt$.
+
+Não tente achar uma primitiva de $\sqrt{1 + t^3}$: ela não se escreve com as
+funções deste curso. A primeira parte do teorema responde sem isso. A derivada
+da função área é a função no extremo superior:
+
+$$
+\frac{d}{dx}\int_1^x \sqrt{1 + t^3}\,dt = \sqrt{1 + x^3}.
+$$
+
+Em $x = 2$, isso dá $\sqrt{9} = 3$. Conferindo numericamente com a função área
+calculada por somas de Riemann: 3,000.
+
+### Exemplo 7: extremo superior composto
+
+*Pause e tente.* Calcule $\frac{d}{dx}\int_0^{x^2} \sen t\,dt$.
+
+Aqui o extremo superior não é $x$, é $x^2$. Chame $A(u) = \int_0^u \sen t\,dt$.
+A função pedida é $A(x^2)$, uma composição, e a [regra da
+cadeia](./regra-da-cadeia) diz que sua derivada é $A'(x^2)$ vezes a derivada
+de dentro:
+
+$$
+\frac{d}{dx}A(x^2) = A'(x^2) \times 2x = \sen(x^2) \times 2x.
+$$
+
+Conferindo em $x = 1{,}5$: a fórmula dá $\sen(2{,}25) \times 3 = 2{,}3342$, e a
+derivada numérica da função área dá 2,3342.
+
+Neste caso a primitiva existe, então dá para conferir por um segundo caminho.
+Integrando, $A(u) = \Big[-\cos t\Big]_0^u = 1 - \cos u$. Substituindo $u$ por
+$x^2$, a função é $1 - \cos(x^2)$, e a regra da cadeia dá derivada
+$\sen(x^2) \times 2x$. Os dois caminhos concordam.
+
+## 14. Erros comuns
+
+> **Erro 1: esquecer o $+C$ na integral indefinida.** $\int 2x\,dx$ é
+> $x^2 + C$, não $x^2$. A resposta é a família inteira de primitivas, e
+> $x^2 + 7$ tem o mesmo direito de estar lá. Na integral **definida** o $C$ se
+> cancela e não precisa ser escrito — a diferença entre os dois casos é onde
+> muita gente escorrega.
+
+> **Erro 2: trocar a ordem da subtração.** O teorema diz $F(b) - F(a)$: o
+> extremo de cima menos o de baixo. Em $\int_0^3 t^2\,dt$, escrever
+> $\frac{0}{3} - \frac{27}{3} = -9$ dá o oposto do valor certo. Uma área
+> positiva que sai negativa denuncia a inversão.
+
+> **Erro 3: primitiva de $\frac{1}{x}$ pela regra da potência.** Subir o
+> expoente de $x^{-1}$ daria $x^0$ e divisão por zero. A regra da potência
+> **exclui** $n = -1$, e esse caso tem primitiva $\ln \lvert x \rvert$.
+
+> **Erro 4: aplicar o teorema atravessando uma descontinuidade.** A função
+> $\frac{1}{x^2}$ tem primitiva $-\frac{1}{x}$, e a conta descuidada dá
+> $$\int_{-1}^{1} \frac{1}{x^2}\,dx = \Big[-\frac{1}{x}\Big]_{-1}^{1} = -1 - 1 = -2.$$
+> É absurdo: $\frac{1}{x^2}$ é positiva em todo ponto do domínio, e uma
+> integral de função positiva não pode ser negativa. O defeito é a hipótese: o
+> teorema exige $f$ contínua em $[a, b]$, e $\frac{1}{x^2}$ não existe em
+> $x = 0$, que está no meio do intervalo. Sempre confira se a função é contínua
+> no intervalo inteiro antes de aplicar o colchete.
+
+> **Erro 5: confundir a integral definida com a indefinida.**
+> $\int_a^b f(x)\,dx$ é um **número**. $\int f(x)\,dx$ é uma **família de
+> funções**. Uma resposta com $x$ para uma integral definida, ou um número para
+> uma indefinida, mostra que os dois foram trocados.
+
+> **Erro 6: derivar $\int_a^b f(t)\,dt$ em relação a $x$ e esperar $f$.** Com
+> os dois extremos fixos, aquilo é um número, e a derivada de um número é zero.
+> A primeira parte do teorema só se aplica quando o extremo superior é a
+> variável.
+
+> **Erro 7: inventar uma regra do produto para primitivas.** Não existe
+> "$\int f g = \int f \times \int g$". Teste com $f = g = x$ em $[0, 1]$:
+> $\int_0^1 x^2\,dx = \frac{1}{3}$, enquanto o produto das integrais é
+> $\frac{1}{2} \times \frac{1}{2} = \frac{1}{4}$. A regra do produto das
+> derivadas já avisava do mesmo: nem a derivação nem a integração atravessam
+> uma multiplicação de funções.
+
+> **Erro 8: esquecer o sinal na primitiva do seno.** A primitiva de $\sen x$ é
+> $-\cos x$; a de $\cos x$ é $+\sen x$. Só uma das duas ganha o menos. Em caso
+> de dúvida, derive a candidata: é uma conta de dois segundos e resolve.
+
+## 15. Perguntas de verificação
+
+1. O que é uma primitiva de $f$, e como se verifica se uma candidata é
+   primitiva?
+2. Por que uma função tem infinitas primitivas, e por que todas diferem por
+   uma constante?
+3. O que a primeira parte do teorema afirma, e qual figura resume a ideia da
+   prova dela?
+4. Onde a hipótese de continuidade é usada na prova da primeira parte?
+5. Na segunda parte, por que o resultado não depende de qual primitiva foi
+   escolhida?
+6. Por que $\int_a^a f(x)\,dx = 0$, e onde esse fato entra na dedução da
+   segunda parte?
+7. Qual é a diferença entre $\int_a^b f(x)\,dx$ e $\int f(x)\,dx$?
+8. Por que a regra da potência para primitivas exclui $n = -1$, e o que se usa
+   nesse caso?
+9. Integrar e depois derivar devolve a função de partida. Derivar e depois
+   integrar devolve o quê?
+10. Por que $\int_{-1}^{1} \frac{1}{x^2}\,dx = -2$ está errado, se a primitiva
+    e a subtração foram feitas corretamente?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. É uma função $F$ com $F'(x) = f(x)$ em todo o intervalo. Para verificar,
+   **derive a candidata** e compare com $f$. Não é preciso saber como ela foi
+   encontrada.
+2. Porque somar uma constante não muda a derivada: $(F + C)' = F' + 0 = F'$.
+   E não há outras, porque duas funções com a mesma derivada num intervalo
+   diferem por uma constante — o corolário do teorema do valor médio.
+3. Afirma que $A(x) = \int_a^x f(t)\,dt$ satisfaz $A'(x) = f(x)$. A figura é a
+   faixa estreita entre $x$ e $x + h$: ela é quase um retângulo de base $h$ e
+   altura $f(x)$, então a área ganha por unidade de avanço é $f(x)$.
+4. No passo em que o menor valor $m$ e o maior valor $M$ de $f$ no pedaço
+   $[x, x+h]$ se aproximam de $f(x)$ quando $h$ encolhe. Com um salto em $x$,
+   isso falharia.
+5. Porque duas primitivas diferem por uma constante, e a constante se cancela
+   na subtração $F(b) - F(a)$.
+6. Porque um intervalo de largura zero não delimita área nenhuma; toda soma de
+   Riemann ali tem $\Delta x = 0$. Entra na dedução ao identificar
+   $A(a) = 0$, o que transforma $A(b) - A(a)$ na integral procurada.
+7. A primeira é um **número**: a área com sinal entre $a$ e $b$. A segunda é
+   uma **família de funções**: todas as primitivas de $f$, escritas como
+   $F(x) + C$.
+8. Porque a fórmula $\frac{x^{n+1}}{n+1}$ pediria divisão por zero quando
+   $n = -1$. Nesse caso a primitiva é $\ln \lvert x \rvert$, que vem da
+   derivada do logaritmo.
+9. A **variação** da função, $F(b) - F(a)$, e não a função. A derivada apaga a
+   constante, e a integração não tem como recuperá-la. É o que o $+C$
+   registra, e o que o exemplo do custo fixo mostrou na prática.
+10. Porque a hipótese do teorema falhou: $\frac{1}{x^2}$ não é contínua em
+    $[-1, 1]$, já que não existe em $x = 0$. Sem a hipótese, a conclusão não
+    vale, e o sinal negativo denuncia o problema — a função é positiva onde
+    existe.
+
+</details>
+
+## 16. Exercícios
+
+### 1. Reconhecimento
+
+1. Verifique, derivando, quais destas são primitivas de $f(x) = 3x^2$:
+   a) $x^3$; b) $x^3 - 7$; c) $\frac{x^3}{3}$; d) $6x$; e) $x^3 + \pi$.
+2. Escreva uma primitiva de cada função: a) $x^5$; b) $\frac{1}{x}$;
+   c) $\cos x$; d) $e^x$; e) $4$; f) $\sqrt{x}$.
+3. Diga se cada expressão é um número ou uma família de funções:
+   a) $\int_1^5 x^2\,dx$; b) $\int x^2\,dx$; c) $\Big[x^3\Big]_0^2$;
+   d) $\int_0^x t^2\,dt$.
+
+### 2. Explicação
+
+4. Explique por que o $+C$ não precisa ser escrito numa integral definida, mas
+   precisa numa indefinida.
+5. Um colega afirma: "a integral de $x^2$ é $x^3$, porque integrar é o
+   contrário de derivar e derivar baixa o expoente". Corrija-o, dizendo onde
+   está o erro e por que o denominador aparece.
+6. Explique, com a figura da faixa, por que a função área de $f$ cresce
+   depressa onde $f$ é alta e devagar onde $f$ é baixa.
+
+### 3. Aplicação direta
+
+7. Calcule: a) $\int_0^2 x^3\,dx$; b) $\int_1^2 (3x^2 - 2x)\,dx$;
+   c) $\int_0^{\pi/2} \cos x\,dx$; d) $\int_0^1 e^x\,dx$;
+   e) $\int_{-1}^{2} x^2\,dx$; f) $\int_2^5 \frac{1}{x^2}\,dx$.
+8. Calcule: a) $\int_1^{e^2} \frac{1}{x}\,dx$; b) $\int_1^3 (2x + 1)\,dx$;
+   c) $\int_0^1 (x^3 + x)\,dx$; d) $\int_0^{2\pi} \cos x\,dx$.
+9. Calcule $\int_0^4 (x^2 - 3x)\,dx$ e explique o sinal do resultado olhando o
+   gráfico de $x^2 - 3x$ no intervalo.
+10. Ache: a) $\frac{d}{dx}\int_0^x \frac{1}{1 + t^4}\,dt$;
+    b) $\frac{d}{dx}\int_2^x \cos(t^2)\,dt$; c) $\frac{d}{dx}\int_0^5 e^{t^2}\,dt$.
+
+### 4. Variação
+
+11. Calcule $\int_0^4 \lvert x - 2 \rvert\,dx$. (A função tem fórmulas
+    diferentes nos dois trechos.)
+12. Confira que $\int_1^3 x^2\,dx = \frac{26}{3}$ de dois jeitos: pelo teorema
+    fundamental e pela subtração $\int_0^3 x^2\,dx - \int_0^1 x^2\,dx$, usando
+    os valores 9 e $\frac{1}{3}$ da lição anterior.
+13. Calcule $\int_0^2 e^{-x}\,dx$, sabendo que uma primitiva de $e^{-x}$ é
+    $-e^{-x}$. Verifique a primitiva derivando-a.
+14. Ache o valor médio de $f(x) = x^2$ em $[0, 3]$ usando o teorema
+    fundamental, e compare com o valor 3 que a lição anterior obteve.
+15. Calcule $\frac{d}{dx}\int_0^{x^3} \sen t\,dt$.
+
+### 5. Problema misto
+
+16. Um móvel tem velocidade $v(t) = 3t^2 - 6t$ m/s, com $t$ em segundos, entre
+    $t = 0$ e $t = 3$. a) Qual é o deslocamento no período? b) Em que instante
+    ele inverte o sentido? c) Qual é a distância percorrida? d) Se a posição
+    inicial era 10 m, onde ele está em $t = 3$?
+17. Um reservatório recebe água a uma vazão $q(t) = 30 - 6t$ litros por minuto,
+    de $t = 0$ a $t = 8$ minutos, com vazão negativa significando saída pelo
+    ralo. a) Quanto o volume variou nos 8 minutos? b) Se o reservatório tinha
+    100 litros no início, quantos tem no fim? c) Por que a integral sozinha não
+    responde à letra (b)?
+18. O custo marginal de uma oficina é $C'(x) = 0{,}6x + 20$ reais por serviço,
+    e o custo fixo mensal é R\$ 800. a) Qual é o custo de passar de 0 para 50
+    serviços? b) Qual é o custo total de 50 serviços? c) E o custo de passar do
+    serviço 50 para o 60?
+19. A área sob a curva $y = \frac{1}{x}$ entre $x = 1$ e $x = b$ vale exatamente
+    1. Encontre $b$.
+
+### 6. Justificativa
+
+20. Mostre que, se $F$ e $G$ são duas primitivas de $f$ num intervalo, então
+    $F(b) - F(a) = G(b) - G(a)$. Que resultado da Parte III você usou?
+21. Explique por que a primeira parte do teorema garante que **toda** função
+    contínua tem primitiva, mesmo quando ninguém consegue escrevê-la com as
+    funções conhecidas. Dê um exemplo dessa situação.
+22. Sem calcular a integral, argumente que $\int_0^1 e^{x^2}\,dx$ está entre 1
+    e $e$. Que propriedade da lição anterior você usou?
+
+<details>
+<summary>Dica para o exercício 11</summary>
+
+Ache primeiro onde $x - 2$ troca de sinal. Antes desse ponto,
+$\lvert x - 2 \rvert = 2 - x$; depois dele, $\lvert x - 2 \rvert = x - 2$.
+Integre cada trecho com a fórmula que vale nele e some.
+
+</details>
+
+<details>
+<summary>Dica para o exercício 19</summary>
+
+Escreva a área como uma integral de 1 até $b$, aplique o teorema fundamental e
+resolva a equação que aparecer. Ela é uma equação logarítmica, do tipo que a
+lição de [equações exponenciais e
+logarítmicas](../exponenciais-e-logaritmos/equacoes-exponenciais-e-logaritmicas)
+ensinou a resolver.
+
+</details>
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. São primitivas **a**, **b** e **e**: as três têm derivada $3x^2$. A (c) tem
+   derivada $x^2$, que é um terço do pedido. A (d) tem derivada 6. Repare que
+   (a), (b) e (e) diferem entre si por constantes, como o corolário prevê.
+2. a) $\frac{x^6}{6}$; b) $\ln \lvert x \rvert$; c) $\sen x$; d) $e^x$;
+   e) $4x$; f) $\frac{2}{3}x^{3/2}$. Qualquer uma delas somada a uma constante
+   também serve.
+3. a) número; b) família de funções; c) número (vale $8 - 0 = 8$); d) função
+   de $x$ — o extremo superior é variável, então o resultado varia com $x$.
+4. Na definida, a resposta é $F(b) - F(a)$, e o $C$ aparece nas duas parcelas
+   e se cancela na subtração. Na indefinida, a resposta é a família de todas as
+   primitivas, e omitir o $C$ seria entregar uma só delas, deixando as outras
+   de fora.
+5. A derivada de $x^3$ é $3x^2$, e não $x^2$: sobrou um fator 3. O denominador
+   existe para cancelá-lo, e a primitiva certa é $\frac{x^3}{3}$. A regra é
+   subir o expoente **e dividir pelo novo expoente**.
+6. A faixa entre $x$ e $x + h$ tem largura $h$ e altura próxima de $f(x)$, e
+   sua área é aproximadamente $f(x) \times h$. Onde $f$ é alta, cada passo
+   agrega uma faixa alta e a área acumulada sobe rápido; onde $f$ é baixa, a
+   faixa é baixa e a área quase não muda. Formalmente, $A'(x) = f(x)$.
+7. a) $\Big[\frac{x^4}{4}\Big]_0^2 = 4$. &nbsp; b)
+   $\Big[x^3 - x^2\Big]_1^2 = (8 - 4) - (1 - 1) = 4$. &nbsp; c)
+   $\Big[\sen x\Big]_0^{\pi/2} = 1$. &nbsp; d) $\Big[e^x\Big]_0^1 = e - 1
+   \approx 1{,}718$. &nbsp; e) $\Big[\frac{x^3}{3}\Big]_{-1}^{2} =
+   \frac{8}{3} + \frac{1}{3} = 3$. &nbsp; f)
+   $\Big[-\frac{1}{x}\Big]_2^5 = -\frac{1}{5} + \frac{1}{2} = \frac{3}{10} = 0{,}3$.
+   Em (f), se você encontrou $-0{,}3$, inverteu a ordem da subtração.
+8. a) $\Big[\ln x\Big]_1^{e^2} = 2 - 0 = 2$. &nbsp; b)
+   $\Big[x^2 + x\Big]_1^3 = 12 - 2 = 10$. &nbsp; c)
+   $\Big[\frac{x^4}{4} + \frac{x^2}{2}\Big]_0^1 = \frac{1}{4} + \frac{1}{2} =
+   \frac{3}{4}$. &nbsp; d) $\Big[\sen x\Big]_0^{2\pi} = 0 - 0 = 0$.
+   Em (b), se você encontrou 12, esqueceu de avaliar a primitiva no extremo
+   inferior: o $F(a) = 2$ precisa ser subtraído.
+9. $\Big[\frac{x^3}{3} - \frac{3x^2}{2}\Big]_0^4 = \frac{64}{3} - 24 =
+   -\frac{8}{3} \approx -2{,}667$. O resultado é negativo porque $x^2 - 3x$ é
+   negativa em $]0, 3[$ e positiva só em $]3, 4]$. Como a região abaixo do eixo
+   é maior que a de cima, a área com sinal fica negativa.
+10. a) $\frac{1}{1 + x^4}$. &nbsp; b) $\cos(x^2)$. &nbsp; c) **zero**: os dois
+    extremos são fixos, então a expressão é um número, e a derivada de um
+    número é zero.
+11. A função troca de fórmula em $x = 2$.
+    $\int_0^2 (2 - x)\,dx = \Big[2x - \frac{x^2}{2}\Big]_0^2 = 4 - 2 = 2$, e
+    $\int_2^4 (x - 2)\,dx = \Big[\frac{x^2}{2} - 2x\Big]_2^4 = (8 - 8) - (2 - 4) = 2$.
+    Total: **4**. Confere com a geometria: dois triângulos de base 2 e altura 2.
+12. Pelo teorema: $\Big[\frac{x^3}{3}\Big]_1^3 = 9 - \frac{1}{3} =
+    \frac{26}{3} \approx 8{,}667$. Pela subtração:
+    $9 - \frac{1}{3} = \frac{26}{3}$. Os dois caminhos dão o mesmo número, como
+    devem.
+13. $(-e^{-x})' = -e^{-x} \times (-1) = e^{-x}$, pela regra da cadeia: a
+    primitiva está certa. Então
+    $\int_0^2 e^{-x}\,dx = \Big[-e^{-x}\Big]_0^2 = -e^{-2} + 1 \approx 0{,}865$.
+14. O valor médio é $\frac{1}{3}\int_0^3 x^2\,dx = \frac{1}{3} \times 9 = 3$.
+    Igual ao da lição anterior, que chegou lá pela soma de Riemann. O teorema
+    trocou a soma por uma subtração.
+15. Com $A(u) = \int_0^u \sen t\,dt$, a função é $A(x^3)$. Pela cadeia, a
+    derivada é $A'(x^3) \times 3x^2 = \sen(x^3) \times 3x^2$. Se você respondeu
+    só $\sen(x^3)$, esqueceu a derivada de dentro.
+16. a) $\int_0^3 (3t^2 - 6t)\,dt = \Big[t^3 - 3t^2\Big]_0^3 = 27 - 27 = 0$ m:
+    deslocamento **zero**, o móvel voltou ao ponto de partida. &nbsp; b) A
+    velocidade zera em $3t(t - 2) = 0$, isto é, em $t = 0$ e $t = 2$; a
+    inversão de sentido acontece em $t = 2$ s (antes disso $v$ é negativa,
+    depois positiva). &nbsp; c) De 0 a 2: $\Big[t^3 - 3t^2\Big]_0^2 = -4$, área
+    4. De 2 a 3: $\Big[t^3 - 3t^2\Big]_2^3 = 0 - (-4) = 4$. Distância
+    $4 + 4 = 8$ m. &nbsp; d) Em 10 m: o deslocamento foi zero, então ele
+    voltou para onde começou, mesmo tendo andado 8 metros.
+17. a) $\int_0^8 (30 - 6t)\,dt = \Big[30t - 3t^2\Big]_0^8 = 240 - 192 = 48$
+    litros de aumento. &nbsp; b) $100 + 48 = 148$ litros. &nbsp; c) Porque a
+    integral da vazão dá a **variação** do volume, não o volume. O volume
+    inicial é a constante que a derivação apagou, e ele precisa ser informado à
+    parte — é o $+C$ do problema.
+18. a) $\int_0^{50} (0{,}6x + 20)\,dx = \Big[0{,}3x^2 + 20x\Big]_0^{50} =
+    750 + 1000 = 1750$ reais. &nbsp; b) $800 + 1750 = 2550$ reais, somando o
+    custo fixo. &nbsp; c) $\int_{50}^{60} (0{,}6x + 20)\,dx =
+    \Big[0{,}3x^2 + 20x\Big]_{50}^{60} = (1080 + 1200) - (750 + 1000) = 530$
+    reais. Dez serviços a mais custam R\$ 530, mais caro que os dez primeiros,
+    porque o custo marginal cresce.
+19. $\int_1^b \frac{1}{x}\,dx = \Big[\ln x\Big]_1^b = \ln b - 0 = \ln b$.
+    Igualando a 1: $\ln b = 1$, logo $b = e \approx 2{,}718$. Esse é um dos
+    modos de **definir** o número $e$: a abscissa em que a área sob a hipérbole
+    completa uma unidade.
+20. Como $F' = G' = f$ no intervalo, as duas diferem por uma constante:
+    $F(x) = G(x) + C$. Então $F(b) - F(a) = (G(b) + C) - (G(a) + C) =
+    G(b) - G(a)$. O resultado usado é o corolário do [teorema do valor
+    médio](./teorema-do-valor-medio): duas funções com a mesma derivada num
+    intervalo diferem por uma constante.
+21. Porque a primeira parte **constrói** uma primitiva a partir da própria
+    função: $A(x) = \int_a^x f(t)\,dt$ existe sempre que $f$ é contínua, e
+    $A' = f$. A existência não depende de a fórmula ser escrevível. Exemplo:
+    $f(t) = e^{-t^2}$ é contínua e tem primitiva, mas nenhuma combinação de
+    polinômios, raízes, exponenciais, logaritmos e funções trigonométricas a
+    expressa. O mesmo vale para $\sen(t^2)$ e $\sqrt{1 + t^3}$ dos exemplos.
+22. Em $[0, 1]$, o expoente $x^2$ vai de 0 a 1, então $e^{x^2}$ vai de
+    $e^0 = 1$ a $e^1 = e$, e a função é crescente. Pelas **cotas** da lição
+    anterior, com $m = 1$, $M = e$ e largura 1:
+    $1 \times 1 \le \int_0^1 e^{x^2}\,dx \le e \times 1$. A integral está entre
+    1 e $e \approx 2{,}718$. (O valor verdadeiro é aproximadamente 1,463.)
+
+</details>
+
+## 17. Revisão curta
+
+- Uma **primitiva** de $f$ é uma função $F$ com $F' = f$. Para verificar uma
+  candidata, derive-a. Todas as primitivas de $f$ num intervalo são $F + C$,
+  porque duas funções com a mesma derivada diferem por uma constante.
+- **Primeira parte do teorema:** a função área $A(x) = \int_a^x f(t)\,dt$ tem
+  $A'(x) = f(x)$. A ideia é a faixa estreita: ela é quase um retângulo de base
+  $h$ e altura $f(x)$, e o confronto entre as cotas fecha o argumento.
+- **Segunda parte:** $\int_a^b f(x)\,dx = \Big[F(x)\Big]_a^b = F(b) - F(a)$,
+  para qualquer primitiva $F$. A constante se cancela na subtração, e por isso
+  a escolha da primitiva não importa.
+- A **tabela de primitivas** é a tabela de derivadas lida ao contrário: suba o
+  expoente e divida pelo novo expoente, com $\frac{1}{x}$ como exceção, que
+  leva a $\ln \lvert x \rvert$.
+- As hipóteses contam: a função precisa ser **contínua** no intervalo inteiro.
+  Aplicar o colchete atravessando uma assíntota produz respostas absurdas.
+
+Antes de avançar, verifique se você consegue fazer três coisas: achar uma
+primitiva de um polinômio e conferi-la derivando; calcular $\int_1^4 \sqrt{x}\,dx$
+pelo colchete; e explicar por que a integral do custo marginal dá a variação do
+custo, e não o custo total.
+
+Este teorema resolve as integrais cuja primitiva está na tabela. Fora dela, a
+maioria das funções exige um passo a mais. A próxima lição,
+[primitivas e substituição](./primitivas-e-substituicao), mostra o que fazer
+quando a função integrada é uma composição: a regra da cadeia, lida ao
+contrário, resolve $\int 2x\,e^{x^2}\,dx$, que nenhuma linha da tabela alcança.

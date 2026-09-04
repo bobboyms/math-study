@@ -1,0 +1,989 @@
+---
+title: "Derivadas de exponencial e logaritmo: por que a base é e"
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Derivadas de exponencial e logaritmo: por que a base é $e$
+
+## 1. Problema motivador: a promessa que ficou no capítulo de exponenciais
+
+A lição do [número $e$](../exponenciais-e-logaritmos/decaimento-e-o-numero-e)
+deu duas razões para essa base esquisita, 2,71828…, ser a preferida da
+matemática. A primeira ela explicou: $e$ é o que sai de capitalizar juros em
+intervalos cada vez menores. A segunda ela só anunciou:
+
+> entre todas as exponenciais, $e^x$ é a única cuja **taxa de variação em cada
+> ponto é igual ao próprio valor da função**. Isso só se explica no cálculo.
+
+Agora o cálculo chegou. E a pergunta pode ser feita com um número na mão.
+
+Uma conta de investimento cresce continuamente, com o saldo dado por
+$M(t) = 1000\,e^{0{,}05t}$ reais depois de $t$ anos. Aos 10 anos o saldo é
+$M(10) = 1000\,e^{0{,}5} \approx 1648{,}72$ reais. A pergunta que esta página
+responde é: **nesse instante, a que ritmo o saldo está crescendo, em reais por
+ano?**
+
+Não é a pergunta “quanto rendeu no décimo ano”, que se responde com uma
+subtração. É a pergunta do velocímetro, a mesma da lição
+[A derivada](./a-derivada): a taxa **naquele instante**. Para respondê-la,
+precisamos derivar $e^{0{,}05t}$, e nenhuma regra do capítulo até aqui cobre
+uma função com a variável no expoente.
+
+O caminho passa por uma tabela. Ela mostra o que a exponencial tem de diferente
+de tudo o que já foi derivado, revela por que $e$ é o número certo, e no fim
+entrega a taxa do investimento com uma linha de conta.
+
+## 2. Mapa das ideias
+
+- a derivada de $a^x$ é **proporcional a $a^x$**: $(a^x)' = a^x \times L(a)$,
+  em que $L(a)$ é um número que depende só da base;
+- $e$ é a base em que esse número vale **1**: $(e^x)' = e^x$;
+- esse número é o **logaritmo natural da base**: $L(a) = \ln a$, e por isso
+  $(a^x)' = a^x \ln a$;
+- com a cadeia, $(e^{kx})' = k\,e^{kx}$: a taxa é proporcional ao valor, e a
+  constante de proporção é o $k$;
+- o logaritmo natural, sendo a inversa de $e^x$, tem derivada
+  $(\ln x)' = \frac{1}{x}$;
+- as outras bases herdam por mudança de base:
+  $(\log_b x)' = \frac{1}{x \ln b}$;
+- **taxa relativa**: $\frac{f'}{f}$, a taxa por unidade do que já existe, que
+  é $(\ln f)'$.
+
+## 3. Para que serve
+
+- juros contínuos, inflação e valorização: a taxa em reais por ano num
+  instante, e não a média de um período;
+- decaimento de um medicamento no sangue, meia-vida e datação por carbono-14:
+  em que ritmo a quantidade cai **agora**;
+- crescimento de população, de audiência ou de uma epidemia no modelo
+  contínuo $P_0 e^{kt}$, e o que o $k$ significa;
+- resfriamento de um corpo e descarga de um capacitor, que a física escreve
+  com $e^{-kt}$;
+- e, dentro da matemática, é aqui que $e$ deixa de ser um número curioso e vira
+  a base natural: com ela, derivar não pendura constante nenhuma.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [potências](../numeros-e-operacoes/potencias): o que é $a^{x+h}$?**
+É $a^x \times a^h$. Multiplicar potências de mesma base soma os expoentes, e
+lida ao contrário a propriedade **separa** um expoente que é soma. Com
+$a = 2$, $x = 3$ e $h = 2$: $2^5 = 32$ e $2^3 \times 2^2 = 8 \times 4 = 32$.
+Esta é a propriedade que faz a exponencial ter uma derivada tão especial.
+
+**2. De [A derivada](./a-derivada): o que é $f'(x)$?** O limite de
+$\frac{f(x+h) - f(x)}{h}$ quando $h$ se aproxima de zero. E a ferramenta de
+conferência: o quociente centrado $\frac{f(a+h) - f(a-h)}{2h}$ com
+$h = 0{,}001$. Toda derivada desta página passa por ele.
+
+**3. De [regra da cadeia](./regra-da-cadeia): qual é a derivada de
+$(3x+1)^5$?** $5(3x+1)^4 \times 3$: derivada de fora, calculada em dentro,
+vezes a derivada de dentro. Aqui a função de fora vai ser $e^u$, e a de
+dentro, $kx$ ou $x \ln a$.
+
+**4. Do [número $e$](../exponenciais-e-logaritmos/decaimento-e-o-numero-e):
+como $e$ foi definido?** Como o valor de que $\left(1 + \frac{1}{n}\right)^n$
+se aproxima quando $n$ cresce: $2{,}718281828\ldots$ Esta página vai chegar
+ao mesmo número por outro caminho, e vai dizer com honestidade o que isso
+significa.
+
+**5. De [propriedades do logaritmo](../exponenciais-e-logaritmos/propriedades-do-logaritmo):
+o que é $\ln a$, e como se troca a base de um logaritmo?** $\ln a$ é o
+logaritmo de base $e$: o expoente que se dá a $e$ para obter $a$. Logo
+$e^{\ln a} = a$. E $\log_b x = \frac{\ln x}{\ln b}$.
+
+**6. De [função inversa](../funcoes/funcao-inversa): o que é o gráfico da
+inversa?** O gráfico da função refletido na reta $y = x$: cada ponto $(a, b)$
+vira $(b, a)$. O logaritmo é a inversa da exponencial, e a tangente refletida
+vai dizer a derivada dele.
+
+Os itens 1 e 3 fazem o trabalho pesado. O item 1 é o que torna a exponencial
+diferente de $x^n$, e o item 3 é o que leva de $e^x$ a todas as outras
+funções desta página.
+
+## 5. Intuição: uma curva que cresce na proporção do que já tem
+
+A lição de exponenciais abriu com dois investimentos: um com acréscimo fixo,
+R\$ 100 por ano, e outro com acréscimo **proporcional ao que já existe**, 10%
+do saldo. O segundo é a exponencial.
+
+Traduza “acréscimo proporcional ao que já existe” para a linguagem de taxa.
+Se o saldo é R\$ 1.000, ele cresce a um certo ritmo. Se o saldo é R\$ 2.000, o
+ritmo é o **dobro**. Se é R\$ 3.000, o triplo. A taxa de crescimento não é um
+número fixo, como na reta, nem cresce com uma potência de $x$, como nos
+polinômios. Ela cresce **junto com a própria função**, na mesma proporção.
+
+Então a derivada de uma exponencial deveria ser a própria exponencial
+multiplicada por alguma constante. A pergunta é qual constante — e se existe
+uma base em que a constante vale 1, isto é, uma função cuja taxa é exatamente
+igual ao valor.
+
+Dá para ver isso numa tabela antes de qualquer fórmula. Tome $f(x) = 2^x$ e
+estime a derivada com o quociente centrado, $h = 0{,}001$, em três pontos:
+
+| $x$ | $2^x$ | $f'(x)$ estimada | $\frac{f'(x)}{2^x}$ |
+|---:|---:|---:|---:|
+| 0 | 1 | $0{,}6931$ | $0{,}6931$ |
+| 1 | 2 | $1{,}3863$ | $0{,}6931$ |
+| 3 | 8 | $5{,}5452$ | $0{,}6931$ |
+
+A última coluna é a mesma nas três linhas. A derivada de $2^x$ é $2^x$
+vezes $0{,}6931$, seja qual for o $x$. Guarde esse número: ele vai reaparecer
+com nome.
+
+## 6. Modelo visual: três exponenciais no ponto $(0, 1)$
+
+Toda exponencial $a^x$ passa por $(0, 1)$, porque $a^0 = 1$. O que muda de uma
+base para outra, nesse ponto, é a **inclinação** com que a curva atravessa
+ele.
+
+<CartesianPlane
+  xMin={-2.2}
+  xMax={2.2}
+  yMin={-0.6}
+  yMax={5.2}
+  xUnit={90}
+  yUnit={60}
+  xStep={1}
+  yStep={1}
+  functions={[
+    {f: (x) => Math.pow(2, x), domain: [-2.2, 2.2], tone: 3},
+    {f: (x) => Math.exp(x), domain: [-2.2, 1.65], tone: 1},
+    {f: (x) => Math.pow(3, x), domain: [-2.2, 1.5], tone: 2},
+  ]}
+  lines={[{m: 1, n: 1, dashed: true, tone: 1}]}
+  points={[{at: [0, 1], label: '(0,\\ 1)', tone: 1, dx: -36, dy: -4}]}
+  labels={[
+    {at: [1.75, 3.55], math: '2^x', tone: 3, dx: 16},
+    {at: [1.35, 4.2], math: 'e^x', tone: 1, dx: -20},
+    {at: [1.15, 4.8], math: '3^x', tone: 2, dx: -32},
+    {at: [-1.6, -0.35], math: 'y = x + 1', tone: 1, dx: 4},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="As curvas 2^x, e^x e 3^x passam pelo mesmo ponto (0, 1) com inclinações diferentes: 0,69, 1 e 1,10. A reta tracejada y = x + 1, de inclinação exatamente 1, é a tangente de e^x nesse ponto."
+/>
+
+Leia a figura assim: em $x = 0$, a curva de $2^x$ sobe com inclinação
+$0{,}69$; a de $3^x$, com inclinação $1{,}10$. Entre as duas existe uma base
+cuja curva atravessa $(0, 1)$ com inclinação **exatamente 1**, encostada na
+reta $y = x + 1$. Essa base é $e$. A seção seguinte mostra por que a
+inclinação em $(0, 1)$ decide a derivada em **todos** os pontos.
+
+## 7. Ponte para a formalização: o quociente de diferenças de $a^x$
+
+Monte o quociente de diferenças de $f(x) = a^x$ num ponto $x$ qualquer, como
+a definição manda:
+
+$$
+\frac{f(x+h) - f(x)}{h} = \frac{a^{x+h} - a^x}{h}.
+$$
+
+**O que queremos.** Separar o que depende de $x$ do que depende de $h$, para
+poder fazer $h$ encolher sem mexer no $x$.
+
+**Por que a forma atual não serve.** O $x$ e o $h$ estão presos no mesmo
+expoente, $x + h$. Não dá para deixar $h$ ir a zero sem arrastar o $x$ junto.
+
+**Qual propriedade autoriza a mudança.** A propriedade das potências do item 1:
+$a^{x+h} = a^x \times a^h$. Ela vale para qualquer base positiva e quaisquer
+expoentes.
+
+**O que muda na escrita, e o que permanece.** O numerador vira
+$a^x a^h - a^x$, que tem $a^x$ nas duas parcelas. Colocar $a^x$ em evidência
+é a fatoração por fator comum da lição de álgebra:
+$a^x a^h - a^x = a^x(a^h - 1)$. O **valor** de cada expressão em cada $h$
+não muda; só a forma de escrever. Conferindo com $a = 2$, $x = 3$, $h = 2$:
+$2^5 - 2^3 = 24$, e $2^3(2^2 - 1) = 8 \times 3 = 24$.
+
+Com isso o quociente fica
+
+$$
+\frac{a^{x+h} - a^x}{h} = \frac{a^x(a^h - 1)}{h} = a^x \times \frac{a^h - 1}{h}.
+$$
+
+Agora repare no que aconteceu. O fator $a^x$ **não tem $h$**: quando $h$
+encolhe, ele fica parado. E a fração $\frac{a^h - 1}{h}$ **não tem $x$**: ela
+é a mesma seja qual for o ponto em que estamos derivando. Ela é, aliás, o
+quociente de diferenças de $a^x$ **em $x = 0$**, porque $a^0 = 1$:
+
+$$
+\frac{a^{0+h} - a^0}{h} = \frac{a^h - 1}{h}.
+$$
+
+Ou seja: a derivada de $a^x$ em qualquer ponto é $a^x$ vezes a derivada de
+$a^x$ **na origem**. É exatamente o que a figura mostrava: a inclinação em
+$(0, 1)$ decide tudo.
+
+Falta saber de que valor a fração $\frac{a^h - 1}{h}$ se aproxima. É a
+tabela prometida.
+
+## 8. A tabela que revela o número $e$
+
+Calcule $\frac{a^h - 1}{h}$ para $h$ cada vez menor, com três bases:
+
+| $h$ | base 2 | base $e$ | base 3 |
+|---:|---:|---:|---:|
+| $0{,}1$ | $0{,}717735$ | $1{,}051709$ | $1{,}161232$ |
+| $0{,}01$ | $0{,}695555$ | $1{,}005017$ | $1{,}104669$ |
+| $0{,}001$ | $0{,}693387$ | $1{,}000500$ | $1{,}099216$ |
+| $-0{,}001$ | $0{,}692907$ | $0{,}999500$ | $1{,}098009$ |
+
+Três leituras.
+
+**Cada coluna se acomoda num número.** Base 2 se aproxima de $0{,}6931$, pelos
+dois lados. Base 3, de $1{,}0986$. Esse valor limite é o que a página vai
+chamar de $L(a)$:
+
+$$
+L(a) = \lim_{h \to 0} \frac{a^h - 1}{h}.
+$$
+
+**O $0{,}6931$ da base 2 é o número da seção 5.** Lá ele apareceu como a
+razão $\frac{f'(x)}{2^x}$, a mesma em todos os pontos. Aqui aparece como a
+inclinação de $2^x$ na origem. São a mesma coisa, e a seção 7 explicou por quê.
+
+**A coluna do meio se aproxima de 1.** Com a base $e$, a fração vale
+$1{,}0005$ em $h = 0{,}001$ e $0{,}9995$ em $h = -0{,}001$: está apertada em
+torno de 1. É esse o fato que a lição de exponenciais anunciou.
+
+### De onde vem esse $e$, e por que é o mesmo da lição anterior
+
+A lição do número $e$ o definiu como o valor de que $\left(1 + \frac{1}{n}\right)^n$
+se aproxima. Aqui ele apareceu como a base em que $L = 1$. Vale mostrar que as
+duas descrições apontam para o mesmo número, e dizer o que fica sem
+demonstração.
+
+Se $L(a) = 1$, então para $h$ pequeno a fração $\frac{a^h - 1}{h}$ é quase 1,
+isto é, $a^h - 1 \approx h$, isto é, $a^h \approx 1 + h$. Elevando os dois
+lados a $\frac{1}{h}$ para isolar a base:
+
+$$
+a \approx (1 + h)^{1/h}.
+$$
+
+Agora escolha $h = \frac{1}{n}$. A expressão vira $\left(1 + \frac{1}{n}\right)^n$,
+a mesma da lição anterior. Numericamente: com $h = 0{,}001$,
+$(1{,}001)^{1000} \approx 2{,}7169$; com $h = 0{,}0001$,
+$(1{,}0001)^{10000} \approx 2{,}7181$. É o $2{,}71828\ldots$ chegando.
+
+O que o curso **aceita sem demonstrar** é que os dois processos de aproximação
+chegam exatamente ao mesmo limite, e não a dois números que só coincidem nas
+primeiras casas. A demonstração rigorosa é matéria de um curso de análise. A
+tabela é a evidência que este curso oferece, e ela é a mesma evidência que
+convenceu os matemáticos do século XVII antes que a demonstração existisse.
+
+> O **número $e$** é a base cuja exponencial atravessa o ponto $(0, 1)$ com
+> inclinação 1. Equivalentemente, é a base em que
+> $$
+> \lim_{h \to 0} \frac{e^h - 1}{h} = 1.
+> $$
+
+## 9. A derivada de $e^x$ e de $e^{kx}$
+
+Junte a seção 7 com a tabela. Para a base $e$:
+
+$$
+(e^x)' = \lim_{h \to 0} e^x \times \frac{e^h - 1}{h} = e^x \times 1 = e^x.
+$$
+
+> $$
+> (e^x)' = e^x.
+> $$
+> A função exponencial de base $e$ é igual à própria derivada. Em cada ponto,
+> a inclinação da curva é a altura da curva.
+
+**Exemplo.** Em $x = 1$, a altura é $e^1 \approx 2{,}7183$ e a inclinação
+também. O quociente centrado com $h = 0{,}001$ dá $2{,}7183$. Confere.
+
+**Contraexemplo, para delimitar.** $2^x$ **não** é igual à própria derivada.
+Em $x = 3$ a altura é 8, e a inclinação, pela tabela, é $8 \times 0{,}6931 \approx 5{,}545$. A propriedade é da base $e$, e só dela.
+
+### O expoente com um coeficiente
+
+O investimento do motivador tem $e^{0{,}05t}$, com um número multiplicando o
+$t$. É uma composição: a função de dentro é $u = 0{,}05t$, a de fora é $e^u$.
+A regra da cadeia dá a derivada de fora, calculada em dentro, vezes a
+derivada de dentro:
+
+$$
+\left(e^{0{,}05t}\right)' = e^{0{,}05t} \times 0{,}05.
+$$
+
+Em geral, com $u = kx$ e $\frac{du}{dx} = k$:
+
+> $$
+> \left(e^{kx}\right)' = k\,e^{kx}.
+> $$
+
+O que essa fórmula diz é o que a intuição da seção 5 previu: a derivada é
+**proporcional à própria função**, e a constante de proporção é o $k$. Dividindo
+os dois lados por $e^{kx}$:
+
+$$
+\frac{\left(e^{kx}\right)'}{e^{kx}} = k.
+$$
+
+Essa razão, derivada dividida pela função, é a **taxa relativa**: quanto a
+grandeza cresce por unidade de tempo, **por unidade do que ela já tem**. Para
+$e^{0{,}05t}$ ela vale $0{,}05$ em todo instante: o saldo cresce 5% de si mesmo
+por ano, sempre. É por isso que os modelos contínuos são escritos como
+$P_0 e^{kt}$: o $k$ é a taxa relativa, e ela é constante.
+
+## 10. Resolvendo o problema do investimento
+
+$M(t) = 1000\,e^{0{,}05t}$. A constante 1000 sai para fora da derivada, pela
+regra da constante multiplicativa, e o resto é a fórmula da seção anterior:
+
+$$
+M'(t) = 1000 \times 0{,}05\,e^{0{,}05t} = 50\,e^{0{,}05t}.
+$$
+
+Em $t = 10$:
+
+$$
+M'(10) = 50\,e^{0{,}5} \approx 50 \times 1{,}6487 \approx 82{,}44
+\ \text{reais por ano}.
+$$
+
+**Conferindo com um número.** O quociente centrado de $M$ em $t = 10$ com
+$h = 0{,}001$ dá $82{,}436$. Confere.
+
+**Lendo o resultado.** Aos 10 anos o saldo é R\$ 1.648,72 e cresce a R\$ 82,44
+por ano. A razão entre os dois é $\frac{82{,}44}{1648{,}72} = 0{,}05$: o saldo
+cresce 5% de si mesmo por ano, como o $k$ prometia. E como o saldo aumenta, os
+R\$ 82,44 por ano também aumentam: aos 20 anos serão $50\,e^{1} \approx 135{,}91$
+reais por ano. Uma reta daria o mesmo número de reais por ano para sempre; a
+exponencial, não.
+
+Repare que a pergunta “quanto rendeu no décimo ano”, feita por subtração, dá
+$M(10) - M(9) = 1648{,}72 - 1568{,}31 = 80{,}41$ reais: um pouco menos que
+82,44, porque é uma média do ano inteiro, e o ritmo no fim do ano é maior que
+no começo. A diferença é a mesma que a lição de taxa média apontou entre média
+de um trecho e leitura do velocímetro.
+
+## 11. Outras bases: $(a^x)' = a^x \ln a$
+
+Para $2^x$ e $3^x$ a seção 8 só entregou números, $0{,}6931$ e $1{,}0986$. Eles
+têm nome, e o caminho para descobrir é reescrever a base.
+
+**O que queremos.** Derivar $a^x$ usando a única exponencial que já sabemos
+derivar, a de base $e$.
+
+**Por que a forma atual não serve.** $a^x$ tem base $a$, e a regra
+$(e^x)' = e^x$ só vale para base $e$.
+
+**Qual propriedade autoriza a mudança.** Da lição de propriedades do
+logaritmo: $e^{\ln a} = a$, porque $\ln a$ é, por definição, o expoente que
+transforma $e$ em $a$. Então
+
+$$
+a^x = \left(e^{\ln a}\right)^x = e^{x \ln a},
+$$
+
+pela propriedade de potência de potência, $(b^m)^n = b^{mn}$.
+
+**O que muda e o que permanece.** A escrita trocou a base $a$ pela base $e$,
+com o expoente multiplicado por $\ln a$. O valor é o mesmo: com $a = 2$ e
+$x = 3$, $2^3 = 8$ e $e^{3 \ln 2} = e^{2{,}0794} \approx 8{,}000$.
+
+Agora $e^{x \ln a}$ é $e^{kx}$ com $k = \ln a$, e a seção 9 dá a derivada:
+
+$$
+\left(a^x\right)' = \left(e^{x \ln a}\right)' = \ln a \times e^{x \ln a}
+= a^x \ln a.
+$$
+
+> $$
+> (a^x)' = a^x \ln a.
+> $$
+
+Então o número $L(a)$ da tabela **é $\ln a$**. Conferindo: $\ln 2 = 0{,}693147$
+e $\ln 3 = 1{,}098612$, exatamente os valores de que as colunas se
+aproximavam. E $\ln e = 1$, que é a coluna do meio.
+
+**Exemplo.** $(2^x)'$ em $x = 3$: $2^3 \times \ln 2 = 8 \times 0{,}6931 = 5{,}545$. O quociente centrado dá $5{,}5452$.
+
+**Exemplo com contexto.** A população da lição de exponenciais,
+$P(t) = 200 \times 1{,}03^t$ milhares, cresce 3% ao ano. A derivada é
+
+$$
+P'(t) = 200 \times 1{,}03^t \times \ln 1{,}03,
+\qquad
+\ln 1{,}03 \approx 0{,}02956.
+$$
+
+Em $t = 10$: $P(10) \approx 268{,}78$ mil e $P'(10) \approx 7{,}94$ mil
+habitantes por ano. Repare que a taxa relativa é $\ln 1{,}03 = 0{,}02956$, e
+não $0{,}03$. O 3% é o acréscimo **de um ano inteiro**; $\ln 1{,}03$ é a taxa
+**instantânea** que, mantida continuamente, produz esses 3% ao fim do ano. As
+duas são próximas porque $\ln(1 + r) \approx r$ para $r$ pequeno, mas não são
+iguais.
+
+## 12. A derivada do logaritmo natural
+
+O logaritmo natural é a inversa de $e^x$: $y = \ln x$ significa $e^y = x$. Essa
+igualdade é uma relação entre $x$ e $y$, e dá para derivar os dois lados dela
+em relação a $x$ **tratando $y$ como uma função de $x$**, que é o que $y$ é.
+
+Do lado direito, $(x)' = 1$. Do lado esquerdo, $e^y$ é uma composição: a
+função de fora é $e^u$, a de dentro é $u = y(x)$. Pela cadeia, a derivada é
+$e^y \times y'$. Então
+
+$$
+e^y \, y' = 1
+\quad\Longrightarrow\quad
+y' = \frac{1}{e^y}.
+$$
+
+Mas $e^y = x$, pela própria relação de partida. Substituindo:
+
+> $$
+> (\ln x)' = \frac{1}{x}, \qquad x > 0.
+> $$
+
+Esse passo, “derivar os dois lados de uma relação tratando $y$ como função de
+$x$”, é o método da lição seguinte, [derivação
+implícita](./derivacao-implicita), que o apresenta com nome e o usa em outras
+situações. Aqui ele apareceu antes da hora porque é o caminho mais curto até
+a derivada do logaritmo.
+
+**Exemplo.** Em $x = 4$, $(\ln x)' = \frac{1}{4} = 0{,}25$. O quociente centrado
+de $\ln x$ em 4 dá $0{,}2500$.
+
+**Contraexemplo.** $(\ln x)'$ **não** é $\ln x$. Em $x = 4$, $\ln 4 = 1{,}386$,
+muito longe dos $0{,}25$ que a estimativa numérica dá. A função que é igual à
+própria derivada é $e^x$, não a inversa dela.
+
+### A mesma derivada lida no espelho
+
+<CartesianPlane
+  xMin={-2.5}
+  xMax={5.5}
+  yMin={-2.5}
+  yMax={5.5}
+  xUnit={40}
+  yUnit={40}
+  functions={[
+    {f: (x) => Math.exp(x), domain: [-2.5, 1.7], tone: 1},
+    {f: (x) => Math.log(x), domain: [0.08, 5.5], tone: 2},
+    {f: (x) => x, domain: [-2.5, 5.5], tone: 0, dashed: true},
+  ]}
+  lines={[
+    {m: Math.E, n: 0, dashed: true, tone: 1},
+    {m: 1 / Math.E, n: 0, dashed: true, tone: 2},
+  ]}
+  points={[
+    {at: [1, Math.E], label: '(1,\\ e)', tone: 1, dx: -34, dy: -6},
+    {at: [Math.E, 1], label: '(e,\\ 1)', tone: 2, dx: 30, dy: 22},
+  ]}
+  labels={[
+    {at: [1.55, 4.9], math: 'e^x', tone: 1, dx: 18},
+    {at: [5.0, 1.8], math: '\\ln x', tone: 2, dx: 0},
+    {at: [1.62, 4.3], math: 'y = ex', tone: 1, dx: 40, dy: 10},
+    {at: [4.6, 1.5], math: 'y = x/e', tone: 2, dx: 10, dy: 22},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A tangente a e^x em (1, e) tem inclinação e; refletida na reta y = x, ela vira a tangente a ln x em (e, 1), de inclinação 1/e. Refletir troca a inclinação pelo inverso dela."
+/>
+
+A figura conta a mesma história sem álgebra. O ponto $(1, e)$ está na curva de
+$e^x$, e a tangente ali tem inclinação $e^1 = e$: sobe $e$ para cada 1 que
+avança. Refletir na reta $y = x$ troca as coordenadas: o ponto vira $(e, 1)$,
+que está na curva de $\ln x$, e a tangente refletida sobe **1 para cada $e$
+que avança**, isto é, tem inclinação $\frac{1}{e}$. E $\frac{1}{e}$ é
+exatamente $\frac{1}{x}$ em $x = e$. A regra “a derivada da inversa é o
+inverso da derivada, no ponto refletido” é geral, e o exercício 22 pede para
+escrevê-la.
+
+## 13. Outras bases e o logaritmo de uma função
+
+**Mudança de base.** Para $\log_b x$, a propriedade da lição de logaritmos
+reescreve tudo em base $e$: $\log_b x = \frac{\ln x}{\ln b}$. O denominador
+$\ln b$ é uma constante, então sai para fora da derivada:
+
+$$
+(\log_b x)' = \frac{1}{\ln b} \times (\ln x)' = \frac{1}{x \ln b}.
+$$
+
+> $$
+> (\log_b x)' = \frac{1}{x \ln b}.
+> $$
+
+**Exemplo.** Para o logaritmo decimal em $x = 100$: $\frac{1}{100 \ln 10} = \frac{1}{230{,}26} \approx 0{,}004343$. O quociente centrado dá $0{,}004343$.
+É uma inclinação minúscula, e é o que a lição de função logarítmica descreveu
+como “cresce sem limite, mas cada vez mais devagar”: em $x = 100$ o logaritmo
+decimal sobe menos de meio centésimo por unidade.
+
+**Logaritmo de uma função.** Para $\ln(g(x))$, a função de fora é $\ln u$, com
+derivada $\frac{1}{u}$, e a de dentro é $g$. Pela cadeia:
+
+> $$
+> \big(\ln g(x)\big)' = \frac{g'(x)}{g(x)}.
+> $$
+
+**Exemplo.** $\left(\ln(x^2 + 1)\right)' = \frac{2x}{x^2 + 1}$. Em $x = 2$:
+$\frac{4}{5} = 0{,}8$, e o quociente centrado dá $0{,}8000$.
+
+Essa fórmula tem uma leitura que vale guardar. $\frac{g'}{g}$ é a **taxa
+relativa** da seção 9: a derivada por unidade do que a função já tem. Então
+**derivar o logaritmo de uma grandeza dá a taxa relativa dela**. Para
+$g(t) = P_0 e^{kt}$, $\ln g = \ln P_0 + kt$ tem derivada $k$, que é a taxa
+relativa constante. É outro jeito de ver por que o $k$ é o que é.
+
+### A tabela desta página
+
+| Função | Derivada | Conferência numérica |
+|---|---|---|
+| $e^x$ | $e^x$ | em $x = 1$: $2{,}7183$ |
+| $e^{kx}$ | $k\,e^{kx}$ | $e^{2x}$ em $x = 1$: $14{,}778$ |
+| $a^x$ | $a^x \ln a$ | $2^x$ em $x = 3$: $5{,}5452$ |
+| $\ln x$ | $\frac{1}{x}$ | em $x = 4$: $0{,}2500$ |
+| $\log_b x$ | $\frac{1}{x \ln b}$ | $\log_{10} x$ em $x = 100$: $0{,}004343$ |
+| $\ln g(x)$ | $\frac{g'(x)}{g(x)}$ | $\ln(x^2+1)$ em $x = 2$: $0{,}8000$ |
+| $e^{g(x)}$ | $g'(x)\,e^{g(x)}$ | $e^{x^2}$ em $x = 1$: $5{,}4366$ |
+
+A última linha é a cadeia com $e^u$ por fora, e vale registrar em separado
+porque é a que mais aparece: **a derivada de $e^{\text{alguma coisa}}$ é
+$e^{\text{alguma coisa}}$ vezes a derivada da alguma coisa.**
+
+## 14. Exemplos resolvidos
+
+### Exemplo 1: juros contínuos
+
+Um capital de R\$ 5.000 rende 7% ao ano com capitalização contínua:
+$M(t) = 5000\,e^{0{,}07t}$. A que taxa o saldo cresce aos 3 anos?
+
+$$
+M'(t) = 5000 \times 0{,}07\,e^{0{,}07t} = 350\,e^{0{,}07t},
+\qquad
+M'(3) = 350\,e^{0{,}21} \approx 350 \times 1{,}2337 \approx 431{,}79
+\ \text{reais por ano}.
+$$
+
+Conferindo: o quociente centrado em $t = 3$ dá $431{,}787$. A taxa relativa é
+$\frac{431{,}79}{6168{,}39} = 0{,}07$, os 7% do enunciado.
+
+### Exemplo 2: o remédio que sai do sangue
+
+*Pause e tente antes de ler.* Um analgésico tem meia-vida de 6 horas. Uma dose
+de 200 mg é tomada em $t = 0$. Escreva a quantidade como $N(t) = 200\,e^{-kt}$,
+encontre $k$ e calcule a que ritmo o remédio está sendo eliminado em $t = 0$ e
+em $t = 6$ h.
+
+A meia-vida diz que $N(6) = 100$: $200\,e^{-6k} = 100$, logo
+$e^{-6k} = \frac{1}{2}$. Aplicando $\ln$ aos dois lados, $-6k = \ln\frac{1}{2} = -\ln 2$, então
+
+$$
+k = \frac{\ln 2}{6} \approx 0{,}11552 \ \text{por hora}.
+$$
+
+A derivada é $N'(t) = 200 \times (-k)\,e^{-kt} = -200k\,e^{-kt}$:
+
+$$
+N'(0) = -200k \approx -23{,}10 \ \text{mg/h},
+\qquad
+N'(6) = -100k \approx -11{,}55 \ \text{mg/h}.
+$$
+
+O sinal negativo diz que a quantidade cai. E o ritmo de eliminação **cai pela
+metade** entre 0 e 6 h, junto com a quantidade: o corpo elimina uma fração fixa
+do que há, então elimina menos miligramas por hora quando há menos remédio. É
+a taxa relativa, $-k$, que é constante.
+
+Conferindo $N'(6)$ com o quociente centrado: $-11{,}552$.
+
+A lição de exponenciais escreveu a mesma função como
+$N(t) = 200 \times \left(\frac{1}{2}\right)^{t/6}$. As duas escritas são a mesma
+função, e a derivada com a fórmula $(a^x)' = a^x \ln a$ em $t = 0$ dá
+$200 \times \ln\frac{1}{2} \times \frac{1}{6} = -23{,}10$, o mesmo número.
+
+### Exemplo 3: um produto com exponencial
+
+*Pause e tente.* Derive $f(x) = x\,e^x$ e diga onde a tangente é horizontal.
+
+É um produto, e a regra do produto dá
+
+$$
+f'(x) = (x)'\,e^x + x\,(e^x)' = e^x + x\,e^x = e^x(1 + x).
+$$
+
+Conferindo em $x = 1$: $e(1 + 1) = 2e \approx 5{,}4366$; quociente centrado,
+$5{,}4366$.
+
+A tangente é horizontal onde $f'(x) = 0$. Como $e^x$ nunca é zero, sobra
+$1 + x = 0$, isto é, $x = -1$. Ali $f(-1) = -\frac{1}{e} \approx -0{,}368$, e a
+[lição de máximos e mínimos](./maximos-e-minimos) vai dizer o que esse ponto é.
+
+### Exemplo 4: a tangente ao logaritmo
+
+*Pause e tente.* Escreva a equação da reta tangente a $y = \ln x$ no ponto em
+que $x = 1$.
+
+Em $x = 1$, $\ln 1 = 0$: o ponto é $(1, 0)$. A inclinação é $\frac{1}{1} = 1$.
+Pela equação da reta por um ponto e uma inclinação,
+
+$$
+y = 0 + 1 \times (x - 1) = x - 1.
+$$
+
+Essa reta é o reflexo, na reta $y = x$, da tangente $y = x + 1$ a $e^x$ em
+$(0, 1)$. Refletir trocou $x$ com $y$: $x = y + 1$, ou seja, $y = x - 1$.
+
+### Exemplo 5: exponencial com expoente composto
+
+*Pause e tente.* Derive $g(x) = e^{x^2}$ e $h(x) = e^{\sen x}$.
+
+As duas são $e^{\text{alguma coisa}}$. A derivada é a própria função vezes a
+derivada do expoente:
+
+$$
+g'(x) = 2x\,e^{x^2},
+\qquad
+h'(x) = \cos x\,e^{\sen x}.
+$$
+
+Em $x = 1$: $g'(1) = 2e \approx 5{,}4366$ e $h'(1) = \cos 1 \times e^{\sen 1} \approx 0{,}5403 \times 2{,}3198 \approx 1{,}2534$. Os quocientes centrados dão
+$5{,}4366$ e $1{,}2534$.
+
+O erro a evitar é entregar $e^{x^2}$ como derivada de $e^{x^2}$. Isso valeria
+se o expoente fosse o próprio $x$; com $x^2$ lá dentro, a cadeia cobra o fator
+$2x$. Em $x = 1$ a conta errada dá $2{,}718$, e a certa, $5{,}437$.
+
+### Exemplo 6: ler a taxa relativa numa fórmula
+
+*Pause e tente.* Uma cultura de bactérias dobra a cada 3 horas. Qual é a taxa
+relativa de crescimento, em porcentagem por hora?
+
+Dobrar a cada 3 horas é $N(t) = N_0 \times 2^{t/3}$. Reescrevendo em base $e$:
+$2^{t/3} = e^{(t/3)\ln 2} = e^{kt}$ com $k = \frac{\ln 2}{3} \approx 0{,}2310$.
+
+A taxa relativa é $k$: a cultura cresce cerca de **23,1% de si mesma por
+hora**. Repare que isso não é $\frac{100\%}{3} \approx 33\%$, que seria a
+resposta se o crescimento fosse por acréscimo fixo. O crescimento é
+multiplicativo, e 23,1% ao hora, compostos continuamente por 3 horas, dão
+$e^{3 \times 0{,}2310} = e^{\ln 2} = 2$: o dobro, como o enunciado pede.
+
+## 15. Erros comuns
+
+> **Erro 1: derivar $e^x$ pela regra da potência.** $(e^x)'$ **não** é
+> $x\,e^{x-1}$. A regra da potência vale quando a variável está na **base** e o
+> expoente é fixo, como em $x^5$. Em $e^x$ a base é fixa e a variável está no
+> expoente. Teste em $x = 2$: a conta errada dá $2e \approx 5{,}44$; a certa,
+> $e^2 \approx 7{,}39$; o quociente centrado confirma $7{,}389$.
+
+> **Erro 2: $(\ln x)' = \ln x$.** A função igual à própria derivada é $e^x$, e
+> o logaritmo é a inversa, não a mesma coisa. Em $x = 4$: $\ln 4 = 1{,}386$,
+> mas a inclinação de $\ln x$ ali é $\frac{1}{4} = 0{,}25$. A curva do
+> logaritmo é quase horizontal para $x$ grande, e uma derivada que crescesse
+> como $\ln x$ diria o contrário.
+
+> **Erro 3: $(2^x)' = 2^x$.** Só a base $e$ tem esse privilégio. Para as
+> outras, o $\ln$ da base fica multiplicando: $(2^x)' = 2^x \ln 2$. Em $x = 3$
+> a conta errada dá 8; a certa, $8 \times 0{,}693 = 5{,}545$.
+
+> **Erro 4: esquecer a derivada de dentro.** $\left(e^{x^2}\right)'$ não é
+> $e^{x^2}$; é $2x\,e^{x^2}$. Do mesmo modo, $\left(e^{3x}\right)' = 3e^{3x}$ e
+> $\left(\ln(x^2 + 1)\right)' = \frac{2x}{x^2 + 1}$, não $\frac{1}{x^2 + 1}$.
+> O expoente ou o argumento do logaritmo é a função de dentro, e a cadeia
+> cobra a derivada dela.
+
+> **Erro 5: separar o logaritmo de uma soma.** $\ln(x^2 + 1)$ **não** é
+> $\ln x^2 + \ln 1$. A propriedade do logaritmo transforma **produto** em soma,
+> não soma em soma: $\ln(2 \times 3) = \ln 2 + \ln 3$, mas
+> $\ln(2 + 3) = \ln 5 = 1{,}609$, enquanto $\ln 2 + \ln 3 = 1{,}792$. O erro
+> aparece na hora de derivar porque a derivada de $\ln(x^2+1)$ pela cadeia
+> dá um resultado, e a da versão separada daria outro.
+
+> **Erro 6: confundir a taxa anual com a taxa relativa contínua.** Uma
+> população que cresce 3% ao ano tem $k = \ln 1{,}03 = 0{,}02956$, não
+> $0{,}03$. Os dois números são próximos e se confundem em modelos com taxa
+> pequena, mas são coisas diferentes: 3% é o acréscimo acumulado num ano;
+> $0{,}02956$ é a taxa instantânea que o produz.
+
+## 16. Perguntas de verificação
+
+1. Por que a derivada de $a^x$ é proporcional a $a^x$? Que propriedade das
+   potências está por trás disso?
+2. O que o número $L(a) = \lim_{h \to 0} \frac{a^h - 1}{h}$ mede no gráfico de
+   $a^x$?
+3. Em que sentido $e$ é “a base em que a constante vale 1”? O que isso diz
+   sobre a curva de $e^x$ no ponto $(0, 1)$?
+4. A lição de exponenciais definiu $e$ por $\left(1 + \frac{1}{n}\right)^n$.
+   Como essa definição se liga à desta página? O que fica sem demonstração?
+5. Por que $(a^x)' = a^x \ln a$? Que reescrita da base torna isso uma
+   aplicação da cadeia?
+6. Para $P(t) = P_0 e^{kt}$, o que o $k$ mede? Por que ele é chamado de taxa
+   relativa?
+7. Como a derivada de $\ln x$ sai da derivada de $e^x$? Que ideia da lição de
+   função inversa está em jogo?
+8. Por que $(\ln x)' = \frac{1}{x}$ faz sentido olhando o gráfico do logaritmo?
+9. Por que $(\log_{10} x)'$ é menor que $(\ln x)'$ em todo ponto?
+10. Uma grandeza dobra a cada $T$ horas. Qual é a taxa relativa dela, e por
+    que não é $\frac{1}{T}$?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque $a^{x+h} = a^x a^h$: o quociente de diferenças vira
+   $a^x \times \frac{a^h - 1}{h}$, e o fator $a^x$ sai do limite. A derivada em
+   qualquer ponto é $a^x$ vezes um número que não depende do ponto.
+2. A inclinação da curva de $a^x$ no ponto $(0, 1)$: é o quociente de
+   diferenças em $x = 0$, já que $a^0 = 1$.
+3. $L(e) = 1$: a fração $\frac{e^h - 1}{h}$ se aproxima de 1. No gráfico, a
+   curva de $e^x$ atravessa $(0, 1)$ com inclinação exatamente 1, encostada na
+   reta $y = x + 1$.
+4. Se $L(a) = 1$, então $a^h \approx 1 + h$ para $h$ pequeno, logo
+   $a \approx (1 + h)^{1/h}$, que com $h = \frac{1}{n}$ é a expressão da
+   lição anterior. A tabela mostra que os dois processos chegam a 2,71828…; o
+   que fica sem demonstração é que o limite é exatamente o mesmo número, e não
+   dois que coincidem nas primeiras casas.
+5. Reescrevendo $a = e^{\ln a}$, temos $a^x = e^{x \ln a}$, que é $e^{kx}$
+   com $k = \ln a$. A cadeia dá $\ln a \times e^{x \ln a} = a^x \ln a$.
+6. $k$ é a derivada dividida pela função: $\frac{P'}{P} = k$. Mede o
+   crescimento por unidade de tempo **por unidade do que já existe**, e por
+   isso é uma taxa relativa. É constante para a exponencial e só para ela.
+7. Escrevendo $e^y = x$ e derivando os dois lados com a cadeia,
+   $e^y y' = 1$, logo $y' = \frac{1}{e^y} = \frac{1}{x}$. A ideia é que a
+   inversa é a mesma relação lida ao contrário: o gráfico refletido, com a
+   inclinação trocada pelo inverso.
+8. O logaritmo cresce sem limite, mas cada vez mais devagar. Uma derivada
+   $\frac{1}{x}$ é sempre positiva (a curva sempre sobe) e se aproxima de zero quando $x$
+   cresce (sobe cada vez menos). Perto de $x = 0$ ela é enorme, e a curva
+   despenca para a assíntota vertical.
+9. Porque $\log_{10} x = \frac{\ln x}{\ln 10}$, e $\ln 10 \approx 2{,}303$ é
+   maior que 1. A curva do logaritmo decimal é a do natural achatada por esse
+   fator, e a inclinação encolhe na mesma proporção.
+10. $N = N_0 \times 2^{t/T} = N_0\,e^{(\ln 2 / T)\,t}$, então a taxa relativa
+    é $\frac{\ln 2}{T} \approx \frac{0{,}693}{T}$. Não é $\frac{1}{T}$ porque
+    o crescimento é multiplicativo e contínuo: uma taxa relativa de
+    $\frac{1}{T}$ mantida por $T$ horas multiplicaria por $e \approx 2{,}72$,
+    e não por 2.
+
+</details>
+
+## 17. Exercícios
+
+### 1. Reconhecimento
+
+1. Em cada função, diga se a variável está na base ou no expoente, e qual
+   regra se aplica: a) $x^e$; b) $e^x$; c) $3^x$; d) $x^3$; e) $e^{3x}$.
+2. Em cada uma, identifique a função de dentro e a de fora: a) $e^{-2x}$;
+   b) $\ln(5x + 2)$; c) $e^{\sqrt{x}}$; d) $\ln(\cos x)$.
+3. Sem calcular, diga qual das duas é maior em $x = 2$: a derivada de $2^x$ ou
+   a de $3^x$? E em $x = 0$?
+4. Olhando a tabela da seção 8, qual coluna se aproxima de um número maior
+   que 1 e qual se aproxima de um menor que 1? O que isso diz sobre a
+   inclinação de cada curva em $(0, 1)$?
+
+### 2. Explicação
+
+5. Explique com as próprias palavras por que a derivada de $e^x$ é a própria
+   $e^x$, sem usar a palavra “regra”.
+6. Um colega diz: “$\ln x$ cresce sem parar, então a derivada dele deve
+   crescer também”. Corrija o raciocínio usando a fórmula da derivada.
+7. Por que a taxa relativa de $e^{kt}$ é constante, e a de $t^2$ não é?
+   Calcule $\frac{f'}{f}$ para as duas.
+8. Explique por que $(2^x)'$ precisa do fator $\ln 2$ e $(e^x)'$ não.
+
+### 3. Aplicação direta
+
+9. Derive: a) $e^{3x}$; b) $5^x$; c) $\ln(2x)$; d) $e^{-x}$; e) $\log_2 x$;
+   f) $x^2 e^x$; g) $\ln(3x + 1)$; h) $e^{\sen x}$.
+10. Calcule o valor da derivada e confira com o quociente centrado:
+    a) $(5^x)'$ em $x = 1$; b) $(\ln 2x)'$ em $x = 3$; c) $(\log_2 x)'$ em
+    $x = 8$; d) $(x^2 e^x)'$ em $x = 1$; e) $(\ln(3x+1))'$ em $x = 1$.
+11. Escreva a equação da reta tangente a $y = e^{2x}$ em $x = 0$.
+12. Um saldo é $M(t) = 2000\,e^{0{,}04t}$. Calcule $M'(0)$, $M'(10)$ e a taxa
+    relativa em cada instante.
+
+### 4. Variação
+
+13. Onde a tangente a $y = x\,e^{-x}$ é horizontal? Qual é a altura da curva
+    nesse ponto?
+14. Onde a tangente a $y = x - \ln x$ é horizontal?
+15. Mostre que $y = e^{-2x}$ satisfaz a relação $y' = -2y$. Depois mostre que
+    $y = 7e^{-2x}$ satisfaz a mesma relação. O que isso diz sobre o papel da
+    constante 7?
+16. Derive $f(x) = \ln(x^2 + 1)$ e diga em que intervalo $f$ é crescente,
+    olhando o sinal da derivada.
+17. Uma população cresce 5% ao ano. Escreva-a como $P_0 \times 1{,}05^t$ e
+    como $P_0\,e^{kt}$, encontre $k$, e compare $k$ com $0{,}05$.
+
+### 5. Problema misto
+
+18. Um capital de R\$ 8.000 rende 6% ao ano com capitalização contínua. a) A
+    que taxa cresce aos 5 anos? b) Em que instante a taxa chega a R\$ 1.000 por
+    ano?
+19. A temperatura de uma peça que esfria é $T(t) = 20 + 60\,e^{-0{,}05t}$
+    graus Celsius, com $t$ em minutos. a) Qual é a temperatura inicial e para
+    que valor ela tende? b) A que taxa a temperatura cai em $t = 0$ e em
+    $t = 20$ min? c) Por que a queda desacelera?
+20. O carbono-14 tem meia-vida de 5 730 anos. a) Escreva a fração restante
+    como $e^{-kt}$ e encontre $k$. b) Qual é a taxa relativa de decaimento por
+    ano, em porcentagem? c) Um fóssil tem 25% do carbono-14 original. Que idade
+    ele tem?
+21. Uma cultura de bactérias dobra a cada 3 horas. Escreva a taxa relativa,
+    depois calcule quanto tempo ela leva para **triplicar**, usando a forma
+    $e^{kt}$.
+
+### 6. Justificativa
+
+22. A seção 12 mostrou que refletir a tangente na reta $y = x$ troca a
+    inclinação $m$ por $\frac{1}{m}$. Use isso para escrever a derivada da
+    inversa em geral: se $f(a) = b$ e $f'(a) = m$, quanto vale
+    $(f^{-1})'(b)$? Confira com $f(x) = e^x$, $a = 1$.
+23. Mostre que $L(a^2) = 2L(a)$ usando a fórmula $L(a) = \ln a$. Depois
+    explique o que isso quer dizer comparando as inclinações de $2^x$ e de
+    $4^x$ no ponto $(0, 1)$.
+24. A seção 7 fatorou $a^{x+h} - a^x = a^x(a^h - 1)$. Explique por que esse
+    passo é a mesma operação de “colocar em evidência” da lição de fator
+    comum, e por que ele é o que faz a derivada de $a^x$ ser proporcional a
+    $a^x$. O que aconteceria se a propriedade $a^{x+h} = a^x a^h$ não valesse?
+25. Use $(\ln g)' = \frac{g'}{g}$ para derivar $g(x) = x^x$ (para $x > 0$).
+    Sugestão: escreva $\ln g = x \ln x$, derive os dois lados com a regra do
+    produto, e isole $g'$. Confira o resultado em $x = 2$ com o quociente
+    centrado.
+
+<details>
+<summary>Dica para o exercício 18b</summary>
+
+A taxa é $M'(t) = 480\,e^{0{,}06t}$. Iguale a 1000, divida por 480 e aplique
+$\ln$ aos dois lados, como na lição de equações exponenciais.
+
+</details>
+
+<details>
+<summary>Dica para o exercício 25</summary>
+
+Do lado esquerdo, $(\ln g)' = \frac{g'}{g}$. Do lado direito, $x \ln x$ é um
+produto: $(x)' \ln x + x (\ln x)' = \ln x + 1$. Então
+$\frac{g'}{g} = \ln x + 1$, e $g' = g \times (\ln x + 1)$. Troque $g$ de volta
+por $x^x$.
+
+</details>
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) base, potência: $e\,x^{e-1}$; b) expoente, exponencial: $e^x$;
+   c) expoente, $3^x \ln 3$; d) base, $3x^2$; e) expoente com cadeia,
+   $3e^{3x}$.
+2. a) dentro $-2x$, fora $e^u$; b) dentro $5x + 2$, fora $\ln u$; c) dentro
+   $\sqrt{x}$, fora $e^u$; d) dentro $\cos x$, fora $\ln u$.
+3. Em $x = 2$: $(3^x)' = 9 \ln 3 \approx 9{,}89$ contra $(2^x)' = 4 \ln 2 \approx 2{,}77$; a de $3^x$. Em $x = 0$: $\ln 3 = 1{,}099$ contra
+   $\ln 2 = 0{,}693$; ainda a de $3^x$. A base maior sobe mais depressa em todo
+   ponto.
+4. Base 3 se aproxima de $1{,}0986$, maior que 1; base 2, de $0{,}6931$, menor.
+   A curva de $3^x$ atravessa $(0, 1)$ mais inclinada que a reta $y = x + 1$, e
+   a de $2^x$, menos. A de $e^x$ atravessa exatamente com essa reta.
+5. Resposta esperada: o quociente de diferenças de $e^x$ se separa em $e^x$
+   vezes $\frac{e^h - 1}{h}$; a segunda parte não depende de $x$ e se aproxima
+   de 1, porque é assim que $e$ foi escolhido. Sobra $e^x$.
+6. A derivada de $\ln x$ é $\frac{1}{x}$, que **diminui** quando $x$ cresce. A
+   função cresce sem parar, mas em passos cada vez menores: $\ln x$ sobe de 0
+   a 1 entre $x = 1$ e $x = e$, e precisa ir até $x = e^2 \approx 7{,}4$ para
+   subir mais 1. Crescer sem limite e crescer cada vez mais devagar não se
+   contradizem.
+7. Para $e^{kt}$: $\frac{f'}{f} = \frac{k e^{kt}}{e^{kt}} = k$, constante. Para
+   $t^2$: $\frac{2t}{t^2} = \frac{2}{t}$, que depende de $t$. Só a exponencial
+   cresce numa fração fixa de si mesma.
+8. Porque $2^x = e^{x \ln 2}$: reescrita em base $e$, ela é $e^{kx}$ com
+   $k = \ln 2$, e a cadeia cobra esse $k$. Para $e^x$ o $k$ vale
+   $\ln e = 1$ e some.
+9. a) $3e^{3x}$; b) $5^x \ln 5$; c) $\frac{2}{2x} = \frac{1}{x}$ (repare que
+   $\ln 2x = \ln 2 + \ln x$, e a constante $\ln 2$ some); d) $-e^{-x}$;
+   e) $\frac{1}{x \ln 2}$; f) $2x\,e^x + x^2 e^x = e^x(x^2 + 2x)$;
+   g) $\frac{3}{3x + 1}$; h) $\cos x\,e^{\sen x}$.
+10. a) $5 \ln 5 \approx 8{,}047$; b) $\frac{1}{3} \approx 0{,}3333$;
+    c) $\frac{1}{8 \ln 2} \approx 0{,}1803$; d) $e(1 + 2) = 3e \approx 8{,}155$;
+    e) $\frac{3}{4} = 0{,}75$. Os quocientes centrados dão $8{,}0472$,
+    $0{,}3333$, $0{,}1803$, $8{,}1548$ e $0{,}7500$. Se em (a) você encontrou 5,
+    esqueceu o $\ln 5$; se em (d) encontrou $2e$, derivou só o $x^2$ e não
+    aplicou a regra do produto.
+11. Em $x = 0$: $y = e^0 = 1$ e $y' = 2e^0 = 2$. Reta: $y = 1 + 2x$.
+12. $M'(t) = 80\,e^{0{,}04t}$: $M'(0) = 80$ reais por ano e
+    $M'(10) = 80\,e^{0{,}4} \approx 119{,}35$ reais por ano. A taxa relativa é
+    $0{,}04$ nos dois instantes: 4% do saldo por ano, sempre.
+13. $y' = e^{-x} - x\,e^{-x} = e^{-x}(1 - x)$, zero em $x = 1$. Altura:
+    $y(1) = e^{-1} \approx 0{,}368$. Se você encontrou $x = -1$, trocou o sinal
+    da derivada de $e^{-x}$.
+14. $y' = 1 - \frac{1}{x} = 0$ em $x = 1$.
+15. $y' = -2e^{-2x} = -2y$. Com a constante, $y' = 7 \times (-2)e^{-2x} = -2 \times 7e^{-2x} = -2y$: a relação continua valendo. A constante é o
+    valor inicial ($y(0) = 7$) e não interfere na taxa relativa, que é $-2$
+    para qualquer múltiplo de $e^{-2x}$.
+16. $f'(x) = \frac{2x}{x^2 + 1}$. O denominador é sempre positivo, então o
+    sinal é o de $2x$: $f$ é crescente para $x > 0$ e decrescente para
+    $x < 0$.
+17. $1{,}05^t = e^{t \ln 1{,}05}$, então $k = \ln 1{,}05 \approx 0{,}04879$,
+    um pouco menor que $0{,}05$. Os 5% são o acréscimo do ano inteiro; $k$ é
+    a taxa instantânea que o produz.
+18. a) $M'(t) = 8000 \times 0{,}06\,e^{0{,}06t} = 480\,e^{0{,}06t}$;
+    $M'(5) = 480\,e^{0{,}3} \approx 647{,}93$ reais por ano. b)
+    $480\,e^{0{,}06t} = 1000$ dá $e^{0{,}06t} = \frac{1000}{480} \approx 2{,}0833$,
+    logo $t = \frac{\ln 2{,}0833}{0{,}06} \approx 12{,}23$ anos.
+19. a) $T(0) = 80$ °C; quando $t$ cresce, $e^{-0{,}05t}$ se aproxima de zero e
+    a temperatura se aproxima de 20 °C, a do ambiente, sem alcançar. b) $T'(t) = -3\,e^{-0{,}05t}$:
+    $T'(0) = -3$ °C/min e $T'(20) = -3e^{-1} \approx -1{,}10$ °C/min. c) A
+    taxa é proporcional à diferença $T - 20$ entre a peça e o ambiente
+    ($T' = -0{,}05\,(T - 20)$); conforme a peça esfria, a diferença encolhe e
+    a queda desacelera.
+20. a) $e^{-5730k} = \frac{1}{2}$ dá $k = \frac{\ln 2}{5730} \approx 1{,}2097 \times 10^{-4}$ por ano. b) Cerca de $0{,}0121\%$ ao ano.
+    c) $e^{-kt} = 0{,}25 = \frac{1}{4}$: duas meias-vidas, $t = 11\,460$ anos.
+    Pela fórmula, $t = \frac{\ln 4}{k} = \frac{1{,}3863}{1{,}2097 \times 10^{-4}} \approx 11\,460$.
+21. $k = \frac{\ln 2}{3} \approx 0{,}2310$ por hora. Triplicar: $e^{kt} = 3$,
+    $t = \frac{\ln 3}{k} = \frac{1{,}0986}{0{,}2310} \approx 4{,}75$ horas.
+    Conferindo pelo caminho da base 2: $2^{t/3} = 3$ dá
+    $t = 3 \log_2 3 = 3 \times 1{,}585 = 4{,}75$.
+22. $(f^{-1})'(b) = \frac{1}{f'(a)} = \frac{1}{m}$: a inversa, no ponto
+    refletido, tem a inclinação inversa. Com $f(x) = e^x$ e $a = 1$: $b = e$,
+    $f'(1) = e$, e $(\ln)'(e) = \frac{1}{e}$, que é $\frac{1}{x}$ em $x = e$.
+23. $L(a^2) = \ln(a^2) = 2 \ln a = 2L(a)$, pela propriedade do logaritmo de
+    potência. A curva de $4^x = (2^2)^x$ atravessa $(0, 1)$ com o dobro da
+    inclinação de $2^x$: $\ln 4 = 1{,}386 = 2 \times 0{,}693$.
+24. Colocar em evidência é escrever uma soma de parcelas que têm um fator
+    comum como esse fator vezes a soma do que sobra: $a^x a^h - a^x \times 1 = a^x(a^h - 1)$. O fator comum $a^x$ é o que sai do limite e faz a derivada
+    ser $a^x$ vezes uma constante. Se a propriedade não valesse, o $x$ ficaria
+    preso no mesmo expoente que o $h$, e a derivada dependeria de $x$ de um
+    jeito que não seria “proporcional a $a^x$” e nada mais. É o que acontece
+    com $x^n$: não existe propriedade que separe $(x+h)^n$ em algo vezes $x^n$,
+    e a derivada sai como $n x^{n-1}$, uma potência **menor**.
+25. $\ln g = x \ln x$. Derivando: $\frac{g'}{g} = \ln x + x \times \frac{1}{x} = \ln x + 1$. Logo $g' = x^x(\ln x + 1)$. Em $x = 2$: $4(\ln 2 + 1) \approx 4 \times 1{,}6931 \approx 6{,}773$; o quociente centrado de $x^x$
+    em 2 dá $6{,}7726$. Nem a regra da potência (que daria $x \times x^{x-1} = x^x$, ou seja, 4) nem a da exponencial (que daria $x^x \ln x \approx 2{,}77$) resolvem sozinhas, porque a variável está na base **e** no
+    expoente.
+
+</details>
+
+## 18. Revisão curta
+
+- A derivada de uma exponencial é **proporcional a ela mesma**, porque
+  $a^{x+h} = a^x a^h$ separa o ponto da variação: $(a^x)' = a^x \ln a$.
+- $e$ é a base em que a constante vale 1: $(e^x)' = e^x$. A curva de $e^x$
+  atravessa $(0, 1)$ com inclinação exatamente 1, e essa escolha é o que faz
+  as fórmulas de cálculo saírem sem constantes penduradas. A ligação com
+  $\left(1 + \frac{1}{n}\right)^n$ é numérica; a igualdade exata dos dois
+  limites o curso aceita sem demonstrar.
+- Com a cadeia, $(e^{kx})' = k e^{kx}$, e $k$ é a **taxa relativa**: o
+  crescimento por unidade de tempo por unidade do que já existe. É constante
+  para a exponencial e só para ela.
+- O logaritmo natural é a inversa de $e^x$, e herda $(\ln x)' = \frac{1}{x}$:
+  a tangente refletida tem a inclinação invertida. As outras bases herdam por
+  mudança de base, $(\log_b x)' = \frac{1}{x \ln b}$.
+- $(\ln g)' = \frac{g'}{g}$ é a taxa relativa de $g$. E
+  $(e^{g})' = g'\,e^{g}$: a derivada de $e^{\text{alguma coisa}}$ é ela mesma
+  vezes a derivada da alguma coisa.
+- Toda derivada desta página se confere com o quociente centrado. Se a
+  fórmula deu $(e^x)' = x e^{x-1}$, a calculadora diz que não.
+
+Antes de avançar, verifique se você consegue fazer três coisas: derivar
+$e^{-0{,}2t}$ e dizer o que o $-0{,}2$ significa; explicar por que $(2^x)'$
+carrega um $\ln 2$ e $(e^x)'$ não; e derivar $\ln(x^2 + 1)$ sem confundir com
+$\frac{1}{x^2 + 1}$.
+
+A promessa da lição do número $e$ está paga: $e^x$ é a única exponencial igual à
+própria taxa de variação, e o motivo é a tabela da seção 8. A lição seguinte,
+[derivação implícita](./derivacao-implicita), dá nome ao truque que derivou
+$\ln x$ — derivar os dois lados de uma relação — e o usa em curvas que não são
+gráfico de função nenhuma. Mais adiante, a [regra de
+L'Hôpital](./regra-de-lhopital) vai reencontrar o limite $\frac{e^h - 1}{h}$ e
+calculá-lo por outro caminho, e as [primitivas](./primitivas-e-substituicao)
+vão ler a tabela desta página de trás para a frente.

@@ -1,0 +1,1068 @@
+---
+title: "Segunda derivada e concavidade: para que lado a curva vira"
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Segunda derivada e concavidade: para que lado a curva vira
+
+## 1. Problema motivador: duas vans que avançam, uma acelerando e outra freando
+
+Duas vans de entrega saem do mesmo ponto de uma avenida reta. Um sensor
+registra a posição de cada uma, em metros, a cada segundo:
+
+| Instante $t$ (s) | 0 | 1 | 2 | 3 | 4 | 5 |
+|---:|---:|---:|---:|---:|---:|---:|
+| Van A: posição $s_A(t)$ (m) | 0 | 1 | 4 | 9 | 16 | 25 |
+| Van B: posição $s_B(t)$ (m) | 0 | 19 | 36 | 51 | 64 | 75 |
+
+As duas posições **crescem**: as duas vans andam para a frente o tempo todo. A
+lição do [sinal da derivada](./sinal-da-derivada) diz isso com a derivada: a
+velocidade das duas é positiva. Mas quem lê a tabela sente que as viagens são
+diferentes. Olhe o avanço em cada segundo:
+
+| Segundo | 1º | 2º | 3º | 4º | 5º |
+|---:|---:|---:|---:|---:|---:|
+| Avanço da van A (m) | 1 | 3 | 5 | 7 | 9 |
+| Avanço da van B (m) | 19 | 17 | 15 | 13 | 11 |
+
+A van A avança cada vez **mais** por segundo: ela está acelerando. A van B
+avança cada vez **menos**: ela está freando. As duas têm velocidade positiva, e
+ainda assim uma pisa no acelerador e a outra no freio.
+
+> **Como distinguir, com a derivada, uma função que cresce cada vez mais
+> depressa de uma que cresce cada vez mais devagar?**
+
+A pergunta tem uma irmã, deixada no capítulo de exponenciais. A lição de
+[função logarítmica](../exponenciais-e-logaritmos/funcao-logaritmica) descreveu
+o logaritmo com uma frase: “cresce sem limite, mas cada vez mais devagar”.
+“Cresce” é a primeira derivada positiva. “Cada vez mais devagar” é uma
+afirmação sobre a **derivada da derivada** — e é ela que esta lição constrói.
+
+## 2. Mapa das ideias
+
+- a **segunda derivada** $f''$ é a derivada de $f'$: mede quão depressa a
+  inclinação muda;
+- **aceleração** é a segunda derivada da posição: a taxa da velocidade;
+- o gráfico é **côncavo para cima** num intervalo quando a inclinação
+  aumenta ao andar para a direita (a curva fica acima das tangentes), e
+  **côncavo para baixo** quando a inclinação diminui (a curva fica abaixo);
+- segunda derivada positiva num intervalo garante concavidade para cima;
+  negativa, para baixo;
+- um **ponto de inflexão** é onde a concavidade troca;
+- o **teste da segunda derivada** decide se um ponto crítico é máximo ou
+  mínimo olhando o sinal de $f''$ nele — e às vezes não decide nada;
+- concavidade e crescimento são perguntas **diferentes**: uma curva pode
+  subir virando para baixo.
+
+## 3. Para que serve
+
+- separar “acelerando” de “freando” quando as duas velocidades são positivas;
+- dizer se um custo cresce em ritmo crescente ou decrescente, isto é, se o
+  custo de cada peça a mais está subindo ou caindo;
+- localizar o instante em que uma queda é mais rápida — o pico da
+  eliminação de um remédio, o momento de maior perda de uma população;
+- decidir máximo ou mínimo num ponto crítico com uma única conta, sem montar
+  o quadro de sinais inteiro;
+- e, dentro da matemática, completar o esboço de um gráfico: a lição do sinal
+  da derivada deu os trechos de subida e descida; esta dá a forma de cada
+  trecho, curvado para cima ou para baixo.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [função quadrática](../funcoes/funcao-quadratica): o que decide se uma
+parábola abre para cima ou para baixo?** O sinal do coeficiente $a$ em
+$ax^2 + bx + c$: positivo abre para cima, negativo abre para baixo. Aquela
+página explicou o “entortar” pelo acréscimo que cresce a cada passo: de 1 para
+2, $x^2$ sobe 3; de 2 para 3, sobe 5; de 3 para 4, sobe 7. É exatamente a
+tabela da van A.
+
+**2. De [taxa média de variação](../funcoes/taxa-media-de-variacao): o que a
+linha “avanço no segundo” daquele veículo de teste mostrava?** Que o veículo
+com $s(t) = t^2$ estava acelerando: avanços de 1, 3, 5, 7 metros em segundos
+consecutivos. Esta página dá a esse “acelerando” um número.
+
+**3. De [o sinal da derivada](./sinal-da-derivada): o que garante que uma
+função é crescente num intervalo?** Derivada positiva em todo ponto do
+intervalo. E o método: achar onde a derivada zera ou não existe, montar o
+quadro de sinais, ler cada trecho. Vamos aplicar esse mesmo critério e esse
+mesmo quadro a uma função nova — a própria $f'$.
+
+**4. De [regras de derivação](./regras-de-derivacao): o que é a aceleração de
+um elevador cuja posição é $s(t) = t^3 - 6t^2 + 9t$?** Aquela página derivou
+duas vezes: a velocidade é $v(t) = 3t^2 - 12t + 9$, e a aceleração é a
+derivada da velocidade, $a(t) = 6t - 12$, em metros por segundo a cada
+segundo. Derivar duas vezes já apareceu; agora ganha nome.
+
+**5. De [derivadas de exponencial e
+logaritmo](./derivadas-de-exponencial-e-logaritmo) e de [derivadas de seno e
+cosseno](./derivadas-de-seno-e-cosseno): quais são as derivadas de $e^x$,
+$\ln x$ e $\sen x$?** $(e^x)' = e^x$, $(\ln x)' = \frac{1}{x}$ e
+$(\sen x)' = \cos x$. Derivar uma segunda vez dá $e^x$ de novo, $-\frac{1}{x^2}$
+e $-\sen x$. Os três aparecem adiante.
+
+O item 3 é a chave da página. Tudo o que vamos dizer sobre concavidade é o
+critério do sinal da derivada aplicado a $f'$ em vez de a $f$.
+
+## 5. Intuição: a inclinação também muda, e para um lado só
+
+Caminhe sobre o gráfico da esquerda para a direita, como na lição anterior. A
+derivada diz para onde o seu pé aponta em cada instante: para cima ou para
+baixo. Agora preste atenção em outra coisa: **a direção do pé está girando?**
+
+Na van A, a inclinação do gráfico da posição começa quase deitada e vai
+ficando cada vez mais íngreme. A tangente **gira para cima** conforme
+avançamos. Na van B, a inclinação começa íngreme e vai deitando: a tangente
+**gira para baixo**.
+
+Então há duas informações separadas em cada ponto de uma curva:
+
+- **para onde a tangente aponta** — é a derivada $f'$, positiva ou negativa;
+- **para que lado a tangente está girando** — é a derivada de $f'$, e vamos
+  chamá-la de $f''$.
+
+Se a inclinação está aumentando, a curva vira para cima. Se está diminuindo,
+vira para baixo. Uma reta não vira para lado nenhum, porque a inclinação dela
+não muda.
+
+Veja com números em $f(x) = x^2$, cuja derivada é $f'(x) = 2x$:
+
+| $x$ | $-2$ | $-1$ | $0$ | $1$ | $2$ |
+|---:|---:|---:|---:|---:|---:|
+| inclinação $f'(x) = 2x$ | $-4$ | $-2$ | $0$ | $2$ | $4$ |
+
+A inclinação **aumenta** o tempo todo: de $-4$ (descida forte) para $-2$
+(descida suave), para $0$ (horizontal), para $2$ e $4$ (subida cada vez mais
+forte). A parábola vira para cima em toda a reta, mesmo no trecho em que está
+descendo. Isso já é o aviso mais importante da página: **virar para cima não é
+subir**. Entre $-2$ e $0$ a curva desce, e ainda assim a inclinação está
+aumentando.
+
+## 6. Modelo visual: a curva e as suas tangentes
+
+A forma mais direta de ver a concavidade é desenhar algumas tangentes. Numa
+curva que vira para cima, a curva fica **acima** de cada tangente. Numa que vira
+para baixo, fica **abaixo**.
+
+<CartesianPlane
+  xMin={-3}
+  xMax={3}
+  yMin={-3.5}
+  yMax={5}
+  xUnit={54}
+  yUnit={40}
+  functions={[{f: (x) => x * x, tone: 1}]}
+  lines={[
+    {m: -3, n: -2.25, dashed: true, tone: 2},
+    {m: 0, n: 0, dashed: true, tone: 2},
+    {m: 3, n: -2.25, dashed: true, tone: 2},
+  ]}
+  points={[
+    {at: [-1.5, 2.25], tone: 3},
+    {at: [0, 0], tone: 3},
+    {at: [1.5, 2.25], tone: 3},
+  ]}
+  labels={[
+    {at: [-2.3, 4.4], math: '-3', tone: 2},
+    {at: [2.3, 4.4], math: '3', tone: 2},
+    {at: [0.7, -0.4], math: '0', tone: 2},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="f(x) = x² com as tangentes em x = −1,5, 0 e 1,5, de inclinações −3, 0 e 3. A inclinação aumenta da esquerda para a direita, e a curva fica acima de todas as tangentes: côncava para cima."
+/>
+
+<CartesianPlane
+  xMin={-3}
+  xMax={3}
+  yMin={-1.5}
+  yMax={7}
+  xUnit={54}
+  yUnit={36}
+  functions={[{f: (x) => 4 - x * x, tone: 1}]}
+  lines={[
+    {m: 3, n: 6.25, dashed: true, tone: 2},
+    {m: 0, n: 4, dashed: true, tone: 2},
+    {m: -3, n: 6.25, dashed: true, tone: 2},
+  ]}
+  points={[
+    {at: [-1.5, 1.75], tone: 3},
+    {at: [0, 4], tone: 3},
+    {at: [1.5, 1.75], tone: 3},
+  ]}
+  labels={[
+    {at: [-2.55, -0.9], math: '3', tone: 2},
+    {at: [2.55, -0.9], math: '-3', tone: 2},
+    {at: [0.7, 4.45], math: '0', tone: 2},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="f(x) = 4 − x² com as tangentes nos mesmos três pontos, de inclinações 3, 0 e −3. A inclinação diminui da esquerda para a direita, e a curva fica abaixo de todas as tangentes: côncava para baixo."
+/>
+
+Repare no que as duas figuras têm em comum e no que as separa. Nas duas, a
+curva **desce e depois sobe** (a primeira) ou **sobe e depois desce** (a
+segunda) — o sinal de $f'$ troca no meio. Mas a concavidade **não** troca:
+cada figura vira para um lado só, do começo ao fim.
+
+Agora uma curva em que a concavidade troca:
+
+<CartesianPlane
+  xMin={-2.2}
+  xMax={2.2}
+  yMin={-4}
+  yMax={4}
+  xUnit={68}
+  yUnit={36}
+  functions={[{f: (x) => x * x * x, tone: 1}]}
+  lines={[
+    {m: 0, n: 0, dashed: true, tone: 2},
+    {m: 3, n: -2, dashed: true, tone: 2},
+    {m: 3, n: 2, dashed: true, tone: 2},
+  ]}
+  points={[
+    {at: [0, 0], label: '(0,\\ 0)', tone: 3, dx: 34, dy: -14},
+    {at: [1, 1], tone: 3},
+    {at: [-1, -1], tone: 3},
+  ]}
+  labels={[
+    {at: [-1.3, 2.9], math: '\\text{vira para baixo}', tone: 1},
+    {at: [1.3, -2.9], math: '\\text{vira para cima}', tone: 1},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="f(x) = x³ com as tangentes em −1, 0 e 1. À esquerda de 0 a curva fica abaixo das tangentes; à direita, acima. Em (0, 0) a tangente atravessa a curva: é o ponto de inflexão."
+/>
+
+À esquerda de zero, a curva de $x^3$ fica **abaixo** da tangente em $-1$:
+vira para baixo. À direita, fica **acima** da tangente em $1$: vira para cima.
+E no ponto $(0, 0)$ acontece algo que não aconteceu nas parábolas: a tangente
+horizontal **atravessa** a curva, em vez de deixá-la toda de um lado. Esse
+ponto de troca é o **ponto de inflexão**.
+
+## 7. Ponte para a formalização: aplicar o critério do sinal à própria derivada
+
+A intuição da seção 5 disse: a curva vira para cima onde a inclinação
+**aumenta**. “Inclinação” é $f'$. “Aumenta” é **crescente**. Então “a curva
+vira para cima num intervalo” quer dizer: **$f'$ é crescente naquele
+intervalo**.
+
+E a lição anterior já tem um critério para decidir se uma função é crescente:
+a derivada dela é positiva em todo o intervalo. A função agora é $f'$. A
+derivada de $f'$ é o que vamos chamar de $f''$. Logo:
+
+$$
+f'' \text{ positiva no intervalo}
+\;\Longrightarrow\;
+f' \text{ crescente no intervalo}
+\;\Longrightarrow\;
+\text{a curva vira para cima}.
+$$
+
+Nenhuma ideia nova entrou nessa cadeia. A primeira seta é o critério do sinal
+da derivada, aplicado a $f'$. A segunda é a intuição da seção 5.
+
+Vale ser honesto sobre o que sustenta a primeira seta. A lição anterior a usou
+e avisou que a demonstração completa é o **teorema do valor médio**, da lição
+[teorema do valor médio](./teorema-do-valor-medio): entre dois pontos
+quaisquer, a taxa média é igual à derivada em algum ponto do meio. Se $f''$ é
+positiva em todo o intervalo, a taxa média de $f'$ entre dois pontos quaisquer
+é positiva, e $f'$ sobe entre eles. Esta página usa o resultado do mesmo jeito
+que a anterior.
+
+Falta ligar “$f'$ crescente” a “a curva fica acima das tangentes”, que é o que
+as figuras mostraram. A ligação também passa pelo teorema do valor médio, e
+cabe em três linhas. Tome a tangente em $a$, que é a reta
+$T(x) = f(a) + f'(a)(x - a)$ da lição [a derivada](./a-derivada). Para um
+$x$ à direita de $a$, o teorema diz que $f(x) - f(a) = f'(c)(x - a)$ para
+algum $c$ entre $a$ e $x$. Como $f'$ é crescente e $c$ está à direita de $a$,
+temos $f'(c)$ maior que $f'(a)$. Então $f(x) - f(a)$ é maior que
+$f'(a)(x - a)$, isto é, $f(x)$ é maior que $T(x)$: a curva está acima da
+tangente. À esquerda de $a$ o raciocínio é o mesmo com os sinais trocados. Se
+esta passagem não fechar na primeira leitura, isso é esperado — releia depois
+da lição do teorema do valor médio.
+
+## 8. A segunda derivada
+
+> A **segunda derivada** de $f$, escrita $f''$, é a derivada de $f'$:
+>
+> $$
+> f''(x) = \big(f'(x)\big)'.
+> $$
+>
+> Na notação de Leibniz, escreve-se $\dfrac{d^2y}{dx^2}$, lida “derivada
+> segunda de $y$ em relação a $x$”. O expoente 2 marca que derivamos duas
+> vezes; não é uma potência.
+
+**Exemplo.** Para $f(x) = x^3 - 3x$: a primeira derivada é
+$f'(x) = 3x^2 - 3$, pela regra da potência. A segunda é a derivada disso:
+$f''(x) = 6x$. Em $x = 2$, $f''(2) = 12$.
+
+**Contraexemplo.** $f''$ **não** é $f'$ ao quadrado. Para a mesma função,
+$(f'(2))^2 = 9^2 = 81$, e $f''(2) = 12$. A segunda derivada é uma nova
+derivação, não uma conta com a primeira.
+
+Conferindo com números, como a lição [a derivada](./a-derivada) ensinou a
+fazer: o quociente centrado de $f'$ em $x = 2$, com $h = 0{,}001$, dá
+$\frac{f'(2{,}001) - f'(1{,}999)}{0{,}002} = 12{,}000$. E há um quociente que
+usa só $f$, sem passar por $f'$, útil quando se quer conferir $f''$ direto na
+calculadora:
+
+$$
+f''(a) \approx \frac{f(a+h) - 2f(a) + f(a-h)}{h^2}.
+$$
+
+Para $f(x) = x^3 - 3x$ em $a = 2$ com $h = 0{,}001$, ele dá $12{,}000$. É o
+que esta página vai usar para conferir cada segunda derivada.
+
+### Aceleração
+
+Quando $s(t)$ é a posição de um objeto no instante $t$, a lição [a
+derivada](./a-derivada) leu $s'(t)$ como velocidade. A segunda derivada tem
+nome próprio:
+
+> A **aceleração** é a taxa de variação da velocidade: $a(t) = v'(t) = s''(t)$.
+
+A unidade sai da definição. A velocidade é medida em metros por segundo. A
+aceleração mede quanto a velocidade muda a cada segundo, então é “metros por
+segundo, a cada segundo” — que se abrevia m/s². É a mesma construção que a
+lição de [taxa média](../funcoes/taxa-media-de-variacao) fez com m/s: a unidade
+da saída dividida pela unidade da entrada. Aqui a saída já era uma taxa.
+
+**Exemplo.** Para a van A, $s_A(t) = t^2$: velocidade $v_A(t) = 2t$ m/s,
+aceleração $a_A(t) = 2$ m/s². A cada segundo a velocidade sobe 2 m/s.
+Conferindo com a tabela: os avanços 1, 3, 5, 7, 9 crescem de 2 em 2.
+
+**Contraexemplo.** Velocidade **alta** não é aceleração alta. Uma van a 100
+km/h em velocidade constante tem aceleração zero. Aceleração é sobre a
+**mudança** da velocidade, não sobre o valor dela.
+
+## 9. Concavidade
+
+> Seja $f$ derivável num intervalo aberto $I$. O gráfico de $f$ é **côncavo
+> para cima** em $I$ quando $f'$ é **crescente** em $I$; é **côncavo para
+> baixo** em $I$ quando $f'$ é **decrescente** em $I$.
+>
+> Equivalentemente: côncavo para cima quando a curva fica **acima** de cada
+> uma das suas tangentes no intervalo; para baixo quando fica **abaixo**.
+
+**Exemplo.** $f(x) = x^2$ é côncava para cima em toda a reta: $f'(x) = 2x$ é
+crescente em toda a reta (a tabela da seção 5). E $g(x) = 4 - x^2$ é côncava
+para baixo em toda a reta: $g'(x) = -2x$ é decrescente.
+
+**Contraexemplo.** $h(x) = x^3$ **não** é côncava para cima em toda a reta,
+nem para baixo: $h'(x) = 3x^2$ decresce até 0 e cresce depois. A concavidade
+de $x^3$ depende do intervalo. E uma reta $y = mx + n$ não é côncava para
+lado nenhum: $f'(x) = m$ é constante, nem cresce nem decresce. Reta não vira.
+
+O nome pede um aviso. “Côncavo para cima” quer dizer que a curva se **abre**
+para cima, como uma tigela: a boca fica em cima. Não quer dizer que a curva
+esteja subindo. A parábola $x^2$ é côncava para cima também no trecho em que
+desce.
+
+### O critério da segunda derivada
+
+> **Critério da concavidade.** Seja $f$ com segunda derivada em todo ponto de
+> um intervalo aberto $I$.
+>
+> - Se $f''(x)$ é **positiva** para todo $x$ em $I$, o gráfico é **côncavo
+>   para cima** em $I$.
+> - Se $f''(x)$ é **negativa** para todo $x$ em $I$, o gráfico é **côncavo
+>   para baixo** em $I$.
+
+É a cadeia da seção 7. Para usá-la, fazemos com $f''$ o que a lição anterior
+fez com $f'$: achamos onde $f''$ vale zero ou não existe, montamos o quadro
+de sinais de $f''$ e lemos cada trecho.
+
+**Exemplo.** $f(x) = e^x$: $f'(x) = e^x$ e $f''(x) = e^x$, positiva em todo
+ponto. Côncava para cima em toda a reta — a exponencial vira para cima o tempo
+todo, e é isso que a lição de exponenciais chamou de “acelera”.
+
+**Contraexemplo, para marcar o sentido da seta.** O critério vai de $f''$
+para a concavidade, não o contrário. $f(x) = x^4$ é côncava para cima em toda
+a reta (a curva fica acima de todas as tangentes), e ainda assim
+$f''(x) = 12x^2$ vale **zero** em $x = 0$. Concavidade para cima garante
+$f''$ maior **ou igual** a zero, com zeros isolados permitidos — exatamente
+como “crescente” admitia $f'(0) = 0$ em $x^3$ na lição anterior.
+
+### O ponto de inflexão
+
+> Um **ponto de inflexão** é um ponto $(c, f(c))$ do gráfico em que a
+> concavidade **troca**: para baixo de um lado de $c$ e para cima do outro, ou
+> o contrário.
+
+Num ponto de inflexão em que $f''$ existe, ela tem que valer zero — uma função
+contínua não troca de sinal sem passar pelo zero, e é o sinal de $f''$ que
+decide a concavidade. Por isso os candidatos a inflexão são os pontos em que
+$f''$ **vale zero** ou **não existe**, do mesmo jeito que os candidatos a
+máximo e mínimo eram os pontos em que $f'$ valia zero ou não existia.
+
+**Exemplo.** $f(x) = x^3$ tem inflexão em $(0, 0)$: $f''(x) = 6x$ é negativa
+para $x$ menor que 0 e positiva para $x$ maior que 0. A concavidade troca de
+“para baixo” para “para cima”, como a terceira figura da seção 6 mostrou.
+
+**Contraexemplo.** $g(x) = x^4$ **não** tem inflexão em $(0, 0)$, embora
+$g''(0) = 12 \times 0^2 = 0$. A segunda derivada $12x^2$ é positiva dos dois
+lados de zero: não há troca. O zero de $g''$ é candidato, e o candidato foi
+reprovado. Confira nos números: $g''(-1) = 12$ e $g''(1) = 12$, mesmo sinal.
+
+Candidato não é veredicto. A lição anterior disse isso de $f'(c) = 0$; aqui
+vale, palavra por palavra, de $f''(c) = 0$.
+
+### O método
+
+Para descobrir a concavidade de $f$ e os pontos de inflexão:
+
+1. **Derive duas vezes.** Calcule $f'$, depois $f''$, e fatore $f''$ se
+   puder.
+2. **Ache os candidatos.** Resolva $f''(x) = 0$ e liste os pontos do domínio
+   em que $f''$ não existe. Anote também os pontos fora do domínio de $f$:
+   eles cortam a reta.
+3. **Monte o quadro de sinais de $f''$.** Um ponto de teste por trecho.
+4. **Leia.** Trecho com $f''$ positiva: côncavo para cima. Negativa: para
+   baixo. Um candidato em que o sinal troca, e em que $f$ está definida, é
+   ponto de inflexão.
+5. **Confira.** Escolha um trecho e calcule $f'$ em dois pontos dele: num
+   trecho côncavo para cima, a inclinação tem que ter aumentado.
+
+## 10. Resolvendo o problema das vans e a frase do logaritmo
+
+**As vans.** A posição da van A é $s_A(t) = t^2$; a da van B é
+$s_B(t) = 20t - t^2$, válida enquanto ela ainda anda para a frente, isto é,
+até $t = 10$ s.
+
+| | Van A | Van B |
+|---|---|---|
+| posição | $t^2$ | $20t - t^2$ |
+| velocidade $s'$ | $2t$ | $20 - 2t$ |
+| aceleração $s''$ | $2$ | $-2$ |
+
+Nos dois casos a velocidade é positiva entre 0 e 10 s: as duas vans avançam,
+e por isso as duas posições crescem. O que as separa é a **segunda**
+derivada. A van A tem aceleração $+2$ m/s²: a velocidade sobe 2 m/s a cada
+segundo, e o gráfico da posição é côncavo para cima. A van B tem aceleração
+$-2$ m/s²: a velocidade cai 2 m/s a cada segundo — de 20 m/s no início a
+10 m/s aos 5 s — e o gráfico da posição é côncavo para baixo.
+
+Conferindo com a tabela do começo: os avanços da van A (1, 3, 5, 7, 9) crescem
+de 2 em 2, e os da van B (19, 17, 15, 13, 11) caem de 2 em 2. A aceleração é
+exatamente esse “de 2 em 2”, com o sinal.
+
+A resposta à pergunta do motivador, então: **uma função cresce cada vez mais
+depressa quando $f'$ é positiva e $f''$ também é positiva; cresce cada vez
+mais devagar quando $f'$ é positiva e $f''$ é negativa.** A primeira derivada
+diz que sobe; a segunda diz se a subida está apertando ou afrouxando.
+
+**O logaritmo.** Para $f(x) = \ln x$, com $x$ positivo:
+
+$$
+f'(x) = \frac{1}{x},
+\qquad
+f''(x) = -\frac{1}{x^2}.
+$$
+
+A primeira derivada é positiva em todo o domínio: o logaritmo **cresce**. A
+segunda é negativa em todo o domínio: o logaritmo é côncavo para baixo em todo
+o domínio, e a inclinação $\frac{1}{x}$ diminui sem parar — em $x = 1$ vale 1,
+em $x = 10$ vale $0{,}1$, em $x = 1000$ vale $0{,}001$. É o “cada vez mais
+devagar”. E o “sem limite” não contradiz nada: a inclinação diminui, mas nunca
+chega a zero nem fica negativa, então a função continua subindo para sempre.
+A frase inteira da lição de logaritmo era uma frase sobre os sinais de $f'$ e
+de $f''$.
+
+## 11. O teste da segunda derivada
+
+A lição anterior deixou uma pergunta em aberto: um ponto crítico é máximo, é
+mínimo ou nenhum dos dois? A resposta segura é o quadro de sinais de $f'$ dos
+dois lados do ponto, que a lição de [máximos e mínimos](./maximos-e-minimos)
+organiza como **teste da primeira derivada**. A concavidade dá um atalho.
+
+Pense num ponto $c$ com $f'(c) = 0$: tangente horizontal. Se perto de $c$ a
+curva é côncava para cima, ela fica **acima** dessa tangente horizontal dos
+dois lados — e ficar acima de uma reta horizontal que passa por $(c, f(c))$ é
+ter valores maiores que $f(c)$ em volta. O ponto é um **mínimo local**. Se a
+curva é côncava para baixo, fica abaixo da tangente: **máximo local**.
+
+> **Teste da segunda derivada.** Suponha $f'(c) = 0$ e $f''$ contínua perto de
+> $c$.
+>
+> - Se $f''(c)$ é **positiva**, $f$ tem **mínimo local** em $c$.
+> - Se $f''(c)$ é **negativa**, $f$ tem **máximo local** em $c$.
+> - Se $f''(c)$ é **zero**, o teste **não decide**: pode ser máximo, mínimo
+>   ou nenhum dos dois.
+
+**Exemplo.** $f(x) = x^3 - 3x$, a função das figuras da lição anterior:
+$f'(x) = 3x^2 - 3$, com pontos críticos $-1$ e $1$; $f''(x) = 6x$. Em
+$x = 1$: $f''(1) = 6$, positiva, **mínimo local**, com $f(1) = -2$. Em
+$x = -1$: $f''(-1) = -6$, negativa, **máximo local**, com $f(-1) = 2$. É o
+que o quadro de sinais de $f'$ tinha dito, agora com uma conta por ponto.
+
+**Contraexemplo, os três que o teste não separa.** Em $x = 0$, as funções
+$x^4$, $-x^4$ e $x^3$ têm todas $f'(0) = 0$ e $f''(0) = 0$. A primeira tem
+mínimo em 0; a segunda, máximo; a terceira, nem um nem outro. O mesmo par de
+números, $f'(0) = 0$ e $f''(0) = 0$, e três comportamentos diferentes. Quando
+$f''(c) = 0$, o teste não tem informação, e o caminho é voltar ao quadro de
+sinais de $f'$.
+
+Quando usar cada um? O teste da segunda derivada é mais rápido quando $f''$ sai
+em uma linha e não zera no ponto crítico — polinômios em geral. O quadro
+de sinais de $f'$ é o que sempre funciona, inclusive onde $f'$ não existe, e
+é o único que decide quando $f''(c) = 0$.
+
+## 12. Concavidade não é crescimento
+
+Esta é a confusão mais frequente da página, e ela merece uma tabela. Crescer ou
+decrescer é o sinal de $f'$. Virar para cima ou para baixo é o sinal de $f''$.
+São duas perguntas independentes, e os quatro cruzamentos acontecem:
+
+| | **côncava para cima** ($f''$ positiva) | **côncava para baixo** ($f''$ negativa) |
+|---|---|---|
+| **crescente** ($f'$ positiva) | sobe cada vez mais depressa: $e^x$; $x^2$ para $x$ positivo | sobe cada vez mais devagar: $\ln x$; $\sqrt{x}$ |
+| **decrescente** ($f'$ negativa) | desce cada vez mais devagar: $e^{-x}$; $\frac{1}{x}$ para $x$ positivo | desce cada vez mais depressa: $4 - x^2$ para $x$ positivo |
+
+Confira uma célula que costuma surpreender: $f(x) = e^{-x}$ é **decrescente**
+($f'(x) = -e^{-x}$, sempre negativa) e **côncava para cima**
+($f''(x) = e^{-x}$, sempre positiva). A curva desce, e vira para cima enquanto
+desce: a descida vai ficando cada vez mais suave, e a curva se aproxima do eixo
+sem tocá-lo. É a curva do remédio que sai do sangue, da lição de exponencial:
+o corpo elimina cada vez menos miligramas por hora.
+
+Uma frase para guardar: **a primeira derivada diz se a curva sobe; a segunda
+diz se a subida (ou a descida) está apertando ou afrouxando.**
+
+## 13. Exemplos resolvidos
+
+### Exemplo 1: o elevador, agora com a aceleração lida por inteiro
+
+O elevador de carga da lição de regras de derivação tem posição
+$s(t) = t^3 - 6t^2 + 9t$, em metros, para $t$ entre 0 e 4 s. Em que
+intervalo ele está acelerando? Em que instante a descida é mais rápida?
+
+**Derivar duas vezes.** $v(t) = s'(t) = 3t^2 - 12t + 9$ e
+$a(t) = s''(t) = 6t - 12$.
+
+**Candidato.** $a(t) = 0$ em $t = 2$.
+
+**Quadro de $s''$.** Em $t = 1$, $a(1) = -6$, negativa. Em $t = 3$,
+$a(3) = 6$, positiva.
+
+**Leitura.** Entre 0 e 2 s a aceleração é negativa: a velocidade está caindo,
+e o gráfico da posição é côncavo para baixo. Entre 2 e 4 s a aceleração é
+positiva: a velocidade está subindo, gráfico côncavo para cima. O ponto
+$(2, s(2)) = (2, 2)$ é de inflexão.
+
+**A descida mais rápida.** A velocidade é $v(0) = 9$, $v(1) = 0$,
+$v(2) = -3$, $v(3) = 0$, $v(4) = 9$. Ela cai de 9 até $-3$ e volta a subir. O
+menor valor da velocidade, $-3$ m/s, acontece em $t = 2$ — exatamente onde a
+aceleração troca de sinal. A lição de regras de derivação tinha dito que 2 s
+era “o ponto em que a descida é mais rápida”; agora sabemos por quê: é onde
+$v' = s''$ zera e troca de negativo para positivo, isto é, um mínimo de $v$
+pelo teste da primeira derivada aplicado a $v$.
+
+**Conferindo.** O quociente $\frac{s(2{,}001) - 2s(2) + s(1{,}999)}{0{,}001^2}$
+dá $0{,}000$, e o mesmo quociente em $t = 3$ dá $6{,}000$.
+
+### Exemplo 2: a concavidade de uma raiz
+
+*Pause e tente antes de ler.* Qual é a concavidade de $f(x) = \sqrt{x}$, para
+$x$ positivo?
+
+**Derivar duas vezes.** $f'(x) = \frac{1}{2}x^{-1/2}$, pela regra da potência.
+Derivando de novo:
+
+$$
+f''(x) = \frac{1}{2} \times \left(-\frac{1}{2}\right) x^{-3/2}
+= -\frac{1}{4x^{3/2}} = -\frac{1}{4\sqrt{x^3}}.
+$$
+
+**Sinal.** Para $x$ positivo, $\sqrt{x^3}$ é positiva, e o sinal de menos na
+frente torna $f''$ **negativa** em todo o domínio. Não há candidato a inflexão.
+
+**Leitura.** A raiz quadrada é côncava para baixo em todo o domínio. Como
+$f'(x) = \frac{1}{2\sqrt{x}}$ é positiva, ela é crescente. Sobe cada vez mais
+devagar — a mesma célula da tabela que o logaritmo ocupa.
+
+**Conferindo.** $f'(1) = 0{,}5$ e $f'(4) = 0{,}25$: a inclinação diminuiu, como
+a concavidade para baixo exige.
+
+### Exemplo 3: o remédio, e o instante em que a queda é mais rápida
+
+*Pause e tente.* A lição anterior estudou $k(x) = x e^{-x}$, a concentração
+de um remédio no sangue $x$ horas depois da dose, e achou o pico em $x = 1$.
+Onde a curva é côncava para cima, e o que isso diz sobre o remédio?
+
+**Derivar duas vezes.** A lição anterior obteve $k'(x) = e^{-x}(1 - x)$. Pela
+regra do produto:
+
+$$
+k''(x) = (-e^{-x})(1 - x) + e^{-x}(-1) = e^{-x}\big(-(1 - x) - 1\big) = e^{-x}(x - 2).
+$$
+
+**Candidato.** $e^{-x}$ nunca é zero, então $k''(x) = 0$ só em $x = 2$.
+
+**Quadro.** O fator $e^{-x}$ é sempre positivo; o sinal de $k''$ é o sinal de
+$x - 2$: negativo para $x$ menor que 2, positivo para $x$ maior que 2.
+
+**Leitura.** Côncava para baixo em $]-\infty, 2[$, para cima em
+$]2, +\infty[$. Inflexão em $(2, k(2)) = (2, 2e^{-2}) \approx (2;\ 0{,}271)$.
+
+<CartesianPlane
+  xMin={-0.5}
+  xMax={6}
+  yMin={-0.12}
+  yMax={0.5}
+  xUnit={70}
+  yUnit={560}
+  yStep={0.1}
+  yTicks={[
+    {at: 0.1, label: '0{,}1'},
+    {at: 0.2, label: '0{,}2'},
+    {at: 0.3, label: '0{,}3'},
+    {at: 0.4, label: '0{,}4'},
+  ]}
+  functions={[{f: (x) => x * Math.exp(-x), domain: [0, 6], tone: 1}]}
+  lines={[{m: -Math.exp(-2), n: 4 * Math.exp(-2), dashed: true, tone: 2}]}
+  points={[
+    {at: [1, Math.exp(-1)], label: '\\text{pico}', tone: 3, dx: 0, dy: -16},
+    {at: [2, 2 * Math.exp(-2)], label: '\\text{inflexão}', tone: 3, dx: 44, dy: 10},
+  ]}
+  axisLabels={['x', 'k(x)']}
+  caption="k(x) = x·e⁻ˣ. Sobe até o pico em x = 1 e desce depois. A tangente tracejada em x = 2 atravessa a curva: ali a concavidade troca de baixo para cima, e é o instante em que a descida é mais rápida."
+/>
+
+**O que isso diz sobre o remédio.** Entre 1 e 2 horas a concentração cai cada
+vez mais depressa: côncava para baixo, inclinação diminuindo (ficando mais
+negativa). A partir de 2 horas ela continua caindo, mas cada vez mais devagar:
+côncava para cima, inclinação aumentando de volta em direção a zero. A queda
+mais rápida acontece exatamente em $x = 2$, com
+$k'(2) = -e^{-2} \approx -0{,}135$ por hora. Conferindo: $k'(1{,}5) \approx -0{,}112$
+e $k'(2{,}5) \approx -0{,}123$, os dois menos negativos que $k'(2)$.
+
+**Conferindo $k''$.** O quociente de segunda derivada em $x = 1$ dá $-0{,}368$,
+e a fórmula $e^{-1}(1 - 2)$ dá $-0{,}368$. Em $x = 3$, os dois dão $0{,}050$.
+
+### Exemplo 4: um cúbico completo, com os dois testes
+
+*Pause e tente.* Para $f(x) = x^3 - 3x^2 - 9x + 5$: classifique os pontos
+críticos pelo teste da segunda derivada e ache o ponto de inflexão.
+
+**Primeira derivada.** $f'(x) = 3x^2 - 6x - 9 = 3(x^2 - 2x - 3) = 3(x - 3)(x + 1)$.
+Pontos críticos: $x = -1$ e $x = 3$.
+
+**Segunda derivada.** $f''(x) = 6x - 6 = 6(x - 1)$.
+
+**Teste.** $f''(-1) = -12$, negativa: **máximo local** em $x = -1$, com
+$f(-1) = -1 - 3 + 9 + 5 = 10$. E $f''(3) = 12$, positiva: **mínimo local**
+em $x = 3$, com $f(3) = 27 - 27 - 27 + 5 = -22$.
+
+**Inflexão.** $f''(x) = 0$ em $x = 1$; negativa antes, positiva depois. O
+ponto $(1, f(1)) = (1, -6)$ é de inflexão.
+
+Repare na posição: a inflexão fica em $x = 1$, bem no meio entre o máximo em
+$-1$ e o mínimo em $3$. Em todo cúbico isso acontece, porque $f''$ é uma reta e
+zera no ponto médio das raízes da parábola $f'$ — é o exercício 24.
+
+**Conferindo.** Quociente centrado de $f$ em $-1$: $0{,}000$. Quociente de
+segunda derivada em $-1$: $-12{,}000$; em $3$: $12{,}000$.
+
+### Exemplo 5: custo com rendimentos decrescentes
+
+*Pause e tente.* O custo total de produzir $x$ lotes numa fábrica é
+$C(x) = x^3 - 30x^2 + 400x + 2000$ reais, para $x$ entre 0 e 20. O custo
+sempre cresce? Em que faixa cada lote a mais custa **menos** que o anterior?
+
+**Sempre cresce?** $C'(x) = 3x^2 - 60x + 400$. O discriminante é
+$3600 - 4800 = -1200$, negativo: $C'$ nunca zera, e $C'(0) = 400$ é positiva.
+O custo é crescente em toda a faixa — produzir mais sempre custa mais.
+
+**Cada lote a mais custa menos?** A pergunta é sobre o **custo marginal**
+$C'(x)$, o custo aproximado do próximo lote. “Cada lote custa menos que o
+anterior” é $C'$ **decrescente**, isto é, $C''$ negativa.
+
+$$
+C''(x) = 6x - 60 = 6(x - 10).
+$$
+
+Negativa para $x$ menor que 10, positiva para $x$ maior que 10.
+
+**Leitura.** Até 10 lotes, o custo marginal cai: cada lote sai mais barato que
+o anterior (a fábrica ganha eficiência com a escala). A partir de 10, o custo
+marginal sobe: cada lote sai mais caro que o anterior (horas extras, máquinas
+no limite). Em $x = 10$ o custo marginal é mínimo: $C'(10) = 100$ reais por
+lote. Confira nos vizinhos: $C'(5) = 175$ e $C'(15) = 175$.
+
+O ponto $(10, C(10)) = (10, 4000)$ é de inflexão do custo total: a curva do
+custo passa de côncava para baixo a côncava para cima. Em economia isso é o
+ponto de **rendimentos decrescentes**: dali em diante, aumentar a produção
+fica cada vez mais caro por lote.
+
+**Conferindo.** $C(11) - C(10) = 101$, próximo dos 100 reais por lote de
+$C'(10)$. Quociente de segunda derivada em 5: $-30{,}00$; em 15: $30{,}00$.
+
+### Exemplo 6: quando o teste da segunda derivada não decide
+
+*Pause e tente.* A lição anterior viu que $g(x) = x^4 - 4x^3$ tem pontos
+críticos em 0 e 3. Aplique o teste da segunda derivada aos dois.
+
+**Segunda derivada.** $g'(x) = 4x^3 - 12x^2$, então
+$g''(x) = 12x^2 - 24x = 12x(x - 2)$.
+
+**Em $x = 3$.** $g''(3) = 12 \times 3 \times 1 = 36$, positiva: **mínimo
+local**, com $g(3) = -27$.
+
+**Em $x = 0$.** $g''(0) = 0$. O teste **não decide**. Volte ao quadro de
+sinais de $g'$ da lição anterior: $g'$ é negativa antes de 0 e negativa
+depois. Nem máximo nem mínimo — a curva desce, para um instante e continua
+descendo.
+
+**E as inflexões.** Os candidatos são as raízes de $g''$: $0$ e $2$. Quadro:
+$g''(-1) = 36$, positiva; $g''(1) = -12$, negativa; $g''(3) = 36$, positiva.
+O sinal troca nos dois candidatos. Inflexões em $(0, 0)$ e em $(2, -16)$.
+
+O ponto $x = 0$ acumula duas coisas: é ponto crítico (tangente horizontal) e
+é ponto de inflexão (a tangente horizontal atravessa a curva). É a mesma
+situação de $x^3$ em 0. Um ponto crítico que é inflexão nunca é máximo nem
+mínimo, e é exatamente o caso em que $f''(c) = 0$ deixa o teste mudo.
+
+## 14. Erros comuns
+
+> **Erro 1: “$f''(c) = 0$, logo $c$ é ponto de inflexão”.** Em $f(x) = x^4$,
+> $f''(x) = 12x^2$ vale zero em 0, e a concavidade não troca: $f''(-1) = 12$ e
+> $f''(1) = 12$. O zero de $f''$ é **candidato**. Inflexão exige que o sinal
+> de $f''$ seja diferente dos dois lados.
+
+> **Erro 2: confundir concavidade com crescimento.** “Côncava para cima” não
+> é “sobe”. $e^{-x}$ desce em toda a reta e é côncava para cima em toda a
+> reta: $f'(x) = -e^{-x}$ é negativa, $f''(x) = e^{-x}$ é positiva. A tabela
+> da seção 12 tem as quatro combinações, e todas acontecem.
+
+> **Erro 3: achar que o teste da segunda derivada sempre decide.** Em $x = 0$,
+> as funções $x^4$, $-x^4$ e $x^3$ têm $f'(0) = 0$ e $f''(0) = 0$, e são
+> mínimo, máximo e nenhum dos dois. Quando $f''(c) = 0$, a única saída é o
+> quadro de sinais de $f'$.
+
+> **Erro 4: trocar o sentido.** Segunda derivada **positiva** é concavidade
+> para **cima**. Uma forma de não trocar: em $f(x) = x^2$, que abre para cima,
+> $f''(x) = 2$, positiva. Se a sua conta deu “$f''$ positiva, côncava para
+> baixo”, teste com a parábola.
+
+> **Erro 5: chamar de inflexão um ponto fora do domínio.** Em
+> $f(x) = \frac{1}{x}$, $f''(x) = \frac{2}{x^3}$ é negativa para $x$ menor que
+> 0 e positiva para $x$ maior que 0. O sinal troca em 0, mas **não há ponto**
+> $(0, f(0))$: a função não existe ali. A concavidade muda de um ramo para o
+> outro, e nenhum dos dois ramos tem inflexão.
+
+> **Erro 6: misturar $f'(c) = 0$ com $f''(c) = 0$.** O primeiro é candidato a
+> máximo ou mínimo; o segundo, candidato a inflexão. Em
+> $f(x) = x^3 - 3x^2 - 9x + 5$ do exemplo 4, os pontos críticos são $-1$ e
+> $3$ e a inflexão é em $1$. Três pontos, duas perguntas diferentes.
+
+> **Erro 7: elevar $f'$ ao quadrado e chamar de $f''$.** $f''$ é a derivada
+> de $f'$, uma nova derivação. Para $f(x) = x^3 - 3x$ em $x = 2$: $f'(2) = 9$,
+> $(f'(2))^2 = 81$, e $f''(2) = 12$. O expoente 2 em $f''$ e em
+> $\frac{d^2y}{dx^2}$ conta derivações, não multiplica.
+
+## 15. Perguntas de verificação
+
+1. O que a segunda derivada mede, em palavras, sem usar a palavra
+   “concavidade”?
+2. Por que “côncava para cima” não significa “crescente”? Dê um exemplo em que
+   a função desce e é côncava para cima.
+3. Que critério da lição anterior é a base do critério da concavidade, e a
+   que função ele é aplicado aqui?
+4. Por que $f''(c) = 0$ é necessário, mas não suficiente, para que $c$ seja
+   ponto de inflexão (quando $f''$ existe)?
+5. Por que o teste da segunda derivada funciona quando $f''(c)$ é positiva?
+   Use a tangente horizontal na explicação.
+6. Dê três funções com $f'(0) = 0$ e $f''(0) = 0$ que se comportem de três
+   maneiras diferentes em 0.
+7. As duas vans do motivador tinham velocidade positiva. O que distinguia a
+   que acelerava da que freava?
+8. Reescreva “o logaritmo cresce sem limite, mas cada vez mais devagar” usando
+   os sinais de $f'$ e de $f''$.
+9. Uma reta tem concavidade? Por quê?
+10. Num cúbico $ax^3 + bx^2 + cx + d$ com dois pontos críticos, onde fica a
+    inflexão em relação a eles?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Quão depressa a inclinação da tangente muda ao andar para a direita: se a
+   inclinação está aumentando ($f''$ positiva), diminuindo ($f''$ negativa)
+   ou parada ($f''$ zero). Na posição de um objeto, é a aceleração.
+2. Porque são sinais de funções diferentes: crescer é $f'$ positiva; côncava
+   para cima é $f''$ positiva. $e^{-x}$ tem $f' = -e^{-x}$ negativa (desce) e
+   $f'' = e^{-x}$ positiva (vira para cima): desce cada vez mais devagar.
+3. O critério “derivada positiva em todo o intervalo implica função
+   crescente”, aplicado à função $f'$. A derivada de $f'$ é $f''$; se ela é
+   positiva, $f'$ é crescente, e $f'$ crescente é a curva virando para cima.
+4. Necessário porque $f''$ contínua só troca de sinal passando por zero.
+   Não suficiente porque $f''$ pode tocar o zero e voltar com o mesmo sinal,
+   como $12x^2$ em $x = 0$ para $f(x) = x^4$: zero sem troca, sem inflexão.
+5. $f'(c) = 0$ dá tangente horizontal em $(c, f(c))$. Com $f''(c)$ positiva,
+   a curva é côncava para cima perto de $c$, e uma curva côncava para cima fica
+   acima das suas tangentes. Ficar acima de uma reta horizontal na altura
+   $f(c)$ é ter valores maiores que $f(c)$ em volta: mínimo local.
+6. $x^4$ (mínimo em 0), $-x^4$ (máximo em 0) e $x^3$ (nem um nem outro; ponto
+   de inflexão com tangente horizontal).
+7. O sinal da aceleração, isto é, da segunda derivada da posição: $+2$ na van
+   A (velocidade subindo, avanços crescentes, posição côncava para cima) e
+   $-2$ na van B (velocidade caindo, avanços decrescentes, posição côncava
+   para baixo).
+8. $f'(x) = \frac{1}{x}$ é positiva em todo o domínio, logo a função cresce; e
+   como $\frac{1}{x}$ nunca chega a zero, ela cresce sem parar. A segunda,
+   $f''(x) = -\frac{1}{x^2}$, é negativa em todo o domínio, logo a inclinação diminui:
+   cada vez mais devagar.
+9. Não. A inclinação de uma reta é constante, então $f'$ não cresce nem
+   decresce e $f''$ é zero em todo ponto. A reta não fica acima nem abaixo das
+   suas tangentes — ela **é** a própria tangente em todo ponto.
+10. Exatamente no meio. $f'$ é uma parábola cujas raízes são os pontos
+    críticos, e $f''$ é uma reta que zera no vértice dessa parábola, que fica
+    no ponto médio das raízes. No exemplo 4, críticos em $-1$ e $3$, inflexão
+    em $1$.
+
+</details>
+
+## 16. Exercícios
+
+### 1. Reconhecimento
+
+1. Para cada segunda derivada abaixo, diga em que trechos a função é côncava
+   para cima, sem calcular nada além do sinal: a) $f''(x) = 4$;
+   b) $f''(x) = -2x$; c) $f''(x) = x^2 + 1$; d) $f''(x) = (x - 1)(x + 3)$.
+2. Quais destas funções têm ponto de inflexão em $x = 0$? a) $x^3$; b) $x^4$;
+   c) $x^2$; d) $x^5$; e) $\sen x$.
+3. Sabe-se que $f''(2) = 0$. Isso garante que $(2, f(2))$ é ponto de inflexão?
+   Cite um contraexemplo desta página.
+4. Em $x = 3$, uma função tem $f'(3) = 0$ e $f''(3) = -5$. O que se pode
+   concluir? E se fosse $f''(3) = 0$?
+
+### 2. Explicação
+
+5. Explique com palavras por que uma reta não tem concavidade, usando a
+   definição pela derivada.
+6. Use a tabela das duas vans para explicar por que “posição crescente” não
+   decide entre acelerar e frear, e o que decide.
+7. O teste da segunda derivada e o quadro de sinais de $f'$ respondem à mesma
+   pergunta. Em que situação o segundo é obrigatório?
+
+### 3. Aplicação direta
+
+8. Determine a concavidade e o ponto de inflexão de $f(x) = x^3 - 6x^2 + 1$.
+9. Determine a concavidade e os pontos de inflexão de $f(x) = x^4 - 6x^2$.
+10. Classifique os pontos críticos de $f(x) = x^3 - 12x$ pelo teste da segunda
+    derivada.
+
+### 4. Variação
+
+11. Determine a concavidade e o ponto de inflexão de $f(x) = x e^{x}$.
+12. Determine os pontos de inflexão de $f(x) = e^{-x^2}$.
+13. Para $f(x) = x + \dfrac{1}{x}$ com $x$ positivo: mostre que a curva é
+    côncava para cima em todo o domínio e classifique o ponto crítico.
+14. Para $f(x) = \sqrt[3]{x}$: a segunda derivada não existe em $x = 0$. Há
+    inflexão em $(0, 0)$? Justifique pelo sinal de $f''$ dos dois lados.
+15. Para $f(x) = \sen x$ em $[0, 2\pi]$: onde a curva é côncava para baixo, e
+    onde está o ponto de inflexão do interior do intervalo?
+
+### 5. Problema misto
+
+16. A posição de um carrinho de teste, em metros, é $s(t) = t^3 - 9t^2 + 24t$
+    para $t$ entre 0 e 6 s. a) Escreva a velocidade e a aceleração. b) Em que
+    intervalo o carrinho está acelerando (velocidade subindo)? c) Em que
+    instante a velocidade é a menor possível, e quanto vale?
+17. O lucro de uma empresa, em milhares de reais, ao vender $x$ centenas de
+    unidades é $L(x) = -x^3 + 6x^2 - 9x + 1$. A lição anterior achou que o
+    lucro cresce para $x$ entre 1 e 3. Ache o ponto de inflexão e explique o
+    que ele significa para o lucro de cada centena a mais.
+18. O custo de produzir $x$ peças é $C(x) = 0{,}01x^3 - 0{,}6x^2 + 20x + 500$
+    reais. A partir de que quantidade cada peça a mais passa a custar **mais**
+    que a anterior? Qual é o menor custo marginal?
+19. A população de uma colônia, em milhares, é $N(t) = t^3 - 6t^2 + 9t + 5$
+    para $t$ entre 0 e 5 h. A lição anterior achou que ela cai entre 1 h e
+    3 h. Em que instante a queda é mais rápida, e a que ritmo?
+20. A temperatura de uma peça que esfria é $T(t) = 20 + 60e^{-0{,}1t}$ graus
+    Celsius, com $t$ em minutos. Calcule $T'$ e $T''$, diga o sinal de cada
+    uma e traduza os dois sinais em uma frase sobre o esfriamento.
+
+### 6. Justificativa
+
+21. Mostre que, para $f(x) = ax^2 + bx + c$, a segunda derivada é $2a$, e
+    explique como isso recupera a regra “abre para cima se $a$ é positivo” da
+    lição de função quadrática.
+22. Explique por que $f''(c) = 0$ é necessário para inflexão quando $f''$ é
+    contínua, e por que não é suficiente. Use $x^4$.
+23. Suponha $f''$ positiva em todo um intervalo e $f'(c) = 0$ num ponto $c$
+    dele. Usando só o critério do sinal da derivada aplicado a $f'$, mostre
+    que $f'$ é negativa à esquerda de $c$ e positiva à direita, e conclua que
+    $c$ é mínimo local.
+24. Para $f(x) = ax^3 + bx^2 + cx + d$ com dois pontos críticos, mostre que a
+    inflexão fica no ponto médio entre eles.
+
+<details>
+<summary>Dica para o exercício 12</summary>
+
+Depois da regra da cadeia, $f'(x) = -2x e^{-x^2}$. Para $f''$, use a regra do
+produto e ponha $e^{-x^2}$ em evidência: o sinal de $f''$ é o sinal do outro
+fator, um polinômio de grau 2.
+
+</details>
+
+<details>
+<summary>Dica para o exercício 16</summary>
+
+A velocidade é um polinômio de grau 2. O menor valor dela é onde a derivada
+**da velocidade** zera — e a derivada da velocidade é a aceleração.
+
+</details>
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) Em toda a reta: $f''$ sempre positiva. b) Para $x$ menor que 0, onde
+   $-2x$ é positivo. c) Em toda a reta: $x^2 + 1$ nunca é negativo. d) Fora das
+   raízes: em $]-\infty, -3[$ e em $]1, +\infty[$, onde os dois fatores têm o
+   mesmo sinal.
+2. a) Sim: $f'' = 6x$ troca de sinal em 0. b) Não: $12x^2$ não troca. c) Não:
+   $f'' = 2$ não zera. d) Sim: $f'' = 20x^3$ é negativa antes e positiva
+   depois. e) Sim: $f'' = -\sen x$ é positiva antes de 0 e negativa depois. Se
+   você marcou (b), lembre: zero de $f''$ é candidato, e $12x^2$ é positiva
+   dos dois lados.
+3. Não. $x^4$ tem $f''(0) = 0$ sem inflexão. Falta a troca de sinal.
+4. Com $f'(3) = 0$ e $f''(3) = -5$: máximo local em 3, pelo teste da segunda
+   derivada. Com $f''(3) = 0$, nada: o teste não decide, e é preciso o quadro
+   de sinais de $f'$.
+5. Concavidade é sobre $f'$ crescer ou decrescer. Numa reta $f'$ é constante:
+   não cresce nem decresce, e $f''$ é zero em todo ponto. A curva nem fica
+   acima nem abaixo das tangentes, porque coincide com elas.
+6. As duas posições crescem porque as duas velocidades são positivas: as duas
+   vans avançam. O que muda é o avanço por segundo: crescente (1, 3, 5, 7, 9)
+   na van A e decrescente (19, 17, 15, 13, 11) na van B. Isso é o sinal da
+   **segunda** derivada: $+2$ e $-2$.
+7. Quando $f''(c) = 0$, o teste da segunda derivada não tem informação; e
+   quando $f'(c)$ não existe (bico), não há $f''(c)$ para olhar. Nos dois
+   casos o quadro de sinais de $f'$ é o único caminho.
+8. $f'(x) = 3x^2 - 12x$, $f''(x) = 6x - 12 = 6(x - 2)$. Negativa para $x$
+   menor que 2, positiva depois. Côncava para baixo em $]-\infty, 2[$, para
+   cima em $]2, +\infty[$. Inflexão em $(2, f(2)) = (2, -15)$. Confira:
+   $f''(1) = -6$, $f''(3) = 6$.
+9. $f'(x) = 4x^3 - 12x$, $f''(x) = 12x^2 - 12 = 12(x - 1)(x + 1)$. Positiva
+   fora de $[-1, 1]$, negativa entre. Côncava para cima em $]-\infty, -1[$ e
+   em $]1, +\infty[$, para baixo em $]-1, 1[$. Inflexões em $(-1, -5)$ e
+   $(1, -5)$. Se você achou só uma inflexão, esqueceu que $12x^2 - 12$ tem
+   duas raízes.
+10. $f'(x) = 3x^2 - 12$, críticos $-2$ e $2$. $f''(x) = 6x$. $f''(2) = 12$,
+    positiva: mínimo local, $f(2) = -16$. $f''(-2) = -12$, negativa: máximo
+    local, $f(-2) = 16$. Bate com o quadro de sinais do exercício 9 da lição
+    anterior.
+11. $f'(x) = e^x + xe^x = (x + 1)e^x$. $f''(x) = e^x + (x + 1)e^x = (x + 2)e^x$.
+    Como $e^x$ é sempre positiva, o sinal é o de $x + 2$: côncava para baixo
+    em $]-\infty, -2[$, para cima em $]-2, +\infty[$. Inflexão em
+    $(-2, -2e^{-2}) \approx (-2;\ -0{,}271)$. Conferindo com o quociente de
+    segunda derivada em $-1$: $0{,}368$, igual a $(-1 + 2)e^{-1}$.
+12. $f'(x) = -2xe^{-x^2}$. Pela regra do produto,
+    $f''(x) = -2e^{-x^2} + (-2x)(-2x)e^{-x^2} = e^{-x^2}(4x^2 - 2)$.
+    Zera em $x = \pm\frac{1}{\sqrt{2}} \approx \pm 0{,}707$,
+    e $4x^2 - 2$ é negativo entre as raízes, positivo fora. Duas inflexões, em
+    $\left(\pm\frac{1}{\sqrt 2},\ e^{-1/2}\right) \approx (\pm 0{,}707;\ 0{,}607)$.
+    É a curva em forma de sino: côncava para baixo no topo, para cima nas
+    abas. Se você achou inflexão em 0, confundiu o zero de $f'$ (o máximo)
+    com o zero de $f''$.
+13. $f'(x) = 1 - \frac{1}{x^2}$, $f''(x) = \frac{2}{x^3}$, positiva para todo
+    $x$ positivo: côncava para cima em todo o domínio. Ponto crítico:
+    $1 - \frac{1}{x^2} = 0$ dá $x = 1$ (o $-1$ está fora do domínio).
+    $f''(1) = 2$, positiva: mínimo local, $f(1) = 2$.
+14. $f'(x) = \frac{1}{3}x^{-2/3}$ e
+    $f''(x) = -\frac{2}{9}x^{-5/3} = -\dfrac{2}{9\sqrt[3]{x^5}}$.
+    O denominador tem o sinal de $x$, então
+    $f''$ é positiva para $x$ menor que 0 e negativa para $x$ maior que 0:
+    troca de sinal, com $f(0) = 0$ definida. Há inflexão em $(0, 0)$, com
+    tangente vertical — a segunda derivada não existe ali, mas a concavidade
+    troca. Conferindo: $f''(-1) = \frac{2}{9}$ e $f''(1) = -\frac{2}{9}$.
+15. $f'(x) = \cos x$, $f''(x) = -\sen x$. Negativa onde $\sen x$ é positivo,
+    em $]0, \pi[$: côncava para baixo. Positiva em $]\pi, 2\pi[$: côncava para
+    cima. Inflexão em $(\pi, 0)$, onde a curva cruza o eixo. O seno vira para
+    baixo nas cristas e para cima nos vales, e troca exatamente ao cruzar o
+    eixo.
+16. a) $v(t) = 3t^2 - 18t + 24$ m/s e $a(t) = 6t - 18$ m/s². b) Acelerando
+    onde $a$ é positiva: $t$ maior que 3 s. Antes de 3 s a velocidade está
+    caindo. c) A velocidade é uma parábola para cima, com mínimo onde
+    $a(t) = 0$: $t = 3$ s, com $v(3) = 27 - 54 + 24 = -3$ m/s. O carrinho está
+    voltando a 3 m/s, e esse é o instante em que volta mais depressa. Confira:
+    $v(2) = 0$ e $v(4) = 0$, os dois maiores que $-3$.
+17. $L'(x) = -3x^2 + 12x - 9$, $L''(x) = -6x + 12 = -6(x - 2)$. Positiva para
+    $x$ menor que 2, negativa depois. Inflexão em $(2, L(2)) = (2, -1)$. Entre
+    1 e 3 o lucro cresce; até $x = 2$ ele cresce em ritmo **crescente** (cada
+    centena a mais acrescenta mais lucro que a anterior: $L'(2) = 3$ é o maior
+    lucro marginal), e de 2 a 3 cresce em ritmo **decrescente** (cada centena
+    acrescenta menos, até $L'(3) = 0$). Quem vende 200 unidades está no ponto
+    em que a próxima centena rende mais.
+18. $C'(x) = 0{,}03x^2 - 1{,}2x + 20$ e $C''(x) = 0{,}06x - 1{,}2 = 0{,}06(x - 20)$.
+    $C''$ é negativa antes de 20 e positiva depois: até 20 peças cada peça a
+    mais custa menos que a anterior; a partir de 20, custa mais. O menor
+    custo marginal é $C'(20) = 12 - 24 + 20 = 8$ reais por peça. Confira:
+    $C'(10) = 11$ e $C'(30) = 11$. O discriminante de $C'$ é negativo
+    ($1{,}44 - 2{,}4$), então o custo total nunca deixa de crescer.
+19. $N'(t) = 3t^2 - 12t + 9$ e $N''(t) = 6t - 12$, zero em $t = 2$. A queda
+    mais rápida é onde $N'$ é mínima, isto é, onde $N''$ zera trocando de
+    negativo para positivo: $t = 2$ h, com $N'(2) = 12 - 24 + 9 = -3$ mil por
+    hora, e $N(2) = 7$ mil. Confira: $N'(1{,}5) = -2{,}25$ e
+    $N'(2{,}5) = -2{,}25$, menos negativos.
+20. $T'(t) = -6e^{-0{,}1t}$, sempre negativa: a peça esfria.
+    $T''(t) = 0{,}6e^{-0{,}1t}$, sempre positiva: côncava para cima, a inclinação
+    aumenta (fica menos negativa). Frase: a temperatura cai o tempo todo, mas
+    cada vez mais devagar — de 6 °C/min no início a cerca de 2,2 °C/min aos
+    10 min — e se aproxima dos 20 °C do ambiente sem passar deles. É a célula
+    “desce cada vez mais devagar” da tabela.
+21. $f'(x) = 2ax + b$ e $f''(x) = 2a$, constante. Se $a$ é positivo, $f''$ é
+    positiva em toda a reta: côncava para cima em toda a reta, que é “abre
+    para cima”. Se $a$ é negativo, côncava para baixo. A regra da lição de
+    quadrática era o critério da concavidade num caso em que $f''$ é
+    constante.
+22. Necessário: $f''$ contínua que troca de sinal passa por zero, e inflexão
+    é troca de sinal de $f''$. Não suficiente: $f''$ pode tocar o zero sem
+    trocar de sinal, como $12x^2$ em $x = 0$ para $x^4$, positiva dos dois
+    lados. O gráfico de $x^4$ é côncavo para cima em toda a reta e não tem
+    inflexão.
+23. Com $f''$ positiva no intervalo, o critério do sinal da derivada aplicado
+    a $f'$ diz que $f'$ é crescente ali. Uma função crescente que vale zero em
+    $c$ é negativa antes de $c$ (valores menores que zero, porque as saídas
+    crescem até chegar a zero) e positiva depois. Então $f$ decresce até $c$ e
+    cresce depois: mínimo local em $c$, pelo teste da primeira derivada. É a
+    demonstração do teste da segunda derivada.
+24. $f'(x) = 3ax^2 + 2bx + c$, uma parábola cujas raízes são os pontos
+    críticos $x_1$ e $x_2$. $f''(x) = 6ax + 2b$ zera em
+    $x = -\frac{2b}{6a} = -\frac{b}{3a}$. O vértice da parábola $f'$ fica em
+    $-\frac{2b}{2 \times 3a} = -\frac{b}{3a}$, o mesmo ponto — e o vértice de
+    uma parábola fica no ponto médio das raízes, $\frac{x_1 + x_2}{2}$. Como
+    $f''$ é uma reta com coeficiente $6a$ diferente de zero, ela troca de sinal
+    nesse ponto, que é a inflexão. No exemplo 4: críticos $-1$ e $3$, inflexão
+    em $1$.
+
+</details>
+
+## 17. Revisão curta
+
+- A **segunda derivada** é a derivada da derivada: mede se a inclinação está
+  aumentando ou diminuindo. Na posição de um objeto, é a **aceleração**, em
+  metros por segundo a cada segundo.
+- $f''$ positiva num intervalo: $f'$ crescente, curva **côncava para cima**,
+  acima das tangentes. $f''$ negativa: **côncava para baixo**, abaixo das
+  tangentes. É o critério do sinal da derivada aplicado a $f'$.
+- **Ponto de inflexão** é onde a concavidade troca. Candidatos: $f''$ zero ou
+  inexistente. Candidato não é veredicto: $x^4$ em 0 tem $f'' = 0$ e não
+  troca.
+- **Teste da segunda derivada:** $f'(c) = 0$ com $f''(c)$ positiva é mínimo
+  local; negativa, máximo local; zero, o teste não decide, e o quadro de
+  sinais de $f'$ assume.
+- **Concavidade não é crescimento.** $f'$ diz se a curva sobe; $f''$ diz se
+  a subida ou a descida está apertando ou afrouxando. As quatro combinações
+  existem, e $e^{-x}$ desce virando para cima.
+- As duas vans avançavam; a aceleração $+2$ e $-2$ era o que as separava. O
+  logaritmo “cresce sem limite, cada vez mais devagar” é $f'$ positiva sem
+  nunca zerar e $f''$ negativa.
+
+Antes de avançar, verifique se você consegue: calcular $f''$ de um polinômio
+de grau 3 e dizer onde a curva vira para cima; explicar por que $x^4$ não tem
+inflexão em 0 mesmo com $f''(0) = 0$; e dar um exemplo de função que desce e é
+côncava para cima.
+
+A lição seguinte, [esboço de gráficos](./esboco-de-graficos), junta tudo o que
+o capítulo construiu sobre uma função — domínio, assíntotas, sinal de $f'$ e
+sinal de $f''$ — num roteiro que desenha a curva inteira sem tabela de pontos.

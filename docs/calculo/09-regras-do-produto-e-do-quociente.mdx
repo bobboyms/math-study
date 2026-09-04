@@ -1,0 +1,1016 @@
+---
+title: "Regras do produto e do quociente: derivar o que é multiplicado ou dividido"
+---
+
+import AreaModel from '@site/src/components/AreaModel';
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Regras do produto e do quociente: derivar o que é multiplicado ou dividido
+
+## 1. Problema motivador: o faturamento de um serviço por assinatura
+
+Um serviço de assinatura cobra uma mensalidade e tem um certo número de
+assinantes. O faturamento de um mês é o produto dos dois:
+
+$$
+\text{faturamento} = \text{mensalidade} \times \text{assinantes}.
+$$
+
+As duas coisas mudam com o tempo. Medindo o tempo $t$ em meses a partir de
+hoje, suponha que a mensalidade suba R\$ 2 por mês e que a base de assinantes
+cresça 30 por mês:
+
+$$
+p(t) = 20 + 2t \ \text{reais},
+\qquad
+q(t) = 300 + 30t \ \text{assinantes}.
+$$
+
+Hoje, em $t = 0$, o faturamento é $20 \times 300 = 6000$ reais. A pergunta é
+sobre o ritmo: **a que taxa o faturamento está crescendo hoje**, em reais por
+mês?
+
+Temos duas taxas na mão. A mensalidade cresce a $p'(t) = 2$ reais por mês, e a
+base cresce a $q'(t) = 30$ assinantes por mês. A tentação é multiplicar as duas:
+$2 \times 30 = 60$. Sessenta reais por mês.
+
+Isso está errado, e dá para ver sem nenhuma teoria. Daqui a um mês a
+mensalidade será $22$ reais e a base terá $330$ assinantes. O faturamento será
+$22 \times 330 = 7260$ reais. Em um mês ele subiu $7260 - 6000 = 1260$ reais.
+Isso não é 60 nem chega perto. A conta $2 \times 30$ erra por um fator de mais
+de vinte.
+
+Há um segundo sinal de que ela está errada: a unidade. Reais por mês vezes
+assinantes por mês dá “reais vezes assinantes por mês ao quadrado”, que não é
+a unidade de nenhum faturamento.
+
+Então **a taxa de um produto não é o produto das taxas**. Esta página descobre
+o que ela é, e a resposta sai de um desenho que o curso usa desde a primeira
+lição de operações: o retângulo cortado em pedaços.
+
+## 2. Mapa das ideias
+
+- a **regra do produto** diz como derivar $f \times g$ quando $f$ e $g$ são
+  duas funções deriváveis: $(fg)' = f'g + fg'$;
+- a variação de um produto se desenha como um **L de área**: duas faixas, uma
+  para cada fator que cresce, mais um cantinho;
+- o **cantinho** $\Delta f \, \Delta g$ é o termo que some quando o trecho
+  encolhe, e é por isso que a regra tem dois termos, não três;
+- a **derivada do inverso** de uma função é $\left(\frac{1}{g}\right)' =
+  -\frac{g'}{g^2}$;
+- a **regra do quociente** diz como derivar $\frac{f}{g}$:
+  $\left(\frac{f}{g}\right)' = \frac{f'g - fg'}{g^2}$, e a ordem no numerador
+  importa.
+
+## 3. Para que serve
+
+- faturamento, que é preço vezes quantidade, quando os dois mudam ao mesmo
+  tempo;
+- área e volume de uma figura cujas dimensões mudam a ritmos diferentes;
+- concentração, que é massa dividida por volume, quando os dois variam;
+- custo médio por peça, que é custo total dividido por produção, e o ponto em
+  que ele para de cair;
+- e, dentro da matemática, derivar qualquer função racional, derivar um
+  produto de polinômio por raiz sem precisar expandi-lo, e obter a derivada da
+  tangente a partir das do seno e do cosseno, o que a lição de [derivadas de
+  seno e cosseno](./derivadas-de-seno-e-cosseno) vai fazer.
+
+Até aqui o curso sabe derivar somas, diferenças e múltiplos de potências, isto
+é, polinômios e pouco mais. Multiplicar e dividir funções é o que falta para
+alcançar as famílias que o capítulo de funções estudou.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [operações básicas](../numeros-e-operacoes/operacoes-basicas) e de
+[produtos notáveis](../algebra/produtos-notaveis): o que o retângulo cortado
+mostra sobre $(a+b)(c+d)$?** Que cada parte de um fator encontra cada parte do
+outro. O retângulo de lados $a + b$ e $c + d$ se corta em quatro pedaços, de
+áreas $ac$, $ad$, $bc$ e $bd$, e a área total é a soma dos quatro:
+$(a+b)(c+d) = ac + ad + bc + bd$. Nenhum pedaço a mais, nenhum a menos.
+
+**2. De [produtos notáveis](../algebra/produtos-notaveis), seção 10: o que a
+placa de lado $x$ que cresce $h$ ensinou?** Que o aumento de área,
+$(x+h)^2 - x^2 = 2xh + h^2$, tem duas partes de tamanhos diferentes: as duas
+faixas $xh$, que carregam quase todo o aumento, e o quadradinho $h^2$ do canto,
+que com $h$ pequeno é praticamente nada. Aquela seção dizia que separar o
+efeito grande do efeito minúsculo “reaparece no cálculo diferencial”. Reaparece
+aqui.
+
+**3. De [a derivada](./a-derivada): como se define $f'(x)$, e como se confere
+uma derivada com um número?** Pelo limite do quociente de diferenças,
+$f'(x) = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h}$. E a conferência é o quociente
+centrado com $h = 0{,}001$: a fórmula deduzida e esse número têm que concordar
+nas primeiras casas. Aquela lição também calculou, pela definição, que
+$\left(\frac{1}{x}\right)' = -\frac{1}{x^2}$, um resultado que vai servir de
+teste aqui.
+
+**4. De [calculando limites](./calculo-de-limites): o que valem o limite de uma
+soma e o limite de um produto?** A soma dos limites e o produto dos limites,
+desde que cada um exista. É o que permite tratar cada termo de uma expressão
+separadamente na hora de fazer $h \to 0$.
+
+**5. De [quando a derivada não existe](./quando-a-derivada-nao-existe): o que
+a derivabilidade garante sobre a continuidade?** Que toda função derivável num
+ponto é contínua nesse ponto: se $g'(x)$ existe, então $g(x+h) \to g(x)$ quando
+$h \to 0$. Dito de outro modo, a variação $\Delta g = g(x+h) - g(x)$ vai a zero.
+É esse fato que vai fazer o cantinho desaparecer.
+
+**6. De [operações com frações algébricas](../algebra/operacoes-com-fracoes-algebricas):
+como se somam duas frações com denominadores diferentes?** Reescrevendo cada
+uma com um denominador comum, multiplicando numerador e denominador pelo mesmo
+fator, que vale 1. É assim que a regra do quociente vai ganhar a forma
+compacta com um denominador só.
+
+O item 2 é o mais importante. A regra do produto **é** a placa que cresce,
+escrita com duas funções no lugar de dois lados iguais.
+
+## 5. Intuição: um produto cresce por dois motivos ao mesmo tempo
+
+Volte ao faturamento. Ele é $p \times q$. Num mês, duas coisas acontecem:
+
+- a mensalidade sobe R\$ 2, e esses 2 reais a mais são cobrados de **cada um**
+  dos assinantes que já existiam. Com 300 assinantes, isso rende
+  $2 \times 300 = 600$ reais;
+- a base ganha 30 assinantes, e cada um deles paga a mensalidade que já
+  vigorava. Com a mensalidade de 20, isso rende $30 \times 20 = 600$ reais.
+
+Somando, $600 + 600 = 1200$ reais. É quase o aumento real de 1260 que a conta
+do motivador encontrou. Faltam 60 reais, e eles vêm de uma terceira parcela:
+os 30 assinantes novos também pagam os 2 reais de aumento, $30 \times 2 = 60$.
+Essa terceira parcela é pequena porque **multiplica duas variações**, e as
+duas são pequenas em relação aos valores de partida.
+
+Repare no que cada uma das duas parcelas grandes tem: **a taxa de um fator
+vezes o valor atual do outro**. A mensalidade sobe 2 por mês, e esse 2 é
+multiplicado pelos 300 assinantes que estão lá. A base sobe 30 por mês, e esse
+30 é multiplicado pelos 20 reais que já eram cobrados. Cada fator cresce
+enquanto o outro “segura” o valor que tem.
+
+É isso que a conta $2 \times 30$ ignora. Ela multiplica as duas taxas entre si
+e esquece os valores atuais, que são o que dá peso a cada taxa. E o resultado
+dela, 60, é exatamente a parcela pequena, a que multiplica as duas variações.
+Quem faz $2 \times 30$ calcula o cantinho e joga fora as duas faixas.
+
+## 6. Modelo visual: o L do faturamento
+
+A intuição da seção anterior é um retângulo. Desenhe o faturamento como a área
+de um retângulo de lados $p = 20$ e $q = 300$. Quando os dois lados crescem,
+com $\Delta p = 2$ e $\Delta q = 30$, o retângulo ganha duas faixas e um canto.
+
+<AreaModel
+  rows={[{size: 5, label: 'p = 20'}, {size: 1.5, label: '\\Delta p = 2'}]}
+  cols={[{size: 5, label: 'q = 300'}, {size: 1.5, label: '\\Delta q = 30'}]}
+  cells={[
+    [{math: '6000', tone: 1}, {math: '600', tone: 2}],
+    [{math: '600', tone: 2}, {math: '60', tone: 3}],
+  ]}
+  unit={40}
+  labelWidth={78}
+  caption="O faturamento de hoje é o retângulo grande, 20 × 300 = 6000. Em um mês ele ganha a faixa da direita, 20 × 30 = 600, a faixa de baixo, 2 × 300 = 600, e o canto, 2 × 30 = 60. As faixas têm a mesma cor porque são a mesma ideia: uma taxa vezes o valor do outro fator. O canto está desenhado maior do que a proporção real, para caber o rótulo."
+/>
+
+Some os três pedaços novos: $600 + 600 + 60 = 1260$. É o aumento que o
+motivador calculou fazendo $7260 - 6000$. O desenho não inventou nada: ele
+cortou a diferença em partes com nomes.
+
+Agora o mesmo desenho com letras, porque a conta vale para qualquer par de
+funções. Chame de $f$ e $g$ os valores atuais dos dois fatores e de
+$\Delta f$ e $\Delta g$ as variações deles num trecho:
+
+<AreaModel
+  rows={[{size: 5, label: 'f'}, {size: 1.5, label: '\\Delta f'}]}
+  cols={[{size: 5, label: 'g'}, {size: 1.5, label: '\\Delta g'}]}
+  cells={[
+    [{math: 'fg', tone: 1}, {math: 'f\\,\\Delta g', tone: 2}],
+    [{math: 'g\\,\\Delta f', tone: 2}, {math: '\\Delta f\\,\\Delta g', tone: 3}],
+  ]}
+  unit={40}
+  labelWidth={56}
+  caption="A variação de fg é o L: a faixa f·Δg, a faixa g·Δf e o canto Δf·Δg. É o desenho de (a + b)² com outro significado: lá os dois lados eram iguais, aqui cada lado é uma função."
+/>
+
+Em fórmula, o retângulo novo tem lados $f + \Delta f$ e $g + \Delta g$, e a
+distributiva da ideia anterior 1 o corta nos quatro pedaços:
+
+$$
+(f + \Delta f)(g + \Delta g) = fg + f\,\Delta g + g\,\Delta f + \Delta f\,\Delta g.
+$$
+
+Tirando o retângulo antigo $fg$, sobra o L:
+
+$$
+\Delta(fg) = f\,\Delta g + g\,\Delta f + \Delta f\,\Delta g.
+$$
+
+Vale comparar com a placa da lição de produtos notáveis. Lá, $f = g = x$ e
+$\Delta f = \Delta g = h$, e a fórmula dá $xh + xh + h^2 = 2xh + h^2$: as duas
+faixas e o quadradinho. Este é o caso particular; o L de agora é o caso geral.
+
+## 7. Ponte para a formalização: dividir por h e encolher o trecho
+
+O L é a variação do produto num trecho de largura $h$. A derivada é a taxa
+dessa variação quando o trecho encolhe. Então o caminho é o mesmo de toda
+derivada: dividir a variação por $h$ e fazer $h \to 0$.
+
+Antes, diga o que $\Delta f$ e $\Delta g$ são em termos de $h$. Se o trecho
+vai de $x$ a $x + h$, então
+
+$$
+\Delta f = f(x+h) - f(x),
+\qquad
+\Delta g = g(x+h) - g(x).
+$$
+
+Dividindo o L por $h$, termo a termo:
+
+$$
+\frac{\Delta(fg)}{h}
+= f \times \frac{\Delta g}{h}
++ g \times \frac{\Delta f}{h}
++ \frac{\Delta f\,\Delta g}{h}.
+$$
+
+Os dois primeiros termos já são conhecidos. $\frac{\Delta f}{h}$ é o quociente
+de diferenças de $f$, que tende a $f'(x)$; $\frac{\Delta g}{h}$ é o de $g$, que
+tende a $g'(x)$. Os fatores $f$ e $g$ na frente são os valores em $x$, que não
+dependem de $h$.
+
+O terceiro termo é o cantinho, e ele pede cuidado. Vamos reescrevê-lo.
+
+**O que queremos.** Saber de que número $\frac{\Delta f\,\Delta g}{h}$ se
+aproxima quando $h \to 0$.
+
+**Por que a forma atual não serve.** Numerador e denominador vão a zero, e
+$\frac{0}{0}$ não diz nada, como a lição de calculando limites mostrou.
+
+**Qual propriedade permite reescrever.** Dividir um produto por $h$ é dividir
+**um só** dos fatores por $h$: $\frac{ab}{h} = \frac{a}{h} \times b$. É a
+associatividade da multiplicação, e ela vale porque $h \neq 0$.
+
+**O que muda na escrita.** O $h$ passa a dividir só o $\Delta f$:
+
+$$
+\frac{\Delta f\,\Delta g}{h} = \frac{\Delta f}{h} \times \Delta g.
+$$
+
+**O que permanece.** O valor. Confira com o faturamento e $h = 1$ mês:
+$\Delta p = 2$, $\Delta q = 30$. A forma da esquerda dá $\frac{2 \times 30}{1} =
+60$; a da direita dá $\frac{2}{1} \times 30 = 60$.
+
+**Por que agora o limite sai.** O primeiro fator, $\frac{\Delta f}{h}$, tende
+a $f'(x)$, que é um número. O segundo fator, $\Delta g$, tende a **zero**,
+porque $g$ é derivável e por isso contínua, como a ideia anterior 5 lembrou.
+Pela propriedade do limite do produto, o cantinho dividido por $h$ tende a
+$f'(x) \times 0 = 0$.
+
+A tabela abaixo mostra os três termos no faturamento, com o trecho $h$
+encolhendo. As duas faixas ficam paradas em 600; o cantinho vai a zero.
+
+| $h$ (meses) | $p \times \frac{\Delta q}{h}$ | $q \times \frac{\Delta p}{h}$ | $\frac{\Delta p\,\Delta q}{h}$ | soma |
+|---:|---:|---:|---:|---:|
+| $1$ | $600$ | $600$ | $60$ | $1260$ |
+| $0{,}1$ | $600$ | $600$ | $6$ | $1206$ |
+| $0{,}01$ | $600$ | $600$ | $0{,}6$ | $1200{,}6$ |
+
+As faixas não mudam porque, neste exemplo, $p$ e $q$ são funções afins e as
+taxas delas são constantes. Numa função qualquer as faixas também mudariam um
+pouco com $h$, mas convergiriam para $f g'$ e $g f'$. O cantinho vai a zero em
+qualquer caso, e é por isso que a regra final tem **dois** termos.
+
+## 8. A regra do produto
+
+> Se $f$ e $g$ são deriváveis em $x$, então o produto $fg$ é derivável em $x$ e
+> $$
+> \boxed{(fg)' = f'g + fg'}
+> $$
+
+Lê-se: derivada do primeiro vezes o segundo, mais o primeiro vezes derivada do
+segundo. Em palavras que carregam o desenho: **cada fator deriva uma vez,
+enquanto o outro fica parado no valor que tem; some as duas parcelas.**
+
+Não faz diferença qual fator se chama $f$ e qual se chama $g$: as duas
+parcelas se somam, e a soma não depende da ordem. A regra do produto é
+simétrica, como a multiplicação.
+
+**Exemplo.** Derive $x^2 \times x^3$ pela regra do produto. Com $f = x^2$,
+$f' = 2x$, $g = x^3$, $g' = 3x^2$:
+
+$$
+(x^2 \times x^3)' = 2x \times x^3 + x^2 \times 3x^2 = 2x^4 + 3x^4 = 5x^4.
+$$
+
+E dá para conferir sem a regra: $x^2 \times x^3 = x^5$, cuja derivada, pela
+lição de [regras de derivação](./regras-de-derivacao), é $5x^4$. Os dois
+caminhos concordam.
+
+**Contraexemplo.** O produto das derivadas seria $2x \times 3x^2 = 6x^3$. Em
+$x = 2$ isso dá 48, enquanto $5x^4$ dá 80. E a conferência numérica de
+$x^5$ em 2, com o quociente centrado e $h = 0{,}001$, dá $80{,}000$. O
+produto das derivadas está errado, e não por pouco.
+
+**Segundo exemplo, o mais simples possível.** $x \times x$. Pela regra:
+$1 \times x + x \times 1 = 2x$. É a derivada de $x^2$ da lição de derivada. O
+$2$ de $2x$ é a soma de dois $1$: uma faixa de cada lado da placa.
+
+**Um caso particular já conhecido.** Se $g$ é uma constante $c$, então
+$g' = 0$, e a regra dá $(cf)' = 0 \times f + c f' = c f'$. É a regra da
+constante multiplicativa da lição anterior, agora como consequência.
+
+### Por que não expandir sempre
+
+Nos dois exemplos acima a regra parece dispensável: dava para multiplicar
+primeiro e derivar depois. Em polinômios isso é verdade, e muitas vezes é o
+caminho mais curto. A regra passa a ser necessária quando **os fatores não se
+multiplicam de forma útil**: $x^2 \sqrt{x}$ ainda se junta, mas
+$(x^2 + 1)\sqrt{x}$ não vira um monômio, e $x^2 \sen x$ não vira coisa
+nenhuma. A regra do produto deriva o produto sem precisar desfazê-lo.
+
+## 9. A derivada do inverso de uma função
+
+Antes do quociente, um caso intermediário: a derivada de $\frac{1}{g}$, onde
+$g$ é uma função derivável que não se anula.
+
+A lição de derivada calculou $\left(\frac{1}{x}\right)' = -\frac{1}{x^2}$ pela
+definição. Para uma função $g$ qualquer no lugar de $x$, dá para evitar o limite
+usando a regra do produto e um truque de escrita. Para todo $x$ em que
+$g(x) \neq 0$,
+
+$$
+g \times \frac{1}{g} = 1.
+$$
+
+Os dois lados são a mesma função, a constante 1. Então as derivadas dos dois
+lados são iguais. À direita, a derivada de uma constante é zero. À esquerda,
+temos um produto, e a regra do produto se aplica com $f = g$ e o segundo fator
+igual a $\frac{1}{g}$:
+
+$$
+g' \times \frac{1}{g} + g \times \left(\frac{1}{g}\right)' = 0.
+$$
+
+O que queremos é $\left(\frac{1}{g}\right)'$, e ela está multiplicada por $g$.
+Isolar é o mesmo movimento das equações do 1º grau: passe a outra parcela para
+a direita trocando o sinal, e depois divida os dois lados por $g$, o que é
+permitido porque $g \neq 0$:
+
+$$
+g \times \left(\frac{1}{g}\right)' = -\frac{g'}{g}
+\qquad\Longrightarrow\qquad
+\left(\frac{1}{g}\right)' = -\frac{g'}{g^2}.
+$$
+
+> Se $g$ é derivável em $x$ e $g(x) \neq 0$, então
+> $$
+> \boxed{\left(\frac{1}{g}\right)' = -\frac{g'}{g^2}}
+> $$
+
+**Teste com o caso conhecido.** Com $g = x$, $g' = 1$, a fórmula dá
+$-\frac{1}{x^2}$. É o resultado da definição, na lição de derivada. Confere.
+
+**Exemplo.** $\left(\frac{1}{x^2 + 1}\right)'$. Aqui $g = x^2 + 1$ e
+$g' = 2x$, então a derivada é $-\frac{2x}{(x^2+1)^2}$. Em $x = 1$ ela vale
+$-\frac{2}{4} = -0{,}5$; o quociente centrado com $h = 0{,}001$ dá $-0{,}500$.
+
+**Leitura do sinal.** Onde $g$ cresce ($g' > 0$), $\frac{1}{g}$ decresce, e a
+fórmula sai negativa; onde $g$ decresce, $\frac{1}{g}$ cresce. O denominador
+$g^2$ é sempre positivo, então o sinal da derivada de $\frac{1}{g}$ é sempre o
+**oposto** do sinal de $g'$. É o que se espera de um inverso.
+
+## 10. A regra do quociente
+
+Um quociente é um produto disfarçado: $\frac{f}{g} = f \times \frac{1}{g}$.
+Então a regra do produto se aplica, com a derivada do inverso que acabamos de
+obter:
+
+$$
+\left(\frac{f}{g}\right)'
+= f' \times \frac{1}{g} + f \times \left(-\frac{g'}{g^2}\right)
+= \frac{f'}{g} - \frac{f g'}{g^2}.
+$$
+
+Isso já é a regra. Só falta juntar as duas frações, que têm denominadores
+diferentes, $g$ e $g^2$. O denominador comum é $g^2$, e a primeira fração
+precisa ser multiplicada por $\frac{g}{g}$, que vale 1 e por isso não altera a
+quantidade:
+
+$$
+\frac{f'}{g} \times \frac{g}{g} - \frac{fg'}{g^2}
+= \frac{f'g}{g^2} - \frac{fg'}{g^2}
+= \frac{f'g - fg'}{g^2}.
+$$
+
+> Se $f$ e $g$ são deriváveis em $x$ e $g(x) \neq 0$, então
+> $$
+> \boxed{\left(\frac{f}{g}\right)' = \frac{f'g - fg'}{g^2}}
+> $$
+
+Lê-se: derivada do de cima vezes o de baixo, **menos** o de cima vezes derivada
+do de baixo, tudo sobre o de baixo ao quadrado.
+
+Diferente da regra do produto, aqui a **ordem importa**, porque o sinal do
+meio é de subtração: $f'g - fg'$ e $fg' - f'g$ são opostos. A parcela com sinal
+positivo é a que deriva o **numerador**. Uma forma de lembrar: a derivada do
+inverso tem sinal negativo, então o termo que deriva o denominador é o que
+entra subtraindo.
+
+**Exemplo.** $\left(\frac{x}{x+1}\right)'$. Com $f = x$, $f' = 1$, $g = x + 1$,
+$g' = 1$:
+
+$$
+\frac{1 \times (x+1) - x \times 1}{(x+1)^2} = \frac{x + 1 - x}{(x+1)^2} = \frac{1}{(x+1)^2}.
+$$
+
+Em $x = 1$ a derivada vale $\frac{1}{4}$; o quociente centrado dá $0{,}250$.
+
+**Contraexemplo.** Com a ordem trocada, o numerador seria
+$x \times 1 - 1 \times (x+1) = -1$, e a derivada sairia $-\frac{1}{(x+1)^2}$.
+Negativa. Mas a função $\frac{x}{x+1}$ **sobe**: vale $0{,}5$ em $x = 1$ e
+$0{,}667$ em $x = 2$. Uma função que sobe não tem derivada negativa. A ordem
+trocada produz um sinal que o próprio gráfico desmente.
+
+**Quando o denominador é constante, a regra é desnecessária.** Para derivar
+$\frac{x^2 + 1}{3}$, escreva $\frac{1}{3}(x^2 + 1)$ e use a constante
+multiplicativa: $\frac{2x}{3}$. A regra do quociente dá o mesmo,
+$\frac{2x \times 3 - (x^2+1) \times 0}{9} = \frac{6x}{9} = \frac{2x}{3}$, com
+três vezes mais conta. Dividir por constante é multiplicar por constante.
+
+## 11. Resolvendo o problema do faturamento
+
+De volta a $R(t) = p(t) \times q(t)$, com $p(t) = 20 + 2t$ e
+$q(t) = 300 + 30t$. As derivadas dos fatores são $p'(t) = 2$ e $q'(t) = 30$,
+constantes porque as duas funções são afins. Pela regra do produto:
+
+$$
+\begin{aligned}
+R'(t) &= p'(t)\,q(t) + p(t)\,q'(t) \\
+&= 2\,(300 + 30t) + (20 + 2t) \times 30 \\
+&= 600 + 60t + 600 + 60t \\
+&= 1200 + 120t.
+\end{aligned}
+$$
+
+Hoje, em $t = 0$: $R'(0) = 1200$ reais por mês. É o número que a intuição da
+seção 5 montou com as duas faixas, $600 + 600$. As unidades fecham: $p'q$ é
+reais por mês vezes assinantes, e $p q'$ é reais vezes assinantes por mês;
+como $p$ é reais **por assinante**, as duas parcelas saem em reais por mês.
+
+**Conferindo por outro caminho.** Como $p$ e $q$ são polinômios, dá para
+multiplicar primeiro: $R(t) = (20 + 2t)(300 + 30t) = 6000 + 600t + 600t + 60t^2
+= 6000 + 1200t + 60t^2$. Derivando termo a termo, $R'(t) = 1200 + 120t$. O
+mesmo resultado, e o $60t^2$ da expansão é o cantinho: a derivada dele em
+$t = 0$ é zero.
+
+**E o 1260 do motivador?** Era a variação em um mês inteiro, um trecho de
+largura $h = 1$, e por isso incluía o cantinho de 60. A derivada é a taxa
+instantânea, sem o cantinho. Os dois números medem coisas diferentes: 1260 é
+quanto o faturamento vai subir de fato até o mês que vem; 1200 é o ritmo dele
+hoje. Daqui a seis meses, o ritmo será $R'(6) = 1920$ reais por mês, maior,
+porque as duas faixas cresceram junto com $p$ e $q$.
+
+**Sobre “dobrar os dois quadruplica”.** Se a mensalidade e a base dobrassem, o
+faturamento iria de 6000 para $40 \times 600 = 24000$, quatro vezes mais. Não
+há contradição com a regra: dobrar não é uma taxa, é uma variação grande, e
+numa variação grande o cantinho $\Delta p\,\Delta q = 20 \times 300 = 6000$ é
+do tamanho do retângulo original. A regra do produto descreve o ritmo em
+variações **pequenas**, onde o cantinho é desprezível.
+
+## 12. Exemplos resolvidos
+
+### Exemplo 1: um produto de polinômios, pelos dois caminhos
+
+Derive $f(x) = (3x^2 + 1)(x^3 - x)$.
+
+**Pela regra do produto.** O primeiro fator tem derivada $6x$; o segundo,
+$3x^2 - 1$.
+
+$$
+\begin{aligned}
+f'(x) &= 6x\,(x^3 - x) + (3x^2 + 1)(3x^2 - 1) \\
+&= 6x^4 - 6x^2 + 9x^4 - 3x^2 + 3x^2 - 1 \\
+&= 15x^4 - 6x^2 - 1.
+\end{aligned}
+$$
+
+**Expandindo primeiro.** $f(x) = 3x^5 - 3x^3 + x^3 - x = 3x^5 - 2x^3 - x$, e
+$f'(x) = 15x^4 - 6x^2 - 1$. Igual.
+
+**Conferindo com um número.** Em $x = 2$: $15 \times 16 - 6 \times 4 - 1 =
+240 - 24 - 1 = 215$. O quociente centrado com $h = 0{,}001$ dá $215{,}000$.
+
+Neste exemplo os dois caminhos custam quase o mesmo. O seguinte já não.
+
+### Exemplo 2: polinômio vezes raiz
+
+*Pause e tente antes de ler.* Derive $f(x) = (x^2 + 1)\sqrt{x}$ e calcule
+$f'(4)$.
+
+Expandir não ajuda: $(x^2 + 1)\sqrt{x} = x^2\sqrt{x} + \sqrt{x}$, e o primeiro
+termo ainda é um produto. A regra do produto resolve direto, com
+$f = x^2 + 1$, $f' = 2x$, $g = \sqrt{x}$ e $g' = \frac{1}{2\sqrt{x}}$ da lição
+de derivada:
+
+$$
+f'(x) = 2x\sqrt{x} + \frac{x^2 + 1}{2\sqrt{x}}.
+$$
+
+Em $x = 4$: $2 \times 4 \times 2 + \frac{17}{4} = 16 + 4{,}25 = 20{,}25$. O
+quociente centrado dá $20{,}250$.
+
+**Uma forma mais compacta.** As duas parcelas podem ser juntadas com o
+denominador comum $2\sqrt{x}$. A primeira precisa ser multiplicada por
+$\frac{2\sqrt{x}}{2\sqrt{x}}$, e $2x\sqrt{x} \times 2\sqrt{x} = 4x^2$, porque
+$\sqrt{x} \times \sqrt{x} = x$:
+
+$$
+f'(x) = \frac{4x^2}{2\sqrt{x}} + \frac{x^2 + 1}{2\sqrt{x}} = \frac{5x^2 + 1}{2\sqrt{x}}.
+$$
+
+Em $x = 4$: $\frac{81}{4} = 20{,}25$. A mesma quantidade, escrita de outro
+jeito. Se o seu gabarito e o de outra pessoa tiverem formas diferentes, o
+teste é este: avaliar as duas num mesmo ponto.
+
+### Exemplo 3: uma função racional e as tangentes horizontais
+
+*Pause e tente.* Derive $f(x) = \dfrac{x^2 + 1}{x - 1}$ e encontre os pontos em
+que a tangente é horizontal.
+
+Pela regra do quociente, com $f = x^2 + 1$, $f' = 2x$, $g = x - 1$, $g' = 1$:
+
+$$
+f'(x) = \frac{2x\,(x-1) - (x^2 + 1) \times 1}{(x-1)^2}
+= \frac{2x^2 - 2x - x^2 - 1}{(x-1)^2}
+= \frac{x^2 - 2x - 1}{(x-1)^2}.
+$$
+
+O parêntese em torno de $x^2 + 1$ é obrigatório: o sinal de menos se aplica à
+expressão inteira, e sem o parêntese o $+1$ entraria com o sinal errado.
+
+**Conferindo com um número.** Em $x = 2$: $\frac{4 - 4 - 1}{1} = -1$. O
+quociente centrado dá $-1{,}000$.
+
+**Tangente horizontal.** A derivada é zero quando o numerador é zero e o
+denominador não é: $x^2 - 2x - 1 = 0$. Pela fórmula de Bhaskara,
+$x = \frac{2 \pm \sqrt{4 + 4}}{2} = 1 \pm \sqrt{2}$, ou seja, $x \approx 2{,}41$
+e $x \approx -0{,}41$. Nenhum dos dois é o $x = 1$ proibido. A lição de
+[sinal da derivada](./sinal-da-derivada) vai usar exatamente esse tipo de
+conta para dizer onde uma função sobe e onde desce.
+
+<CartesianPlane
+  xMin={-3}
+  xMax={5}
+  yMin={-6}
+  yMax={10}
+  xUnit={44}
+  yUnit={22}
+  yStep={2}
+  functions={[
+    {f: (x) => (x * x + 1) / (x - 1), domain: [-3, 0.82], tone: 1},
+    {f: (x) => (x * x + 1) / (x - 1), domain: [1.12, 5], tone: 1},
+  ]}
+  lines={[{x: 1, dashed: true, tone: 0}]}
+  segments={[
+    {from: [1.2, 4.828], to: [3.6, 4.828], tone: 3},
+    {from: [-1.4, -0.828], to: [0.6, -0.828], tone: 3},
+  ]}
+  points={[
+    {at: [2.414, 4.828], label: '1 + \\sqrt{2}', tone: 3, dx: 34, dy: -14},
+    {at: [-0.414, -0.828], label: '1 - \\sqrt{2}', tone: 3, dx: -34, dy: 16},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A função (x² + 1)/(x − 1) tem assíntota vertical em x = 1 e duas tangentes horizontais, nos pontos em que o numerador da derivada zera: x = 1 ± √2."
+/>
+
+### Exemplo 4: a regra do inverso e a regra da potência concordam
+
+Derive $f(x) = \dfrac{1}{x^3}$ de duas formas.
+
+**Pela derivada do inverso**, com $g = x^3$ e $g' = 3x^2$:
+
+$$
+f'(x) = -\frac{3x^2}{(x^3)^2} = -\frac{3x^2}{x^6} = -\frac{3}{x^4}.
+$$
+
+A simplificação usou $\frac{x^2}{x^6} = x^{2-6} = x^{-4}$, da lição de
+potências.
+
+**Pela regra da potência**, escrevendo $\frac{1}{x^3} = x^{-3}$: a lição de
+regras de derivação dá $(x^{-3})' = -3x^{-4} = -\frac{3}{x^4}$.
+
+Os dois concordam. Em $x = 2$: $-\frac{3}{16} = -0{,}1875$, e o quociente
+centrado dá $-0{,}1875$. Quando os dois caminhos existem, o da potência é mais
+curto; a derivada do inverso serve para os casos em que o denominador não é
+uma potência de $x$.
+
+### Exemplo 5: custo médio por peça
+
+*Pause e tente.* O custo de produzir $q$ peças é
+$C(q) = 0{,}5q^2 + 20q + 800$ reais, o mesmo do exercício 22 da lição de
+derivada. O **custo médio** por peça é $M(q) = \dfrac{C(q)}{q}$. a) Encontre
+$M'(q)$. b) Calcule $M'(20)$, $M'(40)$ e $M'(60)$ e interprete os sinais.
+c) O que acontece em $q = 40$?
+
+**a)** Pela regra do quociente, com $C'(q) = q + 20$ e o denominador $q$, de
+derivada 1:
+
+$$
+M'(q) = \frac{(q + 20)\,q - (0{,}5q^2 + 20q + 800) \times 1}{q^2}
+= \frac{q^2 + 20q - 0{,}5q^2 - 20q - 800}{q^2}
+= \frac{0{,}5q^2 - 800}{q^2}.
+$$
+
+**b)** $M'(20) = \frac{200 - 800}{400} = -1{,}5$; $M'(40) = \frac{800 -
+800}{1600} = 0$; $M'(60) = \frac{1800 - 800}{3600} \approx 0{,}28$. A unidade
+é reais por peça, por peça: quanto o custo médio muda quando a produção sobe
+uma peça. Em 20 peças o custo médio está **caindo**, 1,50 por peça a mais; em
+60 está **subindo**. Os quocientes centrados dão $-1{,}500$, $0{,}000$ e
+$0{,}278$.
+
+**c)** Em $q = 40$ o custo médio para de cair e passa a subir: é o mínimo
+dele. Repare que ali $C'(40) = 60$ e $M(40) = \frac{2400}{40} = 60$: o custo
+marginal é igual ao custo médio. Não é coincidência. O numerador de $M'$ é
+$C'q - C$, e ele zera exatamente quando $C' = \frac{C}{q} = M$. Um resultado
+que a economia usa o tempo todo saiu de uma linha da regra do quociente.
+
+**Conferindo por outro caminho.** $M(q) = \frac{0{,}5q^2}{q} + \frac{20q}{q} +
+\frac{800}{q} = 0{,}5q + 20 + \frac{800}{q}$, e a derivada termo a termo é
+$0{,}5 - \frac{800}{q^2}$. Multiplicando em cima e embaixo por $q^2$ para
+juntar, $\frac{0{,}5q^2 - 800}{q^2}$. Igual.
+
+### Exemplo 6: três fatores
+
+*Pause e tente.* Derive $g(x) = x\,(x+1)(x+2)$ e calcule $g'(1)$.
+
+Agrupe dois fatores e trate o agrupamento como um só: $g = [x(x+1)] \times
+(x+2)$. Pela regra do produto,
+
+$$
+g' = [x(x+1)]' \,(x+2) + x(x+1) \times 1.
+$$
+
+E $[x(x+1)]'$ é outra regra do produto: $1 \times (x+1) + x \times 1 =
+2x + 1$. Substituindo:
+
+$$
+g'(x) = (2x+1)(x+2) + x(x+1).
+$$
+
+Em $x = 1$: $3 \times 3 + 1 \times 2 = 11$. Conferindo por expansão,
+$g(x) = x^3 + 3x^2 + 2x$ e $g'(x) = 3x^2 + 6x + 2$, que em 1 dá 11.
+
+O padrão geral, que o exercício 26 pede para justificar, é: **cada fator
+deriva uma vez enquanto os outros ficam parados**, e somam-se as parcelas.
+Para três fatores, três parcelas; em $x = 1$ elas são $1 \times 2 \times 3$,
+$1 \times 1 \times 3$ e $1 \times 2 \times 1$, que somam $6 + 3 + 2 = 11$.
+
+## 13. Erros comuns
+
+> **Erro 1: derivar o produto como o produto das derivadas.** É o erro do
+> motivador: $2 \times 30 = 60$ quando a resposta era 1200. Teste sempre com
+> $x \times x$: o produto das derivadas seria $1 \times 1 = 1$, mas a derivada
+> de $x^2$ é $2x$. Quem multiplica as derivadas calcula só o cantinho do L e
+> joga fora as duas faixas.
+
+> **Erro 2: trocar a ordem no numerador do quociente.** $fg' - f'g$ tem o
+> sinal oposto de $f'g - fg'$. O termo positivo é o que deriva o **numerador**.
+> Se a sua derivada saiu negativa onde a função sobe, foi isso. Confira com um
+> número antes de seguir.
+
+> **Erro 3: esquecer o quadrado no denominador.** A derivada de $\frac{f}{g}$ é
+> sobre $g^2$, não sobre $g$. O quadrado vem da derivada do inverso,
+> $-\frac{g'}{g^2}$, que vem de dividir por $g$ duas vezes. Teste com
+> $\frac{1}{x}$: a resposta certa é $-\frac{1}{x^2}$, não $-\frac{1}{x}$.
+
+> **Erro 4: usar a regra do quociente com denominador constante.** Para
+> $\frac{x^2 + 1}{3}$, a regra funciona, mas é trabalho à toa: escreva
+> $\frac{1}{3}(x^2 + 1)$ e derive com a constante multiplicativa, $\frac{2x}{3}$.
+> A regra do quociente é para quando a **função** está no denominador.
+
+> **Erro 5: esquecer o parêntese ao subtrair no numerador.** Em
+> $\frac{2x(x-1) - (x^2+1)}{(x-1)^2}$, o menos se aplica a $x^2 + 1$ inteiro:
+> $-x^2 - 1$. Sem o parêntese, o $+1$ entra com o sinal errado e o resultado
+> muda. É o mesmo cuidado da subtração de frações algébricas.
+
+> **Erro 6: achar que a sua resposta está errada porque tem outra forma.**
+> $2x\sqrt{x} + \frac{x^2 + 1}{2\sqrt{x}}$ e $\frac{5x^2 + 1}{2\sqrt{x}}$ são a
+> mesma função. Avalie as duas num ponto: se derem o mesmo número, as duas
+> estão certas. Se derem números diferentes, uma delas está errada.
+
+> **Erro 7: aplicar a regra do produto onde há uma constante.** $(5x^3)'$ não
+> precisa de regra do produto: é $5 \times 3x^2 = 15x^2$. A regra do produto até
+> dá isso, $0 \times x^3 + 5 \times 3x^2$, mas a primeira parcela é sempre zero.
+> Guarde a regra para quando **os dois** fatores variam.
+
+## 14. Perguntas de verificação
+
+1. No L do faturamento, o que cada uma das duas faixas representa, e por que as
+   duas têm a mesma cor?
+2. Por que o cantinho $\Delta f\,\Delta g$ desaparece na derivada, mas não
+   desaparece na variação de um mês inteiro?
+3. Qual ideia anterior garante que $\Delta g \to 0$ quando $h \to 0$?
+4. A regra do produto é simétrica em $f$ e $g$; a do quociente não é. De onde
+   vem a diferença?
+5. Por que a derivada de $\frac{1}{g}$ tem sinal negativo, e o que isso diz
+   sobre o gráfico de $\frac{1}{g}$?
+6. De onde vem o $g^2$ no denominador da regra do quociente?
+7. Um colega derivou $(x^2 + 1)\sqrt{x}$ e obteve $\frac{5x^2 + 1}{2\sqrt{x}}$;
+   você obteve $2x\sqrt{x} + \frac{x^2+1}{2\sqrt{x}}$. Como decidir se algum dos
+   dois errou?
+8. Quando vale a pena expandir um produto antes de derivar, e quando não há
+   como?
+9. Por que $2 \times 30 = 60$ tem a unidade errada para uma taxa de
+   faturamento?
+10. No exemplo do custo médio, por que o custo marginal é igual ao custo médio
+    justamente no mínimo do custo médio?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Uma faixa é a taxa da mensalidade vezes a base de assinantes que já existe
+   ($p'q$); a outra é a taxa da base vezes a mensalidade que já é cobrada
+   ($pq'$). Têm a mesma cor porque são a mesma ideia com os papéis trocados:
+   um fator varia enquanto o outro fica parado.
+2. O cantinho dividido por $h$ se reescreve como $\frac{\Delta f}{h} \times
+   \Delta g$. O primeiro fator tende a $f'(x)$, um número; o segundo tende a
+   zero. O produto tende a zero. Num mês inteiro, $h = 1$ e $\Delta g = 30$
+   não é pequeno: o cantinho vale 60 e entra na conta.
+3. Derivável implica contínua, da lição de quando a derivada não existe. Se
+   $g'(x)$ existe, então $g(x+h) \to g(x)$, isto é, $\Delta g \to 0$.
+4. Do sinal do meio. Na regra do produto as duas parcelas se **somam**, e a
+   soma não depende da ordem. Na do quociente elas se **subtraem**, porque a
+   derivada do inverso é negativa, e trocar a ordem troca o sinal.
+5. Vem de isolar $\left(\frac{1}{g}\right)'$ em $g' \times \frac{1}{g} + g
+   \times \left(\frac{1}{g}\right)' = 0$: a parcela passa para o outro lado
+   com sinal trocado. Como $g^2 > 0$, a derivada de $\frac{1}{g}$ tem sempre
+   o sinal oposto ao de $g'$: onde $g$ sobe, $\frac{1}{g}$ desce.
+6. Da derivada do inverso, $-\frac{g'}{g^2}$, que já tinha $g^2$; e de juntar
+   $\frac{f'}{g}$ com ela num denominador comum, multiplicando a primeira
+   fração por $\frac{g}{g}$.
+7. Avaliando as duas expressões num mesmo ponto, por exemplo $x = 4$. As duas
+   dão $20{,}25$, então as duas estão certas: são a mesma função escrita de
+   dois jeitos. Se dessem números diferentes, ao menos uma estaria errada.
+8. Vale expandir quando os fatores são polinômios e o produto sai curto, como
+   $(2x+1)(x^2 - 3)$. Não há como expandir de forma útil quando um fator não
+   se combina com o outro: $(x^2 + 1)\sqrt{x}$, ou produtos com seno e
+   exponencial, que as próximas lições derivam.
+9. Reais por mês vezes assinantes por mês dá reais vezes assinantes por mês ao
+   quadrado. Uma taxa de faturamento é reais por mês. A unidade errada é o
+   sinal de que as duas taxas não deviam ser multiplicadas entre si.
+10. O numerador de $M'(q)$ é $C'(q)\,q - C(q)$. Ele é zero exatamente quando
+    $C'(q) = \frac{C(q)}{q} = M(q)$. Então o ponto em que o custo médio para de
+    cair é, pela própria fórmula, o ponto em que o marginal iguala o médio.
+
+</details>
+
+## 15. Exercícios
+
+### 1. Reconhecimento
+
+1. Diga, em cada caso, se a derivada pede a regra do produto, a do quociente,
+   ou nenhuma das duas: a) $(x^2 + 1)(x^3 - 2)$; b) $x^5$; c)
+   $\dfrac{x + 1}{x^2 + 3}$; d) $\sqrt{x}\,(x - 4)$; e) $\dfrac{x^3}{7}$.
+2. Sabe-se que $f(2) = 3$, $f'(2) = -1$, $g(2) = 5$ e $g'(2) = 4$. Calcule
+   $(fg)'(2)$ e $\left(\frac{f}{g}\right)'(2)$.
+3. Um retângulo tem lados $50$ e $200$. O primeiro cresce 1 e o segundo cresce
+   10. Escreva a variação da área como soma de duas faixas e um canto, e
+   confira somando com a área nova menos a antiga.
+4. Sem calcular, diga qual das expressões é a derivada de $\frac{x}{x^2+1}$:
+   a) $\dfrac{2x^2 - (x^2+1)}{(x^2+1)^2}$; b) $\dfrac{(x^2+1) - 2x^2}{(x^2+1)^2}$;
+   c) $\dfrac{(x^2+1) - 2x^2}{x^2+1}$. Justifique pela ordem e pelo denominador.
+5. Em $R'(t) = p'(t)\,q(t) + p(t)\,q'(t)$, com $p$ em reais por assinante e $q$
+   em assinantes, escreva a unidade de cada parcela e confira que as duas são
+   iguais.
+
+### 2. Explicação
+
+6. Explique, com o desenho do L, por que $(fg)' \neq f'g'$.
+7. Explique por que o cantinho $\Delta f\,\Delta g$ some quando o trecho
+   encolhe, citando a propriedade que faz $\Delta g$ ir a zero.
+8. Explique por que a ordem no numerador da regra do quociente importa, e como
+   o gráfico da função pode denunciar a ordem trocada.
+9. Explique, sem fórmula, por que a derivada de $\frac{1}{g}$ tem o sinal
+   contrário ao de $g'$.
+10. Um colega derivou $\dfrac{x^2 + 1}{3}$ pela regra do quociente e chegou a
+    $\dfrac{6x}{9}$. A resposta está certa? Havia um caminho mais curto?
+
+### 3. Aplicação direta
+
+11. Derive $x^2 \times x^3$ pela regra do produto e depois pela regra da
+    potência, e confira que dão o mesmo.
+12. Derive $f(x) = (2x + 1)(x^2 - 3)$ pela regra do produto, depois expandindo,
+    e calcule $f'(1)$.
+13. Derive $f(x) = x\sqrt{x}$ pela regra do produto. Depois escreva
+    $x\sqrt{x} = x^{3/2}$ e derive pela regra da potência. Compare.
+14. Derive $f(x) = \dfrac{x + 2}{x - 3}$ e calcule $f'(4)$.
+15. Derive $f(x) = \dfrac{1}{x^2 + 1}$ e calcule $f'(1)$.
+
+### 4. Variação
+
+16. Derive $f(x) = (x^2 + 3) \times \dfrac{1}{x}$ de duas formas: pela regra do
+    produto, e simplificando primeiro para $x + \frac{3}{x}$. Confira em
+    $x = 2$.
+17. Derive $f(x) = \dfrac{\sqrt{x}}{x + 1}$, simplifique, e encontre o ponto em
+    que a tangente é horizontal.
+18. Derive $f(x) = \dfrac{x^2 - 1}{x^2 + 1}$ e simplifique o numerador. Calcule
+    $f'(1)$ e $f'(2)$.
+19. Derive $g(x) = x\,(x+1)(x+2)$ pelo padrão de três fatores e confira
+    $g'(1)$ com a expansão.
+20. Escreva a reta tangente a $f(x) = \dfrac{x}{x^2 + 1}$ em $x = 2$.
+
+<details>
+<summary>Dica para o 17</summary>
+
+A derivada de $\sqrt{x}$ é $\frac{1}{2\sqrt{x}}$. Depois de aplicar a regra do
+quociente, multiplique numerador e denominador por $2\sqrt{x}$ para sumir com a
+fração dentro da fração. O numerador que sobra é do 1º grau.
+
+</details>
+
+### 5. Problema misto
+
+21. Uma loja vende um produto cujo preço está caindo, $p(t) = 50 - 0{,}5t$
+    reais, enquanto a quantidade vendida por mês cresce, $q(t) = 1000 + 40t$
+    unidades, com $t$ em meses. a) Escreva $R'(t)$ pela regra do produto. b)
+    Calcule $R'(0)$ e $R'(30)$. c) A partir de que mês o faturamento mensal
+    começa a cair? d) Confira o item (a) expandindo $R(t)$.
+22. Para $C(q) = 0{,}5q^2 + 20q + 800$, o custo médio é $M(q) = \frac{C(q)}{q}$.
+    Mostre que $M'(q) = \dfrac{C'(q)\,q - C(q)}{q^2}$ é zero exatamente quando
+    $C'(q) = M(q)$, e encontre esse $q$.
+23. Num tanque, a massa de sal é $m(t) = 20 + 0{,}5t$ gramas e o volume de água
+    é $V(t) = 100 + 2t$ litros, com $t$ em minutos. A concentração é
+    $c(t) = \frac{m(t)}{V(t)}$. a) Calcule $c'(t)$ e simplifique. b) Quanto vale
+    $c'(0)$, com unidade? c) A concentração está subindo ou descendo?
+24. Os lados de um retângulo variam com o tempo: $\ell(t) = 3 + 0{,}5t$ e
+    $w(t) = 2 + t$, em metros, com $t$ em segundos. a) Escreva a taxa de
+    variação da área $A(t) = \ell(t)\,w(t)$. b) Calcule $A'(2)$ com unidade.
+    c) Qual parcela da regra do produto corresponde a cada faixa do L?
+
+<details>
+<summary>Dica para o 22</summary>
+
+Não precisa calcular $M'$ inteiro. Olhe só para o numerador: ele é zero quando
+$C'(q)\,q = C(q)$. Divida os dois lados por $q$.
+
+</details>
+
+### 6. Justificativa
+
+25. A regra do produto também sai da definição, sem desenho. Parta de
+    $\dfrac{f(x+h)g(x+h) - f(x)g(x)}{h}$ e some e subtraia $f(x+h)\,g(x)$ no
+    numerador. Agrupe, divida cada grupo por $h$ e faça $h \to 0$. Onde entra
+    a continuidade de $f$?
+26. Mostre que, para três funções deriváveis, $(fgh)' = f'gh + fg'h + fgh'$,
+    aplicando a regra do produto a $(fg) \times h$.
+27. Use a regra do produto para mostrar que $(f^2)' = 2ff'$. Confira com
+    $f = x^3$: o resultado deve coincidir com a derivada de $x^6$.
+28. A derivada do inverso, $\left(\frac{1}{g}\right)' = -\frac{g'}{g^2}$, foi
+    obtida derivando $g \times \frac{1}{g} = 1$. Em que passo foi usada a
+    hipótese $g(x) \neq 0$, e o que acontece com a fórmula onde $g$ se anula?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) produto; b) nenhuma, é a regra da potência, $5x^4$; c) quociente; d)
+   produto; e) nenhuma, o denominador é constante: $\frac{1}{7}x^3$ deriva
+   como $\frac{3x^2}{7}$.
+2. $(fg)'(2) = f'(2)\,g(2) + f(2)\,g'(2) = (-1)(5) + (3)(4) = -5 + 12 = 7$.
+   $\left(\frac{f}{g}\right)'(2) = \frac{f'(2)\,g(2) - f(2)\,g'(2)}{g(2)^2} =
+   \frac{-5 - 12}{25} = -\frac{17}{25} = -0{,}68$. Se você encontrou $+0{,}28$
+   no segundo, trocou a ordem no numerador.
+3. Faixas: $50 \times 10 = 500$ e $200 \times 1 = 200$; canto: $1 \times 10 =
+   10$. Soma: $710$. Área nova menos antiga: $51 \times 210 - 50 \times 200 =
+   10710 - 10000 = 710$. Confere.
+4. A (b). O termo positivo deriva o numerador: $1 \times (x^2 + 1)$; o termo
+   que deriva o denominador, $x \times 2x = 2x^2$, entra subtraindo; e o
+   denominador é $(x^2+1)^2$. A (a) trocou a ordem; a (c) esqueceu o
+   quadrado.
+5. $p'q$: (reais por assinante, por mês) vezes assinantes dá reais por mês.
+   $pq'$: (reais por assinante) vezes (assinantes por mês) dá reais por mês.
+   Iguais, como duas parcelas de uma soma precisam ser.
+6. A variação de $fg$ é o L: duas faixas, $f\,\Delta g$ e $g\,\Delta f$, mais o
+   canto $\Delta f\,\Delta g$. Dividindo por $h$ e encolhendo o trecho, as
+   faixas viram $fg'$ e $gf'$ e o canto some. O produto das derivadas, $f'g'$,
+   é o que sobraria do canto se ele fosse dividido por $h$ duas vezes, o que
+   não acontece: o canto só é dividido por $h$ uma vez, e o outro fator vai a
+   zero. As faixas, que são a parte grande, nem aparecem em $f'g'$.
+7. $\frac{\Delta f\,\Delta g}{h} = \frac{\Delta f}{h} \times \Delta g$. O
+   primeiro fator tende a $f'(x)$, número; o segundo tende a zero porque $g$
+   é derivável e, por isso, contínua: $g(x+h) \to g(x)$. Número vezes zero é
+   zero. Num trecho de largura fixa, $\Delta g$ não é zero e o canto conta.
+8. O numerador é $f'g - fg'$, uma subtração; trocar a ordem dá o oposto. O
+   gráfico denuncia: se a função sobe num ponto e a derivada calculada saiu
+   negativa ali, a ordem foi trocada. Foi o caso de $\frac{x}{x+1}$, que sobe
+   e cuja derivada certa é $\frac{1}{(x+1)^2}$, positiva.
+9. Se $g$ cresce, o inverso $\frac{1}{g}$ encolhe: dividir 1 por um número
+   maior dá um resultado menor. Então onde $g'$ é positiva, a derivada de
+   $\frac{1}{g}$ é negativa, e vice-versa. O $g^2$ no denominador é sempre
+   positivo e não altera o sinal.
+10. Está certa: $\frac{6x}{9} = \frac{2x}{3}$. Mas o caminho curto era
+    escrever $\frac{1}{3}(x^2 + 1)$ e usar a constante multiplicativa,
+    $\frac{1}{3} \times 2x$. A regra do quociente só é necessária quando uma
+    função está no denominador.
+11. Produto: $2x \times x^3 + x^2 \times 3x^2 = 2x^4 + 3x^4 = 5x^4$. Potência:
+    $x^2 \times x^3 = x^5$, derivada $5x^4$. Iguais.
+12. Produto: $2(x^2 - 3) + (2x + 1)(2x) = 2x^2 - 6 + 4x^2 + 2x = 6x^2 + 2x - 6$.
+    Expansão: $2x^3 + x^2 - 6x - 3$, derivada $6x^2 + 2x - 6$. $f'(1) = 6 + 2 -
+    6 = 2$; o quociente centrado dá $2{,}000$.
+13. Produto: $1 \times \sqrt{x} + x \times \frac{1}{2\sqrt{x}} = \sqrt{x} +
+    \frac{\sqrt{x}}{2} = \frac{3}{2}\sqrt{x}$ (o segundo termo usou
+    $\frac{x}{\sqrt{x}} = \sqrt{x}$). Potência: $\frac{3}{2}x^{1/2} =
+    \frac{3}{2}\sqrt{x}$. Iguais; em $x = 4$ valem 3.
+14. $\frac{1 \times (x-3) - (x+2) \times 1}{(x-3)^2} = \frac{x - 3 - x - 2}{(x-3)^2}
+    = \frac{-5}{(x-3)^2}$. $f'(4) = -5$. Sempre negativa: a função desce em
+    todo o domínio. Se você encontrou $+5$, trocou a ordem.
+15. Pela derivada do inverso, com $g = x^2 + 1$: $-\frac{2x}{(x^2+1)^2}$.
+    $f'(1) = -\frac{2}{4} = -0{,}5$.
+16. Produto: $2x \times \frac{1}{x} + (x^2 + 3)\left(-\frac{1}{x^2}\right) =
+    2 - 1 - \frac{3}{x^2} = 1 - \frac{3}{x^2}$. Simplificando antes:
+    $x + \frac{3}{x}$ tem derivada $1 - \frac{3}{x^2}$. Iguais; em $x = 2$
+    valem $\frac{1}{4}$.
+17. Quociente: $\dfrac{\frac{1}{2\sqrt{x}}(x+1) - \sqrt{x}}{(x+1)^2}$.
+    Multiplicando numerador e denominador por $2\sqrt{x}$:
+    $\dfrac{(x + 1) - 2x}{2\sqrt{x}\,(x+1)^2} = \dfrac{1 - x}{2\sqrt{x}\,(x+1)^2}$.
+    Tangente horizontal onde $1 - x = 0$: em $x = 1$, no ponto
+    $\left(1, \frac{1}{2}\right)$. Conferindo em $x = 4$: a fórmula dá
+    $\frac{-3}{2 \times 2 \times 25} = -0{,}03$, e o quociente centrado também.
+18. $\frac{2x(x^2+1) - (x^2-1)\,2x}{(x^2+1)^2} = \frac{2x^3 + 2x - 2x^3 + 2x}{(x^2+1)^2}
+    = \frac{4x}{(x^2+1)^2}$. $f'(1) = \frac{4}{4} = 1$; $f'(2) = \frac{8}{25} =
+    0{,}32$.
+19. $g' = 1 \times (x+1)(x+2) + x \times 1 \times (x+2) + x(x+1) \times 1$. Em
+    $x = 1$: $6 + 3 + 2 = 11$. Expansão: $x^3 + 3x^2 + 2x$, derivada
+    $3x^2 + 6x + 2$, que em 1 dá 11.
+20. $f(2) = \frac{2}{5} = 0{,}4$. Pela (b) do exercício 4,
+    $f'(x) = \frac{1 - x^2}{(x^2+1)^2}$, e $f'(2) = \frac{-3}{25} = -0{,}12$.
+    Reta: $y = 0{,}4 - 0{,}12(x - 2) = -0{,}12x + 0{,}64$. Conferindo: em
+    $x = 2$ dá $0{,}4$, o ponto de contato.
+21. a) $R'(t) = (-0{,}5)(1000 + 40t) + (50 - 0{,}5t)(40) = -500 - 20t + 2000 -
+    20t = 1500 - 40t$. b) $R'(0) = 1500$ e $R'(30) = 300$ reais por mês.
+    c) $R'(t) = 0$ em $t = 37{,}5$; a partir daí a derivada fica negativa e o
+    faturamento cai. Até lá, a queda de preço é mais do que compensada pelo
+    crescimento das vendas. d) $R(t) = 50000 + 2000t - 500t - 20t^2 = 50000 +
+    1500t - 20t^2$, derivada $1500 - 40t$. Confere.
+22. O numerador $C'(q)\,q - C(q)$ é zero quando $C'(q)\,q = C(q)$, isto é,
+    dividindo por $q$, quando $C'(q) = \frac{C(q)}{q} = M(q)$. Com $C'(q) = q +
+    20$: $(q + 20)q = 0{,}5q^2 + 20q + 800$ dá $0{,}5q^2 = 800$, $q^2 = 1600$,
+    $q = 40$. É o mínimo do custo médio do exemplo 5.
+23. a) $c'(t) = \frac{0{,}5(100 + 2t) - (20 + 0{,}5t) \times 2}{(100 + 2t)^2} =
+    \frac{50 + t - 40 - t}{(100+2t)^2} = \frac{10}{(100 + 2t)^2}$. b) $c'(0) =
+    \frac{10}{10000} = 0{,}001$ grama por litro, por minuto. c) Subindo: a
+    derivada é positiva para todo $t$. Faz sentido: o sal entra a 0,5 g por
+    minuto numa concentração de 0,25 g/L, acima da concentração atual de
+    0,2 g/L, então a mistura fica mais salgada. Conferindo: $c(0) = 0{,}2$ e
+    $c(10) \approx 0{,}208$.
+24. a) $A'(t) = 0{,}5\,(2 + t) + (3 + 0{,}5t) \times 1 = 4 + t$. b) $A'(2) = 6$
+    metros quadrados por segundo. c) $\ell'\,w$ é a faixa que o lado $\ell$
+    acrescenta ao longo de $w$; $\ell\,w'$ é a faixa que $w$ acrescenta ao
+    longo de $\ell$. Expandindo, $A(t) = 6 + 4t + 0{,}5t^2$ e $A'(t) = 4 + t$.
+25. Somando e subtraindo $f(x+h)g(x)$:
+    $\frac{f(x+h)g(x+h) - f(x+h)g(x) + f(x+h)g(x) - f(x)g(x)}{h}$. Agrupando,
+    $f(x+h)\,\frac{g(x+h) - g(x)}{h} + g(x)\,\frac{f(x+h) - f(x)}{h}$. Quando
+    $h \to 0$, os quocientes tendem a $g'(x)$ e $f'(x)$, e $f(x+h) \to f(x)$
+    **porque $f$ é contínua**, o que a derivabilidade garante. Resultado:
+    $f g' + g f'$. É o mesmo L, com o cantinho já embutido no primeiro
+    agrupamento: $f(x+h)$ em vez de $f(x)$ carrega o $\Delta f$ extra, e a
+    continuidade é o que o faz sumir.
+26. $(fg \times h)' = (fg)'\,h + fg\,h'$, e $(fg)' = f'g + fg'$. Substituindo:
+    $f'gh + fg'h + fgh'$. Cada fator deriva uma vez enquanto os outros dois
+    ficam parados.
+27. $(f \times f)' = f'f + ff' = 2ff'$. Com $f = x^3$: $2x^3 \times 3x^2 = 6x^5$,
+    que é a derivada de $x^6$ pela regra da potência. A lição de [regra da
+    cadeia](./regra-da-cadeia) vai generalizar isso para qualquer potência de
+    função.
+28. No passo de dividir os dois lados por $g$ para isolar
+    $\left(\frac{1}{g}\right)'$: dividir por zero não existe. Onde $g(x) = 0$ a
+    função $\frac{1}{g}$ nem está definida, então não há derivada a calcular; e
+    a fórmula também não existe ali, porque o denominador $g^2$ zera. A
+    hipótese não é um detalhe técnico: é o domínio da função.
+
+</details>
+
+## 16. Revisão curta
+
+- A derivada de um produto **não** é o produto das derivadas. Ela é o L:
+  $(fg)' = f'g + fg'$, cada fator derivando uma vez enquanto o outro fica
+  parado.
+- O desenho é o de $(a + b)^2$ com outro significado: duas faixas e um canto.
+  O canto $\Delta f\,\Delta g$ some na derivada porque, dividido por $h$, vira
+  um número vezes uma variação que vai a zero, e isso usa que derivável
+  implica contínua.
+- A derivada do inverso é $\left(\frac{1}{g}\right)' = -\frac{g'}{g^2}$, obtida
+  derivando $g \times \frac{1}{g} = 1$; o sinal negativo diz que o inverso
+  desce onde a função sobe.
+- A regra do quociente é a do produto aplicada a $f \times \frac{1}{g}$:
+  $\left(\frac{f}{g}\right)' = \frac{f'g - fg'}{g^2}$. A ordem no numerador
+  importa, o denominador é ao quadrado, e denominador constante dispensa a
+  regra.
+- Quando os dois caminhos existem, expandir e derivar termo a termo é uma
+  conferência; quando não existem, a regra é o único caminho. E, sempre, o
+  quociente centrado com $h = 0{,}001$ é o gabarito na mão.
+
+Antes de avançar, verifique se você consegue fazer três coisas: derivar
+$(x^2 + 1)\sqrt{x}$ sem expandir e conferir o resultado em $x = 4$; explicar,
+com o L, por que $2 \times 30$ não é a taxa do faturamento; e dizer qual
+parcela da regra do quociente entra com sinal negativo, e por quê.
+
+A lição seguinte, [regra da cadeia](./regra-da-cadeia), trata da última
+operação que falta: a composição. Com ela, o capítulo passa a derivar
+qualquer função construída a partir das famílias que o curso estudou.

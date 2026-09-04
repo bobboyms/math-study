@@ -1,0 +1,1119 @@
+---
+title: "Teorema do confronto: o limite de sen x sobre x"
+sidebar_label: Teorema do confronto
+---
+
+import GeoFigure from '@site/src/components/GeoFigure';
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Teorema do confronto: o limite de $\frac{\sen x}{x}$
+
+## 1. Problema motivador: uma promessa de dois capítulos atrás
+
+A lição de [radianos](../geometria/radianos) terminou com uma tabela. Ela
+comparava o seno de um ângulo pequeno com o próprio ângulo, medido em
+radianos:
+
+| $x$ (rad) | $\sen x$ | razão $\frac{\sen x}{x}$ |
+|---:|---:|---:|
+| $0{,}5$ | $0{,}47943$ | $0{,}95885$ |
+| $0{,}1$ | $0{,}09983$ | $0{,}99833$ |
+| $0{,}01$ | $0{,}01000$ | $0{,}99998$ |
+
+A razão parece se aproximar de 1. A lição disse isso, disse que era o motivo
+profundo de o cálculo exigir radianos, e avisou: “a demonstração fica para o
+cálculo”. Esta página é a demonstração.
+
+Antes dela, vale dizer por que a pergunta importa fora da matemática. Um cabo
+de 80 metros está inclinado 0,1 radiano em relação ao chão. A subida vertical
+que ele produz é $80 \times \sen(0{,}1)$ metros. Um técnico, com pressa, faz a
+conta com o ângulo no lugar do seno: $80 \times 0{,}1 = 8$ metros. Ele errou por
+1,3 centímetro, porque $80 \times \sen(0{,}1) = 7{,}9867$. Em 80 metros, esse
+erro não importa.
+
+Mas duas perguntas ficam:
+
+- **Até que ângulo** a troca de $\sen x$ por $x$ é segura?
+- E **qual é o tamanho do erro**, sem precisar calcular o seno para conferir?
+
+A tabela não responde a nenhuma das duas. Ela mostra três números e sugere uma
+tendência. Não diz que a razão chega a 1, e não a 0,99999; não diz o que
+acontece em $x = 0{,}3$, que não está na tabela; e não diz nada sobre $x$
+negativo. Esta página responde às duas perguntas com uma única desigualdade, e
+a ferramenta que transforma a desigualdade em limite chama-se **teorema do
+confronto**.
+
+## 2. Mapa das ideias
+
+- **função presa** — uma função que fica, em todo ponto perto de $a$, entre
+  outras duas: $g(x) \le f(x) \le h(x)$;
+- **teorema do confronto** — se as duas de fora têm o mesmo limite $L$ em $a$,
+  a presa também tem limite $L$;
+- **a cadeia geométrica** — para $0 < x < \frac{\pi}{2}$, vale
+  $\sen x < x < \tg x$, e ela sai comparando três áreas no ciclo
+  trigonométrico;
+- **limite fundamental** — $\lim_{x \to 0} \frac{\sen x}{x} = 1$;
+- **corolário** — $\lim_{x \to 0} \frac{1 - \cos x}{x} = 0$.
+
+Exemplo do teorema: $x^2 \sen\frac{1}{x}$ fica presa entre $-x^2$ e $x^2$, que
+tendem a 0; por isso ela tende a 0. Contraexemplo: $\sen\frac{1}{x}$ fica presa
+entre $-1$ e $1$, mas os dois de fora têm limites diferentes, e o teorema não
+decide nada.
+
+## 3. Para que serve
+
+- justificar a aproximação $\sen x \approx x$, que engenharia e física usam em
+  pêndulos, oscilações pequenas e ótica, e dizer o tamanho do erro;
+- calcular limites que a substituição direta trava e a fatoração não resolve,
+  porque não há polinômio para fatorar;
+- provar, na lição de [derivadas de seno e cosseno](./derivadas-de-seno-e-cosseno),
+  que a derivada do seno é o cosseno — a demonstração usa exatamente os dois
+  limites desta página;
+- e, no método, mostrar uma forma de achar um limite **sem calcular a
+  função**: prendendo-a entre duas outras que se sabe calcular.
+
+Dentro do capítulo, esta é a última lição da Parte I. Ela fecha o vocabulário
+de limite com uma técnica nova, o confronto, e entrega o resultado de que a
+Parte II vai precisar.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [Radianos](../geometria/radianos): na circunferência de raio 1, o que
+o número $x$ mede?** Duas coisas ao mesmo tempo. Ele é o ângulo central em
+radianos e é o comprimento do arco, porque $s = r\theta$ vira $s = \theta$
+quando $r = 1$. Esse é o motivo de a página inteira exigir radianos: em graus,
+o arco de um ângulo $x$ mede $\frac{\pi}{180} x$, e o fator sobra em toda
+conta.
+
+**2. De [Arco e setor circular](../geometria/arco-e-setor-circular): qual é a
+área de um setor de ângulo $\theta$ num círculo de raio $r$?**
+$A = \frac{1}{2} r^2 \theta$, com $\theta$ em radianos. Com $r = 1$, a área do
+setor de ângulo $x$ é $\frac{x}{2}$.
+
+**3. De [Redução ao 1º quadrante](../geometria/reducao-ao-primeiro-quadrante):
+onde a tangente aparece no ciclo?** Na reta vertical $x = 1$. Prolongando o
+lado do ângulo $\theta$ até cruzar essa reta, a altura do ponto de cruzamento
+é $\tg\theta$. A justificativa foi semelhança de triângulos.
+
+**4. De [O ciclo trigonométrico](../geometria/ciclo-trigonometrico): o que
+acontece com seno e cosseno quando o ângulo troca de sinal?** O cosseno não
+muda, $\cos(-x) = \cos x$; o seno troca de sinal, $\sen(-x) = -\sen x$. É o
+que vai estender a demonstração para $x$ negativo.
+
+**5. De [Limite de uma função](./limite-de-uma-funcao) e de
+[Calculando limites](./calculo-de-limites): o que é preciso para o limite
+existir, e o que se pode fazer com limites conhecidos?** O limite existe
+quando os dois lados concordam. E o limite de um produto é o produto dos
+limites, o de um quociente é o quociente dos limites quando o de baixo não é
+zero.
+
+**6. De [Continuidade](./continuidade): quanto vale $\lim_{x \to 0} \cos x$?**
+O cosseno é contínuo, então o limite é o valor da função: $\cos 0 = 1$.
+
+**7. De [Racionalizar denominadores](../algebra/racionalizacao): o que o
+conjugado faz?** Multiplica $(a - b)$ por $(a + b)$ e produz $a^2 - b^2$, sem
+termo do meio. Aqui ele vai transformar $1 - \cos x$ em $\sen^2 x$.
+
+O item 2 é o que sustenta a demonstração. Se a fórmula da área do setor não
+estiver disponível na memória, releia aquela página antes de seguir: a
+desigualdade central desta lição é uma comparação de três áreas, e uma delas é
+a do setor.
+
+## 5. Intuição: o que está preso entre dois que chegam também chega
+
+Imagine três caminhões numa estrada de mão única, sem ultrapassagem. O do meio
+está sempre entre os outros dois: nunca à frente do primeiro, nunca atrás do
+terceiro. Se o primeiro e o terceiro chegam ao mesmo pedágio, o do meio chega
+ao mesmo pedágio — não há para onde ir.
+
+Agora a correspondência, parte por parte:
+
+- os três caminhões são três funções, $g$, $f$ e $h$;
+- “o do meio está sempre entre os outros dois” é $g(x) \le f(x) \le h(x)$;
+- “os dois de fora chegam ao mesmo pedágio” é $g$ e $h$ terem o mesmo limite
+  $L$ quando $x$ se aproxima de $a$;
+- a conclusão, “o do meio chega ao mesmo pedágio”, é $f$ ter limite $L$.
+
+E onde a analogia deixa de valer: se o primeiro caminhão vai para um pedágio
+e o terceiro para outro, o do meio pode parar em qualquer lugar entre os dois,
+ou ficar oscilando. Ficar preso só decide o destino quando os dois de fora
+têm o **mesmo** destino.
+
+O ganho do método é este: **não precisamos saber calcular $f$**. Precisamos
+saber calcular as duas de fora e garantir que $f$ está entre elas. Para
+$\frac{\sen x}{x}$, é exatamente o que vamos fazer — ninguém calcula esse
+quociente diretamente em $x = 0$, mas dá para prendê-lo entre $\cos x$ e $1$.
+
+## 6. Modelo visual: a função presa
+
+O desenho abaixo mostra $\frac{\sen x}{x}$ presa entre $\cos x$ e a reta
+$y = 1$, num intervalo em torno de zero. A bola vazia em $(0, 1)$ lembra que
+a função não existe ali — e que isso não importa para o limite, que só olha a
+vizinhança.
+
+<CartesianPlane
+  xMin={-1.7}
+  xMax={1.7}
+  yMin={-0.2}
+  yMax={1.25}
+  xUnit={130}
+  yUnit={200}
+  xStep={0.5}
+  yStep={0.25}
+  xTicks={[
+    {at: -1.5708, label: '-\\frac{\\pi}{2}'},
+    {at: -1, label: '-1'},
+    {at: 1, label: '1'},
+    {at: 1.5708, label: '\\frac{\\pi}{2}'},
+  ]}
+  yTicks={[{at: 0.5, label: '0{,}5'}, {at: 1, label: '1'}]}
+  functions={[
+    {f: (x) => Math.cos(x), tone: 3},
+    {f: (x) => (Math.abs(x) < 1e-9 ? 1 : Math.sin(x) / x), tone: 1},
+  ]}
+  lines={[{m: 0, n: 1, dashed: true, tone: 3}]}
+  points={[{at: [0, 1], open: true, tone: 1, r: 5}]}
+  labels={[
+    {at: [1.15, 1.09], math: 'y = 1', tone: 3, fontSize: 13},
+    {at: [1.25, 0.22], math: '\\cos x', tone: 3, fontSize: 13},
+    {at: [-1.05, 0.93], math: '\\dfrac{\\sen x}{x}', tone: 1, fontSize: 13, dy: -14},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Entre −π/2 e π/2, a curva de sen x / x fica acima do cosseno e abaixo da reta y = 1. Perto de zero, as duas de fora se encontram em 1, e a curva do meio é obrigada a ir junto."
+/>
+
+Duas observações sobre a figura:
+
+- as três curvas **se encostam** em $x = 0$: o cosseno vale 1 ali, a reta vale
+  1, e a curva do meio tem o buraco exatamente na altura 1. É o encontro que
+  o teorema exige;
+- longe de zero as duas de fora se afastam, e a curva do meio tem espaço para
+  se mover. Isso não atrapalha em nada: o limite só olha o que acontece perto
+  de zero.
+
+A figura mostra, mas não prova. Ela foi desenhada com o computador calculando
+$\frac{\sen x}{x}$ ponto a ponto — o que é justamente a tabela, com mais
+pontos. A prova de que a curva do meio está mesmo entre as outras duas é a
+seção 8.
+
+## 7. O teorema do confronto
+
+### 7.1 Enunciado
+
+> **Teorema do confronto.** Suponha que, para todo $x$ perto de $a$ (mas não
+> necessariamente em $a$), valha
+> $$g(x) \le f(x) \le h(x),$$
+> e que $\lim_{x \to a} g(x) = \lim_{x \to a} h(x) = L$. Então
+> $$\lim_{x \to a} f(x) = L.$$
+
+Três detalhes do enunciado carregam conteúdo:
+
+- **“para todo $x$ perto de $a$”**: a desigualdade precisa valer numa
+  vizinhança de $a$, dos dois lados. Não precisa valer longe de $a$, e não
+  precisa valer em $a$;
+- **“o mesmo $L$”**: as duas de fora precisam ir para o mesmo lugar. É a
+  condição que o contraexemplo abaixo viola;
+- **a conclusão é sobre $f$**, uma função que talvez não saibamos calcular.
+  É isso que torna o teorema útil.
+
+O teorema também se chama **teorema do sanduíche**, porque $f$ fica entre
+duas fatias. Os dois nomes aparecem nos livros.
+
+### 7.2 Exemplo: uma função que oscila sem parar
+
+Considere $f(x) = x^2 \sen\frac{1}{x}$, para $x \neq 0$. Quando $x$ se aproxima
+de zero, $\frac{1}{x}$ cresce sem limite, e o seno de um número que cresce sem
+limite oscila entre $-1$ e $1$ cada vez mais depressa. Uma tabela não ajuda:
+
+| $x$ | $\sen\frac{1}{x}$ | $x^2 \sen\frac{1}{x}$ |
+|---:|---:|---:|
+| $0{,}1$ | $-0{,}5440$ | $-0{,}0054$ |
+| $0{,}01$ | $-0{,}5064$ | $-0{,}00005$ |
+| $0{,}001$ | $0{,}8269$ | $0{,}0000008$ |
+
+A coluna do meio pula sem padrão. A da direita parece ir para zero, mas com o
+sinal trocando. Como decidir?
+
+Pelo confronto. O seno de qualquer número está entre $-1$ e $1$:
+
+$$
+-1 \le \sen\frac{1}{x} \le 1.
+$$
+
+Multiplique os três membros por $x^2$. Como $x^2 > 0$ para $x \neq 0$,
+multiplicar por ele **não inverte** as desigualdades:
+
+$$
+-x^2 \le x^2 \sen\frac{1}{x} \le x^2.
+$$
+
+As duas de fora são polinômios, e $\lim_{x \to 0} (-x^2) = 0$ e
+$\lim_{x \to 0} x^2 = 0$. Mesmo limite. Logo
+
+$$
+\lim_{x \to 0} x^2 \sen\frac{1}{x} = 0.
+$$
+
+<CartesianPlane
+  xMin={-0.42}
+  xMax={0.42}
+  yMin={-0.2}
+  yMax={0.2}
+  xUnit={520}
+  yUnit={520}
+  xStep={0.1}
+  yStep={0.1}
+  xTicks={[{at: -0.3, label: '-0{,}3'}, {at: 0.3, label: '0{,}3'}]}
+  yTicks={[{at: -0.1, label: '-0{,}1'}, {at: 0.1, label: '0{,}1'}]}
+  functions={[
+    {f: (x) => x * x, tone: 3, dashed: true},
+    {f: (x) => -x * x, tone: 3, dashed: true},
+    {f: (x) => (Math.abs(x) < 1e-6 ? 0 : x * x * Math.sin(1 / x)), tone: 1},
+  ]}
+  labels={[
+    {at: [0.33, 0.13], math: 'y = x^2', tone: 3, fontSize: 13},
+    {at: [0.33, -0.13], math: 'y = -x^2', tone: 3, fontSize: 13},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A curva oscila cada vez mais depressa perto de zero, mas está presa entre as duas parábolas, e as duas se fecham em zero."
+/>
+
+Repare no que **não** fizemos: não calculamos $\sen\frac{1}{x}$ em ponto
+nenhum, e não precisávamos. Prender a função bastou-lhe a informação que
+tínhamos sobre ela — o seno nunca sai de $[-1, 1]$.
+
+### 7.3 Contraexemplo: prender não é suficiente
+
+Agora tire o $x^2$: $f(x) = \sen\frac{1}{x}$. Ela também está presa,
+
+$$
+-1 \le \sen\frac{1}{x} \le 1,
+$$
+
+mas os limites das duas de fora são $-1$ e $1$, diferentes. O teorema **não se
+aplica**, e não conclui nada. E de fato o limite não existe: a tabela acima
+mostra a função pulando de $-0{,}54$ para $0{,}83$ conforme $x$ se aproxima de
+zero, e ela continua pulando por mais perto que se chegue.
+
+A lição do contraexemplo é a terceira condição do enunciado. Prender uma função
+entre duas outras só decide o limite quando as duas de fora **concordam**.
+
+## 8. A cadeia geométrica: seno, arco e tangente em ordem
+
+Esta é a parte central da página, e a mais difícil. Se ela não fechar na
+primeira leitura, isso é esperado — releia depois de acompanhar o Exemplo 1.
+
+### 8.1 O desenho
+
+Tome um ângulo $x$ com $0 < x < \frac{\pi}{2}$ no ciclo trigonométrico. Marque:
+
+- $O$, o centro;
+- $A = (1, 0)$, o ponto onde o ciclo cruza o eixo horizontal;
+- $P = (\cos x, \sen x)$, o ponto do ciclo no ângulo $x$;
+- $T = (1, \tg x)$, o ponto em que o lado do ângulo, prolongado, cruza a reta
+  vertical $x = 1$.
+
+<GeoFigure
+  unit={230}
+  padding={52}
+  bounds={[-0.1, -0.14, 1.16, 0.96]}
+  arcs={[{at: [0, 0], r: 1, from: -6, to: 96, tone: 0}]}
+  segments={[
+    {from: [0, 0], to: [1, 0.8391], tone: 0},
+    {from: [0, 0], to: [1, 0], tone: 0},
+    {from: [1, 0], to: [1, 0.8391], tone: 3},
+    {from: [0.7660, 0], to: [0.7660, 0.6428], tone: 2},
+    {from: [0, 0], to: [0.7660, 0], tone: 1},
+  ]}
+  angles={[
+    {at: [0, 0], from: [1, 0], to: [0.766, 0.6428], label: 'x', tone: 0, radius: 40, labelRadius: 56},
+    {at: [0.766, 0], from: [0, 0], to: [0.766, 0.6428], right: true, tone: 0},
+    {at: [1, 0], from: [0, 0], to: [1, 0.8391], right: true, tone: 0},
+  ]}
+  points={[
+    {at: [0, 0], label: 'O', place: 'below-left', tone: 0},
+    {at: [1, 0], label: 'A', place: 'below-right', tone: 0},
+    {at: [0.766, 0.6428], label: 'P', place: 'above-left', tone: 0},
+    {at: [1, 0.8391], label: 'T', place: 'above-right', tone: 0},
+  ]}
+  labels={[
+    {at: [0.383, 0], math: '\\cos x', tone: 1, dy: 18, fontSize: 13},
+    {at: [0.766, 0.32], math: '\\sen x', tone: 2, dx: -28, fontSize: 13},
+    {at: [1, 0.42], math: '\\tg x', tone: 3, dx: 30, fontSize: 13},
+  ]}
+  caption="Raio 1. A altura de P é sen x, a posição horizontal de P é cos x, e a altura de T é tg x — os três segmentos coloridos são os três valores, sem nenhuma divisão."
+/>
+
+Os três segmentos coloridos são as três funções trigonométricas lidas como
+comprimentos, que é o que a definição no ciclo permite: com raio 1, seno é
+altura, cosseno é posição horizontal, e a tangente é a altura de $T$, pela
+semelhança que a lição de redução ao 1º quadrante demonstrou.
+
+### 8.2 Três regiões, uma dentro da outra
+
+Agora olhe para três regiões do mesmo desenho:
+
+1. o **triângulo pequeno** $OAP$, de vértices $O$, $A$ e $P$;
+2. o **setor circular** $OAP$, a fatia do círculo entre os raios $OA$ e $OP$;
+3. o **triângulo grande** $OAT$, de vértices $O$, $A$ e $T$.
+
+<GeoFigure
+  unit={230}
+  padding={52}
+  bounds={[-0.1, -0.14, 1.16, 0.96]}
+  polygons={[
+    {points: [[0, 0], [1, 0], [0.7660, 0.6428]], tone: 1},
+    {
+      points: Array.from({length: 25}, (_, i) => {
+        const t = ((40 * i) / 24) * (Math.PI / 180);
+        return [Math.cos(t), Math.sin(t)];
+      }),
+      tone: 2,
+    },
+    {
+      points: [
+        [1, 0],
+        [1, 0.8391],
+        ...Array.from({length: 25}, (_, i) => {
+          const t = ((40 * (24 - i)) / 24) * (Math.PI / 180);
+          return [Math.cos(t), Math.sin(t)];
+        }),
+      ],
+      tone: 3,
+    },
+  ]}
+  arcs={[{at: [0, 0], r: 1, from: -6, to: 96, tone: 0}]}
+  segments={[
+    {from: [0, 0], to: [1, 0.8391], tone: 0},
+    {from: [0, 0], to: [1, 0], tone: 0},
+  ]}
+  points={[
+    {at: [0, 0], label: 'O', place: 'below-left', tone: 0},
+    {at: [1, 0], label: 'A', place: 'below-right', tone: 0},
+    {at: [0.766, 0.6428], label: 'P', place: 'above-left', tone: 0},
+    {at: [1, 0.8391], label: 'T', place: 'above-right', tone: 0},
+  ]}
+  caption="As três regiões encaixadas. O triângulo pequeno é a parte azul. O setor é a parte azul mais a laranja. O triângulo grande é tudo: azul, laranja e verde."
+/>
+
+O triângulo pequeno **cabe dentro** do setor: os dois têm os lados $OA$ e $OP$,
+e o terceiro lado do triângulo é a corda $AP$, que fica por dentro do arco. O
+setor **cabe dentro** do triângulo grande: os dois começam nos mesmos raios, e
+o arco fica por dentro do segmento $AT$, porque o ciclo está inteiro à
+esquerda da reta $x = 1$.
+
+Quando uma figura cabe dentro de outra, a área da primeira é menor que a da
+segunda. Então:
+
+$$
+\text{área}(\triangle OAP) < \text{área}(\text{setor } OAP) < \text{área}(\triangle OAT).
+$$
+
+Na figura, isso é: azul é menor que azul mais laranja, que é menor que azul
+mais laranja mais verde. Não há o que discutir aí. O trabalho é escrever as
+três áreas.
+
+### 8.3 As três áreas
+
+**Triângulo pequeno $OAP$.** Tome como base o lado $OA$, que mede 1. A altura
+relativa a essa base é a distância de $P$ até a reta $OA$, que é o eixo
+horizontal — ou seja, é a altura de $P$, que vale $\sen x$. Área de triângulo é
+metade da base vezes a altura:
+
+$$
+\text{área}(\triangle OAP) = \frac{1 \times \sen x}{2} = \frac{\sen x}{2}.
+$$
+
+**Setor $OAP$.** Raio 1 e ângulo $x$ em radianos. Pela fórmula da lição de
+setor, $A = \frac{1}{2} r^2 \theta$:
+
+$$
+\text{área}(\text{setor } OAP) = \frac{1}{2} \times 1^2 \times x = \frac{x}{2}.
+$$
+
+**Triângulo grande $OAT$.** A mesma base $OA = 1$. Agora a altura é a de $T$,
+que vale $\tg x$:
+
+$$
+\text{área}(\triangle OAT) = \frac{1 \times \tg x}{2} = \frac{\tg x}{2}.
+$$
+
+Substituindo as três na desigualdade das áreas:
+
+$$
+\frac{\sen x}{2} < \frac{x}{2} < \frac{\tg x}{2}.
+$$
+
+Multiplicando os três membros por 2, que é positivo e não inverte nada:
+
+> $$\sen x < x < \tg x, \qquad 0 < x < \frac{\pi}{2}.$$
+
+**Conferindo com um número**, porque toda desigualdade merece um teste. Em
+$x = 0{,}5$ rad:
+
+| região | área | valor |
+|---|---|---:|
+| triângulo pequeno | $\frac{\sen 0{,}5}{2}$ | $0{,}2397$ |
+| setor | $\frac{0{,}5}{2}$ | $0{,}2500$ |
+| triângulo grande | $\frac{\tg 0{,}5}{2}$ | $0{,}2732$ |
+
+Crescentes, como a figura exige. E os três comprimentos, sem o meio:
+$\sen 0{,}5 = 0{,}4794$, $x = 0{,}5$, $\tg 0{,}5 = 0{,}5463$. Confere.
+
+Aqui está o papel dos radianos, e vale parar nele. A área do setor é
+$\frac{x}{2}$ **porque** $x$ é o ângulo em radianos. Em graus, a área seria
+$\frac{\pi}{360} x$, e a cadeia sairia como $\sen x < \frac{\pi}{180} x$, com
+o fator de conversão pendurado no meio. O limite final não daria 1, e sim
+$\frac{\pi}{180} \approx 0{,}01745$. A lição de radianos avisou isso; esta é a
+conta que mostra de onde o número vem.
+
+### 8.4 Da cadeia de comprimentos à cadeia de razões
+
+Queremos prender $\frac{\sen x}{x}$. A cadeia que temos prende $x$, não a
+razão. Dois movimentos a transformam na que queremos, e cada um precisa de
+justificativa.
+
+**Primeiro movimento: dividir tudo por $\sen x$.** Para $0 < x < \frac{\pi}{2}$,
+o seno é positivo — é a altura de um ponto no primeiro quadrante. Dividir os
+três membros de uma desigualdade por um número **positivo** mantém o sentido
+das desigualdades; só a divisão por número negativo inverteria, como a lição
+de [inequações](../equacoes/inequacoes-do-primeiro-grau) ensinou. Então:
+
+$$
+\frac{\sen x}{\sen x} < \frac{x}{\sen x} < \frac{\tg x}{\sen x}.
+$$
+
+O primeiro membro é 1. O terceiro simplifica: $\tg x = \frac{\sen x}{\cos x}$,
+logo
+
+$$
+\frac{\tg x}{\sen x} = \frac{\sen x}{\cos x} \times \frac{1}{\sen x} = \frac{1}{\cos x}.
+$$
+
+O que mudou na escrita: os três membros foram divididos pelo mesmo número. O
+que permaneceu: a ordem entre eles, porque o divisor é positivo. A cadeia fica
+
+$$
+1 < \frac{x}{\sen x} < \frac{1}{\cos x}.
+$$
+
+**Segundo movimento: inverter as três frações.** Temos $\frac{x}{\sen x}$ no
+meio e queremos $\frac{\sen x}{x}$, que é o inverso. Inverter é legítimo, mas
+tem um preço: **inverter números positivos troca a ordem**. Se $2 < 3$, então
+$\frac{1}{2} > \frac{1}{3}$. O maior número tem o menor inverso. Os três membros
+são positivos (1, um quociente de positivos, e $\frac{1}{\cos x}$ com cosseno
+positivo no primeiro quadrante), então invertendo:
+
+$$
+1 > \frac{\sen x}{x} > \cos x.
+$$
+
+Lendo da direita para a esquerda, para deixar o menor à esquerda:
+
+> $$\cos x < \frac{\sen x}{x} < 1, \qquad 0 < x < \frac{\pi}{2}.$$
+
+O que mudou: cada membro virou seu inverso e o sentido das desigualdades
+trocou. O que permaneceu: a informação — dizer que $\frac{x}{\sen x}$ está entre
+1 e $\frac{1}{\cos x}$ é exatamente o mesmo que dizer que $\frac{\sen x}{x}$
+está entre $\cos x$ e 1.
+
+**Conferindo em $x = 0{,}5$:** $\cos 0{,}5 = 0{,}8776$,
+$\frac{\sen 0{,}5}{0{,}5} = 0{,}9589$, e 1. Ordem certa.
+
+### 8.5 O lado negativo
+
+A cadeia foi provada para $x$ positivo, porque o desenho tem um ângulo no
+primeiro quadrante. Mas o limite em zero exige os dois lados. Para
+$-\frac{\pi}{2} < x < 0$, use a simetria do ciclo: o número $-x$ é positivo,
+então a cadeia vale para ele,
+
+$$
+\cos(-x) < \frac{\sen(-x)}{-x} < 1.
+$$
+
+Agora troque cada pedaço pelo valor em $x$. O cosseno é par, $\cos(-x) = \cos x$.
+O seno é ímpar, $\sen(-x) = -\sen x$, e o sinal de cima cancela com o de baixo:
+
+$$
+\frac{\sen(-x)}{-x} = \frac{-\sen x}{-x} = \frac{\sen x}{x}.
+$$
+
+A cadeia fica idêntica à do lado positivo:
+
+$$
+\cos x < \frac{\sen x}{x} < 1, \qquad -\frac{\pi}{2} < x < 0.
+$$
+
+Isso diz algo que a figura da seção 6 já mostrava: $\frac{\sen x}{x}$ é uma
+função **par**. O gráfico é simétrico em relação ao eixo vertical, e a
+aproximação de 1 acontece igual pelos dois lados.
+
+## 9. O limite fundamental
+
+Tudo pronto para o confronto. Para todo $x \neq 0$ com $\lvert x \rvert < \frac{\pi}{2}$:
+
+$$
+\cos x \le \frac{\sen x}{x} \le 1.
+$$
+
+As duas de fora têm limite em zero. O cosseno é contínuo, então
+$\lim_{x \to 0} \cos x = \cos 0 = 1$. A constante 1 tem limite 1. **Mesmo
+limite**, que é a condição do teorema. Logo:
+
+> $$\boxed{\lim_{x \to 0} \frac{\sen x}{x} = 1}$$
+
+A tabela do começo estava certa, e agora sabemos **por quê**: não é que os
+três números da tabela apontassem para 1 por coincidência. É que a função
+está presa entre o cosseno e o 1, e o cosseno chega a 1.
+
+### 9.1 Resolvendo o problema do cabo
+
+As duas perguntas do começo eram: até que ângulo a troca de $\sen x$ por $x$
+é segura, e qual é o tamanho do erro.
+
+A cadeia $\cos x < \frac{\sen x}{x} < 1$ responde às duas de uma vez. O **erro
+relativo** de usar $x$ no lugar de $\sen x$ é a fração do valor verdadeiro que
+se erra:
+
+$$
+\text{erro relativo} = \frac{x - \sen x}{x} = 1 - \frac{\sen x}{x}.
+$$
+
+Como $\frac{\sen x}{x}$ está entre $\cos x$ e 1, a diferença $1 - \frac{\sen x}{x}$
+está entre 0 e $1 - \cos x$:
+
+> $$0 < \text{erro relativo} < 1 - \cos x.$$
+
+Isso é uma garantia, não uma estimativa: o erro **nunca passa** de
+$1 - \cos x$. Para o cabo, $x = 0{,}1$ rad, e $1 - \cos 0{,}1 = 0{,}0050$. O
+erro relativo é menor que 0,5%. Em 8 metros, menos de 4 centímetros. O erro
+real foi de 1,3 cm, dentro da garantia.
+
+E a primeira pergunta tem resposta pela mesma fórmula. Se o técnico aceita
+errar até 1%, ele precisa de $1 - \cos x < 0{,}01$, ou seja, $\cos x > 0{,}99$,
+o que vale para $x$ até cerca de $0{,}14$ rad — uns 8 graus. Acima disso, a
+troca deixa de ser segura para essa tolerância. Em $x = 0{,}3$ rad, por
+exemplo, a garantia é $1 - \cos 0{,}3 = 0{,}045$, e o erro real já é de 1,5%.
+
+Nenhuma dessas respostas veio da tabela. Vieram da desigualdade, que vale para
+**todo** $x$ do intervalo, e não só para três valores tabelados. É a diferença
+entre observar uma tendência e ter uma prova.
+
+### 9.2 Uma leitura do resultado
+
+$\lim_{x \to 0} \frac{\sen x}{x} = 1$ diz que, para $x$ pequeno, $\sen x$ e
+$x$ são quase iguais — não só ambos pequenos, mas **proporcionalmente**
+iguais. Compare com $x^2$: para $x = 0{,}01$, tanto $\sen x$ quanto $x^2$ são
+pequenos, mas $\frac{x^2}{x} = 0{,}01$, enquanto $\frac{\sen x}{x} = 0{,}99998$.
+O seno acompanha $x$; o quadrado fica para trás.
+
+Há uma segunda leitura, que a Parte II vai usar. A razão $\frac{\sen x}{x}$ é
+$\frac{\sen x - \sen 0}{x - 0}$, porque $\sen 0 = 0$. Isso é a **taxa média de
+variação** do seno entre 0 e $x$, da lição de
+[taxa média](../funcoes/taxa-media-de-variacao). O limite dela quando $x \to 0$
+é a taxa instantânea do seno em zero — e acabamos de provar que vale 1. Na
+lição de [derivadas de seno e cosseno](./derivadas-de-seno-e-cosseno), esse
+número vai reaparecer como $\cos 0$.
+
+## 10. O corolário: $\lim_{x \to 0} \frac{1 - \cos x}{x} = 0$
+
+A demonstração da derivada do seno vai precisar de um segundo limite, parente
+do primeiro. Ele também trava na substituição: em $x = 0$, o numerador é
+$1 - 1 = 0$ e o denominador é 0.
+
+A tabela sugere zero:
+
+| $x$ | $\frac{1 - \cos x}{x}$ |
+|---:|---:|
+| $0{,}5$ | $0{,}2448$ |
+| $0{,}1$ | $0{,}0500$ |
+| $0{,}01$ | $0{,}0050$ |
+| $-0{,}1$ | $-0{,}0500$ |
+
+Para provar, o caminho é transformar $1 - \cos x$ em algo com seno, porque
+seno é o que sabemos controlar. A ferramenta é o **conjugado** da lição de
+racionalização: multiplicar $1 - \cos x$ por $1 + \cos x$ dá uma diferença de
+quadrados.
+
+O que queremos: uma expressão com $\sen x$. Por que a forma atual não serve:
+$1 - \cos x$ não tem seno. Qual propriedade permite a mudança:
+$(a - b)(a + b) = a^2 - b^2$, e a relação fundamental $\sen^2 x + \cos^2 x = 1$,
+que dá $1 - \cos^2 x = \sen^2 x$. Como fazer sem mudar o valor: multiplicar
+numerador e denominador pelo mesmo $1 + \cos x$, que é multiplicar a fração
+por 1.
+
+$$
+\frac{1 - \cos x}{x}
+= \frac{(1 - \cos x)(1 + \cos x)}{x\,(1 + \cos x)}
+= \frac{1 - \cos^2 x}{x\,(1 + \cos x)}
+= \frac{\sen^2 x}{x\,(1 + \cos x)}.
+$$
+
+O que mudou na escrita: apareceu $\sen^2 x$ em cima e um fator $1 + \cos x$
+embaixo. O que permaneceu: o valor, para todo $x \neq 0$ — multiplicamos por
+$\frac{1 + \cos x}{1 + \cos x} = 1$, e esse fator nunca é $\frac{0}{0}$ perto
+de zero, porque $\cos x$ está perto de 1 e $1 + \cos x$ perto de 2.
+
+Agora separe em dois fatores que sabemos calcular:
+
+$$
+\frac{\sen^2 x}{x\,(1 + \cos x)}
+= \frac{\sen x}{x} \times \frac{\sen x}{1 + \cos x}.
+$$
+
+O primeiro fator tende a 1, pelo limite fundamental. O segundo é um quociente
+de funções contínuas com denominador que não zera: tende a
+$\frac{\sen 0}{1 + \cos 0} = \frac{0}{2} = 0$. O limite do produto é o produto
+dos limites:
+
+> $$\boxed{\lim_{x \to 0} \frac{1 - \cos x}{x} = 1 \times 0 = 0}$$
+
+Conferindo com $x = 0{,}1$: o segundo fator vale
+$\frac{\sen 0{,}1}{1 + \cos 0{,}1} = 0{,}0500$, e o produto com
+$\frac{\sen 0{,}1}{0{,}1} = 0{,}9983$ dá $0{,}0500$ — o mesmo número da tabela.
+
+Uma leitura para guardar: $1 - \cos x$ vai para zero **mais depressa** que
+$x$, tanto que a razão entre os dois some. O seno vai para zero no mesmo ritmo
+de $x$; o $1 - \cos x$ vai no ritmo de $x^2$. O Exemplo 5 mostra isso com
+precisão.
+
+## 11. Exemplos resolvidos
+
+Nos exemplos, a técnica é sempre a mesma: **reescrever até aparecer
+$\frac{\sen(\text{algo})}{\text{o mesmo algo}}$**, com o “algo” indo para
+zero. Esse pedaço tende a 1, e o que sobra decide o limite.
+
+### Exemplo 1: um múltiplo dentro do seno
+
+Calcule $\lim_{x \to 0} \frac{\sen 3x}{x}$.
+
+A substituição dá $\frac{0}{0}$. O seno é de $3x$, mas o denominador é $x$ —
+não é o mesmo “algo”. Para consertar, coloque $3x$ embaixo também, e compense
+multiplicando por 3:
+
+$$
+\frac{\sen 3x}{x} = \frac{\sen 3x}{x} \times \frac{3}{3} = 3 \times \frac{\sen 3x}{3x}.
+$$
+
+Multiplicamos por $\frac{3}{3} = 1$, então o valor não mudou. Agora chame
+$u = 3x$. Quando $x$ se aproxima de zero, $u$ também se aproxima de zero, e
+$u \neq 0$ enquanto $x \neq 0$. Então
+
+$$
+\lim_{x \to 0} \frac{\sen 3x}{3x} = \lim_{u \to 0} \frac{\sen u}{u} = 1,
+$$
+
+e o limite pedido é $3 \times 1 = 3$.
+
+Conferindo numericamente: em $x = 0{,}01$, $\frac{\sen 0{,}03}{0{,}01} = 2{,}9996$.
+
+O padrão vale para qualquer constante: $\lim_{x \to 0} \frac{\sen kx}{x} = k$.
+O número que multiplica $x$ dentro do seno sai para fora.
+
+### Exemplo 2: a tangente
+
+*Pause e tente antes de ler.* Calcule $\lim_{x \to 0} \frac{\tg x}{x}$.
+
+Escreva a tangente como seno sobre cosseno e separe:
+
+$$
+\frac{\tg x}{x} = \frac{\sen x}{x \cos x} = \frac{\sen x}{x} \times \frac{1}{\cos x}.
+$$
+
+O primeiro fator tende a 1. O segundo tende a $\frac{1}{\cos 0} = 1$, porque o
+cosseno é contínuo e não zera em 0. Produto: $1 \times 1 = 1$.
+
+Conferindo: em $x = 0{,}01$, $\frac{\tg 0{,}01}{0{,}01} = 1{,}00003$.
+
+A geometria já tinha dito isso: a cadeia $\sen x < x < \tg x$ mostra que a
+tangente também fica colada em $x$ para ângulos pequenos.
+
+### Exemplo 3: seno sobre seno
+
+*Pause e tente.* Calcule $\lim_{x \to 0} \frac{\sen 5x}{\sen 2x}$.
+
+Nem numerador nem denominador é $x$. Faça aparecer os dois limites
+fundamentais dividindo em cima e embaixo por $x$, que não é zero:
+
+$$
+\frac{\sen 5x}{\sen 2x}
+= \frac{\dfrac{\sen 5x}{x}}{\dfrac{\sen 2x}{x}}.
+$$
+
+Pelo Exemplo 1, o numerador tende a 5 e o denominador tende a 2. O limite de
+um quociente é o quociente dos limites, e o de baixo não é zero:
+
+$$
+\lim_{x \to 0} \frac{\sen 5x}{\sen 2x} = \frac{5}{2}.
+$$
+
+Conferindo: em $x = 0{,}01$, o quociente vale $2{,}4991$.
+
+### Exemplo 4: prender uma função que oscila
+
+*Pause e tente.* Calcule $\lim_{x \to 0} x \cos\frac{1}{x}$.
+
+O cosseno de $\frac{1}{x}$ oscila sem limite quando $x \to 0$, então não dá para
+calcular o limite dele. Mas o cosseno de qualquer número está entre $-1$ e $1$:
+
+$$
+-1 \le \cos\frac{1}{x} \le 1.
+$$
+
+Multiplicar por $x$ exige cuidado, porque $x$ pode ser negativo, e aí a ordem
+inverteria. O jeito seguro é usar o módulo. Como $\lvert \cos\frac{1}{x} \rvert \le 1$,
+
+$$
+\left\lvert x \cos\frac{1}{x} \right\rvert = \lvert x \rvert \times \left\lvert \cos\frac{1}{x} \right\rvert \le \lvert x \rvert,
+$$
+
+o que é o mesmo que
+
+$$
+-\lvert x \rvert \le x \cos\frac{1}{x} \le \lvert x \rvert.
+$$
+
+As duas de fora tendem a 0 quando $x \to 0$. Pelo confronto, o limite é **0**.
+
+Conferindo: em $x = 0{,}01$, a função vale $0{,}0086$; em $x = 0{,}001$, vale
+$0{,}0006$.
+
+### Exemplo 5: o corolário ao quadrado
+
+*Pause e tente.* Calcule $\lim_{x \to 0} \frac{1 - \cos x}{x^2}$.
+
+Mesma reescrita da seção 10, com o conjugado:
+
+$$
+\frac{1 - \cos x}{x^2}
+= \frac{\sen^2 x}{x^2 (1 + \cos x)}
+= \left(\frac{\sen x}{x}\right)^2 \times \frac{1}{1 + \cos x}.
+$$
+
+O primeiro fator tende a $1^2 = 1$. O segundo tende a $\frac{1}{1 + 1} = \frac{1}{2}$.
+O limite é $\frac{1}{2}$.
+
+Conferindo: em $x = 0{,}01$, $\frac{1 - \cos 0{,}01}{0{,}0001} = 0{,}499996$.
+
+É a leitura prometida no fim da seção 10: para $x$ pequeno,
+$1 - \cos x \approx \frac{x^2}{2}$. Dividido por $x$, sobra $\frac{x}{2}$, que
+vai para zero — o corolário. Dividido por $x^2$, sobra $\frac{1}{2}$.
+
+### Exemplo 6: o mesmo limite em outro ponto
+
+*Pause e tente.* Calcule $\lim_{x \to 2} \frac{\sen(x - 2)}{x - 2}$.
+
+O “algo” aqui é $x - 2$. Quando $x \to 2$, $x - 2 \to 0$, e $x - 2 \neq 0$
+enquanto $x \neq 2$. Chamando $u = x - 2$:
+
+$$
+\lim_{x \to 2} \frac{\sen(x - 2)}{x - 2} = \lim_{u \to 0} \frac{\sen u}{u} = 1.
+$$
+
+O limite fundamental não é sobre o número zero; é sobre **o argumento do seno
+ir para zero junto com o denominador**, sejam eles $x$, $3x$ ou $x - 2$.
+
+## 12. Erros comuns
+
+> **Erro 1: usar o resultado em graus.** Com $x$ em graus,
+> $\frac{\sen x}{x}$ tende a $\frac{\pi}{180} \approx 0{,}01745$, não a 1.
+> Teste: $\frac{\sen 1^\circ}{1} = 0{,}01745$. A demonstração usou a área do
+> setor como $\frac{x}{2}$, e essa fórmula só vale em radianos. Toda calculadora
+> deve estar em radianos ao conferir esta página.
+
+> **Erro 2: “cancelar o $x$” em $\frac{\sen x}{x}$ e obter $\sen$.** Não há o
+> que cancelar: $\sen x$ não é “seno vezes $x$”, é o seno **de** $x$, e o $x$ de
+> cima não é um fator. Teste com $x = \frac{\pi}{6}$:
+> $\frac{\sen(\pi/6)}{\pi/6} = \frac{0{,}5}{0{,}5236} = 0{,}9549$, e “$\sen$”
+> sozinho não é número nenhum.
+
+> **Erro 3: achar que $\frac{\sen x}{x} = 1$.** É um limite, não uma igualdade.
+> Para todo $x \neq 0$, a razão é **menor** que 1 — a cadeia diz
+> $\frac{\sen x}{x} < 1$. Em $x = 0{,}5$ ela vale $0{,}9589$. O que a página
+> provou é que a razão fica tão perto de 1 quanto se queira, tomando $x$
+> pequeno o suficiente.
+
+> **Erro 4: aplicar o confronto com as duas de fora indo para lugares
+> diferentes.** $-1 \le \sen\frac{1}{x} \le 1$ prende a função, mas não decide
+> nada, porque $-1 \neq 1$. Prender é uma das duas condições; a outra é que os
+> limites de fora coincidam.
+
+> **Erro 5: acreditar que $\sen x \approx x$ para qualquer $x$.** A aproximação
+> é boa quando $x$ é pequeno, e o erro cresce com $1 - \cos x$. Em $x = 1$ rad,
+> $\sen 1 = 0{,}8415$, um erro de 16%. A garantia da seção 9.1 diz até onde ir
+> para cada tolerância.
+
+> **Erro 6: esquecer de compensar o múltiplo.** Em $\frac{\sen 3x}{x}$, o
+> limite é 3, não 1. O “algo” dentro do seno tem que ser o mesmo do
+> denominador; quando não é, o fator que os iguala sai para fora.
+
+> **Erro 7: prender e esquecer de verificar o sinal ao multiplicar.**
+> Multiplicar uma desigualdade por $x$ inverte o sentido quando $x < 0$. O
+> Exemplo 4 evitou o problema usando $\lvert x \rvert$; a seção 7.2 usou $x^2$,
+> que é sempre positivo. Antes de multiplicar os três membros por uma
+> expressão, pergunte se ela pode ser negativa perto do ponto.
+
+## 13. Perguntas de verificação
+
+1. Por que o teorema do confronto exige que as duas funções de fora tenham o
+   **mesmo** limite?
+2. Que informação sobre $\sen\frac{1}{x}$ foi suficiente para prender
+   $x^2 \sen\frac{1}{x}$, sem calcular nada?
+3. Na cadeia $\sen x < x < \tg x$, qual das três quantidades é uma área de
+   setor, e por que a área do setor é $\frac{x}{2}$?
+4. Onde exatamente a demonstração usa que $x$ está em radianos?
+5. Ao dividir a cadeia por $\sen x$, por que o sentido das desigualdades não
+   mudou? E ao inverter as frações, por que mudou?
+6. Como a cadeia provada para $x$ positivo se estende para $x$ negativo?
+7. O que a desigualdade $\cos x < \frac{\sen x}{x} < 1$ diz sobre o erro de
+   trocar $\sen x$ por $x$?
+8. Por que o conjugado $1 + \cos x$ foi a ferramenta certa para
+   $\frac{1 - \cos x}{x}$?
+9. Por que $\lim_{x \to 0} \frac{\sen 3x}{x}$ é 3, e não 1?
+10. Em que sentido $\frac{\sen x}{x}$ é uma taxa média de variação? De que
+    função, em que trecho?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque, se elas fossem para lugares diferentes, a função do meio teria
+   espaço entre eles para ir a qualquer valor, ou para não ter limite. O
+   contraexemplo $\sen\frac{1}{x}$, presa entre $-1$ e $1$, mostra isso.
+2. Só que o seno de qualquer número está entre $-1$ e $1$. Multiplicando por
+   $x^2$, a função ficou entre $-x^2$ e $x^2$, e essas duas se sabe calcular.
+3. A do meio, $x$, vem da área do setor $\frac{x}{2}$ (o meio some quando se
+   multiplica tudo por 2). A área do setor de raio 1 e ângulo $x$ é
+   $\frac{1}{2} \times 1^2 \times x$, pela fórmula $\frac{1}{2} r^2 \theta$.
+4. Na área do setor. A fórmula $\frac{1}{2} r^2 \theta$ só vale com $\theta$ em
+   radianos, porque foi deduzida a partir de a volta inteira medir $2\pi$. Em
+   graus, apareceria o fator $\frac{\pi}{180}$ e o limite não seria 1.
+5. Dividimos por $\sen x$, que é positivo para $0 < x < \frac{\pi}{2}$; dividir
+   por positivo mantém a ordem. Inverter frações positivas troca a ordem porque
+   o maior número tem o menor inverso: $2 < 3$, mas $\frac{1}{2} > \frac{1}{3}$.
+6. Pela simetria: para $x$ negativo, $-x$ é positivo e a cadeia vale para $-x$.
+   Como $\cos(-x) = \cos x$ e $\frac{\sen(-x)}{-x} = \frac{\sen x}{x}$, a cadeia
+   em $-x$ é a mesma cadeia em $x$.
+7. Que o erro relativo, $1 - \frac{\sen x}{x}$, é positivo e menor que
+   $1 - \cos x$. É uma garantia válida para todo $x$ do intervalo, não só para
+   valores tabelados.
+8. Porque $(1 - \cos x)(1 + \cos x) = 1 - \cos^2 x = \sen^2 x$, e seno é o que
+   sabemos controlar com o limite fundamental. O conjugado trocou um cosseno,
+   que sozinho não ajudava, por um seno ao quadrado.
+9. Porque o “algo” dentro do seno é $3x$, e o denominador é $x$. Para igualar
+   os dois, escrevemos $3 \times \frac{\sen 3x}{3x}$; a fração tende a 1, e o 3
+   fica.
+10. Como $\sen 0 = 0$, temos $\frac{\sen x}{x} = \frac{\sen x - \sen 0}{x - 0}$:
+    é a taxa média de variação do seno no trecho de 0 a $x$. O limite dela é a
+    taxa instantânea do seno em zero, que vale 1.
+
+</details>
+
+## 14. Exercícios
+
+Calculadora em **radianos** para todas as conferências.
+
+### 1. Reconhecimento
+
+1. Em cada item, diga se o limite é o limite fundamental “disfarçado” (isto é,
+   pode ser escrito como $\frac{\sen u}{u}$ com $u \to 0$) ou não:
+   a) $\lim_{x \to 0} \frac{\sen 7x}{7x}$; b) $\lim_{x \to 0} \frac{\sen x}{x^2}$;
+   c) $\lim_{x \to \pi} \frac{\sen(x - \pi)}{x - \pi}$; d) $\lim_{x \to 1} \frac{\sen x}{x}$.
+2. Em cada desigualdade, identifique a função presa e as duas de fora, e diga
+   se o confronto decide o limite em zero:
+   a) $-x^4 \le x^4 \cos\frac{1}{x} \le x^4$;
+   b) $-1 \le \cos\frac{1}{x} \le 1$;
+   c) $0 \le \frac{x^2}{1 + x^2} \le x^2$.
+
+### 2. Explicação
+
+3. Explique, sem fórmulas, por que a área do triângulo pequeno é menor que a
+   do setor, e a do setor é menor que a do triângulo grande.
+4. Um colega diz: “a razão $\frac{\sen x}{x}$ chega a 1 quando $x = 0$”. Corrija
+   a frase em duas partes: o que acontece em $x = 0$ e o que acontece perto de
+   $x = 0$.
+5. Explique por que a demonstração precisou de uma seção só para $x$ negativo,
+   e o que teria faltado sem ela.
+
+### 3. Aplicação direta
+
+6. Calcule: a) $\lim_{x \to 0} \frac{\sen 4x}{x}$; b) $\lim_{x \to 0} \frac{\sen x}{2x}$;
+   c) $\lim_{x \to 0} \frac{\tg 2x}{x}$; d) $\lim_{x \to 0} \frac{\sen 2x}{3x}$.
+7. Calcule $\lim_{x \to 0} \frac{1 - \cos x}{\sen x}$.
+8. Use o confronto para calcular $\lim_{x \to 0} x^2 \cos\frac{1}{x^2}$.
+
+### 4. Variação
+
+9. Calcule $\lim_{x \to 0} \frac{\sen 4x}{\sen 3x}$.
+10. Calcule $\lim_{x \to 0} \frac{\sen(x^2)}{x}$.
+11. Calcule $\lim_{x \to 0} \frac{\sen^2 x}{x}$.
+12. O limite $\lim_{x \to 0} \frac{\sen x}{x^2}$ existe? Analise os dois lados.
+
+<details>
+<summary>Dica para o 10</summary>
+
+O “algo” dentro do seno é $x^2$. Faça aparecer $x^2$ no denominador
+multiplicando e dividindo por $x$.
+
+</details>
+
+<details>
+<summary>Dica para o 12</summary>
+
+Escreva $\frac{\sen x}{x^2} = \frac{\sen x}{x} \times \frac{1}{x}$ e pense no
+que o segundo fator faz de cada lado de zero.
+
+</details>
+
+### 5. Problema misto
+
+13. A taxa média de variação do cosseno entre 0 e $h$ é
+    $\frac{\cos h - \cos 0}{h}$. a) Simplifique essa expressão. b) Calcule o
+    limite dela quando $h \to 0$. c) O que esse limite diz sobre a inclinação
+    do gráfico do cosseno em $x = 0$? Compare com a figura da lição de
+    [gráficos de seno e cosseno](../geometria/graficos-seno-e-cosseno).
+14. Uma rampa de 12 metros de comprimento sobe com ângulo de 0,2 rad. a) Qual
+    é a altura exata que ela vence, com quatro casas decimais? b) Qual é a
+    altura aproximada, trocando o seno pelo ângulo? c) Qual é a garantia de
+    erro relativo dada por $1 - \cos x$, e o erro real ficou dentro dela?
+15. Para que valores de $x > 0$ a troca de $\sen x$ por $x$ tem erro relativo
+    garantido abaixo de 0,1%? Dê a resposta em radianos e em graus, com uma
+    casa decimal.
+
+<details>
+<summary>Dica para o 15</summary>
+
+A garantia é $1 - \cos x$. Resolva $1 - \cos x < 0{,}001$ para $\cos x$, e
+depois use a função inversa da lição de
+[funções trigonométricas inversas](../geometria/funcoes-trigonometricas-inversas).
+
+</details>
+
+### 6. Justificativa
+
+16. Na passagem de $1 < \frac{x}{\sen x} < \frac{1}{\cos x}$ para
+    $\cos x < \frac{\sen x}{x} < 1$, um colega manteve o sentido das
+    desigualdades e escreveu $1 < \frac{\sen x}{x} < \cos x$. Mostre com
+    $x = 0{,}5$ que a versão dele é falsa e explique o que ele esqueceu.
+17. Mostre que o corolário $\lim_{x \to 0} \frac{1 - \cos x}{x} = 0$ pode ser
+    obtido pelo confronto, sem conjugado, a partir da desigualdade
+    $0 \le 1 - \cos x \le \frac{x^2}{2}$, aceitando-a como dada. Que cadeia
+    prende $\frac{1 - \cos x}{x}$ para $x > 0$?
+18. Explique por que $\lim_{x \to 0} \frac{\sen x}{x}$ não pode ser calculado
+    pelo método da lição de [calculando limites](./calculo-de-limites)
+    (fatorar, conjugado, somar frações). O que o seno tem que um polinômio não
+    tem?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) **Sim**: $u = 7x \to 0$; vale 1. b) **Não**: o denominador é $x^2$, não
+   o argumento do seno; veja o exercício 12. c) **Sim**: $u = x - \pi \to 0$
+   quando $x \to \pi$; vale 1. d) **Não**: o argumento vai para 1, não para
+   zero. Ali não há indeterminação: o limite é $\frac{\sen 1}{1} = 0{,}8415$
+   por substituição direta, porque o quociente é contínuo em 1.
+2. a) Presa: $x^4 \cos\frac{1}{x}$; de fora: $-x^4$ e $x^4$, ambas com limite 0.
+   **Decide**: o limite é 0. b) Presa: $\cos\frac{1}{x}$; de fora: $-1$ e $1$,
+   limites diferentes. **Não decide** (e o limite não existe). c) Presa:
+   $\frac{x^2}{1 + x^2}$; de fora: 0 e $x^2$, ambas com limite 0. **Decide**: o
+   limite é 0. Aqui o confronto nem era necessário, porque a função é
+   contínua em zero e vale 0 ali; mas a desigualdade está correta.
+3. O triângulo pequeno cabe dentro do setor: os dois compartilham os lados
+   $OA$ e $OP$, e a corda $AP$ fica por dentro do arco. O setor cabe dentro do
+   triângulo grande: compartilham os raios, e o arco fica por dentro do
+   segmento vertical $AT$, porque o círculo inteiro está à esquerda da reta
+   $x = 1$. Figura que cabe dentro de outra tem área menor.
+4. Em $x = 0$ a razão **não existe**: é $\frac{0}{0}$. Perto de $x = 0$, a razão
+   fica tão perto de 1 quanto se queira, sem nunca ser 1 — a cadeia diz que
+   ela é sempre menor que 1. O número 1 é o limite, não um valor atingido.
+5. O desenho usa um ângulo no primeiro quadrante, então prova a cadeia só para
+   $0 < x < \frac{\pi}{2}$. O limite em zero exige que a função se aproxime de
+   1 **pelos dois lados**. Sem a extensão, teríamos provado só o limite pela
+   direita.
+6. a) $4 \times \frac{\sen 4x}{4x} \to 4$. b) $\frac{1}{2} \times \frac{\sen x}{x} \to \frac{1}{2}$.
+   c) $\frac{\tg 2x}{x} = 2 \times \frac{\sen 2x}{2x} \times \frac{1}{\cos 2x} \to 2 \times 1 \times 1 = 2$.
+   d) $\frac{2}{3} \times \frac{\sen 2x}{2x} \to \frac{2}{3}$. Conferência
+   numérica em $x = 0{,}01$: $3{,}9989$; $0{,}49999$; $2{,}0003$; $0{,}6666$.
+   *Se você encontrou 1 em algum item, esqueceu de compensar o múltiplo dentro
+   do seno.*
+7. Divida em cima e embaixo por $x$:
+   $\frac{1 - \cos x}{\sen x} = \dfrac{\frac{1 - \cos x}{x}}{\frac{\sen x}{x}} \to \frac{0}{1} = 0$.
+   Conferência: em $x = 0{,}01$, vale $0{,}0050$.
+8. $-1 \le \cos\frac{1}{x^2} \le 1$; multiplicando por $x^2 \ge 0$, que não
+   inverte: $-x^2 \le x^2 \cos\frac{1}{x^2} \le x^2$. As de fora vão a 0; o
+   limite é **0**.
+9. Divida em cima e embaixo por $x$:
+   $\dfrac{\frac{\sen 4x}{x}}{\frac{\sen 3x}{x}} \to \frac{4}{3}$. Conferência em
+   $x = 0{,}01$: $1{,}3332$. *Se você encontrou $\frac{\sen 4}{\sen 3}$,
+   substituiu $x = 1$ por engano: o limite é em zero.*
+10. $\frac{\sen(x^2)}{x} = x \times \frac{\sen(x^2)}{x^2}$. O segundo fator tende
+    a 1 (com $u = x^2 \to 0$); o primeiro tende a 0. Limite **0**. Conferência:
+    em $x = 0{,}01$, vale $0{,}0100$.
+11. $\frac{\sen^2 x}{x} = \sen x \times \frac{\sen x}{x} \to 0 \times 1 = 0$.
+    Conferência: em $x = 0{,}01$, vale $0{,}0100$.
+12. **Não existe.** $\frac{\sen x}{x^2} = \frac{\sen x}{x} \times \frac{1}{x}$. O
+    primeiro fator tende a 1; o segundo cresce sem limite, positivo pela
+    direita e negativo pela esquerda. A função vai para $+\infty$ por um lado
+    e $-\infty$ pelo outro, como na lição de
+    [limites infinitos](./limites-infinitos-e-no-infinito). Em $x = 0{,}01$
+    ela vale $99{,}998$; em $x = -0{,}01$, vale $-99{,}998$.
+13. a) Como $\cos 0 = 1$: $\frac{\cos h - 1}{h} = -\frac{1 - \cos h}{h}$.
+    b) O limite é $-0 = 0$, pelo corolário. c) A taxa instantânea do cosseno em
+    zero é 0: a reta tangente ao gráfico do cosseno em $x = 0$ é horizontal.
+    É o que a figura mostra — o cosseno tem um máximo em zero, e no topo o
+    gráfico está “deitado”. Conferência: em $h = 0{,}01$, a taxa média vale
+    $-0{,}0050$.
+14. a) $12 \times \sen 0{,}2 = 12 \times 0{,}19867 = 2{,}3840$ m. b) $12 \times 0{,}2 = 2{,}4$ m.
+    c) A garantia é $1 - \cos 0{,}2 = 0{,}0199$, isto é, menos de 2%. O erro real
+    é $\frac{2{,}4 - 2{,}3840}{2{,}3840} = 0{,}0067$, ou 0,67% — dentro da
+    garantia.
+15. Precisamos de $1 - \cos x < 0{,}001$, ou seja, $\cos x > 0{,}999$. Como o
+    cosseno decresce no primeiro quadrante, isso vale para
+    $x < \arccos(0{,}999) = 0{,}0447$ rad, o que dá cerca de $2{,}6^\circ$.
+    Conferência: em $x = 0{,}0447$, o erro relativo real é
+    $1 - \frac{\sen 0{,}0447}{0{,}0447} = 0{,}00033$, abaixo de 0,001.
+16. Em $x = 0{,}5$: $\frac{\sen 0{,}5}{0{,}5} = 0{,}9589$ e $\cos 0{,}5 = 0{,}8776$.
+    A versão dele diz $1 < 0{,}9589 < 0{,}8776$, falsa nas duas desigualdades.
+    Ele esqueceu que inverter números positivos **troca a ordem**: se
+    $a < b$, então $\frac{1}{a} > \frac{1}{b}$. Cada membro virou o inverso, e o
+    sentido tinha que virar junto.
+17. Para $x > 0$, divida a desigualdade dada por $x$, que é positivo e mantém a
+    ordem: $0 \le \frac{1 - \cos x}{x} \le \frac{x}{2}$. As de fora, 0 e
+    $\frac{x}{2}$, têm limite 0 quando $x \to 0^{+}$. Pelo confronto, o limite
+    pela direita é 0. Para $x < 0$, a função $\frac{1 - \cos x}{x}$ é ímpar
+    (numerador par, denominador ímpar), então o limite pela esquerda é $-0 = 0$.
+    Os dois lados concordam.
+18. Aqueles métodos reescrevem a fração usando álgebra: fatorar exige um
+    polinômio, o conjugado exige uma raiz, somar frações exige frações. O seno
+    não é nenhuma dessas coisas — não há como escrever $\sen x$ como
+    $x \times (\text{algo})$ por manipulação algébrica. Foi preciso uma
+    informação de outra natureza, geométrica: a comparação de áreas no ciclo.
+    É por isso que este limite tem uma lição só para ele.
+
+</details>
+
+## 15. Revisão curta
+
+- **Teorema do confronto:** se $g \le f \le h$ perto de $a$ e as duas de fora
+  têm o mesmo limite $L$ em $a$, então $f$ também tem limite $L$. As duas
+  condições são necessárias: estar presa **e** as de fora concordarem.
+- Ele permite achar o limite de uma função que não se sabe calcular, usando
+  só o que se sabe sobre ela — o seno está entre $-1$ e $1$, por exemplo.
+- **A cadeia geométrica:** para $0 < x < \frac{\pi}{2}$, comparar três áreas
+  no ciclo de raio 1 dá $\sen x < x < \tg x$. A do meio é a área do setor,
+  $\frac{x}{2}$, e é ali que os radianos entram.
+- Dividindo por $\sen x$ (positivo, mantém a ordem) e invertendo (troca a
+  ordem): $\cos x < \frac{\sen x}{x} < 1$. Pela paridade, vale também para $x$
+  negativo.
+- **Limite fundamental:** $\lim_{x \to 0} \frac{\sen x}{x} = 1$. Só em
+  radianos. É uma afirmação sobre a vizinhança de zero, não sobre $x = 0$.
+- **O erro de trocar $\sen x$ por $x$** é relativo e menor que $1 - \cos x$ —
+  a resposta às duas perguntas do cabo.
+- **Corolário:** $\lim_{x \to 0} \frac{1 - \cos x}{x} = 0$, pelo conjugado
+  $1 + \cos x$ e pela relação $1 - \cos^2 x = \sen^2 x$.
+- **Técnica dos exemplos:** reescrever até aparecer $\frac{\sen u}{u}$ com
+  $u \to 0$; o que multiplica $x$ dentro do seno sai para fora.
+
+Com isso a Parte I está completa. A [derivada](./a-derivada), que abre a
+Parte II, é o limite do quociente de diferenças — e, quando chegar a vez do
+seno, os dois limites desta página serão exatamente o que falta para a conta
+fechar.

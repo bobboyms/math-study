@@ -1,0 +1,1082 @@
+---
+title: "Limites infinitos e no infinito: as assíntotas com nome exato"
+sidebar_label: Limites infinitos e no infinito
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Limites infinitos e no infinito: as assíntotas com nome exato
+
+## 1. Problema motivador: o piso que a fábrica nunca alcança
+
+A [Revisão geral](../revisao-geral) trouxe uma fábrica que gasta R\$ 2.400
+fixos por lote e R\$ 18 por peça. O custo médio por peça, num lote de $x$
+peças, é
+
+$$
+C(x) = \frac{2400 + 18x}{x} = \frac{2400}{x} + 18.
+$$
+
+Acompanhe o que acontece nos dois extremos do tamanho do lote:
+
+| Peças $x$ | 1 | 10 | 100 | 1 000 | 10 000 | 100 000 |
+|---:|---:|---:|---:|---:|---:|---:|
+| Custo médio $C(x)$ | R\$ 2.418,00 | R\$ 258,00 | R\$ 42,00 | R\$ 20,40 | R\$ 18,24 | R\$ 18,02 |
+
+Duas frases descreveram essa tabela lá na Revisão, e as duas estavam certas:
+“o custo médio se aproxima de 18 sem nunca chegar lá” e “com lotes minúsculos
+o custo médio explode”. Mas as duas frases têm um problema em comum: são
+frases. Não há nenhuma conta que se possa fazer com “explode”, e nenhuma
+igualdade que se possa escrever com “aproxima-se sem chegar”.
+
+A lição de [limite de uma função](./limite-de-uma-funcao) deu um símbolo para
+“aproxima-se de”: $\lim_{x \to a} f(x) = L$. Só que lá o $a$ era um número e o
+$L$ era um número. Aqui nenhum dos dois é. Do lado do lote grande, o $x$ não
+se aproxima de número nenhum — ele cresce sem parar. Do lado do lote pequeno,
+o $C(x)$ é que cresce sem parar.
+
+> Esta lição responde a duas perguntas: como escrever com rigor que $C(x)$
+> **se aproxima de 18 quando $x$ cresce sem parar**, e como escrever que $C(x)$
+> **cresce sem parar quando $x$ se aproxima de zero**.
+
+As duas respostas usam o mesmo símbolo, $\infty$, e as duas exigem o mesmo
+cuidado: $\infty$ **não é um número**. É um jeito abreviado de descrever um
+comportamento. Boa parte desta página é aprender a usar a abreviação sem cair
+nas armadilhas que ela arma.
+
+## 2. Mapa das ideias
+
+- **limite infinito** num ponto: $\lim_{x \to a} f(x) = +\infty$ significa que
+  $f(x)$ cresce além de qualquer valor quando $x$ se aproxima de $a$; é a
+  **assíntota vertical** escrita com símbolos;
+- os **limites laterais** $x \to a^{+}$ e $x \to a^{-}$ podem disparar para
+  lados opostos, e o sinal de cada lado sai do sinal do numerador e do
+  denominador;
+- **limite no infinito**: $\lim_{x \to +\infty} f(x) = L$ significa que $f(x)$
+  se aproxima de $L$ quando $x$ cresce além de qualquer valor; é a **assíntota
+  horizontal** escrita com símbolos;
+- a técnica de **dividir pelo maior grau** reescreve um quociente de
+  polinômios sem mudar o valor dele e deixa o limite à vista;
+- a **comparação de graus** decide os três casos de uma função racional no
+  infinito;
+- a **hierarquia de crescimento**: para $x$ grande, o logaritmo perde para
+  qualquer potência, e qualquer potência perde para a exponencial;
+- $\infty$ **não é número**: $\infty - \infty$ e $\frac{\infty}{\infty}$ não
+  têm valor fixo, e cada caso precisa de conta.
+
+## 3. Para que serve
+
+- dizer o que acontece com um custo médio, uma concentração ou uma dose quando
+  a quantidade cresce muito — o **piso** ou o **teto** de um processo;
+- descrever o comportamento de uma função perto de um ponto proibido, onde ela
+  dispara;
+- comparar velocidades de crescimento: um algoritmo que custa $n^2$ passos
+  contra um que custa $2^n$, um investimento com juros compostos contra um
+  salário que sobe por parcela fixa;
+- preparar o esboço de gráficos, onde cada assíntota é um limite calculado
+  antes de desenhar.
+
+Dentro da matemática, esta página dá nome exato a algo que o curso já usava
+desde a lição de funções racionais: a assíntota. Lá ela era descrita com
+tabelas e com a frase “aproxima-se sem alcançar”. Aqui ela vira uma igualdade
+com $\lim$, que se calcula em vez de se observar.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [limite de uma função](./limite-de-uma-funcao): o que significa
+$\lim_{x \to 2} f(x) = 4$, e o que são os limites laterais?** Significa que
+$f(x)$ fica tão perto de 4 quanto se queira, desde que $x$ esteja perto o
+bastante de 2, sem ser 2. Os limites laterais olham um lado de cada vez:
+$x \to 2^{+}$ vem da direita, com $x$ maior que 2; $x \to 2^{-}$ vem da
+esquerda. O limite existe quando os dois lados concordam.
+
+**2. De [calculando limites](./calculo-de-limites): o que fazer quando a
+substituição direta não serve?** Reescrever a expressão sem mudar o valor dela
+para $x \neq a$, e só então substituir. As propriedades do limite — soma,
+produto, quociente com denominador não nulo — permitem calcular o limite
+pedaço por pedaço.
+
+**3. De [funções racionais](../funcoes/funcoes-racionais): onde ficam as
+assíntotas de $\frac{2x+1}{x-3}$?** A vertical fica em $x = 3$, onde o
+denominador zera e o numerador vale 7. A horizontal fica em $y = 2$, porque os
+graus são iguais e a razão dos coeficientes principais é $\frac{2}{1}$. A
+tabela daquela lição mostrava $f(100) \approx 2{,}072$ e
+$f(1000) \approx 2{,}007$.
+
+**4. De [intervalos](../equacoes/intervalos): por que o lado do infinito é
+sempre aberto?** Porque $+\infty$ não é um número. Escreve-se $[3, +\infty[$ e
+nunca $[3, +\infty]$: não há o que incluir. Esse aviso vai ser repetido aqui
+com mais força.
+
+**5. De [função exponencial](../exponenciais-e-logaritmos/funcao-exponencial)
+e [função logarítmica](../exponenciais-e-logaritmos/funcao-logaritmica): quem
+cresce mais rápido, $2^x$ ou $x^{10}$? E o logaritmo, cresce até onde?** A
+exponencial acaba ultrapassando qualquer polinômio: em $x = 60$ elas se cruzam
+e em $x = 100$ a exponencial é dez bilhões de vezes maior. O logaritmo cresce
+sem limite, mas cada vez mais devagar. As duas frases vão virar limites nesta
+página.
+
+O item 3 é o mais importante. Tudo o que a lição de racionais fez com tabelas
+e com a comparação de graus vai ser refeito aqui com o símbolo de limite — e
+o ganho é que, com o símbolo, dá para **calcular** em vez de observar.
+
+## 5. Intuição: uma seta que descreve um comportamento, não um destino
+
+Quando escrevemos $x \to 2$, o $x$ tem um destino: o número 2. Ele chega tão
+perto quanto quisermos.
+
+Quando escrevemos $x \to +\infty$, não há destino. A seta descreve um
+**movimento sem fim**: $x$ passa de 100, passa de 10 000, passa de um milhão,
+e continua. Não existe um lugar chamado “infinito” onde ele chega. Por isso a
+frase certa é “$x$ cresce além de qualquer valor”, e não “$x$ chega ao
+infinito”.
+
+O mesmo vale do lado da função. Escrever $f(x) \to +\infty$ quer dizer: o
+valor de $f(x)$ passa de 100, passa de 10 000, passa de um milhão, e continua.
+Não quer dizer que $f(x)$ vale infinito em algum ponto — não vale, porque
+infinito não é um valor.
+
+Uma comparação ajuda a fixar a diferença, e ela vem da própria fábrica. Dizer
+“o custo médio se aproxima de 18” é como dizer “a temperatura se aproxima de
+20 graus”: há um número na frente, e a distância até ele encolhe. Dizer “o
+custo médio cresce sem parar quando o lote encolhe” é como dizer “a fila
+cresce sem parar”: não há número na frente. A fila não se aproxima de
+nada — ela só aumenta. Onde a comparação para de valer: a fila cresce por
+saltos de uma pessoa, e $C(x)$ cresce sem saltos. O que importa é a ausência
+de destino, e nisso as duas são iguais.
+
+## 6. Modelo visual: a curva que dispara junto de uma reta
+
+Comece pela função mais simples que dispara: $f(x) = \dfrac{1}{x - 2}$. Ela é a
+curva $\frac{1}{x}$ da lição de racionais, movida duas unidades para a direita.
+O denominador zera em $x = 2$, e o numerador vale 1 ali.
+
+| $x$ | $1{,}9$ | $1{,}99$ | $1{,}999$ | $2{,}001$ | $2{,}01$ | $2{,}1$ |
+|---|---:|---:|---:|---:|---:|---:|
+| $x - 2$ | $-0{,}1$ | $-0{,}01$ | $-0{,}001$ | $0{,}001$ | $0{,}01$ | $0{,}1$ |
+| $f(x)$ | $-10$ | $-100$ | $-1\,000$ | $1\,000$ | $100$ | $10$ |
+
+Leia a tabela pelos dois lados. Vindo pela direita, com $x$ maior que 2, o
+denominador é um positivo minúsculo, e dividir 1 por um positivo minúsculo dá
+um positivo enorme. Vindo pela esquerda, o denominador é um negativo minúsculo,
+e o resultado é um negativo enorme.
+
+<CartesianPlane
+  xMin={-2}
+  xMax={6}
+  yMin={-5}
+  yMax={5}
+  xUnit={42}
+  yUnit={42}
+  functions={[
+    {f: (x) => 1 / (x - 2), domain: [-2, 1.8], tone: 1},
+    {f: (x) => 1 / (x - 2), domain: [2.2, 6], tone: 1},
+  ]}
+  lines={[{x: 2, dashed: true, tone: 2}]}
+  labels={[{at: [2, 4.4], math: 'x = 2', tone: 2, dx: 34, dy: 0}]}
+  axisLabels={['x', 'y']}
+  caption="f(x) = 1/(x − 2). Perto da reta tracejada x = 2, o ramo da direita sobe além de qualquer altura e o ramo da esquerda desce além de qualquer profundidade. A curva nunca toca a reta, porque em x = 2 a função não existe."
+/>
+
+A reta tracejada é a assíntota vertical, e o desenho é o mesmo da lição de
+racionais. O que muda nesta página é a **frase** que descreve o desenho.
+Antes: “a curva dispara perto de $x = 2$”. Agora:
+
+$$
+\lim_{x \to 2^{+}} \frac{1}{x-2} = +\infty
+\qquad\text{e}\qquad
+\lim_{x \to 2^{-}} \frac{1}{x-2} = -\infty.
+$$
+
+Lê-se: “o limite de $\frac{1}{x-2}$ quando $x$ se aproxima de 2 pela direita
+é mais infinito”. E a leitura correta da igualdade é a da seção anterior: não
+há um número chamado infinito do lado direito. A igualdade abrevia a frase “a
+função cresce além de qualquer valor”.
+
+## 7. Ponte para os símbolos: por que a igualdade com $\infty$ é legítima
+
+Há um risco em escrever $\lim f(x) = +\infty$: parecer que o limite **existe** e
+vale um número chamado $+\infty$. Não é isso. Vale ser explícito sobre o que a
+igualdade afirma e o que ela não afirma.
+
+**O que ela afirma.** Escolha uma altura qualquer, por maior que seja — um
+milhão, um bilhão. Existe uma faixa em torno de $a$ dentro da qual $f(x)$
+ultrapassa essa altura. Em $\frac{1}{x-2}$ pela direita: para ultrapassar um
+milhão, é preciso que $x - 2$ seja menor que um milionésimo, e a faixa
+$2 < x < 2{,}000001$ garante isso. Para ultrapassar um bilhão, a faixa
+encolhe, mas existe. **Conferindo**: em $x = 2{,}001$, o denominador é
+$0{,}001$ e a função vale $1\,000$; em $x = 2{,}000001$, vale $1\,000\,000$.
+
+**O que ela não afirma.** Que o limite exista como número. Quando dizemos “o
+limite existe”, queremos dizer que existe um **número** $L$ de que $f(x)$ se
+aproxima. Aqui não existe. Por isso, a frase completa e honesta é: *o limite
+não existe, e a função cresce sem limite* — e a igualdade
+$\lim f(x) = +\infty$ é a abreviação dessa frase inteira.
+
+A mesma leitura vale para $x \to +\infty$. Escrever
+$\lim_{x \to +\infty} f(x) = L$ afirma: escolha uma tolerância qualquer em
+torno de $L$, por menor que seja. Existe um ponto a partir do qual todos os
+valores de $f(x)$ ficam dentro dessa tolerância. Na fábrica: para o custo
+médio ficar a menos de R\$ 0,10 de 18, é preciso que $\frac{2400}{x}$ seja
+menor que $0{,}10$, o que acontece para todo $x$ maior que 24 000 peças.
+**Conferindo**: $C(24\,000) = 18{,}10$ exatamente, e $C(24\,001)$ já fica
+abaixo disso.
+
+É a mesma ideia de tolerância que a lição de limite apresentou para
+$x \to a$. O que muda é que, em vez de uma faixa em torno de $a$, a condição
+passa a ser “a partir de certo ponto”.
+
+## 8. Limite infinito num ponto: a assíntota vertical
+
+> Dizemos que $\lim_{x \to a} f(x) = +\infty$ quando $f(x)$ cresce além de
+> qualquer valor à medida que $x$ se aproxima de $a$, pelos dois lados. Se
+> $f(x)$ desce além de qualquer valor, escrevemos $-\infty$. A reta $x = a$ é
+> então uma **assíntota vertical** do gráfico.
+
+Quando os dois lados discordam — um sobe, o outro desce —, escrevemos os dois
+limites laterais separadamente, como fizemos com $\frac{1}{x-2}$. A reta
+continua sendo assíntota vertical: para isso, um lado que dispare já é
+suficiente.
+
+**Exemplo.** $g(x) = \dfrac{x+2}{(x-1)^2}$ em $x = 1$. O denominador zera e o
+numerador vale 3. Mas aqui o denominador é um **quadrado**: ele é positivo
+dos dois lados de 1.
+
+| $x$ | $0{,}9$ | $0{,}99$ | $0{,}999$ | $1{,}001$ | $1{,}01$ | $1{,}1$ |
+|---|---:|---:|---:|---:|---:|---:|
+| $g(x)$ | $290$ | $29\,900$ | $2\,999\,000$ | $3\,001\,000$ | $30\,100$ | $310$ |
+
+Os dois lados sobem. Por isso, sem precisar separar os lados:
+
+$$
+\lim_{x \to 1} \frac{x+2}{(x-1)^2} = +\infty.
+$$
+
+**Contraexemplo.** $h(x) = \dfrac{x^2 - 4}{x - 2}$ em $x = 2$. O denominador
+também zera. Mas o numerador zera junto, e a lição de calculando limites
+mostrou que essa fração é igual a $x + 2$ para todo $x \neq 2$. O limite é 4,
+um número. Não há assíntota vertical: há um **buraco**. Denominador zero é
+condição necessária para a assíntota vertical, e não é suficiente. A
+diferença está no numerador: ele precisa ficar longe de zero.
+
+### Como decidir o sinal de cada lado
+
+Não é preciso montar a tabela toda vez. Perto de $a$, o numerador tem um sinal
+conhecido, e o sinal do denominador de cada lado se lê pelo fator que zera.
+
+Tome $f(x) = \dfrac{2x+1}{x-3}$, a função da lição de racionais. Perto de 3, o
+numerador vale aproximadamente $7$, positivo. O fator $x - 3$ é positivo para
+$x$ maior que 3 e negativo para $x$ menor que 3. Então:
+
+| Lado | Numerador | Denominador $x - 3$ | Quociente | Limite lateral |
+|---|---|---|---|---|
+| $x \to 3^{+}$ | perto de 7, positivo | positivo minúsculo | positivo enorme | $+\infty$ |
+| $x \to 3^{-}$ | perto de 7, positivo | negativo minúsculo | negativo enorme | $-\infty$ |
+
+**Conferindo com um número de cada lado**: em $x = 3{,}001$, o quociente é
+$\frac{7{,}002}{0{,}001} = 7\,002$; em $x = 2{,}999$, é
+$\frac{6{,}998}{-0{,}001} = -6\,998$. Os sinais batem com a tabela.
+
+Esse é o mesmo raciocínio do quadro de sinais das
+[inequações](../equacoes/inequacoes-do-segundo-grau): o sinal de um quociente
+é o produto dos sinais. A novidade está no tamanho: o denominador não é um
+número qualquer, é um número minúsculo, e o quociente sai enorme.
+
+## 9. Limite no infinito: a assíntota horizontal
+
+Agora a outra direção. Em vez de $x$ se aproximar de um ponto, $x$ cresce
+além de qualquer valor, e a pergunta é o que $f(x)$ faz.
+
+> Dizemos que $\lim_{x \to +\infty} f(x) = L$ quando $f(x)$ fica tão perto de
+> $L$ quanto se queira a partir de certo valor de $x$. Do mesmo modo,
+> $\lim_{x \to -\infty} f(x) = L$ descreve o que acontece quando $x$ desce
+> além de qualquer valor. Em qualquer dos dois casos, a reta $y = L$ é uma
+> **assíntota horizontal** do gráfico.
+
+O fato básico, de onde todos os outros vão sair, é este:
+
+$$
+\lim_{x \to +\infty} \frac{1}{x} = 0
+\qquad\text{e}\qquad
+\lim_{x \to -\infty} \frac{1}{x} = 0.
+$$
+
+A razão é a mesma da tabela do custo médio: dividir 1 por um número enorme dá
+um número minúsculo, e quanto maior o divisor, mais perto de zero. Em
+$x = 10^6$, $\frac{1}{x} = 0{,}000001$. Para qualquer potência de expoente
+positivo vale o mesmo, pelo mesmo motivo: $\frac{1}{x^2}$, $\frac{1}{x^3}$ e
+$\frac{5}{x^2}$ também se aproximam de zero.
+
+**Exemplo.** $f(x) = \dfrac{2x+1}{x-3}$. A tabela da lição de racionais dava
+$2{,}072$ em $x = 100$ e $2{,}007$ em $x = 1000$; em $x = 10^6$ o valor é
+$2{,}000007$. Logo $\lim_{x \to +\infty} f(x) = 2$, e a reta $y = 2$ é
+assíntota horizontal. Pelo outro lado, $f(-100) \approx 1{,}932$ e
+$f(-10^4) \approx 1{,}9993$: também $\lim_{x \to -\infty} f(x) = 2$.
+
+<CartesianPlane
+  xMin={-4}
+  xMax={10}
+  yMin={-6}
+  yMax={10}
+  xUnit={30}
+  yUnit={26}
+  yStep={2}
+  functions={[
+    {f: (x) => (2 * x + 1) / (x - 3), domain: [-4, 2.72], tone: 1},
+    {f: (x) => (2 * x + 1) / (x - 3), domain: [3.3, 10], tone: 1},
+  ]}
+  lines={[
+    {x: 3, dashed: true, tone: 2},
+    {m: 0, n: 2, dashed: true, tone: 3},
+  ]}
+  labels={[
+    {at: [3, 9.2], math: 'x = 3', tone: 2, dx: 34, dy: 0},
+    {at: [-2.6, 2], math: 'y = 2', tone: 3, dy: -14},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="f(x) = (2x + 1)/(x − 3). A vertical tracejada é o limite infinito em x = 3: um ramo sobe, o outro desce. A horizontal tracejada é o limite no infinito: os dois ramos se colam em y = 2 quando x cresce para um lado ou para o outro."
+/>
+
+**Contraexemplo.** $f(x) = x^2$. Quando $x$ cresce, $x^2$ cresce ainda mais
+rápido, sem se aproximar de altura nenhuma. Escrevemos
+$\lim_{x \to +\infty} x^2 = +\infty$, com a mesma leitura da seção 7: o
+limite não existe como número, e a função cresce sem limite. Não há assíntota
+horizontal. E, em $x \to -\infty$, o quadrado continua positivo e enorme:
+$\lim_{x \to -\infty} x^2 = +\infty$ também. Já $x^3$ muda de sinal:
+$\lim_{x \to -\infty} x^3 = -\infty$, porque $(-100)^3 = -1\,000\,000$.
+
+### A curva pode cruzar a assíntota horizontal
+
+A lição de racionais já avisou, e vale repetir com um limite ao lado. A
+assíntota horizontal descreve o que acontece **longe**, a partir de certo
+ponto. Ela não diz nada sobre o que a curva faz antes.
+
+Tome $f(x) = \dfrac{x^2 - x}{x^2 + 1}$. Os graus são iguais, e a assíntota
+horizontal é $y = 1$. A curva cruza essa reta? Cruza onde $f(x) = 1$, isto é,
+$x^2 - x = x^2 + 1$, o que dá $x = -1$. **Conferindo**:
+$f(-1) = \frac{1 + 1}{1 + 1} = 1$. A curva passa **em cima** da assíntota em
+$x = -1$, e ainda assim $\lim_{x \to +\infty} f(x) = 1$: em $x = 100$ ela
+vale $0{,}9899$ e em $x = 10^4$ vale $0{,}9999$.
+
+<CartesianPlane
+  xMin={-6}
+  xMax={8}
+  yMin={-0.6}
+  yMax={1.8}
+  xUnit={34}
+  yUnit={110}
+  yStep={0.5}
+  functions={[{f: (x) => (x * x - x) / (x * x + 1), tone: 1}]}
+  lines={[{m: 0, n: 1, dashed: true, tone: 3}]}
+  points={[{at: [-1, 1], label: '(-1,\\ 1)', tone: 2, dx: -30, dy: -16}]}
+  labels={[{at: [6.4, 1], math: 'y = 1', tone: 3, dy: 16}]}
+  axisLabels={['x', 'y']}
+  caption="f(x) = (x² − x)/(x² + 1). A curva cruza a assíntota y = 1 em x = −1 e, mais adiante, se aproxima dela por baixo. Cruzar antes não impede o limite no infinito."
+/>
+
+Já a assíntota **vertical** nunca é cruzada: em $x = a$ a função não existe.
+Cruzar uma reta é ter um ponto sobre ela, e não há ponto do gráfico com
+abscissa $a$.
+
+## 10. A técnica: dividir pelo maior grau
+
+Para $\frac{2x+1}{x-3}$ a tabela deu o limite 2. Mas tabela é observação, não
+cálculo, e ela pode enganar quando a aproximação é lenta. O que queremos é uma
+conta que **entregue** o 2.
+
+**Por que a substituição direta não serve.** Não dá para colocar $+\infty$ no
+lugar de $x$: não é um número, e “$\frac{\infty}{\infty}$” não tem valor. É a
+mesma situação de $\frac{0}{0}$ na lição anterior — a expressão trava, e a
+saída é reescrevê-la.
+
+**Qual propriedade autoriza a reescrita.** Multiplicar numerador e
+denominador pela mesma quantidade não nula não muda uma fração: é multiplicar
+por 1 escrito de outro jeito, a mesma ideia das
+[frações equivalentes](../numeros-e-operacoes/fracoes) e das
+[frações algébricas](../algebra/fracoes-algebricas). Aqui a quantidade é
+$\frac{1}{x}$, e ela é não nula para todo $x \neq 0$ — e como $x$ está
+crescendo além de qualquer valor, $x = 0$ nunca está em jogo.
+
+**O que muda na escrita e o que permanece.** Multiplicando em cima e embaixo
+por $\frac{1}{x}$:
+
+$$
+\frac{2x+1}{x-3}
+= \frac{(2x+1) \times \frac{1}{x}}{(x-3) \times \frac{1}{x}}
+= \frac{2 + \frac{1}{x}}{1 - \frac{3}{x}},
+\qquad x \neq 0.
+$$
+
+Mudou a escrita: cada termo foi dividido por $x$. Permaneceu o valor: para
+qualquer $x \neq 0$, os dois lados dão o mesmo número. **Conferindo em
+$x = 10$**: à esquerda, $\frac{21}{7} = 3$; à direita,
+$\frac{2 + 0{,}1}{1 - 0{,}3} = \frac{2{,}1}{0{,}7} = 3$. Confere.
+
+**Por que a nova forma responde.** Na nova escrita, as parcelas $\frac{1}{x}$ e
+$\frac{3}{x}$ são as que a seção 9 já resolveu: as duas se aproximam de zero.
+E as propriedades do limite da lição anterior deixam calcular o resto pedaço
+por pedaço — limite da soma é a soma dos limites, e limite do quociente é o
+quociente dos limites, porque o denominador se aproxima de 1, que não é zero:
+
+$$
+\lim_{x \to +\infty} \frac{2 + \frac{1}{x}}{1 - \frac{3}{x}}
+= \frac{2 + 0}{1 - 0} = 2.
+$$
+
+Agora o 2 saiu de uma conta, não de uma tabela. E a conta explica **por que**
+é 2: os termos de grau menor foram divididos por $x$ e viraram parcelas que
+somem; sobrou a razão entre os coeficientes de maior grau. É exatamente a
+regra “compare os graus” da lição de racionais, agora com a justificativa
+escrita.
+
+> **Dividir pelo maior grau:** para calcular o limite no infinito de um
+> quociente de polinômios, divida numerador e denominador pela maior potência
+> de $x$ que aparece no **denominador**. As parcelas que ficam com $x$ embaixo
+> se aproximam de zero, e o que sobra dá o limite.
+
+### Os três casos da comparação de graus
+
+A mesma técnica resolve as três situações, e vale fazer uma de cada.
+
+**Graus iguais.** $\lim_{x \to +\infty} \dfrac{3x^2 + 5x - 2}{x^2 + 1}$.
+Dividindo tudo por $x^2$:
+
+$$
+\frac{3 + \frac{5}{x} - \frac{2}{x^2}}{1 + \frac{1}{x^2}}
+\longrightarrow
+\frac{3 + 0 - 0}{1 + 0} = 3.
+$$
+
+**Conferindo**: em $x = 100$ a fração vale $3{,}049$; em $x = 10^4$,
+$3{,}0005$. A assíntota horizontal é $y = 3$, a razão dos coeficientes
+principais.
+
+**Grau do numerador menor.** $\lim_{x \to +\infty} \dfrac{5x + 1}{x^2 + 4}$.
+Dividindo tudo por $x^2$, o maior grau do denominador:
+
+$$
+\frac{\frac{5}{x} + \frac{1}{x^2}}{1 + \frac{4}{x^2}}
+\longrightarrow
+\frac{0 + 0}{1 + 0} = 0.
+$$
+
+**Conferindo**: em $x = 100$, $0{,}050$; em $x = 10^4$, $0{,}0005$. A
+assíntota horizontal é $y = 0$: o denominador cresce mais rápido e engole o
+numerador.
+
+**Grau do numerador maior.** $\lim_{x \to +\infty} \dfrac{x^2}{x + 1}$.
+Dividindo tudo por $x$, o maior grau do denominador:
+
+$$
+\frac{x}{1 + \frac{1}{x}}.
+$$
+
+O denominador se aproxima de 1, e o numerador é $x$, que cresce além de
+qualquer valor. Um número enorme dividido por algo perto de 1 é um número
+enorme:
+
+$$
+\lim_{x \to +\infty} \frac{x^2}{x+1} = +\infty.
+$$
+
+**Conferindo**: em $x = 100$, $99{,}01$; em $x = 10^4$, $9\,999{,}0$. Não há
+assíntota horizontal. A lição de racionais mostrou que esta curva se cola na
+reta $y = x - 1$, a assíntota oblíqua; o limite $+\infty$ diz que ela sobe
+sem parar, e a oblíqua diz **como** sobe.
+
+Do outro lado, $x \to -\infty$, a mesma escrita dá numerador negativo enorme
+sobre algo perto de 1: $\lim_{x \to -\infty} \frac{x^2}{x+1} = -\infty$.
+**Conferindo**: em $x = -100$, a fração vale $-101{,}01$.
+
+| Graus | Limite no infinito | Assíntota horizontal |
+|---|---|---|
+| numerador **menor** | 0 | $y = 0$ |
+| **iguais** | razão dos coeficientes principais | $y = \frac{a_n}{b_n}$ |
+| numerador **maior** | $+\infty$ ou $-\infty$, conforme os sinais | não há |
+
+É a tabela da lição de racionais, com a coluna do meio acrescentada. A
+coluna do meio é o que esta página trouxe: o número que antes se lia numa
+tabela agora sai de uma divisão.
+
+## 11. A hierarquia de crescimento
+
+A lição de função exponencial mostrou $2^x$ passando por cima de $x^{10}$ perto
+de $x = 60$. Com o símbolo de limite, essa observação vira uma afirmação
+exata sobre um quociente.
+
+Tome $\dfrac{x^3}{2^x}$. Numerador e denominador crescem os dois além de
+qualquer valor. A pergunta é **quem cresce mais rápido**, e a resposta é o
+quociente:
+
+| $x$ | 1 | 5 | 10 | 20 | 30 | 50 |
+|---:|---:|---:|---:|---:|---:|---:|
+| $x^3$ | 1 | 125 | 1 000 | 8 000 | 27 000 | 125 000 |
+| $2^x$ | 2 | 32 | 1 024 | 1 048 576 | $1{,}07 \times 10^9$ | $1{,}13 \times 10^{15}$ |
+| $\frac{x^3}{2^x}$ | $0{,}5$ | $3{,}9$ | $0{,}98$ | $0{,}0076$ | $0{,}000025$ | $1{,}1 \times 10^{-10}$ |
+
+Até $x = 9$ o polinômio está na frente — em $x = 5$ o quociente passa de 3.
+Em $x = 10$ eles quase empatam. A partir daí o quociente despenca, e não para
+de despencar. A afirmação exata é
+
+$$
+\lim_{x \to +\infty} \frac{x^3}{2^x} = 0,
+$$
+
+e ela vale para qualquer expoente no numerador e qualquer base maior que 1
+no denominador. O logaritmo fica na outra ponta: $\frac{\ln x}{x}$ vale
+$0{,}046$ em $x = 100$ e $0{,}00092$ em $x = 10^4$, e
+
+$$
+\lim_{x \to +\infty} \frac{\ln x}{x} = 0.
+$$
+
+> **Hierarquia de crescimento.** Para $x$ crescendo além de qualquer valor:
+> o logaritmo cresce mais devagar que qualquer potência $x^n$ com $n > 0$, e
+> qualquer potência cresce mais devagar que qualquer exponencial $b^x$ com
+> $b > 1$. Em quociente: o que está embaixo na hierarquia dividido pelo que
+> está em cima se aproxima de zero.
+
+Esta lição **não demonstra** essa hierarquia. A tabela mostra que ela é
+verossímil, e o argumento da lição de exponencial — somar 1 à entrada
+multiplica a saída por um fator fixo, enquanto o polinômio precisa dobrar a
+entrada para isso — diz por que ela é esperada. A demonstração fica para a
+[regra de L'Hôpital](./regra-de-lhopital), que usa derivadas. Até lá, use a
+hierarquia como resultado aceito e confira com números quando precisar.
+
+Dois limites que saem daí e que vão ser usados adiante:
+
+$$
+\lim_{x \to +\infty} e^{-x} = 0
+\qquad\text{e}\qquad
+\lim_{x \to 0^{+}} \ln x = -\infty.
+$$
+
+O primeiro é o decaimento da lição do número $e$: $e^{-x} = \frac{1}{e^x}$, e
+$e^x$ cresce além de qualquer valor. O segundo é a assíntota vertical do
+logaritmo em $x = 0$, que a lição de função logarítmica desenhou:
+$\ln 0{,}001 \approx -6{,}9$ e $\ln 10^{-6} \approx -13{,}8$, descendo sem
+parar.
+
+## 12. Resolvendo o problema da fábrica
+
+Agora as duas frases da Revisão geral viram duas igualdades.
+
+**Lote grande.** Dividindo numerador e denominador de
+$\frac{2400 + 18x}{x}$ por $x$, ou lendo direto a forma $\frac{2400}{x} + 18$:
+
+$$
+\lim_{x \to +\infty} C(x)
+= \lim_{x \to +\infty} \left(\frac{2400}{x} + 18\right)
+= 0 + 18 = 18.
+$$
+
+O custo médio se aproxima de R\$ 18 — o custo variável por peça — porque a
+parcela $\frac{2400}{x}$, que é o custo fixo diluído, se aproxima de zero. E a
+frase “nunca chega lá” também ganha justificativa: $\frac{2400}{x}$ é
+positiva para todo lote, então $C(x)$ é sempre maior que 18. O 18 é a
+assíntota horizontal: um piso.
+
+**Lote pequeno.** Quando $x$ se aproxima de zero pela direita — não faz
+sentido lote negativo —, o numerador $2400 + 18x$ fica perto de 2 400, e o
+denominador é um positivo minúsculo:
+
+$$
+\lim_{x \to 0^{+}} C(x) = +\infty.
+$$
+
+O custo médio cresce além de qualquer valor. A reta $x = 0$ é assíntota
+vertical.
+
+<CartesianPlane
+  xMin={-20}
+  xMax={300}
+  yMin={-8}
+  yMax={80}
+  xUnit={1.45}
+  yUnit={4.4}
+  xStep={50}
+  yStep={10}
+  functions={[{f: (x) => 2400 / x + 18, domain: [24, 300], tone: 1}]}
+  lines={[{m: 0, n: 18, dashed: true, tone: 3}]}
+  labels={[{at: [240, 18], math: 'y = 18', tone: 3, dy: 16}]}
+  axisLabels={['x', 'C']}
+  caption="Custo médio C(x) = 2400/x + 18. Perto de x = 0 a curva sobe além da janela; para a direita ela se cola no piso y = 18 sem tocá-lo."
+/>
+
+E a pergunta prática que a seção 7 levantou tem resposta com conta: para o
+custo médio ficar a menos de R\$ 0,10 do piso, é preciso $\frac{2400}{x} < 0{,}10$,
+isto é, $x > 24\,000$ peças. A partir desse lote, o custo fixo pesa menos de
+dez centavos por peça.
+
+## 13. Exemplos resolvidos
+
+### Exemplo 1: sinal de cada lado
+
+Calcule $\lim_{x \to 2^{+}} \dfrac{x}{x-2}$ e $\lim_{x \to 2^{-}} \dfrac{x}{x-2}$.
+
+O denominador zera em 2 e o numerador vale 2 ali, positivo. Pela direita,
+$x - 2$ é positivo minúsculo: quociente positivo enorme. Pela esquerda, $x - 2$
+é negativo minúsculo: quociente negativo enorme.
+
+$$
+\lim_{x \to 2^{+}} \frac{x}{x-2} = +\infty,
+\qquad
+\lim_{x \to 2^{-}} \frac{x}{x-2} = -\infty.
+$$
+
+**Conferindo**: $x = 2{,}001$ dá $\frac{2{,}001}{0{,}001} = 2\,001$;
+$x = 1{,}999$ dá $\frac{1{,}999}{-0{,}001} = -1\,999$.
+
+### Exemplo 2: quando os dois lados concordam
+
+*Pause e tente antes de ler.* Calcule $\lim_{x \to -3} \dfrac{1}{(x+3)^2}$.
+
+O denominador zera em $-3$, e o numerador é 1. Como o denominador é um
+quadrado, ele é positivo dos dois lados. O quociente é positivo enorme dos dois
+lados, e não é preciso separar:
+
+$$
+\lim_{x \to -3} \frac{1}{(x+3)^2} = +\infty.
+$$
+
+**Conferindo**: em $x = -3{,}001$ e em $x = -2{,}999$, o denominador vale
+$0{,}000001$ nos dois casos, e a fração vale $1\,000\,000$.
+
+### Exemplo 3: graus iguais, coeficientes negativos
+
+*Pause e tente.* Calcule $\lim_{x \to +\infty} \dfrac{2x^2 - x}{5 - 3x^2}$.
+
+Dividindo numerador e denominador por $x^2$:
+
+$$
+\frac{2 - \frac{1}{x}}{\frac{5}{x^2} - 3}
+\longrightarrow
+\frac{2 - 0}{0 - 3} = -\frac{2}{3}.
+$$
+
+**Conferindo**: em $x = 100$, a fração vale $-0{,}6634$; em $x = 10^4$,
+$-0{,}66663$. A assíntota horizontal é $y = -\frac{2}{3}$. O sinal negativo
+vem do denominador, que é negativo para $x$ grande. Esse sinal se perde
+quando a conta é feita olhando só os coeficientes $2$ e $3$.
+
+### Exemplo 4: uma raiz no numerador
+
+*Pause e tente.* Calcule $\lim_{x \to +\infty} \dfrac{\sqrt{x}}{x + 1}$.
+
+Aqui o “grau” do numerador é $\frac{1}{2}$, pela lição de
+[expoentes fracionários](../numeros-e-operacoes/expoentes-fracionarios), e o
+do denominador é 1. Dividindo por $x$:
+
+$$
+\frac{\frac{\sqrt{x}}{x}}{1 + \frac{1}{x}}
+= \frac{\frac{1}{\sqrt{x}}}{1 + \frac{1}{x}}.
+$$
+
+O passo $\frac{\sqrt{x}}{x} = \frac{1}{\sqrt{x}}$ vem de $x = \sqrt{x} \times \sqrt{x}$
+para $x > 0$: cancela um $\sqrt{x}$ em cima e embaixo. E $\frac{1}{\sqrt{x}}$
+se aproxima de zero pelo mesmo motivo de $\frac{1}{x}$: o divisor cresce sem
+parar. Logo o limite é $\frac{0}{1 + 0} = 0$.
+
+**Conferindo**: em $x = 100$, $\frac{10}{101} \approx 0{,}099$; em
+$x = 10^4$, $\frac{100}{10\,001} \approx 0{,}010$.
+
+### Exemplo 5: infinito menos infinito
+
+*Pause e tente.* Calcule $\lim_{x \to +\infty} \left(\sqrt{x^2 + 4x} - x\right)$.
+
+As duas parcelas crescem além de qualquer valor. A tentação é dizer que a
+diferença é zero, “porque infinito menos infinito é zero”. Antes de aceitar,
+confira com um número: em $x = 100$, $\sqrt{10\,400} - 100 \approx 1{,}98$.
+Não é zero.
+
+A saída é o **conjugado** da lição de [racionalização](../algebra/racionalizacao),
+que a lição de calculando limites já reaproveitou. Multiplicamos e dividimos
+por $\sqrt{x^2+4x} + x$, que é multiplicar por 1:
+
+$$
+\sqrt{x^2 + 4x} - x
+= \frac{\left(\sqrt{x^2+4x} - x\right)\left(\sqrt{x^2+4x} + x\right)}{\sqrt{x^2+4x} + x}
+= \frac{(x^2 + 4x) - x^2}{\sqrt{x^2+4x} + x}
+= \frac{4x}{\sqrt{x^2+4x} + x}.
+$$
+
+O numerador usou o produto notável $(a - b)(a + b) = a^2 - b^2$. Agora é um
+quociente, e a técnica desta página se aplica: dividir tudo por $x$. No
+denominador, $\frac{\sqrt{x^2+4x}}{x} = \sqrt{\frac{x^2+4x}{x^2}} = \sqrt{1 + \frac{4}{x}}$,
+válido porque $x > 0$:
+
+$$
+\frac{4}{\sqrt{1 + \frac{4}{x}} + 1}
+\longrightarrow
+\frac{4}{\sqrt{1 + 0} + 1} = \frac{4}{2} = 2.
+$$
+
+**Conferindo**: em $x = 10^4$, a expressão original vale $1{,}9998$; em
+$x = 10^6$, $1{,}999998$.
+
+A resposta 2 é o que “infinito menos infinito” escondia. Outras diferenças do
+mesmo tipo dão outros resultados: $\sqrt{x^2 + 1} - x$ se aproxima de 0 (em
+$x = 100$ vale $0{,}005$), $(x + 5) - x$ vale 5 sempre, e $x^2 - x$ cresce
+além de qualquer valor. **Não existe um valor para $\infty - \infty$.** Cada
+caso exige conta.
+
+### Exemplo 6: polinômio contra exponencial
+
+*Pause e tente.* Uma rotina de computador gasta $n^3$ passos para uma entrada
+de tamanho $n$; outra gasta $2^n$. Qual das duas fica mais lenta para entradas
+grandes, e o que isso tem a ver com limite?
+
+Pela hierarquia da seção 11, $\lim_{n \to +\infty} \frac{n^3}{2^n} = 0$: para
+$n$ grande, $n^3$ é uma fração desprezível de $2^n$. A rotina exponencial fica
+**muito** mais lenta. Mas a tabela da seção 11 também mostra que, para $n$ até
+9, a rotina cúbica gasta mais passos. O limite descreve o comportamento para
+entradas grandes; para entradas pequenas ele não decide nada.
+
+## 14. Erros comuns
+
+> **Erro 1: tratar $\infty$ como número e fazer conta com ele.** “Infinito
+> menos infinito é zero”, “infinito sobre infinito é um”. Teste:
+> $x^2 - x$ cresce além de qualquer valor, $(x + 5) - x$ vale 5, e
+> $\sqrt{x^2 + 4x} - x$ se aproxima de 2 — três diferenças do tipo
+> $\infty - \infty$, três resultados. Do mesmo modo, $\frac{x^2}{x}$ cresce
+> sem limite, $\frac{x}{x^2}$ se aproxima de 0 e $\frac{3x}{x}$ vale 3. As
+> escritas $\infty - \infty$ e $\frac{\infty}{\infty}$ são **avisos** de que a
+> expressão precisa ser reescrita, não resultados.
+
+> **Erro 2: achar que $\lim f(x) = +\infty$ significa que o limite existe.**
+> Existe quando há um **número** de que a função se aproxima. A igualdade com
+> $+\infty$ é uma abreviação de “não existe, e a função cresce sem limite”.
+> Por isso não se faz conta com esse “valor”: não é valor.
+
+> **Erro 3: declarar assíntota vertical só porque o denominador zera.** Em
+> $\frac{x^2-4}{x-2}$ o denominador zera em 2 e o limite é 4: há um buraco, não
+> uma assíntota. É preciso conferir que o numerador **não** zera junto — e, se
+> zerar, fatorar e cancelar antes de decidir.
+
+> **Erro 4: esquecer o sinal de cada lado.** $\frac{1}{x-2}$ dá $+\infty$ pela
+> direita e $-\infty$ pela esquerda. Escrever só “$\lim_{x \to 2} = \infty$”,
+> sem sinal e sem lado, apaga metade da informação. O sinal sai do quadro:
+> sinal do numerador vezes sinal do denominador em cada lado.
+
+> **Erro 5: achar que a curva não pode cruzar a assíntota horizontal.**
+> $\frac{x^2 - x}{x^2 + 1}$ passa exatamente sobre $y = 1$ em $x = -1$ e mesmo
+> assim tem limite 1 no infinito. A assíntota horizontal descreve a curva
+> **longe**; perto da origem ela não manda em nada. A vertical, essa sim,
+> nunca é cruzada.
+
+> **Erro 6: dividir pelo maior grau do numerador em vez do denominador.** Em
+> $\frac{x^2}{x+1}$, dividir por $x^2$ dá $\frac{1}{\frac{1}{x} + \frac{1}{x^2}}$,
+> com denominador se aproximando de zero — a expressão continua travada. Divida
+> pelo maior grau do **denominador**: sobra $\frac{x}{1 + \frac{1}{x}}$, e o
+> limite $+\infty$ fica visível.
+
+> **Erro 7: ler $\sqrt{x^2}$ como $x$ quando $x$ é negativo.** Para
+> $x \to -\infty$, $\sqrt{x^2} = \lvert x \rvert = -x$, como a lição de
+> [raízes](../numeros-e-operacoes/raizes) avisou. É por isso que
+> $\frac{3x+1}{\sqrt{x^2+1}}$ se aproxima de 3 quando $x \to +\infty$ e de
+> $-3$ quando $x \to -\infty$. Teste com $x = -100$: o numerador é $-299$ e a
+> raiz é positiva, cerca de 100; o quociente é perto de $-3$.
+
+> **Erro 8: concluir da hierarquia que a exponencial é sempre maior.** A
+> hierarquia é sobre $x$ **grande**. Em $x = 5$, $x^3 = 125$ e $2^x = 32$: o
+> polinômio ganha. A exponencial passa na frente em algum ponto, e a partir
+> dali não perde mais — mas o ponto existe, e antes dele a comparação é outra.
+
+## 15. Perguntas de verificação
+
+1. Por que $\lim_{x \to 2^{+}} \frac{1}{x-2} = +\infty$ e
+   $\lim_{x \to 2^{-}} \frac{1}{x-2} = -\infty$ têm sinais opostos?
+2. O que a igualdade $\lim_{x \to +\infty} C(x) = 18$ afirma, e o que ela não
+   afirma?
+3. Por que se diz que $\infty$ não é um número, se ele aparece numa igualdade?
+4. Em $\frac{x^2 - 4}{x - 2}$ o denominador zera em 2. Por que ali não há
+   assíntota vertical?
+5. Por que dividir numerador e denominador por $x$ não muda o valor da fração,
+   e por que essa reescrita ajuda?
+6. Por que o limite de $\frac{3x^2 + 5x - 2}{x^2 + 1}$ no infinito é 3 e não
+   depende do 5 nem do $-2$?
+7. A curva de $\frac{x^2 - x}{x^2 + 1}$ passa sobre a reta $y = 1$. Isso
+   contradiz o fato de $y = 1$ ser assíntota horizontal?
+8. Por que $\infty - \infty$ não vale zero?
+9. O que a tabela de $\frac{x^3}{2^x}$ mostra que a comparação “$2^x$ é maior
+   que $x^3$” sozinha não mostra?
+10. Por que a divisão pelo maior grau é feita com o grau do denominador, e não
+    do numerador?
+11. Numa assíntota vertical, um lado subindo já é suficiente para a reta ser
+    assíntota? E para escrever $\lim_{x \to a} f(x) = +\infty$ sem indicar o
+    lado?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. O numerador é 1, positivo, dos dois lados. O que muda é o sinal do
+   denominador: $x - 2$ é positivo minúsculo pela direita e negativo minúsculo
+   pela esquerda. Positivo sobre positivo minúsculo dá positivo enorme;
+   positivo sobre negativo minúsculo dá negativo enorme.
+2. Afirma que, escolhida qualquer tolerância em torno de 18, existe um tamanho
+   de lote a partir do qual todos os custos médios ficam dentro dela — para
+   R\$ 0,10, o lote é 24 000 peças. Não afirma que algum lote tem custo médio
+   exatamente 18, e de fato nenhum tem, porque $\frac{2400}{x}$ nunca é zero.
+3. Porque a igualdade é uma abreviação. $\lim f(x) = +\infty$ resume a frase
+   “o limite não existe como número, e $f(x)$ cresce além de qualquer valor”.
+   Nenhuma conta é feita com o $\infty$: ele não entra em soma, produto ou
+   divisão como um número entraria.
+4. Porque o numerador zera junto. Para $x \neq 2$ a fração é igual a $x + 2$,
+   e o limite é 4, um número. Assíntota vertical exige denominador se
+   aproximando de zero com numerador **longe** de zero.
+5. Dividir em cima e embaixo por $x$ é multiplicar a fração por
+   $\frac{1/x}{1/x} = 1$, o que não muda o valor para $x \neq 0$. Ajuda porque
+   os termos de grau menor viram parcelas com $x$ embaixo, e essas parcelas se
+   aproximam de zero — o limite fica à vista.
+6. Depois da divisão por $x^2$, o 5 vira $\frac{5}{x}$ e o $-2$ vira
+   $-\frac{2}{x^2}$, e os dois se aproximam de zero. Sobra $\frac{3}{1}$. Os
+   termos de grau menor influenciam a curva perto da origem, mas não o
+   comportamento longe dela.
+7. Não. A assíntota horizontal descreve o que a curva faz **a partir de certo
+   ponto**, e o limite continua sendo 1: em $x = 10^4$ a função vale
+   $0{,}9999$. O cruzamento em $x = -1$ acontece antes, onde a assíntota não
+   diz nada.
+8. Porque as duas parcelas podem crescer em ritmos diferentes. $x^2 - x$
+   cresce sem limite, $(x + 5) - x$ é 5, e $\sqrt{x^2 + 4x} - x$ se aproxima
+   de 2. Não há como saber o resultado sem reescrever a expressão.
+9. Mostra o **ritmo** da diferença. Além de $2^x$ passar na frente, o
+   quociente $\frac{x^3}{2^x}$ se aproxima de zero, ou seja, o polinômio vira
+   uma fração desprezível da exponencial. E mostra também que, antes de
+   $x = 10$, o polinômio estava na frente.
+10. Porque é o denominador que precisa se aproximar de algo diferente de zero
+    para a propriedade do quociente funcionar. Dividindo pelo maior grau do
+    denominador, ele se aproxima do coeficiente principal, que não é zero. Se
+    o numerador tem grau maior, sobra $x$ em cima, e o limite infinito fica
+    visível; se tem grau menor, sobra zero em cima.
+11. Um lado subindo (ou descendo) já faz de $x = a$ uma assíntota vertical.
+    Mas escrever $\lim_{x \to a} f(x) = +\infty$ sem indicar o lado exige que
+    **os dois** lados subam, como em $\frac{1}{(x+3)^2}$. Quando um sobe e o
+    outro desce, os dois limites laterais precisam ser escritos separadamente.
+
+</details>
+
+## 16. Exercícios
+
+### 1. Reconhecimento
+
+1. Para cada função, diga se a reta $x = a$ é assíntota vertical, se há
+   buraco em $a$, ou se nenhum dos dois: a) $\frac{x+1}{x^2-9}$ em $a = 3$;
+   b) $\frac{x^2-1}{x-1}$ em $a = 1$; c) $\frac{3}{x^2+1}$ em $a = 0$.
+2. Sem calcular, diga qual dos três casos da comparação de graus cada função
+   ocupa: a) $\frac{4x-7}{2x+5}$; b) $\frac{x+3}{x^2-1}$;
+   c) $\frac{x^3-1}{x^2+1}$.
+3. Cada frase abaixo descreve um limite. Escreva-o com símbolos:
+   a) “quando $x$ cresce sem parar, $f(x)$ se aproxima de $-4$”;
+   b) “quando $x$ se aproxima de 5 pela esquerda, $f(x)$ desce além de
+   qualquer valor”.
+
+### 2. Explicação
+
+4. Explique, com um número ao lado, por que “$\frac{\infty}{\infty} = 1$” está
+   errado.
+5. Um colega diz: “$\lim_{x \to 0^{+}} \frac{1}{x} = +\infty$, então o limite
+   existe e vale infinito”. Corrija a frase.
+6. Explique por que a assíntota vertical nunca é cruzada pela curva, mas a
+   horizontal pode ser.
+
+### 3. Aplicação direta
+
+7. Calcule:
+   a) $\lim_{x \to +\infty} \dfrac{4x - 7}{2x + 5}$;
+   b) $\lim_{x \to -\infty} \dfrac{x + 3}{x^2 - 1}$;
+   c) $\lim_{x \to +\infty} \dfrac{x^3 - 1}{x^2 + 1}$;
+   d) $\lim_{x \to +\infty} \dfrac{6x^2 + 1}{3x^2 - x}$.
+8. Calcule os limites laterais e diga se a reta é assíntota vertical:
+   a) $\lim_{x \to 2^{+}} \dfrac{x}{x-2}$ e $\lim_{x \to 2^{-}} \dfrac{x}{x-2}$;
+   b) $\lim_{x \to -3} \dfrac{1}{(x+3)^2}$.
+9. Para cada função do exercício 7, escreva a assíntota horizontal, se houver.
+
+### 4. Variação
+
+10. Calcule $\lim_{x \to +\infty} \dfrac{2x^2 - x}{5 - 3x^2}$ e explique de
+    onde vem o sinal do resultado.
+11. Calcule $\lim_{x \to +\infty} \dfrac{\sqrt{x}}{x + 1}$.
+12. Calcule $\lim_{x \to +\infty} \left(\sqrt{x^2 + 4x} - x\right)$.
+13. Calcule $\lim_{x \to -\infty} \dfrac{3x + 1}{\sqrt{x^2 + 1}}$ e compare com
+    o mesmo limite em $x \to +\infty$.
+14. Use a hierarquia de crescimento para dizer o valor de
+    $\lim_{x \to +\infty} \dfrac{5^x}{x^5}$ e de $\lim_{x \to +\infty} \dfrac{\ln x}{x}$,
+    e confira cada um com $x = 50$ e $x = 10^4$, respectivamente.
+
+### 5. Problema misto
+
+15. Um tanque contém 200 litros de água pura. A partir do instante zero, entra
+    água salgada a 1 litro por minuto, trazendo 30 gramas de sal por minuto, e
+    nada sai. Após $t$ minutos, a concentração de sal no tanque, em gramas por
+    litro, é $c(t) = \dfrac{30t}{200 + t}$.
+    a) Calcule $\lim_{t \to +\infty} c(t)$ e interprete o resultado.
+    b) A concentração chega a 30 g/L em algum instante? Justifique.
+    c) Em que instante a concentração atinge 27 g/L?
+16. A quantidade de um medicamento no sangue, em miligramas, $t$ horas após a
+    dose, é $M(t) = 500 \times 0{,}8^t$. a) Calcule
+    $\lim_{t \to +\infty} M(t)$. b) Qual é a assíntota horizontal? c) O
+    medicamento é eliminado por completo em algum instante?
+17. Na fábrica do motivador, a partir de que tamanho de lote o custo médio
+    fica a menos de R\$ 0,01 do piso de R\$ 18?
+
+### 6. Justificativa
+
+18. Explique por que $\lim_{x \to +\infty} \dfrac{1}{x^n} = 0$ para qualquer
+    expoente inteiro $n \ge 1$.
+19. Sejam $P(x) = a_n x^n + \ldots + a_0$ e $Q(x) = b_n x^n + \ldots + b_0$
+    polinômios do mesmo grau $n$, com $b_n \neq 0$. Mostre que
+    $\lim_{x \to +\infty} \dfrac{P(x)}{Q(x)} = \dfrac{a_n}{b_n}$.
+20. A função $\frac{2x+1}{x-3}$ tem assíntota horizontal $y = 2$, e a função
+    $\frac{x^2 - x}{x^2 + 1}$ tem assíntota horizontal $y = 1$. A primeira
+    nunca cruza a sua assíntota; a segunda cruza. Mostre os dois fatos
+    resolvendo uma equação em cada caso.
+
+<details>
+<summary>Dica para o exercício 13</summary>
+
+Para $x$ negativo, $\sqrt{x^2} = -x$, e não $x$. Ao dividir a raiz por $x$,
+escreva $x = -\sqrt{x^2}$ antes de entrar com o $x$ para dentro da raiz.
+
+</details>
+
+<details>
+<summary>Dica para o exercício 19</summary>
+
+Divida numerador e denominador por $x^n$ e observe o que acontece com cada
+parcela que ficou com $x$ embaixo.
+
+</details>
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) **Assíntota vertical.** O denominador $x^2 - 9 = (x-3)(x+3)$ zera em 3,
+   e o numerador vale 4 ali. &nbsp; b) **Buraco.** Numerador e denominador
+   zeram em 1; para $x \neq 1$ a fração é $x + 1$, e o limite é 2. &nbsp;
+   c) **Nenhum dos dois.** O denominador $x^2 + 1$ vale 1 em $x = 0$ e nunca
+   zera: a função existe em todo ponto e não tem assíntota vertical.
+2. a) Graus iguais. &nbsp; b) Numerador de grau menor. &nbsp; c) Numerador de
+   grau maior.
+3. a) $\lim_{x \to +\infty} f(x) = -4$. &nbsp; b) $\lim_{x \to 5^{-}} f(x) = -\infty$.
+4. Porque numerador e denominador podem crescer em ritmos diferentes.
+   $\frac{x^2}{x} = x$ cresce sem limite; $\frac{x}{x^2} = \frac{1}{x}$ se
+   aproxima de zero; $\frac{3x}{x} = 3$. Em $x = 100$: 100, $0{,}01$ e 3.
+   Três quocientes do tipo $\frac{\infty}{\infty}$, três resultados. A escrita
+   avisa que é preciso reescrever, não entrega um valor.
+5. “O limite não existe como número: a função cresce além de qualquer valor
+   quando $x$ se aproxima de zero pela direita. A igualdade com $+\infty$ é a
+   abreviação dessa frase.” Um limite que existe é um número de que a função
+   se aproxima, e infinito não é número.
+6. Cruzar uma reta é ter um ponto do gráfico sobre ela. Na assíntota vertical
+   $x = a$, a função não existe em $a$, então não há ponto do gráfico com essa
+   abscissa. Na horizontal $y = L$, nada impede que $f(x) = L$ para algum
+   $x$: a assíntota só descreve o comportamento a partir de certo ponto.
+7. a) Dividindo por $x$: $\frac{4 - 7/x}{2 + 5/x} \to \frac{4}{2} = 2$.
+   Conferindo: $x = 10^4$ dá $1{,}99915$. &nbsp; b) Dividindo por $x^2$:
+   $\frac{1/x + 3/x^2}{1 - 1/x^2} \to \frac{0}{1} = 0$. Conferindo:
+   $x = -10^4$ dá $-0{,}0001$. &nbsp; c) Dividindo por $x^2$:
+   $\frac{x - 1/x^2}{1 + 1/x^2}$; o numerador cresce sem limite e o
+   denominador se aproxima de 1: $+\infty$. Conferindo: $x = 10^4$ dá
+   $9\,999{,}9999$. &nbsp; d) Dividindo por $x^2$:
+   $\frac{6 + 1/x^2}{3 - 1/x} \to \frac{6}{3} = 2$. Conferindo: $x = 10^4$ dá
+   $2{,}00007$. **Se você encontrou $\frac{6}{3x}$ ou algo parecido em (d)**,
+   provavelmente dividiu o $-x$ do denominador por $x^2$ e obteve $-x$ em vez
+   de $-\frac{1}{x}$.
+8. a) O numerador vale 2 perto de 2, positivo. Pela direita o denominador é
+   positivo minúsculo: $+\infty$. Pela esquerda, negativo minúsculo:
+   $-\infty$. Conferindo: $x = 2{,}001$ dá $2\,001$ e $x = 1{,}999$ dá
+   $-1\,999$. A reta $x = 2$ é assíntota vertical. &nbsp; b) O denominador é
+   um quadrado, positivo dos dois lados, e o numerador é 1: $+\infty$ pelos
+   dois lados. Conferindo: $x = -3{,}001$ e $x = -2{,}999$ dão $10^6$. A reta
+   $x = -3$ é assíntota vertical.
+9. a) $y = 2$. &nbsp; b) $y = 0$. &nbsp; c) Não há: o limite é $+\infty$.
+   &nbsp; d) $y = 2$.
+10. Dividindo por $x^2$: $\frac{2 - 1/x}{5/x^2 - 3} \to \frac{2}{-3} = -\frac{2}{3}$.
+    Conferindo: $x = 10^4$ dá $-0{,}66663$. O sinal vem do denominador: para
+    $x$ grande, $5 - 3x^2$ é negativo, porque o $-3x^2$ domina o 5. **Se você
+    encontrou $\frac{2}{3}$**, leu os coeficientes sem o sinal.
+11. Dividindo por $x$: $\frac{\sqrt{x}/x}{1 + 1/x} = \frac{1/\sqrt{x}}{1 + 1/x} \to \frac{0}{1} = 0$.
+    Conferindo: $x = 10^4$ dá $\frac{100}{10\,001} \approx 0{,}01$.
+12. Multiplicando e dividindo pelo conjugado $\sqrt{x^2+4x} + x$, o numerador
+    vira $(x^2 + 4x) - x^2 = 4x$. Dividindo tudo por $x$:
+    $\frac{4}{\sqrt{1 + 4/x} + 1} \to \frac{4}{2} = 2$. Conferindo:
+    $x = 10^4$ dá $1{,}9998$. **Se você encontrou 0**, tratou
+    $\infty - \infty$ como zero; confira com $x = 100$, que dá $1{,}98$.
+13. Para $x$ negativo, $x = -\sqrt{x^2}$. Dividindo numerador e denominador
+    por $x$: o numerador vira $3 + \frac{1}{x}$; o denominador vira
+    $\frac{\sqrt{x^2+1}}{x} = \frac{\sqrt{x^2+1}}{-\sqrt{x^2}} = -\sqrt{1 + \frac{1}{x^2}}$.
+    O limite é $\frac{3}{-1} = -3$. Conferindo: $x = -10^4$ dá $-2{,}9999$.
+    Em $x \to +\infty$, o sinal não aparece e o limite é 3 ($x = 10^4$ dá
+    $3{,}0001$). **Se você encontrou 3 nos dois lados**, usou
+    $\sqrt{x^2} = x$ para $x$ negativo.
+14. $\frac{5^x}{x^5}$ é exponencial sobre potência: $+\infty$. Conferindo:
+    $x = 50$ dá cerca de $2{,}8 \times 10^{26}$. E $\frac{\ln x}{x}$ é
+    logaritmo sobre potência: 0. Conferindo: $x = 10^4$ dá $0{,}00092$.
+15. a) Dividindo por $t$: $\frac{30}{200/t + 1} \to \frac{30}{1} = 30$ g/L.
+    Conferindo: $t = 10^4$ dá $29{,}41$. É a concentração da água que entra:
+    com o tempo, os 200 litros iniciais de água pura viram uma fração
+    desprezível do tanque, e a mistura fica quase igual ao que está entrando.
+    &nbsp; b) **Não.** $c(t) = 30$ exigiria $30t = 30(200 + t)$, isto é,
+    $0 = 6\,000$, impossível. Sempre há água pura no tanque diluindo a
+    mistura; 30 é o teto, uma assíntota horizontal. &nbsp; c) $30t = 27(200 + t)$
+    dá $3t = 5\,400$, logo $t = 1\,800$ minutos, ou 30 horas. Conferindo:
+    $c(1800) = \frac{54\,000}{2\,000} = 27$.
+16. a) $0{,}8^t = \frac{1}{1{,}25^t}$, e $1{,}25^t$ cresce além de qualquer
+    valor, então $\lim_{t \to +\infty} M(t) = 0$. Conferindo: $t = 50$ dá
+    $0{,}007$ mg. &nbsp; b) $y = 0$. &nbsp; c) **Não.** Uma potência de
+    $0{,}8$ nunca vale zero: a quantidade fica abaixo de qualquer valor que se
+    fixe, mas nunca é exatamente zero. Na prática, abaixo de certa quantidade
+    o medicamento deixa de ter efeito — mas isso é um critério prático, não
+    um instante em que $M(t) = 0$.
+17. $\frac{2400}{x} < 0{,}01$ dá $x > 240\,000$ peças. Conferindo:
+    $C(240\,000) = 18{,}01$ exatamente, e a partir de $240\,001$ fica abaixo.
+18. Para $x > 1$, $x^n \ge x$, então $0 < \frac{1}{x^n} \le \frac{1}{x}$. Como
+    $\frac{1}{x}$ se aproxima de zero e $\frac{1}{x^n}$ fica preso entre 0 e
+    ele, $\frac{1}{x^n}$ também se aproxima de zero. Esse argumento de
+    “preso entre dois que vão para o mesmo lugar” é o que a lição do
+    [teorema do confronto](./teorema-do-confronto) formaliza.
+19. Dividindo numerador e denominador por $x^n$:
+    $\dfrac{a_n + \frac{a_{n-1}}{x} + \ldots + \frac{a_0}{x^n}}{b_n + \frac{b_{n-1}}{x} + \ldots + \frac{b_0}{x^n}}$.
+    Cada parcela com $x$ embaixo se aproxima de zero pelo exercício 18. O
+    numerador se aproxima de $a_n$ e o denominador de $b_n \neq 0$; pela
+    propriedade do quociente, o limite é $\frac{a_n}{b_n}$. É a demonstração
+    do caso “graus iguais” da tabela.
+20. Primeira: $\frac{2x+1}{x-3} = 2$ dá $2x + 1 = 2x - 6$, isto é, $1 = -6$,
+    impossível. A curva nunca toca $y = 2$. Segunda:
+    $\frac{x^2 - x}{x^2 + 1} = 1$ dá $x^2 - x = x^2 + 1$, isto é, $x = -1$. A
+    curva toca $y = 1$ no ponto $(-1, 1)$. Nos dois casos o limite no infinito
+    é a assíntota; tocar ou não tocar é uma pergunta separada, respondida por
+    uma equação.
+
+</details>
+
+## 17. Revisão curta
+
+- $\infty$ **não é número**. As igualdades $\lim f(x) = +\infty$ e
+  $\lim_{x \to +\infty} f(x) = L$ abreviam frases sobre comportamento:
+  “cresce além de qualquer valor” e “fica tão perto de $L$ quanto se queira a
+  partir de certo ponto”.
+- **Limite infinito num ponto** é a assíntota vertical com símbolos. Ele
+  aparece onde o denominador se aproxima de zero e o numerador **não**; o
+  sinal de cada lado sai do sinal do numerador vezes o sinal do denominador.
+  Se os dois lados discordam, os limites laterais são escritos separados.
+- **Limite no infinito** é a assíntota horizontal com símbolos. O fato básico
+  é $\lim_{x \to \pm\infty} \frac{1}{x} = 0$, e ele se estende a qualquer
+  potência com expoente positivo.
+- Para quociente de polinômios, **divida pelo maior grau do denominador**. A
+  reescrita não muda o valor da fração; as parcelas com $x$ embaixo somem, e o
+  que sobra decide os três casos: grau menor dá 0, graus iguais dão a razão
+  dos coeficientes principais, grau maior dá $\pm\infty$.
+- $\infty - \infty$ e $\frac{\infty}{\infty}$ são **avisos**, não resultados.
+  Reescreva — com conjugado, com divisão pelo maior grau — antes de responder.
+- **Hierarquia de crescimento:** logaritmo, depois potências, depois
+  exponencial. O de baixo dividido pelo de cima se aproxima de zero. A
+  demonstração fica para a regra de L'Hôpital.
+- A curva **pode** cruzar a assíntota horizontal e **nunca** cruza a vertical.
+
+A próxima página, sobre [continuidade](./continuidade), pega o limite num
+ponto e faz a pergunta que faltava: e quando o limite existe e é igual ao
+valor da função? É essa igualdade que separa uma curva sem saltos de uma com
+saltos, buracos e assíntotas — e ela garante um resultado que a lição de
+raízes racionais não conseguia: achar uma raiz mesmo quando a lista de
+candidatos falha.

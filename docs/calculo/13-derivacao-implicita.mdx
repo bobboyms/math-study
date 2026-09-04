@@ -1,0 +1,1000 @@
+---
+title: "Derivação implícita: derivar sem isolar y"
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Derivação implícita: derivar sem isolar $y$
+
+## 1. Problema motivador: em que direção o carrinho escapa?
+
+Uma pista circular de testes tem 5 m de raio, e o centro dela é a origem de um
+sistema de coordenadas com unidade em metros. A borda da pista é a
+circunferência
+
+$$
+x^2 + y^2 = 25.
+$$
+
+Um carrinho de controle remoto percorre a borda. No ponto $(3, 4)$ ele perde a
+aderência e sai em linha reta, na direção em que estava indo naquele instante.
+A pergunta é: **para onde ele vai?** Ou seja, qual é a reta que passa por
+$(3, 4)$ com a direção da curva ali?
+
+Essa reta é a **tangente** à circunferência no ponto $(3, 4)$. A lição de
+[A derivada](./a-derivada) ensinou a achar tangentes: a inclinação é a derivada,
+e a reta é $y = f(a) + f'(a)(x - a)$. Então parece que só falta derivar.
+
+Só que há um obstáculo. A circunferência **não é o gráfico de uma função**. A
+lição de [funções](../funcoes/funcoes) mostrou isso com o teste da reta
+vertical: a vertical em $x = 3$ corta a curva duas vezes, em $(3, 4)$ e em
+$(3, -4)$. Não existe uma $f$ com $f(3) = 4$ e $f(3) = -4$ ao mesmo tempo.
+
+O caminho conhecido seria isolar $y$. De $x^2 + y^2 = 25$ vem $y^2 = 25 - x^2$,
+e daí
+
+$$
+y = \sqrt{25 - x^2} \qquad \text{ou} \qquad y = -\sqrt{25 - x^2}.
+$$
+
+O ponto $(3, 4)$ está no arco de cima, então a função que interessa é
+$y = \sqrt{25 - x^2}$. Dá para derivá-la: é uma raiz de função, e a
+[regra da cadeia](./regra-da-cadeia) resolve. Mas a conta tem raiz, tem cadeia,
+tem um sinal para vigiar, e precisa ser repetida para o arco de baixo se o
+carrinho escapar de lá.
+
+Esta página mostra um caminho mais curto: **derivar a equação inteira, sem
+isolar $y$**. Ele dá a resposta do carrinho em duas linhas, funciona para os
+dois arcos ao mesmo tempo e serve para curvas em que isolar $y$ é impossível.
+
+## 2. Mapa das ideias
+
+- uma **função explícita** tem o $y$ isolado: $y = \sqrt{25 - x^2}$;
+- uma **relação implícita** liga $x$ e $y$ sem isolar nenhum dos dois:
+  $x^2 + y^2 = 25$;
+- perto de um ponto, uma relação implícita costuma **definir** $y$ como função
+  de $x$, mesmo sem fórmula para ela;
+- **derivação implícita** é derivar os dois lados da relação em relação a $x$,
+  tratando $y$ como uma função de $x$;
+- toda vez que um termo com $y$ é derivado, aparece um fator $y'$ — é a regra
+  da cadeia em ação;
+- o resultado $y'$ costuma depender de $x$ **e** de $y$, então a tangente
+  depende do ponto inteiro, não só de $x$;
+- as derivadas de $\arcsen$, $\arctg$ e de $x^{p/q}$ saem desse método.
+
+## 3. Para que serve
+
+- achar a tangente a uma circunferência, uma elipse ou qualquer curva dada por
+  uma equação, sem isolar $y$;
+- derivar as funções inversas: a lição de
+  [exponencial e logaritmo](./derivadas-de-exponencial-e-logaritmo) já usou o
+  método, sem nome, para obter $(\ln x)' = \frac{1}{x}$; aqui ele produz
+  $(\arcsen x)'$ e $(\arctg x)'$;
+- justificar a regra da potência para expoente fracionário, que a lição de
+  [regras de derivação](./regras-de-derivacao) aceitou sem demonstração;
+- preparar as [taxas relacionadas](./taxas-relacionadas), a próxima lição, em
+  que duas grandezas amarradas por uma equação variam no tempo — é a mesma
+  ideia, com $t$ no lugar de $x$.
+
+Dentro da matemática, esta página muda o alcance da derivada. Até aqui só se
+derivava o que tinha a forma $y = f(x)$. A partir daqui, qualquer equação em
+$x$ e $y$ pode ser derivada.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [circunferência e parábola](../geometria/circunferencia-e-parabola):
+o que a equação $x^2 + y^2 = 25$ descreve?** Todos os pontos cuja distância até
+a origem é exatamente 5. A distância vem de Pitágoras, $\sqrt{x^2 + y^2}$, e a
+equação é essa distância elevada ao quadrado. Um ponto está sobre a curva quando
+satisfaz a equação: $(3, 4)$ está, porque $9 + 16 = 25$; $(3, 3)$ não está,
+porque $9 + 9 = 18$.
+
+**2. De [paralelas e perpendiculares](../geometria/paralelas-e-perpendiculares):
+quando duas retas são perpendiculares?** Quando o produto das inclinações é
+$-1$. Uma reta de inclinação $\frac{4}{3}$ é perpendicular a uma de inclinação
+$-\frac{3}{4}$, porque $\frac{4}{3} \times \left(-\frac{3}{4}\right) = -1$.
+Esta lição usa esse fato como **verificação**: numa circunferência, a tangente
+é perpendicular ao raio.
+
+**3. De [regra da cadeia](./regra-da-cadeia): qual é a derivada de $u^2$
+quando $u$ é uma função de $x$?** É $2u \times u'$: derivada de fora, calculada
+em dentro, vezes derivada de dentro. Para $u = 3x + 1$, por exemplo,
+$(u^2)' = 2(3x+1) \times 3$. Esta é a ideia central da página: o $y$ vai fazer o
+papel do $u$.
+
+**4. De [A derivada](./a-derivada): como se escreve a reta tangente?** Por um
+ponto $(a, b)$ e uma inclinação $m$: $y = b + m(x - a)$. A inclinação é a
+derivada no ponto.
+
+**5. De [funções trigonométricas inversas](../geometria/funcoes-trigonometricas-inversas):
+o que é $\arcsen x$, e em que intervalo ele devolve o ângulo?** É o ângulo
+cujo seno é $x$, escolhido em $\left[-\frac{\pi}{2}, \frac{\pi}{2}\right]$.
+Nesse intervalo o cosseno é positivo ou zero — um detalhe que vai decidir um
+sinal adiante.
+
+**6. De [relações fundamentais](../geometria/relacoes-fundamentais): como se
+escreve $\cos y$ a partir de $\sen y$?** Por $\sen^2 y + \cos^2 y = 1$, ou
+seja, $\cos y = \pm\sqrt{1 - \sen^2 y}$. E dividindo a relação por $\cos^2 y$
+sai $1 + \tg^2 y = \sec^2 y$.
+
+Os itens 1, 3 e 4 são os que sustentam o método. Se o item 3 estiver
+enferrujado, releia a seção de potência de função na lição da cadeia antes de
+seguir, porque toda a página é aquela regra aplicada a $y$.
+
+## 5. Intuição: $y$ é função de $x$, só não foi isolado
+
+Olhe para o arco de cima da circunferência, perto do ponto $(3, 4)$. Para cada
+$x$ entre $-5$ e $5$ existe **um único** ponto do arco com aquele $x$. Então,
+nesse arco, $y$ **é** uma função de $x$: entra $x = 3$, sai $y = 4$; entra
+$x = 0$, sai $y = 5$. A fórmula dessa função é $\sqrt{25 - x^2}$, mas o ponto
+importante é outro: a função existe **antes** de alguém escrever a fórmula. A
+equação $x^2 + y^2 = 25$ já a define.
+
+O mesmo vale para o arco de baixo, com outra função: entra $x = 3$, sai
+$y = -4$.
+
+Agora a ideia. Se $y$ é função de $x$ ao longo do arco, então a expressão
+$x^2 + y^2$ também é função de $x$, e ela é **constante**: vale 25 em todo
+ponto do arco. Uma função constante tem derivada zero. Então, derivando os dois
+lados de $x^2 + y^2 = 25$ em relação a $x$, o lado direito dá 0, e o lado
+esquerdo dá alguma coisa que envolve $y'$. Isolando $y'$, a derivada aparece —
+sem que a fórmula de $y$ tenha sido escrita em momento algum.
+
+O único cuidado é lembrar, ao derivar $y^2$, que $y$ **não é uma constante nem
+é o próprio $x$**: é uma função de $x$. Derivar $y^2$ é derivar o quadrado de
+uma função, e a regra da cadeia diz o que isso dá.
+
+## 6. Modelo visual: o raio e a tangente
+
+<CartesianPlane
+  xMin={-6} xMax={9} yMin={-6} yMax={7}
+  xUnit={34}
+  circles={[{center: [0, 0], r: 5, tone: 1}]}
+  lines={[{m: -0.75, n: 6.25, tone: 3}]}
+  segments={[{from: [0, 0], to: [3, 4], tone: 2, label: '\\text{raio}', dx: -26, dy: 4}]}
+  points={[
+    {at: [3, 4], label: '(3,\\ 4)', tone: 3, dx: 30, dy: 2},
+    {at: [3, -4], label: '(3,\\ -4)', tone: 2, dx: 34, dy: 8, open: true},
+  ]}
+  labels={[
+    {at: [7, 1.7], math: '\\text{tangente}', tone: 3, dx: 0, dy: -10},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A borda da pista, o raio até (3, 4) e a reta em que o carrinho escapa. A tangente é perpendicular ao raio: as inclinações 4/3 e −3/4 têm produto −1. Em (3, −4), o ponto vazio, a tangente teria outra inclinação."
+/>
+
+O desenho traz as três coisas que a página vai calcular e conferir:
+
+- a **circunferência**, que não é gráfico de função, mas cujo arco de cima é;
+- o **raio** até $(3, 4)$, com inclinação $\frac{4 - 0}{3 - 0} = \frac{4}{3}$;
+- a **tangente**, que a geometria diz ser perpendicular ao raio — logo, com
+  inclinação $-\frac{3}{4}$.
+
+A derivada implícita vai chegar a esse $-\frac{3}{4}$ por conta própria, sem
+usar a perpendicularidade. Quando os dois caminhos concordarem, cada um terá
+conferido o outro.
+
+Repare também no ponto vazio $(3, -4)$. Ele tem o mesmo $x$ que $(3, 4)$, e a
+tangente ali é diferente: pela simetria do desenho, ela sobe em vez de descer.
+É o primeiro sinal de que, nesta página, a derivada vai depender de $y$ e não
+só de $x$.
+
+## 7. Ponte para a formalização: por que $y^2$ vira $2y\,y'$
+
+Este é o passo que sustenta a página inteira, e é o que mais confunde. Vale
+fazer devagar.
+
+**O que queremos.** Derivar $y^2$ em relação a $x$, sabendo que $y$ é uma
+função de $x$.
+
+**Por que $2y$ não serve.** A regra da potência diz que $(x^2)' = 2x$ porque a
+variável de derivação é o próprio $x$. Mas em $y^2$ a variável de dentro é $y$,
+e estamos derivando em relação a $x$. Se $y$ fosse $3x + 1$, a expressão seria
+$(3x+1)^2$, e a lição da cadeia mostrou que a derivada disso é
+$2(3x+1) \times 3$, não $2(3x+1)$. O fator 3 é a derivada de dentro, e sumir
+com ele dá o número errado.
+
+**Qual propriedade já estudada resolve.** A potência de função da regra da
+cadeia: para $u$ função de $x$,
+
+$$
+(u^2)' = 2u \times u'.
+$$
+
+**Por que ela se aplica aqui.** Porque $y$ é uma função de $x$ ao longo do
+arco. Trocando $u$ por $y$:
+
+$$
+(y^2)' = 2y \times y'.
+$$
+
+**O que muda na escrita.** Aparece o fator $y'$, que ainda não conhecemos.
+Ele fica como incógnita na equação derivada.
+
+**O que permanece.** O significado: $y'$ é a inclinação da curva no ponto, a
+mesma derivada de sempre.
+
+**Conferindo com números.** No arco de cima, $y^2 = 25 - x^2$. A derivada
+disso em relação a $x$ é $-2x$, que em $x = 3$ vale $-6$. Pelo outro lado,
+$2y \times y'$ em $(3, 4)$ vale $2 \times 4 \times y'$; para dar $-6$, é preciso
+$y' = -\frac{6}{8} = -\frac{3}{4}$. E $-\frac{3}{4}$ é exatamente a inclinação
+que a geometria previu para a tangente. A regra $(y^2)' = 2y\,y'$ está
+coerente com tudo o que já sabemos.
+
+> Toda vez que um termo com $y$ for derivado em relação a $x$, a regra da
+> cadeia entra e deixa um fator $y'$ para trás. É esse fator que o método vai
+> isolar.
+
+## 8. Formalização: relação implícita e o método
+
+### O que é uma relação implícita
+
+> Uma equação em $x$ e $y$ define **implicitamente** $y$ como função de $x$
+> num trecho quando, para cada $x$ desse trecho, existe um único $y$ que
+> satisfaz a equação. A função fica definida pela equação, mesmo sem uma
+> fórmula isolando $y$.
+
+**Exemplo.** $x^2 + y^2 = 25$ define $y$ como função de $x$ no arco de cima
+(com $y$ positivo) e, separadamente, no arco de baixo. Em cada arco, dado $x$,
+há um único $y$.
+
+**Contraexemplo.** $x^2 + y^2 = -1$ não define função nenhuma: nenhum par
+$(x, y)$ satisfaz a equação, porque a soma de dois quadrados nunca é negativa.
+Derivar essa equação produziria símbolos sem nenhum ponto por trás deles.
+
+**Segundo contraexemplo, mais sutil.** $x^2 + y^2 = 25$ **não** define $y$
+como função de $x$ perto do ponto $(5, 0)$. Ali a tangente é vertical: para
+$x$ um pouco menor que 5 há dois valores de $y$, um positivo e um negativo, e
+nenhum dos dois é "o" $y$. É o mesmo ponto em que a fórmula $y' = -\frac{x}{y}$,
+que vem adiante, divide por zero. A fórmula e a geometria falham no mesmo
+lugar, e isso não é coincidência.
+
+Esta página vai derivar sempre em pontos onde a relação define uma função —
+na prática, onde a fórmula de $y'$ não divide por zero.
+
+### O método
+
+> **Derivação implícita.** Para achar $y'$ a partir de uma equação em $x$ e
+> $y$:
+>
+> 1. derive os **dois lados** da equação em relação a $x$, tratando $y$ como
+>    função de $x$;
+> 2. em todo termo que contém $y$, aplique a regra da cadeia: derive em
+>    relação a $y$ e multiplique por $y'$;
+> 3. em todo termo que contém $x$ **e** $y$ multiplicados, aplique a regra do
+>    produto;
+> 4. reúna os termos que têm $y'$ de um lado e os demais do outro;
+> 5. isole $y'$;
+> 6. substitua as coordenadas $x$ **e** $y$ do ponto.
+
+O passo 3 é o que mais se esquece, e o passo 6 é onde a diferença em relação
+às lições anteriores aparece: antes, bastava conhecer $x$; agora a derivada
+pede o ponto inteiro.
+
+### As duas notações
+
+O fator que a cadeia deixa pode ser escrito $y'$ ou $\frac{dy}{dx}$. Na
+lição da cadeia, a segunda forma deixava visível "derivada de $y$ em relação
+a $x$", e é útil quando há mais de uma variável em cena. Nesta página as
+equações ficam longas, e $y'$ é mais curto. As duas escritas abaixo dizem a
+mesma coisa:
+
+$$
+2x + 2y \, y' = 0
+\qquad\text{e}\qquad
+2x + 2y \, \frac{dy}{dx} = 0.
+$$
+
+O texto segue com $y'$. A próxima lição, de taxas relacionadas, volta a
+$\frac{dy}{dt}$, porque lá a variável de derivação é o tempo e vale a pena
+escrevê-la.
+
+## 9. Resolvendo o problema do carrinho
+
+Agora o método, na equação da pista.
+
+**Passo 1: derivar os dois lados em relação a $x$.** A equação é
+$x^2 + y^2 = 25$. O lado direito é constante; a derivada de constante é 0. O
+lado esquerdo é a soma de $x^2$ e $y^2$, e a derivada da soma é a soma das
+derivadas:
+
+$$
+(x^2)' + (y^2)' = 0.
+$$
+
+**Passo 2: a cadeia nos termos com $y$.** $(x^2)' = 2x$, pela potência. E
+$(y^2)' = 2y \, y'$, pela seção anterior. Então:
+
+$$
+2x + 2y \, y' = 0.
+$$
+
+**Passos 4 e 5: isolar $y'$.** Passe $2x$ para o outro lado e divida por
+$2y$, que é diferente de zero fora dos pontos $(\pm 5, 0)$:
+
+$$
+2y \, y' = -2x
+\qquad\Longrightarrow\qquad
+y' = -\frac{2x}{2y} = -\frac{x}{y}.
+$$
+
+**Passo 6: substituir o ponto.** Em $(3, 4)$:
+
+$$
+y' = -\frac{3}{4}.
+$$
+
+**A tangente.** Ponto $(3, 4)$ e inclinação $-\frac{3}{4}$:
+
+$$
+y = 4 - \frac{3}{4}(x - 3) = -\frac{3}{4}x + \frac{25}{4}.
+$$
+
+O carrinho escapa ao longo dessa reta. Ela cruza o eixo $x$ em $x =
+\frac{25}{3} \approx 8{,}33$ m — se houver um muro no eixo $x$, é ali que ele
+bate.
+
+**Verificação pela geometria.** O raio até $(3, 4)$ tem inclinação
+$\frac{4}{3}$. A tangente deve ser perpendicular a ele, e
+$\frac{4}{3} \times \left(-\frac{3}{4}\right) = -1$. Confere. A derivação
+implícita não usou a perpendicularidade em passo nenhum, e chegou ao mesmo
+número.
+
+**Verificação pelo caminho explícito.** No arco de cima, $y = \sqrt{25 - x^2}
+= (25 - x^2)^{1/2}$. Pela cadeia, com $u = 25 - x^2$ e $u' = -2x$:
+
+$$
+y' = \frac{1}{2}(25 - x^2)^{-1/2} \times (-2x) = -\frac{x}{\sqrt{25 - x^2}}.
+$$
+
+Em $x = 3$: $-\frac{3}{\sqrt{16}} = -\frac{3}{4}$. Mesmo número. E repare que
+$\sqrt{25 - x^2}$ é o próprio $y$, então essa fórmula é $-\frac{x}{y}$ escrita
+de outro jeito — os dois caminhos não só concordam no ponto, mas são a mesma
+fórmula.
+
+**Conferindo com um número.** O quociente centrado de $\sqrt{25 - x^2}$ em
+$x = 3$, com $h = 10^{-6}$, dá $-0{,}750000$. Confere.
+
+### O ponto de baixo
+
+Se o carrinho escapasse em $(3, -4)$, a fórmula $y' = -\frac{x}{y}$ daria
+
+$$
+y' = -\frac{3}{-4} = \frac{3}{4}.
+$$
+
+Mesmo $x$, derivada diferente. A tangente ali sobe, como o desenho da seção 6
+sugeria. É por isso que o método pede o ponto inteiro no passo 6: a fórmula de
+$y'$ tem $y$ dentro, e trocar o $y$ troca a resposta.
+
+O caminho explícito precisaria de uma segunda função, $y = -\sqrt{25 - x^2}$,
+e de uma segunda conta. A derivação implícita cobriu os dois arcos com a mesma
+fórmula.
+
+## 10. Quando há $x$ e $y$ no mesmo termo
+
+A circunferência tem $x$ e $y$ em termos separados. Muitas curvas não. Tome
+
+$$
+x^2 + xy + y^2 = 7,
+$$
+
+e o ponto $(1, 2)$, que está na curva porque $1 + 2 + 4 = 7$.
+
+O termo $xy$ é um **produto de duas funções de $x$**: a função $x$ e a função
+$y$. A [regra do produto](./regras-do-produto-e-do-quociente) diz que a
+derivada de um produto é "derivada do primeiro vezes o segundo, mais o
+primeiro vezes derivada do segundo":
+
+$$
+(xy)' = (x)' \times y + x \times (y)' = 1 \times y + x \times y' = y + x\,y'.
+$$
+
+Agora a equação inteira, termo a termo:
+
+$$
+\underbrace{2x}_{(x^2)'} + \underbrace{y + x\,y'}_{(xy)'} + \underbrace{2y\,y'}_{(y^2)'} = 0.
+$$
+
+Reunindo o que tem $y'$ de um lado:
+
+$$
+x\,y' + 2y\,y' = -2x - y
+\qquad\Longrightarrow\qquad
+y'(x + 2y) = -(2x + y),
+$$
+
+e isolando:
+
+$$
+y' = -\frac{2x + y}{x + 2y}.
+$$
+
+Em $(1, 2)$: $y' = -\frac{2 + 2}{1 + 4} = -\frac{4}{5}$.
+
+**Conferindo com um número.** A curva pode ser resolvida em $y$ por
+Bhaskara, tratando a equação como $y^2 + x\,y + (x^2 - 7) = 0$; o ramo que
+passa por $(1, 2)$ é $y = \frac{-x + \sqrt{28 - 3x^2}}{2}$. O quociente
+centrado dessa função em $x = 1$ dá $-0{,}800000$. Confere — e a fórmula
+implícita saiu sem que a raiz de Bhaskara aparecesse em nenhum momento.
+
+<CartesianPlane
+  xMin={-4} xMax={4} yMin={-4} yMax={4}
+  xUnit={40}
+  functions={[
+    {f: (x) => (-x + Math.sqrt(28 - 3 * x * x)) / 2, domain: [-3.05, 3.05], tone: 1},
+    {f: (x) => (-x - Math.sqrt(28 - 3 * x * x)) / 2, domain: [-3.05, 3.05], tone: 1},
+  ]}
+  lines={[{m: -0.8, n: 2.8, tone: 3}]}
+  points={[
+    {at: [1, 2], label: '(1,\\ 2)', tone: 3, dx: 30, dy: -4},
+    {at: [1, -3], label: '(1,\\ -3)', tone: 2, dx: 34, dy: 10, open: true},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A curva x² + xy + y² = 7 é uma elipse inclinada. Em (1, 2) a tangente tem inclinação −4/5. O ponto vazio (1, −3) tem o mesmo x e outra inclinação: −1/5."
+/>
+
+O ponto vazio confirma mais uma vez a dependência de $y$: em $(1, -3)$, que
+também está na curva ($1 - 3 + 9 = 7$), a fórmula dá
+$y' = -\frac{2 - 3}{1 - 6} = -\frac{-1}{-5} = -\frac{1}{5}$.
+
+> **O erro mais comum desta página** está no termo $xy$: derivá-lo como se
+> fosse só $y$, ou só $x\,y'$. Os dois esquecem metade do produto. Teste em
+> $(1, 2)$: com $(xy)' = y$ a fórmula final daria $y' = -\frac{2x + y}{2y} =
+> -1$; o quociente centrado dá $-0{,}8$. Diferente, logo errado.
+
+## 11. As derivadas que o método produz
+
+O método serve para tangentes, mas o uso mais importante dele é outro: obter
+derivadas de funções cuja fórmula direta não ajuda. A lição de exponencial e
+logaritmo já fez isso uma vez, escrevendo $y = \ln x$ como $e^y = x$ e
+derivando os dois lados. Aqui a mesma manobra rende três resultados.
+
+### A derivada de $\arcsen x$
+
+Seja $y = \arcsen x$, com $x$ em $]-1, 1[$. Pela definição da função inversa,
+isso é o mesmo que
+
+$$
+\sen y = x, \qquad y \in \left[-\tfrac{\pi}{2}, \tfrac{\pi}{2}\right].
+$$
+
+Derive os dois lados em relação a $x$. O lado direito dá 1. O lado esquerdo é
+o seno de uma função de $x$, e a [derivada do seno](./derivadas-de-seno-e-cosseno)
+com a cadeia dá $\cos y \times y'$:
+
+$$
+\cos y \times y' = 1
+\qquad\Longrightarrow\qquad
+y' = \frac{1}{\cos y}.
+$$
+
+Falta escrever $\cos y$ em função de $x$. A relação fundamental dá
+$\cos^2 y = 1 - \sen^2 y = 1 - x^2$, logo $\cos y = \pm\sqrt{1 - x^2}$. Qual
+sinal? Aqui entra o intervalo do $\arcsen$: para $y$ entre $-\frac{\pi}{2}$ e
+$\frac{\pi}{2}$, o cosseno é positivo ou zero. Então o sinal é $+$:
+
+> $$
+> \boxed{(\arcsen x)' = \frac{1}{\sqrt{1 - x^2}}}, \qquad -1 < x < 1.
+> $$
+
+**Conferindo.** Em $x = 0{,}5$, a fórmula dá $\frac{1}{\sqrt{0{,}75}} \approx
+1{,}1547$. O quociente centrado de $\arcsen$ em $0{,}5$ dá $1{,}1547$. Confere.
+Em $x = 0$ a fórmula dá 1: o gráfico de $\arcsen$ cruza a origem a 45°, o
+reflexo do seno, que também cruza a origem a 45°.
+
+**Contraexemplo, para o sinal.** Se o intervalo escolhido para a inversa fosse
+$\left[\frac{\pi}{2}, \frac{3\pi}{2}\right]$, ali o cosseno é negativo e a
+derivada seria $-\frac{1}{\sqrt{1 - x^2}}$. A fórmula depende da escolha que a
+lição de inversas fez, e o sinal registra essa escolha.
+
+### A derivada de $\arctg x$
+
+Seja $y = \arctg x$, isto é, $\tg y = x$ com $y$ em
+$\left]-\frac{\pi}{2}, \frac{\pi}{2}\right[$. Derivando os dois lados, com
+$(\tg y)' = \sec^2 y \times y'$:
+
+$$
+\sec^2 y \times y' = 1
+\qquad\Longrightarrow\qquad
+y' = \frac{1}{\sec^2 y}.
+$$
+
+A relação fundamental dividida por $\cos^2 y$ deu $1 + \tg^2 y = \sec^2 y$.
+Como $\tg y = x$:
+
+> $$
+> \boxed{(\arctg x)' = \frac{1}{1 + x^2}}.
+> $$
+
+Aqui não há sinal para decidir: $\sec^2 y$ é um quadrado, positivo sempre.
+
+**Conferindo.** Em $x = 1$, a fórmula dá $\frac{1}{2}$; o quociente centrado
+de $\arctg$ em 1 dá $0{,}5000$. Em $x = 2$, a fórmula dá $\frac{1}{5} = 0{,}2$;
+o quociente dá $0{,}2000$. Confere.
+
+Um comentário sobre o resultado: a derivada de $\arctg$ é uma função
+**racional**, sem trigonometria nenhuma. Ela vai aparecer, lida ao contrário,
+na lição de [primitivas e substituição](./primitivas-e-substituicao), como a
+primitiva de $\frac{1}{1 + x^2}$.
+
+### A regra da potência com expoente fracionário
+
+A lição de regras de derivação aceitou $(x^r)' = r\,x^{r-1}$ para expoente
+fracionário, com base em dois casos e na conferência numérica, e prometeu a
+justificativa para cá.
+
+Seja $y = x^{p/q}$, com $p$ e $q$ inteiros, $q$ positivo, e $x$ positivo.
+Elevando os dois lados a $q$, o expoente fracionário some:
+
+$$
+y^q = x^p.
+$$
+
+Agora os dois expoentes são inteiros, e a regra da potência para inteiros já
+está demonstrada. Derive os dois lados em relação a $x$. O lado esquerdo é uma
+potência de função, $q\,y^{q-1}\,y'$; o direito é $p\,x^{p-1}$:
+
+$$
+q\,y^{q-1}\,y' = p\,x^{p-1}
+\qquad\Longrightarrow\qquad
+y' = \frac{p}{q} \times \frac{x^{p-1}}{y^{q-1}}.
+$$
+
+Falta trocar $y$ de volta por $x^{p/q}$. Como $y^{q-1} = \left(x^{p/q}\right)^{q-1}
+= x^{p - p/q}$, o quociente vira
+
+$$
+\frac{x^{p-1}}{x^{p - p/q}} = x^{(p-1) - (p - p/q)} = x^{p/q - 1},
+$$
+
+usando a propriedade de dividir potências de mesma base, que subtrai os
+expoentes. Portanto:
+
+> $$
+> \boxed{\left(x^{p/q}\right)' = \frac{p}{q}\,x^{p/q - 1}}.
+> $$
+
+É a regra da potência, agora **demonstrada** para todo expoente racional.
+
+**Conferindo.** $x^{2/3}$ em $x = 8$: a fórmula dá
+$\frac{2}{3} \times 8^{-1/3} = \frac{2}{3} \times \frac{1}{2} = \frac{1}{3}$. O
+quociente centrado dá $0{,}3333$. Confere.
+
+## 12. Exemplos resolvidos
+
+### Exemplo 1: uma elipse
+
+Encontre a inclinação da tangente a $\frac{x^2}{16} + \frac{y^2}{9} = 1$ no
+ponto de abscissa $x = 2$ com $y$ positivo.
+
+Primeiro o ponto. Com $x = 2$: $\frac{4}{16} + \frac{y^2}{9} = 1$, logo
+$\frac{y^2}{9} = \frac{3}{4}$, $y^2 = \frac{27}{4}$ e
+$y = \frac{3\sqrt{3}}{2} \approx 2{,}598$.
+
+Agora a derivada. Os dois termos com variável são potências, e o lado direito
+é constante:
+
+$$
+\frac{2x}{16} + \frac{2y\,y'}{9} = 0
+\qquad\Longrightarrow\qquad
+y' = -\frac{2x}{16} \times \frac{9}{2y} = -\frac{9x}{16y}.
+$$
+
+No ponto: $y' = -\frac{18}{16 \times 2{,}598} \approx -0{,}433$.
+
+**Conferindo.** O ramo de cima é $y = 3\sqrt{1 - \frac{x^2}{16}}$; o quociente
+centrado em $x = 2$ dá $-0{,}4330$. Confere.
+
+### Exemplo 2: uma cúbica que não se isola
+
+*Pause e tente antes de ler.* A curva $y^3 + y = x$ passa por $(2, 1)$, porque
+$1 + 1 = 2$. Qual é $y'$ nesse ponto?
+
+Isolar $y$ aqui exigiria resolver uma equação do terceiro grau em $y$, e não
+há fórmula simples para isso. A derivação implícita não precisa:
+
+$$
+3y^2\,y' + y' = 1
+\qquad\Longrightarrow\qquad
+y'(3y^2 + 1) = 1
+\qquad\Longrightarrow\qquad
+y' = \frac{1}{3y^2 + 1}.
+$$
+
+Em $(2, 1)$: $y' = \frac{1}{4}$.
+
+**Conferindo.** Sem fórmula para $y$, a conferência numérica precisa de um
+passo a mais: resolver $y^3 + y = x$ por tentativa para $x = 2{,}00001$ e
+$x = 1{,}99999$ e montar o quociente. Feito isso, o resultado é $0{,}2500$.
+Confere. Repare que o denominador $3y^2 + 1$ nunca zera: esta curva tem $y'$
+em todo ponto, e de fato ela é o gráfico de uma função de $x$ inteira, só que
+sem fórmula.
+
+### Exemplo 3: a tangente numa curva com produto
+
+*Pause e tente.* A curva $x^3 + y^3 = 6xy$ passa por $(3, 3)$, porque
+$27 + 27 = 54$. Escreva a equação da tangente ali.
+
+Derivando termo a termo — o lado direito é um produto:
+
+$$
+3x^2 + 3y^2\,y' = 6y + 6x\,y'.
+$$
+
+Reunindo os termos com $y'$ à esquerda:
+
+$$
+3y^2\,y' - 6x\,y' = 6y - 3x^2
+\qquad\Longrightarrow\qquad
+y' = \frac{6y - 3x^2}{3y^2 - 6x} = \frac{2y - x^2}{y^2 - 2x}.
+$$
+
+Em $(3, 3)$: $y' = \frac{6 - 9}{9 - 6} = -1$. A tangente é
+$y = 3 - 1(x - 3) = -x + 6$.
+
+**Conferindo.** O ponto $(3, 3)$ está sobre a reta $y = x$, e a curva é
+simétrica em relação a essa reta (trocar $x$ por $y$ não muda a equação). Uma
+tangente num ponto do eixo de simetria precisa ser perpendicular a ele, e a
+perpendicular a $y = x$ tem inclinação $-1$. Confere pela geometria, e o
+quociente centrado, calculado resolvendo a equação para $y$ perto de 3, dá
+$-1{,}0000$.
+
+### Exemplo 4: onde a tangente é horizontal
+
+*Pause e tente.* Em que pontos da circunferência $x^2 + y^2 = 25$ a tangente é
+horizontal? E vertical?
+
+Horizontal significa $y' = 0$. Com $y' = -\frac{x}{y}$, isso exige $x = 0$ e
+$y \neq 0$. Na circunferência, $x = 0$ dá $y = \pm 5$: os pontos $(0, 5)$ e
+$(0, -5)$, o topo e a base. Faz sentido: no topo da pista o carrinho anda na
+horizontal.
+
+Vertical é onde $y'$ **não existe** por divisão por zero: $y = 0$, que dá
+$(5, 0)$ e $(-5, 0)$. São os pontos da seção 8 em que a relação não define
+$y$ como função de $x$ — e a lição de
+[quando a derivada não existe](./quando-a-derivada-nao-existe) explicou que
+tangente vertical é um dos casos sem derivada.
+
+### Exemplo 5: a derivada do logaritmo, revisitada
+
+A lição anterior obteve $(\ln x)' = \frac{1}{x}$ escrevendo $y = \ln x$ como
+$e^y = x$ e derivando os dois lados: $e^y \times y' = 1$, logo
+$y' = \frac{1}{e^y} = \frac{1}{x}$.
+
+Releia esse cálculo com o vocabulário desta página. A equação $e^y = x$ é uma
+relação implícita; o fator $y'$ que apareceu ao derivar $e^y$ é a cadeia
+deixando o rastro dela; e a troca final de $e^y$ por $x$ é o passo 6, de
+escrever a resposta em termos do ponto. Era derivação implícita, sem o nome.
+
+O mesmo molde vale para qualquer inversa: escreva a função direta aplicada a
+$y$, derive, e use a relação original para eliminar $y$ da resposta. Foi assim
+com $\sen y = x$ e $\tg y = x$ na seção 11.
+
+### Exemplo 6: duas máquinas para a mesma produção
+
+*Pause e tente.* Uma oficina produz 400 peças por dia usando $x$ horas de uma
+máquina antiga e $y$ horas de uma máquina nova, com a relação
+$\sqrt{x}\,\sqrt{y} = 20$. Hoje ela usa 16 horas da antiga e 25 da nova (e de
+fato $\sqrt{16} \times \sqrt{25} = 4 \times 5 = 20$). Se ela aumentar um
+pouco as horas da máquina antiga, em que ritmo pode reduzir as da nova sem
+mudar a produção?
+
+A pergunta é $y'$ em $(16, 25)$: quanto $y$ cai por hora a mais de $x$.
+Escrevendo $\sqrt{x}\,\sqrt{y} = x^{1/2}\,y^{1/2}$, o lado esquerdo é um
+produto, e o fator com $y$ pede a cadeia:
+
+$$
+\frac{1}{2}x^{-1/2}\,y^{1/2} + x^{1/2} \times \frac{1}{2}y^{-1/2}\,y' = 0.
+$$
+
+Multiplicando tudo por $2\,x^{1/2}\,y^{1/2}$ para limpar os expoentes
+negativos:
+
+$$
+y + x\,y' = 0
+\qquad\Longrightarrow\qquad
+y' = -\frac{y}{x}.
+$$
+
+Em $(16, 25)$: $y' = -\frac{25}{16} \approx -1{,}56$. Cada hora a mais na
+máquina antiga dispensa cerca de 1,56 hora da nova, **nesse ponto** — a troca
+não é de um para um, porque a máquina nova rende mais.
+
+**Conferindo.** Aqui dá para isolar: $\sqrt{xy} = 20$ vira $xy = 400$ e
+$y = \frac{400}{x}$, cuja derivada em 16 é $-\frac{400}{256} = -1{,}5625$.
+Confere. O caminho implícito evitou a raiz e chegou à mesma resposta.
+
+## 13. Erros comuns
+
+> **Erro 1: derivar $y^2$ como $2y$.** Falta o $y'$. $y$ é função de $x$, e a
+> cadeia exige a derivada de dentro. Teste na circunferência em $(3, 4)$: com
+> $2x + 2y = 0$ não há $y'$ para isolar, e a "equação" $6 + 8 = 0$ é falsa.
+> Com $2x + 2y\,y' = 0$, sai $y' = -\frac{3}{4}$, que a geometria confirma.
+
+> **Erro 2: derivar $xy$ como $y$, ou como $x\,y'$.** É um produto de duas
+> funções de $x$, e a regra do produto dá **duas** parcelas: $y + x\,y'$.
+> Na curva $x^2 + xy + y^2 = 7$, em $(1, 2)$, esquecer a parcela $x\,y'$ leva
+> a $y' = -1$; o valor correto, conferido numericamente, é $-\frac{4}{5}$.
+
+> **Erro 3: substituir só o $x$.** A fórmula de $y'$ tem $y$ dentro. Em
+> $x = 3$ a circunferência tem duas tangentes, uma em $(3, 4)$ com inclinação
+> $-\frac{3}{4}$ e outra em $(3, -4)$ com inclinação $+\frac{3}{4}$. "A
+> derivada em $x = 3$" não é uma pergunta completa; é preciso dizer o ponto.
+
+> **Erro 4: trocar o sinal ao isolar $y'$.** De $2x + 2y\,y' = 0$ vem
+> $2y\,y' = -2x$, com o sinal de menos. Esquecê-lo dá $y' = \frac{x}{y} =
+> \frac{3}{4}$ em $(3, 4)$, e o produto com a inclinação do raio seria
+> $\frac{4}{3} \times \frac{3}{4} = 1$, não $-1$: a "tangente" teria a
+> direção do próprio raio.
+
+> **Erro 5: derivar um lado e esquecer o outro.** Em $y^3 + y = x$, o lado
+> direito não é constante: a derivada dele é 1, não 0. Com 0 no lugar de 1
+> sairia $y' = 0$ em todo ponto, o que diria que a curva é horizontal — e ela
+> sobe.
+
+> **Erro 6: usar a fórmula onde ela divide por zero.** $y' = -\frac{x}{y}$
+> não vale em $(5, 0)$. Ali a tangente é vertical, a derivada não existe, e a
+> relação não define $y$ como função de $x$. A divisão por zero é o aviso.
+
+> **Erro 7: escolher o sinal errado em $\cos y = \pm\sqrt{1 - x^2}$.** A
+> derivada de $\arcsen$ é positiva porque, no intervalo
+> $\left[-\frac{\pi}{2}, \frac{\pi}{2}\right]$, o cosseno não é negativo.
+> Teste: $\arcsen$ é crescente (o gráfico sobe), e uma função crescente não
+> pode ter derivada negativa.
+
+## 14. Perguntas de verificação
+
+1. Por que a circunferência não é o gráfico de uma função, e por que mesmo
+   assim faz sentido falar em $y'$ num ponto dela?
+2. Que regra já estudada justifica $(y^2)' = 2y\,y'$? Onde ela apareceu?
+3. Por que a derivada obtida implicitamente costuma depender de $x$ e de $y$,
+   enquanto as derivadas das lições anteriores dependiam só de $x$?
+4. O que a regra do produto tem a ver com o termo $xy$?
+5. De que maneira a perpendicularidade entre raio e tangente serve como
+   conferência, e não como parte do cálculo?
+6. Em que pontos a fórmula $y' = -\frac{x}{y}$ falha, e o que acontece com a
+   curva ali?
+7. Na dedução de $(\arcsen x)'$, de onde vem a escolha do sinal $+$ na raiz?
+8. Por que $(\arctg x)'$ não tem raiz nem trigonometria?
+9. O que a demonstração da regra da potência para $x^{p/q}$ usou que já estava
+   demonstrado, e o que ela acrescentou?
+10. Qual é o passo comum às deduções de $(\ln x)'$, $(\arcsen x)'$ e
+    $(\arctg x)'$?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque a vertical em $x = 3$ corta a curva em dois pontos, então um mesmo
+   $x$ teria duas saídas. Mas cada arco, o de cima e o de baixo, **é** gráfico
+   de uma função. Perto de um ponto que não esteja em $(\pm 5, 0)$, a curva se
+   comporta como uma função de $x$, e $y'$ é a inclinação dessa função ali.
+2. A potência de função da regra da cadeia, $(u^n)' = n\,u^{n-1}\,u'$, com
+   $u = y$ e $n = 2$. Ela foi deduzida na lição da regra da cadeia.
+3. Porque o método deriva a equação sem resolvê-la, e ao isolar $y'$ o $y$
+   continua presente na fórmula. Nas lições anteriores, $y$ já estava escrito
+   em função de $x$, então a derivada também ficava só em $x$. As duas formas
+   dão o mesmo número em cada ponto: $-\frac{x}{y}$ e
+   $-\frac{x}{\sqrt{25 - x^2}}$ coincidem no arco de cima.
+4. $xy$ é o produto de duas funções de $x$: $x$ e $y$. A derivada do produto
+   tem duas parcelas, $y + x\,y'$. Esquecer uma delas é o erro mais frequente
+   da página.
+5. O cálculo usou só a equação e as regras de derivação; nunca usou que o raio
+   é perpendicular à tangente. Quando o resultado $-\frac{3}{4}$ multiplicado
+   pela inclinação do raio $\frac{4}{3}$ dá $-1$, dois raciocínios
+   independentes concordaram, e cada um confere o outro.
+6. Onde $y = 0$: os pontos $(5, 0)$ e $(-5, 0)$. Ali a tangente é vertical, a
+   derivada não existe, e perto desses pontos a curva não é o gráfico de uma
+   função de $x$ — há dois valores de $y$ para cada $x$ um pouco menor que 5.
+7. Do intervalo em que $\arcsen$ devolve o ângulo: $\left[-\frac{\pi}{2},
+   \frac{\pi}{2}\right]$. Nesse intervalo o cosseno é positivo ou zero, então
+   $\cos y = +\sqrt{1 - \sen^2 y}$.
+8. Porque $\sec^2 y = 1 + \tg^2 y$, e $\tg y$ é exatamente $x$. A relação
+   fundamental converteu a trigonometria em $1 + x^2$, e não sobrou raiz porque
+   $\sec^2 y$ é um quadrado, sem sinal a decidir.
+9. Usou a regra da potência para expoentes **inteiros**, já deduzida da
+   expansão de $(a+h)^n$, aplicada aos dois lados de $y^q = x^p$. Acrescentou
+   o caso fracionário, que antes era aceito só pela conferência numérica.
+10. Escrever a função direta aplicada a $y$ ($e^y = x$, $\sen y = x$,
+    $\tg y = x$), derivar os dois lados, isolar $y'$ e usar a relação original
+    para eliminar $y$ da resposta.
+
+</details>
+
+## 15. Exercícios
+
+### 1. Reconhecimento
+
+1. Em cada equação, diga se $y$ já está isolado (função explícita) ou não
+   (relação implícita): a) $y = 3x^2 - 1$; b) $x^2 + y^2 = 9$; c) $xy = 12$;
+   d) $y^3 + y = x$.
+2. Em cada termo, diga o que a derivada em relação a $x$ produz, sem resolver
+   nada: a) $y^3$; b) $x^2 y$; c) $\sen y$; d) $x^2$; e) $e^y$.
+3. A fórmula $y' = -\frac{x}{y}$ vale para a circunferência $x^2 + y^2 = 25$.
+   Ela pode ser calculada nos pontos $(0, 5)$, $(4, 3)$, $(5, 0)$ e $(-3, -4)$?
+   Para os que puderem, dê o valor.
+
+### 2. Explicação
+
+4. Explique, com as próprias palavras, por que derivar $y^2$ em relação a $x$
+   dá $2y\,y'$ e não $2y$. Use um exemplo em que $y$ tenha fórmula conhecida,
+   como $y = 3x + 1$.
+5. Um colega diz: "em $x = 3$ a derivada da circunferência $x^2 + y^2 = 25$ é
+   $-\frac{3}{4}$". A frase está completa? O que falta dizer, e por quê?
+6. Por que o método pede para derivar os **dois** lados da equação? O que
+   aconteceria se o lado direito fosse $x$ em vez de uma constante e fosse
+   tratado como constante?
+
+### 3. Aplicação direta
+
+7. Encontre $y'$ em cada ponto: a) $x^2 + y^2 = 169$ em $(5, 12)$; b) $xy = 12$
+   em $(3, 4)$; c) $x^2 - y^2 = 9$ em $(5, 4)$; d) $x^2 + 4y^2 = 20$ em
+   $(2, 2)$.
+8. Escreva a equação da tangente a $x^2 + y^2 = 169$ em $(5, 12)$, e confira
+   que ela é perpendicular ao raio.
+9. Encontre $y'$ em $(4, 8)$ para a curva $y^2 = x^3$. Depois isole $y$ (com
+   $y$ positivo) e derive pelo caminho explícito; os dois resultados têm que
+   bater.
+
+### 4. Variação
+
+10. Encontre $y'$ em $(2, 2)$ para $x^2 y + y = 10$. Aqui o termo $x^2 y$ é um
+    produto: cuidado com as duas parcelas.
+11. A curva $x + \sen y = 1$ passa por $(1, 0)$. Encontre $y'$ ali.
+12. A curva $e^y = x^2 + 1$ passa por $(1, \ln 2)$. Encontre $y'$ ali de duas
+    formas: implicitamente, e isolando $y = \ln(x^2 + 1)$ e derivando com a
+    cadeia.
+13. Calcule $(\arcsen x)'$ em $x = 0{,}8$ e $(\arctg x)'$ em $x = 0{,}5$.
+
+### 5. Problema misto
+
+14. Uma antena cobre a região $(x - 2)^2 + (y - 1)^2 = 25$ (coordenadas em
+    quilômetros). Uma estrada reta passa pelo ponto $(5, 5)$ da borda e é
+    tangente à borda ali. a) Confira que $(5, 5)$ está na borda. b) Encontre a
+    inclinação da estrada. c) Escreva a equação da estrada. d) Confira que ela
+    é perpendicular ao segmento que liga o centro $(2, 1)$ ao ponto $(5, 5)$.
+15. Uma empresa mantém a produção diária constante combinando $x$ horas de um
+    processo manual e $y$ horas de um processo automatizado, segundo
+    $x^2 + 4y^2 = 20$. Hoje usa $x = 2$ e $y = 2$. Se aumentar em uma hora o
+    processo manual, aproximadamente quantas horas do automatizado pode
+    dispensar? Use a derivada como taxa de troca e diga por que a resposta é
+    uma aproximação.
+16. Use a demonstração da seção 11 para calcular $\left(x^{5/3}\right)'$ em
+    $x = 8$, e confira com o quociente centrado.
+
+### 6. Justificativa
+
+17. Mostre que, para qualquer circunferência centrada na origem, $x^2 + y^2 =
+    r^2$, a tangente em um ponto $(a, b)$ com $b \neq 0$ tem inclinação
+    $-\frac{a}{b}$, e que ela é sempre perpendicular ao raio. O que acontece
+    quando $b = 0$?
+18. Deduza $(\arccos x)' = -\frac{1}{\sqrt{1 - x^2}}$ pelo método da seção 11,
+    lembrando que $\arccos$ devolve ângulos em $[0, \pi]$. Explique de onde
+    vem o sinal negativo.
+
+<details>
+<summary>Dica para o exercício 15</summary>
+
+A derivada $y'$ em $(2, 2)$ diz quanto $y$ muda por unidade de $x$, **no
+ritmo daquele ponto**. Uma hora inteira é um passo grande, e ao longo dela o
+ritmo muda; por isso a resposta é uma estimativa. Compare com o valor exato,
+que sai da própria equação com $x = 3$.
+
+</details>
+
+<details>
+<summary>Dica para o exercício 18</summary>
+
+Escreva $y = \arccos x$ como $\cos y = x$ e derive. Vai aparecer $\sen y$, e a
+relação fundamental dá $\sen y = \pm\sqrt{1 - x^2}$. Em $[0, \pi]$ o seno é
+positivo ou zero.
+
+</details>
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) explícita; b) implícita; c) implícita (embora dê para isolar em um passo:
+   $y = \frac{12}{x}$); d) implícita, e aqui isolar $y$ não é viável.
+2. a) $3y^2\,y'$; b) $2xy + x^2\,y'$ (produto); c) $\cos y \times y'$; d) $2x$,
+   sem $y'$, porque não há $y$; e) $e^y \times y'$.
+3. Em $(0, 5)$: $y' = 0$, tangente horizontal. Em $(4, 3)$: $y' = -\frac{4}{3}$.
+   Em $(5, 0)$: **não**, o denominador é zero; a tangente é vertical. Em
+   $(-3, -4)$: $y' = -\frac{-3}{-4} = -\frac{3}{4}$ — o mesmo valor de $(3, 4)$,
+   porque os dois pontos são simétricos em relação à origem e a curva também.
+4. Se $y = 3x + 1$, então $y^2 = (3x+1)^2$, e a cadeia dá $(y^2)' =
+   2(3x+1) \times 3 = 2y \times y'$, com $y' = 3$. Escrever só $2y$ perde o
+   fator 3. Em geral, $y$ é uma função de $x$ e derivar $y^2$ é derivar o
+   quadrado de uma função — a derivada de dentro precisa aparecer.
+5. Não está completa. Em $x = 3$ há dois pontos na curva, $(3, 4)$ e
+   $(3, -4)$, com derivadas $-\frac{3}{4}$ e $+\frac{3}{4}$. A fórmula
+   $y' = -\frac{x}{y}$ tem $y$ dentro, então a pergunta precisa do ponto
+   inteiro.
+6. Porque a igualdade só se mantém se os dois lados forem derivados. Se o lado
+   direito fosse $x$ e fosse tratado como constante, a derivada dele entraria
+   como 0 em vez de 1, e o $y'$ isolado sairia errado — em $y^3 + y = x$, daria
+   $y' = 0$ em todo ponto, o que afirma que a curva é horizontal.
+7. a) $2x + 2y\,y' = 0$, $y' = -\frac{x}{y} = -\frac{5}{12}$. b) $y + x\,y' =
+   0$, $y' = -\frac{y}{x} = -\frac{4}{3}$; confere com $y = \frac{12}{x}$,
+   cuja derivada em 3 é $-\frac{12}{9}$. c) $2x - 2y\,y' = 0$, $y' =
+   \frac{x}{y} = \frac{5}{4}$; repare no sinal positivo, que vem do menos da
+   equação. d) $2x + 8y\,y' = 0$, $y' = -\frac{x}{4y} = -\frac{2}{8} =
+   -\frac{1}{4}$. *Se em (c) você encontrou $-\frac{5}{4}$, copiou o sinal da
+   circunferência; a equação aqui tem $-y^2$, e a derivada de $-y^2$ é
+   $-2y\,y'$.*
+8. $y = 12 - \frac{5}{12}(x - 5)$, isto é, $y = -\frac{5}{12}x +
+   \frac{169}{12}$. O raio tem inclinação $\frac{12}{5}$, e
+   $\frac{12}{5} \times \left(-\frac{5}{12}\right) = -1$.
+9. Implícito: $2y\,y' = 3x^2$, $y' = \frac{3x^2}{2y} = \frac{48}{16} = 3$.
+   Explícito: $y = x^{3/2}$, $y' = \frac{3}{2}x^{1/2} = \frac{3}{2} \times 2 =
+   3$. Batem — e a segunda conta usa justamente a regra da potência
+   fracionária que a seção 11 demonstrou.
+10. $2xy + x^2\,y' + y' = 0$, $y'(x^2 + 1) = -2xy$, $y' = -\frac{2xy}{x^2 + 1}
+    = -\frac{8}{5} = -1{,}6$. Confere com $y = \frac{10}{x^2 + 1}$, cuja
+    derivada em 2 é $-\frac{20 \times 2}{25} = -1{,}6$. *Se encontrou
+    $-\frac{4}{5}$, derivou $x^2 y$ como $x^2\,y'$ e perdeu a parcela $2xy$.*
+11. $1 + \cos y \times y' = 0$, $y' = -\frac{1}{\cos y} = -\frac{1}{\cos 0} =
+    -1$. Confere com $y = \arcsen(1 - x)$, cujo quociente centrado em 1 dá
+    $-1{,}0000$.
+12. Implícito: $e^y\,y' = 2x$, $y' = \frac{2x}{e^y} = \frac{2}{2} = 1$, usando
+    $e^y = x^2 + 1 = 2$ no ponto. Explícito: $y' = \frac{2x}{x^2 + 1} =
+    \frac{2}{2} = 1$. As duas fórmulas são a mesma, porque $e^y$ é
+    $x^2 + 1$.
+13. $(\arcsen x)'$ em $0{,}8$: $\frac{1}{\sqrt{1 - 0{,}64}} = \frac{1}{0{,}6}
+    \approx 1{,}667$. $(\arctg x)'$ em $0{,}5$: $\frac{1}{1 + 0{,}25} = 0{,}8$.
+14. a) $(5-2)^2 + (5-1)^2 = 9 + 16 = 25$ ✓. b) Derivando,
+    $2(x-2) + 2(y-1)\,y' = 0$, logo $y' = -\frac{x-2}{y-1} = -\frac{3}{4}$.
+    c) $y = 5 - \frac{3}{4}(x - 5) = -\frac{3}{4}x + \frac{35}{4}$. d) O
+    segmento do centro ao ponto tem inclinação $\frac{5-1}{5-2} =
+    \frac{4}{3}$, e $\frac{4}{3} \times \left(-\frac{3}{4}\right) = -1$ ✓. É a
+    circunferência do motivador deslocada; a cadeia com $(x - 2)$ e $(y - 1)$
+    não muda a conta, porque a derivada de dentro desses parênteses é 1.
+15. $y' = -\frac{x}{4y} = -\frac{1}{4}$ em $(2, 2)$: cerca de **0,25 hora** do
+    automatizado por hora a mais do manual. É aproximação porque a taxa vale
+    naquele ponto e muda ao longo da hora. O valor exato: com $x = 3$,
+    $4y^2 = 11$ e $y = \sqrt{2{,}75} \approx 1{,}658$, uma redução de
+    $0{,}342$ hora. A derivada subestimou, porque a curva se inclina mais
+    conforme $x$ cresce.
+16. $\frac{5}{3}x^{2/3}$ em 8: $\frac{5}{3} \times 4 = \frac{20}{3} \approx
+    6{,}667$. O quociente centrado dá $6{,}6667$.
+17. Derivando $x^2 + y^2 = r^2$: $2x + 2y\,y' = 0$, $y' = -\frac{x}{y}$, que
+    em $(a, b)$ é $-\frac{a}{b}$. O raio até $(a, b)$ tem inclinação
+    $\frac{b}{a}$ (com $a \neq 0$), e $\frac{b}{a} \times
+    \left(-\frac{a}{b}\right) = -1$: perpendiculares, para qualquer raio $r$.
+    Se $a = 0$ o raio é vertical e a tangente é horizontal ($y' = 0$), ainda
+    perpendiculares, só que a fórmula do produto não se aplica a reta vertical.
+    Se $b = 0$, a fórmula divide por zero: a tangente é vertical e a derivada
+    não existe.
+18. De $\cos y = x$: $-\sen y \times y' = 1$, logo $y' = -\frac{1}{\sen y}$.
+    Como $y \in [0, \pi]$, $\sen y \ge 0$ e $\sen y = +\sqrt{1 - \cos^2 y} =
+    \sqrt{1 - x^2}$. Então $(\arccos x)' = -\frac{1}{\sqrt{1 - x^2}}$. O sinal
+    negativo vem da derivada do cosseno, $-\sen y$, e faz sentido: $\arccos$ é
+    decrescente. Repare que é exatamente o oposto de $(\arcsen x)'$, coerente
+    com $\arcsen x + \arccos x = \frac{\pi}{2}$, uma soma constante cuja
+    derivada tem que ser zero.
+
+</details>
+
+## 16. Revisão curta
+
+- Uma equação em $x$ e $y$ pode definir $y$ como função de $x$ perto de um
+  ponto, mesmo sem fórmula. **Derivação implícita** é derivar os dois lados
+  em relação a $x$ tratando $y$ como essa função.
+- O passo central é a regra da cadeia: todo termo com $y$ deixa um fator $y'$.
+  $(y^2)' = 2y\,y'$, $(\sen y)' = \cos y \times y'$, $(e^y)' = e^y\,y'$. Termos
+  com $x$ e $y$ multiplicados pedem também a regra do produto.
+- A fórmula de $y'$ costuma ter $x$ e $y$: **a tangente depende do ponto
+  inteiro**. Onde a fórmula divide por zero, a tangente é vertical e a
+  derivada não existe.
+- O método rende três resultados novos: $(\arcsen x)' = \frac{1}{\sqrt{1 -
+  x^2}}$, $(\arctg x)' = \frac{1}{1 + x^2}$ e a regra da potência demonstrada
+  para expoente fracionário. E explica a dedução de $(\ln x)'$ da lição
+  anterior.
+- Toda derivada implícita pode ser conferida com um número: isole $y$ num
+  ramo, ou resolva a equação numericamente, e compare com o quociente
+  centrado.
+
+A próxima lição, [taxas relacionadas](./taxas-relacionadas), faz o mesmo
+movimento com o tempo no lugar de $x$: uma escada que escorrega, um tanque
+que enche e um balão que infla têm grandezas amarradas por uma equação, e
+derivar essa equação em relação a $t$ diz como as taxas se ligam.

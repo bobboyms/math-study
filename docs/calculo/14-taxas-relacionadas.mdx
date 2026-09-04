@@ -1,0 +1,870 @@
+---
+title: "Taxas relacionadas: quando duas grandezas mudam juntas"
+---
+
+import GeoFigure from '@site/src/components/GeoFigure';
+
+# Taxas relacionadas: quando duas grandezas mudam juntas
+
+## 1. Problema motivador: a escada que escorrega
+
+Uma escada de 5 m está encostada numa parede. O pé dela começa a escorregar
+pelo chão, afastando-se da parede a **0,5 m por segundo**, num ritmo
+constante. Enquanto o pé se afasta, o topo desce pela parede.
+
+A pergunta é sobre o topo: **em que ritmo ele está descendo no instante em
+que o pé está a 3 m da parede?**
+
+Repare no que o problema dá e no que ele pede. Ele dá a taxa de uma grandeza,
+a distância do pé até a parede. Ele pede a taxa de outra grandeza, a altura
+do topo. As duas grandezas não são independentes: a escada tem 5 m sempre, e
+o triângulo que ela forma com a parede e o chão é retângulo. Pitágoras amarra
+uma à outra.
+
+Uma tentação aparece logo: se o pé anda 0,5 m por segundo, o topo desce
+0,5 m por segundo. Vale testar essa ideia com números antes de aceitá-la.
+Quando o pé está a 3 m, o topo está a 4 m de altura, porque $3^2 + 4^2 = 25$.
+Um segundo depois, o pé está a 3,5 m, e o topo está a
+$\sqrt{25 - 3{,}5^2} = \sqrt{12{,}75} \approx 3{,}571$ m. O topo desceu cerca
+de 0,43 m nesse segundo, não 0,5 m. E se o pé estivesse a 4 m, o topo estaria
+a 3 m; um segundo depois, a $\sqrt{25 - 4{,}5^2} = \sqrt{4{,}75} \approx 2{,}179$
+m, uma descida de 0,82 m. **O pé anda sempre no mesmo ritmo, e o topo não.**
+
+A conta de "um segundo depois" dá uma velocidade média do topo naquele
+segundo, e a lição de [taxa média](../funcoes/taxa-media-de-variacao) já
+separou média de instantânea. O que o problema pede é a taxa **no instante**
+em que o pé está a 3 m. Esta página constrói o método que responde a isso, e
+volta à escada na seção 9.
+
+## 2. Mapa das ideias
+
+- duas grandezas estão **relacionadas** quando uma equação as amarra:
+  $x^2 + y^2 = 25$ amarra a distância do pé e a altura do topo;
+- num problema de **taxas relacionadas**, as duas grandezas mudam com o
+  tempo, a taxa de uma é conhecida, e a taxa da outra é a pergunta;
+- o método é **derivar a equação em relação ao tempo**, tratando cada grandeza
+  como uma função de $t$, com a regra da cadeia;
+- $\frac{dx}{dt}$ lê-se "taxa de $x$ em relação ao tempo", e a unidade dela é
+  a unidade de $x$ por unidade de tempo;
+- a regra mais importante do método: **derivar antes de substituir** os
+  valores do instante.
+
+## 3. Para que serve
+
+- saber em que ritmo o nível de um tanque sobe quando se conhece a vazão que
+  entra;
+- saber em que ritmo dois veículos se afastam quando se conhecem as
+  velocidades de cada um;
+- saber em que ritmo o faturamento cresce quando preço e quantidade mudam ao
+  mesmo tempo;
+- saber em que ritmo a sombra de uma pessoa cresce enquanto ela caminha;
+- e, dentro da matemática, é a primeira aplicação em que a regra da cadeia e
+  a derivação implícita deixam de ser técnica e viram ferramenta de resposta.
+
+Todos esses problemas têm o mesmo formato: uma equação liga duas ou mais
+grandezas, todas elas mudam com o tempo, e a pergunta é sobre a taxa de uma
+delas num instante.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [Teorema de Pitágoras](../geometria/teorema-de-pitagoras): como se
+relacionam os lados de um triângulo retângulo?** O quadrado da hipotenusa é
+a soma dos quadrados dos catetos: $a^2 + b^2 = c^2$. O terno $(3, 4, 5)$
+satisfaz a relação exatamente, e é ele que aparece na escada.
+
+**2. De [Volumes e superfícies](../geometria/volumes-e-superficies): qual é o
+volume de um cone e o de uma esfera?** O cone de raio $r$ e altura $h$ tem
+$V = \frac{1}{3}\pi r^2 h$. A esfera de raio $r$ tem $V = \frac{4}{3}\pi r^3$.
+As duas fórmulas voltam nos exemplos.
+
+**3. De [Semelhança](../geometria/semelhanca): o que uma reta paralela a um
+lado faz dentro de um triângulo?** Recorta um triângulo menor, semelhante ao
+inteiro, e por isso com lados na mesma proporção. Num tanque em forma de
+cone, a superfície da água é paralela à base, e é essa semelhança que liga o
+raio da água à altura dela.
+
+**4. De [Regra da cadeia](./regra-da-cadeia): o que diz
+$\frac{dy}{dx} = \frac{dy}{du} \times \frac{du}{dx}$?** Que a taxa de uma
+composição é o produto das taxas das camadas. O balão daquela lição já era
+um problema de taxas relacionadas: o volume dependia do raio, o raio
+dependia do tempo, e a taxa do volume no tempo saiu do produto.
+
+**5. De [Derivação implícita](./derivacao-implicita): como se deriva $y^2$
+quando $y$ depende de $x$?** Como $2y \times y'$, pela cadeia, e não como
+$2y$: o $y$ é uma camada de dentro, e a derivada dela multiplica. Nesta
+página a variável de fora deixa de ser $x$ e passa a ser o tempo, e **todas**
+as letras da equação viram camadas de dentro.
+
+**6. De [Regras do produto e do quociente](./regras-do-produto-e-do-quociente):
+como cresce um faturamento quando preço e quantidade mudam juntos?** Pela
+regra do produto: $(pq)' = p'q + pq'$. Aquele problema, da mensalidade que
+sobe enquanto a base de assinantes cresce, já era um problema de taxas
+relacionadas, sem o nome.
+
+O item 5 é o que decide tudo. Se a derivação implícita não estiver clara,
+releia a seção do método naquela lição antes de seguir, porque esta página
+usa o mesmo movimento em toda linha.
+
+## 5. Intuição: grandezas amarradas mudam em proporção
+
+Pense em duas grandezas amarradas por uma equação como dois pontos ligados
+por um barbante esticado: mexer num deles obriga o outro a se mexer. A
+equação diz **como** os dois estão ligados. A pergunta das taxas relacionadas
+é: se um deles se mexe num certo ritmo, em que ritmo o outro é obrigado a se
+mexer?
+
+O caso mais simples é o de uma ligação em linha reta. Se o perímetro de um
+quadrado é $P = 4\ell$, então o perímetro cresce sempre quatro vezes mais
+rápido que o lado: lado a 0,1 cm/s, perímetro a 0,4 cm/s. A proporção é fixa
+porque a ligação é uma reta.
+
+Na escada, a ligação não é uma reta: é $x^2 + y^2 = 25$. Por isso a
+proporção entre as duas taxas **muda de instante para instante**. Quando o pé
+está perto da parede, o topo mal desce; quando o pé está longe, o topo
+desce muito depressa. A tabela do motivador já mostrou isso: o mesmo avanço de 0,5 m no
+pé fez o topo descer 0,43 m num caso e 0,82 m no outro.
+
+A regra da cadeia é a ferramenta que mede essa proporção num instante. E ela
+não precisa de uma fórmula de $y$ em função de $t$: precisa só da equação que
+amarra $x$ e $y$, e da taxa de $x$.
+
+## 6. Modelo visual: a escada com as duas medidas que mudam
+
+<GeoFigure
+  unit={44}
+  padding={58}
+  bounds={[-0.9, -0.9, 5.4, 5.3]}
+  segments={[
+    {from: [0, 0], to: [0, 5], tone: 0},
+    {from: [0, 0], to: [5.2, 0], tone: 0},
+    {from: [3, 0], to: [0, 4], tone: 1},
+    {from: [3, 0], to: [3.9, 0], tone: 2, arrow: true},
+    {from: [0, 4], to: [0, 3.1], tone: 2, arrow: true},
+  ]}
+  angles={[{at: [0, 0], from: [5, 0], to: [0, 5], right: true, tone: 0}]}
+  points={[
+    {at: [3, 0], tone: 1},
+    {at: [0, 4], tone: 1},
+  ]}
+  labels={[
+    {at: [1.5, -0.45], math: 'x', tone: 1, fontSize: 14},
+    {at: [-0.45, 2], math: 'y', tone: 1, fontSize: 14},
+    {at: [1.95, 2.35], math: '5', tone: 1, fontSize: 14},
+    {at: [4.35, 0.45], math: '\\dfrac{dx}{dt} = 0{,}5', tone: 2, fontSize: 13},
+    {at: [1.1, 3.5], math: '\\dfrac{dy}{dt} = \\,?', tone: 2, fontSize: 13},
+  ]}
+  caption="A escada de 5 m forma um triângulo retângulo com a parede e o chão. A distância x do pé cresce a 0,5 m/s; a altura y do topo diminui, e a pergunta é em que ritmo."
+/>
+
+Três coisas estão marcadas na figura, e cada uma tem um papel:
+
+- os **comprimentos** $x$ e $y$, que são as grandezas que mudam. Eles não
+  têm valor fixo na figura, porque a figura vale para qualquer instante;
+- o **5**, que não muda: é a escada, e é ele que aparece na equação como
+  constante;
+- as **setas**, que são as taxas. Uma é conhecida, a outra é a pergunta.
+
+Acompanhe o movimento numa tabela. A cada instante, $x$ avança 0,5 m por
+segundo; $y$ é calculado por $\sqrt{25 - x^2}$:
+
+| $t$ (s) | $x$ (m) | $y$ (m) | descida de $y$ no segundo (m) |
+|---:|---:|---:|---:|
+| 0 | 2,0 | 4,583 | — |
+| 1 | 2,5 | 4,330 | 0,253 |
+| 2 | 3,0 | 4,000 | 0,330 |
+| 3 | 3,5 | 3,571 | 0,429 |
+| 4 | 4,0 | 3,000 | 0,571 |
+| 5 | 4,5 | 2,179 | 0,821 |
+
+A última coluna é a taxa média de descida em cada segundo, e ela cresce sem
+parar. O que o problema pede é a taxa instantânea em $t = 2$, quando $x = 3$.
+Pela tabela, ela deve estar entre 0,330 e 0,429. O método da seção 8 vai dar
+o valor exato.
+
+## 7. Ponte para a formalização: tudo é função do tempo
+
+A equação da escada, $x^2 + y^2 = 25$, não tem nenhum $t$ escrito nela. Mesmo
+assim, ela vale **em todo instante**: no instante 0, no instante 2, no
+instante 4,7. Em cada um deles, o $x$ daquele instante e o $y$ daquele
+instante satisfazem a equação. Ou seja, $x$ é uma função do tempo, $x(t)$, e
+$y$ também, $y(t)$, e a equação diz que
+
+$$
+x(t)^2 + y(t)^2 = 25 \qquad \text{para todo } t.
+$$
+
+Dois lados que são iguais em todo instante têm a mesma taxa de variação em
+todo instante. Isso é o que autoriza **derivar os dois lados em relação a
+$t$**. O lado direito é a constante 25, e a derivada de constante é zero. O
+lado esquerdo tem duas parcelas, cada uma com uma função do tempo dentro de
+um quadrado. A lição de derivação implícita já ensinou o que fazer com isso:
+$x^2$ é uma potência de função, e a regra da cadeia dá
+
+$$
+\frac{d}{dt}\left(x^2\right) = 2x \times \frac{dx}{dt}.
+$$
+
+**O que muda na escrita:** o $x^2$ vira $2x$ vezes a taxa de $x$. **O que
+permanece:** a igualdade entre os dois lados, porque derivamos os dois.
+**Por que a cadeia se aplica:** $x^2$ é a função "elevar ao quadrado"
+aplicada à função $x(t)$, uma composição, e composição se deriva pela cadeia.
+Sem o fator $\frac{dx}{dt}$, a conta trataria $x$ como se fosse o próprio
+tempo, o que não é.
+
+Fazendo o mesmo com $y^2$ e somando, a equação da escada derivada fica
+
+$$
+2x \frac{dx}{dt} + 2y \frac{dy}{dt} = 0.
+$$
+
+Esta é a **equação das taxas**. Ela relaciona as duas taxas em qualquer
+instante, do mesmo modo que a equação original relacionava as duas
+grandezas. Repare que ela contém quatro coisas: $x$, $y$ e as duas taxas. Num
+instante dado, três delas são conhecidas ou calculáveis, e a quarta é a
+pergunta.
+
+### Sobre a notação
+
+Esta página usa $\frac{dx}{dt}$ no lugar de $x'$. As duas escritas
+significam a mesma coisa, a derivada de $x$ em relação ao tempo, e a lição de
+[A derivada](./a-derivada) apresentou as duas. A escolha aqui é pela leitura:
+$\frac{dx}{dt}$ deixa visível **de quem** é a taxa e **em relação a quê**, e
+num problema com três ou quatro grandezas mudando isso evita confusão. E a
+unidade sai da própria escrita: se $x$ está em metros e $t$ em segundos,
+$\frac{dx}{dt}$ está em metros por segundo.
+
+## 8. O método: cinco passos, e um deles é o que mais erra
+
+> **Problema de taxas relacionadas.** Duas ou mais grandezas mudam com o
+> tempo e estão ligadas por uma equação. Conhecida a taxa de uma delas num
+> instante, encontrar a taxa de outra no mesmo instante.
+
+O roteiro tem cinco passos, sempre nesta ordem:
+
+1. **Desenhar** a situação e marcar o que muda e o que é fixo.
+2. **Nomear** cada grandeza que muda com uma letra, e anotar a taxa
+   conhecida e a taxa pedida, com unidades.
+3. **Relacionar**: escrever a equação que liga as grandezas. Ela vem da
+   geometria (Pitágoras, semelhança, uma fórmula de volume) ou do contexto
+   (faturamento é preço vezes quantidade).
+4. **Derivar** os dois lados da equação em relação a $t$, com a regra da
+   cadeia em cada grandeza que muda.
+5. **Substituir** os valores do instante e isolar a taxa pedida.
+
+**Exemplo.** O lado de um quadrado cresce a 0,2 cm por segundo. Em que
+ritmo a área cresce quando o lado mede 10 cm?
+
+1. Um quadrado que cresce mantendo a forma.
+2. Lado $\ell$, área $A$; $\frac{d\ell}{dt} = 0{,}2$ cm/s;
+   $\frac{dA}{dt} = ?$ em cm²/s.
+3. $A = \ell^2$.
+4. $\frac{dA}{dt} = 2\ell \frac{d\ell}{dt}$.
+5. Com $\ell = 10$: $\frac{dA}{dt} = 2 \times 10 \times 0{,}2 = 4$ cm²/s.
+
+A unidade fecha: centímetros vezes centímetros por segundo dá centímetros
+quadrados por segundo. E o número faz sentido pelo desenho de área do curso:
+o quadrado ganha duas faixas finas de comprimento 10 e largura 0,2 por
+segundo, mais um cantinho desprezível, isto é, $2 \times 10 \times 0{,}2 = 4$.
+
+**Contraexemplo, para delimitar o que é e o que não é o problema.** "Um
+quadrado de lado 10 cm tem que área?" não é um problema de taxas
+relacionadas: nada muda com o tempo, e a resposta é 100 cm². "A área de um
+quadrado é $\ell^2$; qual é a derivada disso em relação a $\ell$?" também não
+é: a pergunta é sobre a taxa de $A$ em relação a $\ell$, que é $2\ell$, e não
+em relação ao tempo. O problema de taxas relacionadas tem sempre o tempo como
+variável de fundo, e duas grandezas mudando **nele**.
+
+### Derivar antes de substituir
+
+O passo 4 vem antes do passo 5, e essa ordem não é uma preferência. Veja o
+que acontece se ela for invertida na escada. O instante pedido tem $x = 3$.
+Se esse valor for colocado na equação antes de derivar, ela vira
+
+$$
+9 + y^2 = 25,
+$$
+
+e agora só sobrou uma coisa que muda. Derivando, $2y \frac{dy}{dt} = 0$, o
+que dá $\frac{dy}{dt} = 0$: o topo parado. Está errado, e o erro tem uma
+causa precisa. Ao trocar $x$ por 3 antes de derivar, a conta passou a tratar
+$x$ como uma constante, e a taxa $\frac{dx}{dt}$ desapareceu da equação. **A
+informação de que o pé se move foi apagada.** Só depois de derivar, com todas
+as taxas presentes, é que os valores do instante podem entrar.
+
+A regra vale para qualquer grandeza que mude. O 5 da escada pode entrar antes
+de derivar, porque a escada mede 5 sempre; o 3 não pode, porque o pé só está
+a 3 m num instante.
+
+### As unidades como conferência
+
+A equação das taxas herda as unidades da equação original. Em
+$2x \frac{dx}{dt} + 2y \frac{dy}{dt} = 0$, cada parcela está em metros vezes
+metros por segundo, isto é, metros quadrados por segundo. Ao final, a taxa
+pedida tem que sair na unidade de $y$ por unidade de tempo. Se sair em outra
+coisa, algum passo trocou grandeza por taxa ou esqueceu um fator. Esse teste é
+rápido e pega a maioria dos erros.
+
+## 9. Resolvendo o problema da escada
+
+Com o método pronto, os cinco passos na escada:
+
+1. A figura da seção 6.
+2. $x$ é a distância do pé à parede, $y$ é a altura do topo, os dois em
+   metros; $\frac{dx}{dt} = 0{,}5$ m/s; a pergunta é $\frac{dy}{dt}$ no
+   instante em que $x = 3$.
+3. Pitágoras: $x^2 + y^2 = 25$.
+4. Derivando em $t$, como na seção 7:
+   $$
+   2x \frac{dx}{dt} + 2y \frac{dy}{dt} = 0.
+   $$
+   Isolando a taxa pedida (tirar a primeira parcela dos dois lados e dividir
+   por $2y$, que não é zero enquanto a escada está de pé):
+   $$
+   \frac{dy}{dt} = -\frac{x}{y} \frac{dx}{dt}.
+   $$
+5. No instante pedido, $x = 3$; o $y$ desse instante sai de Pitágoras,
+   $y = \sqrt{25 - 9} = 4$. Então
+   $$
+   \frac{dy}{dt} = -\frac{3}{4} \times 0{,}5 = -0{,}375 \text{ m/s}.
+   $$
+
+**O sinal.** Negativo, porque $y$ está diminuindo: o topo desce. A conta
+produz o sinal sozinha, e ele é parte da resposta. "O topo desce a 0,375 m/s"
+e "$\frac{dy}{dt} = -0{,}375$ m/s" dizem a mesma coisa.
+
+**A conferência com a tabela.** A seção 6 previu que a taxa instantânea em
+$x = 3$ ficaria entre 0,330 e 0,429. Ficou: 0,375. E uma conferência
+numérica, do tipo que a lição de A derivada ensinou: avançando o tempo em
+$0{,}000001$ s a partir de $x = 3$, o topo desce $0{,}0000003750$ m, e a razão
+dá $-0{,}3750$. Confere.
+
+**A proporção.** A fórmula $\frac{dy}{dt} = -\frac{x}{y}\frac{dx}{dt}$ diz
+que a taxa do topo é a taxa do pé multiplicada por $\frac{x}{y}$. Enquanto o
+pé está mais perto da parede que o topo está do chão ($x$ menor que $y$), o
+topo desce mais devagar que o pé anda. Quando $x = y$, os dois ritmos se
+igualam. Depois disso, o topo desce mais rápido que o pé anda, e perto do fim
+($y$ perto de zero) a taxa cresce sem limite. É a leitura exata da última
+coluna da tabela.
+
+| $x$ (m) | $y$ (m) | $\frac{dy}{dt}$ (m/s) |
+|---:|---:|---:|
+| 1 | 4,899 | $-0{,}102$ |
+| 3 | 4 | $-0{,}375$ |
+| 4 | 3 | $-0{,}667$ |
+| 4,5 | 2,179 | $-1{,}032$ |
+
+O pé anda sempre a 0,5 m/s. O topo, em $x = 4{,}5$, já desce a mais de
+1 m/s: o dobro da velocidade do pé.
+
+## 10. Exemplos resolvidos
+
+### Exemplo 1: o tanque cônico
+
+Um tanque tem a forma de um cone com o vértice para baixo, 6 m de altura e
+2 m de raio na boca. Água entra a **3 m³ por minuto**. Em que ritmo o nível
+da água sobe quando ele está a 4 m do vértice?
+
+<GeoFigure
+  unit={40}
+  padding={58}
+  bounds={[-2.6, -0.5, 2.6, 6.7]}
+  polygons={[
+    {points: [[-2, 6], [0, 0], [2, 6]], tone: 0, fill: false},
+    {points: [[-1.333, 4], [0, 0], [1.333, 4]], tone: 1},
+  ]}
+  segments={[
+    {from: [-2, 6], to: [2, 6], tone: 0},
+    {from: [0, 0], to: [0, 6], tone: 0, dashed: true},
+    {from: [0, 4], to: [1.333, 4], tone: 2},
+    {from: [0, 6], to: [2, 6], tone: 2},
+  ]}
+  labels={[
+    {at: [1, 6.4], math: '2', tone: 2, fontSize: 13},
+    {at: [0.67, 4.38], math: 'r', tone: 2, fontSize: 14},
+    {at: [-0.4, 5.1], math: '6', fontSize: 13},
+    {at: [-0.35, 2], math: 'h', tone: 1, fontSize: 14},
+  ]}
+  caption="Corte do tanque pelo eixo. A água forma um cone menor, semelhante ao tanque inteiro: o raio r e a altura h da água estão na mesma proporção que 2 e 6."
+/>
+
+1. A figura: um cone de ponta para baixo, com a água formando um cone menor
+   dentro dele.
+2. Altura da água $h$ (m), raio da superfície da água $r$ (m), volume de água
+   $V$ (m³). $\frac{dV}{dt} = 3$ m³/min; $\frac{dh}{dt} = ?$ em m/min, quando
+   $h = 4$.
+3. O volume do cone de água é $V = \frac{1}{3}\pi r^2 h$. Só que essa equação
+   tem **três** grandezas mudando, e a taxa de $r$ não foi dada. É aqui que a
+   semelhança entra: a superfície da água é paralela à boca do tanque, então
+   o cone de água é semelhante ao tanque inteiro, e
+   $$
+   \frac{r}{h} = \frac{2}{6}, \qquad \text{isto é,} \qquad r = \frac{h}{3}.
+   $$
+   Trocando $r$ por $\frac{h}{3}$ no volume, sobra uma equação com duas
+   grandezas:
+   $$
+   V = \frac{1}{3}\pi \left(\frac{h}{3}\right)^2 h = \frac{\pi h^3}{27}.
+   $$
+   Esse passo, de eliminar uma grandeza usando uma relação fixa, é o que
+   permite derivar sem precisar da taxa de $r$.
+4. Derivando em $t$ (cadeia em $h^3$):
+   $$
+   \frac{dV}{dt} = \frac{\pi}{27} \times 3h^2 \frac{dh}{dt} = \frac{\pi h^2}{9} \frac{dh}{dt}.
+   $$
+5. Com $h = 4$ e $\frac{dV}{dt} = 3$:
+   $$
+   3 = \frac{16\pi}{9} \frac{dh}{dt}
+   \qquad\Longrightarrow\qquad
+   \frac{dh}{dt} = \frac{27}{16\pi} \approx 0{,}537 \text{ m/min}.
+   $$
+
+A unidade fecha: metros cúbicos por minuto divididos por metros quadrados dão
+metros por minuto. E a leitura faz sentido: $\frac{\pi h^2}{9}$ é a área da
+superfície da água naquele instante ($\pi r^2$ com $r = \frac{4}{3}$), e o
+nível sobe na razão entre a vazão e essa área, como numa caixa de base fixa.
+A diferença do cone é que a área da superfície cresce conforme a água sobe, e
+por isso o nível sobe cada vez mais devagar: em $h = 2$ ele subia a
+$\frac{27}{4\pi} \approx 2{,}15$ m/min, quatro vezes mais rápido.
+
+Conferência numérica: avançando o volume em $3 \times 0{,}000001$ m³ a partir
+de $h = 4$ e recalculando a altura, a razão dá $0{,}5371$. Confere.
+
+### Exemplo 2: o balão com vazão constante
+
+*Pause e tente antes de ler.* Na lição da regra da cadeia, o raio do balão
+crescia num ritmo fixo. Agora é o **ar** que entra num ritmo fixo: 100 cm³
+por segundo. Em que ritmo o raio cresce quando ele mede 5 cm?
+
+1. Uma esfera crescendo.
+2. Raio $r$ (cm), volume $V$ (cm³); $\frac{dV}{dt} = 100$ cm³/s;
+   $\frac{dr}{dt} = ?$ em cm/s, quando $r = 5$.
+3. $V = \frac{4}{3}\pi r^3$.
+4. $\frac{dV}{dt} = 4\pi r^2 \frac{dr}{dt}$.
+5. $100 = 4\pi \times 25 \times \frac{dr}{dt}$, logo
+   $$
+   \frac{dr}{dt} = \frac{100}{100\pi} = \frac{1}{\pi} \approx 0{,}318 \text{ cm/s}.
+   $$
+
+Compare com a lição anterior. Lá, a taxa do raio era o dado e a do volume era
+a pergunta; a mesma equação das taxas, $\frac{dV}{dt} = 4\pi r^2 \frac{dr}{dt}$,
+foi lida da esquerda para a direita. Aqui ela é lida da direita para a
+esquerda. **A equação das taxas não sabe qual taxa é a pergunta**; quem decide
+é o problema. E a leitura física: com o ar entrando sempre no mesmo ritmo, o
+raio cresce cada vez mais devagar, porque a mesma quantidade de ar tem que
+se espalhar por uma casca cada vez maior, de área $4\pi r^2$.
+
+### Exemplo 3: dois carros se afastando
+
+*Pause e tente.* Dois carros partem do mesmo cruzamento no mesmo instante.
+Um vai para o norte a 60 km/h; o outro, para o leste a 80 km/h. Meia hora
+depois, em que ritmo a distância entre eles está aumentando?
+
+1. Um triângulo retângulo com o ângulo reto no cruzamento: um cateto para o
+   norte, outro para o leste, e a distância entre os carros como hipotenusa.
+2. Distância do carro do norte ao cruzamento $y$, do carro do leste $x$,
+   distância entre os carros $D$, tudo em km; $\frac{dy}{dt} = 60$,
+   $\frac{dx}{dt} = 80$ km/h; $\frac{dD}{dt} = ?$ após meia hora.
+3. Pitágoras: $D^2 = x^2 + y^2$.
+4. Derivando em $t$, cadeia nos três quadrados:
+   $$
+   2D \frac{dD}{dt} = 2x \frac{dx}{dt} + 2y \frac{dy}{dt}
+   \qquad\Longrightarrow\qquad
+   \frac{dD}{dt} = \frac{x \frac{dx}{dt} + y \frac{dy}{dt}}{D}.
+   $$
+5. Após meia hora, $x = 40$ km e $y = 30$ km, e $D = \sqrt{1600 + 900} = 50$
+   km, o terno $(3, 4, 5)$ multiplicado por 10. Então
+   $$
+   \frac{dD}{dt} = \frac{40 \times 80 + 30 \times 60}{50} = \frac{3200 + 1800}{50} = 100 \text{ km/h}.
+   $$
+
+Uma leitura antes de aceitar: a distância entre os carros cresce a 100 km/h,
+que é **menos** que $60 + 80 = 140$. Faz sentido, porque os carros não andam
+em sentidos opostos numa mesma reta; andam em direções perpendiculares, e só
+parte de cada velocidade contribui para afastá-los. E neste exemplo a taxa
+não depende do instante: como $x$ e $y$ crescem em proporção fixa, a razão
+$\frac{x \times 80 + y \times 60}{D}$ dá 100 em qualquer instante. Isso é
+particular deste problema, em que os dois partem juntos do mesmo ponto; o
+exercício 14 mostra que, com partidas diferentes, a taxa muda.
+
+### Exemplo 4: a sombra que caminha
+
+*Pause e tente.* Um poste de 6 m de altura ilumina uma calçada à noite. Uma
+pessoa de 1,8 m caminha afastando-se do poste a 1,5 m/s. Em que ritmo o
+comprimento da sombra dela cresce?
+
+1. Dois triângulos retângulos com o mesmo ângulo na ponta da sombra: o
+   grande, formado pelo poste e pela distância do poste até a ponta da
+   sombra; o pequeno, formado pela pessoa e pela sombra dela.
+2. Distância da pessoa ao poste $x$, comprimento da sombra $s$, em metros;
+   $\frac{dx}{dt} = 1{,}5$ m/s; $\frac{ds}{dt} = ?$.
+3. Os dois triângulos são semelhantes (ângulo reto e o ângulo da ponta em
+   comum), como o bastão e o prédio da lição de semelhança. Os lados
+   correspondentes estão na mesma razão:
+   $$
+   \frac{s}{1{,}8} = \frac{x + s}{6}.
+   $$
+   Vale arrumar antes de derivar. Multiplicando em cruz, $6s = 1{,}8x + 1{,}8s$;
+   passando o $1{,}8s$ para a esquerda, $4{,}2s = 1{,}8x$; dividindo,
+   $s = \frac{1{,}8}{4{,}2}x = \frac{3}{7}x$.
+4. $\frac{ds}{dt} = \frac{3}{7}\frac{dx}{dt}$.
+5. $\frac{ds}{dt} = \frac{3}{7} \times 1{,}5 \approx 0{,}643$ m/s.
+
+Aqui a relação entre as grandezas era uma reta, $s = \frac{3}{7}x$, e por
+isso a taxa da sombra é uma fração fixa da taxa da pessoa, em qualquer
+instante. O problema não pediu um instante justamente por isso. Uma pergunta
+parecida, com resposta diferente: em que ritmo a **ponta** da sombra se
+afasta do poste? A ponta está a $x + s = \frac{10}{7}x$ do poste, então ela
+anda a $\frac{10}{7} \times 1{,}5 \approx 2{,}14$ m/s, mais rápido que a
+pessoa.
+
+### Exemplo 5: o faturamento, agora com o nome certo
+
+*Pause e tente.* Um serviço por assinatura cobra $p$ reais por mês e tem $q$
+assinantes. A mensalidade sobe 2 reais por mês e a base cresce 30 assinantes
+por mês. Em que ritmo o faturamento mensal cresce no instante em que
+$p = 32$ e $q = 480$?
+
+1. Não há figura geométrica; a relação vem do contexto.
+2. Preço $p$, assinantes $q$, faturamento $R$; $\frac{dp}{dt} = 2$ reais/mês,
+   $\frac{dq}{dt} = 30$ assinantes/mês; $\frac{dR}{dt} = ?$ em reais/mês.
+3. $R = pq$.
+4. Regra do produto, com $p$ e $q$ funções do tempo:
+   $$
+   \frac{dR}{dt} = \frac{dp}{dt}\,q + p\,\frac{dq}{dt}.
+   $$
+5. $\frac{dR}{dt} = 2 \times 480 + 32 \times 30 = 960 + 960 = 1920$ reais por
+   mês.
+
+É o problema da lição de produto e quociente, seis meses depois do instante
+que ela calculou (lá, com $p = 20$ e $q = 300$, a taxa era 1200). O método
+é o mesmo dos exemplos geométricos; a única diferença é que a equação de
+ligação não vem de um desenho. E a lição serve de aviso: quando a relação é
+um produto de duas grandezas que mudam, o passo 4 é a regra do produto, não
+a cadeia sozinha.
+
+## 11. Erros comuns
+
+> **Erro 1: substituir o valor do instante antes de derivar.** Na escada,
+> pôr $x = 3$ na equação e derivar depois dá $\frac{dy}{dt} = 0$, porque a
+> substituição apaga a taxa $\frac{dx}{dt}$. Só o que é constante em todo
+> instante (o 5 da escada, o 6 e o 2 do tanque) pode entrar antes de derivar.
+> O que muda entra depois.
+
+> **Erro 2: esquecer o fator da cadeia.** Derivar $x^2 + y^2 = 25$ como
+> $2x + 2y = 0$. Isso trataria $x$ e $y$ como se fossem o próprio tempo. Toda
+> grandeza que muda é uma função de $t$, e a derivada dela é a taxa
+> $\frac{dx}{dt}$, que multiplica.
+
+> **Erro 3: confundir a grandeza com a taxa.** Na escada, "o pé está a 3 m"
+> é o valor de $x$; "o pé anda a 0,5 m/s" é o valor de $\frac{dx}{dt}$. Os
+> dois entram em lugares diferentes da equação das taxas, e trocá-los produz
+> um número com unidade errada. Anotar as unidades no passo 2 é o que evita
+> a troca.
+
+> **Erro 4: ignorar o sinal.** Na escada, $\frac{dy}{dt} = -0{,}375$: o topo
+> **desce**. Responder "0,375 m/s" sem dizer que é descida é responder pela
+> metade; e num problema em que a grandeza diminui (o gelo derretendo, o
+> tanque esvaziando), a taxa conhecida entra **negativa** no passo 5.
+
+> **Erro 5: derivar uma equação com uma grandeza a mais.** No tanque cônico,
+> derivar $V = \frac{1}{3}\pi r^2 h$ direto produz uma equação com
+> $\frac{dr}{dt}$, que ninguém deu. Antes de derivar, use a relação fixa
+> (a semelhança, $r = \frac{h}{3}$) para eliminar a grandeza sem taxa
+> conhecida.
+
+> **Erro 6: somar as velocidades dos carros.** Dois carros a 60 e 80 km/h em
+> direções perpendiculares não se afastam a 140 km/h; se afastam a 100. Só
+> parte de cada velocidade aponta na direção que separa os dois, e Pitágoras
+> é quem faz a conta.
+
+## 12. Perguntas de verificação
+
+1. O que torna um problema um problema de "taxas relacionadas", e não um
+   problema comum de derivada?
+2. Por que é preciso derivar a equação **antes** de substituir o valor do
+   instante? O que acontece com a informação do problema se a ordem for
+   invertida?
+3. Na escada, de onde vem o fator $\frac{dx}{dt}$ ao derivar $x^2$?
+4. Por que o 5 da escada pode entrar na equação antes de derivar, e o 3 não?
+5. A equação das taxas do balão, $\frac{dV}{dt} = 4\pi r^2 \frac{dr}{dt}$,
+   é a mesma na lição da regra da cadeia e no exemplo 2. O que mudou entre os
+   dois problemas?
+6. No tanque cônico, por que foi preciso usar semelhança antes de derivar?
+7. O que o sinal negativo de $\frac{dy}{dt}$ na escada informa?
+8. Como as unidades ajudam a conferir a equação das taxas?
+9. No exemplo da sombra, a taxa não dependia do instante. No exemplo da
+   escada, dependia. Qual é a diferença entre as duas relações que explica
+   isso?
+10. Por que a distância entre os dois carros cresce a menos de 140 km/h?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Há duas ou mais grandezas mudando **com o tempo**, ligadas por uma
+   equação; a taxa de uma é conhecida e a de outra é a pergunta. Num
+   problema comum, há uma função dada e a pergunta é a derivada dela.
+2. Porque a derivada de uma grandeza que muda é a taxa dela, e a taxa só
+   aparece se a grandeza ainda estiver escrita como algo que muda. Ao trocar
+   $x$ por 3 antes de derivar, $x$ vira constante, a derivada dele vira zero
+   e o dado "o pé anda a 0,5 m/s" some da conta.
+3. Da regra da cadeia: $x^2$ é a função "elevar ao quadrado" aplicada à
+   função $x(t)$. A derivada de fora é $2x$, e a de dentro é $\frac{dx}{dt}$.
+4. O 5 é o comprimento da escada, igual em todo instante: é uma constante, e
+   a derivada dele é zero de verdade. O 3 é o valor de $x$ num único
+   instante; em outros instantes $x$ vale outra coisa, então $x$ é uma
+   função do tempo, com taxa.
+5. Mudou qual taxa é o dado e qual é a pergunta. Na regra da cadeia,
+   $\frac{dr}{dt}$ era conhecida e $\frac{dV}{dt}$ era a pergunta; no exemplo
+   2 é o contrário. A equação das taxas relaciona as duas e serve nos dois
+   sentidos.
+6. Porque a fórmula do volume tem três grandezas que mudam ($V$, $r$, $h$) e
+   o problema só dá a taxa de uma. A semelhança fornece uma relação fixa
+   entre $r$ e $h$, que permite eliminar $r$ e ficar com uma equação entre
+   $V$ e $h$ somente.
+7. Que $y$ está diminuindo: o topo desce. A conta produz o sinal sozinha, e
+   ele faz parte da resposta.
+8. Cada parcela da equação das taxas herda a unidade da equação original
+   multiplicada por "por unidade de tempo". Se a taxa pedida não sair na
+   unidade da grandeza dela por unidade de tempo, algum fator foi trocado
+   ou esquecido.
+9. A relação da sombra é uma reta, $s = \frac{3}{7}x$: a proporção entre as
+   variações é fixa. A da escada é $x^2 + y^2 = 25$, uma curva: a proporção,
+   $-\frac{x}{y}$, muda conforme a posição.
+10. Porque os carros se movem em direções perpendiculares, e não em sentidos
+    opostos na mesma reta. Só a parte de cada velocidade que aponta na
+    direção da reta que liga os dois contribui para afastá-los; Pitágoras
+    combina as duas partes e dá 100.
+
+</details>
+
+## 13. Exercícios
+
+### 1. Reconhecimento
+
+1. Em cada situação, diga qual é a taxa conhecida, qual é a taxa pedida, e
+   qual equação liga as grandezas:
+   a) o raio de uma mancha circular de óleo cresce 3 m/min; pergunta-se o
+   ritmo da área;
+   b) a aresta de um cubo de gelo derrete a 0,1 cm/min; pergunta-se o ritmo
+   do volume;
+   c) uma pipa está a 30 m de altura e se afasta horizontalmente a 2 m/s;
+   pergunta-se o ritmo em que a linha é solta.
+2. Quais destes números podem entrar na equação **antes** de derivar, e
+   quais só depois? a) o comprimento de 5 m da escada; b) a distância de 3 m
+   do pé no instante pedido; c) a altura de 6 m do tanque; d) o nível de 4 m
+   da água no instante pedido.
+3. Dê a unidade de cada taxa: a) $\frac{dV}{dt}$ com $V$ em litros e $t$ em
+   minutos; b) $\frac{dD}{dt}$ com $D$ em quilômetros e $t$ em horas;
+   c) $\frac{dR}{dt}$ com $R$ em reais e $t$ em meses.
+
+### 2. Explicação
+
+4. Explique com as próprias palavras por que "derivar antes de substituir"
+   não é uma preferência de estilo, e sim uma exigência do método. Use a
+   escada como exemplo.
+5. Um colega derivou $x^2 + y^2 = 25$ e obteve $2x + 2y = 0$. Explique o
+   erro dele e diga que ideia anterior do curso ele deixou de aplicar.
+
+### 3. Aplicação direta
+
+6. O raio de uma mancha circular de óleo cresce 3 m por minuto. Em que ritmo
+   a área da mancha cresce quando o raio mede 20 m?
+7. A aresta de um cubo de gelo diminui 0,1 cm por minuto. Em que ritmo o
+   volume diminui quando a aresta mede 10 cm?
+8. Uma caixa d'água cilíndrica tem 1,5 m de raio. Água entra a 0,5 m³ por
+   minuto. Em que ritmo o nível sobe? Esse ritmo depende do instante?
+
+### 4. Variação
+
+9. Na escada do motivador, em que ritmo o topo desce quando o pé está a
+   4 m da parede? E a 4,5 m? Compare com o resultado em 3 m.
+10. Ainda na escada: em que posição do pé o topo desce exatamente a 1 m/s,
+    o dobro do ritmo do pé?
+11. O tanque cônico do exemplo 1 agora **esvazia** a 0,5 m³ por minuto. Em
+    que ritmo o nível desce quando a água está a 3 m do vértice?
+12. No balão do exemplo 2, em que ritmo a **área da superfície** do balão
+    cresce quando o raio mede 5 cm?
+
+<details>
+<summary>Dica para o 10</summary>
+
+Escreva a condição pedida, $\frac{dy}{dt} = -1$, na fórmula
+$\frac{dy}{dt} = -\frac{x}{y} \times 0{,}5$. Isso dá uma relação entre $x$
+e $y$; junte com $x^2 + y^2 = 25$ e resolva o sistema.
+
+</details>
+
+### 5. Problema misto
+
+13. Uma pipa está presa a uma linha e voa a 30 m de altura, sempre à mesma
+    altura. O vento a afasta horizontalmente da pessoa a 2 m/s. Em que ritmo
+    a pessoa está soltando linha quando a linha mede 50 m?
+14. Um navio $A$ está 10 km a oeste de um porto e navega para o sul a
+    20 km/h. Um navio $B$ parte do porto no mesmo instante e navega para o
+    leste a 15 km/h. Em que ritmo a distância entre os dois cresce uma hora
+    depois?
+15. Um radar está a 60 m de uma estrada reta. Um carro passa a 90 km/h. Em
+    que ritmo a distância entre o carro e o radar cresce no instante em que
+    essa distância é 100 m (e o carro já passou do ponto mais próximo)?
+16. Uma pessoa de 1,8 m caminha **em direção** a um poste de 6 m, a 1,5 m/s.
+    Em que ritmo a sombra dela encolhe? Compare com o exemplo 4.
+
+<details>
+<summary>Dica para o 14</summary>
+
+Coloque o porto na origem. Após $t$ horas, $A$ está em $(-10, -20t)$ e $B$
+em $(15t, 0)$. A distância ao quadrado é a soma dos quadrados das diferenças
+das coordenadas; derive essa expressão em $t$ e calcule em $t = 1$.
+
+</details>
+
+<details>
+<summary>Dica para o 15</summary>
+
+Nomeie $x$ a distância do carro ao ponto da estrada mais próximo do radar.
+Então $D^2 = x^2 + 60^2$, e o 60 é constante. Encontre $x$ no instante em
+que $D = 100$.
+
+</details>
+
+### 6. Justificativa
+
+17. Na escada, $y = \sqrt{25 - x^2}$ é uma fórmula explícita. Derive-a em
+    relação a $t$ pela regra da cadeia e mostre que o resultado é o mesmo
+    $\frac{dy}{dt} = -\frac{x}{y}\frac{dx}{dt}$ obtido pela derivação
+    implícita.
+18. Mostre que, no exemplo 3, a taxa $\frac{dD}{dt}$ vale 100 km/h em
+    **qualquer** instante, e explique por que isso acontece nesse problema e
+    não na escada.
+19. No tanque cônico, mostre que $\frac{dh}{dt} = \frac{1}{\pi r^2}
+    \frac{dV}{dt}$, onde $r$ é o raio da superfície da água naquele instante,
+    e interprete: o nível sobe como numa caixa cuja base é a superfície atual
+    da água.
+20. Explique por que, num problema de taxas relacionadas com um produto de
+    duas grandezas que mudam (como o faturamento), o passo 4 usa a regra do
+    produto, e o que aconteceria se a cadeia fosse aplicada como se fosse
+    uma potência.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) Conhecida $\frac{dr}{dt} = 3$ m/min; pedida $\frac{dA}{dt}$;
+   $A = \pi r^2$. b) Conhecida $\frac{da}{dt} = -0{,}1$ cm/min (negativa,
+   porque diminui); pedida $\frac{dV}{dt}$; $V = a^3$. c) Conhecida
+   $\frac{dx}{dt} = 2$ m/s, com $x$ a distância horizontal; pedida
+   $\frac{dL}{dt}$, com $L$ o comprimento da linha; $L^2 = x^2 + 30^2$.
+2. Antes: a) e c), porque são constantes em todo instante. Só depois: b) e
+   d), porque são valores de grandezas que mudam, válidos num único
+   instante.
+3. a) litros por minuto; b) quilômetros por hora; c) reais por mês.
+4. Derivar é o que faz as taxas aparecerem: a derivada de $x(t)$ é
+   $\frac{dx}{dt}$. Se $x$ é trocado por 3 antes, ele deixa de ser função do
+   tempo, a derivada dele vira zero, e o dado de que o pé anda a 0,5 m/s
+   desaparece. Na escada isso leva a $\frac{dy}{dt} = 0$, o topo parado, que
+   é falso.
+5. Ele derivou $x^2$ como se $x$ fosse a variável de derivação. Mas a
+   derivação é em relação a $t$, e $x$ é uma função de $t$: pela regra da
+   cadeia, $(x^2)' = 2x \frac{dx}{dt}$. A ideia que ele deixou de aplicar é a
+   da derivação implícita, em que toda letra que depende da variável é uma
+   camada de dentro.
+6. $A = \pi r^2$, logo $\frac{dA}{dt} = 2\pi r \frac{dr}{dt}$. Com $r = 20$
+   e $\frac{dr}{dt} = 3$: $120\pi \approx 377$ m² por minuto.
+7. $V = a^3$, logo $\frac{dV}{dt} = 3a^2 \frac{da}{dt}$. Com $a = 10$ e
+   $\frac{da}{dt} = -0{,}1$: $3 \times 100 \times (-0{,}1) = -30$ cm³ por
+   minuto. O sinal negativo diz que o volume diminui. Se você encontrou
+   $+30$, esqueceu que a taxa da aresta entra negativa.
+8. $V = \pi r^2 h$ com $r = 1{,}5$ fixo, então $V = 2{,}25\pi h$ e
+   $\frac{dV}{dt} = 2{,}25\pi \frac{dh}{dt}$. Logo
+   $\frac{dh}{dt} = \frac{0{,}5}{2{,}25\pi} \approx 0{,}0707$ m/min, cerca de
+   7 cm por minuto. Não depende do instante, porque a relação entre $V$ e
+   $h$ é uma reta: a base não muda de tamanho.
+9. Com $x = 4$, $y = 3$:
+   $\frac{dy}{dt} = -\frac{4}{3} \times 0{,}5 \approx -0{,}667$ m/s. Com $x = 4{,}5$, $y = \sqrt{4{,}75} \approx 2{,}179$:
+   $\frac{dy}{dt} \approx -1{,}032$ m/s. Em 3 m era $-0{,}375$. O topo desce
+   cada vez mais depressa enquanto o pé anda sempre igual.
+10. A condição $-\frac{x}{y} \times 0{,}5 = -1$ dá $x = 2y$. Com
+    $x^2 + y^2 = 25$: $4y^2 + y^2 = 25$, $y = \sqrt{5} \approx 2{,}236$ e
+    $x = 2\sqrt{5} \approx 4{,}472$ m. Conferindo: $-\frac{4{,}472}{2{,}236}
+    \times 0{,}5 = -1$. ✓
+11. A mesma equação das taxas, $\frac{dV}{dt} = \frac{\pi h^2}{9}
+    \frac{dh}{dt}$, agora com $\frac{dV}{dt} = -0{,}5$ e $h = 3$:
+    $-0{,}5 = \pi \frac{dh}{dt}$, logo $\frac{dh}{dt} = -\frac{0{,}5}{\pi}
+    \approx -0{,}159$ m/min. O nível desce cerca de 16 cm por minuto. Se
+    você encontrou um valor positivo, esqueceu de pôr a vazão negativa.
+12. $S = 4\pi r^2$, logo $\frac{dS}{dt} = 8\pi r \frac{dr}{dt}$. Com $r = 5$
+    e $\frac{dr}{dt} = \frac{1}{\pi}$ (do exemplo 2):
+    $8\pi \times 5 \times \frac{1}{\pi} = 40$ cm² por segundo. Repare que o
+    $\pi$ cancelou.
+13. $L^2 = x^2 + 900$, logo $2L \frac{dL}{dt} = 2x \frac{dx}{dt}$ e
+    $\frac{dL}{dt} = \frac{x}{L}\frac{dx}{dt}$. Com $L = 50$,
+    $x = \sqrt{2500 - 900} = 40$: $\frac{dL}{dt} = \frac{40}{50} \times 2 = 1{,}6$ m/s. Menos
+    que 2, porque a linha está inclinada: parte do avanço horizontal da pipa
+    não se converte em comprimento de linha.
+14. Após $t$ horas, $A = (-10, -20t)$ e $B = (15t, 0)$. As diferenças são
+    $15t + 10$ (horizontal) e $20t$ (vertical), então
+    $D^2 = (15t + 10)^2 + (20t)^2$. Derivando: $2D \frac{dD}{dt} =
+    2(15t+10) \times 15 + 2(20t) \times 20$. Em $t = 1$: $D = \sqrt{625 +
+    400} = \sqrt{1025} \approx 32{,}02$ km e $\frac{dD}{dt} = \frac{25 \times
+    15 + 20 \times 20}{32{,}02} = \frac{775}{32{,}02} \approx 24{,}2$ km/h.
+    Aqui a taxa depende do instante, ao contrário do exemplo 3, porque os
+    navios não partiram do mesmo ponto.
+15. $D^2 = x^2 + 3600$, logo $\frac{dD}{dt} = \frac{x}{D}\frac{dx}{dt}$.
+    Quando $D = 100$, $x = \sqrt{10000 - 3600} = 80$ m. Então
+    $\frac{dD}{dt} = \frac{80}{100} \times 90 = 72$ km/h. A distância ao
+    radar cresce mais devagar que o carro anda, porque parte do movimento é
+    "de lado" em relação ao radar. No ponto mais próximo ($x = 0$), a taxa
+    é zero, e o radar mede o carro parado por um instante.
+16. A relação é a mesma, $s = \frac{3}{7}x$, mas agora $x$ diminui:
+    $\frac{dx}{dt} = -1{,}5$. Então $\frac{ds}{dt} = \frac{3}{7} \times
+    (-1{,}5) \approx -0{,}643$ m/s: a sombra encolhe no mesmo ritmo em que
+    crescia no exemplo 4. A geometria é a mesma; só o sinal da taxa mudou.
+17. Escreva $y = (25 - x^2)^{1/2}$. Pela cadeia, com $x$ função de $t$:
+    $\frac{dy}{dt} = \frac{1}{2}(25 - x^2)^{-1/2} \times (-2x) \frac{dx}{dt}
+    = -\frac{x}{\sqrt{25 - x^2}} \frac{dx}{dt}$. Como $\sqrt{25 - x^2} = y$,
+    isso é $-\frac{x}{y}\frac{dx}{dt}$, o mesmo resultado. Os dois caminhos
+    têm que concordar; o implícito é mais curto porque não precisa da raiz.
+18. Com partida simultânea do mesmo ponto, $x = 80t$ e $y = 60t$, então
+    $D = \sqrt{6400t^2 + 3600t^2} = 100t$, e $\frac{dD}{dt} = 100$ para todo
+    $t$. A relação entre $D$ e $t$ é uma reta, porque o triângulo cresce
+    mantendo a forma (semelhança). Na escada, o triângulo **muda** de forma
+    enquanto a escada escorrega, e por isso a proporção entre as taxas muda.
+19. Da equação das taxas, $\frac{dV}{dt} = \frac{\pi h^2}{9}\frac{dh}{dt}$.
+    Como $r = \frac{h}{3}$, tem-se $\pi r^2 = \frac{\pi h^2}{9}$, e a equação
+    fica $\frac{dV}{dt} = \pi r^2 \frac{dh}{dt}$; isolando,
+    $\frac{dh}{dt} = \frac{1}{\pi r^2}\frac{dV}{dt}$. É a conta de uma caixa
+    de base $\pi r^2$: vazão dividida pela área da base. A diferença é que,
+    no cone, essa base muda de tamanho a cada instante.
+20. Porque $R = pq$ é um produto de duas funções do tempo, e a derivada de
+    um produto tem duas parcelas: $\frac{dp}{dt}q + p\frac{dq}{dt}$. Tratar
+    $pq$ como uma potência não faz sentido, porque não há uma única camada
+    de dentro; são duas grandezas independentes multiplicadas. Derivar só
+    uma delas (por exemplo, obter $p\frac{dq}{dt}$ sozinho) ignoraria o
+    crescimento do preço, e no exemplo 5 daria 960 em vez de 1920.
+
+</details>
+
+## 14. Revisão curta
+
+- Um problema de **taxas relacionadas** tem duas ou mais grandezas mudando
+  com o tempo, amarradas por uma equação; conhece-se a taxa de uma e
+  pede-se a de outra num instante.
+- O método: **desenhar, nomear, relacionar, derivar em $t$, substituir**. A
+  derivada de cada grandeza que muda é a taxa dela, pela regra da cadeia:
+  $(x^2)' = 2x\frac{dx}{dt}$.
+- **Derivar antes de substituir.** Só constantes de verdade entram antes;
+  o valor de uma grandeza num instante entra depois, senão a taxa dela some.
+- Quando a equação tem uma grandeza a mais, elimine-a com uma relação fixa
+  (semelhança no cone) antes de derivar.
+- O **sinal** e a **unidade** da resposta fazem parte dela e servem de
+  conferência.
+
+Antes de avançar, verifique se você consegue fazer três coisas: explicar, com
+a escada, o que dá errado quando se substitui antes de derivar; montar a
+equação das taxas do balão e lê-la nos dois sentidos; e dizer por que o
+tanque cônico precisou de semelhança.
+
+Esta foi a primeira aplicação da Parte III. As próximas lições mudam a
+pergunta: em vez de "em que ritmo", elas perguntam "onde a função sobe, onde
+desce e onde está o maior valor". Começa pelo [sinal da
+derivada](./sinal-da-derivada), e chega aos [problemas de
+otimização](./problemas-de-otimizacao), que reaproveitam o mesmo hábito de
+desenhar, nomear e relacionar antes de derivar.

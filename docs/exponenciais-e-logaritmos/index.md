@@ -97,5 +97,5 @@ o seno e o cosseno também são funções que se estudam pelo gráfico, pelo dom
 e pela inversa.
 
 Ao terminar este capítulo, você conhecerá as principais famílias algébricas que
-um curso de cálculo assume de antemão. A trigonometria do capítulo seguinte
+um curso de [cálculo](../calculo/) assume de antemão. A trigonometria do capítulo seguinte
 completará essa base com seno, cosseno, tangente e suas inversas.

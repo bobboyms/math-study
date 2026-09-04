@@ -1,0 +1,937 @@
+---
+title: "Limite de uma função: o valor de que a função se aproxima"
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Limite de uma função: o valor de que a função se aproxima
+
+## 1. Problema motivador: o número que a conta nunca alcança
+
+A lição de [taxa média de variação](../funcoes/taxa-media-de-variacao) terminou
+com uma conta pela metade. O veículo tinha posição $s(t) = t^2$, em metros, e
+queríamos a velocidade **no instante** $t = 2$. O que conseguimos foi a
+velocidade média entre $2$ e $2 + h$:
+
+$$
+\frac{(2+h)^2 - 4}{h} = \frac{4 + 4h + h^2 - 4}{h} = \frac{h(4+h)}{h} = 4 + h,
+\qquad h \neq 0.
+$$
+
+O cancelamento do $h$ foi permitido porque $h$ não era zero: os dois instantes
+eram diferentes. E aí veio a tabela:
+
+| $h$ | $1$ | $0{,}1$ | $0{,}01$ | $0{,}001$ | $-0{,}001$ | $-0{,}01$ | $-0{,}1$ |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| velocidade média $4 + h$ | $5$ | $4{,}1$ | $4{,}01$ | $4{,}001$ | $3{,}999$ | $3{,}99$ | $3{,}9$ |
+
+Os números se aproximam de 4 pelos dois lados. Dissemos então que a velocidade
+instantânea em $t = 2$ era 4 m/s. Mas repare no que a tabela **não** contém: a
+linha $h = 0$. Ela não pode existir, porque com $h = 0$ a fração original vira
+$\frac{0}{0}$, e a versão simplificada $4 + h$ só vale para $h \neq 0$.
+
+Então a pergunta desta página é:
+
+> Que número é esse 4, se nenhuma linha da tabela chega nele?
+
+Ele não é o valor da conta em $h = 0$, porque a conta não tem valor ali. Ele é
+outra coisa: o valor de que a conta **se aproxima**. Dar nome, escrita e regras
+a essa outra coisa é o que o cálculo chama de **limite**. E é o primeiro
+conceito do capítulo porque a derivada, a integral e tudo o mais são
+construídos com ele.
+
+## 2. Mapa das ideias
+
+- o **limite** de $f$ em $a$ é o número $L$ de que $f(x)$ se aproxima quando
+  $x$ se aproxima de $a$, escrito $\lim_{x \to a} f(x) = L$;
+- o limite **não depende** de $f(a)$: a função pode não existir em $a$, ou
+  valer outra coisa ali, e o limite continua o mesmo;
+- **limite lateral** é o limite olhando só um lado: pela esquerda,
+  $x \to a^{-}$; pela direita, $x \to a^{+}$;
+- o limite **existe** quando os dois lados concordam, e é esse valor comum;
+- quando os lados discordam, o limite **não existe**;
+- a definição exata, com **tolerâncias** $\varepsilon$ e $\delta$, escreve
+  “se aproxima” usando o valor absoluto como distância.
+
+## 3. Para que serve
+
+- dar significado exato a “$h$ se aproxima de zero”, que é o passo que faltava
+  para definir velocidade instantânea e, com ela, a **derivada**;
+- descrever o que uma função faz **perto** de um ponto em que ela falha — um
+  buraco no gráfico, uma divisão por zero;
+- separar duas perguntas que a escrita $f(2)$ mistura: quanto a função
+  **vale** em 2, e para que valor ela **se dirige** quando a entrada chega
+  perto de 2;
+- escrever com rigor as assíntotas das [funções racionais](../funcoes/funcoes-racionais),
+  o número $e$ como valor perseguido por $\left(1 + \frac{1}{n}\right)^n$, e a
+  tabela de $\frac{\sen x}{x}$ da lição de [radianos](../geometria/radianos);
+- e, na Parte IV do capítulo, definir área sob uma curva como o valor de que
+  somas de retângulos se aproximam.
+
+Dentro da matemática, o limite é a ferramenta que transforma uma **tendência
+observada numa tabela** em um **número com definição**. Tabela sugere; limite
+afirma.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [taxa média de variação](../funcoes/taxa-media-de-variacao): o que é o
+quociente de diferenças, e por que ele exige $h \neq 0$?** É a taxa média entre
+$a$ e $a + h$, escrita $\frac{f(a+h) - f(a)}{h}$. O $h$ é a distância
+horizontal entre as duas entradas. Com $h = 0$ as duas entradas coincidem, o
+denominador zera, e a divisão não existe. Por isso simplificamos **antes** de
+fazer $h$ encolher — e por isso a tabela do motivador não tem a linha $h = 0$.
+
+**2. De [funções racionais](../funcoes/funcoes-racionais): o que é um buraco no
+gráfico?** É um ponto isolado que falta na curva. Aparece quando um fator do
+denominador se cancela com o numerador: $\frac{x^2 - 4}{x - 2}$ é a reta
+$y = x + 2$ para todo $x \neq 2$, e em $x = 2$ não existe. O gráfico é a reta
+com uma bolinha vazia em $(2, 4)$. Repare que, ali, a curva se aproxima de 4
+pelos dois lados sem nunca passar por 4 — é exatamente a situação do motivador,
+escrita em $x$ em vez de $h$.
+
+**3. De [valor absoluto](../numeros-e-operacoes/valor-absoluto): o que
+$\lvert m - 50 \rvert \le 0{,}3$ diz sobre a medida $m$?** Que $m$ está a no
+máximo $0{,}3$ de distância de 50, para qualquer lado. A distância entre dois
+números é o valor absoluto da diferença deles. A condição descreve uma **faixa
+em torno de um centro**, e é assim que a seção 9 vai escrever “se aproxima”.
+
+**4. De [função modular e por partes](../funcoes/funcao-modular-e-por-partes):
+o que acontece com a conta de luz na fronteira dos 100 kWh?** As duas fórmulas
+dão o mesmo valor, 50 reais, e o traço não se rompe. Se a distribuidora cobrasse
+uma taxa extra ao ultrapassar 100 kWh, as fórmulas dariam 50 e 60, e o gráfico
+daria um **salto**. Esse salto vai reaparecer aqui como o caso em que o limite
+pela esquerda e o limite pela direita são diferentes.
+
+O item 2 é o mais importante dos quatro: o buraco de $\frac{x^2 - 4}{x - 2}$
+**é** o desenho do limite. Esta página dá nome ao número que está no meio do
+buraco.
+
+## 5. Intuição: perguntar “para onde” em vez de “quanto vale”
+
+Imagine o rastreador de um caminhão de entrega, que grava a posição a cada
+segundo. Às 8h00m00s exatas o registro falhou: a linha da planilha está vazia.
+Mesmo assim, ninguém tem dúvida de onde o caminhão estava naquele segundo. Os
+registros de 7h59m59s e de 8h00m01s mostram o caminhão no quilômetro 41,998 e
+no quilômetro 42,002. Ele estava no quilômetro 42, ou tão perto disso que a
+diferença não importa.
+
+Repare no que acabamos de fazer. Não lemos o valor às 8h00m00s — ele não
+existe. Lemos os valores **em volta** e deduzimos para onde eles apontavam.
+Esse valor deduzido é o limite.
+
+A analogia tem duas partes que correspondem a duas partes do conceito:
+
+- **o registro que falta** é o valor da função no ponto, $f(a)$. O limite
+  não precisa dele. Ele pode faltar, ou até estar errado — se a linha das
+  8h00m00s dissesse “quilômetro 300”, continuaríamos afirmando que o caminhão
+  estava perto do 42, porque um registro isolado não muda o que os vizinhos
+  mostram;
+- **os registros em volta** são os valores $f(x)$ para $x$ perto de $a$. São
+  eles que decidem o limite, e precisam apontar para um número só.
+
+E há um ponto em que a analogia deixa de valer, que é justamente o que o
+conceito exige a mais: se os registros de antes das 8h apontassem para o
+quilômetro 42 e os de depois apontassem para o quilômetro 57, não haveria como
+dizer onde o caminhão estava. Os dois lados precisam **concordar**. Quando não
+concordam, o limite não existe — e isso não é um defeito da ferramenta, é uma
+informação sobre a função.
+
+Guarde a mudança de pergunta, porque é ela que esta página ensina. Até aqui, a
+pergunta sobre uma função era “quanto vale $f(2)$?”. A partir de agora existe
+uma segunda pergunta, diferente: “para que valor $f(x)$ se dirige quando $x$
+chega perto de 2?”. As duas podem ter a mesma resposta, respostas diferentes,
+ou uma delas pode não ter resposta.
+
+## 6. Modelo visual: o buraco e o salto
+
+A função $f(x) = \dfrac{x^2 - 4}{x - 2}$ é a tradução, em $x$, da conta do
+motivador. Se chamarmos o instante $2 + h$ de $x$, então $h = x - 2$, e o
+quociente $\frac{(2+h)^2 - 4}{h}$ vira $\frac{x^2 - 4}{x - 2}$. É a mesma
+quantidade com outro nome para a variável. Fatorando o numerador como
+diferença de quadrados, $x^2 - 4 = (x - 2)(x + 2)$, e cancelando o fator
+comum — permitido porque $x \neq 2$ —, sobra $x + 2$.
+
+<CartesianPlane
+  xMin={-1}
+  xMax={5}
+  yMin={-1}
+  yMax={7}
+  xUnit={50}
+  yUnit={34}
+  functions={[
+    {f: (x) => x + 2, domain: [-1, 1.93], tone: 1},
+    {f: (x) => x + 2, domain: [2.07, 5], tone: 1},
+  ]}
+  points={[{at: [2, 4], label: '(2,\\ 4)', tone: 2, dx: 32, dy: 20, open: true}]}
+  segments={[
+    {from: [2, -1], to: [2, 4], dashed: true, tone: 3},
+    {from: [-1, 4], to: [2, 4], dashed: true, tone: 3},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="O gráfico de (x² − 4)/(x − 2) é a reta y = x + 2 com um ponto faltando em x = 2. Chegando por qualquer lado, a curva aponta para a altura 4 — e é essa altura, não o ponto vazio, que o limite mede."
+/>
+
+Acompanhe com a tabela, agora em $x$. À esquerda de 2 e à direita de 2:
+
+| $x$ | $1{,}9$ | $1{,}99$ | $1{,}999$ | $2$ | $2{,}001$ | $2{,}01$ | $2{,}1$ |
+|---:|---:|---:|---:|:---:|---:|---:|---:|
+| $f(x)$ | $3{,}9$ | $3{,}99$ | $3{,}999$ | não existe | $4{,}001$ | $4{,}01$ | $4{,}1$ |
+
+Os dois lados apontam para 4. A coluna do meio está vazia, e o limite não
+precisa dela.
+
+Agora o caso oposto. A função $g(x) = \dfrac{\lvert x \rvert}{x}$ vale $1$ para
+todo $x$ positivo, porque ali $\lvert x \rvert = x$ e a fração é $\frac{x}{x}$.
+Para $x$ negativo, $\lvert x \rvert = -x$, e a fração é $\frac{-x}{x} = -1$. Em
+$x = 0$ ela não existe, porque o denominador zera.
+
+<CartesianPlane
+  xMin={-4}
+  xMax={4}
+  yMin={-2}
+  yMax={2}
+  xUnit={40}
+  yUnit={40}
+  functions={[
+    {f: (x) => 1, domain: [0.06, 4], tone: 1},
+    {f: (x) => -1, domain: [-4, -0.06], tone: 1},
+  ]}
+  points={[
+    {at: [0, 1], tone: 2, open: true, label: '(0,\\ 1)', dx: 34, dy: -12},
+    {at: [0, -1], tone: 2, open: true, label: '(0,\\ -1)', dx: -40, dy: 16},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="O gráfico de |x|/x: −1 à esquerda do zero, 1 à direita, nada no zero. Chegando pela esquerda a curva aponta para −1; pela direita, para 1. Os dois lados discordam, e não há um número que sirva de limite."
+/>
+
+| $x$ | $-0{,}1$ | $-0{,}01$ | $-0{,}001$ | $0$ | $0{,}001$ | $0{,}01$ | $0{,}1$ |
+|---:|---:|---:|---:|:---:|---:|---:|---:|
+| $g(x)$ | $-1$ | $-1$ | $-1$ | não existe | $1$ | $1$ | $1$ |
+
+As duas figuras têm um ponto vazio em comum. A diferença está nos vizinhos: na
+primeira, eles apontam para um número só; na segunda, cada lado aponta para um
+número diferente. É essa diferença que separa “o limite existe” de “o limite
+não existe”.
+
+## 7. Ponte para a formalização: por que a tabela não é suficiente
+
+A tabela é convincente, mas ela tem três fraquezas, e são elas que a definição
+precisa consertar.
+
+**A tabela só olha alguns pontos.** Vimos $x = 1{,}9$, $1{,}99$ e $1{,}999$.
+Nada garante o que acontece em $x = 1{,}9995$, ou em qualquer outro valor que
+não foi testado. Uma definição precisa falar de **todos** os $x$ perto de 2, e
+não de uma lista.
+
+**A tabela não diz o que é “perto”.** Perto de 2 é a menos de $0{,}1$? A menos
+de $0{,}001$? A resposta certa é: **tão perto quanto se queira**. O que
+caracteriza o limite não é que $f(x)$ chega a $0{,}001$ de 4, e sim que chega
+a **qualquer** distância de 4 que se exija, desde que $x$ esteja
+suficientemente perto de 2.
+
+**A tabela mistura o ponto com a vizinhança.** Ela tem uma coluna para $x = 2$,
+ainda que vazia. A definição precisa dizer, explicitamente, que o valor em
+$x = 2$ **não entra** na conta — nem quando ele existe.
+
+A seção 8 escreve a definição em palavras, que é como ela vai ser usada no
+resto do capítulo. A seção 9 mostra a versão exata, com tolerâncias, para que
+você saiba de onde as palavras vêm.
+
+## 8. Formalização: o limite e os limites laterais
+
+> O **limite** de $f(x)$ quando $x$ se aproxima de $a$ é o número $L$ de que
+> $f(x)$ chega tão perto quanto se queira, para todo $x$ suficientemente perto
+> de $a$ **e diferente de $a$**. Escreve-se
+> $$
+> \lim_{x \to a} f(x) = L.
+> $$
+> O valor $f(a)$ não participa: pode não existir, ou ser diferente de $L$.
+
+Lê-se “o limite de $f$ de $x$, quando $x$ tende a $a$, é $L$”. **Tende a** é a
+expressão que a matemática usa para “se aproxima de”, e nesta página as duas
+formas significam a mesma coisa. A seta em $x \to a$ é o movimento da entrada
+na direção de $a$ — sem chegar.
+
+**Exemplo.** $\lim_{x \to 2} \dfrac{x^2 - 4}{x - 2} = 4$. A tabela da seção 6
+mostrou os valores chegando a 4 pelos dois lados, e a fração simplificada,
+$x + 2$, explica por quê: quando $x$ chega perto de 2, $x + 2$ chega perto de 4.
+Que $f(2)$ não exista não atrapalha em nada.
+
+**Contraexemplo.** $\lim_{x \to 0} \dfrac{\lvert x \rvert}{x}$ **não existe**.
+Não há um número só de que a função chegue perto: à esquerda ela vale $-1$, à
+direita vale $1$. Qualquer candidato a $L$ fica a pelo menos 1 unidade de
+distância de um dos lados. Nenhum número serve, então o limite não existe.
+
+### Os limites laterais
+
+O contraexemplo mostra que vale a pena olhar um lado de cada vez.
+
+> O **limite pela esquerda**, escrito $\lim_{x \to a^{-}} f(x)$, é o valor de
+> que $f(x)$ se aproxima quando $x$ chega perto de $a$ **por valores menores**
+> que $a$. O **limite pela direita**, $\lim_{x \to a^{+}} f(x)$, usa os valores
+> **maiores** que $a$.
+
+O sinal pequeno no alto diz de que lado a entrada vem. Para
+$g(x) = \frac{\lvert x \rvert}{x}$:
+
+$$
+\lim_{x \to 0^{-}} g(x) = -1,
+\qquad
+\lim_{x \to 0^{+}} g(x) = 1.
+$$
+
+Cada um existe; eles só não coincidem. E é essa a regra que liga os dois
+conceitos:
+
+> O limite $\lim_{x \to a} f(x)$ **existe** exatamente quando os dois limites
+> laterais existem e são **iguais**. Nesse caso, o limite é esse valor comum.
+
+**Exemplo.** Para $f(x) = \frac{x^2 - 4}{x - 2}$, os dois laterais em 2 valem 4,
+então o limite existe e vale 4.
+
+**Contraexemplo.** Para $g(x) = \frac{\lvert x \rvert}{x}$, os laterais em 0
+valem $-1$ e $1$, então o limite não existe — mesmo com cada lateral existindo.
+
+### Três situações que a escrita separa
+
+Com a definição na mão, dá para classificar o que acontece num ponto. Veja as
+três funções abaixo em $x = 2$. As três têm o **mesmo limite**, 4; o que muda
+é o valor da função no ponto.
+
+| Função | $f(2)$ | $\lim_{x \to 2} f(x)$ | O que o gráfico mostra |
+|---|:---:|:---:|---|
+| $\dfrac{x^2 - 4}{x - 2}$ | não existe | $4$ | reta com um buraco em $(2, 4)$ |
+| $x + 2$ | $4$ | $4$ | reta inteira, sem buraco |
+| $x + 2$ para $x \neq 2$, e $7$ para $x = 2$ | $7$ | $4$ | reta com buraco em $(2, 4)$ e um ponto solto em $(2, 7)$ |
+
+<CartesianPlane
+  xMin={-1}
+  xMax={5}
+  yMin={-1}
+  yMax={8}
+  xUnit={50}
+  yUnit={30}
+  functions={[
+    {f: (x) => x + 2, domain: [-1, 1.93], tone: 1},
+    {f: (x) => x + 2, domain: [2.07, 5], tone: 1},
+  ]}
+  points={[
+    {at: [2, 4], tone: 2, open: true, label: '(2,\\ 4)', dx: 32, dy: 20},
+    {at: [2, 7], tone: 2, label: '(2,\\ 7)', dx: 32, dy: -4},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A terceira função da tabela: a reta y = x + 2 com o ponto de x = 2 tirado do lugar e posto em (2, 7). O limite em 2 continua sendo 4 — a vizinhança não mudou. Só o valor da função mudou."
+/>
+
+A terceira linha é a que mais ensina. A função **tem** valor em 2, e esse valor
+é 7. Mas o limite não é 7, porque o limite ignora o ponto e olha os vizinhos, e
+os vizinhos apontam para 4. **Limite e valor são perguntas diferentes.** Quando
+as duas respostas coincidem, como na segunda linha, a função ganha um nome —
+**contínua** no ponto —, e a lição de [continuidade](./continuidade) é dedicada
+a isso.
+
+## 9. O que “se aproxima” quer dizer com rigor
+
+Esta seção existe por honestidade. Tudo o que o capítulo faz com limites pode
+ser feito com a definição em palavras da seção 8. Mas “tão perto quanto se
+queira” é uma frase, e a matemática precisou transformá-la em condição
+verificável. Vale ver como, porque a ferramenta usada é uma que você já tem: o
+valor absoluto como distância.
+
+Se esta passagem não fechar na primeira leitura, isso é esperado. Nenhum
+exercício da página exige que você a use.
+
+### A linguagem da tolerância
+
+Volte à peça da [Revisão geral](../revisao-geral): ela devia medir 3,5 cm com
+tolerância de 0,15 cm, e a condição de aprovação era
+$\lvert m - 3{,}5 \rvert \le 0{,}15$. Uma tolerância é uma **distância máxima
+permitida** em relação a um alvo.
+
+Agora pense numa máquina de corte. A regulagem da máquina é a entrada $x$; o
+comprimento da peça que sai é a saída $f(x)$. Suponha $f(x) = 3x - 1$, com a
+regulagem em 2 produzindo o alvo $f(2) = 5$.
+
+O cliente exige que as peças fiquem a menos de $0{,}3$ do alvo:
+$\lvert f(x) - 5 \rvert < 0{,}3$. A pergunta do operador é: **com que precisão
+preciso regular a máquina** para garantir isso? Ou seja, que tolerância na
+entrada garante a tolerância exigida na saída?
+
+A conta responde:
+
+$$
+\lvert f(x) - 5 \rvert = \lvert 3x - 1 - 5 \rvert = \lvert 3x - 6 \rvert = 3 \lvert x - 2 \rvert.
+$$
+
+O afastamento da saída é **três vezes** o afastamento da entrada. Para que
+$3 \lvert x - 2 \rvert$ fique abaixo de $0{,}3$, o afastamento da entrada
+precisa ficar abaixo de $0{,}1$. Conferindo com um número: em $x = 2{,}1$ a
+peça mede $3 \times 2{,}1 - 1 = 5{,}3$, bem na borda; em $x = 2{,}01$ ela mede
+$5{,}03$, folgadamente dentro.
+
+<CartesianPlane
+  xMin={1}
+  xMax={3}
+  yMin={1}
+  yMax={9}
+  xUnit={120}
+  yUnit={30}
+  functions={[{f: (x) => 3 * x - 1, tone: 1}]}
+  polygons={[
+    {points: [[1, 4.7], [3, 4.7], [3, 5.3], [1, 5.3]], tone: 2},
+    {points: [[1.9, 1], [2.1, 1], [2.1, 9], [1.9, 9]], tone: 3},
+  ]}
+  points={[{at: [2, 5], tone: 2, label: '(2,\\ 5)', dx: 36, dy: -8}]}
+  labels={[
+    {at: [1.3, 5], math: '\\varepsilon = 0{,}3', tone: 2, dy: 0},
+    {at: [2, 8.3], math: '\\delta = 0{,}1', tone: 3, dy: 0},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A faixa horizontal é a tolerância ε = 0,3 na saída, em torno de 5. A faixa vertical é a tolerância δ = 0,1 na entrada, em torno de 2. Todo x dentro da faixa vertical produz um f(x) dentro da faixa horizontal — é isso que a definição exige, para toda ε que se peça."
+/>
+
+E se o cliente apertar para $0{,}03$? A mesma conta dá $0{,}01$ na entrada. Para
+$0{,}003$, dá $0{,}001$. **Seja qual for a tolerância exigida na saída, existe
+uma tolerância na entrada que a garante.** É isso que “tão perto quanto se
+queira” significa.
+
+### A definição
+
+Os nomes tradicionais são gregos: $\varepsilon$ (épsilon) para a tolerância na
+saída e $\delta$ (delta) para a tolerância na entrada.
+
+> $\lim_{x \to a} f(x) = L$ significa: para **toda** tolerância
+> $\varepsilon > 0$ na saída, **existe** uma tolerância $\delta > 0$ na entrada
+> tal que, sempre que $0 < \lvert x - a \rvert < \delta$, vale
+> $\lvert f(x) - L \rvert < \varepsilon$.
+
+Leia cada pedaço com a máquina em mente:
+
+- $\lvert f(x) - L \rvert < \varepsilon$: a peça está dentro da tolerância do
+  cliente;
+- $\lvert x - a \rvert < \delta$: a regulagem está dentro da tolerância do
+  operador;
+- $0 < \lvert x - a \rvert$: a regulagem **não é exatamente** $a$. Este é o
+  pedaço que exclui o ponto — é ele que diz que $f(a)$ não participa;
+- “para toda $\varepsilon$, existe $\delta$”: a ordem importa. O cliente
+  escolhe primeiro, e o operador responde. Se para algum $\varepsilon$ nenhum
+  $\delta$ funcionasse, o limite não seria $L$.
+
+No exemplo, $\delta = \frac{\varepsilon}{3}$ sempre funciona, e por isso
+$\lim_{x \to 2} (3x - 1) = 5$. Para $\frac{\lvert x \rvert}{x}$ em 0, nenhum $L$
+funciona com $\varepsilon = \frac{1}{2}$: qualquer faixa vertical em torno de 0
+contém entradas que produzem $-1$ e entradas que produzem $1$, e não há faixa
+horizontal de largura 1 que contenha os dois. Isso é o que “o limite não
+existe” quer dizer em linguagem de tolerância.
+
+Fora desta seção, o capítulo usa a definição em palavras. A versão com
+$\varepsilon$ e $\delta$ é a garantia de que as palavras têm um significado
+único — e é o assunto de um curso de análise, que não é este.
+
+## 10. Resolvendo o problema do velocímetro
+
+Agora a conta do motivador tem escrita própria. A velocidade instantânea do
+veículo em $t = 2$ é o limite da velocidade média quando $h$ se aproxima de
+zero:
+
+$$
+v(2) = \lim_{h \to 0} \frac{(2+h)^2 - 4}{h}.
+$$
+
+Para calcular, reescrevemos a fração para $h \neq 0$ — o que já tínhamos
+feito — e então perguntamos de que valor a forma simplificada se aproxima:
+
+$$
+\lim_{h \to 0} \frac{(2+h)^2 - 4}{h} = \lim_{h \to 0} (4 + h) = 4.
+$$
+
+Vale dizer o que cada igualdade afirma, porque a primeira é o ponto que mais
+confunde.
+
+**A primeira igualdade** troca $\frac{(2+h)^2 - 4}{h}$ por $4 + h$ dentro do
+limite. As duas expressões são **a mesma função** para todo $h \neq 0$; elas só
+diferem em $h = 0$, onde a primeira não existe e a segunda vale 4. Mas o limite
+**não olha** $h = 0$ — ele olha a vizinhança. Como as duas funções coincidem em
+toda a vizinhança, elas têm o mesmo limite. A reescrita não mudou a quantidade
+em nenhum ponto que o limite enxerga.
+
+**A segunda igualdade** diz de que valor $4 + h$ se aproxima quando $h$ se
+aproxima de 0. Como $4 + h$ é uma reta sem buraco, o valor de que ela se
+aproxima é o valor que ela tem: $4 + 0 = 4$.
+
+Então a resposta é $v(2) = 4$ m/s, e o 4 da tabela agora tem uma definição: ele
+é o limite. Não é o valor da velocidade média em $h = 0$, porque esse valor
+não existe. É o número de que as velocidades médias se aproximam, tão perto
+quanto se queira, enquanto os intervalos encolhem.
+
+A lição de [a derivada](./a-derivada) vai chamar esse limite de **derivada de
+$s$ em 2** e escrever $s'(2) = 4$. Mas o conceito já está inteiro aqui.
+
+## 11. Exemplos resolvidos
+
+### Exemplo 1: um limite lido numa tabela
+
+Encontre $\lim_{x \to 3} \dfrac{x^2 - 9}{x - 3}$.
+
+Em $x = 3$ a fração dá $\frac{0}{0}$: não existe. Olhamos os vizinhos:
+
+| $x$ | $2{,}9$ | $2{,}99$ | $2{,}999$ | $3{,}001$ | $3{,}01$ | $3{,}1$ |
+|---:|---:|---:|---:|---:|---:|---:|
+| $f(x)$ | $5{,}9$ | $5{,}99$ | $5{,}999$ | $6{,}001$ | $6{,}01$ | $6{,}1$ |
+
+Os dois lados apontam para 6. Então $\lim_{x \to 3} \frac{x^2 - 9}{x - 3} = 6$.
+
+A tabela sugere, e a álgebra confirma: $x^2 - 9 = (x - 3)(x + 3)$, e para
+$x \neq 3$ a fração é $x + 3$, que se aproxima de 6. A lição de
+[calculando limites](./calculo-de-limites) transforma essa confirmação em
+método.
+
+### Exemplo 2: quando o limite é o valor da função
+
+*Pause e tente antes de ler.* Encontre $\lim_{x \to 3} x^2$.
+
+Aqui não há buraco: $x^2$ existe em 3 e vale 9. A tabela mostra que os
+vizinhos apontam para o mesmo 9:
+
+| $x$ | $2{,}99$ | $2{,}999$ | $3{,}001$ | $3{,}01$ |
+|---:|---:|---:|---:|---:|
+| $x^2$ | $8{,}9401$ | $8{,}994001$ | $9{,}006001$ | $9{,}0601$ |
+
+Então $\lim_{x \to 3} x^2 = 9$, que é também $f(3)$. Quando o gráfico é uma
+curva sem buraco nem salto, o valor de que a função se aproxima é o valor que
+ela tem, e o limite se calcula por **substituição direta**. A lição de
+[continuidade](./continuidade) diz para quais funções isso é garantido —
+polinômios, entre elas.
+
+### Exemplo 3: um salto numa regra de frete
+
+*Pause e tente.* Uma loja cobra R\$ 8 de frete em pedidos de até R\$ 50, e não
+cobra frete acima disso. O total pago por um pedido de $p$ reais é
+
+$$
+T(p) =
+\begin{cases}
+p + 8, & \text{se } p \le 50,\\
+p, & \text{se } p > 50.
+\end{cases}
+$$
+
+Calcule os limites laterais de $T$ em $p = 50$ e diga se o limite existe.
+
+Pela esquerda, os pedidos são um pouco menores que 50 e usam a primeira
+fórmula: $T(49{,}9) = 57{,}9$, $T(49{,}99) = 57{,}99$. Eles apontam para 58:
+
+$$
+\lim_{p \to 50^{-}} T(p) = 58.
+$$
+
+Pela direita, os pedidos são um pouco maiores que 50 e usam a segunda:
+$T(50{,}01) = 50{,}01$, $T(50{,}1) = 50{,}1$. Eles apontam para 50:
+
+$$
+\lim_{p \to 50^{+}} T(p) = 50.
+$$
+
+Os laterais são diferentes, então **o limite não existe**. O valor da função
+existe — $T(50) = 58$, pela primeira fórmula —, mas o limite não. É o salto da
+conta de luz com a taxa extra, agora escrito com a notação de limite. E o salto
+tem consequência prática: um pedido de R\$ 50,01 paga R\$ 7,99 a menos que um
+de R\$ 50,00.
+
+### Exemplo 4: o ponto tirado do lugar
+
+*Pause e tente.* Seja $f(x) = x + 2$ para $x \neq 2$, e $f(2) = 7$. Encontre
+$\lim_{x \to 2} f(x)$ e $f(2)$.
+
+$f(2) = 7$, pela definição da função. O limite olha os vizinhos, e todos os
+vizinhos seguem a reta $x + 2$, que aponta para 4:
+
+$$
+\lim_{x \to 2} f(x) = 4.
+$$
+
+Limite 4, valor 7. É a terceira linha da tabela da seção 8. Se você respondeu 7
+para o limite, usou o valor no ponto — e o ponto é exatamente o que o limite
+ignora.
+
+### Exemplo 5: um limite que a tabela mostra e a álgebra ainda não explica
+
+*Pause e tente.* Encontre $\lim_{x \to 0} \dfrac{\sqrt{x + 1} - 1}{x}$.
+
+Em $x = 0$: $\frac{\sqrt{1} - 1}{0} = \frac{0}{0}$, não existe. Tabela:
+
+| $x$ | $-0{,}1$ | $-0{,}01$ | $-0{,}001$ | $0{,}001$ | $0{,}01$ | $0{,}1$ |
+|---:|---:|---:|---:|---:|---:|---:|
+| $f(x)$ | $0{,}5132$ | $0{,}5013$ | $0{,}5001$ | $0{,}4999$ | $0{,}4988$ | $0{,}4881$ |
+
+Os dois lados apontam para $0{,}5$. Então o limite é $\frac{1}{2}$.
+
+Aqui a fatoração não ajuda, porque não há produto para desmontar. O que
+destrava esse limite é o **conjugado** da lição de
+[racionalização](../algebra/racionalizacao), e a lição seguinte mostra como.
+Por enquanto, a tabela responde — e a resposta $\frac{1}{2}$ está certa.
+
+### Exemplo 6: a tabela dos radianos, agora com nome
+
+*Pause e tente.* A lição de [radianos](../geometria/radianos) tabelou
+$\dfrac{\sen x}{x}$ para $x$ pequeno, em radianos. Escreva o que a tabela
+afirma na notação de limite.
+
+| $x$ (rad) | $0{,}5$ | $0{,}1$ | $0{,}01$ | $0{,}001$ |
+|---:|---:|---:|---:|---:|
+| $\dfrac{\sen x}{x}$ | $0{,}95885$ | $0{,}99833$ | $0{,}99998$ | $1{,}00000$ |
+
+A tabela afirma que
+
+$$
+\lim_{x \to 0} \frac{\sen x}{x} = 1.
+$$
+
+Pela esquerda dá o mesmo, porque $\sen(-x) = -\sen x$ e o sinal cancela na
+fração. A tabela sugere, mas não prova, e a lição de radianos prometeu a
+demonstração para o cálculo. Ela está na lição do
+[teorema do confronto](./teorema-do-confronto).
+
+### Exemplo 7: escrever um limite a partir de um gráfico descrito
+
+*Pause e tente.* O gráfico de uma função $h$ é uma curva que, chegando em
+$x = 1$ pela esquerda, sobe até a altura 3; chegando pela direita, desce até a
+mesma altura 3; e em $x = 1$ há uma bola cheia na altura 5. Escreva os
+limites laterais, o limite e o valor.
+
+$$
+\lim_{x \to 1^{-}} h(x) = 3,
+\qquad
+\lim_{x \to 1^{+}} h(x) = 3,
+\qquad
+\lim_{x \to 1} h(x) = 3,
+\qquad
+h(1) = 5.
+$$
+
+Os laterais coincidem, logo o limite existe e vale 3. A bola cheia em 5 é o
+valor da função, e não muda o limite. Se a bola cheia estivesse na altura 3, o
+limite seria o mesmo — a função é que passaria a ser contínua ali.
+
+## 12. Erros comuns
+
+> **Erro 1: achar que o limite é o valor da função no ponto.** No Exemplo 4,
+> $f(2) = 7$ e o limite é 4. O limite olha a vizinhança e ignora o ponto. As
+> duas perguntas só têm a mesma resposta quando a função é contínua ali — e
+> isso é uma propriedade a verificar, não uma regra geral.
+
+> **Erro 2: achar que o limite “não existe” porque a função nunca chega
+> nele.** É o contrário. O limite é definido como o valor de que a função se
+> aproxima; chegar ou não chegar não faz parte da pergunta. Em
+> $\frac{x^2 - 4}{x - 2}$, a função nunca vale 4 e o limite em 2 é 4.
+
+> **Erro 3: substituir $x = a$, encontrar $\frac{0}{0}$ e parar.** $\frac{0}{0}$
+> não é uma resposta: não é zero, não é 1, não é “infinito”. É o aviso de que a
+> substituição direta não serve e que o limite precisa ser encontrado de outro
+> modo — pela tabela, por enquanto, e pela reescrita da fração na lição
+> seguinte.
+
+> **Erro 4: olhar um lado só.** A tabela de $\frac{\lvert x \rvert}{x}$ só com
+> valores positivos apontaria para 1, e a resposta “o limite é 1” estaria
+> errada. O limite exige que os dois lados concordem. Quando se quer um lado
+> só, a escrita é $x \to a^{+}$ ou $x \to a^{-}$.
+
+> **Erro 5: confundir “os laterais existem” com “o limite existe”.** No
+> Exemplo 3, cada lateral existe (58 e 50), e o limite não existe. Laterais
+> existirem é condição necessária; serem iguais é o que falta.
+
+> **Erro 6: trocar a fração pela forma simplificada e dizer que “agora a
+> função existe em 2”.** Não existe. $\frac{x^2 - 4}{x - 2}$ e $x + 2$ são a
+> mesma função para $x \neq 2$ e funções diferentes em $x = 2$. O que a
+> reescrita garante é que as duas têm o **mesmo limite**, porque o limite não
+> enxerga o ponto. Ela não tapa o buraco.
+
+> **Erro 7: ler $x \to 2$ como “$x = 2$”.** A seta é movimento na direção de
+> 2, por valores diferentes de 2. Na definição exata isso está escrito como
+> $0 < \lvert x - 2 \rvert$: a distância até 2 é positiva.
+
+## 13. Perguntas de verificação
+
+1. O que muda entre as perguntas “quanto vale $f(2)$?” e “qual é o limite de
+   $f$ em 2?”?
+2. Por que $\frac{x^2 - 4}{x - 2}$ e $x + 2$ têm o mesmo limite em 2, se são
+   funções diferentes?
+3. O que precisa acontecer com os limites laterais para que o limite exista?
+4. Uma função pode ter limite em $a$ sem existir em $a$? E existir em $a$ sem
+   ter limite em $a$?
+5. Na analogia do rastreador, o que corresponde ao valor $f(a)$ e o que
+   corresponde aos valores $f(x)$ da vizinhança?
+6. Por que a tabela não é uma demonstração do limite?
+7. Na definição com tolerâncias, qual pedaço da escrita diz que o ponto $a$
+   não participa?
+8. Por que $\frac{0}{0}$ não é a resposta de um limite?
+9. Na regra do frete, o que significa, na prática, o limite não existir em
+   $p = 50$?
+10. Quem escolhe primeiro na definição com tolerâncias: $\varepsilon$ ou
+    $\delta$? Por que a ordem importa?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. A primeira pede o valor da função **no** ponto. A segunda pede o valor de
+   que a função se aproxima quando a entrada chega perto do ponto, **sem** usar
+   o ponto. Podem ter respostas iguais, diferentes, ou uma delas pode não ter
+   resposta.
+2. Porque o limite só olha os valores para $x \neq 2$, e nesses valores as duas
+   funções coincidem. Elas diferem só em $x = 2$, que o limite ignora.
+3. Os dois precisam existir e ser **iguais**. O limite é então esse valor
+   comum.
+4. Sim para as duas. $\frac{x^2 - 4}{x - 2}$ tem limite 4 em 2 e não existe em
+   2. A função do frete existe em 50 (vale 58) e não tem limite em 50, porque
+   os laterais são 58 e 50.
+5. O valor $f(a)$ é o registro das 8h00m00s, que falhou. Os valores da
+   vizinhança são os registros de antes e de depois, que apontam para onde o
+   caminhão estava.
+6. Porque ela testa uma lista finita de entradas e não diz nada sobre as
+   outras. O limite afirma algo sobre **todas** as entradas suficientemente
+   perto de $a$, e sobre **qualquer** tolerância exigida.
+7. O $0 < \lvert x - a \rvert$: a distância entre $x$ e $a$ é positiva, então
+   $x$ não é $a$.
+8. Porque $\frac{0}{0}$ não é um número. É o sinal de que a substituição direta
+   falhou. O limite pode ser 4, 6, $\frac{1}{2}$, 1 ou não existir — todos
+   esses casos apareceram nesta página com $\frac{0}{0}$ na substituição.
+9. Que o total pago dá um salto ao cruzar R\$ 50: um pedido um centavo acima
+   paga quase 8 reais a menos que um pedido exatamente em 50. Não há um valor
+   único de que o total se aproxime ali.
+10. O $\varepsilon$, a tolerância na saída. O $\delta$ é a resposta a ele. Se a
+    ordem fosse invertida, seria suficiente uma tolerância na entrada que
+    funcionasse para um único $\varepsilon$, e isso não diz que a função chega **tão perto
+    quanto se queira** de $L$.
+
+</details>
+
+## 14. Exercícios
+
+### 1. Reconhecimento
+
+1. Leia em palavras: $\lim_{x \to 3} f(x) = 7$.
+2. Uma função $f$ tem a tabela abaixo. Qual é o limite de $f$ em 1?
+
+   | $x$ | $0{,}9$ | $0{,}99$ | $0{,}999$ | $1{,}001$ | $1{,}01$ | $1{,}1$ |
+   |---:|---:|---:|---:|---:|---:|---:|
+   | $f(x)$ | $2{,}7$ | $2{,}97$ | $2{,}997$ | $3{,}003$ | $3{,}03$ | $3{,}3$ |
+
+3. O gráfico de $g$ tem uma bola vazia em $(1, 5)$, com a curva chegando a ela
+   pelos dois lados, e uma bola cheia em $(1, 2)$. Escreva $\lim_{x \to 1} g(x)$
+   e $g(1)$.
+4. Para cada função, diga se o limite em $x = 0$ existe, e qual é: a) $x^2$;
+   b) $\lvert x \rvert$; c) $\dfrac{\lvert x \rvert}{x}$; d) $2x + 3$.
+
+### 2. Explicação
+
+5. Explique por que o limite de uma função em $a$ não depende de $f(a)$.
+6. Explique por que a definição de limite exige olhar os dois lados de $a$.
+7. Um colega diz: “$\frac{x^2 - 4}{x - 2}$ nunca chega a 4, então o limite em 2
+   não existe”. Corrija o raciocínio.
+8. Explique a diferença entre $\lim_{x \to 2} f(x) = 4$ e $f(2) = 4$. Dê um
+   exemplo em que a primeira vale e a segunda não.
+
+### 3. Aplicação direta
+
+9. Monte a tabela de $\dfrac{x^2 - 1}{x - 1}$ com $x = 0{,}9$; $0{,}99$;
+   $1{,}01$; $1{,}1$ e encontre $\lim_{x \to 1} \dfrac{x^2 - 1}{x - 1}$.
+10. Encontre $\lim_{x \to 5} \dfrac{x^2 - 25}{x - 5}$ por tabela.
+11. Encontre $\lim_{x \to 3} (2x + 1)$ por tabela, e diga por que a
+    substituição direta daria o mesmo resultado.
+12. Para $f(x) = x + 1$ se $x$ é menor que 2, e $f(x) = 3x - 3$ se $x \ge 2$:
+    calcule os limites laterais em 2, diga se o limite existe, e dê $f(2)$.
+13. Monte a tabela de $\dfrac{\sqrt{x + 4} - 2}{x}$ com $x = \pm 0{,}01$ e
+    $\pm 0{,}001$, e encontre o limite em 0.
+
+### 4. Variação
+
+14. Seja $f(x) = \dfrac{x^2 - 4}{x - 2}$ para $x \neq 2$, e $f(2) = 7$. Dê o
+    limite em 2 e o valor em 2.
+15. A função **parte inteira**, $\lfloor x \rfloor$, devolve o maior inteiro que
+    não passa de $x$: $\lfloor 1{,}9 \rfloor = 1$, $\lfloor 2 \rfloor = 2$,
+    $\lfloor 2{,}4 \rfloor = 2$. a) Calcule os laterais em $x = 2$ e diga se o
+    limite existe. b) E em $x = 2{,}5$?
+16. Encontre $\lim_{h \to 0} \dfrac{(3+h)^2 - 9}{h}$. Simplifique a fração para
+    $h \neq 0$ antes.
+17. Encontre os limites laterais de $\dfrac{\lvert x - 2 \rvert}{x - 2}$ em
+    $x = 2$ e diga se o limite existe.
+18. Mude a regra do frete do Exemplo 3: agora o frete é R\$ 8 até R\$ 50 e cai
+    para R\$ 0 acima disso, mas a loja dá R\$ 8 de desconto em pedidos de
+    exatamente R\$ 50. Escreva $T(50)$ e os laterais em 50. O limite passou a
+    existir?
+
+<details>
+<summary>Dica para o 15</summary>
+
+Desenhe a função entre 1 e 3: ela é uma escada. Degraus horizontais na altura
+1 (de 1 até antes de 2), na altura 2 (de 2 até antes de 3). Em $x = 2$, de que
+altura vem a esquerda e de que altura vem a direita?
+
+</details>
+
+### 5. Problema misto
+
+19. A posição de um carrinho é $s(t) = t^2 + 2t$, em metros. a) Escreva a
+    velocidade instantânea em $t = 1$ como um limite. b) Simplifique o
+    quociente para $h \neq 0$. c) Calcule o limite.
+20. Encontre $\lim_{x \to 2} \dfrac{x^3 - 8}{x - 2}$ por tabela, com
+    $x = 1{,}99$; $1{,}999$; $2{,}001$; $2{,}01$.
+21. Uma máquina produz peças de comprimento $f(x) = 3x - 1$ a partir da
+    regulagem $x$, e o alvo é 5, obtido com $x = 2$. a) Que tolerância na
+    regulagem garante peças a menos de $0{,}03$ do alvo? b) E a menos de
+    $0{,}3$? c) Escreva a relação geral entre a tolerância $\varepsilon$ na
+    peça e a tolerância $\delta$ na regulagem.
+
+<details>
+<summary>Dica para o 21</summary>
+
+Escreva o afastamento da peça, $\lvert f(x) - 5 \rvert$, e fatore até aparecer
+$\lvert x - 2 \rvert$, que é o afastamento da regulagem. O número que sobrar na
+frente é a razão entre os dois afastamentos.
+
+</details>
+
+### 6. Justificativa
+
+22. Para $f(x) = 5x$, mostre que $\lvert f(x) - 10 \rvert = 5 \lvert x - 2 \rvert$
+    e conclua que $\lim_{x \to 2} 5x = 10$ na linguagem de tolerâncias: dado
+    $\varepsilon$, que $\delta$ funciona?
+23. Explique por que, se os limites laterais em $a$ são $-1$ e $1$, **nenhum**
+    número $L$ pode ser o limite. Use a ideia de distância.
+24. Na conta $\lim_{h \to 0} \frac{(2+h)^2 - 4}{h} = \lim_{h \to 0} (4 + h)$,
+    diga o que muda na escrita e o que permanece igual na quantidade, e por que
+    a troca é permitida mesmo que as duas expressões sejam diferentes em
+    $h = 0$.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. “O limite de $f$ de $x$, quando $x$ tende a 3, é 7”: quando $x$ chega perto
+   de 3, por qualquer lado e sem ser 3, $f(x)$ chega tão perto de 7 quanto se
+   queira.
+2. $3$. Pela esquerda os valores sobem para 3; pela direita descem para 3. (Se
+   você reparou, a tabela é a de $f(x) = 3x$.)
+3. $\lim_{x \to 1} g(x) = 5$ e $g(1) = 2$. A bola vazia é para onde a curva
+   aponta; a bola cheia é o valor.
+4. a) Existe e vale 0. b) Existe e vale 0: o V de $\lvert x \rvert$ chega ao
+   zero pelos dois lados. c) Não existe: $-1$ pela esquerda, 1 pela direita.
+   d) Existe e vale 3.
+5. Porque a definição só usa valores de $x$ **diferentes** de $a$ — na versão
+   exata, $0 < \lvert x - a \rvert$. O que acontece exatamente em $a$ não é
+   consultado.
+6. Porque “se aproximar de $a$” pode acontecer por valores menores ou maiores,
+   e a função pode se comportar de modo diferente em cada lado. Se olhássemos
+   só um lado, diríamos que $\frac{\lvert x \rvert}{x}$ tem limite 1 em 0, e
+   isso é falso.
+7. O limite não pergunta se a função chega em 4. Pergunta de que valor ela se
+   aproxima, e ela se aproxima de 4 pelos dois lados. Logo o limite é 4 — e o
+   fato de $f(2)$ não existir não tem influência.
+8. A primeira diz para onde os vizinhos de 2 apontam; a segunda diz o valor no
+   próprio 2. Em $\frac{x^2 - 4}{x - 2}$ vale a primeira e não a segunda,
+   porque $f(2)$ não existe.
+9. $1{,}9$; $1{,}99$; $2{,}01$; $2{,}1$. Limite $2$. (Confirmação: para
+   $x \neq 1$ a fração é $x + 1$.)
+10. $9{,}9$; $9{,}99$; $10{,}01$; $10{,}1$ para $x = 4{,}9$; $4{,}99$; $5{,}01$;
+    $5{,}1$. Limite $10$.
+11. $6{,}98$; $6{,}998$; $7{,}002$; $7{,}02$ para $x = 2{,}99$; $2{,}999$;
+    $3{,}001$; $3{,}01$. Limite 7. A substituição dá $2 \times 3 + 1 = 7$ e
+    coincide porque $2x + 1$ é uma reta sem buraco: o valor de que ela se
+    aproxima é o valor que ela tem.
+12. Esquerda: $x + 1$ com $x$ chegando a 2 dá 3. Direita: $3x - 3$ com $x$
+    chegando a 2 dá 3. Os laterais são iguais, o limite existe e vale 3.
+    $f(2) = 3 \times 2 - 3 = 3$. Limite e valor coincidem: a função é contínua
+    em 2.
+13. $0{,}2502$; $0{,}25002$; $0{,}24998$; $0{,}2498$ para $x = -0{,}01$;
+    $-0{,}001$; $0{,}001$; $0{,}01$. Limite $\frac{1}{4}$. É o mesmo padrão do
+    Exemplo 5, e o conjugado da lição seguinte confirma.
+14. Limite 4, valor 7. Se você respondeu 4 para os dois, esqueceu que a função
+    foi redefinida em 2; se respondeu 7 para os dois, usou o valor no ponto
+    como limite.
+15. a) Pela esquerda, $x$ um pouco menor que 2 dá $\lfloor x \rfloor = 1$;
+    pela direita, $x$ um pouco maior que 2 dá 2. Laterais 1 e 2: o limite
+    **não existe**. b) Em $2{,}5$, os dois lados estão no mesmo degrau, na
+    altura 2. O limite existe e vale 2.
+16. Para $h \neq 0$:
+    $$
+    \frac{(3+h)^2 - 9}{h} = \frac{9 + 6h + h^2 - 9}{h} = \frac{h(6 + h)}{h} = 6 + h.
+    $$
+    O limite é 6. Conferindo: em $h = 0{,}01$ a fração vale $6{,}01$.
+17. Para $x$ maior que 2, $\lvert x - 2 \rvert = x - 2$ e a fração vale 1. Para
+    $x$ menor que 2, $\lvert x - 2 \rvert = -(x - 2)$ e a fração vale $-1$.
+    Laterais 1 e $-1$: o limite não existe. É o gráfico de
+    $\frac{\lvert x \rvert}{x}$ deslocado duas unidades para a direita.
+18. $T(50) = 50 + 8 - 8 = 50$. Os laterais não mudaram: 58 pela esquerda e 50
+    pela direita. O limite **continua não existindo** — mudar o valor num único
+    ponto não altera nenhum limite, porque o limite não olha o ponto.
+19. a) $v(1) = \lim_{h \to 0} \dfrac{s(1+h) - s(1)}{h}$. b)
+    $s(1 + h) = (1+h)^2 + 2(1+h) = 3 + 4h + h^2$ e $s(1) = 3$, então o
+    quociente é $\frac{4h + h^2}{h} = 4 + h$ para $h \neq 0$. c) O limite é 4:
+    a velocidade em $t = 1$ é 4 m/s. Conferindo com $h = 0{,}01$: o quociente
+    vale $4{,}01$.
+20. $11{,}9401$; $11{,}994$; $12{,}006$; $12{,}0601$. Limite 12. A lição
+    seguinte mostra como obter esse 12 sem tabela.
+21. $\lvert f(x) - 5 \rvert = \lvert 3x - 6 \rvert = 3\lvert x - 2 \rvert$. a)
+    Para o afastamento da peça ficar abaixo de $0{,}03$, o da regulagem precisa
+    ficar abaixo de $0{,}01$. b) Abaixo de $0{,}1$. c) $\delta = \frac{\varepsilon}{3}$:
+    a regulagem precisa ser três vezes mais precisa que a peça, porque a reta
+    tem inclinação 3.
+22. $\lvert 5x - 10 \rvert = \lvert 5(x - 2) \rvert = 5\lvert x - 2 \rvert$. Dado
+    $\varepsilon$, tome $\delta = \frac{\varepsilon}{5}$: se
+    $\lvert x - 2 \rvert < \frac{\varepsilon}{5}$, então
+    $5\lvert x - 2 \rvert < \varepsilon$, ou seja, $\lvert 5x - 10 \rvert < \varepsilon$.
+    Como isso funciona para toda $\varepsilon$, o limite é 10.
+23. Qualquer $L$ está a pelo menos 1 unidade de distância de $-1$ ou de $1$
+    (se estivesse a menos de 1 dos dois, os dois estariam a menos de 2 um do
+    outro, e a distância entre eles é 2). Então, perto de $a$, há sempre
+    valores da função a pelo menos 1 de $L$, de um lado ou do outro. Com
+    tolerância $\varepsilon = \frac{1}{2}$ nenhum $\delta$ funciona, e $L$ não
+    é o limite. Como isso vale para todo $L$, o limite não existe.
+24. **O que muda na escrita:** a fração, que não existe em $h = 0$, vira a
+    expressão $4 + h$, que existe em todo $h$. **O que permanece:** o valor em
+    cada $h \neq 0$ — as duas expressões são a mesma quantidade em toda a
+    vizinhança de 0, porque a passagem de uma à outra foi cancelar o fator
+    $h$, permitido quando $h \neq 0$. **Por que a troca é permitida:** o limite
+    só consulta a vizinhança, nunca o ponto. Duas funções que coincidem em
+    toda a vizinhança têm o mesmo limite, mesmo que difiram no ponto.
+
+</details>
+
+## 15. Revisão curta
+
+- O **limite** de $f$ em $a$, escrito $\lim_{x \to a} f(x) = L$, é o número de
+  que $f(x)$ se aproxima tanto quanto se queira quando $x$ chega perto de $a$
+  por qualquer lado, **sem ser** $a$.
+- O limite **não depende de $f(a)$**. A função pode não existir em $a$ (o
+  buraco de $\frac{x^2 - 4}{x - 2}$), pode valer o limite (a reta $x + 2$), ou
+  pode valer outra coisa (o ponto tirado do lugar). Nos três casos o limite em
+  2 é 4.
+- **Limite e valor são perguntas diferentes.** Quando coincidem, a função é
+  contínua no ponto — assunto da lição de continuidade.
+- **Limites laterais**: $x \to a^{-}$ olha a esquerda, $x \to a^{+}$ olha a
+  direita. O limite existe exatamente quando os dois laterais existem e são
+  iguais. O frete com salto tem laterais 58 e 50, e por isso não tem limite em
+  50.
+- $\frac{0}{0}$ na substituição direta **não é resposta**: é o aviso de que o
+  limite precisa ser encontrado de outro modo.
+- Trocar uma fração pela forma simplificada dentro do limite é permitido
+  porque as duas coincidem em toda a vizinhança do ponto, e o limite só olha a
+  vizinhança. A troca não tapa o buraco; ela mostra para onde a vizinhança
+  aponta.
+- A definição exata usa **tolerâncias**: para toda $\varepsilon$ na saída,
+  existe $\delta$ na entrada tal que $0 < \lvert x - a \rvert < \delta$ garante
+  $\lvert f(x) - L \rvert < \varepsilon$. É o valor absoluto como distância, e
+  é o que dá significado único a “tão perto quanto se queira”.
+- A velocidade instantânea do motivador agora tem escrita:
+  $v(2) = \lim_{h \to 0} \frac{(2+h)^2 - 4}{h} = \lim_{h \to 0} (4 + h) = 4$
+  m/s.
+
+Antes de avançar, verifique se você consegue fazer três coisas: explicar por
+que o limite de $\frac{x^2 - 4}{x - 2}$ em 2 é 4 mesmo a função não existindo
+ali; calcular os dois laterais de uma função por partes e decidir se o limite
+existe; e dizer, sem consultar, o que $0 < \lvert x - a \rvert < \delta$ está
+exigindo.
+
+A tabela responde a todos os limites desta página, mas ela é lenta e não é
+demonstração. A lição seguinte, [calculando limites](./calculo-de-limites),
+troca a tabela por três reescritas que o curso já ensinou — fatorar, usar o
+conjugado e somar frações algébricas — e transforma o limite numa conta.

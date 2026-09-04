@@ -1,0 +1,946 @@
+---
+title: "Máximos e mínimos: os candidatos e o teste que decide"
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+import NumberLine from '@site/src/components/NumberLine';
+
+# Máximos e mínimos: os candidatos e o teste que decide
+
+## 1. Problema motivador: a caixa, pela terceira vez
+
+Uma chapa de 30 cm por 20 cm vira uma caixa sem tampa quando se corta um
+quadrado de lado $x$ em cada canto e se dobram as abas. O volume é
+
+$$
+V(x) = x(30 - 2x)(20 - 2x) = 4x^3 - 100x^2 + 600x,
+$$
+
+com $x$ entre 0 e 10 cm — o corte não pode passar da metade do lado menor.
+
+Esta caixa já apareceu duas vezes. Na lição de [função
+polinomial](../funcoes/funcao-polinomial), o gráfico mostrou que o volume tem um
+pico perto de $x = 4$ e que o corte de 5 cm, o melhor entre os testados, não é
+o melhor possível. A página avisou que achar o pico exato “exige derivada”. Na
+lição de [regras de derivação](./regras-de-derivacao), a derivada saiu em uma
+linha:
+
+$$
+V'(x) = 12x^2 - 200x + 600,
+$$
+
+e a equação $V'(x) = 0$, resolvida por Bhaskara, deu $x \approx 3{,}924$ cm.
+Aquela página parou ali, com um aviso honesto: saber que $V' = 0$ em 3,924 não
+é o mesmo que saber que **ali está o máximo**. A lição anterior, sobre [o sinal
+da derivada](./sinal-da-derivada), reforçou o aviso: derivada zero é
+**candidatura**, não veredicto. Em $x^3$, a derivada é zero em 0 e não há
+máximo nenhum.
+
+Então ficam duas perguntas que nenhuma das páginas anteriores fechou:
+
+> **Como ter certeza de que $x \approx 3{,}924$ é o corte de maior volume?** E
+> o que garante que não existe um corte melhor escondido em outro lugar — nas
+> pontas do intervalo, por exemplo?
+
+A segunda pergunta parece excesso de zelo, mas não é. A oficina da lição
+anterior, com lucro $P(x) = 2x^3 - 9x^2 + 12x - 3$, tinha dois trechos de
+subida. O melhor lote dependia da capacidade da oficina, e num dos casos o
+melhor lote era o **maior que ela conseguia produzir** — um ponto sem tangente
+horizontal nenhuma. Esta página organiza tudo isso num método: quem são os
+candidatos, e qual teste decide.
+
+## 2. Mapa das ideias
+
+- um **máximo local** é um valor maior que os dos vizinhos próximos; um
+  **máximo global** é o maior valor de todos no intervalo considerado. O mesmo
+  para mínimo;
+- **valor** e **ponto** são coisas diferentes: o volume máximo é 1056,31 cm³
+  (valor); ele ocorre em $x \approx 3{,}924$ (ponto);
+- **teorema de Fermat**: num ponto do interior onde a derivada existe, máximo
+  ou mínimo local obriga $f' = 0$. A volta é falsa;
+- os **candidatos** a extremo são os pontos críticos e as pontas do intervalo;
+- o **teste da primeira derivada** decide cada ponto crítico pelo sinal de $f'$
+  dos dois lados: de positivo para negativo é máximo; de negativo para
+  positivo é mínimo; sem troca, não é nenhum dos dois;
+- o **teorema de Weierstrass** garante que uma função contínua num intervalo
+  fechado tem máximo e mínimo globais — e, por isso, o roteiro do intervalo
+  fechado é comparar os candidatos.
+
+## 3. Para que serve
+
+- achar o corte, o preço, o lote ou a dose que dá o maior lucro, o menor custo,
+  o maior volume;
+- saber o maior e o menor valor que uma grandeza atinge num período: a maior
+  temperatura do dia, o pico de concentração de um remédio, o volume máximo de
+  um reservatório;
+- decidir se um ponto crítico é máximo, mínimo ou nenhum dos dois, o que o
+  sinal da derivada sozinho ainda não decidia;
+- garantir que o melhor valor **existe** antes de procurá-lo — e saber quando
+  ele não existe;
+- e, dentro da matemática, preparar os [problemas de
+  otimização](./problemas-de-otimizacao) da lição seguinte, em que a função
+  ainda precisa ser montada, e o [esboço de gráficos](./esboco-de-graficos), em
+  que os máximos e mínimos são os pontos de virada.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [o sinal da derivada](./sinal-da-derivada): o que é um ponto crítico, e
+o que ele garante?** É uma entrada do domínio em que $f'$ vale zero ou não
+existe. Ele garante só uma coisa: é o único lugar em que o sinal de $f'$ pode
+trocar. Não garante máximo nem mínimo — $x^3$ tem derivada zero em 0 e continua
+subindo. O quadro de sinais daquela página é a ferramenta que esta página usa
+para decidir.
+
+**2. De [regras de derivação](./regras-de-derivacao): qual é a derivada de
+$V(x) = 4x^3 - 100x^2 + 600x$, e onde ela é zero?** Termo a termo,
+$V'(x) = 12x^2 - 200x + 600$. Dividindo por 4 e aplicando Bhaskara a
+$3x^2 - 50x + 150 = 0$, as raízes são $x \approx 3{,}924$ e $x \approx 12{,}74$.
+Só a primeira está no domínio da caixa.
+
+**3. De [quando a derivada não existe](./quando-a-derivada-nao-existe): a
+função $\lvert x \rvert$ tem derivada zero em algum ponto?** Não: ela vale $-1$ à
+esquerda de 0, $1$ à direita e não existe em 0. E mesmo assim o ponto 0 é o
+mínimo. Um bico é candidato a extremo tanto quanto uma tangente horizontal, e
+quem procura só as raízes de $f'$ deixa esse candidato passar.
+
+**4. De [continuidade](./continuidade): o que uma função contínua num intervalo
+não faz?** Ela não pula valores: entre duas saídas, ela passa por todas as
+intermediárias. Esta página usa uma consequência dessa mesma propriedade: uma
+função contínua num intervalo **fechado** atinge um maior e um menor valor.
+
+**5. De [função quadrática](../funcoes/funcao-quadratica): onde está o vértice
+de $ax^2 + bx + c$?** Em $x_v = -\frac{b}{2a}$, obtido lá completando o
+quadrado. A lição anterior mostrou que esse é o ponto crítico da parábola; esta
+mostra que o teste da derivada o classifica como mínimo quando $a$ é positivo e
+máximo quando $a$ é negativo — sem completar quadrado nenhum.
+
+O item 1 é o mais importante. Se “ponto crítico é candidato, não veredicto”
+ainda não está firme, releia a seção 8 da lição anterior antes de seguir: toda
+esta página é sobre transformar candidatura em veredicto.
+
+## 5. Intuição: o alto do morro e a ponta da estrada
+
+Imagine uma estrada que sobe e desce por um morro. Onde está o ponto mais
+alto?
+
+**No alto do morro a estrada fica horizontal.** Um instante antes do topo ela
+ainda sobe; um instante depois já desce. No topo, a inclinação é zero. É por
+isso que procurar o ponto mais alto começa por procurar onde a inclinação zera:
+se a estrada ainda subisse ali, o ponto seguinte seria mais alto, e aquele não
+seria o topo.
+
+**Mas estrada horizontal não é sempre topo.** Uma estrada pode subir, ficar
+horizontal por um instante — um patamar — e continuar subindo. A inclinação
+zerou e nada de especial aconteceu. É o $x^3$ em 0. Para distinguir topo de
+patamar, é preciso olhar o que a estrada faz **dos dois lados**: sobe antes e
+desce depois, é topo; sobe antes e sobe depois, é patamar.
+
+**E a estrada pode terminar no meio da subida.** Se o trecho considerado acaba
+numa cerca, o ponto mais alto do trecho pode ser a própria cerca, com a estrada
+ainda inclinada ali. Não há tangente horizontal, e mesmo assim é o maior valor.
+A ponta de um intervalo escapa ao argumento do topo porque só tem **um lado**:
+não existe “um instante depois” para a estrada descer.
+
+Estas três observações são a lição inteira. Os candidatos são os pontos de
+inclinação zero (ou sem inclinação definida, como um bico) e as pontas; o
+veredicto vem de olhar os dois lados de cada candidato, ou de comparar os
+valores nos candidatos quando o trecho é fechado.
+
+## 6. Modelo visual: máximo local, mínimo local e a ponta que ganha
+
+Tome $f(x) = x^3 - 3x$, a mesma da lição anterior, agora restrita ao intervalo
+$[-1{,}5;\ 2{,}5]$. A derivada é $f'(x) = 3x^2 - 3 = 3(x-1)(x+1)$, com pontos
+críticos $-1$ e $1$.
+
+<CartesianPlane
+  xMin={-2.2}
+  xMax={3.2}
+  yMin={-3.4}
+  yMax={9.4}
+  xUnit={64}
+  yUnit={26}
+  yStep={2}
+  functions={[{f: (x) => x * x * x - 3 * x, domain: [-1.5, 2.5], tone: 1}]}
+  lines={[
+    {x: -1.5, dashed: true, tone: 0},
+    {x: 2.5, dashed: true, tone: 0},
+  ]}
+  points={[
+    {at: [-1.5, 1.125], label: '(-1{,}5;\\ 1{,}125)', tone: 3, dx: -6, dy: 20},
+    {at: [-1, 2], label: '(-1,\\ 2)', tone: 2, dx: 8, dy: -16},
+    {at: [1, -2], label: '(1,\\ -2)', tone: 2, dx: 30, dy: 12},
+    {at: [2.5, 8.125], label: '(2{,}5;\\ 8{,}125)', tone: 3, dx: -40, dy: -14},
+  ]}
+  labels={[
+    {at: [-1, 3.2], math: '\\text{máximo local}', tone: 2, dy: -8},
+    {at: [1, -3.0], math: '\\text{mínimo local e global}', tone: 2, dx: 30},
+    {at: [2.5, 5.6], math: '\\text{máximo global}', tone: 3, dx: -52},
+  ]}
+  axisLabels={['x', 'f(x)']}
+  caption="f(x) = x³ − 3x no intervalo [−1,5; 2,5]. Dois pontos com tangente horizontal, em x = −1 e x = 1, e duas pontas. O maior valor de todos, 8,125, está na ponta direita, onde a tangente não é horizontal."
+/>
+
+Leia a figura com os quatro pontos marcados:
+
+| Ponto | Tipo | Valor de $f$ | O que é |
+|---|---|---:|---|
+| $x = -1{,}5$ | ponta esquerda | $1{,}125$ | nem máximo nem mínimo global |
+| $x = -1$ | ponto crítico | $2$ | **máximo local**: os vizinhos são mais baixos |
+| $x = 1$ | ponto crítico | $-2$ | **mínimo local e global**: o menor valor do intervalo |
+| $x = 2{,}5$ | ponta direita | $8{,}125$ | **máximo global**: o maior valor do intervalo |
+
+Três coisas para guardar do desenho.
+
+O ponto $(-1, 2)$ é o mais alto **da sua vizinhança**, e isso é o que “máximo
+local” quer dizer. Mas ele não é o mais alto do intervalo: a ponta direita
+chega a 8,125. Máximo local e máximo global são perguntas diferentes.
+
+O ponto $(1, -2)$ é mínimo local e também global: não há valor menor em lugar
+nenhum do intervalo. Um ponto pode ser as duas coisas ao mesmo tempo.
+
+E o máximo global está numa ponta, sem tangente horizontal. Se procurássemos
+o maior valor só entre os pontos críticos, responderíamos “2, em $x = -1$” — e
+estaríamos errados por mais de 6 unidades.
+
+## 7. Ponte para a formalização: por que a derivada zera no topo
+
+A intuição da seção 5 disse que no alto do morro a inclinação é zero. Vale
+escrever o argumento com a derivada, porque ele é curto e diz exatamente
+**quando** vale.
+
+Suponha que $a$ está no **interior** do intervalo, que $f$ tem um máximo local
+em $a$ e que $f'(a)$ existe. Então:
+
+- se $f'(a)$ fosse **positivo**, a função subiria logo depois de $a$ (é o que a
+  seção 7 da lição anterior mostrou: a secante para $h$ pequeno e positivo tem
+  inclinação próxima de $f'(a)$, logo $f(a + h)$ é maior que $f(a)$). Mas então
+  $a$ não seria máximo local: haveria um vizinho mais alto à direita;
+- se $f'(a)$ fosse **negativo**, a função subiria logo **antes** de $a$
+  ($f(a - h)$ seria maior que $f(a)$). De novo, $a$ não seria máximo local.
+
+A única possibilidade que sobra é $f'(a) = 0$. O mesmo argumento, com os sinais
+trocados, vale para mínimo local.
+
+Repare no que o argumento usou: que existe um “depois” e um “antes” de $a$ —
+isto é, que $a$ está no interior — e que $f'(a)$ existe. Se $a$ é uma ponta,
+falta um dos lados, e o argumento não se aplica: a ponta pode ser máximo com
+derivada diferente de zero. Se $f'(a)$ não existe, não há o que zerar, e o
+ponto pode ser máximo ou mínimo num bico. É por isso que a lista de
+candidatos tem três tipos, e não um.
+
+## 8. Formalização: as definições e os três teoremas
+
+### Máximo e mínimo, local e global
+
+> $f$ tem um **máximo global** em $a$, num intervalo $I$, quando $f(a) \ge f(x)$
+> para **todo** $x$ de $I$. O número $f(a)$ é o **valor máximo**; o ponto $a$ é
+> **onde ele ocorre**.
+>
+> $f$ tem um **máximo local** em $a$ quando $f(a) \ge f(x)$ para todo $x$
+> **próximo** de $a$ — isto é, num intervalo aberto em torno de $a$.
+>
+> Mínimo global e mínimo local se definem trocando $\ge$ por $\le$.
+
+**Exemplo.** Na figura da seção 6, $f$ tem máximo global em $x = 2{,}5$, com
+valor máximo $8{,}125$; máximo local em $x = -1$, com valor $2$; mínimo global
+(e local) em $x = 1$, com valor $-2$.
+
+**Contraexemplo.** O ponto $x = -1{,}5$ não é máximo local nem mínimo local: à
+direita dele a função sobe até 2 (então não é máximo) e, dentro do intervalo,
+não há vizinhos à esquerda para comparar. Ele é uma ponta com valor
+intermediário, e ponta não é automaticamente extremo.
+
+Duas observações sobre as definições, porque as duas geram erro.
+
+**Valor e ponto.** “O máximo é 8,125” fala do valor, uma saída. “O máximo está
+em $x = 2{,}5$” fala do ponto, uma entrada. Um problema pode perguntar qualquer
+dos dois — “qual é o maior volume?” pede o valor; “qual corte dá o maior
+volume?” pede o ponto — e a resposta precisa entregar o que foi pedido. Na
+caixa, os dois números são diferentes: 1056,31 e 3,924.
+
+**Empate.** Se dois pontos têm o mesmo valor máximo, os dois são pontos de
+máximo global. O valor máximo é um só; os pontos onde ele ocorre podem ser
+vários. O exemplo 1 mostra um empate.
+
+### Teorema de Fermat: a derivada zera no interior
+
+> **Teorema de Fermat.** Se $f$ tem máximo ou mínimo local em um ponto $a$ do
+> **interior** do intervalo, e $f'(a)$ existe, então $f'(a) = 0$.
+
+É o argumento da seção 7. A consequência prática é a lista de candidatos:
+
+> Um máximo ou mínimo de $f$ num intervalo só pode estar em um **ponto crítico**
+> (derivada zero ou inexistente) ou numa **ponta** do intervalo.
+
+**Exemplo.** Em $f(x) = x^3 - 3x$, o máximo local em $x = -1$ tem
+$f'(-1) = 3 - 3 = 0$, como o teorema exige.
+
+**Contraexemplo da volta.** A recíproca é falsa: $f'(a) = 0$ **não** implica
+máximo ou mínimo. Em $g(x) = x^3$, $g'(0) = 0$, e 0 não é nem máximo nem mínimo
+local: $g(-0{,}1) = -0{,}001$ é menor e $g(0{,}1) = 0{,}001$ é maior que
+$g(0) = 0$. O teorema vai numa direção só — dos extremos para os pontos
+críticos —, e é por isso que ponto crítico é **candidato**.
+
+### Teste da primeira derivada: o veredicto por trecho
+
+Para decidir o que acontece num ponto crítico, olhe o sinal de $f'$ dos dois
+lados dele. É o quadro de sinais da lição anterior, lido em cada fronteira.
+
+> **Teste da primeira derivada.** Seja $a$ um ponto crítico de $f$, com $f$
+> contínua em $a$.
+>
+> - Se $f'$ é **positiva antes** de $a$ e **negativa depois**, $f$ tem
+>   **máximo local** em $a$ (sobe, depois desce).
+> - Se $f'$ é **negativa antes** e **positiva depois**, $f$ tem **mínimo local**
+>   em $a$ (desce, depois sobe).
+> - Se $f'$ tem o **mesmo sinal** dos dois lados, $a$ **não** é máximo nem
+>   mínimo.
+
+**Exemplo.** Em $f(x) = x^3 - 3x$, o quadro de $f' = 3(x-1)(x+1)$ é positivo,
+negativo, positivo, com fronteiras em $-1$ e $1$:
+
+<NumberLine
+  min={-3}
+  max={3}
+  unit={64}
+  spans={[
+    {from: -3, to: -1, tone: 1, continuesLeft: true},
+    {from: -1, to: 1, tone: 2},
+    {from: 1, to: 3, tone: 1, continuesRight: true},
+  ]}
+  marks={[
+    {at: -1, label: '\\text{máx.}', tone: 3},
+    {at: 1, label: '\\text{mín.}', tone: 3},
+  ]}
+  caption="O sinal de f′ = 3(x − 1)(x + 1). Em −1 o sinal troca de positivo para negativo: máximo local. Em 1 troca de negativo para positivo: mínimo local."
+/>
+
+Em $-1$, positivo vira negativo: máximo local, com $f(-1) = 2$. Em $1$,
+negativo vira positivo: mínimo local, com $f(1) = -2$. É o que a figura da
+seção 6 mostrou.
+
+**Contraexemplo.** Em $g(x) = x^3$, $g'(x) = 3x^2$ é positiva à esquerda de 0 e
+positiva à direita. Sem troca de sinal, nada acontece em 0: é o patamar da
+estrada. E em $h(x) = x^4 - 4x^3$, do exemplo 1 da lição anterior,
+$h'(x) = 4x^2(x - 3)$ é negativa dos dois lados de 0: a função desce, para um
+instante e continua descendo. Zero é ponto crítico e não é extremo.
+
+O teste pede $f$ contínua em $a$ por um motivo concreto. Numa função com salto,
+o sinal de $f'$ pode trocar na fronteira sem que o ponto seja máximo de nada:
+a função pode descer até $a$, pular para cima e subir, e o valor em $a$ ficar
+no fundo do salto. Nas funções desta página os pontos críticos são pontos de
+continuidade, e o teste se aplica.
+
+### Teorema de Weierstrass: o melhor valor existe
+
+Tudo até aqui diz **onde procurar**. Falta saber se o que procuramos existe. A
+resposta depende do intervalo.
+
+> **Teorema de Weierstrass.** Se $f$ é contínua num intervalo **fechado**
+> $[a, b]$, então $f$ tem máximo global e mínimo global nesse intervalo: existe
+> um ponto em que ela atinge o maior valor, e um em que atinge o menor.
+
+O curso enuncia o teorema sem demonstrá-lo. A demonstração usa uma propriedade
+dos números reais que este curso não desenvolveu; o que o aluno precisa é
+reconhecer as duas condições — **contínua** e **intervalo fechado** — e ver o
+que acontece quando cada uma falha.
+
+**Exemplo.** $V(x) = 4x^3 - 100x^2 + 600x$ é um polinômio, logo contínua, e o
+domínio da caixa é $[0, 10]$, fechado. O teorema garante que existe um corte de
+volume máximo. Ainda não diz qual — mas garante que a busca não é em vão.
+
+**Contraexemplo 1: intervalo aberto.** $f(x) = \frac{1}{x}$ em $]0, 1]$ é
+contínua, mas o intervalo não inclui o 0. Não há máximo: em $x = 0{,}001$ a
+função vale 1000, em $x = 0{,}000001$ vale um milhão, e sempre há um $x$ mais
+perto de 0 com valor maior. O maior valor **não existe**.
+
+**Contraexemplo 2: intervalo aberto dos dois lados.** $f(x) = x$ em $]0, 1[$
+não tem máximo nem mínimo: qualquer valor que se proponha como maior, existe um
+$x$ mais perto de 1 com valor maior, e o 1 não está no intervalo.
+
+**Contraexemplo 3: função descontínua.** Em $[0, 1]$, defina $f(x) = x$ para
+$x$ menor que 1, e $f(1) = 0$. O intervalo é fechado, mas a função pula em 1.
+Ela chega perto de 1 sem nunca atingi-lo, e em $x = 1$ cai para 0. Não há
+máximo.
+
+Nos três casos a função não tem “maior valor”, e nenhum método vai achá-lo.
+Por isso um problema aplicado precisa dizer o domínio, e o domínio precisa
+incluir as pontas quando elas fazem sentido.
+
+### O roteiro do intervalo fechado
+
+Junte Fermat e Weierstrass e sai um método sem quadro de sinais:
+
+1. **Confira as hipóteses.** $f$ é contínua em $[a, b]$? Se sim, o máximo e o
+   mínimo existem, e estão entre os candidatos.
+2. **Liste os candidatos.** Os pontos críticos **dentro** de $]a, b[$ — raízes
+   de $f'$ e pontos onde $f'$ não existe — e as duas pontas $a$ e $b$.
+3. **Calcule $f$ em cada candidato.**
+4. **Compare.** O maior valor é o máximo global; o menor é o mínimo global.
+   Anote o valor e o ponto onde ocorre; em caso de empate, todos os pontos.
+
+O passo 4 dispensa o teste da primeira derivada: se o máximo existe e só pode
+estar nos candidatos, o candidato com o maior valor **é** o máximo. O teste
+volta a ser necessário em dois casos: quando o intervalo é aberto ou infinito
+(sem Weierstrass, comparar candidatos não prova nada) e quando a pergunta é
+sobre máximos e mínimos **locais**, que a comparação global não classifica.
+
+### O vértice, recuperado
+
+Para $f(x) = ax^2 + bx + c$ com $a \neq 0$, a derivada é $f'(x) = 2ax + b$, que
+zera só em $x = -\frac{b}{2a}$. É o único ponto crítico, e é a fórmula do
+vértice.
+
+O teste da primeira derivada classifica: se $a$ é positivo, $2ax + b$ é uma reta
+crescente, negativa antes da raiz e positiva depois — mínimo. Se $a$ é
+negativo, os sinais se invertem — máximo. É a regra “concavidade para cima,
+vértice é mínimo” da lição de função quadrática, agora deduzida da derivada em
+duas linhas. Para a serigrafia da lição anterior, $L(x) = -x^2 + 100x - 1600$,
+o ponto crítico $x = 50$ tem $a = -1$ negativo: máximo, com $L(50) = 900$
+reais.
+
+## 9. Resolvendo o problema da caixa
+
+Agora dá para fechar a conta que a lição de polinômios abriu.
+
+**1. Hipóteses.** $V(x) = 4x^3 - 100x^2 + 600x$ é contínua, e o domínio é
+$[0, 10]$, fechado. Pelo teorema de Weierstrass, o volume máximo existe.
+
+**2. Candidatos.** $V'(x) = 12x^2 - 200x + 600$ existe em todo ponto, então os
+pontos críticos são as raízes. Dividindo por 4, $3x^2 - 50x + 150 = 0$, e
+Bhaskara dá
+
+$$
+x = \frac{50 \pm \sqrt{2500 - 1800}}{6} = \frac{50 \pm \sqrt{700}}{6}.
+$$
+
+Como $\sqrt{700} = \sqrt{100 \times 7} = 10\sqrt{7}$, as raízes são
+$\frac{25 \pm 5\sqrt{7}}{3}$: aproximadamente $3{,}924$ e $12{,}743$. A segunda
+está fora de $[0, 10]$. Os candidatos são três: $0$, $3{,}924$ e $10$.
+
+**3. Valores.**
+
+| Candidato | $V$ (cm³) |
+|---:|---:|
+| $x = 0$ | $0$ |
+| $x \approx 3{,}924$ | $1056{,}31$ |
+| $x = 10$ | $0$ |
+
+As pontas dão zero, e não é coincidência: cortar nada não levanta abas, e
+cortar 10 cm consome o lado de 20 cm inteiro. Nos dois casos não há caixa.
+
+**4. Comparação.** O maior valor é $1056{,}31$ cm³, em $x \approx 3{,}924$ cm.
+
+> O corte de maior volume mede $\frac{25 - 5\sqrt{7}}{3} \approx 3{,}924$ cm,
+> e o volume máximo é aproximadamente $1056{,}31$ cm³.
+
+**Conferindo com o teste da primeira derivada.** O roteiro do intervalo fechado
+já decidiu, mas vale ver o outro método dar a mesma resposta. Da lição de
+regras de derivação: $V'(3) = 108$, positivo; $V'(4) = -8$, negativo. Entre 3 e
+4 só há um ponto crítico, o 3,924, então o sinal troca ali de positivo para
+negativo: **máximo local**. Como é o único ponto crítico do intervalo e as
+pontas valem zero, é também o global.
+
+**Conferindo com números.** Numa malha de cem mil pontos entre 0 e 10, o maior
+valor de $V$ aparece em $x = 3{,}92375$ e vale $1056{,}3059$ cm³. Confere com a
+resposta.
+
+E as duas perguntas do começo? A primeira, “como ter certeza de que 3,924 é o
+máximo”, foi respondida duas vezes: pela comparação dos candidatos e pelo sinal
+de $V'$ dos dois lados. A segunda, “não há um corte melhor escondido”, é o
+teorema de Fermat: fora dos pontos críticos e das pontas não pode haver máximo,
+e os três candidatos foram todos examinados.
+
+### A oficina, com a capacidade como ponta
+
+O lucro da oficina da lição anterior, $P(x) = 2x^3 - 9x^2 + 12x - 3$, tem
+$P'(x) = 6(x-1)(x-2)$, com pontos críticos 1 e 2. O melhor lote depende da
+capacidade, que é a ponta direita do intervalo.
+
+| Capacidade | Candidatos | Valores de $P$ | Melhor lote |
+|---|---|---|---|
+| 200 peças: $[0, 2]$ | $0$, $1$, $2$ | $-3$, $2$, $1$ | **100 peças**, lucro 2 mil |
+| 300 peças: $[0, 3]$ | $0$, $1$, $2$, $3$ | $-3$, $2$, $1$, $6$ | **300 peças**, lucro 6 mil |
+
+Com capacidade para 300, o melhor lote é a própria capacidade — a ponta do
+intervalo, onde a tangente não é horizontal ($P'(3) = 12$). Quem só olhasse os
+pontos críticos responderia “100 peças” nos dois casos, e no segundo deixaria
+4 mil reais na mesa.
+
+## 10. Exemplos resolvidos
+
+### Exemplo 1: um polinômio num intervalo fechado, com empate
+
+Ache o máximo e o mínimo globais de $f(x) = x^3 - 6x^2 + 9x + 1$ em $[0, 5]$.
+
+**Hipóteses.** Polinômio, contínuo; intervalo fechado. Os dois existem.
+
+**Candidatos.** $f'(x) = 3x^2 - 12x + 9 = 3(x - 1)(x - 3)$: raízes 1 e 3, ambas
+dentro de $]0, 5[$. Mais as pontas: $0$, $1$, $3$, $5$.
+
+**Valores.** $f(0) = 1$, $f(1) = 1 - 6 + 9 + 1 = 5$, $f(3) = 27 - 54 + 27 + 1 = 1$,
+$f(5) = 125 - 150 + 45 + 1 = 21$.
+
+**Comparação.** Máximo global $21$, em $x = 5$ — a ponta. Mínimo global $1$, em
+**dois** pontos: $x = 0$ e $x = 3$. O valor mínimo é um só; ele ocorre duas
+vezes.
+
+O ponto $x = 1$, com $f(1) = 5$, é máximo **local** (o sinal de $f'$ troca de
+positivo para negativo ali), mas não global: a ponta direita vale 21.
+
+### Exemplo 2: um bico como candidato
+
+*Pause e tente antes de ler.* Ache o máximo e o mínimo de
+$g(x) = \lvert x - 2 \rvert + 1$ em $[0, 5]$.
+
+**Hipóteses.** O módulo é contínuo; o intervalo é fechado.
+
+**Candidatos.** A derivada vale $-1$ para $x$ menor que 2 e $1$ para $x$ maior
+que 2, e **não existe** em $x = 2$: bico. Ela nunca é zero. O único ponto
+crítico é 2, e ele entra na lista por ser ponto onde $f'$ não existe. Com as
+pontas: $0$, $2$, $5$.
+
+**Valores.** $g(0) = 3$, $g(2) = 1$, $g(5) = 4$.
+
+**Comparação.** Mínimo global $1$ em $x = 2$; máximo global $4$ em $x = 5$.
+
+Se você procurou só as raízes de $g'$ e não achou nenhuma, concluiu que não há
+ponto crítico — e o mínimo, que está no bico, ficou de fora da lista. A
+definição de ponto crítico tem duas metades por causa deste caso.
+
+### Exemplo 3: lote de compra com menor custo
+
+*Pause e tente.* Uma loja vende 1 200 unidades por ano de um produto e faz
+pedidos de $q$ unidades ao fornecedor. Cada pedido custa R\$ 50 para ser
+processado, e manter o estoque custa R\$ 3 por unidade por ano — em média, há
+$\frac{q}{2}$ unidades guardadas. O custo anual é
+
+$$
+C(q) = \frac{1200}{q} \times 50 + 3 \times \frac{q}{2}
+= \frac{60000}{q} + 1{,}5q,
+\qquad q \text{ positivo}.
+$$
+
+Qual tamanho de pedido dá o menor custo?
+
+**Hipóteses.** O domínio é $]0, +\infty[$: aberto de um lado, infinito do
+outro. Weierstrass **não** se aplica, então comparar candidatos não é suficiente; é o
+teste da primeira derivada que vai decidir.
+
+**Candidatos.** Pela regra da potência com expoente $-1$,
+$C'(q) = -\frac{60000}{q^2} + 1{,}5$. Zera quando $\frac{60000}{q^2} = 1{,}5$,
+isto é, $q^2 = 40000$, logo $q = 200$ (a raiz negativa não é um pedido).
+
+**Teste.** Em $q = 100$: $C'(100) = -6 + 1{,}5 = -4{,}5$, negativo. Em
+$q = 400$: $C'(400) = -0{,}375 + 1{,}5 = 1{,}125$, positivo. Negativo antes,
+positivo depois: **mínimo local** em 200.
+
+**Local vira global.** Como 200 é o único ponto crítico, $C$ é decrescente em
+todo $]0, 200[$ e crescente em todo $]200, +\infty[$. Nenhum ponto pode ter
+custo menor que $C(200)$: à esquerda de 200 a função ainda está descendo até
+ele, à direita já subiu a partir dele. O mínimo é global.
+
+**Resposta.** Pedidos de **200 unidades**, com custo anual
+$C(200) = 300 + 300 = 600$ reais. Confira com os vizinhos: $C(100) = 750$ e
+$C(400) = 750$, os dois maiores.
+
+Repare que no mínimo as duas parcelas se igualam — 300 de pedidos e 300 de
+estoque. É uma propriedade desse tipo de custo, e o exercício 22 pede para
+mostrar por quê.
+
+### Exemplo 4: o pico de um remédio
+
+*Pause e tente.* A concentração de um remédio no sangue, em mg/L, $t$ horas
+após a dose, é $c(t) = 5t\,e^{-t/2}$. Em que instante ela é máxima, e qual é o
+valor?
+
+**Derivar.** Regra do produto com a regra da cadeia na exponencial (lições de
+[produto e quociente](./regras-do-produto-e-do-quociente) e de [exponencial e
+logaritmo](./derivadas-de-exponencial-e-logaritmo)):
+
+$$
+c'(t) = 5\,e^{-t/2} + 5t \times \left(-\tfrac{1}{2}\right) e^{-t/2}
+= 5\,e^{-t/2}\left(1 - \tfrac{t}{2}\right).
+$$
+
+**Candidatos.** $e^{-t/2}$ nunca é zero, então $c'(t) = 0$ só quando
+$1 - \frac{t}{2} = 0$, isto é, $t = 2$. O domínio é $[0, +\infty[$: a ponta
+$t = 0$ também é candidata, com $c(0) = 0$.
+
+**Teste.** O sinal de $c'$ é o sinal de $1 - \frac{t}{2}$: positivo para $t$
+menor que 2, negativo depois. Máximo local em $t = 2$, e global pelo mesmo
+argumento do exemplo 3: único ponto crítico, sobe antes, desce depois.
+
+**Resposta.** O pico ocorre **2 horas** após a dose, com concentração
+$c(2) = 10\,e^{-1} \approx 3{,}68$ mg/L. Conferindo: $c(1) \approx 3{,}03$ e
+$c(3) \approx 3{,}35$, os dois menores que 3,68.
+
+### Exemplo 5: onde o logaritmo dividido por x é maior
+
+*Pause e tente.* Qual é o maior valor de $k(x) = \dfrac{\ln x}{x}$ para $x$
+positivo?
+
+A lição anterior, no exercício 14, achou $k'(x) = \dfrac{1 - \ln x}{x^2}$, com
+$k$ crescente em $]0, e[$ e decrescente em $]e, +\infty[$. O ponto crítico
+$x = e$ tem $k'$ positiva antes e negativa depois: máximo local, e global por
+ser o único ponto crítico num domínio sem pontas.
+
+**Resposta.** O maior valor é $k(e) = \dfrac{\ln e}{e} = \dfrac{1}{e} \approx
+0{,}368$, em $x = e \approx 2{,}718$. Não há mínimo: perto de 0 a função
+desce sem limite ($k(0{,}5) \approx -1{,}39$, e piora).
+
+### Exemplo 6: ponto crítico que não é extremo, num intervalo fechado
+
+*Pause e tente.* Ache o máximo e o mínimo de $h(x) = x^4 - 4x^3$ em $[-1, 4]$.
+
+**Candidatos.** $h'(x) = 4x^3 - 12x^2 = 4x^2(x - 3)$: raízes 0 e 3. Com as
+pontas: $-1$, $0$, $3$, $4$.
+
+**Valores.** $h(-1) = 1 + 4 = 5$, $h(0) = 0$, $h(3) = 81 - 108 = -27$,
+$h(4) = 256 - 256 = 0$.
+
+**Comparação.** Máximo global $5$ em $x = -1$; mínimo global $-27$ em $x = 3$.
+
+O ponto crítico $x = 0$ entrou na lista, foi avaliado e **perdeu** a comparação:
+não é máximo nem mínimo global. E também não é local, porque $h'$ é negativa
+dos dois lados de 0. Nada de errado em listá-lo: o roteiro lista candidatos, e
+candidato pode não ganhar. O erro seria não listá-lo.
+
+## 11. Erros comuns
+
+> **Erro 1: esquecer as pontas do intervalo.** Em $f(x) = x^3 - 6x^2 + 9x + 1$
+> no intervalo $[0, 5]$, os pontos críticos são 1 e 3, com valores 5 e 1. Quem
+> compara só esses dois responde “máximo 5”. O máximo é 21, em $x = 5$. A
+> ponta não tem tangente horizontal e não precisa ter: o teorema de Fermat só
+> vale no interior.
+
+> **Erro 2: descartar um ponto crítico onde $f'$ não existe.** Em
+> $\lvert x - 2 \rvert + 1$ a derivada nunca é zero. Quem conclui “sem ponto
+> crítico” perde o mínimo, que está no bico em $x = 2$. Ponto crítico é
+> derivada zero **ou** inexistente.
+
+> **Erro 3: confundir o maior valor com o ponto onde ele ocorre.** “O volume
+> máximo da caixa é 3,924” está errado: 3,924 cm é o **corte**; o volume máximo
+> é 1056,31 cm³. Leia a pergunta: “qual é o maior volume?” pede a saída; “que
+> corte dá o maior volume?” pede a entrada.
+
+> **Erro 4: achar que $f'(a) = 0$ já é máximo ou mínimo.** Em $x^3$ e em
+> $x^4 - 4x^3$, o zero da derivada em $x = 0$ não é extremo. Ponto crítico é
+> candidato; o veredicto vem do sinal de $f'$ dos dois lados ou da comparação
+> dos candidatos.
+
+> **Erro 5: tratar um máximo local como o maior valor de todos.** Na figura da
+> seção 6, o máximo local em $x = -1$ vale 2, e a função chega a 8,125 na ponta.
+> “Local” quer dizer maior que os vizinhos, e só isso.
+
+> **Erro 6: comparar candidatos num intervalo aberto ou infinito.** No custo do
+> exemplo 3, o domínio é $]0, +\infty[$. Não há Weierstrass, e o único
+> candidato, $q = 200$, não tem com quem ser comparado. É o sinal de $C'$ dos
+> dois lados que prova que 200 é mínimo — e o argumento “único ponto crítico,
+> desce antes, sobe depois” é o que estende o local para global.
+
+> **Erro 7: errar o domínio e aceitar um candidato impossível.** A segunda raiz
+> de $V'$, $x \approx 12{,}74$, é um ponto crítico da fórmula, mas não é um
+> corte: não existe caixa com corte maior que 10 cm numa chapa de 20. O domínio
+> do problema vem do contexto, como a lição de [domínio e
+> imagem](../funcoes/dominio-e-imagem) insistiu, e um candidato fora dele não
+> é candidato.
+
+## 12. Perguntas de verificação
+
+1. Qual é a diferença entre máximo local e máximo global? Um ponto pode ser os
+   dois?
+2. Por que o teorema de Fermat exige que o ponto esteja no interior do
+   intervalo?
+3. Por que ponto crítico é candidato e não veredicto? Dê um exemplo.
+4. O que o teste da primeira derivada examina, e o que ele conclui em cada
+   caso?
+5. O que o teorema de Weierstrass garante, e o que ele **não** diz?
+6. No roteiro do intervalo fechado, por que não é preciso montar o quadro de
+   sinais de $f'$?
+7. Em que situações o teste da primeira derivada continua necessário?
+8. Qual é a relação entre a fórmula do vértice e a derivada da parábola?
+9. Por que as pontas do domínio da caixa dão volume zero, e por que isso não
+   as tira da lista de candidatos?
+10. Dois candidatos empatam com o mesmo valor máximo. Qual é a resposta?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Máximo local é o maior valor entre os vizinhos próximos; máximo global é o
+   maior valor do intervalo inteiro. Sim: o mínimo em $x = 1$ da seção 6 é
+   local e global ao mesmo tempo. Todo máximo global no interior é também
+   local; a volta é falsa.
+2. Porque o argumento precisa de um “antes” e um “depois” do ponto: se
+   $f'(a)$ fosse positiva, a função subiria logo depois de $a$; se negativa,
+   subiria logo antes. Numa ponta falta um dos lados, e a função pode ter o
+   maior valor ali com derivada diferente de zero.
+3. Porque o teorema de Fermat vai dos extremos para $f' = 0$, não o contrário.
+   $x^3$ tem $f'(0) = 0$ e não tem máximo nem mínimo em 0: sobe antes e sobe
+   depois.
+4. O sinal de $f'$ à esquerda e à direita do ponto crítico. De positivo para
+   negativo: máximo local. De negativo para positivo: mínimo local. Mesmo
+   sinal dos dois lados: nem um nem outro.
+5. Garante que uma função contínua num intervalo fechado atinge um maior e um
+   menor valor. Não diz onde: quem localiza é o teorema de Fermat, com a lista
+   de candidatos.
+6. Porque, se o máximo existe (Weierstrass) e só pode estar nos candidatos
+   (Fermat), o candidato com o maior valor **é** o máximo. Comparar substitui
+   classificar.
+7. Quando o intervalo é aberto ou infinito, porque aí não há garantia de que o
+   máximo existe e a comparação não prova nada; e quando a pergunta é sobre
+   extremos **locais**, que a comparação global não distingue.
+8. A derivada de $ax^2 + bx + c$ é $2ax + b$, que zera em $x = -\frac{b}{2a}$: o
+   único ponto crítico é o vértice. O sinal de $a$ decide se é mínimo
+   (positivo) ou máximo (negativo), pelo teste da primeira derivada.
+9. Com corte zero não há abas; com corte de 10 cm o lado de 20 cm some. Nos
+   dois casos não há caixa. Mesmo assim elas entram na lista, porque o método
+   não sabe de antemão que valem zero — ele calcula e compara. Em outro
+   problema, a ponta pode ganhar, como na oficina com capacidade 300.
+10. O valor máximo é aquele número, uma vez só. Os pontos de máximo são os dois.
+    A resposta cita o valor e os dois pontos, como no exemplo 1, em que o mínimo
+    1 ocorre em $x = 0$ e em $x = 3$.
+
+</details>
+
+## 13. Exercícios
+
+### 1. Reconhecimento
+
+1. A derivada de uma função é $f'(x) = (x - 1)(x - 3)$. Sem conhecer $f$,
+   classifique cada ponto crítico como máximo local, mínimo local ou nenhum
+   dos dois.
+2. Para $f(x) = x^3 - 9x^2 + 15x$ em $[0, 6]$, liste todos os candidatos a
+   máximo e mínimo globais.
+3. Uma função tem máximo local em $x = a$. A derivada $f'(a)$ é
+   obrigatoriamente zero? Cite um exemplo desta página.
+4. “O mínimo de $f$ em $[0, 3]$ é 7, em $x = 2$.” Qual número é o valor mínimo
+   e qual é o ponto onde ele ocorre?
+
+### 2. Explicação
+
+5. Explique com palavras por que as pontas de um intervalo entram na lista de
+   candidatos mesmo sem tangente horizontal.
+6. Explique por que $x^3$ tem um ponto crítico em 0 que não é máximo nem
+   mínimo, usando o sinal da derivada.
+7. Dê um exemplo de função contínua que não tem máximo, e diga qual condição
+   do teorema de Weierstrass falhou.
+
+### 3. Aplicação direta
+
+8. Ache o máximo e o mínimo globais de $f(x) = x^2 - 4x + 1$ em $[0, 5]$.
+9. Ache o máximo e o mínimo globais de $f(x) = x^3 - 3x^2 + 1$ em $[-1, 3]$.
+10. Ache o máximo e o mínimo globais de $f(x) = x^4 - 2x^2$ em $[-2, 2]$.
+11. Classifique os pontos críticos de $f(x) = 2x^3 + 3x^2 - 12x + 1$ pelo teste
+    da primeira derivada, e dê o valor de $f$ em cada um.
+
+### 4. Variação
+
+12. Ache o máximo e o mínimo globais de $g(x) = \lvert x^2 - 4 \rvert$ em
+    $[-3, 3]$. Diga quais candidatos vêm de $g' = 0$ e quais de $g'$
+    inexistente.
+13. A função $h(x) = x + \dfrac{1}{x}$, para $x$ positivo, tem mínimo? Tem
+    máximo? Justifique com o sinal de $h'$.
+14. Ache o máximo e o mínimo globais de $m(x) = x\,e^{-x}$ em $[0, 3]$.
+15. Ache o máximo e o mínimo globais de $p(x) = x^{2/3}$ em $[-1, 8]$.
+
+### 5. Problema misto
+
+16. A receita diária de um estacionamento que cobra $p$ reais pela diária é
+    $R(p) = 200p - 4p^2$, para $p$ entre 0 e 50. Qual preço dá a maior receita,
+    e qual é ela? Por que as pontas dão receita zero?
+17. A população de uma colônia de bactérias, em milhares, é
+    $N(t) = t^3 - 6t^2 + 9t + 5$ para $t$ entre 0 e 5 horas. Qual é a maior
+    população no período, e quando ocorre? E a menor?
+18. O custo de produzir $x$ peças é $C(x) = 0{,}1x^2 + 20x + 4000$ reais, e o
+    custo médio por peça é $M(x) = \dfrac{C(x)}{x}$. Para que produção o custo
+    médio é mínimo, e quanto vale? Por que a comparação de candidatos não é suficiente
+    aqui?
+19. A altura de um projétil é $s(t) = -5t^2 + 30t + 2$ metros, para $t$ entre 0
+    e 6 segundos. Qual é a altura máxima e a mínima nesse período, e em que
+    instantes ocorrem?
+
+### 6. Justificativa
+
+20. Mostre que, se $f$ tem mínimo local num ponto $a$ do interior e $f'(a)$
+    existe, então $f'(a) = 0$. Adapte o argumento da seção 7.
+21. Mostre que $f(x) = ax^2 + bx + c$, com $a$ positivo, tem mínimo global em
+    $x = -\frac{b}{2a}$ e não tem máximo em toda a reta.
+22. No exemplo 3, o custo $C(q) = \dfrac{A}{q} + Bq$ tem mínimo onde as duas
+    parcelas são iguais. Mostre que isso vale para quaisquer $A$ e $B$
+    positivos.
+23. Dê um exemplo de função contínua em $[0, 1]$ que tem máximo global sem ter
+    nenhum ponto com derivada zero. Onde está o máximo?
+24. Por que a lista de candidatos precisa incluir os pontos onde $f'$ não
+    existe? Use $\lvert x \rvert$ em $[-1, 1]$ para mostrar o que aconteceria se
+    a lista tivesse só as raízes de $f'$.
+
+<details>
+<summary>Dica para o exercício 12</summary>
+
+Escreva $g$ sem o módulo, por trechos: entre $-2$ e $2$ a expressão $x^2 - 4$
+é negativa, então $g(x) = 4 - x^2$ ali; fora, $g(x) = x^2 - 4$. Derive cada
+trecho e olhe as emendas em $\pm 2$.
+
+</details>
+
+<details>
+<summary>Dica para o exercício 18</summary>
+
+Escreva $M(x) = 0{,}1x + 20 + \dfrac{4000}{x}$ antes de derivar. O domínio é
+$x$ positivo, sem ponta direita.
+
+</details>
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Pontos críticos 1 e 3. Quadro de $(x-1)(x-3)$: positivo, negativo, positivo.
+   Em 1 o sinal vai de positivo para negativo: **máximo local**. Em 3, de
+   negativo para positivo: **mínimo local**.
+2. $f'(x) = 3x^2 - 18x + 15 = 3(x-1)(x-5)$: pontos críticos 1 e 5, ambos em
+   $]0, 6[$. Candidatos: $0$, $1$, $5$, $6$. (Valores, se quiser conferir: 0,
+   7, $-25$, $-18$; máximo 7 em $x = 1$, mínimo $-25$ em $x = 5$.)
+3. Não. Só quando $a$ está no interior e $f'(a)$ existe. Em
+   $\lvert x - 2 \rvert + 1$ o mínimo está no bico, onde a derivada não existe;
+   na figura da seção 6 o máximo global está na ponta $x = 2{,}5$, onde a
+   derivada é $f'(2{,}5) = 15{,}75$.
+4. O valor mínimo é 7 (uma saída); o ponto onde ocorre é $x = 2$ (uma
+   entrada).
+5. Porque o argumento que obriga $f' = 0$ num extremo usa os dois lados do
+   ponto, e a ponta só tem um. A função pode chegar à ponta ainda subindo e
+   ter ali o maior valor do intervalo. Sem examiná-la, o máximo pode passar
+   despercebido.
+6. $f'(x) = 3x^2$ é positiva à esquerda de 0 e positiva à direita. Sem troca de
+   sinal, a função sobe, para um instante e continua subindo; nenhum vizinho
+   fica abaixo à direita nem acima à esquerda, então 0 não é máximo nem mínimo.
+7. $\frac{1}{x}$ em $]0, 1]$: contínua, mas o intervalo é aberto em 0, e os
+   valores crescem sem limite perto de 0. Falhou “intervalo fechado”. Outro:
+   $f(x) = x$ em $]0, 1[$, sem máximo nem mínimo, pelo mesmo motivo.
+8. $f'(x) = 2x - 4$, crítico em 2. Candidatos $0$, $2$, $5$ com valores $1$,
+   $-3$, $6$. Máximo global $6$ em $x = 5$; mínimo global $-3$ em $x = 2$.
+9. $f'(x) = 3x^2 - 6x = 3x(x-2)$, críticos 0 e 2. Candidatos $-1$, $0$, $2$,
+   $3$ com valores $-3$, $1$, $-3$, $1$. Máximo global $1$ em $x = 0$ **e**
+   $x = 3$; mínimo global $-3$ em $x = -1$ **e** $x = 2$. Dois empates. Se
+   você respondeu um ponto só para cada, releia a definição: o valor é único,
+   os pontos podem ser vários.
+10. $f'(x) = 4x^3 - 4x = 4x(x-1)(x+1)$, críticos $-1$, 0, 1. Candidatos $-2$,
+    $-1$, $0$, $1$, $2$ com valores $8$, $-1$, $0$, $-1$, $8$. Máximo global
+    $8$ em $x = \pm 2$; mínimo global $-1$ em $x = \pm 1$. O ponto crítico 0,
+    com valor 0, é máximo local (a função desce dos dois lados dele) e não
+    ganha a comparação global.
+11. $f'(x) = 6x^2 + 6x - 12 = 6(x+2)(x-1)$, críticos $-2$ e 1. Testes:
+    $f'(-3) = 24$, $f'(0) = -12$, $f'(2) = 24$. Em $-2$, positivo para
+    negativo: máximo local, $f(-2) = 21$. Em 1, negativo para positivo: mínimo
+    local, $f(1) = -6$.
+12. Entre $-2$ e $2$, $g(x) = 4 - x^2$ e $g'(x) = -2x$, zero em $x = 0$. Fora,
+    $g(x) = x^2 - 4$ e $g'(x) = 2x$, nunca zero em $[-3, -2[$ nem em $]2, 3]$.
+    Em $x = 2$ e em $x = -2$, os dois lados dão derivadas $-4$ e $4$: bicos,
+    $g'$ não existe. Candidatos: $0$ (de $g' = 0$), $\pm 2$ (de $g'$ inexistente),
+    $\pm 3$ (pontas). Valores: $g(0) = 4$, $g(\pm 2) = 0$, $g(\pm 3) = 5$.
+    Máximo global $5$ em $x = \pm 3$; mínimo global $0$ em $x = \pm 2$. O
+    ponto 0 é máximo local com valor 4. Se você achou mínimo em 0, derivou
+    $x^2 - 4$ no trecho errado.
+13. $h'(x) = 1 - \frac{1}{x^2}$, zero em $x = 1$ (a raiz $-1$ está fora do
+    domínio). Em $x = 0{,}5$: $h' = 1 - 4 = -3$, negativo; em $x = 2$:
+    $h' = 1 - 0{,}25 = 0{,}75$, positivo. Mínimo local em 1, com $h(1) = 2$;
+    global porque é o único crítico, desce antes e sobe depois. **Não** tem
+    máximo: perto de 0 a parcela $\frac{1}{x}$ cresce sem limite, e para $x$
+    grande a parcela $x$ cresce sem limite. Confira: $h(0{,}5) = 2{,}5$ e
+    $h(2) = 2{,}5$, os dois acima de 2.
+14. $m'(x) = e^{-x}(1 - x)$, zero em $x = 1$. Candidatos $0$, $1$, $3$ com
+    valores $0$, $e^{-1} \approx 0{,}368$, $3e^{-3} \approx 0{,}149$. Máximo
+    global $\approx 0{,}368$ em $x = 1$; mínimo global $0$ em $x = 0$.
+15. $p'(x) = \frac{2}{3\sqrt[3]{x}}$, nunca zero e inexistente em $x = 0$, que
+    está no domínio. Candidatos $-1$, $0$, $8$ com valores $1$, $0$, $4$.
+    Máximo global $4$ em $x = 8$; mínimo global $0$ em $x = 0$, no bico. Se
+    você não listou o 0, esqueceu a segunda metade da definição de ponto
+    crítico.
+16. $R'(p) = 200 - 8p$, zero em $p = 25$. Candidatos $0$, $25$, $50$ com
+    receitas $0$, $2500$, $0$. Maior receita **R\$ 2 500**, com diária de
+    **R\$ 25**. As pontas dão zero porque com preço zero não entra dinheiro e,
+    pelo modelo, com preço 50 ninguém estaciona ($200p - 4p^2 = 4p(50 - p)$
+    zera em 50). É o vértice da parábola, obtido por $R' = 0$.
+17. $N'(t) = 3(t-1)(t-3)$, críticos 1 e 3. Candidatos $0$, $1$, $3$, $5$ com
+    valores $5$, $9$, $5$, $25$ mil. Maior população **25 mil**, em $t = 5$ h —
+    a ponta do período. Menor população **5 mil**, em $t = 0$ **e** em
+    $t = 3$ h. O máximo local em $t = 1$ (9 mil) não é o maior do período.
+18. $M(x) = 0{,}1x + 20 + \frac{4000}{x}$, com $M'(x) = 0{,}1 - \frac{4000}{x^2}$,
+    zero quando $x^2 = 40000$, isto é, $x = 200$. Em $x = 100$: $M' = 0{,}1 -
+    0{,}4 = -0{,}3$, negativo; em $x = 300$: $M' = 0{,}1 - 0{,}044 = 0{,}056$,
+    positivo. Mínimo em **200 peças**, com custo médio
+    $M(200) = 20 + 20 + 20 = 60$ reais por peça. A comparação não é suficiente porque
+    o domínio, $x$ positivo, não é fechado nem limitado: não há Weierstrass, e
+    é o sinal de $M'$ (único crítico, desce antes, sobe depois) que prova o
+    mínimo global. Confira: $M(100) = 70$ e $M(400) = 70$.
+19. $s'(t) = -10t + 30$, zero em $t = 3$. Candidatos $0$, $3$, $6$ com alturas
+    $2$, $47$, $2$ m. Altura máxima **47 m** aos 3 s; mínima **2 m**, aos 0 s e
+    aos 6 s (empate: ele parte e volta à mesma altura).
+20. Perto de $a$, $f(a+h) \ge f(a)$ para todo $h$ pequeno, positivo ou
+    negativo, porque $a$ é mínimo local. Então o numerador do quociente
+    $\frac{f(a+h) - f(a)}{h}$ é $\ge 0$ sempre. Para $h$ positivo, o
+    quociente é $\ge 0$; para $h$ negativo, o denominador é negativo e o
+    quociente é $\le 0$. O limite do quociente pela direita é $\ge 0$, e pela
+    esquerda é $\le 0$. Como $f'(a)$ existe, os dois limites laterais são o
+    mesmo número, que precisa ser ao mesmo tempo $\ge 0$ e $\le 0$. Logo
+    $f'(a) = 0$. Para máximo local o numerador é $\le 0$ e os sinais se
+    invertem, com a mesma conclusão.
+21. $f'(x) = 2ax + b$, único zero em $x_v = -\frac{b}{2a}$. Com $a$ positivo,
+    $2ax + b$ é negativa à esquerda de $x_v$ e positiva à direita: mínimo
+    local. Como é o único ponto crítico, $f$ decresce em toda a semirreta à
+    esquerda e cresce em toda a semirreta à direita, e nenhum valor fica
+    abaixo de $f(x_v)$: mínimo global. Não há máximo: para $x$ grande, $ax^2$
+    domina e cresce sem limite, então nenhum valor é o maior. A reta não é um
+    intervalo fechado, e Weierstrass não se aplica — de fato, o máximo não
+    existe.
+22. $C'(q) = -\frac{A}{q^2} + B$, zero quando $\frac{A}{q^2} = B$, isto é,
+    $q^2 = \frac{A}{B}$. Nesse $q$, a primeira parcela vale
+    $\frac{A}{q} = \frac{A}{q^2} \times q = Bq$, que é exatamente a segunda
+    parcela. O sinal de $C'$ (negativo antes, positivo depois, porque
+    $\frac{A}{q^2}$ decresce) faz de $q$ um mínimo. No exemplo, $A = 60000$ e
+    $B = 1{,}5$: $q = 200$ e as parcelas valem 300 cada.
+23. $f(x) = x$ em $[0, 1]$: $f'(x) = 1$ nunca zera, e o máximo global é
+    $f(1) = 1$, na ponta direita. Ou $\lvert x - 0{,}5 \rvert$, com máximo
+    $0{,}5$ nas duas pontas e mínimo no bico. Contínua em intervalo fechado,
+    Weierstrass garante o máximo; Fermat diz que ele só pode estar numa ponta
+    ou num ponto sem derivada — e está.
+24. Em $[-1, 1]$, $\lvert x \rvert$ tem derivada $-1$ à esquerda de 0, $1$ à
+    direita e inexistente em 0. Uma lista só com raízes de $f'$ ficaria vazia,
+    e os candidatos seriam só as pontas, com valor 1 nas duas. A conclusão
+    “mínimo 1” estaria errada: o mínimo é 0, em $x = 0$. O teorema de Fermat
+    só obriga $f' = 0$ **onde a derivada existe**; onde ela não existe, o ponto
+    pode ser extremo sem avisar, e por isso entra na lista.
+
+</details>
+
+## 14. Revisão curta
+
+- Os **candidatos** a máximo e mínimo são os pontos críticos (derivada zero ou
+  inexistente) e as pontas do intervalo. É o teorema de Fermat: fora deles não
+  há extremo.
+- Ponto crítico é candidato, não veredicto. O **teste da primeira derivada**
+  decide pelo sinal de $f'$ dos dois lados: positivo para negativo é máximo;
+  negativo para positivo é mínimo; sem troca, nenhum dos dois.
+- **Valor** e **ponto** são respostas diferentes: o volume máximo é 1056,31
+  cm³; o corte que o produz mede 3,924 cm.
+- Num intervalo **fechado** com $f$ contínua, o teorema de **Weierstrass**
+  garante que o máximo e o mínimo existem; então o roteiro é calcular $f$ nos
+  candidatos e comparar. Em intervalo aberto ou infinito, o sinal de $f'$ é o
+  que decide, e o extremo pode não existir.
+- Máximo **local** é o maior entre os vizinhos; máximo **global**, o maior de
+  todos. A ponta pode vencer sem tangente horizontal.
+- O vértice da parábola é o ponto crítico de $ax^2 + bx + c$, e o sinal de $a$
+  decide se é máximo ou mínimo.
+
+Antes de avançar, verifique se você consegue: listar os candidatos de um
+polinômio num intervalo fechado sem esquecer as pontas; classificar um ponto
+crítico pelo sinal da derivada dos dois lados; e explicar por que o mínimo de
+$\lvert x \rvert$ não aparece entre as raízes de $f'$.
+
+A lição seguinte, [problemas de otimização](./problemas-de-otimizacao), começa
+um passo antes desta: a função ainda não está pronta, e é preciso montá-la a
+partir de uma situação com uma restrição. Depois de montada, o que decide é
+exatamente o roteiro desta página. E a lição do [teorema do valor
+médio](./teorema-do-valor-medio) paga a dívida que a lição anterior deixou: a
+prova de que sinal positivo da derivada num intervalo inteiro obriga a função a
+subir nele.

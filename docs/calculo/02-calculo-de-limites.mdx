@@ -1,0 +1,1177 @@
+---
+title: "Calculando limites: reescrever a fração sem mudar o valor"
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Calculando limites: reescrever a fração sem mudar o valor
+
+## 1. Problema motivador: três contas que travam no mesmo lugar
+
+A lição de [taxa média de variação](../funcoes/taxa-media-de-variacao) terminou
+com uma pergunta e um método incompleto. A pergunta era: qual é a taxa **num
+instante**, e não num trecho? O método era: escrever o quociente de diferenças
+$\frac{f(a+h)-f(a)}{h}$ e observar de que número ele se aproxima quando $h$
+encolhe. A [lição anterior](./limite-de-uma-funcao) deu nome a esse número:
+**limite**.
+
+Só que observar uma tabela é lento, e uma tabela nunca entrega o valor exato.
+Ela sugere 4; não prova que é 4. Esta lição troca a tabela por conta.
+
+Veja três situações concretas, cada uma com a sua fração.
+
+**A posição do carro.** O veículo de teste tem posição $s(t)=t^2$ metros. A
+velocidade no instante $t=2$ é o limite de
+
+$$
+\frac{(2+h)^2-4}{h}.
+$$
+
+**O lado de uma placa quadrada.** Uma placa de área $A$ cm² tem lado
+$\ell(A)=\sqrt{A}$ cm. Quando a área é 4 cm² e cresce um pouco, a que ritmo o
+lado cresce? É o limite de
+
+$$
+\frac{\sqrt{4+h}-2}{h}.
+$$
+
+**O tempo de um lote.** Uma impressora que imprime $v$ lotes por hora leva
+$T(v)=\frac{1}{v}$ hora por lote. Se ela imprime 2 lotes por hora e a
+velocidade sobe um pouco, a que ritmo o tempo por lote cai? É o limite de
+
+$$
+\frac{\dfrac{1}{2+h}-\dfrac{1}{2}}{h}.
+$$
+
+As três frações têm o mesmo defeito. Substituir $h=0$ dá zero em cima e zero
+embaixo:
+
+| Fração | Numerador em $h=0$ | Denominador em $h=0$ |
+|---|---:|---:|
+| $\dfrac{(2+h)^2-4}{h}$ | $4-4=0$ | $0$ |
+| $\dfrac{\sqrt{4+h}-2}{h}$ | $2-2=0$ | $0$ |
+| $\dfrac{\frac{1}{2+h}-\frac12}{h}$ | $\frac12-\frac12=0$ | $0$ |
+
+E $\frac{0}{0}$ não é um número. Uma tabela mostra para onde cada fração vai:
+
+| $h$ | $\dfrac{(2+h)^2-4}{h}$ | $\dfrac{\sqrt{4+h}-2}{h}$ | $\dfrac{\frac{1}{2+h}-\frac12}{h}$ |
+|---:|---:|---:|---:|
+| $0{,}1$ | $4{,}1$ | $0{,}24846$ | $-0{,}23810$ |
+| $0{,}01$ | $4{,}01$ | $0{,}24984$ | $-0{,}24876$ |
+| $0{,}001$ | $4{,}001$ | $0{,}24998$ | $-0{,}24988$ |
+| $-0{,}001$ | $3{,}999$ | $0{,}25002$ | $-0{,}25013$ |
+| $-0{,}01$ | $3{,}99$ | $0{,}25016$ | $-0{,}25126$ |
+
+A primeira coluna se aproxima de 4, e a lição de taxa média já tinha demonstrado isso
+fatorando. A segunda parece ir para $0{,}25$ e a terceira para $-0{,}25$. Mas
+"parece" não serve: o lado da placa cresce a exatamente $\frac14$ cm por cm²,
+ou a $0{,}2499$? A tabela não decide.
+
+A pergunta desta lição é:
+
+> Quando a substituição direta dá $\frac{0}{0}$, como **calcular** o limite,
+> com exatidão e sem tabela?
+
+A resposta tem uma ideia só: reescrever a fração de um jeito que valha o mesmo
+para todo $h \neq 0$, mas que não trave em $h=0$. E as três reescritas que
+resolvem quase todos os casos já foram ensinadas no capítulo de álgebra. Esta
+lição as traz de volta com um uso novo.
+
+## 2. Mapa das ideias
+
+- **substituição direta**: calcular $\lim_{x \to a} f(x)$ trocando $x$ por
+  $a$. Funciona quando $f$ é polinômio, ou fração de polinômios com
+  denominador diferente de zero em $a$;
+- **propriedades do limite**: o limite de uma soma é a soma dos limites, o de
+  um produto é o produto, o de um quociente é o quociente — desde que o
+  limite do denominador não seja zero;
+- **indeterminação $\frac{0}{0}$**: o que a substituição devolve quando
+  numerador e denominador zeram juntos. Não é um número, não é "zero", não é
+  "não existe": é um aviso de que a forma atual da fração não responde;
+- **reescrever sem mudar o valor**: trocar a fração por outra que é igual a
+  ela em todo ponto **exceto talvez em $a$**. Como o limite não olha para
+  $a$, as duas frações têm o mesmo limite;
+- as três reescritas: **fatorar e cancelar**, **multiplicar pelo
+  conjugado** e **somar as frações do numerador** com denominador comum.
+
+## 3. Para que serve
+
+- **toda derivada calculada pela definição** é um limite do tipo
+  $\frac{0}{0}$. A lição de [derivada](./a-derivada) vai usar as três
+  reescritas desta página em cada função que derivar;
+- decidir se um ponto de uma função racional é **buraco** ou **assíntota**,
+  agora com o limite escrito;
+- obter o valor exato de uma taxa instantânea, e não uma aproximação por
+  tabela;
+- reconhecer que $\frac{0}{0}$ é uma pergunta em aberto, e não uma resposta —
+  o que evita dois erros que aparecem em toda planilha e todo programa que
+  divide grandezas pequenas.
+
+Dentro da matemática, esta lição fecha a promessa da [Revisão
+geral](../revisao-geral): ela dizia que o conjugado da racionalização
+"reaparece quase imediatamente" no cálculo. É aqui.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [limite de uma função](./limite-de-uma-funcao): o que é
+$\lim_{x \to a} f(x) = L$?** É dizer que $f(x)$ fica tão perto de $L$ quanto se
+queira, desde que $x$ fique perto o bastante de $a$ — sem que $x$ precise ser
+igual a $a$. O valor $f(a)$ pode nem existir. Foi assim com
+$\frac{x^2-4}{x-2}$: a função não existe em 2, e o limite ali é 4.
+
+**2. De [agrupamento e trinômios](../algebra/agrupamento-e-trinomios): como se
+fatora $x^2-5x+6$?** Procurando dois números de soma $-5$ e produto 6. São
+$-2$ e $-3$, então $x^2-5x+6=(x-2)(x-3)$. Confira multiplicando de volta:
+$x^2-3x-2x+6$.
+
+**3. De [divisão de polinômios](../funcoes/divisao-de-polinomios): se $a$ é
+raiz de um polinômio, o que se sabe sobre ele?** Que $(x-a)$ é um fator dele —
+é o teorema do fator. E o dispositivo de Briot-Ruffini entrega o outro fator
+numa linha. Para $x^3-8$ dividido por $(x-2)$, os coeficientes são
+$1,\ 0,\ 0,\ -8$ (o zero dos graus ausentes precisa entrar):
+
+$$
+\begin{array}{r|rrrr}
+2 & 1 & 0 & 0 & -8 \\
+\hline
+ & 1 & 2 & 4 & \boxed{0}
+\end{array}
+$$
+
+Resto zero e quociente $x^2+2x+4$. Logo $x^3-8=(x-2)(x^2+2x+4)$.
+
+**4. De [racionalização](../algebra/racionalizacao): o que faz o conjugado?**
+Multiplica uma soma com raiz pela mesma soma com o sinal do meio trocado, e o
+produto notável $(a+b)(a-b)=a^2-b^2$ apaga a raiz. O exemplo 5 daquela lição já
+fez exatamente o que faremos aqui: reescreveu $\frac{\sqrt{x+2}-\sqrt2}{x}$
+como $\frac{1}{\sqrt{x+2}+\sqrt2}$, e a forma nova tinha valor em $x=0$
+enquanto a original dava $\frac{0}{0}$.
+
+**5. De [operações com frações
+algébricas](../algebra/operacoes-com-fracoes-algebricas): como se calcula
+$\frac{1}{x}-\frac{1}{x+1}$?** Com o denominador comum $x(x+1)$:
+$\frac{(x+1)-x}{x(x+1)}=\frac{1}{x(x+1)}$. Guarde o padrão: a subtração de
+duas frações do tipo $\frac{1}{\square}$ produz um numerador que é a diferença
+dos denominadores, com a ordem trocada.
+
+**6. De [funções racionais](../funcoes/funcoes-racionais): quando um fator do
+denominador se cancela com o numerador, o que aparece no gráfico?** Um
+**buraco**, e não uma assíntota. A curva de $\frac{x^2-4}{x-2}$ é a reta
+$y=x+2$ com um ponto faltando em $x=2$.
+
+O item 1 é a base de tudo o que vem. Os itens 2 a 5 são as ferramentas. O item
+6 é o desenho que mostra por que as ferramentas funcionam.
+
+## 5. Intuição: o limite não enxerga o ponto, só a vizinhança
+
+Pense num sensor de temperatura que registra uma leitura por segundo. Num
+certo instante, a leitura falhou: o registro ficou em branco. Você quer saber
+que temperatura fazia naquele segundo.
+
+Você olha as leituras dos segundos anteriores: 24,1 °C, 24,3, 24,5. E as dos
+seguintes: 24,9, 24,7. Ninguém tem dúvida de que a leitura perdida seria algo
+perto de 24,6. **Você reconstruiu o valor sem ter o valor**, olhando só os
+vizinhos.
+
+Agora imagine que o registro daquele segundo não estivesse em branco, mas com
+um erro grosseiro: 80 °C. Isso mudaria sua conclusão sobre a temperatura
+naquele instante? Não. Você continuaria dizendo "perto de 24,6", e trataria o
+80 como um defeito do sensor.
+
+O limite funciona como esse raciocínio. Ele olha os valores de $f(x)$ para $x$
+perto de $a$ e diz para onde eles apontam. O que acontece exatamente em $x=a$
+— se a função não existe ali, ou se vale outra coisa — **não entra na
+conta**.
+
+Isso tem uma consequência prática, e ela é a lição inteira. Se duas funções
+dão os mesmos valores em todo $x$ perto de $a$, com a única diferença
+possível no próprio $a$, então elas apontam para o mesmo lugar. **O limite das
+duas é o mesmo.**
+
+Então, quando uma fração trava em $a$, não precisamos calcular o limite
+**dela**. Podemos trocá-la por outra função que coincide com ela fora de $a$ e
+que não trava. O limite da segunda é o limite da primeira.
+
+## 6. Modelo visual: a mesma reta, com e sem buraco
+
+Tome a fração do carro, agora como função de $h$:
+
+$$
+g(h)=\frac{(2+h)^2-4}{h}.
+$$
+
+A lição de taxa média já mostrou que, para todo $h \neq 0$, essa fração é
+igual a $4+h$. O gráfico de $g$ é, portanto, a reta $y=4+h$ — com um ponto
+faltando em $h=0$, porque ali $g$ não existe.
+
+<CartesianPlane
+  xMin={-3}
+  xMax={3}
+  yMin={0}
+  yMax={8}
+  xUnit={54}
+  yUnit={36}
+  functions={[
+    {f: (h) => 4 + h, domain: [-3, -0.06], tone: 1},
+    {f: (h) => 4 + h, domain: [0.06, 3], tone: 1},
+  ]}
+  points={[{at: [0, 4], label: '(0,\\ 4)', tone: 2, dx: 30, dy: 20, open: true}]}
+  axisLabels={['h', 'y']}
+  caption="O gráfico de g(h) = ((2+h)² − 4)/h é a reta y = 4 + h com um buraco em h = 0. A reta inteira, sem o buraco, é o gráfico de 4 + h."
+/>
+
+Agora compare as duas funções, $g(h)$ e $4+h$:
+
+| $h$ | $g(h)=\dfrac{(2+h)^2-4}{h}$ | $4+h$ |
+|---:|---:|---:|
+| $1$ | $5$ | $5$ |
+| $0{,}1$ | $4{,}1$ | $4{,}1$ |
+| $0{,}001$ | $4{,}001$ | $4{,}001$ |
+| $0$ | **não existe** | $4$ |
+| $-0{,}001$ | $3{,}999$ | $3{,}999$ |
+| $-1$ | $3$ | $3$ |
+
+Elas coincidem em toda linha, menos na do zero. E a linha do zero é
+exatamente a que o limite ignora. Por isso:
+
+$$
+\lim_{h \to 0}\frac{(2+h)^2-4}{h}
+=\lim_{h \to 0}(4+h)
+=4.
+$$
+
+O segundo limite sai por substituição direta: $4+h$ é um polinômio, não trava
+em lugar nenhum, e em $h=0$ vale 4.
+
+Olhe o que a figura diz. A reta com buraco e a reta inteira têm o **mesmo
+desenho** fora do ponto $h=0$. Perguntar "para onde a reta com buraco aponta
+quando $h$ se aproxima de zero" é perguntar "que altura tem a reta inteira em
+$h=0$". A resposta é a altura do buraco: 4.
+
+## 7. Ponte para a formalização: iguais fora do ponto, mesmo limite
+
+O que a figura mostrou vale em geral, e merece ser escrito:
+
+> Se $f(x)=g(x)$ para todo $x$ perto de $a$, com a única exceção possível do
+> próprio $x=a$, então
+> $$
+> \lim_{x \to a} f(x)=\lim_{x \to a} g(x).
+> $$
+
+Por que isso é legítimo? Porque o limite é definido pelos valores de $f$ em
+$x \neq a$. A definição da lição anterior fala de $x$ **perto** de $a$, e
+"perto" exclui o próprio ponto. Se $f$ e $g$ têm os mesmos valores em todos os
+$x$ que a definição consulta, a definição não tem como distingui-las.
+
+**Exemplo.** $f(x)=\frac{x^2-4}{x-2}$ e $g(x)=x+2$ coincidem em todo
+$x \neq 2$. Então os limites em 2 são iguais, e o de $g$ é 4 por substituição.
+
+**Contraexemplo.** $f(x)=\frac{x^2-4}{x-2}$ e $g(x)=x+3$ **não** coincidem fora
+de 2: em $x=3$, a primeira vale 5 e a segunda vale 6. A regra não se aplica, e
+de fato os limites em 2 são diferentes: 4 e 5.
+
+O contraexemplo mostra o que é preciso conferir antes de trocar uma função por
+outra: a igualdade tem de valer em **toda** a vizinhança, não só em um ponto
+conveniente. As três reescritas da seção 10 garantem isso, porque cada uma é
+uma identidade algébrica válida para todo $x \neq a$.
+
+## 8. Substituição direta e as propriedades do limite
+
+Antes das frações que travam, vale saber quando a conta é simples.
+
+### Polinômios: trocar $x$ por $a$
+
+Para um polinômio $p(x)$, o limite em qualquer ponto é o valor do polinômio
+ali:
+
+$$
+\lim_{x \to a} p(x)=p(a).
+$$
+
+**Exemplo.** $\lim_{x \to 5}(2x^2-3x+1)=2 \times 25-15+1=36$.
+
+Por que isso funciona? Porque um polinômio não tem salto nem buraco: mudar $x$
+um pouco muda $x^2$ um pouco, muda $3x$ um pouco, e a soma muda um pouco. Se
+$x$ está perto de 5, então $2x^2-3x+1$ está perto de 36. É a própria definição
+de limite sendo satisfeita, e a lição de [continuidade](./continuidade) vai
+dar a esse comportamento um nome.
+
+### Frações de polinômios: trocar $x$ por $a$, se o denominador não zerar
+
+$$
+\lim_{x \to a}\frac{p(x)}{q(x)}=\frac{p(a)}{q(a)},
+\qquad \text{desde que } q(a) \neq 0.
+$$
+
+**Exemplo.** $\lim_{x \to 2}\dfrac{x+1}{x-1}=\dfrac{3}{1}=3$. O denominador em
+$x=2$ vale 1, não zero, então a substituição responde.
+
+**Contraexemplo.** $\lim_{x \to 2}\dfrac{x^2-4}{x-2}$ **não** é
+$\dfrac{0}{0}$, porque $\dfrac{0}{0}$ não é um número. O denominador zera em
+2, a condição $q(a) \neq 0$ falha, e a substituição direta não se aplica. É o
+caso das seções 9 e 10.
+
+### As propriedades
+
+A substituição direta é consequência de cinco propriedades. Supondo que
+$\lim_{x \to a} f(x)=L$ e $\lim_{x \to a} g(x)=M$ existam:
+
+| Propriedade | Escrita |
+|---|---|
+| soma e diferença | $\lim_{x \to a}\big(f(x) \pm g(x)\big)=L \pm M$ |
+| constante multiplicando | $\lim_{x \to a} c \times f(x)=c \times L$ |
+| produto | $\lim_{x \to a} f(x) \times g(x)=L \times M$ |
+| quociente | $\lim_{x \to a}\dfrac{f(x)}{g(x)}=\dfrac{L}{M}$, **se** $M \neq 0$ |
+| potência e raiz | $\lim_{x \to a}\big(f(x)\big)^n=L^n$ e $\lim_{x \to a}\sqrt{f(x)}=\sqrt{L}$, com $L \ge 0$ na raiz |
+
+Leia-as como "o limite atravessa a operação". Se $f$ aponta para $L$ e $g$
+aponta para $M$, então $f+g$ aponta para $L+M$: somar duas quantidades que
+estão perto de $L$ e de $M$ dá uma quantidade perto de $L+M$.
+
+**Exemplo, propriedade por propriedade.** Para $\lim_{x \to 3}(x^2+2x)$:
+
+$$
+\lim_{x \to 3}(x^2+2x)
+=\lim_{x \to 3}x^2+\lim_{x \to 3}2x
+=\Big(\lim_{x \to 3}x\Big)^2+2\lim_{x \to 3}x
+=9+6=15.
+$$
+
+Cada igualdade usou uma linha da tabela, e no fim sobrou o limite mais
+simples de todos, $\lim_{x \to 3}x=3$. Na prática ninguém escreve essa cadeia;
+escreve-se $3^2+2 \times 3=15$ direto. Mas é a cadeia que autoriza o atalho.
+
+**Contraexemplo da propriedade do quociente.** Ela exige $M \neq 0$. Em
+$\lim_{x \to 2}\frac{x^2-4}{x-2}$, o denominador tem limite $M=0$, e a
+propriedade se recusa a responder. Não é que o limite não exista — ele existe
+e vale 4. É que **esta ferramenta** não o encontra.
+
+## 9. A indeterminação $\frac{0}{0}$
+
+Quando a substituição direta produz $\frac{0}{0}$, dizemos que o limite está
+**indeterminado** naquela forma. A palavra é precisa: **não determinado
+ainda**. Ela não diz que o limite é zero, não diz que é um, e não diz que não
+existe. Diz que a forma atual da fração não permite decidir.
+
+Veja quatro frações que dão $\frac{0}{0}$ em $x=0$ e têm limites
+completamente diferentes:
+
+| Fração | Igual a, para $x \neq 0$ | Limite em 0 |
+|---|---|---:|
+| $\dfrac{x}{x}$ | $1$ | $1$ |
+| $\dfrac{5x}{x}$ | $5$ | $5$ |
+| $\dfrac{x^2}{x}$ | $x$ | $0$ |
+| $\dfrac{x}{x^2}$ | $\dfrac{1}{x}$ | não existe como número |
+
+A mesma forma $\frac{0}{0}$ escondeu 1, 5, 0 e um valor que cresce sem parar.
+Por isso $\frac{0}{0}$ não pode ter um valor fixo: se tivesse, as quatro
+linhas dariam a mesma resposta.
+
+> **$\dfrac{0}{0}$ é uma pergunta, não uma resposta.** A resposta está na
+> forma reescrita da fração.
+
+Uma distinção importante antes de seguir. Se o denominador zera e o numerador
+**não** zera — por exemplo $\lim_{x \to 3}\frac{x+3}{x^2-9}$, em que a
+substituição dá $\frac{6}{0}$ —, **não** é indeterminação. Dividir um número
+diferente de zero por algo cada vez menor produz valores cada vez maiores, e
+isso tem outro nome e outra lição: [limites infinitos](./limites-infinitos-e-no-infinito).
+Nesta página, o caso é sempre zero sobre zero.
+
+## 10. As três reescritas
+
+Cada reescrita responde às mesmas perguntas: o que queremos, por que a forma
+atual não serve, qual propriedade já estudada permite a mudança, o que muda
+na escrita, o que permanece na quantidade, e como conferir.
+
+### 10.1 Fatorar e cancelar
+
+$$
+\lim_{x \to 3}\frac{x^2-x-6}{x-3}.
+$$
+
+**O que queremos.** Um número: o valor para o qual a fração aponta quando $x$
+se aproxima de 3.
+
+**Por que a forma atual não serve.** Substituir $x=3$ dá $\frac{9-3-6}{0}=\frac{0}{0}$.
+
+**Qual propriedade permite a mudança.** O numerador zera em 3, então 3 é raiz
+dele. Pelo teorema do fator, $(x-3)$ é um fator do numerador. Fatorando pela
+regra da soma e do produto — dois números de soma $-1$ e produto $-6$ são
+$-3$ e $2$:
+
+$$
+x^2-x-6=(x-3)(x+2).
+$$
+
+Agora $(x-3)$ aparece em cima e embaixo, e é **fator** nos dois lugares. Um
+fator comum ao numerador e ao denominador pode ser cancelado, porque
+$\frac{x-3}{x-3}=1$ — desde que $x-3 \neq 0$.
+
+**Por que ela se aplica aqui.** Justamente porque o limite só consulta
+$x \neq 3$. Em todo ponto que o limite consulta, $x-3$ é diferente de zero, a
+divisão $\frac{x-3}{x-3}$ existe e vale 1. O ponto $x=3$, o único em que o
+cancelamento seria ilegítimo, é o único que o limite não consulta.
+
+**O que muda na escrita.**
+
+$$
+\frac{x^2-x-6}{x-3}
+=\frac{(x-3)(x+2)}{x-3}
+=x+2,
+\qquad x \neq 3.
+$$
+
+**O que permanece na quantidade.** Para todo $x \neq 3$, os dois lados são o
+mesmo número. Em $x=4$: $\frac{16-4-6}{1}=6$ e $4+2=6$. Em $x=2{,}9$:
+$\frac{8{,}41-2{,}9-6}{-0{,}1}=4{,}9$ e $2{,}9+2=4{,}9$.
+
+**O limite.** Pela ponte da seção 7, o limite da fração é o limite de $x+2$:
+
+$$
+\lim_{x \to 3}\frac{x^2-x-6}{x-3}
+=\lim_{x \to 3}(x+2)
+=5.
+$$
+
+**Conferindo com a tabela.** Em $x=3{,}001$ a fração original vale
+$5{,}001$; em $x=2{,}999$, vale $4{,}999$. Aponta para 5.
+
+Este é o ponto que mais confunde nesta lição, então vale dizer de novo com
+outras palavras. O cancelamento **não** afirma que a fração vale 5 em $x=3$.
+Ela continua não existindo ali. O cancelamento afirma que, **fora** de 3, a
+fração e $x+2$ são a mesma coisa. Como o limite só olha fora de 3, essa
+igualdade fora do ponto é tudo o que ele precisa.
+
+#### Quando o polinômio tem grau maior
+
+$$
+\lim_{x \to 2}\frac{x^3-8}{x-2}.
+$$
+
+A substituição dá $\frac{8-8}{0}=\frac{0}{0}$. O numerador zera em 2, então
+$(x-2)$ é fator dele. Para achar o outro fator, use Briot-Ruffini, como na
+seção 4:
+
+$$
+x^3-8=(x-2)(x^2+2x+4).
+$$
+
+Cancelando o fator $(x-2)$, válido para $x \neq 2$:
+
+$$
+\lim_{x \to 2}\frac{x^3-8}{x-2}
+=\lim_{x \to 2}(x^2+2x+4)
+=4+4+4=12.
+$$
+
+Esse 12 já apareceu na lição de taxa média: era a taxa instantânea de $x^3$ em
+$x=2$, obtida lá por uma tabela. Agora ele tem uma dedução.
+
+**Conferindo.** Em $x=2{,}001$: $\frac{2{,}001^3-8}{0{,}001}=12{,}006$. Em
+$x=1{,}999$: $11{,}994$.
+
+### 10.2 Multiplicar pelo conjugado
+
+$$
+\lim_{h \to 0}\frac{\sqrt{4+h}-2}{h}.
+$$
+
+**Por que a forma atual não serve.** Em $h=0$, $\frac{\sqrt4-2}{0}=\frac{0}{0}$.
+
+**Por que fatorar não resolve.** Não há fator $h$ visível no numerador:
+$\sqrt{4+h}-2$ não é um polinômio, e a raiz esconde o $h$ dentro dela. É
+preciso tirar a raiz do caminho antes de procurar o fator.
+
+**Qual propriedade permite a mudança.** O conjugado. Multiplicar
+$\sqrt{4+h}-2$ por $\sqrt{4+h}+2$ produz, pelo produto notável
+$(a-b)(a+b)=a^2-b^2$:
+
+$$
+\big(\sqrt{4+h}-2\big)\big(\sqrt{4+h}+2\big)
+=(4+h)-4
+=h.
+$$
+
+A raiz sumiu e o $h$ apareceu. Para não mudar o valor da fração, o
+multiplicador entra em cima **e** embaixo, como $\frac{k}{k}=1$:
+
+$$
+\frac{\sqrt{4+h}-2}{h}
+=\frac{\sqrt{4+h}-2}{h} \times \frac{\sqrt{4+h}+2}{\sqrt{4+h}+2}
+=\frac{h}{h\big(\sqrt{4+h}+2\big)}.
+$$
+
+**O que muda na escrita.** Agora o $h$ é fator do numerador e do
+denominador. Cancelando, o que vale para $h \neq 0$:
+
+$$
+=\frac{1}{\sqrt{4+h}+2},
+\qquad h \neq 0.
+$$
+
+**O que permanece na quantidade.** Em $h=5$: a original é
+$\frac{\sqrt9-2}{5}=\frac{1}{5}$, e a nova é $\frac{1}{3+2}=\frac15$. Em
+$h=0{,}37$: as duas dão $0{,}24447$.
+
+**O limite.** A forma nova não trava em $h=0$:
+
+$$
+\lim_{h \to 0}\frac{\sqrt{4+h}-2}{h}
+=\lim_{h \to 0}\frac{1}{\sqrt{4+h}+2}
+=\frac{1}{\sqrt4+2}
+=\frac{1}{4}.
+$$
+
+A última passagem usou as propriedades do quociente e da raiz: o denominador
+$\sqrt{4+h}+2$ tem limite $2+2=4$, diferente de zero, então o limite atravessa
+a divisão.
+
+O lado da placa cresce a exatamente $\frac14$ cm por cm² de área, quando a
+área é 4 cm². A tabela sugeria $0{,}2499$ ou $0{,}25$; a conta decidiu.
+
+### 10.3 Somar as frações do numerador
+
+$$
+\lim_{h \to 0}\frac{\dfrac{1}{2+h}-\dfrac{1}{2}}{h}.
+$$
+
+**Por que a forma atual não serve.** Em $h=0$, o numerador é
+$\frac12-\frac12=0$ e o denominador é 0.
+
+**Por que fatorar não resolve.** O numerador é uma diferença de duas frações,
+e não se cancela nada numa diferença — só em fatores. Antes de procurar o
+$h$, é preciso transformar a diferença numa fração só.
+
+**Qual propriedade permite a mudança.** O denominador comum. Os denominadores
+são $2+h$ e $2$, sem fator em comum, então o mmc é o produto $2(2+h)$:
+
+$$
+\frac{1}{2+h}-\frac{1}{2}
+=\frac{2}{2(2+h)}-\frac{2+h}{2(2+h)}
+=\frac{2-(2+h)}{2(2+h)}
+=\frac{-h}{2(2+h)}.
+$$
+
+O parêntese na subtração é obrigatório: $2-(2+h)=2-2-h=-h$. Sem ele, o sinal
+do $h$ sai trocado.
+
+**O que muda na escrita.** O numerador da fração grande virou uma fração só,
+com um $h$ à mostra:
+
+$$
+\frac{\dfrac{1}{2+h}-\dfrac{1}{2}}{h}
+=\frac{-h}{2(2+h)} \times \frac{1}{h}
+=\frac{-h}{2h(2+h)}.
+$$
+
+Dividir por $h$ é multiplicar por $\frac1h$. E agora o $h$ é fator em cima e
+embaixo; cancelando, para $h \neq 0$:
+
+$$
+=\frac{-1}{2(2+h)},
+\qquad h \neq 0.
+$$
+
+**O que permanece na quantidade.** Em $h=2$: a original é
+$\frac{\frac14-\frac12}{2}=\frac{-\frac14}{2}=-\frac18$, e a nova é
+$\frac{-1}{2 \times 4}=-\frac18$. Em $h=0{,}37$: as duas dão $-0{,}21097$.
+
+**O limite.**
+
+$$
+\lim_{h \to 0}\frac{\dfrac{1}{2+h}-\dfrac{1}{2}}{h}
+=\lim_{h \to 0}\frac{-1}{2(2+h)}
+=\frac{-1}{2 \times 2}
+=-\frac{1}{4}.
+$$
+
+O tempo por lote cai a $\frac14$ de hora para cada lote por hora de velocidade
+a mais, quando a impressora está em 2 lotes por hora. O sinal negativo era
+esperado: mais velocidade, menos tempo.
+
+### Como escolher a reescrita
+
+As três situações se reconhecem pela cara da fração:
+
+| A fração tem… | Reescrita | Ferramenta antiga |
+|---|---|---|
+| polinômio em cima e embaixo | fatorar e cancelar | soma e produto, Briot-Ruffini, produtos notáveis |
+| raiz numa soma ou diferença | multiplicar pelo conjugado, em cima e embaixo | racionalização |
+| fração dentro da fração | somar as frações com denominador comum | operações com frações algébricas |
+
+E às vezes duas delas se combinam: um numerador com raiz pode, depois do
+conjugado, deixar um polinômio que ainda precisa ser fatorado.
+
+## 11. Resolvendo as três contas do motivador
+
+As três frações da abertura eram os três casos da seção 10, e cada uma foi
+resolvida lá. Reunindo:
+
+| Situação | Limite | Valor | Significado |
+|---|---|---:|---|
+| posição $s(t)=t^2$ em $t=2$ | $\lim_{h \to 0}\dfrac{(2+h)^2-4}{h}$ | $4$ | 4 m/s no instante 2 s |
+| lado $\ell(A)=\sqrt{A}$ em $A=4$ | $\lim_{h \to 0}\dfrac{\sqrt{4+h}-2}{h}$ | $\dfrac14$ | o lado cresce 0,25 cm por cm² |
+| tempo $T(v)=\dfrac1v$ em $v=2$ | $\lim_{h \to 0}\dfrac{\frac{1}{2+h}-\frac12}{h}$ | $-\dfrac14$ | o tempo cai 0,25 h por lote/h |
+
+Os três números que a tabela só sugeria agora estão demonstrados. E repare no
+que cada um significa: é a taxa **num ponto**, a pergunta que a lição de taxa
+média não conseguia responder. Faltava exatamente esta página. A lição de
+[derivada](./a-derivada) vai dar a esses três números um nome único.
+
+## 12. Exemplos resolvidos
+
+### Exemplo 1: substituição direta
+
+Calcule $\lim_{x \to -1}\dfrac{x^2+3}{x+2}$.
+
+O denominador em $x=-1$ vale $-1+2=1$, diferente de zero. Então a
+substituição responde:
+
+$$
+\lim_{x \to -1}\frac{x^2+3}{x+2}=\frac{1+3}{1}=4.
+$$
+
+Nada a reescrever. Vale conferir a condição **antes** de sair fatorando: a
+fatoração só é necessária quando a substituição trava.
+
+### Exemplo 2: fator comum, com o denominador também fatorado
+
+*Pause e tente antes de ler.* Calcule
+$\lim_{x \to 1}\dfrac{x^2-1}{x^2-3x+2}$.
+
+Substituindo $x=1$: $\frac{1-1}{1-3+2}=\frac{0}{0}$. Indeterminado.
+
+O numerador é uma diferença de quadrados: $x^2-1=(x-1)(x+1)$. O denominador
+é um trinômio; dois números de soma $-3$ e produto 2 são $-1$ e $-2$, então
+$x^2-3x+2=(x-1)(x-2)$. Os dois têm o fator $(x-1)$, como tinha de ser: 1 é
+raiz de ambos.
+
+$$
+\frac{x^2-1}{x^2-3x+2}
+=\frac{(x-1)(x+1)}{(x-1)(x-2)}
+=\frac{x+1}{x-2},
+\qquad x \neq 1.
+$$
+
+A forma nova não trava em 1, porque o denominador $x-2$ vale $-1$ ali:
+
+$$
+\lim_{x \to 1}\frac{x^2-1}{x^2-3x+2}
+=\frac{1+1}{1-2}
+=\frac{2}{-1}
+=-2.
+$$
+
+**Conferindo.** Em $x=1{,}001$, a fração original vale $-2{,}003$; em
+$x=0{,}999$, vale $-1{,}997$.
+
+### Exemplo 3: raiz no numerador, com a variável dentro
+
+*Pause e tente.* Calcule $\lim_{x \to 0}\dfrac{\sqrt{x+9}-3}{x}$.
+
+Substituindo: $\frac{3-3}{0}=\frac{0}{0}$. Há raiz numa diferença, então o
+caminho é o conjugado $\sqrt{x+9}+3$, em cima e embaixo:
+
+$$
+\frac{\sqrt{x+9}-3}{x} \times \frac{\sqrt{x+9}+3}{\sqrt{x+9}+3}
+=\frac{(x+9)-9}{x\big(\sqrt{x+9}+3\big)}
+=\frac{x}{x\big(\sqrt{x+9}+3\big)}
+=\frac{1}{\sqrt{x+9}+3},
+\qquad x \neq 0.
+$$
+
+$$
+\lim_{x \to 0}\frac{\sqrt{x+9}-3}{x}
+=\frac{1}{\sqrt9+3}
+=\frac{1}{6}.
+$$
+
+**Conferindo.** Em $x=0{,}001$: $0{,}166662$. Em $x=-0{,}001$: $0{,}166671$.
+E $\frac16=0{,}166667$.
+
+### Exemplo 4: fração dentro de fração, com $x$ em vez de $h$
+
+*Pause e tente.* Calcule $\lim_{x \to 3}\dfrac{\dfrac{1}{x}-\dfrac{1}{3}}{x-3}$.
+
+Substituindo: $\frac{\frac13-\frac13}{0}=\frac{0}{0}$. O numerador é uma
+diferença de frações; o denominador comum é $3x$:
+
+$$
+\frac{1}{x}-\frac{1}{3}
+=\frac{3}{3x}-\frac{x}{3x}
+=\frac{3-x}{3x}.
+$$
+
+Então a fração grande fica
+
+$$
+\frac{\dfrac{3-x}{3x}}{x-3}
+=\frac{3-x}{3x} \times \frac{1}{x-3}
+=\frac{3-x}{3x(x-3)}.
+$$
+
+Aqui há um passo que engana. O numerador tem $3-x$ e o denominador tem $x-3$:
+não são iguais, são **opostos**. Como $3-x=-(x-3)$:
+
+$$
+\frac{-(x-3)}{3x(x-3)}
+=\frac{-1}{3x},
+\qquad x \neq 3.
+$$
+
+$$
+\lim_{x \to 3}\frac{\dfrac{1}{x}-\dfrac{1}{3}}{x-3}
+=\frac{-1}{3 \times 3}
+=-\frac{1}{9}.
+$$
+
+**Conferindo.** Em $x=3{,}001$: $-0{,}111074$. Em $x=2{,}999$: $-0{,}111148$.
+E $-\frac19=-0{,}111111$.
+
+### Exemplo 5: com letra no lugar do número
+
+*Pause e tente.* Para $a \neq 0$, calcule
+$\lim_{h \to 0}\dfrac{\dfrac{1}{a+h}-\dfrac{1}{a}}{h}$.
+
+É a seção 10.3 com $a$ no lugar de 2, e a lição de taxa média já fez a
+álgebra no exercício 18. Denominador comum $a(a+h)$:
+
+$$
+\frac{1}{a+h}-\frac{1}{a}
+=\frac{a-(a+h)}{a(a+h)}
+=\frac{-h}{a(a+h)}.
+$$
+
+Dividindo por $h$ e cancelando o fator $h$, para $h \neq 0$:
+
+$$
+\frac{\dfrac{1}{a+h}-\dfrac{1}{a}}{h}
+=\frac{-1}{a(a+h)}.
+$$
+
+$$
+\lim_{h \to 0}\frac{\dfrac{1}{a+h}-\dfrac{1}{a}}{h}
+=\frac{-1}{a \times a}
+=-\frac{1}{a^2}.
+$$
+
+**Conferindo com o caso feito.** Em $a=2$, a fórmula dá $-\frac14$, que é o
+resultado da seção 10.3. Confere.
+
+Resolver com letra respondeu de uma vez para todos os pontos: em $a=3$, o
+limite é $-\frac19$ — o mesmo do Exemplo 4, que era esta conta escrita com
+$x$ no lugar de $a+h$.
+
+### Exemplo 6: uma forma $\frac{0}{0}$ que não tem limite
+
+*Pause e tente.* O que acontece com $\lim_{x \to 1}\dfrac{x^2-1}{(x-1)^2}$?
+
+Substituindo: $\frac{0}{0}$. Fatorando o numerador e cancelando um dos dois
+fatores $(x-1)$ do denominador:
+
+$$
+\frac{(x-1)(x+1)}{(x-1)(x-1)}
+=\frac{x+1}{x-1},
+\qquad x \neq 1.
+$$
+
+A forma nova **ainda trava** em $x=1$: dá $\frac{2}{0}$. Mas agora não é
+$\frac{0}{0}$ — o numerador se aproxima de 2 e só o denominador se aproxima de zero. Isso
+não é indeterminação; é o sinal de que os valores crescem sem limite. Em
+$x=1{,}001$ a fração vale 2001; em $x=0{,}999$, vale $-1999$.
+
+O limite **não existe como número**. A reescrita não falhou: ela revelou que
+a resposta não é um número, e a [próxima lição](./limites-infinitos-e-no-infinito)
+diz como escrever esse comportamento.
+
+A lição deste exemplo: $\frac{0}{0}$ não garante que o limite exista. Garante
+só que a pergunta ainda está aberta.
+
+### Exemplo 7: o custo médio da Revisão geral
+
+*Pause e tente.* A fábrica da [Revisão geral](../revisao-geral) tem custo médio
+por peça $C(x)=\dfrac{2400}{x}+18$ reais, com $x$ peças no lote. Calcule
+
+$$
+\lim_{h \to 0}\frac{C(100+h)-C(100)}{h}
+$$
+
+e diga o que o número significa.
+
+Primeiro o numerador. A parcela 18 aparece em $C(100+h)$ e em $C(100)$ e se
+cancela na subtração:
+
+$$
+C(100+h)-C(100)
+=\frac{2400}{100+h}-\frac{2400}{100}
+=2400\left(\frac{1}{100+h}-\frac{1}{100}\right).
+$$
+
+O parêntese é a diferença do Exemplo 5 com $a=100$, e vale
+$\frac{-h}{100(100+h)}$. Dividindo por $h$ e cancelando:
+
+$$
+\frac{C(100+h)-C(100)}{h}
+=\frac{-2400}{100(100+h)},
+\qquad h \neq 0.
+$$
+
+$$
+\lim_{h \to 0}\frac{C(100+h)-C(100)}{h}
+=\frac{-2400}{100 \times 100}
+=-0{,}24.
+$$
+
+**Significado.** Num lote de 100 peças, cada peça a mais no lote reduz o
+custo médio em cerca de R\$ 0,24 por peça. O sinal negativo diz que o custo
+médio está caindo; o tamanho diz quão rápido. E, como o limite foi calculado
+com letra no Exemplo 5, dá para ler direto: a taxa em $x=a$ é
+$-\frac{2400}{a^2}$. Em $a=200$ ela seria $-0{,}06$: quatro vezes menor. O
+custo médio cai cada vez mais devagar, que é o que a curva de custo médio da
+lição de funções racionais mostrava chegando perto de 18.
+
+**Conferindo.** Em $h=0{,}01$: $\frac{C(100{,}01)-C(100)}{0{,}01}=-0{,}239976$.
+
+## 13. Erros comuns
+
+> **Erro 1: dar valor a $\frac{0}{0}$.** Nem 0, nem 1, nem "infinito". A
+> tabela da seção 9 mostra a mesma forma $\frac{0}{0}$ escondendo 1, 5, 0 e um
+> valor que cresce sem parar. Se $\frac{0}{0}$ tivesse um valor, as quatro
+> linhas dariam a mesma coisa.
+
+> **Erro 2: cancelar parcela em vez de fator.** Em $\frac{x^2-9}{x-3}$, não se
+> pode "cortar o $x^2$ com o $x$" nem "o 9 com o 3". Teste com $x=4$: a
+> fração vale $\frac{7}{1}=7$; cortando parcelas sairia algo como
+> $\frac{x-3}{1-1}$, que não é nada. Só se cancela o que **multiplica** a
+> fração inteira: $\frac{(x-3)(x+3)}{x-3}$ cancela o $(x-3)$ porque ele é
+> fator dos dois lados, e sobra $x+3=7$.
+
+> **Erro 3: multiplicar só o numerador pelo conjugado.** Passar de
+> $\frac{\sqrt{4+h}-2}{h}$ para $\frac{h}{h}=1$ multiplicando só em cima muda o
+> valor: em $h=5$, a original vale $\frac15$, e 1 não é $\frac15$. O
+> conjugado entra em cima **e** embaixo, porque só $\frac{k}{k}$ vale 1.
+
+> **Erro 4: substituir, ver $\frac{0}{0}$ e parar — ou declarar que "o limite
+> não existe".** $\frac{0}{0}$ é o começo do trabalho, não o fim. O limite de
+> $\frac{x^2-4}{x-2}$ em 2 existe e vale 4; a substituição só não o encontrou.
+
+> **Erro 5: achar que o cancelamento "conserta" a função no ponto.** Depois de
+> escrever $\frac{x^2-4}{x-2}=x+2$, a função da esquerda **continua** não
+> existindo em $x=2$. O cancelamento vale para $x \neq 2$, e o limite não
+> precisa de mais do que isso. Dizer que "a função vale 4 em 2" é confundir limite com
+> valor — o erro que a lição anterior desmontou.
+
+> **Erro 6: esquecer o parêntese ao subtrair frações.** Em
+> $\frac{1}{2+h}-\frac12$, o numerador é $2-(2+h)=-h$. Sem o parêntese sai
+> $2-2+h=h$, o sinal troca, e o limite da seção 10.3 sairia $+\frac14$ em vez
+> de $-\frac14$. Teste com $h=2$: a diferença original é
+> $\frac14-\frac12=-\frac14$, negativa.
+
+> **Erro 7: confundir $3-x$ com $x-3$.** São opostos, não iguais. Cancelar um
+> com o outro deixa um sinal de menos: $\frac{3-x}{x-3}=-1$ para $x \neq 3$.
+> Esquecer esse sinal troca o sinal da resposta inteira.
+
+> **Erro 8: tratar $\frac{6}{0}$ como se fosse $\frac{0}{0}$.** Se só o
+> denominador zera, não é indeterminação e nenhuma das três reescritas vai
+> ajudar. Os valores crescem sem parar, e isso é o assunto da próxima lição.
+
+> **Erro 9: pular a substituição direta.** Fatorar $\frac{x^2-9}{x+3}$ para
+> calcular o limite em 3 é trabalho perdido: o denominador em 3 vale 6, a
+> substituição dá $\frac{0}{6}=0$, e a resposta é 0. Zero em cima com
+> denominador diferente de zero embaixo é um número — zero.
+
+## 14. Perguntas de verificação
+
+1. Por que trocar $\frac{x^2-4}{x-2}$ por $x+2$ não muda o limite em 2, se as
+   duas funções são diferentes em $x=2$?
+2. O que a propriedade do quociente exige, e por que ela se recusa a
+   responder em $\lim_{x \to 2}\frac{x^2-4}{x-2}$?
+3. Por que $\frac{0}{0}$ não pode ter um valor fixo?
+4. O cancelamento de $(x-3)$ em $\frac{(x-3)(x+2)}{x-3}$ é legítimo por qual
+   motivo, e em qual único ponto ele não seria?
+5. Por que o conjugado precisa multiplicar numerador e denominador, e não só o
+   numerador?
+6. Numa diferença de frações como $\frac{1}{2+h}-\frac12$, por que não dá para
+   cancelar nada antes de somar?
+7. Como você decide, olhando a fração, qual das três reescritas usar?
+8. O Exemplo 6 deu $\frac{0}{0}$ e o limite não existiu como número. Isso
+   contradiz a ideia de que $\frac{0}{0}$ é "uma pergunta em aberto"?
+9. Depois de reescrever e calcular, como você confere o resultado sem refazer
+   a álgebra?
+10. Por que a lição de taxa média conseguiu achar o 4 do velocímetro, mas não
+    o $\frac14$ da placa nem o $-\frac14$ da impressora?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque o limite em 2 é definido pelos valores da função em $x \neq 2$, e
+   nesses pontos as duas funções são iguais. A definição de limite não
+   consulta $x=2$, então não tem como distinguir uma da outra.
+2. Exige que o limite do denominador seja diferente de zero. Em
+   $\frac{x^2-4}{x-2}$, o denominador tem limite zero em 2, e a propriedade
+   não se aplica. O limite existe e vale 4; a propriedade só não o encontra.
+3. Porque frações diferentes com a mesma forma $\frac{0}{0}$ têm limites
+   diferentes: $\frac{x}{x}$ aponta para 1, $\frac{x^2}{x}$ para 0,
+   $\frac{5x}{x}$ para 5. Um valor fixo obrigaria as três a concordar.
+4. É legítimo porque $\frac{x-3}{x-3}=1$ sempre que $x-3 \neq 0$, e
+   multiplicar por 1 não muda quantidade nenhuma. O único ponto em que falha é
+   $x=3$, onde $\frac{0}{0}$ não vale 1 — e esse é justamente o ponto que o
+   limite não consulta.
+5. Porque multiplicar só o numerador multiplica a fração por
+   $\sqrt{4+h}+2$, que não é 1, e muda o valor dela. Só $\frac{k}{k}$ vale 1.
+   A reescrita precisa preservar o valor em todo $h \neq 0$, senão a ponte da
+   seção 7 não se aplica.
+6. Porque cancelamento é operação de **fator**, e uma diferença tem parcelas,
+   não fatores. Primeiro se transforma a diferença numa fração só, com
+   denominador comum; só então aparece um $h$ multiplicando o numerador
+   inteiro, e só então ele pode ser cancelado.
+7. Pela cara da fração: polinômio em cima e embaixo pede fatoração; raiz numa
+   soma ou diferença pede conjugado; fração dentro da fração pede denominador
+   comum. Em todos os casos, o objetivo é o mesmo: fazer aparecer o fator
+   $(x-a)$ ou $h$ que o numerador esconde.
+8. Não. "Pergunta em aberto" quer dizer que a forma $\frac{0}{0}$ não decide a
+   resposta — e uma das respostas possíveis é "os valores crescem sem parar".
+   A reescrita respondeu à pergunta; a resposta só não foi um número.
+9. Escolhendo um valor de $x$ bem perto de $a$, como $a+0{,}001$ e
+   $a-0{,}001$, e avaliando a fração **original**. Se os dois valores estão
+   perto do resultado, a conta está certa. Se um deles está longe, há erro de
+   sinal ou de fatoração.
+10. Porque o 4 saía de uma fatoração de polinômio, que aquela lição já tinha.
+    Os outros dois exigiam o conjugado e o denominador comum — ferramentas
+    que o curso já ensinava, mas que ainda não tinham sido ligadas ao
+    quociente de diferenças. Esta lição fez a ligação.
+
+</details>
+
+## 15. Exercícios
+
+### 1. Reconhecimento
+
+1. Para cada limite, diga se a substituição direta responde ou se dá
+   $\frac{0}{0}$. Não calcule.
+   a) $\lim_{x \to 2}\dfrac{x+3}{x-1}$ &nbsp;
+   b) $\lim_{x \to 4}\dfrac{x^2-16}{x-4}$ &nbsp;
+   c) $\lim_{x \to 3}\dfrac{x^2-9}{x+3}$ &nbsp;
+   d) $\lim_{h \to 0}\dfrac{\sqrt{1+h}-1}{h}$
+2. Para cada fração, diga qual reescrita se aplica: fatorar, conjugado ou
+   denominador comum.
+   a) $\dfrac{x^2+5x+6}{x+2}$ &nbsp;
+   b) $\dfrac{\sqrt{x}-3}{x-9}$ &nbsp;
+   c) $\dfrac{\frac{1}{x}-\frac{1}{4}}{x-4}$ &nbsp;
+   d) $\dfrac{x^3-1}{x-1}$
+3. Qual dos limites abaixo **não** é uma indeterminação, embora o denominador
+   zere? Explique sem calcular.
+   a) $\lim_{x \to 3}\dfrac{x^2-9}{x-3}$ &nbsp;
+   b) $\lim_{x \to 3}\dfrac{x+3}{x^2-9}$
+
+### 2. Explicação
+
+4. Explique, com suas palavras, por que o limite de $\frac{x^2-4}{x-2}$ em 2
+   pode ser calculado a partir de $x+2$, sendo que as duas expressões não são
+   iguais em $x=2$.
+5. Um colega diz: "$\frac{0}{0}=1$, porque qualquer número dividido por ele
+   mesmo dá 1". Mostre com duas frações concretas por que isso não pode ser
+   verdade.
+6. Explique por que, em $\frac{\sqrt{4+h}-2}{h}$, fatorar não resolve e o
+   conjugado resolve.
+7. Explique a diferença entre "o limite não existe" e "a substituição direta
+   deu $\frac{0}{0}$".
+
+### 3. Aplicação direta
+
+8. Calcule por substituição direta:
+   a) $\lim_{x \to 5}(2x^2-3x+1)$ &nbsp;
+   b) $\lim_{x \to 2}\dfrac{x+1}{x-1}$ &nbsp;
+   c) $\lim_{x \to 3}\dfrac{x^2-9}{x+3}$
+9. Calcule fatorando:
+   a) $\lim_{x \to 4}\dfrac{x^2-16}{x-4}$ &nbsp;
+   b) $\lim_{x \to -2}\dfrac{x^2+5x+6}{x+2}$ &nbsp;
+   c) $\lim_{x \to 1}\dfrac{x^3-1}{x-1}$
+10. Calcule pelo conjugado:
+    a) $\lim_{h \to 0}\dfrac{\sqrt{1+h}-1}{h}$ &nbsp;
+    b) $\lim_{x \to 9}\dfrac{\sqrt{x}-3}{x-9}$ &nbsp;
+    c) $\lim_{x \to 0}\dfrac{\sqrt{x+16}-4}{x}$
+11. Calcule com denominador comum:
+    a) $\lim_{h \to 0}\dfrac{\frac{1}{3+h}-\frac{1}{3}}{h}$ &nbsp;
+    b) $\lim_{x \to 2}\dfrac{\frac{1}{x^2}-\frac{1}{4}}{x-2}$
+
+<details>
+<summary>Dica para o 11b</summary>
+
+Depois do denominador comum $4x^2$, o numerador fica $4-x^2$. Isso é uma
+diferença de quadrados com o sinal ao contrário do que você gostaria: escreva
+$4-x^2=-(x-2)(x+2)$ antes de cancelar.
+
+</details>
+
+### 4. Variação
+
+12. Calcule $\lim_{x \to 2}\dfrac{x^2-4}{x^2-5x+6}$. Os dois lados fatoram.
+13. Calcule $\lim_{x \to -3}\dfrac{x^2-9}{x^2+x-6}$.
+14. Calcule $\lim_{x \to 2}\dfrac{x-2}{\sqrt{x}-\sqrt2}$. A raiz agora está no
+    denominador.
+15. Calcule $\lim_{x \to 0}\dfrac{(2+x)^3-8}{x}$ e diga que limite da lição ele
+    repete, escrito de outro jeito.
+16. Calcule $\lim_{x \to 1}\dfrac{x^2+2x-3}{x^2-1}$.
+
+<details>
+<summary>Dica para o 14</summary>
+
+O conjugado se escolhe pela raiz que incomoda, esteja ela em cima ou embaixo.
+Aqui ela está embaixo: multiplique por $\sqrt{x}+\sqrt2$ nos dois lados e
+observe o que o denominador vira.
+
+</details>
+
+### 5. Problema misto
+
+17. A posição de um carrinho de teste é $s(t)=5t^2$ metros. a) Escreva o
+    quociente de diferenças em torno de $t=1$. b) Calcule o limite dele
+    quando $h$ se aproxima de zero. c) Interprete o número com unidade.
+18. O custo médio por peça de uma fábrica é $C(x)=\dfrac{2400}{x}+18$ reais.
+    Calcule $\lim_{h \to 0}\dfrac{C(200+h)-C(200)}{h}$ e compare com o valor em
+    $x=100$ obtido no Exemplo 7. O que a comparação diz sobre a curva do custo
+    médio?
+19. A função $f(x)=\dfrac{\lvert x \rvert}{x}$ dá $\frac{0}{0}$ em $x=0$.
+    a) Calcule $f(0{,}001)$ e $f(-0{,}001)$. b) O limite em 0 existe? c) Por
+    que nenhuma das três reescritas desta lição resolve esse caso?
+
+<details>
+<summary>Dica para o 19</summary>
+
+Lembre a lição anterior: para o limite existir, os dois lados precisam
+concordar. E lembre a definição de valor absoluto por partes: para $x > 0$,
+$\lvert x \rvert=x$; para $x < 0$, $\lvert x \rvert=-x$.
+
+</details>
+
+### 6. Justificativa
+
+20. Mostre que $\lim_{h \to 0}\dfrac{(a+h)^3-a^3}{h}=3a^2$ para qualquer $a$,
+    expandindo o cubo da soma. Confira com $a=2$ contra o resultado da seção
+    10.1.
+21. Mostre que $\lim_{h \to 0}\dfrac{\sqrt{a+h}-\sqrt{a}}{h}=\dfrac{1}{2\sqrt{a}}$
+    para $a > 0$. Confira com $a=4$ contra a seção 10.2.
+22. Explique por que a ponte da seção 7 exige que $f$ e $g$ coincidam em
+    **toda** a vizinhança de $a$, e não só em alguns pontos. Use o
+    contraexemplo daquela seção.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) Responde: o denominador em 2 vale 1. &nbsp; b) $\frac{0}{0}$. &nbsp; c)
+   Responde: numerador 0 e denominador 6, então o limite é 0. &nbsp; d)
+   $\frac{0}{0}$.
+2. a) Fatorar. &nbsp; b) Conjugado. &nbsp; c) Denominador comum. &nbsp; d)
+   Fatorar, com Briot-Ruffini ou com a diferença de cubos.
+3. O item (b). Em 3, o numerador vale 6 e o denominador vale 0: é $\frac{6}{0}$,
+   não $\frac{0}{0}$. Os valores crescem sem parar, e isso é assunto da próxima
+   lição. O item (a) é $\frac{0}{0}$ e resolve por fatoração.
+4. Porque o limite em 2 só usa os valores da função em pontos diferentes de
+   2, e nesses pontos $\frac{x^2-4}{x-2}$ e $x+2$ são o mesmo número. A
+   definição de limite não consulta $x=2$; portanto o que acontece ali não
+   altera o resultado.
+5. $\frac{x}{x}$ e $\frac{x^2}{x}$ têm a forma $\frac{0}{0}$ em $x=0$. A
+   primeira vale 1 para todo $x \neq 0$; a segunda vale $x$, que se aproxima de
+   0. Se $\frac{0}{0}$ fosse 1, a segunda também teria de apontar para 1, e
+   ela aponta para 0.
+6. Fatorar exige um polinômio, e $\sqrt{4+h}-2$ não é um: a raiz esconde o
+   $h$ dentro dela. O conjugado usa $(a-b)(a+b)=a^2-b^2$ para elevar a raiz ao
+   quadrado, o que a apaga e faz o $h$ aparecer como fator: $(4+h)-4=h$.
+7. "A substituição deu $\frac{0}{0}$" é uma afirmação sobre a **forma** da
+   fração: ela não decide nada. "O limite não existe" é uma afirmação sobre o
+   **comportamento** da função perto do ponto. Um $\frac{0}{0}$ pode virar um
+   número (seção 10) ou não (Exemplo 6); só a reescrita revela qual.
+8. a) $50-15+1=36$. &nbsp; b) $\frac{3}{1}=3$. &nbsp; c) $\frac{0}{6}=0$. Se
+   você fatorou o item (c), a resposta continua 0 — mas o trabalho era
+   desnecessário.
+9. a) $\frac{(x-4)(x+4)}{x-4}=x+4 \to 8$. &nbsp; b) Soma 5 e produto 6 dão 2 e
+   3: $\frac{(x+2)(x+3)}{x+2}=x+3 \to 1$. &nbsp; c) Briot-Ruffini com raiz 1 e
+   coeficientes $1,0,0,-1$ dá quociente $x^2+x+1$:
+   $\frac{(x-1)(x^2+x+1)}{x-1}=x^2+x+1 \to 3$. Conferindo: em $x=1{,}001$ a
+   fração vale $3{,}003$.
+10. a) $\frac{(1+h)-1}{h(\sqrt{1+h}+1)}=\frac{1}{\sqrt{1+h}+1} \to \frac12$.
+    &nbsp; b) $\frac{x-9}{(x-9)(\sqrt{x}+3)}=\frac{1}{\sqrt{x}+3} \to \frac16$.
+    &nbsp; c) $\frac{(x+16)-16}{x(\sqrt{x+16}+4)}=\frac{1}{\sqrt{x+16}+4} \to \frac18$.
+    Se você encontrou 1 no item (a), multiplicou só o numerador pelo conjugado.
+11. a) $\frac{1}{3+h}-\frac13=\frac{3-(3+h)}{3(3+h)}=\frac{-h}{3(3+h)}$;
+    dividindo por $h$: $\frac{-1}{3(3+h)} \to -\frac19$. Se você encontrou
+    $+\frac19$, faltou o parêntese em $3-(3+h)$. &nbsp; b)
+    $\frac{1}{x^2}-\frac14=\frac{4-x^2}{4x^2}=\frac{-(x-2)(x+2)}{4x^2}$;
+    dividindo por $x-2$ e cancelando: $\frac{-(x+2)}{4x^2} \to \frac{-4}{16}=-\frac14$.
+    Conferindo: em $x=2{,}001$ a fração original vale $-0{,}24998$.
+12. $\frac{(x-2)(x+2)}{(x-2)(x-3)}=\frac{x+2}{x-3} \to \frac{4}{-1}=-4$.
+13. Soma 1 e produto $-6$ dão 3 e $-2$: $x^2+x-6=(x+3)(x-2)$. Então
+    $\frac{(x-3)(x+3)}{(x+3)(x-2)}=\frac{x-3}{x-2} \to \frac{-6}{-5}=\frac65$.
+14. Multiplicando por $\frac{\sqrt{x}+\sqrt2}{\sqrt{x}+\sqrt2}$, o denominador
+    vira $x-2$, e o $(x-2)$ cancela com o numerador:
+    $\frac{(x-2)(\sqrt{x}+\sqrt2)}{x-2}=\sqrt{x}+\sqrt2 \to 2\sqrt2 \approx 2{,}83$.
+    Conferindo: em $x=2{,}001$ a fração vale $2{,}8288$.
+15. $(2+x)^3=8+12x+6x^2+x^3$, então $\frac{12x+6x^2+x^3}{x}=12+6x+x^2 \to 12$.
+    É o limite de $\frac{x^3-8}{x-2}$ em 2 da seção 10.1, escrito com $x$ no
+    papel do $h$: a taxa instantânea de $x^3$ em 2.
+16. Soma 2 e produto $-3$ dão 3 e $-1$: $x^2+2x-3=(x+3)(x-1)$. Então
+    $\frac{(x+3)(x-1)}{(x-1)(x+1)}=\frac{x+3}{x+1} \to \frac42=2$.
+17. a) $\dfrac{5(1+h)^2-5}{h}$. &nbsp; b)
+    $\frac{5+10h+5h^2-5}{h}=\frac{h(10+5h)}{h}=10+5h \to 10$. &nbsp; c) A
+    velocidade do carrinho no instante 1 s é 10 m/s.
+18. Pelo Exemplo 5 com $a=200$: $\frac{-2400}{200 \times 200}=-0{,}06$ real
+    por peça, contra $-0{,}24$ em $x=100$. Ao dobrar o lote, a taxa de queda
+    ficou **quatro vezes menor**: o custo médio ainda cai, mas cada vez mais
+    devagar, o que é a curva se deitando sobre a assíntota 18.
+19. a) $f(0{,}001)=\frac{0{,}001}{0{,}001}=1$ e
+    $f(-0{,}001)=\frac{0{,}001}{-0{,}001}=-1$. &nbsp; b) **Não.** Pela direita
+    a função vale 1; pela esquerda, $-1$. Os dois lados não concordam. &nbsp;
+    c) Porque as três reescritas produzem uma **única** expressão válida para
+    todo $x \neq 0$, e aqui não existe uma: à direita a função é $\frac{x}{x}=1$
+    e à esquerda é $\frac{-x}{x}=-1$. A definição por partes do valor absoluto
+    é o que separa os dois lados, e nenhuma fatoração junta os dois de novo.
+20. $(a+h)^3=a^3+3a^2h+3ah^2+h^3$, então o numerador é $3a^2h+3ah^2+h^3=h(3a^2+3ah+h^2)$.
+    Cancelando o $h$: $3a^2+3ah+h^2 \to 3a^2$. Com $a=2$: $3 \times 4=12$,
+    igual ao resultado da seção 10.1.
+21. Multiplicando pelo conjugado $\sqrt{a+h}+\sqrt{a}$ em cima e embaixo, o
+    numerador vira $(a+h)-a=h$, e sobra $\frac{1}{\sqrt{a+h}+\sqrt{a}}$, que
+    se aproxima de $\frac{1}{2\sqrt{a}}$. Com $a=4$: $\frac{1}{4}$, igual à
+    seção 10.2.
+22. Porque o limite é decidido pelo comportamento de $f$ em todos os pontos
+    perto de $a$, não em alguns. Se $g$ coincide com $f$ só em alguns pontos,
+    o comportamento de $g$ perto de $a$ pode ser outro: $x+3$ coincide com
+    $\frac{x^2-4}{x-2}$ em ponto nenhum fora de 2, e os limites em 2 são 5 e
+    4. A ponte só transfere o limite quando não há como as duas funções
+    apontarem para lugares diferentes — e isso exige igualdade em toda a
+    vizinhança.
+
+</details>
+
+## 16. Revisão curta
+
+- **Substituição direta** responde quando a expressão é um polinômio, ou uma
+  fração cujo denominador **não zera** no ponto. É sempre o primeiro passo.
+- Se a substituição dá $\dfrac{0}{0}$, o limite está **indeterminado**: nem
+  zero, nem um, nem "não existe". A forma atual da fração não decide.
+- O limite **não consulta o ponto** $x=a$, só a vizinhança. Por isso, duas
+  funções iguais em todo $x \neq a$ têm o mesmo limite em $a$ — e podemos
+  trocar a fração que trava por outra que não trava.
+- As três reescritas fazem o fator escondido aparecer:
+  **fatorar e cancelar** (polinômios: soma e produto, Briot-Ruffini);
+  **conjugado** em cima e embaixo (raiz numa soma ou diferença);
+  **denominador comum** (fração dentro de fração).
+- O cancelamento de $(x-a)$ é legítimo **porque** $x \neq a$ nos pontos que o
+  limite consulta. Ele não conserta a função no ponto: ela continua não
+  existindo ali.
+- Se, depois de reescrever, o denominador ainda zera e o numerador não, o
+  limite **não é um número**. Isso é assunto da próxima lição.
+- Confira sempre avaliando a fração original em $a \pm 0{,}001$.
+
+Antes de avançar, verifique se você consegue fazer três coisas: explicar por
+que $\frac{0}{0}$ não pode valer 1; calcular
+$\lim_{h \to 0}\frac{\sqrt{9+h}-3}{h}$ do começo ao fim, sem tabela; e dizer,
+olhando uma fração, qual das três reescritas ela pede.
+
+Os três números do motivador — 4, $\frac14$ e $-\frac14$ — são taxas
+instantâneas, e o que esta lição fez foi calculá-las com exatidão. A [lição de
+derivada](./a-derivada) vai chamar esse limite pelo nome e transformá-lo na
+ferramenta central do capítulo. Antes disso, faltam três coisas: o que fazer
+quando os valores crescem sem parar, o que a substituição direta tem a ver com
+**continuidade**, e um limite que nenhuma das três reescritas alcança — o de
+$\frac{\sen x}{x}$.

@@ -1,0 +1,1182 @@
+---
+title: "A derivada: a taxa de variação num ponto"
+---
+
+import TangentExplorer from '@site/src/components/TangentExplorer';
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# A derivada: a taxa de variação num ponto
+
+## 1. Problema motivador: o velocímetro, agora com rigor
+
+O veículo de teste da lição de [taxa média de
+variação](../funcoes/taxa-media-de-variacao) está de volta. A posição dele após
+$t$ segundos é
+
+$$
+s(t) = t^2,
+$$
+
+com $s$ em metros. Aquela lição respondeu quanto ele andou **em média** entre
+1 s e 3 s: 4 metros por segundo. E deixou uma pergunta no ar: o que o
+velocímetro marca **exatamente aos 2 segundos**?
+
+A tentativa natural é usar a fórmula da taxa média com os dois instantes
+iguais a 2. Mas ela pede uma variação da entrada no denominador, e de 2 s para
+2 s a variação é zero. A conta não existe.
+
+O caminho encontrado foi indireto. Em vez de medir em 2 s, medimos entre 2 s e
+$2 + h$ s, com $h$ diferente de zero, e obtivemos
+
+$$
+\frac{(2+h)^2 - 4}{h} = 4 + h, \qquad h \neq 0.
+$$
+
+Depois observamos a tabela: com $h = 1$ a taxa é 5; com $h = 0{,}1$ é 4,1;
+com $h = 0{,}01$ é 4,01; com $h = -0{,}01$ é 3,99. Os valores se acumulam em
+torno de 4 sem nenhum deles ser 4. A lição de taxa média parou aí, dizendo que
+faltava uma única passagem: dizer com rigor o que significa “$h$ se aproxima de
+zero”.
+
+Essa passagem agora existe. A lição de [limite de uma
+função](./limite-de-uma-funcao) ensinou a escrever
+
+$$
+\lim_{h \to 0} (4 + h) = 4
+$$
+
+e a dizer o que isso significa: o valor $4 + h$ chega tão perto de 4 quanto se
+queira, desde que $h$ fique perto o bastante de zero. E ensinou que esse número
+4 não depende de $h = 0$ existir na conta.
+
+Então a resposta do velocímetro é
+
+$$
+v(2) = \lim_{h \to 0} \frac{(2+h)^2 - 4}{h} = 4 \text{ m/s}.
+$$
+
+Esta página dá nome a esse limite, mostra que ele responde a duas perguntas ao
+mesmo tempo, e o calcula para as seis funções mais simples do curso. O nome é
+**derivada**.
+
+## 2. Mapa das ideias
+
+- a **derivada de $f$ em $a$**, escrita $f'(a)$, é o limite do quociente de
+  diferenças quando $h$ se aproxima de zero;
+- ela tem duas leituras: a **inclinação da reta tangente** ao gráfico em
+  $(a, f(a))$ e a **taxa de variação instantânea** de $f$ em $a$;
+- a **derivada como função**, $f'(x)$, entrega a derivada em qualquer ponto de
+  uma vez;
+- **derivável** em $a$ é a função cuja derivada em $a$ existe;
+- a notação $\frac{dy}{dx}$ é outro nome para $f'(x)$: o $\frac{\Delta y}{\Delta
+  x}$ que encolheu;
+- a **reta tangente** em $a$ é $y = f(a) + f'(a)(x - a)$;
+- a **estimativa numérica** da derivada é o quociente de diferenças com um $h$
+  pequeno, e serve para conferir qualquer conta deste capítulo.
+
+## 3. Para que serve
+
+- velocidade num instante, a partir da posição; e, adiante, aceleração a partir
+  da velocidade;
+- custo de produzir **uma peça a mais** quando a fábrica já produz $q$ peças —
+  o que a economia chama de custo marginal;
+- ritmo de crescimento de uma população, de um investimento ou de uma epidemia
+  num dia específico, e não numa média de meses;
+- a reta que melhor imita uma curva perto de um ponto, base de toda
+  aproximação linear;
+- e, dentro da matemática, o sinal da derivada diz onde a função sobe e onde
+  desce, e o zero dela localiza máximos e mínimos com exatidão — é o que as
+  lições de [sinal da derivada](./sinal-da-derivada) e de [máximos e
+  mínimos](./maximos-e-minimos) vão fazer.
+
+A unidade continua sendo parte da resposta: se $s$ está em metros e $t$ em
+segundos, $s'(t)$ sai em metros por segundo. A derivada é uma taxa, e taxa tem
+unidade composta.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [taxa média de variação](../funcoes/taxa-media-de-variacao): o que é o
+quociente de diferenças, e por que ele exige $h \neq 0$?** É a taxa média entre
+$a$ e $a + h$, escrita como $\frac{f(a+h) - f(a)}{h}$. Com $h = 0$ os dois pontos
+coincidem, o denominador zera e a divisão não existe. Para $f(x) = x^2$ em
+torno de $a$, aquela lição simplificou o quociente até $2a + h$, e viu a
+tabela se acumular em $2a$.
+
+**2. De [limite de uma função](./limite-de-uma-funcao): o que é
+$\lim_{h \to 0} g(h) = L$?** É a afirmação de que $g(h)$ fica tão perto de $L$
+quanto se queira, desde que $h$ esteja perto o bastante de zero, **sem** que
+$h$ precise valer zero. O limite existe quando os dois lados concordam:
+aproximando por $h$ positivo e por $h$ negativo, o valor é o mesmo. Um exemplo
+daquela lição foi exatamente $\lim_{h \to 0} \frac{(2+h)^2 - 4}{h} = 4$.
+
+**3. De [calculando limites](./calculo-de-limites): o que fazer quando a
+substituição dá $\frac{0}{0}$?** Reescrever a fração sem mudar o valor dela para
+$h \neq 0$, até que o $h$ do denominador cancele. As três reescritas que
+resolvem quase todos os casos são a fatoração, o conjugado e a soma de frações.
+Aquela lição calculou $\lim_{h \to 0} \frac{\sqrt{4+h} - 2}{h} = \frac{1}{4}$ e
+$\lim_{h \to 0} \frac{\frac{1}{a+h} - \frac{1}{a}}{h} = -\frac{1}{a^2}$. Os dois
+vão reaparecer aqui com nome.
+
+**4. De [equação da reta](../geometria/equacao-da-reta): como se escreve a reta
+que passa por $(x_0, y_0)$ com inclinação $m$?** Pela forma ponto-inclinação,
+$y - y_0 = m(x - x_0)$. Ela vem de exigir que a inclinação entre $(x_0, y_0)$ e
+qualquer outro ponto $(x, y)$ da reta seja $m$. É com ela que a reta tangente
+será escrita.
+
+**5. De [racionalização](../algebra/racionalizacao) e de [operações com frações
+algébricas](../algebra/operacoes-com-fracoes-algebricas): o que é o conjugado, e
+como se somam duas frações com denominadores diferentes?** O conjugado de
+$\sqrt{a} - b$ é $\sqrt{a} + b$; o produto dos dois é $a - b^2$, sem raiz. Duas
+frações se somam depois de reescritas com denominador comum, multiplicando cada
+uma por um fator que vale 1. As duas técnicas são as que destravam
+$\sqrt{x}$ e $\frac{1}{x}$ nesta página.
+
+O item 1 é o mais importante. A derivada **não é uma ideia nova**: é o
+quociente de diferenças da lição de taxa média, com a palavra “se aproxima”
+trocada pelo símbolo $\lim$.
+
+## 5. Intuição: o velocímetro não marca médias
+
+Há duas perguntas diferentes sobre a mesma viagem.
+
+“Quanto o carro andou por segundo entre 1 s e 3 s?” é uma pergunta sobre um
+**trecho**. A resposta é uma média, e ela resume o trecho inteiro num número
+só. A lição de taxa média mostrou que esse número não descreve nenhum instante
+em particular: o carro começou o trecho a 2 m/s e terminou a 6 m/s.
+
+“Quanto o velocímetro marca aos 2 s?” é uma pergunta sobre um **instante**. E
+um instante não tem largura: não há “antes” e “depois” para subtrair.
+
+A saída é aceitar que a pergunta sobre o instante **só se responde por
+aproximação**. Medimos a média num trecho curto em torno de 2 s. Depois num
+trecho mais curto. Depois num mais curto ainda. Se essas médias se acumulam
+num único número, esse número é o que chamamos de velocidade **naquele
+instante**. O velocímetro faz exatamente isso: ele mede o deslocamento numa
+fração de segundo e divide pelo tempo, e a fração de segundo é curta o bastante
+para a média se confundir com o valor instantâneo.
+
+A matemática faz a mesma coisa, só que sem parar numa fração de segundo
+qualquer. Ela pergunta de que número as médias se aproximam quando o trecho
+encolhe sem limite. Esse número é o limite, e o limite é a derivada.
+
+No gráfico, a história é a mesma contada com retas. A média num trecho é a
+inclinação da **secante** que liga os dois extremos. Encolher o trecho é
+aproximar o segundo ponto do primeiro, e a secante gira. A posição para a qual
+ela gira é a **tangente**, e a inclinação da tangente é a derivada.
+
+## 6. Modelo visual: a secante que gira
+
+A figura abaixo é interativa. Ela desenha a parábola $f(x) = x^2$, o ponto
+fixo $A = (2, 4)$ e um segundo ponto $B = (2 + h, f(2+h))$ que você controla.
+A reta cheia é a secante por $A$ e $B$; a inclinação dela está escrita embaixo,
+calculada dos valores da função. A reta tracejada é a tangente em $A$.
+
+<TangentExplorer
+  f={(x) => x * x}
+  a={2}
+  hMin={-1.5}
+  hMax={2}
+  expression="f(x) = x^2"
+  caption="Arraste h em direção a zero pelos dois lados e acompanhe a inclinação da secante. Ela se aproxima de 4 — a inclinação da reta tracejada."
+/>
+
+Faça o seguinte, na ordem, e anote o que observar.
+
+1. **Comece com $h = 1$.** O ponto $B$ está em $(3, 9)$, e a inclinação é
+   $\frac{9 - 4}{1} = 5$. É o primeiro número da tabela da lição de taxa média.
+2. **Diminua para $h = 0{,}5$, depois $0{,}1$.** A inclinação passa a 4,5 e
+   depois a 4,1. A secante gira e se deita sobre a tracejada.
+3. **Passe para o lado negativo: $h = -0{,}5$ e $h = -0{,}1$.** Agora $B$ está à
+   esquerda de $A$, e as inclinações são 3,5 e 3,9. Elas sobem em direção a 4.
+   É a concordância dos dois lados que a lição de limite exige.
+4. **Leve o controle exatamente a $h = 0$.** O componente para de desenhar a
+   secante e avisa: os dois pontos coincidem e a divisão não existe. Isso não é
+   um defeito da figura. É o ponto central desta página: **a derivada não é a
+   inclinação em $h = 0$**, porque essa inclinação não existe. Ela é o número
+   de que as inclinações se aproximam. A reta tracejada continua na tela
+   porque ela é definida por esse limite, e não por uma conta em $h = 0$.
+
+Repare também no que a figura não mostra: nenhuma secante coincide com a
+tangente. Cada uma delas tem inclinação $4 + h$, e $4 + h$ só seria 4 com
+$h = 0$, que é o caso proibido. A tangente é a posição-limite, não uma das
+secantes.
+
+## 7. Ponte para a formalização: o que muda e o que permanece
+
+Antes de escrever a definição, vale dizer exatamente o que ela acrescenta ao
+que a lição de taxa média já tinha.
+
+**O que permanece.** O quociente de diferenças é o mesmo:
+$\frac{f(a+h) - f(a)}{h}$, com $h \neq 0$. A simplificação que cancela o $h$ do
+denominador é a mesma, e é legítima pelo mesmo motivo: como $h \neq 0$, dividir
+numerador e denominador por $h$ é multiplicar por 1 escrito como $\frac{1/h}{1/h}$.
+
+**O que muda.** A frase “quando $h$ se aproxima de zero, a expressão se aproxima
+de $2a$” vira o símbolo $\lim_{h \to 0}$. Isso vai além de economia de escrita. O
+limite tem regras: existe quando os dois lados concordam, obedece às
+propriedades de soma, produto e quociente, e é um número bem definido. Com ele,
+a “taxa instantânea” deixa de ser uma tendência observada numa tabela e passa
+a ser um valor calculado.
+
+**O que fica proibido continua proibido.** Substituir $h = 0$ antes de
+simplificar produz $\frac{0}{0}$, e a lição de calculando limites mostrou que
+$\frac{0}{0}$ não é zero, não é 1 e não é nada: é o sinal de que a fração
+precisa ser reescrita antes de o limite ser lido.
+
+## 8. Definição da derivada
+
+> Seja $f$ uma função definida em torno de $a$. A **derivada de $f$ em $a$** é
+> $$
+> \boxed{
+> f'(a) = \lim_{h \to 0} \frac{f(a+h) - f(a)}{h}
+> }
+> $$
+> desde que esse limite exista. Quando ele existe, dizemos que $f$ é
+> **derivável** em $a$.
+
+Lê-se “efe linha de $a$”. A linha é a marca da derivada.
+
+**Exemplo.** Para $f(x) = x^2$ em $a = 2$, o quociente é $4 + h$ para
+$h \neq 0$, e $\lim_{h \to 0} (4 + h) = 4$. Logo $f'(2) = 4$. É o velocímetro do
+motivador.
+
+**Contraexemplo.** Para $f(x) = \lvert x \rvert$ em $a = 0$, o quociente é
+$\frac{\lvert h \rvert}{h}$. Com $h$ positivo ele vale 1; com $h$ negativo vale
+$-1$. Os dois lados não concordam, o limite não existe, e $f$ **não é
+derivável** em 0. O gráfico de $\lvert x \rvert$ tem um bico na origem, e
+nenhuma reta merece o nome de tangente ali. A lição [quando a derivada não
+existe](./quando-a-derivada-nao-existe) desenvolve este e os outros casos em
+que o limite falha.
+
+### As duas leituras de $f'(a)$
+
+A mesma fórmula responde a duas perguntas, e vale entender por que são a mesma
+resposta.
+
+**Leitura geométrica.** O quociente $\frac{f(a+h) - f(a)}{h}$ é a inclinação da
+secante por $(a, f(a))$ e $(a+h, f(a+h))$. Quando $h$ se aproxima de zero, a
+secante gira em direção à tangente, e a inclinação dela se aproxima da
+inclinação da tangente. Então **$f'(a)$ é a inclinação da reta tangente** ao
+gráfico de $f$ no ponto $(a, f(a))$.
+
+**Leitura de taxa.** O mesmo quociente é a taxa média de $f$ no trecho de $a$ a
+$a + h$. Quando o trecho encolhe, a média se aproxima do ritmo no ponto. Então
+**$f'(a)$ é a taxa de variação instantânea** de $f$ em $a$: quanto a saída muda
+por unidade de entrada, naquele ponto exato.
+
+As duas leituras coincidem porque são o **mesmo número** visto em dois lugares.
+A inclinação de uma reta já era, na lição de função afim, a taxa de variação
+dela. Aqui a reta é a tangente, e a taxa é a da curva no ponto de contato.
+
+### Unidades
+
+A derivada herda a unidade do quociente: saída por entrada.
+
+| $f$ mede | $x$ mede | $f'(x)$ mede |
+|---|---|---|
+| metros | segundos | metros por segundo |
+| reais | peças produzidas | reais por peça |
+| graus Celsius | minutos | graus Celsius por minuto |
+| litros | quilômetros | litros por quilômetro |
+
+Se a unidade que saiu está de cabeça para baixo, o quociente foi montado ao
+contrário.
+
+## 9. Resolvendo o problema do velocímetro
+
+Com a definição, o motivador se resolve em três linhas. A velocidade é a
+derivada da posição:
+
+$$
+v(2) = s'(2) = \lim_{h \to 0} \frac{s(2+h) - s(2)}{h}
+= \lim_{h \to 0} \frac{(2+h)^2 - 4}{h}.
+$$
+
+Substituir $h = 0$ dá $\frac{0}{0}$, então reescrevemos. Expandindo o quadrado,
+$(2+h)^2 = 4 + 4h + h^2$; o 4 cancela com o $-4$; sobra $4h + h^2 = h(4 + h)$;
+o $h$ em evidência cancela com o denominador porque $h \neq 0$:
+
+$$
+v(2) = \lim_{h \to 0} (4 + h) = 4 \text{ m/s}.
+$$
+
+**O que os 4 m/s significam.** Não é uma média: é o número de que **todas** as
+médias em torno de 2 s se aproximam quando o trecho encolhe. Se o velocímetro
+mede o deslocamento em um milésimo de segundo, ele marca
+$\frac{s(2{,}001) - s(2)}{0{,}001} = 4{,}001$ m/s, e o ponteiro mostra 4.
+
+E a pergunta que a lição de taxa média deixou pela metade — “o carro passa
+pelos 4 m/s?” — agora tem resposta exata: sim, aos 2 s, porque $s'(2) = 4$.
+
+## 10. A derivada como função
+
+Fizemos a conta em $a = 2$. Refazê-la em $a = 3$ ou em $a = 5$ seria repetir
+os mesmos passos mudando um número, e a lição de taxa média já fez a economia
+certa: resolver uma vez com a letra $a$.
+
+$$
+\begin{aligned}
+f'(a) &= \lim_{h \to 0} \frac{(a+h)^2 - a^2}{h} \\
+&= \lim_{h \to 0} \frac{a^2 + 2ah + h^2 - a^2}{h} \\
+&= \lim_{h \to 0} \frac{h(2a + h)}{h} \\
+&= \lim_{h \to 0} (2a + h) \\
+&= 2a.
+\end{aligned}
+$$
+
+A derivada de $x^2$ em $a$ vale $2a$, para qualquer $a$. Isso é uma regra que
+associa cada entrada $a$ a uma saída $2a$ — ou seja, é uma **função**. Trocando
+a letra $a$ por $x$, para ficar na notação usual de função:
+
+> A **derivada de $f$** é a função $f'$ que associa a cada $x$ o valor
+> $f'(x) = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h}$. Para $f(x) = x^2$,
+> $f'(x) = 2x$.
+
+Há dois objetos diferentes aqui, e vale separá-los:
+
+- $f'(x) = 2x$ é uma **função**: a regra da derivada;
+- $f'(2) = 4$ é um **número**: a derivada calculada num ponto.
+
+Para a posição $s(t) = t^2$, a função $s'(t) = 2t$ é o velocímetro inteiro: a
+tabela de instantes e velocidades da lição de taxa média sai dela por
+substituição.
+
+| Instante $t$ (s) | 1 | $1{,}5$ | 2 | $2{,}5$ | 3 |
+|---:|---:|---:|---:|---:|---:|
+| Velocímetro $s'(t) = 2t$ (m/s) | 2 | 3 | 4 | 5 | 6 |
+
+### A notação $\frac{dy}{dx}$
+
+Há uma segunda forma de escrever a derivada, e ela aparece em quase todo
+livro. Se $y = f(x)$, a derivada também se escreve
+
+$$
+\frac{dy}{dx}.
+$$
+
+Lê-se “dê ípsilon, dê xis”. A origem é a taxa média $\frac{\Delta y}{\Delta x}$
+da lição de função afim e de taxa média: $\Delta y$ é a variação da saída,
+$\Delta x$ a variação da entrada. Quando o trecho encolhe, a letra grega
+$\Delta$ (“variação de”) é trocada pela letra $d$, para lembrar que o trecho foi
+levado ao limite. É o $\Delta$ que encolheu.
+
+Um aviso, porque a forma engana: $\frac{dy}{dx}$ **não é uma fração comum**.
+Não há um número $dy$ dividido por um número $dx$; há um limite de frações. A
+escrita é útil porque carrega a unidade (saída por entrada) e porque algumas
+regras adiante ficam mais legíveis com ela — a lição de [regra da
+cadeia](./regra-da-cadeia) vai usá-la. Mas não separe o $dy$ do $dx$ como se
+fossem dois fatores.
+
+Nesta página e nas seguintes, $f'(x)$ é a notação principal. Quando
+$\frac{dy}{dx}$ aparecer, significa a mesma coisa.
+
+## 11. Conferir uma derivada com um número
+
+Antes de calcular derivadas de outras funções, vale montar a ferramenta de
+conferência que o índice do capítulo prometeu. Ela é a definição sem o limite:
+o quociente de diferenças com um $h$ pequeno.
+
+$$
+f'(a) \approx \frac{f(a+h) - f(a)}{h}, \qquad h \text{ pequeno}.
+$$
+
+Para $f(x) = x^3$ em $a = 2$, numa calculadora:
+
+| $h$ | $\frac{(2+h)^3 - 8}{h}$ |
+|---:|---:|
+| $0{,}1$ | $12{,}61$ |
+| $0{,}01$ | $12{,}0601$ |
+| $0{,}001$ | $12{,}006001$ |
+
+Os valores se acumulam em 12. Se a fórmula que você deduzir para $f'(2)$ der 12,
+a conta está certa; se der 6 ou 24, algo escapou.
+
+Uma versão melhor usa um trecho **centrado** em $a$, de $a - h$ a $a + h$:
+
+$$
+f'(a) \approx \frac{f(a+h) - f(a-h)}{2h}.
+$$
+
+Com $h = 0{,}001$, ela dá $12{,}000001$ para o mesmo $x^3$ em 2 — cinco zeros
+depois da vírgula, contra dois da versão anterior. O exercício 25 explica por
+que centrar ajuda tanto.
+
+> Em todo o capítulo, **confira cada derivada com um número**. A fórmula
+> deduzida e o quociente com $h = 0{,}001$ precisam concordar nas primeiras
+> casas. É o gabarito que você tem na mão sem professor.
+
+## 12. Seis derivadas pela definição
+
+Agora o trabalho principal da página: calcular, pela definição, a derivada das
+seis funções mais simples do curso. Em cada uma, o roteiro é o mesmo:
+
+1. escrever o quociente $\frac{f(a+h) - f(a)}{h}$;
+2. constatar que substituir $h = 0$ dá $\frac{0}{0}$;
+3. reescrever a fração, sem mudar o valor dela para $h \neq 0$, até cancelar o
+   $h$ do denominador;
+4. só então fazer $h \to 0$;
+5. conferir com um número.
+
+O passo 3 é onde a regra anti-mágica se aplica. Em cada caso o texto diz **o que
+muda na escrita** e **o que permanece na quantidade**.
+
+### Derivada de uma constante: $f(x) = c$
+
+Uma função constante devolve o mesmo valor para toda entrada. O quociente é
+
+$$
+\frac{f(a+h) - f(a)}{h} = \frac{c - c}{h} = \frac{0}{h} = 0, \qquad h \neq 0.
+$$
+
+Aqui nem chega a aparecer $\frac{0}{0}$: o numerador é zero para todo $h$
+diferente de zero, então o quociente é a constante 0, e o limite de uma
+constante é ela mesma.
+
+$$
+\boxed{(c)' = 0}
+$$
+
+**Leitura.** Uma quantidade que não muda tem taxa de variação zero. O gráfico
+é uma reta horizontal, e a tangente a uma reta horizontal é ela mesma, com
+inclinação zero.
+
+### Derivada da identidade: $f(x) = x$
+
+$$
+\frac{f(a+h) - f(a)}{h} = \frac{(a+h) - a}{h} = \frac{h}{h} = 1, \qquad h \neq 0.
+$$
+
+O $a$ cancela na subtração e o $h$ cancela na divisão. Sobra 1 para todo
+$h \neq 0$, e o limite é 1.
+
+$$
+\boxed{(x)' = 1}
+$$
+
+**Leitura.** A reta $y = x$ sobe 1 para cada 1 que anda. A inclinação é 1 em
+todo ponto, e a tangente é a própria reta — como o exercício 25 da lição de
+taxa média já tinha mostrado para qualquer reta.
+
+### Derivada do quadrado: $f(x) = x^2$
+
+Já feita na seção 10. Vale reler o cancelamento com a lente da regra
+anti-mágica. O quociente $\frac{2ah + h^2}{h}$ e a expressão $2a + h$ são a
+mesma quantidade para todo $h \neq 0$: a escrita mudou, o valor não. O que a
+reescrita comprou foi tirar o $h$ do denominador, e com isso a substituição
+$h = 0$, que antes dava $\frac{0}{0}$, passa a dar um número.
+
+$$
+\boxed{(x^2)' = 2x}
+$$
+
+**Conferindo com um número.** Em $a = 3$, a fórmula dá 6. O quociente centrado
+com $h = 0{,}001$ dá $6{,}000000$. Confere.
+
+### Derivada do cubo: $f(x) = x^3$
+
+Precisamos de $(a+h)^3$. A lição de [produtos
+notáveis](../algebra/produtos-notaveis) expandiu o cubo da soma:
+$(a+b)^3 = a^3 + 3a^2 b + 3ab^2 + b^3$. Com $b = h$:
+
+$$
+(a+h)^3 = a^3 + 3a^2 h + 3a h^2 + h^3.
+$$
+
+O quociente:
+
+$$
+\begin{aligned}
+\frac{(a+h)^3 - a^3}{h}
+&= \frac{a^3 + 3a^2 h + 3a h^2 + h^3 - a^3}{h} \\
+&= \frac{3a^2 h + 3a h^2 + h^3}{h} \\
+&= \frac{h(3a^2 + 3ah + h^2)}{h} \\
+&= 3a^2 + 3ah + h^2, \qquad h \neq 0.
+\end{aligned}
+$$
+
+**O que mudou na escrita:** o $a^3$ cancelou com o $-a^3$, os três termos que
+sobraram tinham $h$ como fator comum, e o $h$ em evidência foi cancelado com o
+denominador. **O que permaneceu:** o valor, para todo $h \neq 0$. Teste com
+$a = 2$ e $h = 1$: o quociente original é $\frac{27 - 8}{1} = 19$; a forma
+reescrita dá $12 + 6 + 1 = 19$.
+
+Agora o limite. Quando $h \to 0$, os termos $3ah$ e $h^2$ vão a zero, e sobra:
+
+$$
+\boxed{(x^3)' = 3x^2}
+$$
+
+**Conferindo com um número.** Em $a = 2$ a fórmula dá $3 \times 4 = 12$, que é
+o número em que a tabela da seção 11 se acumulava.
+
+**Um padrão começa a aparecer.** A derivada de $x$ é $1$, a de $x^2$ é $2x$, a
+de $x^3$ é $3x^2$. O expoente desce para a frente e diminui em 1. A lição de
+[regras de derivação](./regras-de-derivacao) vai mostrar que esse padrão vale
+para qualquer expoente, e o motivo é o mesmo que apareceu aqui: na expansão de
+$(a+h)^n$, o termo que sobrevive ao limite é sempre $n a^{n-1} h$.
+
+### Derivada do inverso: $f(x) = \frac{1}{x}$, com $x \neq 0$
+
+O quociente tem uma fração dentro de outra:
+
+$$
+\frac{f(a+h) - f(a)}{h} = \frac{\dfrac{1}{a+h} - \dfrac{1}{a}}{h}.
+$$
+
+Substituir $h = 0$ dá $\frac{0}{0}$ de novo. A reescrita aqui é a soma de
+frações da lição de operações com frações algébricas: as duas frações do
+numerador têm denominadores diferentes, $a + h$ e $a$, e o denominador comum é
+o produto $a(a+h)$. Reescrevendo cada uma com esse denominador (multiplicando
+por um fator que vale 1) e subtraindo os numeradores:
+
+$$
+\frac{1}{a+h} - \frac{1}{a}
+= \frac{a}{a(a+h)} - \frac{a+h}{a(a+h)}
+= \frac{a - (a+h)}{a(a+h)}
+= \frac{-h}{a(a+h)}.
+$$
+
+O numerador virou $-h$, e é esse $h$ que vai cancelar com o de baixo. Dividir
+por $h$ é multiplicar por $\frac{1}{h}$:
+
+$$
+\frac{f(a+h) - f(a)}{h}
+= \frac{-h}{a(a+h)} \times \frac{1}{h}
+= \frac{-1}{a(a+h)}, \qquad h \neq 0.
+$$
+
+**O que mudou na escrita:** o numerador foi juntado numa fração só, e o $h$ que
+apareceu nele cancelou com o denominador. **O que permaneceu:** o valor. Com
+$a = 1$ e $h = 1$: original $\frac{\frac{1}{2} - 1}{1} = -\frac{1}{2}$;
+reescrita $\frac{-1}{1 \times 2} = -\frac{1}{2}$.
+
+Agora $h \to 0$ faz $a + h \to a$, e o denominador vira $a \times a = a^2$:
+
+$$
+\boxed{\left(\frac{1}{x}\right)' = -\frac{1}{x^2}}
+$$
+
+Este é o limite que a lição de calculando limites já tinha obtido, e que o
+exercício 18 da lição de taxa média tinha deixado como tendência. Agora ele
+tem nome: é a derivada de $\frac{1}{x}$.
+
+**Leitura.** O sinal negativo diz que $\frac{1}{x}$ desce em todo ponto do
+domínio, o que o gráfico dela já mostrava. E a derivada nunca é zero: a
+hipérbole não tem tangente horizontal em ponto nenhum.
+
+**Conferindo com um número.** Em $a = 2$ a fórmula dá $-\frac{1}{4} = -0{,}25$.
+O quociente centrado com $h = 0{,}001$ dá $-0{,}250000$.
+
+### Derivada da raiz: $f(x) = \sqrt{x}$, com $x$ positivo
+
+$$
+\frac{f(a+h) - f(a)}{h} = \frac{\sqrt{a+h} - \sqrt{a}}{h}.
+$$
+
+Com $h = 0$, $\frac{0}{0}$. Desta vez não há fator comum para pôr em evidência
+nem fração para somar: a raiz bloqueia. A ferramenta é o **conjugado** da lição
+de racionalização, usado no numerador, como no exemplo 5 daquela lição.
+Multiplicamos numerador e denominador por $\sqrt{a+h} + \sqrt{a}$, que é
+multiplicar por 1:
+
+$$
+\frac{\sqrt{a+h} - \sqrt{a}}{h} \times \frac{\sqrt{a+h} + \sqrt{a}}{\sqrt{a+h} + \sqrt{a}}
+= \frac{(\sqrt{a+h})^2 - (\sqrt{a})^2}{h\,(\sqrt{a+h} + \sqrt{a})}
+= \frac{(a+h) - a}{h\,(\sqrt{a+h} + \sqrt{a})}.
+$$
+
+O produto notável $(p - q)(p + q) = p^2 - q^2$ elevou as duas raízes ao
+quadrado, e o quadrado desfaz a raiz. O numerador virou $a + h - a = h$:
+
+$$
+= \frac{h}{h\,(\sqrt{a+h} + \sqrt{a})}
+= \frac{1}{\sqrt{a+h} + \sqrt{a}}, \qquad h \neq 0.
+$$
+
+**O que mudou na escrita:** a raiz saiu do numerador e foi para o denominador,
+e o $h$ que apareceu em cima cancelou com o de baixo. **O que permaneceu:** o
+valor. Com $a = 4$ e $h = 5$: original $\frac{3 - 2}{5} = 0{,}2$; reescrita
+$\frac{1}{3 + 2} = 0{,}2$.
+
+Agora $h \to 0$ faz $\sqrt{a+h} \to \sqrt{a}$, e o denominador vira
+$2\sqrt{a}$:
+
+$$
+\boxed{\left(\sqrt{x}\right)' = \frac{1}{2\sqrt{x}}}
+$$
+
+É o limite $\frac{\sqrt{4+h} - 2}{h} \to \frac{1}{4}$ da lição de calculando
+limites, com $a = 4$: $\frac{1}{2\sqrt{4}} = \frac{1}{4}$.
+
+**Leitura.** A derivada é positiva em todo $x > 0$: a raiz sobe sempre. E ela
+**diminui** conforme $x$ cresce: em $x = 4$ vale $\frac{1}{4}$, em $x = 100$
+vale $\frac{1}{20}$. A raiz sobe cada vez mais devagar, o que o gráfico dela na
+lição de funções potência já mostrava. Em $x = 0$ a fórmula não existe, e a
+lição seguinte explica o que acontece com a tangente ali.
+
+**Conferindo com um número.** Em $a = 9$ a fórmula dá $\frac{1}{6} \approx
+0{,}16667$; o quociente centrado com $h = 0{,}001$ dá $0{,}166667$.
+
+### A tabela desta página
+
+| $f(x)$ | $f'(x)$ | Reescrita que destravou o $\frac{0}{0}$ |
+|---|---|---|
+| $c$ | $0$ | nenhuma: o numerador já era 0 |
+| $x$ | $1$ | cancelar $\frac{h}{h}$ |
+| $x^2$ | $2x$ | expandir o quadrado e pôr $h$ em evidência |
+| $x^3$ | $3x^2$ | expandir o cubo e pôr $h$ em evidência |
+| $\frac{1}{x}$ | $-\frac{1}{x^2}$ | somar as frações do numerador |
+| $\sqrt{x}$ | $\frac{1}{2\sqrt{x}}$ | multiplicar pelo conjugado |
+
+Cada linha foi obtida pela definição. As lições seguintes vão obter as mesmas
+seis por regras gerais, e os resultados têm que bater — é a conferência
+interna do capítulo.
+
+## 13. A reta tangente
+
+A derivada $f'(a)$ é a inclinação da tangente em $(a, f(a))$. Uma reta fica
+determinada por um ponto e uma inclinação, e a lição de equação da reta
+escreveu essa reta como $y - y_0 = m(x - x_0)$. Aqui o ponto é $(a, f(a))$ e a
+inclinação é $f'(a)$:
+
+$$
+y - f(a) = f'(a)(x - a),
+$$
+
+ou, isolando $y$:
+
+> A **reta tangente** ao gráfico de $f$ no ponto de abscissa $a$ é
+> $$
+> \boxed{y = f(a) + f'(a)\,(x - a)}
+> $$
+
+Cada peça tem um papel. $f(a)$ é a altura do ponto de contato. $f'(a)$ é a
+inclinação. $(x - a)$ é quanto se andou a partir do ponto de contato. A reta
+diz: “comece na altura $f(a)$ e suba $f'(a)$ para cada unidade andada”.
+
+**Exemplo.** Tangente a $f(x) = x^2$ em $a = 3$. O ponto é $(3, 9)$ e a
+inclinação é $f'(3) = 2 \times 3 = 6$:
+
+$$
+y = 9 + 6(x - 3) = 6x - 9.
+$$
+
+<CartesianPlane
+  xMin={-1}
+  xMax={5}
+  yMin={-3}
+  yMax={17}
+  xUnit={58}
+  yUnit={17}
+  yStep={2}
+  functions={[{f: (x) => x * x, tone: 1}]}
+  lines={[{m: 6, n: -9, tone: 3}]}
+  points={[{at: [3, 9], label: '(3,\\ 9)', tone: 3, dx: -28, dy: 4}]}
+  labels={[{at: [4.3, 12], math: 'y = 6x - 9', tone: 3, dx: -30}]}
+  axisLabels={['x', 'y']}
+  caption="A tangente à parábola em (3, 9) tem inclinação 6, que é f'(3). Perto do ponto de contato, reta e curva quase se confundem; longe dele, se separam."
+/>
+
+**Conferindo.** A reta passa pelo ponto de contato: com $x = 3$, $y = 18 - 9 =
+9$. E, num segundo ponto, ela **não** coincide com a curva: com $x = 4$, a reta
+dá 15 e a parábola dá 16. A tangente toca a curva em $a$ e tem a inclinação da
+curva ali; fora de $a$, ela é a reta que melhor imita a curva por perto, e nada
+mais. A
+diferença cresce quando se afasta: com $x = 2{,}9$, a reta dá 8,4 e a curva
+8,41 — quase iguais; com $x = 4$, a diferença já é 1.
+
+**Contraexemplo.** A reta $y = 6x$ também tem inclinação 6, mas não passa por
+$(3, 9)$: em $x = 3$ ela dá 18. Inclinação certa e ponto errado não é a
+tangente. A tangente precisa das duas coisas.
+
+## 14. Exemplos resolvidos
+
+### Exemplo 1: uma derivada pela definição
+
+Calcule $f'(1)$ para $f(x) = 3x^2 - 2x$.
+
+Pela definição, com $a = 1$:
+
+$$
+f'(1) = \lim_{h \to 0} \frac{f(1+h) - f(1)}{h}.
+$$
+
+Calculando as duas saídas: $f(1) = 3 - 2 = 1$, e
+$f(1+h) = 3(1+h)^2 - 2(1+h) = 3(1 + 2h + h^2) - 2 - 2h = 1 + 4h + 3h^2$.
+
+$$
+\frac{f(1+h) - f(1)}{h} = \frac{1 + 4h + 3h^2 - 1}{h} = \frac{h(4 + 3h)}{h}
+= 4 + 3h, \qquad h \neq 0.
+$$
+
+Quando $h \to 0$, sobra $f'(1) = 4$.
+
+**Conferindo com um número.** $\frac{f(1{,}001) - f(1)}{0{,}001} =
+\frac{1{,}004003 - 1}{0{,}001} = 4{,}003$. Confere.
+
+### Exemplo 2: custo de uma peça a mais
+
+*Pause e tente antes de ler.* Uma fábrica tem custo total, em reais, de
+$C(q) = 0{,}02q^2 + 5q + 1500$ para produzir $q$ peças. a) Qual é a derivada
+$C'(q)$? b) Quanto vale $C'(100)$, e o que ela mede? c) Compare com o custo
+real da 101ª peça.
+
+**a)** Pela definição, com a letra $q$ no lugar de $a$:
+
+$$
+\begin{aligned}
+C(q+h) - C(q)
+&= 0{,}02(q+h)^2 + 5(q+h) + 1500 - (0{,}02q^2 + 5q + 1500) \\
+&= 0{,}02(2qh + h^2) + 5h \\
+&= h\,(0{,}04q + 0{,}02h + 5).
+\end{aligned}
+$$
+
+Dividindo por $h \neq 0$ e fazendo $h \to 0$: $C'(q) = 0{,}04q + 5$.
+
+**b)** $C'(100) = 4 + 5 = 9$. A unidade é reais por peça: é o ritmo em que o
+custo total cresce quando a produção está em 100 peças. A economia chama esse
+número de **custo marginal**: aproximadamente, o que custa produzir uma peça a
+mais a partir das 100.
+
+**c)** O custo real da 101ª peça é $C(101) - C(100)$. Como $C(100) = 200 + 500 +
+1500 = 2200$ e $C(101) = 204{,}02 + 505 + 1500 = 2209{,}02$, a diferença é
+R\$ 9,02. A derivada deu R\$ 9,00. Os dois números não são iguais, porque a
+derivada é a taxa **no ponto** $q = 100$ e a peça a mais é um trecho de largura
+1; mas a diferença é de dois centavos, e para decidir preço isso é a mesma
+coisa.
+
+### Exemplo 3: a tangente a uma hipérbole
+
+*Pause e tente.* Escreva a reta tangente a $f(x) = \frac{1}{x}$ no ponto de
+abscissa 2, e diga onde ela cruza os eixos.
+
+O ponto de contato é $\left(2, \frac{1}{2}\right)$. A inclinação é a derivada
+da tabela: $f'(2) = -\frac{1}{2^2} = -\frac{1}{4}$.
+
+$$
+y = \frac{1}{2} - \frac{1}{4}(x - 2) = -\frac{x}{4} + 1.
+$$
+
+Ela cruza o eixo $y$ em $(0, 1)$ e o eixo $x$ onde $-\frac{x}{4} + 1 = 0$, ou
+seja, em $(4, 0)$.
+
+<CartesianPlane
+  xMin={-1}
+  xMax={5}
+  yMin={-1}
+  yMax={3}
+  xUnit={58}
+  yUnit={58}
+  functions={[{f: (x) => 1 / x, domain: [0.3, 5], tone: 1}]}
+  lines={[{m: -0.25, n: 1, tone: 3}]}
+  points={[
+    {at: [2, 0.5], label: '(2,\\ \\tfrac12)', tone: 3, dx: 34, dy: -14},
+    {at: [0, 1], tone: 3},
+    {at: [4, 0], tone: 3},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A tangente à hipérbole em (2, 1/2) desce com inclinação −1/4 e corta os eixos em (0, 1) e (4, 0)."
+/>
+
+**Conferindo.** No ponto de contato, $x = 2$ dá $y = -\frac{1}{2} + 1 =
+\frac{1}{2}$. E o sinal da inclinação bate com o gráfico: o ramo da hipérbole
+desce, e a tangente também.
+
+### Exemplo 4: onde a tangente tem uma inclinação dada
+
+*Pause e tente.* Em que ponto da parábola $f(x) = x^2$ a tangente tem
+inclinação 5?
+
+A inclinação da tangente em $a$ é $f'(a) = 2a$. Queremos $2a = 5$, logo
+$a = 2{,}5$. O ponto é $(2{,}5;\ 6{,}25)$.
+
+Repare que a pergunta “onde a inclinação vale tanto” é uma **equação** cuja
+incógnita é o ponto: $f'(a) = 5$. É o mesmo movimento que a lição de taxa média
+fez no exemplo 6, em que a incógnita era um extremo do trecho. A pergunta que
+mais vai aparecer no capítulo é a versão com zero: onde $f'(a) = 0$, a tangente
+é horizontal — e é assim que se acham máximos e mínimos.
+
+### Exemplo 5: a bicicleta da lição anterior
+
+*Pause e tente.* A posição de uma bicicleta é $s(t) = 2t^2 + 3t$ metros. O
+exercício 19 da lição de taxa média chegou ao quociente $11 + 2h$ em torno de
+$t = 2$ e disse que ele “se aproxima de 11”. Escreva a velocidade em qualquer
+instante e confirme.
+
+Pela definição, em torno de um $t$ qualquer:
+
+$$
+s(t+h) - s(t) = 2(t+h)^2 + 3(t+h) - 2t^2 - 3t = 4th + 2h^2 + 3h = h(4t + 2h + 3).
+$$
+
+Dividindo por $h \neq 0$ e fazendo $h \to 0$: $s'(t) = 4t + 3$. Em $t = 2$,
+$s'(2) = 11$ m/s. O que antes era uma tendência lida numa tabela agora é um
+valor calculado, e a função $s'(t)$ responde para todos os instantes de uma vez:
+aos 0 s a bicicleta já ia a 3 m/s; aos 5 s vai a 23 m/s.
+
+### Exemplo 6: ler a derivada numa frase
+
+*Pause e tente.* Um técnico anota: “aos 10 minutos, a temperatura da peça era
+80 °C e caía a 3 °C por minuto”. Escreva as duas informações com a notação de
+função e de derivada.
+
+Chame de $T(t)$ a temperatura no minuto $t$. A frase diz $T(10) = 80$ e
+$T'(10) = -3$. O primeiro é um valor da função; o segundo é a taxa naquele
+instante, negativa porque a temperatura cai. As duas informações são
+independentes: saber que a peça está a 80 °C não diz se ela esquenta ou esfria,
+e saber que cai 3 °C por minuto não diz a que temperatura está.
+
+## 15. Erros comuns
+
+> **Erro 1: entregar $2a + h$ como derivada.** O quociente simplificado ainda
+> depende de $h$; ele é a inclinação de uma secante. A derivada é o **limite**
+> dele: $2a$. Esquecer o $h \to 0$ é parar um passo antes do fim. Teste: a
+> derivada em $a = 2$ tem que ser um número, e $4 + h$ não é.
+
+> **Erro 2: substituir $h = 0$ antes de simplificar.** Dá $\frac{0}{0}$, que
+> não tem valor. A ordem é reescrever primeiro, com $h \neq 0$, e só depois
+> fazer $h \to 0$. A lição de calculando limites explica por que $\frac{0}{0}$
+> não é zero nem 1: é o aviso de que a fração precisa de outra forma.
+
+> **Erro 3: confundir $f'(a)$ com $f(a)$.** Para $f(x) = x^2$, $f(2) = 4$ é a
+> altura do ponto e $f'(2) = 4$ é a inclinação da tangente ali. Os dois deram 4
+> por coincidência. Em $a = 3$, $f(3) = 9$ e $f'(3) = 6$: números diferentes,
+> porque medem coisas diferentes. Um está no eixo $y$; o outro é uma taxa.
+
+> **Erro 4: achar que a derivada é “a fórmula da tangente”.** A derivada é um
+> **número** (a inclinação) ou uma **função** (a regra da inclinação). A
+> tangente é uma **reta**, $y = f(a) + f'(a)(x - a)$, que usa a derivada como
+> um dos ingredientes. Dizer “a derivada de $x^2$ em 3 é $y = 6x - 9$” mistura
+> o ingrediente com o prato.
+
+> **Erro 5: esquecer os parênteses em $f(a+h)$.** Para $f(x) = x^2$,
+> $f(a+h) = (a+h)^2 = a^2 + 2ah + h^2$, e não $a^2 + h$ nem $a + h^2$. É o
+> erro 3 da lição de taxa média, e ele continua sendo o mais frequente.
+
+> **Erro 6: derivada zero significa função zero.** A derivada de $f(x) = 7$ é
+> zero, e $f$ vale 7 em todo ponto. Derivada zero diz que a função **não
+> muda**, e não que ela vale zero.
+
+> **Erro 7: confiar na estimativa numérica como se fosse exata.** O quociente
+> com $h = 0{,}001$ deu $12{,}006$ para $x^3$ em 2, e a derivada é 12. A
+> estimativa **confere** a fórmula; ela não a substitui. Se as duas discordarem
+> na primeira casa decimal, a fórmula está errada.
+
+## 16. Perguntas de verificação
+
+1. Por que a taxa de variação num ponto não pode ser calculada diretamente
+   pela fórmula da taxa média?
+2. O que a definição de derivada acrescenta ao quociente de diferenças da
+   lição de taxa média?
+3. Por que $f'(a)$ é, ao mesmo tempo, a inclinação da tangente e a taxa
+   instantânea?
+4. No `TangentExplorer`, por que a secante desaparece quando $h = 0$, mas a
+   tangente continua desenhada?
+5. Qual é a diferença entre $f'(x)$ e $f'(2)$?
+6. O que o $d$ de $\frac{dy}{dx}$ tem a ver com o $\Delta$ de
+   $\frac{\Delta y}{\Delta x}$? E por que $\frac{dy}{dx}$ não é uma fração comum?
+7. Nas seis derivadas pela definição, qual passo é o mesmo em todas, e o que
+   muda de uma para outra?
+8. Por que o cancelamento do $h$ no denominador é legítimo?
+9. A tangente a $x^2$ em $a = 3$ dá 15 em $x = 4$, e a parábola dá 16. Isso
+   quer dizer que a tangente está errada?
+10. Para que serve a estimativa numérica com $h$ pequeno, se ela nunca dá o
+    valor exato?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque a fórmula da taxa média divide pela variação da entrada, e num ponto
+   essa variação é zero. Dividir por zero não existe. A saída é medir em
+   trechos cada vez menores em torno do ponto e tomar o limite.
+2. Acrescenta o **limite**. O quociente, depois de simplificado, ainda depende
+   de $h$: é uma secante. A derivada é o número de que esses quocientes se
+   aproximam quando $h \to 0$, e o limite é o que dá a esse número um
+   significado preciso, com regras.
+3. Porque são o mesmo número visto em dois lugares. O quociente
+   $\frac{f(a+h) - f(a)}{h}$ é, ao mesmo tempo, a inclinação da secante e a
+   taxa média do trecho. Quando $h \to 0$, a secante vira tangente e a taxa
+   média vira taxa instantânea, e o limite é um só.
+4. A secante precisa de dois pontos distintos, e em $h = 0$ eles coincidem: não
+   há reta nem inclinação. A tangente não é definida por uma conta em $h = 0$,
+   e sim pelo limite das secantes com $h \neq 0$. O limite existe mesmo que o
+   valor em $h = 0$ não exista — é o que a lição de limite ensinou.
+5. $f'(x)$ é uma função: a regra que dá a derivada em qualquer ponto. $f'(2)$
+   é um número: a derivada calculada em $x = 2$. Para $f(x) = x^2$, $f'(x) =
+   2x$ e $f'(2) = 4$.
+6. O $\Delta$ significa “variação de”, num trecho de largura $\Delta x$. O $d$
+   marca que o trecho foi levado ao limite: é o $\Delta$ que encolheu. Não é
+   uma fração comum porque não existem dois números $dy$ e $dx$ para dividir;
+   o que existe é o limite de frações $\frac{\Delta y}{\Delta x}$.
+7. O mesmo em todas: escrever o quociente, ver o $\frac{0}{0}$, reescrever até
+   cancelar o $h$ do denominador, e só então fazer $h \to 0$. O que muda é a
+   reescrita: expandir e pôr em evidência nas potências, somar frações em
+   $\frac{1}{x}$, multiplicar pelo conjugado em $\sqrt{x}$.
+8. Porque $h \neq 0$ durante todo o cálculo do quociente. Cancelar $\frac{h}{h}$
+   é multiplicar por 1, o que não muda o valor. O $h = 0$ só entra depois, no
+   limite, e nesse momento o $h$ já não está no denominador.
+9. Não. A tangente toca a curva em $a = 3$ e tem a inclinação da curva **ali**.
+   Fora do ponto de contato ela é uma reta e a parábola é uma curva; a
+   diferença cresce com a distância ao ponto. A conferência da tangente é no
+   ponto de contato: em $x = 3$ os dois dão 9.
+10. Para conferir a fórmula. A derivada deduzida e o quociente com
+    $h = 0{,}001$ têm que concordar nas primeiras casas; se a fórmula der 6 e
+    o número der 12,006, a fórmula está errada. É o gabarito que o aluno sem
+    professor tem na mão.
+
+</details>
+
+## 17. Exercícios
+
+### 1. Reconhecimento
+
+1. Escreva, sem calcular, $f'(3)$ como um limite, para $f(x) = x^2$.
+2. As inclinações das secantes por $(1, f(1))$ foram, para $h = 0{,}1$; $0{,}01$;
+   $0{,}001$ e $-0{,}001$: $5{,}1$; $5{,}01$; $5{,}001$ e $4{,}999$. Quanto vale
+   $f'(1)$?
+3. Diga a unidade da derivada em cada caso: a) posição em quilômetros e tempo
+   em horas; b) custo em reais e produção em peças; c) temperatura em graus
+   Celsius e tempo em minutos.
+4. Na frase “aos 4 segundos o carro estava a 30 metros do ponto de partida e
+   andava a 8 metros por segundo”, qual número é $s(4)$ e qual é $s'(4)$?
+5. Das expressões abaixo, quais são funções e quais são números?
+   a) $f'(x) = 2x$; b) $f'(2) = 4$; c) $\frac{dy}{dx} = 3x^2$; d) $s'(1) = 5$.
+
+### 2. Explicação
+
+6. Explique por que não se pode substituir $h = 0$ no quociente
+   $\frac{f(a+h) - f(a)}{h}$ antes de simplificá-lo.
+7. Explique, com as próprias palavras, por que a inclinação da tangente e a
+   taxa instantânea são o mesmo número.
+8. Para $f(x) = x^2$, $f(2) = 4$ e $f'(2) = 4$. Explique o que cada um dos dois
+   números mede, e por que a coincidência não se repete em $x = 3$.
+9. Explique, sem fórmula, por que a derivada de uma função constante é zero.
+10. Um colega diz que a derivada de $x^2$ em 3 “é a reta $y = 6x - 9$”. O que
+    ele confundiu?
+
+### 3. Aplicação direta
+
+11. Calcule $f'(a)$ pela definição para $f(x) = 5x + 1$.
+12. Para $f(x) = x^2 - 4x$: a) encontre $f'(x)$ pela definição; b) calcule
+    $f'(1)$, $f'(2)$ e $f'(3)$; c) em qual dos três pontos a tangente é
+    horizontal?
+13. Use a tabela da seção 12 para calcular: a) $f'(1)$ e $f'(-1)$ para
+    $f(x) = x^3$; b) $f'(-2)$ para $f(x) = \frac{1}{x}$; c) $f'(16)$ para
+    $f(x) = \sqrt{x}$.
+14. Estime numericamente $f'(1)$ para $f(x) = x^4$, com $h = 0{,}001$, e diga
+    de que inteiro o resultado está perto.
+15. Escreva a reta tangente a $f(x) = x^3$ em $a = 1$.
+
+### 4. Variação
+
+16. Calcule $f'(x)$ pela definição para $f(x) = 2x^2 + 3x - 1$, e confira
+    numericamente em $x = 2$.
+17. Para $f(x) = x^3 - x$: a) encontre $f'(x)$ pela definição, usando a expansão
+    do cubo; b) encontre os pontos em que a tangente é horizontal.
+18. Escreva a tangente a $f(x) = x^2$ em $a = -1$, e confira que ela passa pelo
+    ponto de contato.
+19. A tangente a $f(x) = \frac{1}{x}$ em $a = 1$ corta os eixos em dois pontos.
+    Quais?
+20. Em que ponto do gráfico de $f(x) = \sqrt{x}$ a tangente tem inclinação
+    $\frac{1}{10}$?
+
+<details>
+<summary>Dica para o 17</summary>
+
+O cubo da soma é $(a+h)^3 = a^3 + 3a^2h + 3ah^2 + h^3$, e o $-(a+h)$ do segundo
+termo entra na subtração com o sinal trocado. Depois de cancelar $a^3$ com
+$-a^3$ e $-a$ com $+a$, tudo o que sobra tem $h$ como fator.
+
+</details>
+
+### 5. Problema misto
+
+21. A posição de um carrinho num trilho é $s(t) = t^2 - 6t + 20$ metros, com
+    $t$ em segundos. a) Encontre a velocidade $s'(t)$. b) Calcule $s'(1)$,
+    $s'(3)$ e $s'(5)$ e interprete o sinal de cada uma. c) Em que instante o
+    carrinho para de recuar e começa a avançar?
+22. O custo de produzir $q$ peças é $C(q) = 0{,}5q^2 + 20q + 800$ reais. a)
+    Calcule o custo marginal $C'(40)$. b) Calcule o custo real da 41ª peça,
+    $C(41) - C(40)$. c) Por que os dois números são parecidos mas não iguais?
+23. Um quadrado tem lado $\ell$ cm e área $A(\ell) = \ell^2$. a) Calcule
+    $A'(5)$ e diga a unidade. b) Aumente o lado de 5 para 5,1 cm e calcule o
+    acréscimo real de área. c) Desenhe, mentalmente, o “L” que o acréscimo
+    forma em torno do quadrado, e explique por que a derivada é $2\ell$ e não
+    $4\ell$.
+24. A temperatura de uma peça que esfria é $T(t) = 20 + \dfrac{60}{t + 1}$
+    graus Celsius, com $t$ em minutos. a) Calcule $T(2)$. b) Calcule $T'(2)$
+    pela definição. c) Interprete o sinal e a unidade.
+
+<details>
+<summary>Dica para o 24</summary>
+
+A parte que varia é $\frac{60}{t+1}$. O quociente de diferenças dela é 60 vezes
+o de $\frac{1}{t+1}$, e este se calcula exatamente como o de $\frac{1}{x}$ na
+seção 12, com $t + 1$ no lugar de $a$: some as duas frações com denominador
+comum $(t+1)(t+1+h)$.
+
+</details>
+
+### 6. Justificativa
+
+25. Mostre que, para $f(x) = x^2$, a inclinação da secante **centrada** em $a$,
+    entre $a - h$ e $a + h$, é exatamente $2a$ para qualquer $h \neq 0$. Use
+    isso para explicar por que a estimativa centrada da seção 11 é tão melhor
+    que a comum.
+26. Mostre, pela definição, que a derivada de $f(x) = mx + n$ é $m$ em todo
+    ponto, e diga o que isso significa para a tangente de uma reta.
+27. Suponha que $f'(a)$ existe. Escreva $f(a+h) - f(a)$ como o produto do
+    quociente de diferenças por $h$, e conclua que $\lim_{h \to 0}
+    \big(f(a+h) - f(a)\big) = 0$. O que isso diz sobre a continuidade de $f$
+    em $a$?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. $f'(3) = \lim_{h \to 0} \dfrac{(3+h)^2 - 9}{h}$.
+2. $f'(1) = 5$. As inclinações se acumulam em 5 pelos dois lados: por cima
+   ($5{,}1$; $5{,}01$; $5{,}001$) e por baixo ($4{,}999$).
+3. a) quilômetros por hora. b) reais por peça. c) graus Celsius por minuto.
+4. $s(4) = 30$ metros é a posição; $s'(4) = 8$ metros por segundo é a
+   velocidade.
+5. Funções: (a) e (c). Números: (b) e (d).
+6. Porque com $h = 0$ o numerador e o denominador valem zero, e $\frac{0}{0}$
+   não tem valor. A fração precisa ser reescrita numa forma sem $h$ no
+   denominador, o que é legítimo para $h \neq 0$. Só então o limite pode ser
+   lido.
+7. O quociente $\frac{f(a+h) - f(a)}{h}$ é a inclinação da secante e a taxa
+   média do trecho ao mesmo tempo, porque inclinação de reta é taxa de
+   variação. Quando o trecho encolhe, a secante se aproxima da tangente e a
+   média se aproxima do valor no ponto. É um limite só, lido de dois jeitos.
+8. $f(2) = 4$ é a altura do ponto da parábola em $x = 2$; $f'(2) = 4$ é a
+   inclinação da tangente ali. Em $x = 3$, $f(3) = 9$ e $f'(3) = 6$. A
+   coincidência em 2 acontece porque $x^2 = 2x$ tem solução $x = 2$; em geral
+   altura e inclinação são números diferentes.
+9. Porque uma constante não muda: a variação da saída é zero em qualquer
+   trecho, então a taxa média é zero em qualquer trecho, e o limite de zeros é
+   zero. No gráfico, a reta horizontal é a própria tangente, com inclinação
+   zero.
+10. Confundiu a derivada com a tangente. A derivada em 3 é o número 6, a
+    inclinação. A reta $y = 6x - 9$ é a tangente, que usa esse 6 e o ponto
+    $(3, 9)$. A derivada é um ingrediente da tangente, não a tangente.
+11. $\dfrac{5(a+h) + 1 - (5a + 1)}{h} = \dfrac{5h}{h} = 5$, para $h \neq 0$.
+    O limite é 5. A derivada de uma reta é a inclinação dela, em todo ponto.
+12. a) $f(x+h) - f(x) = 2xh + h^2 - 4h = h(2x + h - 4)$; dividindo por $h$ e
+    fazendo $h \to 0$, $f'(x) = 2x - 4$. &nbsp; b) $f'(1) = -2$, $f'(2) = 0$,
+    $f'(3) = 2$. &nbsp; c) Em $x = 2$, onde $f'(2) = 0$. É o vértice da parábola
+    $x^2 - 4x$, que a fórmula $x_v = -\frac{b}{2a} = \frac{4}{2} = 2$ confirma:
+    a lição de máximos e mínimos vai mostrar que isso não é coincidência.
+13. a) $f'(x) = 3x^2$, então $f'(1) = 3$ e $f'(-1) = 3$. A tangente tem a
+    mesma inclinação nos dois pontos, embora um esteja acima e o outro abaixo
+    do eixo: $x^3$ sobe nos dois. &nbsp; b) $f'(-2) = -\frac{1}{(-2)^2} =
+    -\frac{1}{4}$. &nbsp; c) $f'(16) = \frac{1}{2\sqrt{16}} = \frac{1}{8}$.
+14. $\dfrac{1{,}001^4 - 1}{0{,}001} = \dfrac{0{,}004006004 \ldots}{0{,}001}
+    \approx 4{,}006$. Está perto de 4, e a lição de regras de derivação vai
+    confirmar que $(x^4)' = 4x^3$, que em 1 dá 4. Se você encontrou algo perto
+    de 1, provavelmente esqueceu de dividir por $h$.
+15. $f(1) = 1$ e $f'(1) = 3 \times 1^2 = 3$, então $y = 1 + 3(x - 1) = 3x - 2$.
+16. $f(x+h) - f(x) = 2(2xh + h^2) + 3h = h(4x + 2h + 3)$; dividindo por $h$ e
+    fazendo $h \to 0$, $f'(x) = 4x + 3$. Em $x = 2$ a fórmula dá 11, e o
+    quociente com $h = 0{,}001$ dá $11{,}002$. Confere.
+17. a) $f(x+h) - f(x) = 3x^2h + 3xh^2 + h^3 - h = h(3x^2 + 3xh + h^2 - 1)$;
+    após dividir por $h$ e fazer $h \to 0$, $f'(x) = 3x^2 - 1$. Conferindo em
+    $x = 2$: a fórmula dá 11, e o quociente numérico dá $11{,}006$. &nbsp; b)
+    Tangente horizontal onde $3x^2 - 1 = 0$, isto é, $x = \pm\frac{1}{\sqrt3}
+    \approx \pm 0{,}577$. Se você achou só o positivo, esqueceu que a equação
+    $x^2 = \frac{1}{3}$ tem duas raízes.
+18. $f(-1) = 1$ e $f'(-1) = -2$, então $y = 1 - 2(x + 1) = -2x - 1$. No ponto
+    de contato: $x = -1$ dá $y = 2 - 1 = 1$. Confere.
+19. $f(1) = 1$ e $f'(1) = -1$, então $y = 1 - (x - 1) = -x + 2$. Corta o eixo
+    $y$ em $(0, 2)$ e o eixo $x$ em $(2, 0)$.
+20. $f'(a) = \frac{1}{2\sqrt{a}} = \frac{1}{10}$ dá $\sqrt{a} = 5$, logo
+    $a = 25$. O ponto é $(25, 5)$.
+21. a) $s'(t) = 2t - 6$. &nbsp; b) $s'(1) = -4$ m/s: o carrinho recua, porque a
+    posição diminui. $s'(3) = 0$: está parado naquele instante. $s'(5) = 4$
+    m/s: avança. &nbsp; c) Aos 3 segundos, quando a velocidade troca de sinal.
+    Repare que a posição nesse instante, $s(3) = 11$ m, é a menor de todas: o
+    carrinho recuou até 11 m e voltou. A posição $s(1) = s(5) = 15$ m é a mesma
+    nos dois instantes, mas as velocidades têm sinais opostos.
+22. a) $C'(q) = q + 20$, então $C'(40) = 60$ reais por peça. &nbsp; b)
+    $C(41) - C(40) = (840{,}5 + 820 + 800) - (800 + 800 + 800) = 2460{,}5 -
+    2400 = 60{,}5$ reais. &nbsp; c) A derivada é a taxa exatamente em $q = 40$;
+    a 41ª peça é o trecho de 40 a 41, de largura 1, ao longo do qual a taxa
+    sobe de 60 para 61. A diferença de 50 centavos é a metade desse aumento.
+23. a) $A'(\ell) = 2\ell$, então $A'(5) = 10$ cm² por cm: a área cresce 10 cm²
+    para cada centímetro de lado, no lado 5. &nbsp; b)
+    $5{,}1^2 - 25 = 26{,}01 - 25 = 1{,}01$ cm². A derivada previa
+    $10 \times 0{,}1 = 1$ cm²; o excesso
+    de $0{,}01$ é o quadradinho do canto. &nbsp; c) Esticar o lado em $\Delta\ell$
+    acrescenta duas tiras de $\ell$ por $\Delta\ell$ (uma à direita, uma em
+    cima) e um quadradinho de $\Delta\ell$ por $\Delta\ell$ no canto:
+    $2\ell\,\Delta\ell + (\Delta\ell)^2$. Dividindo por $\Delta\ell$ e
+    encolhendo, o quadradinho some e ficam as **duas** tiras: $2\ell$. Seriam
+    quatro tiras se o quadrado crescesse para os quatro lados ao mesmo tempo,
+    mas o lado cresce a partir de um canto fixo.
+24. a) $T(2) = 20 + \frac{60}{3} = 40$ °C. &nbsp; b) O quociente de $\frac{60}{t+1}$
+    em torno de $t = 2$ é $60 \times \dfrac{\frac{1}{3+h} - \frac{1}{3}}{h} = 60
+    \times \dfrac{-1}{3(3+h)}$, para $h \neq 0$, pela mesma soma de frações da
+    seção 12. Com $h \to 0$: $T'(2) = -\frac{60}{9} = -\frac{20}{3} \approx
+    -6{,}67$. O 20 constante não contribui, porque a derivada de constante é
+    zero. &nbsp; c) Graus Celsius por minuto, negativo: aos 2 minutos a peça
+    esfria a cerca de 6,67 °C por minuto. Conferindo numericamente:
+    $\frac{T(2{,}001) - T(2)}{0{,}001} \approx -6{,}665$.
+25. $\dfrac{(a+h)^2 - (a-h)^2}{2h} = \dfrac{4ah}{2h} = 2a$. Os termos $a^2$ e
+    $h^2$ cancelam na subtração, e sobra só o termo cruzado. Para a parábola, a
+    secante centrada tem **exatamente** a inclinação da tangente, para qualquer
+    $h$ — é a propriedade que a lição de taxa média chamou de “média igual à
+    instantânea no ponto médio”. Para outras funções a igualdade não é exata,
+    mas o erro da versão centrada é muito menor que o da comum, porque os
+    termos com $h$ elevado a expoente ímpar cancelam.
+26. $\dfrac{m(a+h) + n - (ma + n)}{h} = \dfrac{mh}{h} = m$ para $h \neq 0$, e o
+    limite de uma constante é ela mesma. A derivada de uma reta é a inclinação
+    dela em todo ponto, então a tangente a uma reta é a própria reta: não há
+    nada a aproximar.
+27. $f(a+h) - f(a) = \dfrac{f(a+h) - f(a)}{h} \times h$, para $h \neq 0$. Quando
+    $h \to 0$, o primeiro fator tende a $f'(a)$, que é um número, e o segundo
+    tende a zero. Pela propriedade do limite do produto, o produto tende a
+    $f'(a) \times 0 = 0$. Logo $f(a+h) \to f(a)$, que é a definição de $f$ ser
+    contínua em $a$. **Toda função derivável é contínua.** A recíproca é
+    falsa, e a lição seguinte mostra por quê: $\lvert x \rvert$ é contínua em 0
+    e não é derivável ali.
+
+</details>
+
+## 18. Revisão curta
+
+- A **derivada de $f$ em $a$** é $f'(a) = \lim_{h \to 0} \frac{f(a+h) -
+  f(a)}{h}$: o quociente de diferenças da lição de taxa média, com a palavra
+  “se aproxima” trocada pelo limite.
+- Ela tem **duas leituras** que são o mesmo número: a inclinação da tangente
+  em $(a, f(a))$ e a taxa de variação instantânea de $f$ em $a$. A unidade é
+  saída por entrada.
+- A **derivada como função**, $f'(x)$, entrega a derivada em todo ponto de uma
+  vez. $f'(x) = 2x$ é uma função; $f'(2) = 4$ é um número.
+- $\frac{dy}{dx}$ é outra escrita para $f'(x)$: o $\frac{\Delta y}{\Delta x}$
+  que encolheu. Não é uma fração comum.
+- O roteiro pela definição é sempre o mesmo: escrever o quociente, ver o
+  $\frac{0}{0}$, **reescrever sem mudar o valor** para $h \neq 0$ até cancelar o
+  $h$ do denominador, e só então fazer $h \to 0$.
+- Seis derivadas saíram da definição: $(c)' = 0$, $(x)' = 1$, $(x^2)' = 2x$,
+  $(x^3)' = 3x^2$, $\left(\frac{1}{x}\right)' = -\frac{1}{x^2}$ e
+  $\left(\sqrt{x}\right)' = \frac{1}{2\sqrt{x}}$. As três reescritas foram pôr
+  $h$ em evidência, somar frações e multiplicar pelo conjugado.
+- A **reta tangente** em $a$ é $y = f(a) + f'(a)(x - a)$. A derivada é um
+  ingrediente dela, não a reta.
+- **Confira cada derivada com um número**: o quociente com $h = 0{,}001$ tem
+  que concordar com a fórmula nas primeiras casas. A versão centrada,
+  $\frac{f(a+h) - f(a-h)}{2h}$, é mais precisa.
+- Toda função derivável é contínua. O contrário é falso: $\lvert x \rvert$ é
+  contínua em 0 e não tem derivada ali, porque os dois lados do limite não
+  concordam.
+
+Antes de avançar, verifique se você consegue fazer três coisas: deduzir
+$(x^2)' = 2x$ pela definição sem consultar; escrever a tangente a $\sqrt{x}$
+em $x = 4$ e conferir que ela passa por $(4, 2)$; e explicar, com as próprias
+palavras, por que a secante some em $h = 0$ e a tangente não.
+
+A lição seguinte, [quando a derivada não existe](./quando-a-derivada-nao-existe),
+trata dos pontos em que o limite falha — o bico, a tangente vertical e o salto.
+Depois dela, as [regras de derivação](./regras-de-derivacao) transformam o
+padrão $1$, $2x$, $3x^2$ numa fórmula geral, e a definição deixa de ser
+necessária para cada função nova.

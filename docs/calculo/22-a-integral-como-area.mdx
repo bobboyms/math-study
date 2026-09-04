@@ -1,0 +1,974 @@
+---
+title: "A integral como área: somar retângulos cada vez mais finos"
+---
+
+import RiemannSum from '@site/src/components/RiemannSum';
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# A integral como área: somar retângulos cada vez mais finos
+
+## 1. Problema motivador: o velocímetro ao contrário
+
+O capítulo abriu com o veículo de teste e uma pergunta: dada a posição
+$s(t) = t^2$, qual é a velocidade num instante? A lição de
+[derivada](./a-derivada) respondeu: a velocidade é $v(t) = 2t$ metros por
+segundo, e aos 2 segundos o painel marca 4 m/s.
+
+Agora o problema vem de cabeça para baixo. Desta vez ninguém mediu a posição.
+O que ficou registrado foi **só o painel**: a velocidade era $v(t) = 2t$ m/s,
+segundo a segundo. A pergunta é:
+
+> Quanto o carro andou nos primeiros 3 segundos?
+
+Se a velocidade fosse constante, a resposta seria uma multiplicação. Um carro a
+6 m/s durante 3 segundos anda $6 \times 3 = 18$ metros. No gráfico da
+velocidade contra o tempo, esse produto é a **área de um retângulo**: base 3
+(o tempo), altura 6 (a velocidade).
+
+Mas a velocidade aqui muda a cada instante. Ela começa em 0 e termina em 6.
+Multiplicar 6 por 3 conta como se o carro estivesse a 6 m/s o tempo todo, e
+ele só chegou a 6 no último instante. A resposta tem que ser **menor** que 18.
+
+O desenho sugere o caminho. O gráfico de $v(t) = 2t$ entre 0 e 3 é uma reta
+que sobe, e a região entre ela e o eixo do tempo é um **triângulo** de base 3 e
+altura 6.
+
+<CartesianPlane
+  xMin={-0.5}
+  xMax={3.8}
+  yMin={-0.8}
+  yMax={7}
+  xUnit={70}
+  yUnit={34}
+  polygons={[{points: [[0, 0], [3, 0], [3, 6]], tone: 2}]}
+  functions={[{f: (t) => 2 * t, domain: [-0.3, 3.6], tone: 1}]}
+  points={[{at: [3, 6], label: '(3, 6)', tone: 1, dx: -28, dy: -6}]}
+  labels={[{at: [2.1, 1.6], math: '\\text{área} = 9', tone: 2}]}
+  axisLabels={['t', 'v']}
+  caption="A velocidade v(t) = 2t entre 0 e 3 segundos. A região sob a reta é um triângulo de base 3 e altura 6."
+/>
+
+A área de um triângulo é metade de base vezes altura:
+
+$$
+\frac{3 \times 6}{2} = 9.
+$$
+
+Nove metros. E dá para conferir: a posição era $s(t) = t^2$, então em 3
+segundos o carro saiu de $s(0) = 0$ e chegou a $s(3) = 9$. Andou exatamente 9
+metros. A área sob o gráfico da velocidade **é** a distância percorrida.
+
+Isso resolve o caso da reta. Mas troque o painel. Suponha que a velocidade
+registrada tenha sido $v(t) = t^2$ m/s. O gráfico agora é um pedaço de
+parábola, e a região sob ele **não é** triângulo, nem trapézio, nem nenhuma
+figura com fórmula de área na lição de
+[áreas de polígonos](../geometria/areas-de-poligonos).
+
+> Como medir a área de uma região que tem um lado curvo?
+
+Esta página responde com uma ideia que o capítulo já usou uma vez: aproximar
+com o que se sabe medir, e apertar a aproximação até sobrar um número só. O
+nome desse número é **integral**.
+
+## 2. Mapa das ideias
+
+- a **distância percorrida** é a **área** entre o gráfico da velocidade e o
+  eixo do tempo;
+- uma área com lado curvo se aproxima por **retângulos**: base $\Delta x$,
+  altura lida na curva;
+- a **soma de Riemann** é a soma das áreas desses retângulos, escrita com o
+  símbolo $\sum$;
+- soma **pela esquerda**, **pela direita** e **pelo ponto médio** diferem só
+  em onde a altura é lida;
+- a **integral definida** $\int_a^b f(x)\,dx$ é o valor de que as somas se
+  aproximam quando o número de retângulos cresce sem parar;
+- o símbolo $\int$ é um S alongado, de **soma**; $dx$ é o $\Delta x$ que
+  encolheu; $a$ e $b$ são os extremos do intervalo.
+
+## 3. Para que serve
+
+- recuperar a **distância** a partir da velocidade, quando o painel foi
+  registrado e o odômetro não;
+- calcular o **consumo total** de água, energia ou combustível a partir de
+  uma vazão que varia ao longo do dia;
+- medir a **área** de um terreno com uma margem curva, de uma peça com bordas
+  arredondadas, de uma região que nenhuma fórmula de polígono cobre;
+- somar uma **receita acumulada** quando a taxa de vendas muda hora a hora;
+- e, dentro da matemática, inverter o problema da derivada: dada a taxa de
+  variação, recuperar a quantidade. A lição do
+  [teorema fundamental do cálculo](./teorema-fundamental-do-calculo) vai
+  mostrar que essa inversão é exata.
+
+A unidade da área vem do produto das unidades dos eixos. Velocidade em metros
+por segundo vezes tempo em segundos dá metros. Vazão em litros por minuto vezes
+minutos dá litros. Quando a área sai em "metros por segundo ao quadrado", o
+desenho foi montado com os eixos trocados.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [áreas de polígonos](../geometria/areas-de-poligonos): quais áreas já
+sabemos calcular, e de onde vem a do triângulo?** Retângulo: base vezes
+altura, que é a contagem de quadradinhos em fileiras. Triângulo: metade de
+base vezes altura, porque dois triângulos iguais formam um paralelogramo.
+Trapézio: média das bases vezes altura. O motivador usou a do triângulo. A
+lição inteira vai usar a do retângulo, muitas vezes.
+
+**2. De [figuras compostas](../geometria/figuras-compostas): o que acontece
+com a área quando uma figura é cortada em pedaços?** A área do todo é a soma
+das áreas dos pedaços, desde que eles não se sobreponham nem deixem vão. Aqui
+os pedaços vão ser retângulos de pé, lado a lado, cobrindo o intervalo inteiro
+sem sobra.
+
+**3. De [taxa média de variação](../funcoes/taxa-media-de-variacao) e de
+[derivada](./a-derivada): qual é a relação entre posição e velocidade?** A
+velocidade é a taxa de variação da posição. Com $s(t) = t^2$, a velocidade em
+$t$ é $s'(t) = 2t$. E, se a velocidade fosse constante em $v$ durante um tempo
+$\Delta t$, a distância seria $v \times \Delta t$. É esse produto que vira a
+área de um retângulo.
+
+**4. De [limite de uma função](./limite-de-uma-funcao): o que significa "os
+valores se aproximam de um número sem chegar nele"?** Significa que a distância
+entre os valores e o número fica tão pequena quanto se queira, desde que se vá
+longe o bastante na tabela. Aquela lição fez isso com $4 + h$ e $h$
+encolhendo. Esta vai fazer com somas de retângulos e o número de retângulos
+crescendo.
+
+**5. De [limites infinitos e no infinito](./limites-infinitos-e-no-infinito):
+como se lê $\lim_{n \to +\infty}$?** É o comportamento de uma expressão quando
+$n$ cresce sem parar. Aquela lição olhou $\frac{2400}{x} + 18$ com $x$ enorme e
+viu o 18. Aqui a expressão vai ser uma soma que depende de $n$, o número de
+retângulos, e a pergunta é a mesma: para onde ela vai quando $n$ cresce?
+
+Os itens 3 e 4 são os mais importantes. O primeiro diz por que área é
+distância. O segundo é o mecanismo inteiro da página: aproximar, apertar,
+observar para onde os valores apontam.
+
+## 5. Intuição: fatiar o tempo em pedaços curtos
+
+Volte ao painel com $v(t) = t^2$. O problema é que a velocidade muda o tempo
+todo. Mas ela muda **pouco** num intervalo **curto**.
+
+Olhe o que acontece entre $t = 1$ e $t = 1{,}3$ segundos. A velocidade vai de
+$1^2 = 1$ até $1{,}3^2 = 1{,}69$ m/s. Ela não é constante, mas ficou perto de
+1 o tempo todo. Se fingirmos que o carro andou a 1 m/s nesses 0,3 segundos,
+a distância nesse pedaço é $1 \times 0{,}3 = 0{,}3$ metros. Erramos um pouco
+para menos, porque o carro estava um pouco mais rápido que 1. Se fingirmos que
+ele andou a 1,69 m/s, a distância é $1{,}69 \times 0{,}3 = 0{,}507$ metros, e
+erramos um pouco para mais.
+
+A distância verdadeira nesse pedaço está entre 0,3 e 0,507. O erro é pequeno
+porque o pedaço é curto.
+
+Agora faça isso com o intervalo inteiro. Corte os 3 segundos em 10 pedaços de
+0,3 segundos. Em cada pedaço, finja que a velocidade foi constante e igual à
+velocidade do começo do pedaço. Some as dez distâncias. O resultado é uma
+aproximação da distância total, com erro para menos. Repita fingindo que a
+velocidade foi a do fim de cada pedaço, e a aproximação sai com erro para
+mais.
+
+E o passo que decide tudo: **corte em pedaços ainda mais curtos**. Com 100
+pedaços de 0,03 segundos, a velocidade varia ainda menos dentro de cada um, e
+os dois erros encolhem. Com 1000, encolhem mais. A distância verdadeira é o
+número de que as duas aproximações se aproximam.
+
+Essa é a mesma jogada da derivada, lida ao contrário. Lá, a taxa média num
+trecho virava a taxa num instante quando o trecho encolhia. Aqui, a soma de
+distâncias em trechos vira a distância total quando os trechos encolhem.
+
+## 6. Modelo visual: retângulos por baixo e por cima
+
+No gráfico, "fingir que a velocidade foi constante num pedaço" é trocar o
+pedaço de curva por um segmento horizontal, e a região sob ele vira um
+retângulo. Base 0,3; altura lida na curva.
+
+A figura abaixo faz isso com $f(t) = t^2$ entre 0 e 3, em 10 retângulos, com a
+altura lida no **começo** de cada pedaço, isto é, **pela esquerda**. A soma das
+dez áreas está escrita na legenda, calculada a partir da figura.
+
+<RiemannSum
+  f={(t) => t * t}
+  a={0}
+  b={3}
+  n={10}
+  method="left"
+  axisLabels={['t', 'v']}
+  caption="Dez retângulos de base 0,3 sob a curva v = t², com a altura lida no início de cada pedaço. Cada retângulo fica abaixo da curva, e a faixa sem cor sobre ele é o que ficou de fora."
+/>
+
+Todo retângulo fica **abaixo** da curva, porque a curva sobe e a altura foi
+lida no ponto mais baixo de cada pedaço. A soma 7,695 é menor que a área
+verdadeira.
+
+Agora a altura lida no **fim** de cada pedaço, **pela direita**:
+
+<RiemannSum
+  f={(t) => t * t}
+  a={0}
+  b={3}
+  n={10}
+  method="right"
+  axisLabels={['t', 'v']}
+  caption="Os mesmos dez pedaços, com a altura lida no fim de cada um. Cada retângulo passa por cima da curva, e a parte em outro tom é o excesso."
+/>
+
+Todo retângulo passa **por cima**, e a soma 10,395 é maior que a área
+verdadeira. A área que procuramos está presa entre 7,695 e 10,395.
+
+O intervalo é largo demais para servir de resposta. Mas veja o que acontece
+quando o número de retângulos cresce. A tabela abaixo foi calculada com o
+mesmo procedimento para vários valores de $n$:
+
+| retângulos $n$ | base $\Delta t = \frac{3}{n}$ | soma pela esquerda | soma pela direita | diferença |
+|---:|---:|---:|---:|---:|
+| 4 | 0,75 | 5,906 | 12,656 | 6,75 |
+| 10 | 0,3 | 7,695 | 10,395 | 2,7 |
+| 100 | 0,03 | 8,865 | 9,135 | 0,27 |
+| 1 000 | 0,003 | 8,987 | 9,014 | 0,027 |
+| 10 000 | 0,0003 | 8,9987 | 9,0014 | 0,0027 |
+
+As duas colunas se aproximam de **9**, uma por baixo e outra por cima. E a
+diferença entre elas cai por 10 cada vez que $n$ é multiplicado por 10. Com
+retângulos suficientes, a área verdadeira fica presa num intervalo tão
+estreito quanto se queira.
+
+Guarde uma observação sobre a última coluna, porque ela volta nos
+exercícios. A soma pela direita menos a soma pela esquerda dá sempre
+$9 \times \Delta t$: com $\Delta t = 0{,}3$ são 2,7; com $0{,}03$ são 0,27. O 9
+é $f(3) - f(0)$, a subida total da curva. Isso não é coincidência, e o
+exercício 17 explica de onde vem.
+
+### Uma terceira leitura: o ponto médio
+
+Nada obriga a ler a altura numa ponta do pedaço. Lendo no **meio** de cada um,
+os retângulos ficam parte abaixo e parte acima da curva, e os dois erros se
+compensam em boa medida:
+
+<RiemannSum
+  f={(t) => t * t}
+  a={0}
+  b={3}
+  n={10}
+  method="mid"
+  axisLabels={['t', 'v']}
+  caption="Altura lida no meio de cada pedaço. Cada retângulo fica abaixo da curva na metade direita e acima na metade esquerda."
+/>
+
+Com 10 retângulos, o ponto médio já dá 8,9775, a dois centésimos e meio do 9.
+A esquerda e a direita, com os mesmos 10, erravam por mais de um metro. Esse é
+o método que se usa quando o objetivo é uma estimativa boa com poucos
+retângulos.
+
+## 7. Ponte para a formalização: escrever a soma
+
+A tabela foi feita à mão para $n = 4$ e $n = 10$, e por computador para os
+demais. Para transformar o procedimento numa definição, precisamos escrevê-lo
+de um jeito que valha para **qualquer** $n$ e qualquer função.
+
+### O símbolo de soma
+
+Somar dez parcelas é escrever dez termos com sinais de mais. Somar mil é
+inviável. A matemática tem uma abreviação para "some estas parcelas, uma para
+cada valor de $i$": a letra grega sigma maiúscula, $\sum$.
+
+Um exemplo com três parcelas, antes de qualquer generalização:
+
+$$
+\sum_{i=1}^{3} i^2 = 1^2 + 2^2 + 3^2 = 1 + 4 + 9 = 14.
+$$
+
+Leia assim: "some $i^2$ para $i$ indo de 1 até 3". O que está embaixo do
+$\sum$ diz onde $i$ começa; o que está em cima diz onde termina; o que está à
+direita é a parcela, escrita com $i$. Para calcular, você troca $i$ por 1, por
+2, por 3, e soma os três resultados.
+
+Mais um, para fixar a leitura. $\sum_{i=1}^{4} (2i + 1)$ pede quatro parcelas:
+$3 + 5 + 7 + 9 = 24$.
+
+**Contraexemplo, para delimitar.** $\sum_{i=1}^{3} 5$ não é "5 elevado a
+alguma coisa" nem "5 vezes $i$". A parcela é 5 e não depende de $i$; ela é
+somada três vezes: $5 + 5 + 5 = 15$.
+
+### A soma dos retângulos, escrita com sigma
+
+Volte a $f(t) = t^2$ em $[0, 3]$ com $n = 10$ retângulos. A base de cada um é
+$\Delta t = \frac{3}{10} = 0{,}3$. Os pontos de corte são $0$; $0{,}3$;
+$0{,}6$; ...; $3$. Na soma pela esquerda, o retângulo número $i$ tem altura
+$f$ lida no começo do pedaço, que é $t = (i - 1) \times 0{,}3$:
+
+$$
+\text{soma pela esquerda}
+= f(0) \times 0{,}3 + f(0{,}3) \times 0{,}3 + \ldots + f(2{,}7) \times 0{,}3.
+$$
+
+São dez parcelas, todas com o mesmo formato "altura vezes base". Com o sigma:
+
+$$
+\text{soma pela esquerda} = \sum_{i=1}^{10} f\big((i-1) \times 0{,}3\big) \times 0{,}3.
+$$
+
+E a tabela da seção 6 confirma: as dez alturas são $0$; $0{,}09$; $0{,}36$;
+$0{,}81$; $1{,}44$; $2{,}25$; $3{,}24$; $4{,}41$; $5{,}76$; $7{,}29$, que somam
+25,65; vezes a base 0,3 dá **7,695**.
+
+Pela direita, a altura é lida no fim do pedaço, $t = i \times 0{,}3$:
+
+$$
+\text{soma pela direita} = \sum_{i=1}^{10} f(i \times 0{,}3) \times 0{,}3.
+$$
+
+As alturas vão de $0{,}09$ até $9$, somam 34,65, e vezes 0,3 dá **10,395**.
+
+### O que muda e o que permanece
+
+Ao escrever com sigma, o que muda é a **escrita**, e nada mais: dez parcelas
+viraram uma linha. A quantidade é a mesma, e a conferência com a tabela mostra isso. O que
+a escrita compra é a possibilidade de trocar o 10 por $n$:
+
+$$
+\sum_{i=1}^{n} f(x_i)\,\Delta x,
+\qquad
+\Delta x = \frac{b - a}{n}.
+$$
+
+Aqui $a$ e $b$ são os extremos do intervalo, $\Delta x$ é a base comum dos
+retângulos, e $x_i$ é o ponto onde a altura do retângulo $i$ é lida: o começo
+do pedaço, o fim, ou o meio.
+
+Repare no que essa expressão é. Na lição de derivada, o quociente
+$\frac{f(a+h) - f(a)}{h}$ **dividia** uma variação por um $h$ que encolhia.
+Aqui, a soma $\sum f(x_i)\,\Delta x$ **multiplica** valores por um $\Delta x$
+que encolhe, e soma. Uma é a outra lida de trás para a frente. A lição do
+[teorema fundamental do cálculo](./teorema-fundamental-do-calculo) vai
+transformar essa semelhança num resultado exato.
+
+## 8. Formalização: soma de Riemann e integral definida
+
+> **Soma de Riemann.** Dada uma função $f$ num intervalo $[a, b]$, corte o
+> intervalo em $n$ pedaços de largura $\Delta x = \frac{b - a}{n}$, escolha um
+> ponto $x_i$ dentro de cada pedaço, e some as áreas dos retângulos de base
+> $\Delta x$ e altura $f(x_i)$:
+>
+> $$
+> S_n = \sum_{i=1}^{n} f(x_i)\,\Delta x.
+> $$
+
+O nome homenageia o matemático que formalizou a ideia no século XIX. As três
+somas da seção 6 são somas de Riemann: a pela esquerda escolhe $x_i$ no começo
+de cada pedaço, a pela direita no fim, a pelo ponto médio no meio.
+
+**Exemplo.** Para $f(x) = x^2$ em $[0, 2]$ com $n = 4$: os pedaços têm largura
+$\Delta x = 0{,}5$, e pela esquerda as alturas são $f(0) = 0$,
+$f(0{,}5) = 0{,}25$, $f(1) = 1$, $f(1{,}5) = 2{,}25$. A soma é
+$(0 + 0{,}25 + 1 + 2{,}25) \times 0{,}5 = 1{,}75$.
+
+**Contraexemplo.** Somar $f(0) \times 0{,}5 + f(1) \times 0{,}5$ para a mesma
+função no mesmo intervalo **não** é uma soma de Riemann: dois retângulos de
+base 0,5 cobrem só 1 unidade do intervalo, que tem 2. Faltou o pedaço de 1 a
+2. A soma de Riemann precisa cobrir o intervalo inteiro, sem vão e sem
+sobreposição, exatamente como a lição de figuras compostas exigia.
+
+### A integral definida
+
+A tabela da seção 6 mostrou as somas se aproximando de 9 quando $n$ crescia.
+Esse número tem nome e escrita:
+
+> **Integral definida.** Se as somas de Riemann $S_n$ se aproximam de um mesmo
+> número quando $n$ cresce sem parar, seja qual for a escolha dos pontos
+> $x_i$, esse número é a **integral definida** de $f$ de $a$ até $b$:
+>
+> $$
+> \int_a^b f(x)\,dx = \lim_{n \to +\infty} \sum_{i=1}^{n} f(x_i)\,\Delta x.
+> $$
+>
+> Quando $f$ é positiva no intervalo, a integral é a **área** da região entre
+> o gráfico e o eixo, de $x = a$ até $x = b$.
+
+A frase "seja qual for a escolha dos pontos" é o que a tabela mostrou: a
+esquerda e a direita chegam ao mesmo 9. Toda função contínua num intervalo
+fechado tem integral; é um resultado que o curso aceita sem demonstração, e
+que garante que todas as funções deste capítulo podem ser integradas.
+
+**Exemplo.** $\int_0^3 t^2\,dt = 9$, pela tabela da seção 6 e pela conta exata
+da seção 9.
+
+**Contraexemplo.** A soma 7,695 **não** é $\int_0^3 t^2\,dt$. Ela é $S_{10}$,
+uma soma de Riemann com um $n$ específico. A integral é o limite, não uma
+parada no caminho.
+
+### A notação, símbolo por símbolo
+
+A escrita $\int_a^b f(x)\,dx$ foi desenhada para lembrar a soma de onde veio.
+
+| Símbolo | O que é | De onde veio |
+|---|---|---|
+| $\int$ | um S alongado, de **soma** | o $\sum$ da soma de Riemann, esticado para dizer "soma no limite" |
+| $a$ e $b$ | os extremos do intervalo, embaixo e em cima | o $[a, b]$ que foi cortado em pedaços |
+| $f(x)$ | a altura, lida na curva | o $f(x_i)$ de cada retângulo |
+| $dx$ | a largura, agora "infinitamente fina" | o $\Delta x$ que encolheu, como o $\frac{dy}{dx}$ da derivada era o $\frac{\Delta y}{\Delta x}$ que encolheu |
+
+Lê-se "integral de $a$ a $b$ de $f$ de $x$, $dx$". O $dx$ também diz **qual é
+a variável**: em $\int_0^3 t^2\,dt$, a variável é $t$. Ele não é um número
+para substituir, e o exercício 4 volta a isso.
+
+## 9. Resolvendo o problema do velocímetro: a área exata
+
+A tabela sugere 9, mas tabela sugere e limite afirma, como a lição de limite
+insistiu. Para afirmar, precisamos calcular a soma para um $n$ **qualquer** e
+ver para onde ela vai.
+
+Pela direita, com $n$ retângulos em $[0, 3]$, a base é $\Delta t = \frac{3}{n}$
+e a altura do retângulo $i$ é $f\!\left(\frac{3i}{n}\right) = \frac{9i^2}{n^2}$.
+A soma é
+
+$$
+S_n = \sum_{i=1}^{n} \frac{9i^2}{n^2} \times \frac{3}{n}
+= \frac{27}{n^3} \sum_{i=1}^{n} i^2.
+$$
+
+O passo do meio tirou de dentro da soma tudo o que não depende de $i$: o fator
+$\frac{27}{n^3}$ multiplica todas as parcelas, e a distributiva permite pô-lo
+em evidência. O que sobrou dentro é a soma dos quadrados $1^2 + 2^2 + \ldots +
+n^2$.
+
+Essa soma tem fórmula fechada, conhecida desde a Antiguidade:
+
+$$
+1^2 + 2^2 + \ldots + n^2 = \frac{n(n+1)(2n+1)}{6}.
+$$
+
+Confira num caso antes de usar: para $n = 10$, o lado direito dá
+$\frac{10 \times 11 \times 21}{6} = \frac{2310}{6} = 385$, e a soma
+$1 + 4 + 9 + \ldots + 100$ dá 385 também. A demonstração geral fica para um
+curso de indução; aqui ela é aceita conferida.
+
+Substituindo:
+
+$$
+S_n = \frac{27}{n^3} \times \frac{n(n+1)(2n+1)}{6}
+= \frac{27}{6} \times \frac{(n+1)(2n+1)}{n^2}.
+$$
+
+O $n$ do numerador da fórmula cancelou com um dos três do $n^3$. O que sobrou
+é uma fração de polinômios, e a lição de
+[limites no infinito](./limites-infinitos-e-no-infinito) ensinou a ver para
+onde ela vai: expandindo, $(n+1)(2n+1) = 2n^2 + 3n + 1$, e dividindo cada
+parcela por $n^2$,
+
+$$
+S_n = \frac{27}{6} \times \left(2 + \frac{3}{n} + \frac{1}{n^2}\right).
+$$
+
+Confira com a tabela: para $n = 10$, isso dá
+$4{,}5 \times (2 + 0{,}3 + 0{,}01) = 4{,}5 \times 2{,}31 = 10{,}395$, o
+número da soma pela direita. Para $n = 100$, $4{,}5 \times 2{,}0301 = 9{,}135$.
+Bate.
+
+Agora o limite. Quando $n$ cresce sem parar, $\frac{3}{n}$ e $\frac{1}{n^2}$
+se aproximam de zero, e sobra
+
+$$
+\lim_{n \to +\infty} S_n = \frac{27}{6} \times 2 = 9.
+$$
+
+> $$
+> \int_0^3 t^2\,dt = 9.
+> $$
+
+O carro cuja velocidade era $t^2$ m/s andou **exatamente 9 metros** nos
+primeiros 3 segundos. Não é uma estimativa: é o número de que todas as somas
+se aproximam, calculado com a mesma precisão com que a derivada foi calculada
+pela definição.
+
+Vale registrar o custo. Foram necessárias uma fórmula de soma e uma página de
+álgebra para uma das funções mais simples que existem. Para $\sqrt{t}$ ou
+$\frac{1}{t}$ não há fórmula de soma tão limpa. A lição do
+[teorema fundamental do cálculo](./teorema-fundamental-do-calculo) vai
+mostrar um atalho que substitui tudo isso por uma linha, e o atalho passa
+pela derivada. Por enquanto, o que importa é que a integral está **definida**,
+e que sabemos aproximá-la com a precisão que quisermos.
+
+## 10. Exemplos resolvidos
+
+### Exemplo 1: uma reta, conferida com o trapézio
+
+Calcule $\int_1^4 (x + 1)\,dx$ de dois jeitos: pela figura e por somas de
+Riemann.
+
+**Pela figura.** Entre $x = 1$ e $x = 4$, a reta $y = x + 1$ vai da altura 2
+até a altura 5. A região sob ela é um trapézio de bases 2 e 5 e altura 3 (a
+largura do intervalo, deitada). Média das bases vezes altura:
+
+$$
+\frac{(2 + 5) \times 3}{2} = \frac{21}{2} = 10{,}5.
+$$
+
+**Por somas.** Com $n = 3$ pedaços de largura 1, pela esquerda as alturas são
+$f(1) = 2$, $f(2) = 3$, $f(3) = 4$, soma 9. Pela direita, $3 + 4 + 5 = 12$.
+Pelo ponto médio, $f(1{,}5) + f(2{,}5) + f(3{,}5) = 2{,}5 + 3{,}5 + 4{,}5 =
+10{,}5$. O ponto médio acertou com três retângulos.
+
+Não é sorte. Numa reta, o retângulo do ponto médio tem exatamente a área do
+trapézio que ele substitui: o que falta de um lado sobra do outro, em
+triângulos iguais. Por isso o ponto médio é exato para retas, e muito bom para
+curvas suaves.
+
+### Exemplo 2: a parábola entre 0 e 1
+
+*Pause e tente antes de ler.* Estime $\int_0^1 x^2\,dx$ com $n = 4$ pela
+esquerda e pela direita, e depois use a fórmula da seção 9 para achar o valor
+exato.
+
+Com $\Delta x = 0{,}25$, as alturas pela esquerda são $0$; $0{,}0625$;
+$0{,}25$; $0{,}5625$, soma 0,875, vezes 0,25 dá **0,21875**. Pela direita as
+alturas são $0{,}0625$; $0{,}25$; $0{,}5625$; $1$, soma 1,875, vezes 0,25 dá
+**0,46875**. A área está entre 0,219 e 0,469.
+
+Para o valor exato, repita a seção 9 com o intervalo $[0, 1]$. A base é
+$\frac{1}{n}$, a altura do retângulo $i$ pela direita é
+$\left(\frac{i}{n}\right)^2 = \frac{i^2}{n^2}$, e
+
+$$
+S_n = \frac{1}{n^3} \sum_{i=1}^{n} i^2
+= \frac{(n+1)(2n+1)}{6n^2}
+= \frac{1}{6}\left(2 + \frac{3}{n} + \frac{1}{n^2}\right)
+\longrightarrow \frac{2}{6} = \frac{1}{3}.
+$$
+
+$$
+\int_0^1 x^2\,dx = \frac{1}{3} \approx 0{,}333.
+$$
+
+O 0,333 está dentro do intervalo estimado, mais perto da esquerda que da
+direita. Conferindo com $n = 1000$ por computador: esquerda 0,33283, direita
+0,33383.
+
+### Exemplo 3: uma integral que ainda não sabemos calcular
+
+*Pause e tente.* Estime $\int_1^2 \frac{1}{x}\,dx$ com $n = 4$ pelo ponto
+médio.
+
+A largura é $0{,}25$, e os pontos médios são $1{,}125$; $1{,}375$; $1{,}625$;
+$1{,}875$. As alturas são os inversos: $0{,}8889$; $0{,}7273$; $0{,}6154$;
+$0{,}5333$, que somam 2,7649. Vezes 0,25:
+
+$$
+S_4 \approx 0{,}6912.
+$$
+
+Não existe fórmula de soma para $\frac{1}{i}$ como existe para $i^2$, então o
+caminho da seção 9 não funciona aqui. O que temos é a estimativa. Guarde o
+número 0,6912: duas lições adiante ele vai reaparecer com nome, porque
+$\int_1^2 \frac{1}{x}\,dx$ é $\ln 2 \approx 0{,}6931$, e a lição do
+[teorema fundamental](./teorema-fundamental-do-calculo) explica por quê. O
+erro do ponto médio com só quatro retângulos foi de dois milésimos.
+
+### Exemplo 4: consumo de água a partir da vazão
+
+*Pause e tente.* Um hidrômetro registrou a vazão de entrada de um reservatório
+a cada 10 minutos, durante uma hora:
+
+| minuto | 0 | 10 | 20 | 30 | 40 | 50 | 60 |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| vazão (L/min) | 12 | 15 | 20 | 18 | 14 | 10 | 8 |
+
+Quantos litros entraram na hora?
+
+Não há fórmula, e não faz falta. Cada pedaço de 10 minutos é um retângulo de
+base 10 e altura igual à vazão lida. Pela esquerda, usando a leitura do início
+de cada pedaço:
+
+$$
+(12 + 15 + 20 + 18 + 14 + 10) \times 10 = 89 \times 10 = 890 \text{ litros}.
+$$
+
+Pela direita, usando a leitura do fim:
+
+$$
+(15 + 20 + 18 + 14 + 10 + 8) \times 10 = 85 \times 10 = 850 \text{ litros}.
+$$
+
+Entraram entre 850 e 890 litros. A média das duas estimativas, 870 litros, é
+o que se obtém tratando cada pedaço como um trapézio, e costuma ser a melhor
+aposta com dados assim. Repare que aqui a esquerda **não** ficou abaixo da
+direita: a vazão sobe e depois desce, então nenhuma das duas é garantidamente
+maior. Só com função crescente no intervalo inteiro a esquerda fica por baixo.
+
+A unidade saiu certa: litros por minuto vezes minutos dá litros.
+
+### Exemplo 5: velocidade constante, para conferir a definição
+
+*Pause e tente.* Um trem anda a 25 m/s durante 40 segundos. Escreva a
+distância como integral e calcule.
+
+$$
+\int_0^{40} 25\,dt.
+$$
+
+A região sob a função constante 25 é um retângulo de base 40 e altura 25, com
+área $25 \times 40 = 1000$ metros. Por somas de Riemann, com qualquer $n$:
+cada retângulo tem altura 25 e base $\frac{40}{n}$, e a soma dos $n$ é
+$25 \times \frac{40}{n} \times n = 1000$. Todas as somas já dão o valor
+exato, porque não há curva para errar.
+
+É o caso em que a integral coincide com a multiplicação de sempre. A integral
+é a generalização de "velocidade vezes tempo" para quando a velocidade muda.
+
+### Exemplo 6: ler uma integral numa frase
+
+A vazão de uma bomba, em litros por minuto, é dada por $q(t)$, com $t$ em
+minutos. Escreva, com a notação de integral, o volume bombeado entre o minuto
+5 e o minuto 20.
+
+$$
+\int_5^{20} q(t)\,dt.
+$$
+
+Os extremos são 5 e 20, a função é $q$, a variável é $t$. O resultado sai em
+litros. Não é preciso saber a fórmula de $q$ para escrever a integral: a
+escrita diz **o que** se quer, e o cálculo vem depois.
+
+## 11. Erros comuns
+
+> **Erro 1: achar que a soma pela esquerda "está errada".** Ela não é a área
+> exata, e nunca pretendeu ser. É uma aproximação com erro **controlado**: para
+> $t^2$ em $[0, 3]$, o erro da esquerda com $n$ retângulos nunca passa de
+> $\frac{27}{n}$, e você escolhe o $n$ que dá a precisão que precisa. Uma
+> estimativa com erro conhecido é uma resposta legítima.
+
+> **Erro 2: esquecer de multiplicar pela largura.** Somar as alturas
+> $0{,}09 + 0{,}36 + \ldots + 9 = 34{,}65$ e parar aí dá um número sem
+> significado. Área é altura vezes base. Sem o $\times 0{,}3$, a "área" de um
+> retângulo de 1 cm de largura e a de um retângulo de 10 cm sairiam iguais.
+
+> **Erro 3: achar que mais retângulos dão sempre mais área.** Com a função
+> crescendo, a soma pela **esquerda** sobe quando $n$ cresce (7,695; 8,865;
+> 8,987), mas a soma pela **direita** desce (10,395; 9,135; 9,014). As duas se
+> aproximam do mesmo valor por lados opostos. Mais retângulos dão uma
+> aproximação **melhor**, não maior.
+
+> **Erro 4: confundir a integral com a soma para um $n$ específico.** A soma
+> $S_{10} = 7{,}695$ é um número da tabela. A integral $\int_0^3 t^2\,dt = 9$
+> é o limite da tabela. Escrever $\int_0^3 t^2\,dt = 7{,}695$ é o mesmo erro
+> que escrever $f'(2) = 4{,}1$ porque o quociente com $h = 0{,}1$ deu 4,1.
+
+> **Erro 5: tratar $dx$ como um número.** Em $\int_0^3 t^2\,dt$, o $dt$ não
+> vale 0,3 nem 0,003. Ele marca a variável e lembra de onde a integral veio.
+> Substituir $dt$ por um número é voltar para uma soma de Riemann com um $n$
+> escolhido, e perder o limite.
+
+> **Erro 6: inverter os eixos e obter a unidade errada.** Se a distância é
+> área sob a **velocidade**, o eixo vertical é a velocidade e o horizontal é
+> o tempo. Desenhar a posição contra o tempo e calcular a área sob ela dá
+> "metros vezes segundos", que não mede nada neste problema. A unidade da área
+> é o produto das unidades dos eixos, e ela denuncia o desenho errado.
+
+## 12. Perguntas de verificação
+
+1. Por que a distância percorrida é uma área, e não um comprimento no gráfico?
+2. O que muda entre a soma pela esquerda e a soma pela direita? O que
+   permanece igual?
+3. Numa função crescente, qual das duas somas fica abaixo da área verdadeira?
+   E numa decrescente?
+4. O que a notação $\sum_{i=1}^{n} f(x_i)\,\Delta x$ diz para fazer, passo a
+   passo?
+5. Por que a definição de integral exige que o limite seja o mesmo "seja qual
+   for a escolha dos pontos $x_i$"?
+6. O que o $\int$ e o $dx$ lembram, cada um?
+7. Qual é a relação entre a soma de Riemann e o quociente de diferenças da
+   derivada?
+8. Por que o ponto médio acerta a área exata quando a função é uma reta?
+9. Na tabela da seção 6, a diferença entre a direita e a esquerda caía por 10
+   quando $n$ crescia por 10. Isso garante que as duas se aproximam do mesmo
+   número?
+10. Qual foi a ferramenta que permitiu passar de "a tabela sugere 9" para "a
+    integral é 9"?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque distância é velocidade **vezes** tempo, e um produto de duas
+   medidas, uma em cada eixo, é uma área no gráfico. Um comprimento no gráfico
+   mediria só uma das duas.
+2. Muda o ponto onde a altura de cada retângulo é lida: começo ou fim do
+   pedaço. Permanecem o intervalo, o número de retângulos, a largura
+   $\Delta x$ e a regra "altura vezes base, somada".
+3. Numa crescente, a esquerda lê a altura no ponto mais baixo de cada pedaço,
+   então fica abaixo; a direita fica acima. Numa decrescente, inverte: a
+   esquerda fica acima e a direita abaixo.
+4. Corte $[a, b]$ em $n$ pedaços de largura $\Delta x$; para cada $i$ de 1 a
+   $n$, escolha o ponto $x_i$ do pedaço, calcule a altura $f(x_i)$,
+   multiplique pela largura; some os $n$ produtos.
+5. Porque, se escolhas diferentes levassem a números diferentes, "a área" não
+   seria um número só, e a integral não estaria definida. Para funções
+   contínuas, todas as escolhas concordam, e é isso que faz o número
+   merecer o nome.
+6. O $\int$ é um S alongado, de soma: lembra o $\sum$. O $dx$ lembra o
+   $\Delta x$, a largura dos retângulos, que encolheu no limite. Ele também
+   diz qual é a variável.
+7. Um é o outro lido ao contrário. O quociente **divide** uma variação por um
+   $h$ que encolhe; a soma **multiplica** alturas por um $\Delta x$ que
+   encolhe e soma. O teorema fundamental vai tornar essa relação exata.
+8. Porque, numa reta, o retângulo do ponto médio e o trapézio que ele
+   substitui têm a mesma área: o triângulo que o retângulo deixa de fora de
+   um lado é igual ao que ele cobre a mais do outro.
+9. Sim. A diferença entre as duas é $\big(f(b) - f(a)\big)\Delta x$, que vai a
+   zero quando $n$ cresce. Duas sequências cuja diferença vai a zero, uma
+   crescendo e outra decrescendo, apertam o mesmo número.
+10. A fórmula da soma dos quadrados, que permitiu escrever $S_n$ para um $n$
+    qualquer, mais o limite no infinito de uma fração de polinômios, que já
+    sabíamos calcular.
+
+</details>
+
+## 13. Exercícios
+
+### 1. Reconhecimento
+
+1. Em cada item, diga se a expressão é uma soma de Riemann de alguma função
+   em $[0, 2]$. Se for, diga $n$ e se é pela esquerda, pela direita ou pelo
+   ponto médio.
+   a) $f(0) \times 0{,}5 + f(0{,}5) \times 0{,}5 + f(1) \times 0{,}5 + f(1{,}5) \times 0{,}5$
+   b) $f(0{,}5) \times 0{,}5 + f(1{,}5) \times 0{,}5$
+   c) $f(0{,}25) \times 0{,}5 + f(0{,}75) \times 0{,}5 + f(1{,}25) \times 0{,}5 + f(1{,}75) \times 0{,}5$
+2. Calcule cada soma: a) $\sum_{i=1}^{4} i$; b) $\sum_{i=1}^{3} 2^i$;
+   c) $\sum_{i=1}^{5} 3$.
+3. Um caminhão anda a 20 m/s durante 15 segundos. Escreva a distância como uma
+   integral e calcule a área correspondente.
+
+### 2. Explicação
+
+4. Explique, com as próprias palavras, o que o $dx$ em $\int_0^3 t^2\,dt$
+   **não** é, e o que ele indica. Por que a variável ali é $t$?
+5. Um colega diz: "com 10 retângulos a área deu 7,695, com 100 deu 8,865;
+   então, quanto mais retângulos, maior a área". Onde está o engano?
+6. Por que a soma de Riemann precisa cobrir o intervalo inteiro, sem vão e sem
+   sobreposição? Que lição do curso já tinha dito isso, e sobre o quê?
+
+### 3. Aplicação direta
+
+7. Para $f(x) = x$ em $[0, 2]$ com $n = 4$, calcule a soma pela esquerda e
+   pela direita. Depois calcule a área exata pela figura e diga entre quais
+   valores ela ficou.
+8. Para $f(x) = x^2$ em $[0, 2]$ com $n = 4$, calcule as somas pela esquerda,
+   pela direita e pelo ponto médio.
+9. Escreva a área sob $y = 3x + 1$ entre $x = 0$ e $x = 2$ com a notação de
+   integral, e calcule-a pela fórmula do trapézio.
+
+### 4. Variação
+
+10. Para $f(x) = 4 - x$ em $[0, 3]$ com $n = 3$, calcule as somas pela esquerda
+    e pela direita, e a área exata pelo trapézio. Qual das duas somas ficou
+    abaixo da área? Compare com o que acontecia em $t^2$.
+11. A expressão $\sum_{i=1}^{4} i^2 \times 0{,}5$ é a soma de Riemann pela
+    direita de qual função, em qual intervalo? Calcule-a.
+12. Estime $\int_1^2 \frac{1}{x}\,dx$ com $n = 4$ pela esquerda e pela
+    direita. Entre quais valores está a integral? O 0,6912 do exemplo 3 está
+    entre eles?
+13. Para $t^2$ em $[0, 3]$, o erro da soma pela esquerda é no máximo
+    $\frac{27}{n}$. Quantos retângulos garantem erro menor que 0,01?
+
+### 5. Problema misto
+
+14. Uma bomba foi ligada e a vazão, em litros por minuto, foi lida a cada 5
+    minutos: 0, 8, 14, 18, 20, 21, 21 (do minuto 0 ao minuto 30). Estime o
+    volume bombeado pela esquerda e pela direita. Por que, neste caso, a
+    esquerda ficou abaixo da direita?
+15. A velocidade de um carro foi lida a cada 2 segundos: 0, 6, 10, 12, 13 m/s
+    (de 0 a 8 s). Estime a distância pela esquerda, pela direita e pela média
+    das duas. Qual das três você entregaria, e com que ressalva?
+16. Refaça a dedução da seção 9 para o intervalo $[0, b]$, com $b$ qualquer, e
+    mostre que $\int_0^b x^2\,dx = \frac{b^3}{3}$. Confira com $b = 3$ e com
+    $b = 1$, que já foram calculados nesta página, e depois use a fórmula para
+    $\int_0^2 x^2\,dx$.
+17. A região sob $y = \sqrt{4 - x^2}$ entre $x = -2$ e $x = 2$ é meio disco de
+    raio 2. Escreva a integral, calcule a área pela fórmula do círculo da lição
+    de [círculo](../geometria/circulo), e estime pelo ponto médio com $n = 4$.
+    Quanto o ponto médio errou?
+
+### 6. Justificativa
+
+18. Para uma função **crescente** em $[a, b]$, mostre que a soma pela direita
+    menos a soma pela esquerda vale $\big(f(b) - f(a)\big) \Delta x$.
+    Comece escrevendo as duas somas com $n = 3$ e veja o que cancela.
+    Depois explique por que isso garante que as duas se aproximam do mesmo
+    número quando $n$ cresce.
+19. Explique por que, para uma reta $y = mx + c$, a soma pelo ponto médio dá
+    a área exata para qualquer $n$. Use o retângulo e o trapézio de um pedaço
+    só.
+20. A dedução da seção 9 usou a soma pela direita. Refaça com a soma pela
+    esquerda (a altura do retângulo $i$ passa a ser $f\!\left(\frac{3(i-1)}{n}\right)$)
+    e mostre que o limite também é 9. Que fórmula de soma você precisou?
+
+<details>
+<summary>Dica para o exercício 16</summary>
+
+Siga a seção 9 trocando o 3 por $b$: a base vira $\frac{b}{n}$, a altura do
+retângulo $i$ vira $\left(\frac{bi}{n}\right)^2$. Ponha em evidência tudo o
+que não depende de $i$ e use a fórmula da soma dos quadrados.
+
+</details>
+
+<details>
+<summary>Dica para o exercício 18</summary>
+
+Escreva a soma pela esquerda com $n = 3$: $\big(f(x_0) + f(x_1) + f(x_2)\big)
+\Delta x$. E a pela direita: $\big(f(x_1) + f(x_2) + f(x_3)\big) \Delta x$.
+Subtraia uma da outra e observe quais parcelas aparecem nas duas.
+
+</details>
+
+<details>
+<summary>Dica para o exercício 20</summary>
+
+A soma que aparece é $0^2 + 1^2 + \ldots + (n-1)^2$. Ela é a soma dos quadrados
+até $n - 1$, então a fórmula da seção 9 serve com $n - 1$ no lugar de $n$:
+$\frac{(n-1)\,n\,(2n-1)}{6}$.
+
+</details>
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) Sim: $n = 4$, $\Delta x = 0{,}5$, altura lida no começo de cada pedaço,
+   **pela esquerda**. b) **Não**: dois retângulos de base 0,5 cobrem só 1
+   unidade, e o intervalo tem 2. Faltou pedaço. c) Sim: $n = 4$, alturas lidas
+   em $0{,}25$; $0{,}75$; $1{,}25$; $1{,}75$, que são os meios dos pedaços,
+   **pelo ponto médio**.
+2. a) $1 + 2 + 3 + 4 = 10$. b) $2 + 4 + 8 = 14$. c) $3 + 3 + 3 + 3 + 3 = 15$.
+   Se você encontrou $3^5$ ou $3 \times 5 = 15$ por outro caminho, confira: a
+   parcela é 3, somada cinco vezes, e 15 é a resposta certa pelo motivo certo.
+3. $\int_0^{15} 20\,dt = 20 \times 15 = 300$ metros: retângulo de base 15 e
+   altura 20.
+4. O $dt$ não é um número para substituir, nem uma largura específica como 0,3.
+   Ele lembra o $\Delta t$ que encolheu no limite e indica que a variável de
+   integração é $t$: é $t$ que percorre o intervalo de 0 a 3, e é $t^2$ que dá
+   a altura.
+5. O engano é ler duas somas pela esquerda como se fossem "a área". As somas
+   pela esquerda **sobem** para 9 porque estão abaixo dele; as pela direita
+   **descem** para 9. Mais retângulos aproximam melhor, e a área verdadeira não
+   muda com $n$.
+6. Porque a área do todo só é a soma das áreas dos pedaços quando os pedaços
+   formam uma divisão de verdade: um vão deixa área de fora, uma sobreposição
+   conta área duas vezes. Foi a lição de figuras compostas que disse isso,
+   sobre cortar uma figura em retângulos e triângulos.
+7. $\Delta x = 0{,}5$. Esquerda: $(0 + 0{,}5 + 1 + 1{,}5) \times 0{,}5 = 1{,}5$.
+   Direita: $(0{,}5 + 1 + 1{,}5 + 2) \times 0{,}5 = 2{,}5$. Exata: triângulo de
+   base 2 e altura 2, área 2, entre 1,5 e 2,5.
+8. Esquerda: $(0 + 0{,}25 + 1 + 2{,}25) \times 0{,}5 = 1{,}75$. Direita:
+   $(0{,}25 + 1 + 2{,}25 + 4) \times 0{,}5 = 3{,}75$. Ponto médio: alturas
+   $0{,}0625$; $0{,}5625$; $1{,}5625$; $3{,}0625$, soma 5,25, vezes 0,5 dá
+   $2{,}625$. O valor exato, pelo exercício 16, é $\frac{8}{3} \approx 2{,}667$;
+   o ponto médio errou por 0,04, a esquerda por 0,92.
+9. $\int_0^2 (3x + 1)\,dx$. As alturas nas pontas são $1$ e $7$; trapézio de
+   bases 1 e 7 e altura 2: $\frac{(1 + 7) \times 2}{2} = 8$.
+10. Esquerda: $(4 + 3 + 2) \times 1 = 9$. Direita: $(3 + 2 + 1) \times 1 = 6$.
+    Exata: trapézio de bases 4 e 1 e altura 3, $\frac{(4 + 1) \times 3}{2} =
+    7{,}5$. Aqui a **direita** ficou abaixo e a esquerda acima, o contrário de
+    $t^2$, porque a função **desce**: o fim de cada pedaço é o ponto mais
+    baixo. Se você encontrou "esquerda abaixo" sem calcular, foi a regra da
+    função crescente aplicada onde ela não vale.
+11. **$f(x) = 4x^2$ em $[0, 2]$, com $n = 4$.** O fator 0,5 que multiplica
+    cada parcela é a base, então $\Delta x = 0{,}5$; com quatro retângulos, o
+    intervalo tem largura $4 \times 0{,}5 = 2$. Pela direita, o ponto de
+    leitura do retângulo $i$ é $x_i = i \times 0{,}5$. Para a parcela ser
+    $i^2 \times 0{,}5$, a altura tem que valer $f(x_i) = i^2$. Como
+    $i = 2x_i$, isso dá $f(x) = (2x)^2 = 4x^2$. O valor da soma é
+    $(1 + 4 + 9 + 16) \times 0{,}5 = 15$.
+    *Se você respondeu $x^2$ em $[0, 2]$, leu $i^2$ como se fosse a altura
+    $(0{,}5i)^2$ — e essa soma dá 3,75, não 15.* A lição do exercício: a base
+    aparece **duas vezes** numa parcela de Riemann, uma dentro da altura, em
+    $f(i\,\Delta x)$, e outra multiplicando fora. Trocar $i$ por $x_i$ dentro
+    da função é o passo que identifica a curva.
+12. $\Delta x = 0{,}25$. Esquerda: alturas $1$; $0{,}8$; $0{,}6667$; $0{,}5714$,
+    soma 3,0381, vezes 0,25 dá **0,7595**. Direita: alturas $0{,}8$;
+    $0{,}6667$; $0{,}5714$; $0{,}5$, soma 2,5381, vezes 0,25 dá **0,6345**. A
+    integral está entre 0,6345 e 0,7595 (a função desce, então a direita é a
+    de baixo). O 0,6912 está dentro, e o valor exato, 0,6931, também.
+13. Precisamos de $\frac{27}{n} \le 0{,}01$, isto é, $n \ge 2700$. Com 2700
+    retângulos, a soma pela esquerda dá 8,9950, que está a 0,005 do 9 —
+    dentro da tolerância pedida. A cota $\frac{27}{n}$ é o pior caso, e o erro
+    de verdade costuma ficar abaixo dela.
+14. Esquerda: $(0 + 8 + 14 + 18 + 20 + 21) \times 5 = 81 \times 5 = 405$ litros.
+    Direita: $(8 + 14 + 18 + 20 + 21 + 21) \times 5 = 102 \times 5 = 510$
+    litros. A esquerda ficou abaixo porque a vazão **nunca desceu** no
+    intervalo: em cada pedaço, a leitura do início é a menor.
+15. Esquerda: $(0 + 6 + 10 + 12) \times 2 = 56$ m. Direita: $(6 + 10 + 12 + 13)
+    \times 2 = 82$ m. Média: 69 m. A média é a melhor aposta, porque trata
+    cada pedaço como trapézio e a velocidade cresceu de forma suave. A ressalva:
+    entre as leituras, não sabemos o que o carro fez; com leituras a cada 2 s,
+    o erro pode ser de vários metros, e a estimativa honesta é "entre 56 e 82,
+    provavelmente perto de 69".
+16. Base $\frac{b}{n}$, altura $\left(\frac{bi}{n}\right)^2 = \frac{b^2 i^2}{n^2}$.
+    $S_n = \frac{b^3}{n^3} \sum i^2 = \frac{b^3}{n^3} \times
+    \frac{n(n+1)(2n+1)}{6} = \frac{b^3}{6}\left(2 + \frac{3}{n} +
+    \frac{1}{n^2}\right) \to \frac{2b^3}{6} = \frac{b^3}{3}$. Com $b = 3$:
+    $\frac{27}{3} = 9$. Com $b = 1$: $\frac{1}{3}$. Com $b = 2$: $\frac{8}{3}
+    \approx 2{,}667$, e a conferência por computador com $n = 1000$ dá
+    esquerda 2,6627 e direita 2,6707.
+17. $\int_{-2}^{2} \sqrt{4 - x^2}\,dx$. Meio disco de raio 2: $\frac{\pi
+    \times 2^2}{2} = 2\pi \approx 6{,}283$. Ponto médio com $n = 4$: $\Delta x
+    = 1$, pontos $-1{,}5$; $-0{,}5$; $0{,}5$; $1{,}5$, alturas $\sqrt{1{,}75}
+    \approx 1{,}3229$ (duas vezes) e $\sqrt{3{,}75} \approx 1{,}9365$ (duas
+    vezes), soma $6{,}519$. Errou por 0,24 para mais, porque perto das pontas
+    a curva cai muito depressa e o retângulo do meio cobre área a mais. Com
+    $n = 100$ o ponto médio dá 6,285.
+18. Com $n = 3$: direita menos esquerda $= \big(f(x_1) + f(x_2) + f(x_3)\big)
+    \Delta x - \big(f(x_0) + f(x_1) + f(x_2)\big) \Delta x$. As parcelas
+    $f(x_1)$ e $f(x_2)$ aparecem nas duas e cancelam; sobra $\big(f(x_3) -
+    f(x_0)\big) \Delta x = \big(f(b) - f(a)\big) \Delta x$. O mesmo
+    cancelamento vale para qualquer $n$: cada altura interna aparece uma vez
+    em cada soma. Como $\Delta x = \frac{b - a}{n}$ vai a zero quando $n$
+    cresce, a diferença entre as duas somas vai a zero. A esquerda está abaixo
+    da área e a direita acima; se a distância entre elas some, as duas apertam
+    o mesmo número, que é a área. Para $t^2$ em $[0, 3]$, a diferença é
+    $9 \times \frac{3}{n} = \frac{27}{n}$, o número da tabela e do erro 1.
+19. Num pedaço de $x_0$ a $x_1$, a área exata sob a reta é o trapézio de bases
+    $f(x_0)$ e $f(x_1)$: $\frac{f(x_0) + f(x_1)}{2} \Delta x$. O retângulo do
+    ponto médio tem altura $f\!\left(\frac{x_0 + x_1}{2}\right)$, e numa reta o
+    valor no meio é a média dos valores nas pontas, porque a reta sobe a mesma
+    quantidade em cada metade. Logo o retângulo tem exatamente a área do
+    trapézio, em cada pedaço, para qualquer $n$.
+20. Altura $\frac{9(i-1)^2}{n^2}$, base $\frac{3}{n}$:
+    $S_n = \frac{27}{n^3} \sum_{i=1}^{n} (i-1)^2 = \frac{27}{n^3}
+    \big(0^2 + 1^2 + \ldots + (n-1)^2\big) = \frac{27}{n^3} \times
+    \frac{(n-1)\,n\,(2n-1)}{6} = \frac{27}{6} \times \frac{(n-1)(2n-1)}{n^2}
+    = \frac{27}{6}\left(2 - \frac{3}{n} + \frac{1}{n^2}\right) \to 9$. Para
+    $n = 10$ isso dá $4{,}5 \times 1{,}71 = 7{,}695$, a soma pela esquerda da
+    tabela. A fórmula necessária foi a soma dos quadrados até $n - 1$.
+
+</details>
+
+## 14. Revisão curta
+
+- A **distância** percorrida é a **área** entre o gráfico da velocidade e o
+  eixo do tempo: velocidade vezes tempo, pedaço a pedaço. A unidade da área é
+  o produto das unidades dos eixos.
+- Uma área com lado curvo se aproxima por **retângulos** de base $\Delta x$ e
+  altura lida na curva. Pela esquerda, pela direita ou pelo ponto médio: muda
+  só onde a altura é lida.
+- A **soma de Riemann** é $\sum_{i=1}^{n} f(x_i)\,\Delta x$. O $\sum$ diz
+  "some uma parcela para cada $i$". Multiplicar pela largura faz parte da
+  parcela.
+- A **integral definida** $\int_a^b f(x)\,dx$ é o limite das somas quando $n$
+  cresce sem parar. O $\int$ é um S de soma; o $dx$ é o $\Delta x$ que
+  encolheu. Uma soma com $n$ fixo é aproximação; a integral é o número exato.
+- Numa função crescente, a esquerda fica por baixo e a direita por cima, e a
+  diferença entre elas, $\big(f(b) - f(a)\big)\Delta x$, vai a zero. É isso
+  que garante o limite.
+- Para $t^2$, a fórmula da soma dos quadrados deu o valor exato:
+  $\int_0^3 t^2\,dt = 9$, e em geral $\int_0^b x^2\,dx = \frac{b^3}{3}$. Para
+  a maioria das funções não há fórmula de soma, e o caminho pelo limite fica
+  inviável.
+
+Antes de avançar, verifique se você consegue fazer três coisas: calcular à
+mão as somas pela esquerda e pela direita de $x^2$ em $[0, 2]$ com quatro
+retângulos; escrever com $\int$ a distância percorrida entre 5 s e 20 s por um
+carro de velocidade $v(t)$; e explicar por que $S_{10} = 7{,}695$ não é a
+integral.
+
+A lição seguinte, [a integral definida](./a-integral-definida), pergunta o que
+acontece quando a função fica **negativa** — o carro dá ré — e mostra que a
+integral é uma área com sinal. Depois dela, o
+[teorema fundamental do cálculo](./teorema-fundamental-do-calculo) entrega o
+atalho que esta página deixou em aberto: a área sob $t^2$ se calcula achando
+uma função cuja derivada é $t^2$, em uma linha, sem nenhum retângulo.

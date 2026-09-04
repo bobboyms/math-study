@@ -1,0 +1,1005 @@
+---
+title: "Regras de derivação: potência, constante e soma"
+---
+
+import AreaModel from '@site/src/components/AreaModel';
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Regras de derivação: potência, constante e soma
+
+## 1. Problema motivador: a caixa, pela segunda vez
+
+A lição de [função polinomial](../funcoes/funcao-polinomial) cortou quadrados
+de lado $x$ nos cantos de uma folha de 30 cm por 20 cm e dobrou as abas para
+formar uma caixa. O volume ficou
+
+$$
+V(x) = x(30 - 2x)(20 - 2x) = 4x^3 - 100x^2 + 600x \ \text{cm}^3,
+$$
+
+com $0 < x < 10$. Aquela lição descobriu que o volume máximo existe e fica
+perto de $x = 4$, e disse que achar o ponto exato “é trabalho do cálculo”.
+
+A ferramenta para isso é a derivada. A lição anterior mostrou que a derivada
+diz o **ritmo** com que a função muda em cada ponto. Se $V'(3)$ for positiva, o
+volume ainda está crescendo quando o corte tem 3 cm; se $V'(4)$ for negativa,
+já está caindo em 4 cm. O máximo fica onde o ritmo troca de sinal.
+
+Então queremos $V'(x)$. Pela definição da lição anterior, seria preciso montar
+
+$$
+\frac{V(a+h) - V(a)}{h}
+= \frac{4(a+h)^3 - 100(a+h)^2 + 600(a+h) - \left(4a^3 - 100a^2 + 600a\right)}{h}.
+$$
+
+Dá para fazer: expandir o cubo, expandir o quadrado, distribuir os
+coeficientes, cancelar o que se repete, pôr $h$ em evidência, dividir. São
+umas quinze linhas para um polinômio de grau 3. Para um modelo de grau 5 — e
+modelos ajustados a dados costumam ter grau alto — seria preciso expandir
+$(a+h)^5$, que tem seis termos, e o trabalho dobra.
+
+A lição anterior deixou uma pista. As derivadas de $x$, $x^2$ e $x^3$ deram
+$1$, $2x$ e $3x^2$: o expoente desce para a frente e diminui em 1. Se esse
+padrão valer para qualquer expoente, e se a derivada de uma soma for a soma
+das derivadas, então $V'(x)$ sai em uma linha:
+
+$$
+V'(x) = 12x^2 - 200x + 600.
+$$
+
+Esta página mostra **por que** o padrão vale e **por que** a soma pode ser
+derivada termo a termo. Não é uma lista de regras para decorar: cada uma é
+deduzida do que a lição anterior fez, e conferida com um número no fim.
+
+## 2. Mapa das ideias
+
+- a **regra da potência**: $(x^n)' = n x^{n-1}$ — o expoente desce
+  multiplicando e diminui em 1;
+- o motivo: na expansão de $(a+h)^n$, só o termo $n a^{n-1} h$ sobrevive
+  ao limite; os outros carregam $h^2$ ou mais e somem;
+- a **regra da constante multiplicativa**: $(c \, f)' = c \, f'$ — uma
+  constante que multiplica passa direto pela derivada;
+- a **regra da soma**: $(f + g)' = f' + g'$ — e a da diferença, igual;
+- a **derivada de um polinômio**: cada termo derivado pela potência, tudo
+  somado;
+- a regra da potência também vale para **expoentes negativos e
+  fracionários**, o que cobre $\frac{1}{x}$ e $\sqrt{x}$ e bate com a lição
+  anterior;
+- **reescrever antes de derivar**: frações e produtos simples viram somas de
+  potências, e só então a regra se aplica.
+
+## 3. Para que serve
+
+- derivar qualquer polinômio em uma linha, sem a definição: custo, receita,
+  lucro, posição e volume modelados por polinômios passam a ter taxa
+  instantânea imediata;
+- velocidade a partir da posição e, derivando de novo, **aceleração** — a
+  taxa da taxa;
+- custo marginal de um modelo de custo polinomial, que é a pergunta mais
+  frequente da economia;
+- achar onde a tangente é horizontal, que é resolver $f'(x) = 0$: o primeiro
+  passo para máximos e mínimos, o assunto das lições de [sinal da
+  derivada](./sinal-da-derivada) e de [máximos e mínimos](./maximos-e-minimos);
+- e, dentro da matemática, ela é a primeira de uma família de regras. As
+  lições seguintes acrescentam produto, quociente e composição, e com elas
+  toda função que o curso conhece passa a ser derivável por regras.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [a derivada](./a-derivada): que padrão apareceu nas derivadas pela
+definição?** A tabela daquela lição deu $(x)' = 1$, $(x^2)' = 2x$ e
+$(x^3)' = 3x^2$. Em cada caso o passo decisivo foi expandir $(a+h)^n$, cancelar
+o $a^n$ e ver que, depois de dividir por $h$, só um termo não tinha mais $h$:
+$2a$ no quadrado, $3a^2$ no cubo. A mesma lição obteve
+$\left(\frac{1}{x}\right)' = -\frac{1}{x^2}$ e
+$\left(\sqrt{x}\right)' = \frac{1}{2\sqrt{x}}$, e ensinou a **conferir com um
+número**: o quociente centrado $\frac{f(a+h) - f(a-h)}{2h}$ com $h = 0{,}001$.
+
+**2. De [produtos notáveis](../algebra/produtos-notaveis): o que é
+$(a+h)^2$, e o que é $(a+h)^3$?** São $a^2 + 2ah + h^2$ e
+$a^3 + 3a^2h + 3ah^2 + h^3$. Aquela lição também leu esses termos como
+**pedaços que crescem**: quando o lado de um quadrado passa de $a$ para $a+h$,
+o aumento de área é $2ah + h^2$, e com $h$ pequeno as duas faixas $2ah$ são
+quase tudo, enquanto o cantinho $h^2$ é quase nada. No cubo, as três lajes
+$3a^2h$ carregam quase todo o volume novo. É essa hierarquia que vai decidir
+a regra.
+
+**3. De [calculando limites](./calculo-de-limites): o limite atravessa a soma
+e a constante?** Sim. Se $\lim f = L$ e $\lim g = M$, então
+$\lim (f + g) = L + M$ e $\lim (c \, f) = c \, L$. São as duas primeiras linhas
+da tabela de propriedades, e elas vão virar as duas últimas regras desta
+página.
+
+**4. De [potências](../numeros-e-operacoes/potencias) e de [expoentes
+fracionários](../numeros-e-operacoes/expoentes-fracionarios): como se escreve
+$\frac{1}{x^3}$ e $\sqrt{x}$ como potência?** $\frac{1}{x^3} = x^{-3}$, porque
+o expoente negativo é o inverso da potência. E $\sqrt{x} = x^{1/2}$, porque o
+denominador do expoente é o índice da raiz. É o que permite uma regra só
+cobrir frações e raízes.
+
+**5. De [quando a derivada não existe](./quando-a-derivada-nao-existe): as
+regras valem em todo ponto?** Valem onde a função é derivável. $\lvert x
+\rvert$ em 0 e $\sqrt{x}$ em 0 continuam sem derivada, e nenhuma regra desta
+página muda isso. As regras produzem a fórmula de $f'$; o domínio dessa fórmula
+diz onde ela vale.
+
+O item 2 é o que sustenta a página. A regra da potência **não é uma regra
+nova**: é a leitura, com $h$ encolhendo, do que os produtos notáveis já
+mostravam sobre faixas, lajes e cantinhos.
+
+## 5. Intuição: só o que tem um $h$ sobrevive
+
+Volte ao quadrado de lado $a$ que cresce para $a + h$. O aumento de área tem
+duas partes: as duas faixas, que medem $a$ por $h$ cada, e o cantinho, que
+mede $h$ por $h$.
+
+Agora divida esse aumento por $h$, que é o que o quociente de diferenças faz.
+Cada faixa dividida por $h$ dá $a$: as duas juntas dão $2a$. O cantinho
+dividido por $h$ dá $h$. E, quando $h$ encolhe, esse $h$ que sobrou vai a zero.
+Sobra $2a$.
+
+O mesmo acontece no cubo. As três lajes $3a^2h$ divididas por $h$ dão $3a^2$,
+que não depende de $h$ e fica. As três barras finas $3ah^2$ divididas por $h$
+dão $3ah$, que ainda tem $h$ e some. O cubinho $h^3$ dividido por $h$ dá
+$h^2$, e some também. Sobra $3a^2$.
+
+A regra geral é essa: **na expansão de $(a+h)^n$, os termos se separam em três
+grupos**. O termo sem $h$ é $a^n$, e ele cancela com o $-a^n$ do quociente. O
+termo com **exatamente um** $h$ é o único que, dividido por $h$, vira um número
+sem $h$, e por isso sobrevive. Todos os termos com $h^2$, $h^3$ e assim por
+diante ainda têm pelo menos um $h$ depois da divisão, e vão a zero no limite.
+
+Então a derivada de $x^n$ é o **coeficiente do termo com um só $h$** na
+expansão de $(a+h)^n$. A pergunta passa a ser: qual é esse coeficiente?
+
+## 6. Modelo visual: o quadrado que cresce, dividido por $h$
+
+<AreaModel
+  rows={[{size: 4, label: 'a'}, {size: 1, label: 'h'}]}
+  cols={[{size: 4, label: 'a'}, {size: 1, label: 'h'}]}
+  cells={[
+    [{math: 'a^2', tone: 0}, {math: 'ah', tone: 2}],
+    [{math: 'ah', tone: 2}, {math: 'h^2', tone: 3}],
+  ]}
+  baseLabel="a + h"
+  caption="O quadrado de lado a + h. O aumento em relação a a² são as duas faixas ah e o cantinho h². Dividido por h, cada faixa vira a, e o cantinho vira h — que some quando h encolhe."
+/>
+
+A figura é a mesma do quadrado da soma da lição de produtos notáveis, com outra
+pergunta. Lá a pergunta era “quanto vale a área toda?”. Aqui é “o que sobra do
+aumento depois de dividir por $h$ e encolher $h$?”. O $a^2$ sem cor não faz
+parte do aumento e cancela. As duas faixas laranja são o que sobrevive. O
+cantinho verde é o que morre.
+
+A tabela abaixo faz o mesmo para os primeiros expoentes. A coluna do meio é a
+única que importa para a derivada.
+
+| $n$ | $(a+h)^n$ expandido | termo sem $h$ | termo com um só $h$ | termos com $h^2$ ou mais |
+|---:|---|---|---|---|
+| 1 | $a + h$ | $a$ | $1 \times h$ | nenhum |
+| 2 | $a^2 + 2ah + h^2$ | $a^2$ | $2a \, h$ | $h^2$ |
+| 3 | $a^3 + 3a^2h + 3ah^2 + h^3$ | $a^3$ | $3a^2 \, h$ | $3ah^2 + h^3$ |
+| 4 | $a^4 + 4a^3h + 6a^2h^2 + 4ah^3 + h^4$ | $a^4$ | $4a^3 \, h$ | $6a^2h^2 + 4ah^3 + h^4$ |
+
+O padrão da coluna do meio é visível: $1$, $2a$, $3a^2$, $4a^3$. O expoente
+$n$ vira o coeficiente, e a potência de $a$ perde um grau. É exatamente o
+$n a^{n-1}$ que a lição anterior antecipou.
+
+A linha de $n = 4$ é nova: a lição anterior parou no cubo. Vale conferir a
+expansão com um número antes de confiar nela. Com $a = 2$ e $h = 0{,}1$, o
+lado esquerdo é $2{,}1^4 = 19{,}4481$. O lado direito, termo a termo, é
+$16 + 3{,}2 + 0{,}24 + 0{,}008 + 0{,}0001 = 19{,}4481$. Confere — e repare na
+hierarquia: $3{,}2$ é quase todo o aumento, e os três últimos termos juntos não
+chegam a $0{,}25$.
+
+## 7. Ponte para a formalização: de onde vem o coeficiente $n$
+
+A tabela mostra o padrão até $n = 4$. Para afirmar que ele vale em qualquer
+expoente, é preciso um motivo que não dependa de expandir caso a caso. O motivo
+está na própria multiplicação.
+
+$(a+h)^n$ é o produto de $n$ fatores iguais a $(a+h)$:
+
+$$
+(a+h)^n = \underbrace{(a+h)(a+h)\timess(a+h)}_{n \text{ fatores}}.
+$$
+
+A lição de produtos notáveis mostrou como se multiplica dois parênteses: cada
+termo do resultado vem de escolher **uma parcela de cada fator** e multiplicar
+as escolhas. Com $n$ fatores é a mesma coisa: cada termo do resultado é um
+produto de $n$ escolhas, uma por fator, e cada escolha é $a$ ou $h$.
+
+- **Termo sem $h$.** Só há um jeito: escolher $a$ em todos os $n$ fatores. O
+  produto é $a^n$.
+- **Termo com exatamente um $h$.** Escolhemos $h$ em **um** fator e $a$ nos
+  outros $n - 1$. O produto é $a^{n-1} h$. Mas há $n$ fatores diferentes em que
+  o $h$ pode ser escolhido — o primeiro, o segundo, até o $n$-ésimo —, e cada
+  uma dessas escolhas produz o mesmo $a^{n-1}h$. Somando as $n$ cópias:
+  $n \, a^{n-1} h$.
+- **Termos com dois ou mais $h$.** Todos têm $h^2$ como fator, porque vieram
+  de escolher $h$ em pelo menos dois fatores.
+
+Teste com $n = 3$: o $h$ pode vir do primeiro, do segundo ou do terceiro fator,
+e são três cópias de $a^2h$. É o $3a^2h$ da tabela. Com $n = 4$, quatro cópias
+de $a^3h$: o $4a^3h$. O argumento não depende do número: com $n$ fatores, são
+$n$ cópias.
+
+Então, para todo $n$ natural,
+
+$$
+(a+h)^n = a^n + n \, a^{n-1} h + (\text{termos com } h^2 \text{ como fator}).
+$$
+
+Os termos do último grupo têm coeficientes que a tabela mostra (o 6 em $n =
+4$, por exemplo), mas o valor deles **não importa** para a derivada: seja qual
+for o coeficiente, o termo carrega $h^2$ e vai sumir. É por isso que a regra
+sai sem precisar da fórmula completa da expansão.
+
+## 8. A regra da potência
+
+Com a expansão em mãos, a definição de derivada faz o resto. Para
+$f(x) = x^n$ em torno de $a$:
+
+$$
+\begin{aligned}
+\frac{f(a+h) - f(a)}{h}
+&= \frac{(a+h)^n - a^n}{h} \\
+&= \frac{a^n + n a^{n-1} h + (\text{termos com } h^2) - a^n}{h} \\
+&= \frac{n a^{n-1} h + (\text{termos com } h^2)}{h} \\
+&= n a^{n-1} + (\text{termos com } h), \qquad h \neq 0.
+\end{aligned}
+$$
+
+Cada passo é um movimento já visto. **O $a^n$ cancela** com o $-a^n$, como o
+$a^2$ e o $a^3$ cancelaram na lição anterior. **O $h$ vai para evidência e
+cancela com o denominador**, o que é legítimo porque $h \neq 0$: dividir
+numerador e denominador por $h$ é multiplicar por 1. **O que muda** é a escrita:
+o quociente deixa de ter $h$ no denominador. **O que permanece** é o valor, para
+todo $h \neq 0$. Os termos que tinham $h^2$ perderam um $h$ na divisão e
+ficaram com pelo menos um; por isso continuam a ter $h$ como fator.
+
+Agora $h \to 0$. O primeiro termo, $n a^{n-1}$, não depende de $h$ e fica. Cada
+um dos outros é um número vezes uma potência de $h$, e vai a zero. Sobra:
+
+> **Regra da potência.** Para todo expoente natural $n$,
+> $$
+> \boxed{(x^n)' = n \, x^{n-1}}
+> $$
+> O expoente desce multiplicando, e o novo expoente é o antigo menos 1.
+
+**Exemplo.** $(x^5)' = 5x^4$. Conferindo com um número em $x = 1$: a fórmula dá
+5. O quociente centrado $\frac{1{,}001^5 - 0{,}999^5}{0{,}002}$ dá
+$5{,}00002$. Confere.
+
+**Contraexemplo.** $(x^5)'$ **não** é $5x^5$: o expoente tem que diminuir. Em
+$x = 1$ a conta errada também dá 5, e por isso o erro passa despercebido; em
+$x = 2$ ela dá $5 \times 32 = 160$, enquanto a derivada é $5 \times 16 = 80$. O
+quociente centrado em 2 dá $80{,}0002$. O erro dobra o resultado.
+
+**A lição anterior, conferida.** A regra recupera as três potências
+calculadas pela definição: $(x)' = 1 \times x^0 = 1$, $(x^2)' = 2x$,
+$(x^3)' = 3x^2$. Os resultados tinham que bater, porque a regra foi deduzida
+das mesmas contas.
+
+### A constante: o expoente zero
+
+Uma constante $c$ pode ser lida como $c \times x^0$, já que $x^0 = 1$. A regra
+da potência com $n = 0$ daria $0 \times x^{-1} = 0$. Bate com $(c)' = 0$ da
+lição anterior, mas o argumento certo é o de lá: uma quantidade que não muda
+tem taxa zero. Vale registrar na tabela:
+
+$$
+(c)' = 0 \qquad \text{para toda constante } c.
+$$
+
+**Contraexemplo.** $(7)' \neq 1$. A derivada de $x$ é 1 porque $x$ sobe uma
+unidade por unidade. A constante 7 não sobe nada.
+
+## 9. Expoentes negativos e fracionários
+
+A regra foi deduzida para $n$ natural, porque a expansão de $(a+h)^n$ como
+produto de $n$ fatores só faz sentido assim. Mas a lição anterior calculou duas
+derivadas que não são de expoente natural, e vale ver se a fórmula as
+acompanha.
+
+**O inverso.** $\frac{1}{x} = x^{-1}$. A regra, aplicada sem perguntar, daria
+
+$$
+(x^{-1})' = (-1) \, x^{-2} = -\frac{1}{x^2}.
+$$
+
+É exatamente o que a definição deu na lição anterior.
+
+**A raiz.** $\sqrt{x} = x^{1/2}$. A regra daria
+
+$$
+\left(x^{1/2}\right)' = \frac{1}{2} \, x^{-1/2} = \frac{1}{2} \times \frac{1}{\sqrt{x}} = \frac{1}{2\sqrt{x}}.
+$$
+
+De novo, o mesmo resultado da definição.
+
+Dois acertos não são uma demonstração, e a página não vai fingir que são. O
+que se pode dizer com honestidade é o seguinte:
+
+> A regra da potência vale para **qualquer expoente real** $r$:
+> $$
+> (x^r)' = r \, x^{r-1},
+> $$
+> em todo $x$ em que $x^r$ e $x^{r-1}$ existam. Nesta página o resultado é
+> **aceito** com base nos dois casos deduzidos pela definição e na conferência
+> numérica; a justificativa para expoente fracionário fica para a lição de
+> [derivação implícita](./derivacao-implicita), e a de expoente negativo sai
+> da regra do quociente na lição de [produto e
+> quociente](./regras-do-produto-e-do-quociente).
+
+**Conferindo um caso novo com um número.** $x^{-2} = \frac{1}{x^2}$. A regra
+dá $-2x^{-3} = -\frac{2}{x^3}$; em $x = 2$, vale $-\frac{2}{8} = -0{,}25$. O
+quociente centrado com $h = 0{,}001$ dá $-0{,}250000$. Confere.
+
+**Outro.** $x^{3/2} = x\sqrt{x}$. A regra dá $\frac{3}{2}x^{1/2} =
+\frac{3}{2}\sqrt{x}$; em $x = 4$, vale $\frac{3}{2} \times 2 = 3$. O quociente
+centrado dá $3{,}000000$.
+
+A ressalva do domínio importa. $\left(\sqrt{x}\right)' = \frac{1}{2\sqrt{x}}$ não
+existe em $x = 0$, e a lição anterior explicou o motivo: a tangente ali é
+vertical. A regra entrega a fórmula; a fórmula diz onde vale.
+
+## 10. Constante multiplicativa e soma
+
+Falta o que permite ir de $x^3$ a $4x^3 - 100x^2 + 600x$: passar por uma
+constante que multiplica e por uma soma de termos.
+
+### Constante que multiplica
+
+Seja $g(x) = c \, f(x)$, com $c$ uma constante. O quociente de diferenças de
+$g$ é
+
+$$
+\frac{g(a+h) - g(a)}{h}
+= \frac{c \, f(a+h) - c \, f(a)}{h}
+= c \times \frac{f(a+h) - f(a)}{h}.
+$$
+
+O que aconteceu: o $c$ era fator comum das duas parcelas do numerador, foi
+posto em evidência e saiu para fora da fração. **O que mudou** é a escrita.
+**O que permaneceu** é o valor: com $c = 3$, $f(a+h) = 10$, $f(a) = 4$ e
+$h = 2$, a forma original dá $\frac{30 - 12}{2} = 9$ e a reescrita dá
+$3 \times \frac{10 - 4}{2} = 9$.
+
+Agora o limite. A propriedade da constante, da lição de calculando limites,
+diz que o limite de $c$ vezes uma expressão é $c$ vezes o limite da
+expressão. O limite do quociente de $f$ é $f'(a)$. Logo:
+
+> **Regra da constante multiplicativa.**
+> $$
+> \boxed{(c \, f)' = c \, f'}
+> $$
+
+**Exemplo.** $(5x^4)' = 5 \times 4x^3 = 20x^3$. Em $x = 2$: $20 \times 8 = 160$.
+O quociente centrado dá $160{,}0000$.
+
+**Leitura geométrica.** Multiplicar $f$ por 3 estica o gráfico três vezes na
+vertical, como a lição de transformações de gráficos mostrou. Toda subida fica
+três vezes maior no mesmo trecho, e por isso toda inclinação triplica. O
+exercício 26 desenha isso com placas.
+
+**Contraexemplo.** A constante que **soma** não passa pela derivada do mesmo
+jeito: $(f + 7)' = f'$, e não $7f'$. Somar 7 desloca o gráfico para cima sem
+mudar inclinação nenhuma. É a regra seguinte que trata disso.
+
+### Soma e diferença
+
+Seja $s(x) = f(x) + g(x)$. O quociente de diferenças de $s$ é
+
+$$
+\frac{s(a+h) - s(a)}{h}
+= \frac{f(a+h) + g(a+h) - f(a) - g(a)}{h}
+= \frac{f(a+h) - f(a)}{h} + \frac{g(a+h) - g(a)}{h}.
+$$
+
+O que aconteceu: as quatro parcelas do numerador foram reagrupadas — o que é
+de $f$ com o que é de $f$, o que é de $g$ com o que é de $g$ — e a fração com
+duas parcelas no numerador virou soma de duas frações com o mesmo
+denominador. É o caminho inverso da soma de frações com denominador comum.
+**O que mudou** é o agrupamento; **o que permaneceu** é o valor.
+
+O limite da soma é a soma dos limites, pela propriedade da lição de
+calculando limites. Cada parcela tem limite $f'(a)$ e $g'(a)$. Logo:
+
+> **Regra da soma e da diferença.**
+> $$
+> \boxed{(f + g)' = f' + g' \qquad (f - g)' = f' - g'}
+> $$
+> A diferença sai da soma: $f - g = f + (-1) \times g$, e o $-1$ passa pela
+> regra da constante.
+
+**Exemplo.** $(x^3 + x^2)' = 3x^2 + 2x$. Em $x = 1$: $3 + 2 = 5$. O quociente
+centrado de $x^3 + x^2$ em 1 dá $5{,}000000$.
+
+**Contraexemplo.** A regra é da **soma**, não do produto. $(x^2 \times x^3)'$
+não é $2x \times 3x^2 = 6x^3$. Como $x^2 \times x^3 = x^5$, a derivada é $5x^4$,
+e em $x = 1$ os dois dão 5 por coincidência, mas em $x = 2$ o certo é 80 e o
+errado é 48. O produto tem regra própria, na lição de [produto e
+quociente](./regras-do-produto-e-do-quociente).
+
+### Derivada de um polinômio
+
+Juntando as três regras, um polinômio se deriva **termo a termo**: cada termo
+$c \, x^n$ vira $c \, n \, x^{n-1}$, e a constante sozinha vira zero.
+
+$$
+\left(4x^3 - 100x^2 + 600x\right)'
+= 4 \times 3x^2 - 100 \times 2x + 600 \times 1
+= 12x^2 - 200x + 600.
+$$
+
+Cada igualdade tem nome: a regra da soma separou os três termos; a regra da
+constante tirou o 4, o 100 e o 600 para fora; a regra da potência derivou
+$x^3$, $x^2$ e $x$.
+
+Uma consequência que vale guardar: **a derivada de um polinômio de grau $n$ é
+um polinômio de grau $n - 1$**. Grau 3 vira grau 2, grau 2 vira grau 1 (uma
+reta), grau 1 vira grau 0 (uma constante), e a constante vira zero.
+
+### A tabela desta página
+
+| Regra | Escrita | De onde vem |
+|---|---|---|
+| constante | $(c)' = 0$ | quantidade que não muda tem taxa zero |
+| potência | $(x^r)' = r \, x^{r-1}$ | só o termo com um $h$ sobrevive na expansão |
+| constante multiplicativa | $(c \, f)' = c \, f'$ | o $c$ sai da fração; o limite atravessa a constante |
+| soma e diferença | $(f \pm g)' = f' \pm g'$ | as parcelas se separam; o limite atravessa a soma |
+| polinômio | termo a termo | as três regras acima, juntas |
+
+## 11. Resolvendo o problema da caixa
+
+De volta ao volume $V(x) = 4x^3 - 100x^2 + 600x$. A derivada já saiu na seção
+anterior:
+
+$$
+V'(x) = 12x^2 - 200x + 600.
+$$
+
+Ela mede o ritmo, em cm³ por cm de corte, com que o volume muda quando o corte
+tem $x$ cm. Vamos ler alguns valores:
+
+| Corte $x$ (cm) | 2 | 3 | $3{,}5$ | 4 |
+|---:|---:|---:|---:|---:|
+| Volume $V(x)$ (cm³) | 832 | 1008 | $1046{,}5$ | 1056 |
+| Ritmo $V'(x)$ (cm³/cm) | 248 | 108 | 47 | $-8$ |
+
+**Conferindo com um número.** Em $x = 3$, o quociente centrado de $V$ com
+$h = 0{,}001$ dá $108{,}0000$. Confere com a fórmula.
+
+**Lendo a tabela.** Em 2 cm o volume cresce a 248 cm³ por cm de corte: cada
+milímetro a mais no corte acrescenta uns 25 cm³. Em 3 cm ainda cresce, mas
+menos que a metade disso. Em 3,5 cm cresce devagar. Em 4 cm o ritmo é
+**negativo**: o volume já está diminuindo. O máximo fica entre 3,5 e 4 cm,
+onde $V'$ troca de sinal — mais perto de 4, porque 47 está mais longe de zero
+que $-8$.
+
+O ponto exato é onde $V'(x) = 0$, e essa é uma equação do 2º grau que a
+[fórmula de Bhaskara](../equacoes/formula-de-bhaskara) resolve. Dividindo por 4,
+$3x^2 - 50x + 150 = 0$; a raiz que cai no domínio é $x \approx 3{,}924$ cm, e
+$V(3{,}924) \approx 1056{,}31$ cm³. É o $x \approx 3{,}92$ que a lição de
+polinômios anunciou sem poder calcular.
+
+Falta ainda um cuidado: saber que $V' = 0$ ali é o máximo, e não outra coisa. A
+lição de [máximos e mínimos](./maximos-e-minimos) retoma a caixa e fecha esse
+argumento. O que esta página entregou foi a ferramenta: $V'$ em uma linha, em
+vez de quinze.
+
+<CartesianPlane
+  xMin={-0.5}
+  xMax={6.5}
+  yMin={-80}
+  yMax={1200}
+  xUnit={72}
+  yUnit={0.33}
+  yStep={200}
+  functions={[{f: (x) => 4 * x * x * x - 100 * x * x + 600 * x, domain: [0, 6.2], tone: 1}]}
+  lines={[
+    {m: 108, n: 1008 - 108 * 3, dashed: true, tone: 3},
+    {m: -8, n: 1056 + 8 * 4, dashed: true, tone: 2},
+  ]}
+  points={[
+    {at: [3, 1008], label: '(3,\\ 1008)', tone: 3, dx: -44, dy: 8},
+    {at: [4, 1056], label: '(4,\\ 1056)', tone: 2, dx: 50, dy: -10},
+  ]}
+  labels={[
+    {at: [1.4, 900], math: "V'(3) = 108", tone: 3, dx: 0},
+    {at: [5.6, 1130], math: "V'(4) = -8", tone: 2, dx: 0},
+  ]}
+  axisLabels={['x', 'V']}
+  caption="O volume da caixa e duas tangentes. Em x = 3 a tangente sobe (inclinação 108); em x = 4 já desce de leve (inclinação −8). O máximo está entre as duas, onde a tangente ficaria horizontal."
+/>
+
+## 12. Exemplos resolvidos
+
+### Exemplo 1: uma potência com coeficiente
+
+Derive $f(x) = 5x^4$ e confira em $x = 1$.
+
+Regra da constante multiplicativa e regra da potência:
+
+$$
+f'(x) = 5 \times (x^4)' = 5 \times 4x^3 = 20x^3.
+$$
+
+Em $x = 1$ a fórmula dá 20. O quociente centrado com $h = 0{,}001$ dá
+$20{,}0000$. Confere.
+
+### Exemplo 2: um polinômio completo
+
+*Pause e tente antes de ler.* Derive $g(x) = 2x^3 - 7x^2 + 4x - 9$ e encontre
+o ponto em que a tangente é horizontal com $x$ inteiro.
+
+Termo a termo:
+
+$$
+g'(x) = 2 \times 3x^2 - 7 \times 2x + 4 \times 1 - 0 = 6x^2 - 14x + 4.
+$$
+
+O $-9$ sumiu: constante tem derivada zero. Tangente horizontal é $g'(x) = 0$.
+Testando $x = 2$: $6 \times 4 - 28 + 4 = 0$. Então em $x = 2$ a tangente é
+horizontal, na altura $g(2) = 16 - 28 + 8 - 9 = -13$.
+
+**Conferindo.** O quociente centrado de $g$ em 2 dá $0{,}000000$; em 1, a
+fórmula dá $6 - 14 + 4 = -4$ e o quociente dá $-4{,}0000$.
+
+### Exemplo 3: reescrever como potência antes de derivar
+
+*Pause e tente.* Derive: a) $\dfrac{3}{x^2}$; b) $\sqrt[3]{x}$; c) $x\sqrt{x}$.
+
+Nenhuma das três está escrita como potência de $x$. O primeiro passo é
+reescrever, com as regras de expoente negativo e fracionário.
+
+**a)** $\dfrac{3}{x^2} = 3x^{-2}$. Derivando:
+$3 \times (-2) x^{-3} = -6x^{-3} = -\dfrac{6}{x^3}$. Em $x = 2$: $-\frac{6}{8}
+= -0{,}75$; o quociente centrado dá $-0{,}7500$.
+
+**b)** $\sqrt[3]{x} = x^{1/3}$. Derivando: $\frac{1}{3} x^{-2/3} =
+\dfrac{1}{3\sqrt[3]{x^2}}$. Em $x = 8$: $\frac{1}{3 \times 4} = \frac{1}{12}
+\approx 0{,}08333$; o quociente centrado dá $0{,}08333$.
+
+**c)** $x\sqrt{x} = x^1 \times x^{1/2} = x^{3/2}$, pela propriedade de somar
+expoentes de mesma base. Derivando: $\frac{3}{2} x^{1/2} =
+\frac{3}{2}\sqrt{x}$. Em $x = 4$: $\frac{3}{2} \times 2 = 3$; o quociente
+centrado dá $3{,}0000$.
+
+Em todos, a regra é a mesma; o trabalho está em **escrever a função como
+potência** antes de aplicá-la. Depois de derivar, vale voltar à escrita com
+fração ou raiz, que é a que se lê melhor.
+
+### Exemplo 4: velocidade e aceleração
+
+*Pause e tente.* Um elevador de carga tem posição, em metros acima do piso,
+dada por $s(t) = t^3 - 6t^2 + 9t$ durante os primeiros 4 segundos de um teste.
+a) Escreva a velocidade $v(t)$. b) Em que instantes o elevador para? c) A
+**aceleração** é a taxa da velocidade: escreva $a(t) = v'(t)$ e diga o que
+ela vale aos 2 s.
+
+**a)** A velocidade é a derivada da posição, como na lição anterior:
+
+$$
+v(t) = s'(t) = 3t^2 - 12t + 9 \ \text{m/s}.
+$$
+
+**b)** Parar é $v(t) = 0$: $3t^2 - 12t + 9 = 0$, ou $t^2 - 4t + 3 = 0$, que
+fatora como $(t-1)(t-3) = 0$. O elevador para em $t = 1$ s e em $t = 3$ s. As
+alturas são $s(1) = 1 - 6 + 9 = 4$ m e $s(3) = 27 - 54 + 27 = 0$ m: sobe até 4
+m, volta ao piso, e depois sobe de novo.
+
+**c)** A aceleração é a derivada da velocidade, que é um polinômio de grau 2:
+
+$$
+a(t) = v'(t) = 6t - 12 \ \text{m/s por segundo}.
+$$
+
+Aos 2 s, $a(2) = 0$. A unidade é “metros por segundo, por segundo”: quanto a
+velocidade muda a cada segundo. Aceleração zero aos 2 s significa que naquele
+instante a velocidade não está mudando — ela é $v(2) = 12 - 24 + 9 = -3$ m/s,
+descendo, e é o ponto em que a descida é mais rápida.
+
+**Conferindo.** O quociente centrado de $s$ em $t = 2$ dá $-3{,}0000$, e o de
+$v$ em $t = 2$ dá $0{,}0000$.
+
+Derivar duas vezes é novidade, e vai ganhar nome e lição própria: [segunda
+derivada e concavidade](./segunda-derivada-e-concavidade).
+
+### Exemplo 5: custo marginal de um modelo cúbico
+
+*Pause e tente.* O custo total de uma fábrica, em reais, para produzir $q$
+peças por dia é
+
+$$
+C(q) = 0{,}001q^3 - 0{,}3q^2 + 40q + 2000.
+$$
+
+a) Escreva o custo marginal $C'(q)$. b) Calcule em $q = 50$, $100$ e $200$.
+c) Confira $C'(100)$ com o custo real da 101ª peça.
+
+**a)** Termo a termo:
+
+$$
+C'(q) = 0{,}003q^2 - 0{,}6q + 40 \ \text{reais por peça}.
+$$
+
+**b)** $C'(50) = 7{,}5 - 30 + 40 = 17{,}5$; $C'(100) = 30 - 60 + 40 = 10$;
+$C'(200) = 120 - 120 + 40 = 40$.
+
+O custo marginal **cai** de 50 para 100 peças e **sobe** de 100 para 200. É
+um comportamento comum: no começo, produzir mais dilui custos e cada peça a
+mais sai mais barata; depois de certo ponto, horas extras e máquinas no limite
+encarecem cada peça a mais. A lição de máximos e mínimos vai achar o $q$ exato
+em que o custo marginal é mínimo.
+
+**c)** $C(100) = 1000 - 3000 + 4000 + 2000 = 4000$ e $C(101) = 4010{,}001$. A
+101ª peça custou R\$ 10,001, contra os R\$ 10,00 da derivada — a diferença é
+de um décimo de centavo.
+
+### Exemplo 6: duas tangentes a um polinômio de grau 4
+
+*Pause e tente.* Para $p(x) = x^4 - 2x^2$, escreva a tangente em $x = 1$ e em
+$x = 2$.
+
+$p'(x) = 4x^3 - 4x$.
+
+**Em $x = 1$:** $p(1) = 1 - 2 = -1$ e $p'(1) = 4 - 4 = 0$. A tangente é
+horizontal: $y = -1$.
+
+**Em $x = 2$:** $p(2) = 16 - 8 = 8$ e $p'(2) = 32 - 8 = 24$. Pela forma da
+lição anterior, $y = 8 + 24(x - 2) = 24x - 40$.
+
+**Conferindo.** A segunda reta passa pelo ponto de contato: em $x = 2$,
+$48 - 40 = 8$. E o quociente centrado de $p$ em 2 dá $24{,}0000$.
+
+### Exemplo 7: uma fração que vira polinômio
+
+*Pause e tente.* Derive $f(x) = \dfrac{x^3 + 2x}{x}$.
+
+Nenhuma regra desta página deriva uma fração com $x$ embaixo. Mas o
+numerador tem $x$ como fator comum: $x^3 + 2x = x(x^2 + 2)$. Para $x \neq 0$,
+o $x$ cancela e sobra $f(x) = x^2 + 2$. Agora sim:
+
+$$
+f'(x) = 2x, \qquad x \neq 0.
+$$
+
+O $x \neq 0$ fica na resposta porque a função original não existe em 0. A
+derivada errada aqui seria derivar em cima e embaixo separadamente,
+$\frac{3x^2 + 2}{1}$: em $x = 1$ isso dá 5, enquanto o quociente centrado de
+$f$ em 1 dá $2{,}0000$.
+
+## 13. Erros comuns
+
+> **Erro 1: derivada de constante como 1.** $(5)' = 0$, não 1. A confusão vem
+> de $(x)' = 1$. Mas $x$ sobe uma unidade por unidade; o 5 não sobe. Teste:
+> a taxa de variação de $f(x) = 5$ entre quaisquer dois pontos é
+> $\frac{5 - 5}{h} = 0$.
+
+> **Erro 2: esquecer de diminuir o expoente.** $(x^2)' = 2x$, não $2x^2$. Em
+> $x = 3$ a conta errada dá 18; o quociente centrado de $x^2$ em 3 dá
+> $6{,}0000$. O expoente que desce **é** o que diminui em 1 — o mesmo $h$ que
+> saiu do termo $n a^{n-1} h$ levou um grau de $a$ embora.
+
+> **Erro 3: derivar $\sqrt{x}$ como $\frac{1}{2}\sqrt{x}$.** O $\frac{1}{2}$
+> desce, mas o expoente vira $-\frac{1}{2}$, e expoente negativo é inverso:
+> $\frac{1}{2}x^{-1/2} = \frac{1}{2\sqrt{x}}$. Em $x = 4$ a conta errada dá
+> $1$; a certa dá $0{,}25$, e o quociente centrado confirma $0{,}2500$.
+
+> **Erro 4: derivar $\frac{1}{x^2}$ como $\frac{1}{2x}$.** A regra se aplica ao
+> expoente $-2$: $(x^{-2})' = -2x^{-3} = -\frac{2}{x^3}$. O sinal fica
+> negativo, o que bate com o gráfico, que desce para $x > 0$. Em $x = 1$ a
+> conta errada dá $0{,}5$ e a certa dá $-2$; o quociente centrado dá
+> $-2{,}0000$.
+
+> **Erro 5: tratar $\pi^2$ ou $3^2$ como se fosse $x^2$.** Em
+> $f(x) = x^2 + 3^2$, o $3^2$ é o número 9, e $f'(x) = 2x$. Escrever $2x + 6$ é
+> aplicar a regra da potência a algo que não varia. Regra prática: se não tem
+> $x$, é constante, e a derivada é zero.
+
+> **Erro 6: derivar $(2x + 1)^2$ como $2(2x + 1)$.** Expandindo,
+> $(2x+1)^2 = 4x^2 + 4x + 1$, e a derivada é $8x + 4$. A conta errada dá
+> $4x + 2$, a metade. Em $x = 1$: 12 contra 6. O erro é tentador porque com
+> $(x + 1)^2$ ele **dá certo**: $2(x + 1) = 2x + 2$, que é a derivada de
+> $x^2 + 2x + 1$. A diferença é o 2 que multiplica o $x$ lá dentro. A [regra
+> da cadeia](./regra-da-cadeia) explica de onde ele vem; até lá, expanda antes
+> de derivar.
+
+> **Erro 7: derivar uma fração em cima e embaixo.** $\left(\frac{x^3}{x}\right)'$
+> não é $\frac{3x^2}{1}$. Como $\frac{x^3}{x} = x^2$ para $x \neq 0$, a derivada
+> é $2x$. Quando a fração **não** simplifica, como em $\frac{1}{x^2 + 1}$,
+> nenhuma regra desta página serve, e é preciso esperar a regra do quociente.
+
+## 14. Perguntas de verificação
+
+1. Na expansão de $(a+h)^n$, por que só o termo com exatamente um $h$
+   sobrevive ao limite do quociente de diferenças?
+2. De onde vem o $n$ que aparece na frente em $n a^{n-1}$?
+3. Por que a regra da potência faz o expoente **diminuir** em 1?
+4. A regra da potência foi deduzida para $n$ natural. Com que base a página
+   a usa para $n = -1$ e $n = \frac{1}{2}$?
+5. Por que a derivada de uma constante é zero, e a de $x$ é 1?
+6. Qual propriedade do limite autoriza $(f + g)' = f' + g'$?
+7. Por que $(f + 7)' = f'$, mas $(7f)' = 7f'$?
+8. Um polinômio de grau 5 tem derivada de que grau? E a derivada da derivada?
+9. Se $V'(3) > 0$ e $V'(4) < 0$, o que se pode concluir sobre o volume da
+   caixa entre 3 e 4?
+10. Por que a página insiste em conferir cada derivada com o quociente
+    centrado, se as regras já foram deduzidas?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque o quociente divide por $h$. O termo $n a^{n-1} h$ dividido por $h$
+   vira $n a^{n-1}$, sem $h$, e fica. Os termos com $h^2$ ou mais, divididos
+   por $h$, ainda têm pelo menos um $h$ e vão a zero quando $h \to 0$. O termo
+   sem $h$, $a^n$, já tinha cancelado com o $-a^n$ do numerador.
+2. Da contagem de escolhas na multiplicação dos $n$ fatores $(a+h)$. Para
+   formar um termo com um só $h$, escolhe-se $h$ em um fator e $a$ nos outros;
+   há $n$ fatores em que o $h$ pode ser escolhido, e cada escolha produz o
+   mesmo $a^{n-1}h$. São $n$ cópias somadas.
+3. Porque o termo que sobrevive é $a^{n-1}$ vezes $h$, e o $h$ foi embora na
+   divisão. Dos $n$ fatores, um deu o $h$ e os outros $n - 1$ deram $a$: por
+   isso a potência de $a$ tem um grau a menos.
+4. Com base em dois fatos: os dois casos foram calculados **pela definição** na
+   lição anterior e batem com a fórmula; e a conferência numérica em casos
+   novos ($x^{-2}$, $x^{3/2}$) também bate. A página diz que aceita o resultado
+   geral e aponta a lição em que ele é justificado.
+5. Uma constante não muda, então toda taxa de variação dela é zero. A função
+   $x$ sobe exatamente uma unidade para cada unidade de entrada, em qualquer
+   ponto, então a taxa é 1.
+6. A propriedade “o limite da soma é a soma dos limites”. O quociente de
+   diferenças de $f + g$ se separa em dois quocientes, um de $f$ e um de $g$,
+   e cada um tem limite $f'$ e $g'$.
+7. Somar 7 desloca o gráfico para cima sem mudar nenhuma inclinação: a
+   diferença $f(a+h) - f(a)$ é a mesma com ou sem o 7, então a derivada não
+   muda. Multiplicar por 7 estica o gráfico sete vezes na vertical: toda
+   subida fica sete vezes maior, e toda inclinação também.
+8. Grau 4. Derivando de novo, grau 3. Cada derivação tira um grau, porque cada
+   $x^n$ vira um múltiplo de $x^{n-1}$.
+9. Que o volume ainda cresce em 3 e já decresce em 4. Em algum ponto entre os
+   dois o ritmo passa por zero, e ali a tangente é horizontal: é o candidato a
+   máximo. Confirmar que é máximo, e não outra coisa, é assunto da lição de
+   máximos e mínimos.
+10. Porque a regra certa aplicada com um deslize — expoente que não desceu,
+    constante tratada como variável, fração derivada em cima e embaixo — produz
+    uma fórmula errada que parece certa. O quociente centrado não sabe qual
+    regra você usou; ele só mede a inclinação. Se os dois discordam, a fórmula
+    está errada.
+
+</details>
+
+## 15. Exercícios
+
+### 1. Reconhecimento
+
+1. Escreva cada expressão como uma potência de $x$: a) $\dfrac{1}{x^4}$;
+   b) $\sqrt[5]{x}$; c) $\dfrac{1}{\sqrt{x}}$; d) $x^2\sqrt{x}$.
+2. Na expansão de $(a+h)^6$: a) quantos termos há? b) qual é o termo com
+   exatamente um $h$?
+3. Quais destas expressões são constantes, com derivada zero: $\pi^3$; $x^3$;
+   $2^5$; $\sqrt{7}$; $c^2$, com $c$ constante?
+4. Sem derivar, diga o grau da derivada de um polinômio de grau 7.
+5. Diga qual regra justifica cada igualdade em
+   $(4x^3 - 5x)' = (4x^3)' - (5x)' = 4(x^3)' - 5(x)' = 12x^2 - 5$.
+
+### 2. Explicação
+
+6. Explique por que $(5)' = 0$ e não 1, usando a ideia de taxa de variação.
+7. Explique, com as próprias palavras, por que só o termo $n a^{n-1} h$ da
+   expansão sobrevive ao limite.
+8. Um colega escreveu $(x^n)' = n x^n$. Mostre com $x^2$ em $x = 3$ que a
+   fórmula dele não bate com o quociente centrado.
+9. Outro colega escreveu $\left(\sqrt{x}\right)' = \frac{1}{2}\sqrt{x}$.
+   Mostre com $x = 4$ que está errado e diga qual passo ele pulou.
+10. Explique por que a regra da soma é legítima, citando a propriedade do
+    limite que ela usa.
+
+### 3. Aplicação direta
+
+11. Derive: a) $x^7$; b) $x^{10}$; c) $4x^5$; d) $-3x^2$; e) $\dfrac{x^6}{2}$.
+12. Derive: a) $x^3 + x^2 + x + 1$; b) $5x^4 - 2x^3 + x - 8$;
+    c) $\dfrac{x^2}{4} - 3x + 7$.
+13. Reescreva como potência e derive: a) $\dfrac{2}{x^3}$; b) $\sqrt[4]{x}$;
+    c) $\dfrac{1}{\sqrt{x}}$; d) $x^2\sqrt{x}$.
+14. Para $f(x) = x^3 - 12x$: a) escreva $f'(x)$; b) encontre os pontos em que
+    a tangente é horizontal; c) confira $f'(3)$ com o quociente centrado.
+15. Escreva a reta tangente a $f(x) = x^4$ em $x = 1$. O exercício 14 da lição
+    anterior estimou essa inclinação numericamente; compare.
+
+### 4. Variação
+
+16. Derive $f(x) = (2x + 1)^2$ expandindo primeiro. Depois calcule o que daria
+    a conta errada $2(2x + 1)$ em $x = 1$ e compare com o quociente centrado.
+17. Derive $g(x) = \dfrac{x^4 - 3x^2}{x}$, dizendo para quais $x$ a resposta
+    vale.
+18. Derive $h(x) = (x^2 + 1)(x^2 - 1)$ sem usar nenhuma regra de produto.
+19. Um objeto em queda livre percorre $s(t) = 4{,}9t^2$ metros em $t$ segundos.
+    a) Escreva a velocidade $v(t)$. b) Quanto vale aos 3 s? c) Escreva a
+    aceleração $v'(t)$ e diga por que ela é constante.
+20. Em que pontos o gráfico de $f(x) = x^3 - 3x^2 + 5$ tem tangente
+    horizontal? Dê as coordenadas completas.
+
+### 5. Problema misto
+
+21. Para a caixa, $V'(x) = 12x^2 - 200x + 600$. a) Resolva $V'(x) = 0$ com a
+    fórmula de Bhaskara e diga qual raiz cai no domínio $0 < x < 10$.
+    b) Calcule $V$ nesse ponto. c) Compare com $V(4) = 1056$.
+
+<details>
+<summary>Dica</summary>
+
+Divida a equação por 4 antes de aplicar Bhaskara: os números ficam menores e
+o discriminante sai $2500 - 1800$.
+
+</details>
+
+22. O lucro da oficina da Revisão geral é $L(x) = -2x^2 + 120x - 1000$ reais,
+    com $x$ serviços por mês. a) Escreva $L'(x)$. b) Calcule $L'(20)$, $L'(30)$
+    e $L'(40)$. c) A Revisão geral achou o vértice em $x = 30$ pela fórmula
+    $x_v = -\frac{b}{2a}$. O que $L'(30)$ tem a ver com isso? d) Em $x = 40$ a
+    Revisão disse que o lucro é positivo mas a função é decrescente. Como
+    $L'(40)$ confirma a segunda parte?
+23. Uma fábrica tem custo $C(q) = 0{,}01q^2 + 12q + 900$ reais para $q$ peças.
+    a) Escreva o custo marginal. b) Calcule-o em $q = 150$. c) Calcule o custo
+    real da 151ª peça e compare.
+24. Um tanque está sendo esvaziado, e o volume em litros após $t$ minutos é
+    $V(t) = 500 - 20t + 0{,}2t^2$. a) Qual é a vazão $V'(t)$, e o que o sinal
+    dela diz? b) Quanto vale aos 10 min? c) Em que instante a vazão chega a
+    zero, e quanto resta no tanque nesse instante?
+
+### 6. Justificativa
+
+25. Deduza $(x^4)' = 4x^3$ pela definição, usando a linha $n = 4$ da tabela da
+    seção 6. Mostre em qual passo os termos $6a^2h^2 + 4ah^3 + h^4$ deixam de
+    importar.
+26. Desenhe (ou descreva) três placas iguais de lado $a$ empilhadas, cada uma
+    crescendo para $a + h$. Use a figura para explicar por que a derivada de
+    $3x^2$ é o triplo da derivada de $x^2$.
+27. Mostre que a derivada de $f(x) = ax^2 + bx + c$ é uma reta, e que ela zera
+    exatamente em $x = -\frac{b}{2a}$. Por que isso era de se esperar, pelo que
+    a lição de [função quadrática](../funcoes/funcao-quadratica) disse sobre o
+    vértice?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) $x^{-4}$. b) $x^{1/5}$. c) $x^{-1/2}$. d) $x^{5/2}$, porque
+   $x^2 \times x^{1/2} = x^{2 + 1/2}$.
+2. a) Sete termos, de $a^6$ até $h^6$. b) $6a^5h$: o $h$ pode vir de qualquer
+   um dos seis fatores.
+3. São constantes $\pi^3$, $2^5$, $\sqrt{7}$ e $c^2$: nenhuma tem $x$. Só $x^3$
+   varia, e a derivada é $3x^2$.
+4. Grau 6. Cada termo $x^n$ vira um múltiplo de $x^{n-1}$, e o termo de maior
+   grau, $x^7$, vira $7x^6$.
+5. Primeira igualdade: regra da diferença. Segunda: regra da constante
+   multiplicativa, duas vezes. Terceira: regra da potência em $x^3$ e em $x$
+   (que dá 1).
+6. A taxa de variação de uma função entre dois pontos é a variação da saída
+   dividida pela variação da entrada. Para $f(x) = 5$, a saída não varia: o
+   numerador é $5 - 5 = 0$ para qualquer trecho, e a taxa é zero em todo
+   trecho. O limite de zero é zero. A derivada de $x$ é 1 porque ali a saída
+   varia tanto quanto a entrada.
+7. O quociente de diferenças divide $(a+h)^n - a^n$ por $h$. O $a^n$ cancela.
+   O termo $n a^{n-1}h$ dividido por $h$ perde o $h$ e vira um número fixo. Os
+   demais termos tinham $h^2$, $h^3$…, e depois da divisão ainda têm $h$; quando
+   $h$ encolhe, eles encolhem junto. Só o termo fixo fica.
+8. A fórmula dele dá $2 \times 3^2 = 18$. O quociente centrado de $x^2$ em 3,
+   com $h = 0{,}001$, dá $\frac{3{,}001^2 - 2{,}999^2}{0{,}002} = 6{,}0000$. A
+   derivada é $2x = 6$. Ele esqueceu de diminuir o expoente.
+9. Em $x = 4$ a fórmula dele dá $\frac{1}{2} \times 2 = 1$. O quociente centrado
+   de $\sqrt{x}$ em 4 dá $0{,}2500$, que é $\frac{1}{2\sqrt{4}}$. Ele desceu o
+   $\frac{1}{2}$ mas não diminuiu o expoente: $\frac{1}{2} - 1 = -\frac{1}{2}$,
+   e $x^{-1/2}$ é $\frac{1}{\sqrt{x}}$, não $\sqrt{x}$.
+10. O quociente de diferenças de $f + g$ se reagrupa em dois quocientes, um só
+    com $f$ e outro só com $g$, sem mudar o valor. A propriedade “o limite da
+    soma é a soma dos limites” diz que o limite dessa soma é $f'(a) + g'(a)$.
+11. a) $7x^6$. b) $10x^9$. c) $20x^4$. d) $-6x$. e) $3x^5$, porque
+    $\frac{1}{2} \times 6 = 3$.
+12. a) $3x^2 + 2x + 1$. b) $20x^3 - 6x^2 + 1$. c) $\frac{x}{2} - 3$, porque
+    $\frac{1}{4} \times 2x = \frac{x}{2}$. Se você encontrou um termo a mais
+    no fim (como $+ 7$ ou $- 8$), esqueceu que a constante tem derivada zero.
+13. a) $2x^{-3}$, derivada $-6x^{-4} = -\frac{6}{x^4}$. b) $x^{1/4}$, derivada
+    $\frac{1}{4}x^{-3/4} = \frac{1}{4\sqrt[4]{x^3}}$. c) $x^{-1/2}$, derivada
+    $-\frac{1}{2}x^{-3/2} = -\frac{1}{2x\sqrt{x}}$. d) $x^{5/2}$, derivada
+    $\frac{5}{2}x^{3/2} = \frac{5}{2}x\sqrt{x}$.
+14. a) $f'(x) = 3x^2 - 12$. b) $3x^2 - 12 = 0$ dá $x^2 = 4$, logo $x = 2$ e
+    $x = -2$. Os pontos são $(2, -16)$ e $(-2, 16)$. c) $f'(3) = 27 - 12 = 15$;
+    o quociente centrado dá $15{,}0000$.
+15. $f(1) = 1$ e $f'(1) = 4 \times 1^3 = 4$, então $y = 1 + 4(x - 1) = 4x - 3$.
+    A estimativa daquele exercício foi $4{,}006$ com $h = 0{,}001$ não
+    centrado: o mesmo 4, com um resto que vem do $h$ que ainda não foi ao
+    limite.
+16. $(2x+1)^2 = 4x^2 + 4x + 1$, e $f'(x) = 8x + 4$. Em $x = 1$: 12. A conta
+    errada dá $2 \times 3 = 6$. O quociente centrado de $f$ em 1 dá $12{,}0000$.
+    A conta errada perdeu o fator 2 que multiplica o $x$ dentro do parêntese.
+17. Para $x \neq 0$, $g(x) = x^3 - 3x$, e $g'(x) = 3x^2 - 3$, valendo em todo
+    $x \neq 0$. Se você derivou o numerador e o denominador separadamente,
+    encontrou $\frac{4x^3 - 6x}{1}$, que em $x = 2$ dá 20; o quociente centrado
+    de $g$ em 2 dá $9{,}0000$, que é $3 \times 4 - 3$.
+18. É a diferença de quadrados: $(x^2+1)(x^2-1) = x^4 - 1$. Então
+    $h'(x) = 4x^3$. Em $x = 2$: 32; o quociente centrado confirma $32{,}0000$.
+    Se você multiplicou as derivadas dos dois fatores, $2x \times 2x = 4x^2$,
+    encontrou 16 em $x = 2$ — errado, e é o contraexemplo da seção 10.
+19. a) $v(t) = 9{,}8t$ m/s. b) $v(3) = 29{,}4$ m/s. c) $v'(t) = 9{,}8$ m/s por
+    segundo. É constante porque $v$ é uma reta, e a derivada de uma reta é a
+    inclinação dela: a velocidade cresce sempre no mesmo ritmo, 9,8 m/s a cada
+    segundo.
+20. $f'(x) = 3x^2 - 6x = 3x(x - 2)$, que zera em $x = 0$ e $x = 2$. Os pontos
+    são $(0, 5)$ e $(2, 1)$, porque $f(0) = 5$ e $f(2) = 8 - 12 + 5 = 1$.
+21. a) Dividindo por 4: $3x^2 - 50x + 150 = 0$. O discriminante é
+    $2500 - 1800 = 700$, e $\sqrt{700} \approx 26{,}46$. As raízes são
+    $\frac{50 \pm 26{,}46}{6}$, isto é, $x \approx 3{,}924$ e $x \approx 12{,}74$.
+    Só a primeira está entre 0 e 10. b) $V(3{,}924) \approx 1056{,}31$ cm³.
+    c) É maior que $V(4) = 1056$ por cerca de 0,3 cm³: o corte de 4 cm já
+    estava muito perto do ótimo. Se você encontrou raízes muito diferentes,
+    confira se usou $a = 3$, $b = -50$, $c = 150$ depois da divisão por 4 —
+    ou $a = 12$, $b = -200$, $c = 600$ sem dividir; as raízes são as mesmas.
+22. a) $L'(x) = -4x + 120$. b) $L'(20) = 40$, $L'(30) = 0$, $L'(40) = -40$
+    reais por serviço. c) $L'(30) = 0$ significa tangente horizontal em
+    $x = 30$: é o vértice da parábola. A fórmula do vértice e a derivada zero
+    localizam o mesmo ponto. d) $L'(40) < 0$ diz que, em 40 serviços, fazer
+    mais um **diminui** o lucro em cerca de R\$ 40: a função está decrescendo,
+    embora $L(40) = 600$ ainda seja positivo. Positiva e decrescente são
+    perguntas diferentes, como a Revisão já tinha dito.
+23. a) $C'(q) = 0{,}02q + 12$. b) $C'(150) = 3 + 12 = 15$ reais por peça.
+    c) $C(151) - C(150) = 0{,}01(151^2 - 150^2) + 12 = 0{,}01 \times 301 + 12 =
+    15{,}01$. A derivada errou por um centavo.
+24. a) $V'(t) = -20 + 0{,}4t$ litros por minuto. O sinal negativo, enquanto
+    durar, diz que o volume está diminuindo: o tanque esvazia. b)
+    $V'(10) = -16$ L/min. c) $V'(t) = 0$ em $t = 50$ min, e
+    $V(50) = 500 - 1000 + 500 = 0$: a vazão chega a zero exatamente quando o
+    tanque fica vazio. O esvaziamento desacelera o tempo todo (de 20 L/min no
+    início a 0 no fim) e para no instante certo.
+25. $\frac{(a+h)^4 - a^4}{h} = \frac{4a^3h + 6a^2h^2 + 4ah^3 + h^4}{h}
+    = 4a^3 + 6a^2h + 4ah^2 + h^3$, para $h \neq 0$. O $a^4$ cancelou na
+    subtração; o $h$ cancelou na divisão. Os três termos que vieram de
+    $6a^2h^2 + 4ah^3 + h^4$ ainda têm $h$ depois da divisão, e é no limite
+    $h \to 0$ que eles deixam de importar: cada um vai a zero. Sobra $4a^3$.
+26. Cada placa de lado $a$ que cresce para $a + h$ ganha duas faixas $ah$ e um
+    cantinho $h^2$. Com três placas, o aumento total é
+    $3(2ah + h^2) = 6ah + 3h^2$. Dividindo por $h$: $6a + 3h$, e no limite
+    $6a$. É três vezes o $2a$ de uma placa só, porque cada placa contribuiu com
+    as próprias duas faixas. A constante 3 conta placas, e sai da derivada
+    contando do mesmo jeito.
+27. $f'(x) = 2ax + b$, que é uma reta (grau 1), com inclinação $2a$. Ela zera
+    quando $2ax + b = 0$, ou seja, $x = -\frac{b}{2a}$. Era de se esperar
+    porque esse é o $x$ do vértice, e no vértice a parábola troca de subir para
+    descer (ou o contrário): a tangente ali é horizontal, e tangente horizontal
+    é derivada zero. A fórmula do vértice, que a lição de função quadrática
+    obteve completando o quadrado, é a mesma que sai de $f'(x) = 0$.
+
+</details>
+
+## 16. Revisão curta
+
+- **$(x^r)' = r \, x^{r-1}$.** O expoente desce multiplicando e diminui em 1.
+  O motivo: na expansão de $(a+h)^n$, só o termo com um $h$ sobrevive ao
+  quociente e ao limite, e ele é $n a^{n-1} h$ porque o $h$ pode vir de
+  qualquer um dos $n$ fatores.
+- **Constante tem derivada zero.** E constante que multiplica passa direto:
+  $(c \, f)' = c \, f'$.
+- **Soma e diferença se derivam termo a termo**, porque o limite atravessa a
+  soma. Produto **não**: $(x^2 \times x^3)' \neq 2x \times 3x^2$.
+- **Reescreva antes de derivar.** $\frac{1}{x^3} = x^{-3}$, $\sqrt{x} = x^{1/2}$,
+  $(2x+1)^2 = 4x^2 + 4x + 1$, $\frac{x^3 + 2x}{x} = x^2 + 2$. A regra só se
+  aplica a potências de $x$ somadas.
+- **Confira com o quociente centrado.** A fórmula e o número com $h = 0{,}001$
+  precisam concordar nas primeiras casas.
+
+Antes de avançar, verifique se você consegue fazer três coisas: explicar de
+onde vem o $n$ em $n x^{n-1}$ sem olhar a tabela; derivar
+$\frac{3}{x^2} - 2\sqrt{x} + 5x^4 - 1$ em uma linha; e dizer o que $V'(3) > 0$
+e $V'(4) < 0$ contam sobre a caixa.
+
+Com esta página, todo polinômio, toda potência e toda soma delas têm derivada
+imediata. O que ainda não tem regra é o **produto** de duas funções, o
+**quociente** e a **composição** — como $x^2 \sqrt{x + 1}$, $\frac{x}{x^2 + 1}$
+e $(2x+1)^{10}$. As três próximas lições cuidam delas, na ordem: [produto e
+quociente](./regras-do-produto-e-do-quociente) e [regra da
+cadeia](./regra-da-cadeia). Depois disso, as famílias que faltam — seno,
+cosseno, exponencial e logaritmo — ganham as próprias derivadas, e a tabela
+fecha. Todas essas derivadas, lidas ao contrário, viram a tabela de primitivas
+da lição de [primitivas e substituição](./primitivas-e-substituicao).

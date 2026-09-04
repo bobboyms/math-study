@@ -30,6 +30,8 @@ Estude os capítulos nesta ordem:
    endereço a cada ponto e ligar ângulo a comprimento.
 8. [Revisão geral](./revisao-geral) — o arco inteiro em exercícios que misturam
    os capítulos.
+9. [Cálculo 1](./calculo/) — medir o que muda a cada instante: limite,
+   derivada e integral.
 
 A ordem segue a dependência entre as ideias, e cada capítulo abre dizendo o que
 herda do anterior. Aritmética sustenta a álgebra; a fatoração da álgebra é o que
@@ -38,8 +40,10 @@ gráfico no capítulo de funções; exponenciais e logaritmos acrescentam a fam�
 que nenhuma operação polinomial produz; e a geometria reaproveita todos eles,
 transformando figuras em equações e ângulos em números.
 
-Ao fim do percurso, o conjunto de ferramentas cobre o que um curso de cálculo
-assume de antemão.
+Os oito primeiros capítulos cobrem o que um curso de cálculo assume de antemão.
+O nono capítulo é esse curso: ele retoma as perguntas que ficaram em aberto —
+a taxa de variação num ponto, o máximo exato, a área sob uma curva — e as
+responde.
 
 ## Como estudar cada página
 

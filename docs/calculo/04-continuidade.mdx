@@ -1,0 +1,1155 @@
+---
+title: "Continuidade: quando o limite é o valor da função"
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Continuidade: quando o limite é o valor da função
+
+## 1. Problema motivador: o frete que pula e o forno que não pula
+
+Uma transportadora cobra pelo peso da encomenda em duas faixas:
+
+- **até 5 kg**: R\$ 20;
+- **acima de 5 kg**: R\$ 35.
+
+Uma encomenda de 5 kg paga R\$ 20. Outra, de 5,001 kg — um grama a mais —,
+paga R\$ 35. Um grama de diferença no peso produziu R\$ 15 de diferença no
+preço. Agora uma pergunta que parece boba: **existe alguma encomenda que pague
+exatamente R\$ 30?** Não existe. O preço vale 20 ou vale 35, e pula de um para
+o outro sem passar por nenhum valor no meio.
+
+Compare com um forno. Ele é ligado às 8h00, marcando 20 °C, e às 8h12 marca
+220 °C. **Houve algum instante em que o termômetro marcou exatamente 150 °C?**
+Houve, e você sabe disso sem ter visto o termômetro. A temperatura não pula:
+para ir de 20 até 220, ela passa por 150 em algum momento, mesmo que ninguém
+tenha anotado qual.
+
+As duas funções — preço em função do peso, temperatura em função do tempo —
+são funções como qualquer outra deste curso. Mas uma delas **pula valores** e a
+outra **não pula**. Essa diferença tem um nome, **continuidade**, e ela vai
+decidir muita coisa daqui para a frente: quando é seguro substituir $x = a$
+numa fórmula, quando um gráfico pode ser desenhado sem tirar o lápis do papel e
+— o mais surpreendente — quando podemos garantir que uma equação tem solução
+sem saber resolvê-la.
+
+Um segundo problema mostra esse último ponto. Considere a equação
+
+$$
+x^3 - 2x - 5 = 0.
+$$
+
+A página de [raízes racionais](../funcoes/raizes-racionais) ensinou a lista de
+candidatos: divisores de $-5$ sobre divisores de $1$, ou seja, $\pm 1$ e
+$\pm 5$. Nenhum deles funciona — a lição vai conferir os quatro. O teorema fez o
+trabalho dele e provou que **não há raiz racional**. Mas a equação tem, sim,
+uma solução real, e esta página vai encontrá-la com a precisão que se quiser,
+sem nenhuma fórmula: só com a garantia de que um polinômio não pula valores.
+
+## 2. Mapa das ideias
+
+- uma função é **contínua em $a$** quando o limite em $a$ existe e é igual a
+  $f(a)$;
+- isso se desdobra em **três condições**: $f(a)$ existe, o limite existe, e os
+  dois coincidem;
+- uma **descontinuidade** é um ponto em que alguma das três falha, e há três
+  jeitos de falhar: **buraco**, **salto** e **assíntota**;
+- uma função é **contínua num intervalo** quando é contínua em cada ponto
+  dele;
+- polinômios, funções racionais, raízes, exponenciais, logaritmos e funções
+  trigonométricas são contínuas **em todo o domínio**;
+- o **Teorema do Valor Intermediário** diz que uma função contínua num
+  intervalo fechado não pula valores: ela assume todo valor entre $f(a)$ e
+  $f(b)$;
+- a **bisseção** usa esse teorema para cercar uma raiz, cortando o intervalo ao
+  meio a cada passo.
+
+## 3. Para que serve
+
+- saber quando uma grandeza pode ser tratada como “sem saltos”: temperatura,
+  posição, pressão, saldo acumulado sem depósitos bruscos;
+- reconhecer as funções com salto: tarifas por faixa, arredondamento,
+  contagem de unidades;
+- garantir que uma equação **tem** solução num intervalo, mesmo sem fórmula
+  para resolvê-la;
+- localizar essa solução numericamente, que é o que uma calculadora ou um
+  programa faz por dentro;
+- e, dentro da matemática, preparar a derivada: uma função só pode ter
+  derivada num ponto se for contínua ali, e a Parte II vai usar isso o tempo
+  todo.
+
+Dentro deste capítulo, a continuidade é o que justifica um hábito que a lição
+de [cálculo de limites](./calculo-de-limites) já usou: **substituir $x = a$
+diretamente** para achar um limite. Substituir direto é a mesma coisa que dizer
+“o limite é o valor da função” — e é exatamente isso que continuidade
+significa.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [função modular e por partes](../funcoes/funcao-modular-e-por-partes):
+como se testa se uma função por partes é contínua na fronteira?** Calculando a
+fronteira pelas **duas** fórmulas. Na conta de luz, a primeira fórmula dava 50
+em 100 kWh e a segunda também dava 50: as partes se encontram, e não há salto.
+Se a segunda desse 60, haveria um degrau de 10. Aquela página também separou
+**bico** de **salto**: no bico, o traço muda de direção sem se romper; no
+salto, ele se parte.
+
+**2. De [funções racionais](../funcoes/funcoes-racionais): qual é a diferença
+entre um buraco e uma assíntota vertical?** Os dois aparecem onde o denominador
+zera. Se o fator do denominador **se cancela** com o numerador, a curva é
+normal ali e só falta um ponto — é o buraco de $\frac{x^2-4}{x-2}$ em $x = 2$.
+Se **não se cancela**, o quociente explode e a reta $x = a$ é assíntota
+vertical, como em $\frac{2x+1}{x-3}$.
+
+**3. De [raízes racionais](../funcoes/raizes-racionais): o que o teorema
+garante, e o que ele não garante?** Garante que **toda** raiz racional está na
+lista $\frac{p}{q}$. Não garante que exista alguma. Em $x^3 - 2$ a lista se
+esgota sem sucesso, e a raiz real, $\sqrt[3]{2}$, é irracional.
+
+**4. De [intervalos](../equacoes/intervalos): o que muda entre $[2, 3]$ e
+$\,]2, 3[$?** No primeiro, os extremos 2 e 3 pertencem ao conjunto. No segundo,
+não. O Teorema do Valor Intermediário vai exigir intervalo **fechado**, e o
+motivo vai ficar claro: ele precisa dos valores da função **nas duas pontas**.
+
+**5. Das duas primeiras lições deste capítulo, [limite de uma
+função](./limite-de-uma-funcao) e [cálculo de limites](./calculo-de-limites):
+o que significa $\lim_{x \to a} f(x) = L$?** Que, quando $x$ se aproxima de
+$a$ pelos dois lados, $f(x)$ se aproxima de $L$ — e isso **não depende** de
+$f(a)$ existir nem de quanto ele vale. O limite existe quando os limites
+laterais, $x \to a^{-}$ e $x \to a^{+}$, concordam.
+
+O item 1 é a chave. A definição de contínua que aquela página deu — “os
+valores, chegando pela esquerda e pela direita, se aproximam do mesmo número, e
+esse número é o valor da função ali” — é uma frase sobre limites laterais. Ela
+foi escrita sem a palavra limite porque a palavra ainda não existia no curso.
+Agora existe, e a definição vira uma linha.
+
+## 5. Intuição: uma função contínua não pula valores
+
+Volte ao frete e ao forno.
+
+O preço do frete vale 20 até o peso 5 e vale 35 logo depois. Se você desenhar o
+gráfico, ele é uma linha horizontal na altura 20, que **termina** em 5, e outra
+linha horizontal na altura 35, que **começa** logo depois de 5. Entre as duas
+há um degrau de altura 15, e nenhum traço liga uma à outra. Para desenhar,
+você precisa **levantar o lápis** em $x = 5$.
+
+<CartesianPlane
+  xMin={-0.5}
+  xMax={10.5}
+  yMin={-3}
+  yMax={42}
+  xUnit={44}
+  yUnit={6.4}
+  yStep={5}
+  yLabelEvery={2}
+  functions={[
+    {f: (x) => 20, domain: [0, 5], tone: 1},
+    {f: (x) => 35, domain: [5.04, 10], tone: 1},
+  ]}
+  lines={[{m: 0, n: 30, dashed: true, tone: 3}]}
+  points={[
+    {at: [5, 20], label: '(5,\\ 20)', tone: 2, dx: 0, dy: 20},
+    {at: [5, 35], label: '(5,\\ 35)', tone: 2, dx: 0, dy: -16, open: true},
+  ]}
+  labels={[{at: [8.4, 30], math: 'R\\$\\ 30', tone: 3, dy: -14}]}
+  axisLabels={['\\text{kg}', 'R\\$']}
+  caption="O preço do frete em função do peso. Em 5 kg o preço é 20 (bolinha cheia); logo depois é 35 (a bolinha vazia marca onde a segunda parte começaria). A altura 30 nunca é atingida: a reta tracejada não encontra o gráfico."
+/>
+
+A temperatura do forno, ao contrário, sobe **sem levantar o lápis**. Ela
+passa por cada altura entre 20 e 220 — por 100, por 150, por 219,9. Se você
+traçar uma reta horizontal em qualquer dessas alturas, ela **corta** o gráfico.
+
+<CartesianPlane
+  xMin={-0.8}
+  xMax={13}
+  yMin={-15}
+  yMax={245}
+  xUnit={34}
+  yUnit={1.15}
+  xStep={1}
+  xLabelEvery={2}
+  yStep={50}
+  functions={[{f: (t) => 20 + 200 * Math.sin((Math.PI * t) / 24), domain: [0, 12], tone: 1}]}
+  lines={[{m: 0, n: 150, dashed: true, tone: 3}]}
+  points={[
+    {at: [0, 20], label: '20', tone: 1, dx: -22, dy: 0},
+    {at: [12, 220], label: '220', tone: 1, dx: 24, dy: 0},
+    {at: [5.41, 150], label: '(5{,}4;\\ 150)', tone: 2, dx: 52, dy: 16},
+  ]}
+  labels={[{at: [1.6, 150], math: '150\\ {}^\\circ\\text{C}', tone: 3, dy: -14}]}
+  axisLabels={['\\text{min}', '{}^\\circ\\text{C}']}
+  caption="A temperatura do forno em função do tempo, em minutos depois das 8h00. A reta tracejada na altura 150 corta a curva: houve um instante, perto de 5,4 min, em que o termômetro marcou 150 °C."
+/>
+
+É essa a intuição inteira: **contínua** é a função cujo gráfico não se rompe,
+e por isso ela **não pula valores**. Tudo o que vem a seguir é dar a essa frase
+uma forma exata, com limites, e depois extrair dela a consequência do forno —
+o Teorema do Valor Intermediário.
+
+Uma advertência: a imagem do lápis é um guia, não a definição. Ela funciona bem
+quando você já tem o desenho. Mas na maior parte dos casos você tem a
+**fórmula**, e precisa decidir a continuidade sem desenhar. É para isso que
+servem as três condições da seção 7.
+
+## 6. Modelo visual: os três jeitos de um gráfico se romper
+
+Há exatamente três maneiras de o traço se romper num ponto, e as duas
+primeiras você já viu em lições anteriores. Vale colocá-las lado a lado, com a
+mesma pergunta para cada uma: **o que falha em $x = a$?**
+
+### Buraco: falta um ponto
+
+<CartesianPlane
+  xMin={-1}
+  xMax={5}
+  yMin={-1}
+  yMax={7}
+  xUnit={50}
+  yUnit={34}
+  functions={[
+    {f: (x) => x + 2, domain: [-1, 1.93], tone: 1},
+    {f: (x) => x + 2, domain: [2.07, 5], tone: 1},
+  ]}
+  points={[{at: [2, 4], label: '(2,\\ 4)', tone: 2, dx: 34, dy: 18, open: true}]}
+  axisLabels={['x', 'y']}
+  caption="f(x) = (x² − 4)/(x − 2). A curva é a reta y = x + 2 com um ponto faltando em x = 2. Chegando pelos dois lados, os valores se aproximam de 4 — mas f(2) não existe."
+/>
+
+Em $f(x) = \frac{x^2-4}{x-2}$, o limite em 2 **existe** e vale 4: a lição de
+cálculo de limites fez essa conta cancelando o fator $(x-2)$. O que falha é o
+valor: $f(2)$ não existe, porque o denominador zera. O gráfico é uma reta
+inteira com um único ponto removido.
+
+### Salto: os dois lados não concordam
+
+<CartesianPlane
+  xMin={-1}
+  xMax={5}
+  yMin={-1}
+  yMax={7}
+  xUnit={50}
+  yUnit={34}
+  functions={[
+    {f: (x) => x + 1, domain: [-1, 2], tone: 1},
+    {f: (x) => 6 - x, domain: [2.04, 5], tone: 1},
+  ]}
+  points={[
+    {at: [2, 3], label: '(2,\\ 3)', tone: 2, dx: -34, dy: 8},
+    {at: [2, 4], label: '(2,\\ 4)', tone: 2, dx: 34, dy: -10, open: true},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Uma função por partes: x + 1 até 2 (inclusive), e 6 − x depois. Pela esquerda os valores chegam a 3; pela direita, a 4. Os dois lados não concordam, e o limite em 2 não existe."
+/>
+
+Aqui a função **tem** valor em 2 — a bolinha cheia em $(2, 3)$ diz que
+$f(2) = 3$. O que falha é o limite: pela esquerda os valores se aproximam de 3,
+pela direita se aproximam de 4. Como os limites laterais discordam, o limite em
+2 não existe. É o frete: um degrau.
+
+### Assíntota: a função dispara
+
+<CartesianPlane
+  xMin={-1}
+  xMax={7}
+  yMin={-6}
+  yMax={6}
+  xUnit={40}
+  yUnit={26}
+  functions={[{f: (x) => 1 / (x - 3), tone: 1}]}
+  lines={[{x: 3, dashed: true, tone: 3}]}
+  labels={[{at: [3, 5.2], math: 'x = 3', tone: 3, dx: 30}]}
+  axisLabels={['x', 'y']}
+  caption="f(x) = 1/(x − 3). Perto de 3 a função não se aproxima de número nenhum: pela esquerda desce sem limite, pela direita sobe sem limite. A reta x = 3 é assíntota vertical."
+/>
+
+Em $f(x) = \frac{1}{x-3}$ falham as duas coisas: $f(3)$ não existe, e o limite
+em 3 também não — a lição de [limites infinitos](./limites-infinitos-e-no-infinito)
+escreve isso como $\lim_{x \to 3^{-}} f(x) = -\infty$ e
+$\lim_{x \to 3^{+}} f(x) = +\infty$, que é uma descrição de comportamento, não
+um número.
+
+Os três desenhos respondem à mesma pergunta de formas diferentes:
+
+| Tipo | $f(a)$ existe? | $\lim_{x \to a} f(x)$ existe? | O que se vê |
+|---|:---:|:---:|---|
+| **buraco** | não (ou existe, mas com outro valor) | sim | um ponto faltando, ou fora do lugar |
+| **salto** | sim ou não | não: os lados discordam | um degrau |
+| **assíntota** | não | não: a função dispara | a curva foge para cima ou para baixo |
+
+E a função contínua é a que responde **sim, sim, e os dois valores são o
+mesmo**. É o que a próxima seção formaliza.
+
+## 7. Ponte para a formalização: a definição da lição de função por partes, agora com limite
+
+A lição de função por partes definiu contínua assim:
+
+> os valores dela, chegando pela esquerda e pela direita, se aproximam do
+> mesmo número — e esse número é o valor da função ali.
+
+Leia a frase com o vocabulário de agora. “Chegando pela esquerda” é
+$x \to a^{-}$. “Chegando pela direita” é $x \to a^{+}$. “Se aproximam do mesmo
+número” é: os limites laterais existem e são iguais — ou seja, **o limite
+existe**. “E esse número é o valor da função ali” é: **o limite é igual a
+$f(a)$**.
+
+A definição antiga não era imprecisa. Ela era a definição com limite, escrita
+por extenso porque a palavra ainda não tinha sido apresentada. Substituir a
+frase pelo símbolo é legítimo porque o símbolo **significa** a frase — foi
+assim que a lição de limite o definiu. O que muda é a escrita; o que permanece
+é a exigência: os dois lados chegam, e chegam no valor certo.
+
+## 8. Formalização: as três condições
+
+> Uma função $f$ é **contínua em $a$** quando
+>
+> $$
+> \lim_{x \to a} f(x) = f(a).
+> $$
+>
+> A igualdade exige três coisas ao mesmo tempo:
+>
+> 1. $f(a)$ **existe** — o número $a$ está no domínio;
+> 2. $\lim_{x \to a} f(x)$ **existe** — os limites laterais concordam;
+> 3. os dois **são iguais**.
+>
+> Se qualquer uma das três falha, $f$ é **descontínua em $a$**.
+
+Antes dos exemplos, uma observação sobre o que a definição **não** diz. Ela é
+sobre **um ponto**. Uma função pode ser contínua em milhares de pontos e
+descontínua num só, e isso é o caso comum: o frete é contínuo em todo peso
+diferente de 5. Dizer “a função é descontínua” sem dizer onde é como dizer “a
+equação tem raiz” sem dizer qual.
+
+**Exemplo: as três condições valendo.** $f(x) = x^2 + 1$ em $a = 2$.
+
+1. $f(2) = 4 + 1 = 5$: existe.
+2. O limite: $f$ é um polinômio, e a lição de cálculo de limites mostrou que o
+   limite de um polinômio se calcula por substituição direta. Então
+   $\lim_{x \to 2} (x^2 + 1) = 5$. Para ver os dois lados chegando, confira a
+   tabela:
+
+   | $x$ | $1{,}9$ | $1{,}99$ | $2{,}01$ | $2{,}1$ |
+   |---|---:|---:|---:|---:|
+   | $x^2 + 1$ | $4{,}61$ | $4{,}9601$ | $5{,}0401$ | $5{,}41$ |
+
+3. Limite $5$, valor $5$: iguais.
+
+Logo $f$ é contínua em 2. E repare no que aconteceu no passo 2: “o limite se
+calcula por substituição direta” **é** dizer que o limite é igual ao valor.
+Para polinômios, a continuidade e a substituição direta são a mesma
+afirmação.
+
+Agora os contraexemplos — um para cada condição, porque é o contraexemplo que
+delimita o conceito.
+
+**Contraexemplo 1: falha a condição 1.** $f(x) = \frac{x^2-4}{x-2}$ em
+$a = 2$. O limite existe e vale 4. Mas $f(2)$ não existe: o 2 não está no
+domínio. Descontínua em 2, e o tipo é **buraco**.
+
+**Contraexemplo 2: falha a condição 2.** O frete em $a = 5$. O valor existe:
+$f(5) = 20$. Mas pela esquerda os preços se aproximam de 20 e pela direita de
+35. Os limites laterais discordam, e o limite não existe. Descontínua em 5, do
+tipo **salto**.
+
+**Contraexemplo 3: falha só a condição 3.** Este é o que mais surpreende, e
+por isso merece desenho. Pegue o buraco do contraexemplo 1 e **tampe-o no lugar
+errado**:
+
+$$
+g(x) = \begin{cases}
+\dfrac{x^2-4}{x-2}, & \text{se } x \neq 2 \\[8pt]
+7, & \text{se } x = 2
+\end{cases}
+$$
+
+<CartesianPlane
+  xMin={-1}
+  xMax={5}
+  yMin={-1}
+  yMax={8}
+  xUnit={50}
+  yUnit={30}
+  functions={[
+    {f: (x) => x + 2, domain: [-1, 1.93], tone: 1},
+    {f: (x) => x + 2, domain: [2.07, 5], tone: 1},
+  ]}
+  points={[
+    {at: [2, 4], label: '(2,\\ 4)', tone: 2, dx: 34, dy: 18, open: true},
+    {at: [2, 7], label: 'g(2) = 7', tone: 2, dx: 44, dy: 0},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A função g: a reta y = x + 2 com o ponto (2, 4) removido e um ponto isolado em (2, 7). O limite em 2 vale 4; o valor g(2) vale 7. Existem os dois, e não coincidem."
+/>
+
+Agora $g(2) = 7$ existe. O limite em 2 continua valendo 4, porque o limite não
+olha para $g(2)$ — ele só olha para o que acontece **perto** de 2, e perto de 2
+a função é a reta $y = x + 2$. Condições 1 e 2 satisfeitas; condição 3 falha:
+$4 \neq 7$. Descontínua em 2. O gráfico é a reta com um buraco e um ponto
+solto flutuando acima dele.
+
+Este contraexemplo ensina duas coisas de uma vez. Primeiro, **limite e valor
+são coisas independentes**: um pode existir sem o outro, e os dois podem
+existir e ser diferentes. Segundo, o buraco do contraexemplo 1 é
+**consertável**: se em vez de 7 tivéssemos definido $g(2) = 4$, as três
+condições valeriam e $g$ seria contínua em 2. Por isso o buraco é chamado de
+descontinuidade **removível** — dá para removê-lo escolhendo o valor certo. O
+salto e a assíntota não têm conserto: nenhum valor que se atribua a $f(5)$ faz
+os dois lados do frete concordarem.
+
+### Os três tipos, com nome
+
+> Uma descontinuidade em $a$ é:
+>
+> - **removível** (buraco) quando o limite existe, mas $f(a)$ não existe ou é
+>   diferente dele;
+> - **de salto** quando os limites laterais existem e são diferentes;
+> - **infinita** (assíntota vertical) quando pelo menos um limite lateral é
+>   $+\infty$ ou $-\infty$.
+
+**Exemplo.** $\frac{x^2-4}{x-2}$ em 2: removível. O frete em 5: salto.
+$\frac{1}{x-3}$ em 3: infinita.
+
+**Contraexemplo, para delimitar.** $\lvert x \rvert$ em 0 **não** é
+descontinuidade de tipo nenhum. As três condições valem: $f(0) = 0$; pela
+esquerda os valores $-x$ se aproximam de 0 e pela direita os valores $x$
+também; e $0 = 0$. O bico é contínuo. O que ele tem de especial é outra coisa —
+a direção muda bruscamente —, e isso é assunto da lição
+[quando a derivada não existe](./quando-a-derivada-nao-existe), não desta.
+
+### Continuidade num intervalo
+
+> $f$ é **contínua num intervalo** quando é contínua em cada ponto dele. Nas
+> pontas de um intervalo fechado $[a, b]$, exige-se somente o limite lateral
+> que faz sentido: em $a$, que $\lim_{x \to a^{+}} f(x) = f(a)$; em $b$, que
+> $\lim_{x \to b^{-}} f(x) = f(b)$.
+
+A ressalva das pontas não é burocracia. Em $f(x) = \sqrt{x}$, o ponto 0 é o
+extremo do domínio $[0, +\infty[$. Não há como chegar a 0 pela esquerda —
+$\sqrt{-0{,}01}$ não existe. Exigir o limite pelos dois lados tornaria
+$\sqrt{x}$ descontínua em 0 por um motivo artificial. Com a ressalva, ela é
+contínua em $[0, +\infty[$: pela direita, $\sqrt{x}$ se aproxima de $0 =
+\sqrt{0}$.
+
+**Exemplo.** $f(x) = x^2 + 1$ é contínua em $\mathbb{R}$, porque o argumento da
+seção anterior vale em qualquer $a$, não só em 2.
+
+**Contraexemplo.** $f(x) = \frac{1}{x}$ é contínua em $\,]0, +\infty[$ e em
+$\,]-\infty, 0[$, mas **não** é contínua em $[-1, 1]$, porque o 0 pertence a
+esse intervalo e $f(0)$ não existe.
+
+### Quais funções são contínuas
+
+Boa notícia: quase todas as que este curso estudou.
+
+> **Polinômios, funções racionais, raízes, exponenciais, logaritmos, seno,
+> cosseno e tangente são contínuas em todo ponto do domínio.**
+
+Para polinômios e racionais isso é um resultado desta parte do curso: a lição
+de cálculo de limites mostrou, a partir das propriedades do limite (soma,
+produto e quociente com denominador não nulo), que o limite dessas funções em
+qualquer ponto do domínio se obtém substituindo — e substituir é ser contínua.
+Para as demais famílias, o curso aceita o resultado: a demonstração completa
+exige uma construção dos números reais que fica fora deste curso, mas os
+gráficos que você desenhou nos capítulos anteriores — a exponencial, o
+logaritmo, a onda do seno — são curvas sem rompimento, e é isso que o enunciado
+registra.
+
+Repare no peso das palavras **do domínio**. $\frac{1}{x}$ é contínua em todo
+ponto do domínio dela, e o domínio dela não contém o 0. Então ela é contínua
+“onde existe” e ainda assim tem uma assíntota. As duas frases não se
+contradizem: a assíntota está fora do domínio.
+
+Duas regras para combinar funções:
+
+- **soma, diferença, produto e quociente** de funções contínuas são contínuos
+  onde estão definidos (no quociente, onde o denominador não zera). O motivo é
+  o mesmo das propriedades do limite: o limite da soma é a soma dos limites, e
+  cada limite é o valor;
+- **composição** de contínuas é contínua: se $g$ é contínua em $a$ e $f$ é
+  contínua em $g(a)$, então $f(g(x))$ é contínua em $a$. É por isso que
+  $\sqrt{x^2 + 1}$, $e^{-x^2}$ e $\sen(3x)$ são contínuas sem que ninguém
+  precise conferir ponto a ponto.
+
+Com isso, o trabalho de verificar continuidade se concentra em poucos lugares:
+**as fronteiras de funções por partes** e **os zeros de denominadores**. Fora
+deles, as regras acima resolvem.
+
+## 9. O Teorema do Valor Intermediário
+
+Agora a consequência do forno, escrita para qualquer função contínua.
+
+> **Teorema do Valor Intermediário.** Se $f$ é contínua no intervalo fechado
+> $[a, b]$ e $k$ é um número **entre** $f(a)$ e $f(b)$, então existe pelo menos
+> um $c$ em $[a, b]$ com $f(c) = k$.
+
+Em palavras: uma função contínua num intervalo fechado **assume todo valor
+intermediário** entre os valores das pontas. Ela não pula nenhum.
+
+<CartesianPlane
+  xMin={1.6}
+  xMax={3.3}
+  yMin={-3}
+  yMax={18}
+  xUnit={170}
+  yUnit={15}
+  xStep={0.5}
+  yStep={2}
+  functions={[{f: (x) => x * x * x - 2 * x - 5, domain: [1.7, 3.2], tone: 1}]}
+  lines={[{m: 0, n: 5, dashed: true, tone: 3}]}
+  segments={[
+    {from: [2, 0], to: [2, -1], dashed: true, tone: 0},
+    {from: [3, 0], to: [3, 16], dashed: true, tone: 0},
+  ]}
+  points={[
+    {at: [2, -1], label: 'f(2) = -1', tone: 1, dx: 52, dy: 8},
+    {at: [3, 16], label: 'f(3) = 16', tone: 1, dx: -56, dy: 0},
+    {at: [2.462, 5], label: 'c \\approx 2{,}46', tone: 2, dx: 54, dy: 14},
+  ]}
+  labels={[{at: [1.85, 5], math: 'k = 5', tone: 3, dy: -14}]}
+  axisLabels={['x', 'y']}
+  caption="f(x) = x³ − 2x − 5 em [2, 3]. Nas pontas ela vale −1 e 16. O valor k = 5 está entre os dois, e a reta tracejada na altura 5 corta a curva: existe c com f(c) = 5. Ele fica perto de 2,46."
+/>
+
+Três observações sobre o enunciado, porque cada palavra dele carrega uma
+hipótese.
+
+**“Contínua”.** Sem isso, o teorema falha, e o frete é o contraexemplo:
+$f(4) = 20$, $f(6) = 35$, o valor 30 está entre os dois, e **nenhum** peso paga
+30. O salto em 5 é exatamente o que o teorema proíbe.
+
+**“Intervalo fechado”.** O teorema usa $f(a)$ e $f(b)$, os valores **nas
+pontas**. Num intervalo aberto as pontas não pertencem ao conjunto, e não há
+o que comparar.
+
+**“Pelo menos um”.** O teorema garante que existe $c$, não que ele é único. No
+desenho da temperatura, se o forno tivesse esfriado e reaquecido, poderia ter
+passado por 150 °C três vezes. E o teorema **não diz onde** o $c$ está — só
+que está em algum lugar de $[a, b]$. Descobrir onde é trabalho da bisseção,
+adiante.
+
+### O caso que mais se usa: o zero
+
+Quando $f(a)$ e $f(b)$ têm **sinais opostos**, o número 0 está entre eles. O
+teorema garante então um $c$ com $f(c) = 0$ — uma **raiz** de $f$ no
+intervalo.
+
+> Se $f$ é contínua em $[a, b]$ e $f(a)$ e $f(b)$ têm sinais opostos, então $f$
+> tem pelo menos uma raiz em $\,]a, b[$.
+
+**Exemplo.** $f(x) = x^3 - 2x - 5$ é um polinômio, logo contínua. Calcule nas
+pontas de $[2, 3]$:
+
+$$
+f(2) = 8 - 4 - 5 = -1, \qquad f(3) = 27 - 6 - 5 = 16.
+$$
+
+Sinais opostos. Então existe uma raiz entre 2 e 3 — **e ninguém resolveu a
+equação para saber disso**.
+
+**Contraexemplo, para delimitar.** $f(x) = \frac{1}{x}$ em $[-1, 1]$:
+$f(-1) = -1$ e $f(1) = 1$ têm sinais opostos, e mesmo assim $\frac{1}{x}$ não
+tem raiz nenhuma. O teorema não se aplica porque $\frac{1}{x}$ **não é
+contínua em $[-1, 1]$** — o 0 está no intervalo e fora do domínio. A hipótese
+de continuidade não é enfeite.
+
+## 10. A bisseção: cercar a raiz cortando ao meio
+
+O teorema diz que há uma raiz de $x^3 - 2x - 5$ em $[2, 3]$. Isso é pouco
+preciso — um intervalo de largura 1. Mas o próprio teorema fornece o jeito de
+apertar.
+
+A ideia: **olhe o ponto médio**. Se $f$ vale zero ali, achou a raiz. Se não
+vale, o sinal de $f$ no meio diz de que lado a raiz está: a raiz fica na
+metade em que os sinais das pontas **continuam opostos**. Fique com essa
+metade e repita. A cada passo, o intervalo tem **metade** da largura do
+anterior.
+
+Chame de $P(x) = x^3 - 2x - 5$. O intervalo inicial é $[2, 3]$, com
+$P(2) = -1 < 0$ e $P(3) = 16 > 0$.
+
+| Passo | Intervalo $[a, b]$ | Ponto médio $m$ | $P(m)$ | Sinal | Novo intervalo |
+|:---:|---|---:|---:|:---:|---|
+| 1 | $[2;\ 3]$ | $2{,}5$ | $5{,}625$ | $+$ | $[2;\ 2{,}5]$ |
+| 2 | $[2;\ 2{,}5]$ | $2{,}25$ | $1{,}8906$ | $+$ | $[2;\ 2{,}25]$ |
+| 3 | $[2;\ 2{,}25]$ | $2{,}125$ | $0{,}3457$ | $+$ | $[2;\ 2{,}125]$ |
+| 4 | $[2;\ 2{,}125]$ | $2{,}0625$ | $-0{,}3513$ | $-$ | $[2{,}0625;\ 2{,}125]$ |
+| 5 | $[2{,}0625;\ 2{,}125]$ | $2{,}09375$ | $-0{,}0089$ | $-$ | $[2{,}09375;\ 2{,}125]$ |
+| 6 | $[2{,}09375;\ 2{,}125]$ | $2{,}109375$ | $0{,}1668$ | $+$ | $[2{,}09375;\ 2{,}109375]$ |
+
+Acompanhe o passo 1 com a mão. O meio de $[2, 3]$ é $2{,}5$, e
+$P(2{,}5) = 15{,}625 - 5 - 5 = 5{,}625$, positivo. Nas pontas, $P(2)$ é
+negativo e $P(3)$ é positivo. A troca de sinal está entre $2$ e $2{,}5$ — do
+lado esquerdo —, então a raiz está em $[2;\ 2{,}5]$, e a metade direita é
+descartada.
+
+No passo 4 acontece a primeira mudança de lado: $P(2{,}0625)$ é negativo, e
+agora a troca de sinal fica entre $2{,}0625$ e $2{,}125$ — a metade **direita**
+sobrevive.
+
+<CartesianPlane
+  xMin={1.9}
+  xMax={3.1}
+  yMin={-2.5}
+  yMax={17}
+  xUnit={240}
+  yUnit={16}
+  xStep={0.25}
+  xLabelEvery={2}
+  yStep={2}
+  functions={[{f: (x) => x * x * x - 2 * x - 5, domain: [1.9, 3.1], tone: 1}]}
+  points={[
+    {at: [2, -1], tone: 1},
+    {at: [3, 16], tone: 1},
+    {at: [2.5, 5.625], label: 'm_1', tone: 3, dx: 22, dy: -4},
+    {at: [2.25, 1.8906], label: 'm_2', tone: 3, dx: 24, dy: -2},
+    {at: [2.125, 0.3457], label: 'm_3', tone: 3, dx: 24, dy: -8},
+    {at: [2.0625, -0.3513], label: 'm_4', tone: 3, dx: -24, dy: 10},
+    {at: [2.0946, 0], label: '\\text{raiz}', tone: 2, dx: 0, dy: 22},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Os quatro primeiros pontos médios da bisseção sobre a curva de P. Os três primeiros caem acima do eixo e o quarto cai abaixo; a raiz está entre m₄ e m₃, e o intervalo já tem largura 0,0625."
+/>
+
+Depois de 6 passos, a raiz está em $[2{,}09375;\ 2{,}109375]$, um intervalo
+de largura $\frac{1}{64} \approx 0{,}0156$. Continuando o processo, ela se
+revela: $c \approx 2{,}0946$. **Conferindo**: $P(2{,}094) \approx -0{,}0062$ e
+$P(2{,}095) \approx 0{,}0050$; a troca de sinal está entre os dois, como
+previsto.
+
+Dois comentários sobre o método.
+
+**Ele nunca erra o lado**, porque o teorema garante que a raiz está na metade
+em que os sinais das pontas são opostos. A única coisa que ele exige é continuidade —
+e por isso funciona para qualquer função contínua, com ou sem fórmula de
+resolução.
+
+**A precisão é previsível.** Começando com largura 1, depois de $n$ passos a
+largura é $\frac{1}{2^n}$. Para garantir três casas decimais, ou seja, largura
+menor que $0{,}001$, precisamos de $2^n > 1000$, e $2^{10} = 1024$ resolve:
+**dez passos**. É lento perto dos métodos que uma calculadora usa por dentro,
+mas é o único que nunca precisa de nada além de continuidade.
+
+## 11. Resolvendo os problemas motivadores
+
+**O frete.** Existe encomenda que pague R\$ 30? Não. A função preço é
+descontínua em 5 kg, com um salto de 20 para 35, e o Teorema do Valor
+Intermediário não se aplica a ela. O valor 30 fica no vão do degrau. Isso não é
+defeito da matemática: é a descrição exata de como a tarifa foi projetada, e é
+por isso que o cliente com 5,001 kg tem interesse em tirar um grama da caixa.
+
+**O forno.** Houve um instante com 150 °C? Sim. A temperatura é uma função
+contínua do tempo — ela não pula —, vale 20 no início e 220 no fim, e 150 está
+entre os dois. O teorema garante que existe um instante $c$ entre 8h00 e 8h12
+com $T(c) = 150$. Ele não diz qual instante, e nem precisa: a pergunta era se
+houve, não quando.
+
+**A equação $x^3 - 2x - 5 = 0$.** Primeiro, a lista de candidatos racionais,
+$\pm 1$ e $\pm 5$:
+
+$$
+P(1) = -6, \qquad P(-1) = -4, \qquad P(5) = 110, \qquad P(-5) = -120.
+$$
+
+Nenhum zera: não há raiz racional, e o teorema das raízes racionais está
+esgotado. Mas $P(2) = -1$ e $P(3) = 16$ têm sinais opostos, então há uma raiz
+em $[2, 3]$, e a bisseção a cercou: $x \approx 2{,}0946$. O que o capítulo de
+funções não conseguia — uma raiz sem fórmula — a continuidade conseguiu.
+
+## 12. Exemplos resolvidos
+
+### Exemplo 1: testar a fronteira de uma função por partes
+
+A função abaixo é contínua em $x = 1$?
+
+$$
+f(x) = \begin{cases}
+x^2 + 1, & \text{se } x \le 1 \\[4pt]
+3x - 1, & \text{se } x > 1
+\end{cases}
+$$
+
+Vá pelas três condições, uma de cada vez.
+
+1. **$f(1)$ existe?** O 1 satisfaz $x \le 1$, então vale a primeira linha:
+   $f(1) = 1 + 1 = 2$.
+2. **O limite existe?** Pela esquerda, os valores vêm da primeira fórmula:
+   $\lim_{x \to 1^{-}} (x^2 + 1) = 2$. Pela direita, da segunda:
+   $\lim_{x \to 1^{+}} (3x - 1) = 2$. Os dois lados concordam, e o limite vale
+   2.
+3. **São iguais?** Limite 2, valor 2. Sim.
+
+Contínua em 1. Repare que o passo 2 é exatamente o teste da lição de função
+por partes — calcular a fronteira pelas duas fórmulas — com o nome que ele
+merecia: limites laterais.
+
+### Exemplo 2: quando os lados discordam
+
+*Pause e tente antes de ler.* A função abaixo é contínua em $x = 3$? Se não
+for, de que tipo é a descontinuidade?
+
+$$
+g(x) = \begin{cases}
+2x, & \text{se } x < 3 \\[4pt]
+x + 2, & \text{se } x \ge 3
+\end{cases}
+$$
+
+1. $g(3)$: o 3 satisfaz $x \ge 3$, segunda linha, $g(3) = 5$. Existe.
+2. Pela esquerda, $\lim_{x \to 3^{-}} 2x = 6$. Pela direita,
+   $\lim_{x \to 3^{+}} (x + 2) = 5$. Discordam: o limite **não existe**.
+
+Descontínua em 3, e como os dois limites laterais existem e são diferentes, é
+uma descontinuidade **de salto**, com degrau de $6 - 5 = 1$.
+
+Nem precisou chegar à condição 3. Assim que uma condição falha, a função é
+descontínua, e o que resta a fazer é classificar.
+
+### Exemplo 3: escolher a constante que conserta
+
+*Pause e tente.* Para qual valor de $k$ a função abaixo é contínua em $x = 2$?
+
+$$
+h(x) = \begin{cases}
+kx + 1, & \text{se } x \le 2 \\[4pt]
+x^2, & \text{se } x > 2
+\end{cases}
+$$
+
+A pergunta pede que as três condições valham, e a única coisa que podemos
+ajustar é $k$. Escreva o que cada lado dá na fronteira:
+
+- pela esquerda (e o próprio valor $h(2)$, que vem da mesma linha):
+  $2k + 1$;
+- pela direita: $\lim_{x \to 2^{+}} x^2 = 4$.
+
+Continuidade exige que os dois coincidam:
+
+$$
+2k + 1 = 4 \quad\Longrightarrow\quad k = \frac{3}{2}.
+$$
+
+**Conferindo**: com $k = \frac{3}{2}$, a primeira linha dá
+$\frac{3}{2} \times 2 + 1 = 4$ em $x = 2$, e a segunda se aproxima de 4. As
+partes se encontram.
+
+É o mesmo raciocínio de um imposto bem desenhado: a segunda faixa é escrita
+para **começar onde a primeira termina**.
+
+### Exemplo 4: classificar as descontinuidades de uma racional
+
+*Pause e tente.* Onde $r(x) = \dfrac{x^2 - 1}{x^2 - 3x + 2}$ é descontínua, e
+de que tipo é cada descontinuidade?
+
+Uma racional é contínua em todo o domínio, então as descontinuidades só podem
+estar **nos zeros do denominador**. Fatore os dois:
+
+$$
+r(x) = \frac{(x-1)(x+1)}{(x-1)(x-2)}.
+$$
+
+O denominador zera em $x = 1$ e em $x = 2$. A lição de funções racionais
+ensinou a distinguir os dois casos pela fatoração:
+
+- **Em $x = 1$**, o fator $(x - 1)$ se cancela. Para $x \neq 1$, a função é
+  $\frac{x+1}{x-2}$, e o limite em 1 se obtém substituindo nessa forma
+  simplificada: $\frac{2}{-1} = -2$. O limite existe, $r(1)$ não. **Buraco**,
+  descontinuidade removível, em $(1, -2)$.
+- **Em $x = 2$**, o fator $(x - 2)$ não se cancela. O numerador vale
+  $3 \neq 0$ ali, e a função dispara: **assíntota vertical**, descontinuidade
+  infinita.
+
+**Conferindo com números**: $r(0{,}999) \approx -1{,}997$ e
+$r(1{,}001) \approx -2{,}003$, os dois lados chegando a $-2$. Já
+$r(1{,}99) = -299$ e $r(2{,}01) = 301$: perto de 2 ela foge, para baixo de um
+lado e para cima do outro.
+
+### Exemplo 5: garantir uma solução sem resolver
+
+*Pause e tente.* Mostre que a equação $\cos x = x$ tem solução entre 0 e 1.
+
+A equação não é polinomial, e nenhuma técnica do curso a resolve por fórmula.
+Mas o teorema não pede fórmula. Passe tudo para um lado e olhe a função
+
+$$
+F(x) = \cos x - x.
+$$
+
+Ela é contínua em $[0, 1]$, porque é a diferença entre duas funções contínuas.
+Agora as pontas, com $x$ em radianos — a lição de
+[radianos](../geometria/radianos) já explicou por que:
+
+$$
+F(0) = \cos 0 - 0 = 1 > 0, \qquad F(1) = \cos 1 - 1 \approx 0{,}540 - 1 = -0{,}460 < 0.
+$$
+
+Sinais opostos. Pelo teorema, existe $c$ em $\,]0, 1[$ com $F(c) = 0$, ou
+seja, com $\cos c = c$. A equação tem solução, e ela está entre 0 e 1.
+
+Se quiser saber onde, a bisseção responde: $c \approx 0{,}739$. Mas repare que
+a pergunta feita — “tem solução?” — foi respondida **antes** de qualquer conta
+numérica. É esse o poder do teorema: transformar uma pergunta de existência em
+duas contas nas pontas.
+
+### Exemplo 6: o custo médio e uma armadilha de contexto
+
+*Pause e tente.* O custo médio por peça de um lote de $x$ peças é
+$C(x) = \frac{800}{x} + 12$. a) Existe um tamanho de lote em que o custo médio
+é exatamente R\$ 20? b) E exatamente R\$ 15?
+
+**a)** $C$ é contínua em $[10, 1000]$ — o 0 fica fora —, com $C(10) = 92$ e
+$C(1000) = 12{,}8$. O 20 está entre os dois, então o teorema garante um $x$ com
+$C(x) = 20$. Aqui dá até para achar: $\frac{800}{x} = 8$ dá $x = 100$. Cem
+peças.
+
+**b)** O mesmo argumento garante um $x$ com $C(x) = 15$: $\frac{800}{x} = 3$,
+logo $x = \frac{800}{3} \approx 266{,}7$. E aqui entra o contexto. **Não existe
+lote de 266,7 peças.** A função matemática $C$ é contínua e assume o valor 15;
+mas o número de peças é inteiro, e com 266 peças o custo é R\$ 15,01, com 267 é
+R\$ 15,00 arredondado, mas não exato.
+
+A lição é esta: o teorema fala da **função**, definida para todo real. Se a
+situação só admite valores inteiros, a função de verdade é uma escada, e
+escada pula valores. Conferir se a resposta faz sentido no contexto é parte do
+método — a mesma ressalva que a lição de domínio fez com a caixa de lado
+negativo.
+
+## 13. Erros comuns
+
+> **Erro 1: “tem fórmula, logo é contínua”.** $f(x) = \frac{1}{x}$ tem uma
+> fórmula perfeitamente boa e uma assíntota em 0. A fórmula não garante nada;
+> o que garante é o domínio. Contínua **onde está definida**, sim — mas o
+> intervalo que você está olhando pode conter um ponto fora do domínio.
+
+> **Erro 2: “contínua significa sem bico”.** $\lvert x \rvert$ tem bico em 0 e
+> **é** contínua ali: $f(0) = 0$, os dois lados chegam a 0. Bico é assunto de
+> derivada, não de continuidade. A lição
+> [quando a derivada não existe](./quando-a-derivada-nao-existe) trata dele.
+
+> **Erro 3: “descontínua em um ponto, logo descontínua em tudo”.** O frete é
+> descontínuo em 5 e contínuo em todos os outros pesos. Continuidade é uma
+> propriedade **de cada ponto**. Diga sempre onde.
+
+> **Erro 4: achar que o limite precisa ser igual ao valor para existir.** Na
+> função $g$ do contraexemplo 3, o limite em 2 vale 4 e $g(2) = 7$. O limite
+> existe; a função é que é descontínua. Limite e valor são independentes — é o
+> mesmo aviso da lição de limite, visto do outro lado.
+
+> **Erro 5: aplicar o Teorema do Valor Intermediário sem continuidade.**
+> $\frac{1}{x}$ troca de sinal entre $-1$ e $1$ e não tem raiz. Antes de
+> concluir que existe raiz, confira que a função é contínua **no intervalo
+> inteiro**, inclusive nas pontas.
+
+> **Erro 6: ler o teorema como “existe um só”.** Ele diz “pelo menos um”. Uma
+> função que sobe, desce e sobe de novo pode cruzar a mesma altura três vezes.
+> Se você precisa de todas as raízes, o teorema sozinho não as conta.
+
+> **Erro 7: na bisseção, ficar com a metade errada.** A raiz está na metade em
+> que os sinais das **pontas** são opostos. Se $P(m)$ tem o mesmo sinal que
+> $P(a)$, a troca de sinal está entre $m$ e $b$; descarte o lado de $a$.
+> Confira o sinal a cada passo, e não decore “fica sempre com a esquerda”.
+
+> **Erro 8: confundir o contexto com a função.** O teorema garante um $x$ com
+> $C(x) = 15$, mas $x = 266{,}7$ peças não existe. A função contínua é um
+> modelo; se a grandeza real só aceita inteiros, o valor garantido pode não ser
+> atingível.
+
+## 14. Perguntas de verificação
+
+1. Por que o preço do frete não pode valer R\$ 30 para nenhum peso?
+2. Por que a temperatura do forno tem de passar por 150 °C, mesmo sem ninguém
+   ter anotado esse instante?
+3. Quais são as três condições da continuidade em $a$, e qual delas falha num
+   buraco?
+4. Por que a definição da lição de função por partes e a definição com limite
+   dizem a mesma coisa?
+5. Uma função pode ter limite em $a$ e ser descontínua em $a$? Dê um exemplo.
+6. Por que se diz que o buraco é uma descontinuidade **removível** e o salto
+   não é?
+7. Por que $\sqrt{x}$ é considerada contínua em 0, se não dá para chegar a 0
+   pela esquerda?
+8. O que quer dizer “contínua em todo ponto do domínio”, e por que isso não
+   contradiz $\frac{1}{x}$ ter assíntota?
+9. Por que o Teorema do Valor Intermediário exige intervalo **fechado**?
+10. Por que a bisseção nunca escolhe a metade errada?
+11. Quantos passos de bisseção garantem largura menor que $0{,}01$, partindo de
+    um intervalo de largura 1?
+12. Substituir $x = a$ diretamente para calcular um limite é o mesmo que
+    afirmar o quê sobre a função?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque a função preço é descontínua em 5 kg: ela vale 20 até 5 e 35 logo
+   depois, sem assumir nenhum valor entre os dois. O valor 30 está no vão do
+   degrau. O Teorema do Valor Intermediário não se aplica, justamente porque a
+   hipótese de continuidade falha.
+2. Porque a temperatura é uma função contínua do tempo: ela não pula. Vale 20
+   no início e 220 no fim, e 150 está entre os dois; o teorema garante que
+   existe um instante em que ela vale exatamente 150. A garantia vem da
+   continuidade, não de alguém ter olhado o termômetro.
+3. (1) $f(a)$ existe; (2) $\lim_{x \to a} f(x)$ existe; (3) os dois são
+   iguais. Num buraco, o limite existe e o que falha é a condição 1 — ou, se o
+   buraco foi tampado no lugar errado, a condição 3.
+4. Porque “chegando pela esquerda e pela direita, os valores se aproximam do
+   mesmo número” é a definição de o limite existir, com limites laterais
+   iguais; e “esse número é o valor da função ali” é a igualdade entre limite e
+   $f(a)$. A frase antiga era a definição com limite escrita por extenso.
+5. Pode. Em $g(x) = \frac{x^2-4}{x-2}$ com $g(2) = 7$, o limite em 2 vale 4 e
+   existe; a função é descontínua porque $g(2) = 7 \neq 4$. O limite só olha
+   para perto de $a$, nunca para o próprio $a$.
+6. Porque no buraco o limite existe: escolhendo $f(a)$ igual a ele, as três
+   condições passam a valer, e a descontinuidade desaparece. No salto os dois
+   lados discordam, e nenhum valor de $f(a)$ pode ser igual a dois números
+   diferentes ao mesmo tempo.
+7. Porque nas pontas do domínio a definição só exige o limite lateral que faz
+   sentido. O 0 é o extremo esquerdo de $[0, +\infty[$; pela direita,
+   $\sqrt{x}$ se aproxima de $0 = \sqrt{0}$, e isso é o que se pede.
+8. Quer dizer que em cada ponto **onde a função existe** as três condições
+   valem. A assíntota de $\frac{1}{x}$ está em 0, que não pertence ao domínio;
+   não há contradição, porque a continuidade nunca foi afirmada ali.
+9. Porque o enunciado usa $f(a)$ e $f(b)$, os valores nas pontas, e $k$ fica
+   entre eles. Num intervalo aberto, $a$ e $b$ não pertencem ao conjunto, e não
+   há valor nas pontas para comparar.
+10. Porque a cada passo ela conserva a metade em que os sinais das pontas são
+    opostos, e o teorema garante que essa metade contém uma raiz. Não é
+    palpite: é a hipótese do teorema sendo verificada a cada passo.
+11. Sete. A largura depois de $n$ passos é $\frac{1}{2^n}$, e $2^7 = 128 > 100$,
+    enquanto $2^6 = 64 < 100$.
+12. Que a função é **contínua** em $a$: o limite é igual ao valor. Para
+    polinômios e racionais no domínio, a lição de cálculo de limites já usava
+    isso; esta lição deu o nome.
+
+</details>
+
+## 15. Exercícios
+
+### 1. Reconhecimento
+
+1. Para cada função, diga se ela é contínua no ponto indicado e, se não for,
+   classifique a descontinuidade (buraco, salto ou assíntota):
+   a) $\dfrac{x^2 - 9}{x - 3}$ em $x = 3$; &nbsp;
+   b) $\dfrac{1}{x - 3}$ em $x = 3$; &nbsp;
+   c) o frete da lição em $x = 5$; &nbsp;
+   d) $\lvert x \rvert$ em $x = 0$; &nbsp;
+   e) $x^3 - 2x$ em $x = 1$.
+2. Um gráfico tem uma bolinha vazia em $(4, 2)$ e uma bolinha cheia em
+   $(4, 6)$, com a curva chegando a $(4, 2)$ pelos dois lados. Que tipo de
+   descontinuidade é essa, e quanto vale o limite em 4?
+3. Em quais das famílias abaixo a função é contínua em todo o domínio:
+   polinômio, racional, raiz quadrada, exponencial, logaritmo, seno?
+
+### 2. Explicação
+
+4. Explique, com as três condições, por que $\frac{x^2-4}{x-2}$ é descontínua
+   em 2 embora o limite ali exista.
+5. Explique por que $\lvert x - 3 \rvert$ é contínua em 3, apesar do bico.
+6. Explique por que o Teorema do Valor Intermediário não se aplica à função
+   $\frac{1}{x}$ em $[-1, 1]$, mesmo que $f(-1)$ e $f(1)$ tenham sinais
+   opostos.
+
+### 3. Aplicação direta
+
+7. Verifique, pelas três condições, se cada função é contínua na fronteira:
+   $$
+   f(x) = \begin{cases}
+   x^2 + 1, & \text{se } x \le 1 \\[4pt]
+   3x - 1, & \text{se } x > 1
+   \end{cases}
+   \qquad
+   g(x) = \begin{cases}
+   2x, & \text{se } x < 3 \\[4pt]
+   x + 2, & \text{se } x \ge 3
+   \end{cases}
+   $$
+8. Encontre os pontos de descontinuidade de $r(x) = \dfrac{x^2 - x - 6}{x^2 - 4}$
+   e classifique cada um.
+9. Mostre que $x^3 + x - 3 = 0$ tem uma solução em $[1, 2]$.
+
+### 4. Variação
+
+10. Para qual valor de $k$ a função abaixo é contínua em $x = 4$?
+    $$
+    h(x) = \begin{cases}
+    \dfrac{x^2 - 16}{x - 4}, & \text{se } x \neq 4 \\[8pt]
+    k, & \text{se } x = 4
+    \end{cases}
+    $$
+11. Para qual valor de $k$ a função abaixo é contínua em $x = 2$?
+    $$
+    p(x) = \begin{cases}
+    kx + 1, & \text{se } x \le 2 \\[4pt]
+    x^2, & \text{se } x > 2
+    \end{cases}
+    $$
+12. Mostre que $2^x = 3x$ tem uma solução em $[0, 1]$.
+
+<details>
+<summary>Dica para o 12</summary>
+
+Passe tudo para um lado: $F(x) = 2^x - 3x$. Calcule $F(0)$ e $F(1)$ e olhe os
+sinais. Antes disso, diga por que $F$ é contínua.
+
+</details>
+
+### 5. Problema misto
+
+13. Mostre que $x^3 + x - 3 = 0$ **não** tem raiz racional e, em seguida,
+    aplique quatro passos de bisseção em $[1, 2]$, montando a tabela com
+    intervalo, ponto médio, valor e sinal. Qual é o intervalo final?
+14. O custo médio de um lote de $x$ peças é $C(x) = \frac{800}{x} + 12$. a) O
+    Teorema do Valor Intermediário garante um lote com custo médio exatamente
+    R\$ 16? Em que intervalo? b) Esse lote existe na prática?
+15. Um tanque é esvaziado de modo que o volume, em litros, após $t$ minutos, é
+    $V(t) = 500 - 20t - t^2$, para $0 \le t \le 15$. a) Mostre que existe um
+    instante em que o tanque tem exatamente 200 litros. b) Encontre esse
+    instante resolvendo a equação, e compare com o que o teorema afirmava.
+
+<details>
+<summary>Dica para o 15</summary>
+
+Em (a), calcule $V(0)$ e $V(15)$ e veja se 200 está entre os dois. Em (b),
+$V(t) = 200$ é uma equação do 2º grau; só uma das raízes está em $[0, 15]$.
+
+</details>
+
+### 6. Justificativa
+
+16. Explique por que todo polinômio é contínuo em $\mathbb{R}$, a partir das
+    propriedades do limite (soma e produto) e do fato de que $\lim_{x \to a} x = a$.
+17. Explique por que, depois de $n$ passos de bisseção, a largura do intervalo
+    é $\frac{b - a}{2^n}$, e quantos passos garantem largura menor que $0{,}001$
+    partindo de largura 1.
+18. Uma função contínua em $[0, 1]$ vale $-2$ em 0 e $3$ em 1. Ela pode ter
+    exatamente duas raízes nesse intervalo? E nenhuma? Justifique com o
+    teorema.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) **Descontínua, buraco.** Fatorando, $\frac{(x-3)(x+3)}{x-3} = x + 3$ para
+   $x \neq 3$; o limite é 6, mas $f(3)$ não existe. &nbsp; b) **Descontínua,
+   assíntota:** o denominador zera e o numerador não; a função dispara. &nbsp;
+   c) **Descontínua, salto** de 20 para 35. &nbsp; d) **Contínua:** $f(0) = 0$
+   e os dois lados chegam a 0; o bico não rompe o traço. &nbsp; e)
+   **Contínua:** é um polinômio, e $f(1) = -1$ coincide com o limite.
+2. É um **buraco tampado no lugar errado** — descontinuidade removível. O
+   limite em 4 vale **2**, porque é para onde a curva chega pelos dois lados; o
+   valor $f(4) = 6$ não participa do limite.
+3. **Todas.** Polinômio, racional, raiz, exponencial, logaritmo e seno são
+   contínuos em todo ponto do domínio. A ressalva está no domínio: a racional
+   exclui os zeros do denominador, a raiz exclui radicando negativo, o
+   logaritmo exclui logaritmando não positivo.
+4. Condição 1 falha: em $x = 2$ o denominador é zero e $f(2)$ não existe. A
+   condição 2 vale — o limite é 4, pelo cancelamento de $(x-2)$ —, mas a
+   definição exige as três, e a falha de uma delas já torna a função
+   descontínua.
+5. Porque as três condições valem: $f(3) = 0$; pela esquerda os valores
+   $3 - x$ chegam a 0, e pela direita os valores $x - 3$ também; e $0 = 0$. O
+   bico muda a direção do traço, não a altura, e continuidade só olha a altura.
+6. Porque a hipótese “contínua em $[-1, 1]$” é falsa: o 0 pertence ao
+   intervalo e não pertence ao domínio. Sem a hipótese, a conclusão não é
+   garantida — e de fato falha, porque $\frac{1}{x}$ nunca vale zero.
+7. **$f$ é contínua em 1**: $f(1) = 2$; pela esquerda $x^2 + 1 \to 2$, pela
+   direita $3x - 1 \to 2$; iguais. **$g$ é descontínua em 3**: $g(3) = 5$; pela
+   esquerda $2x \to 6$, pela direita $x + 2 \to 5$; os lados discordam, salto de
+   1. Se você concluiu que $g$ é contínua, provavelmente calculou só a linha
+   que contém o 3 e esqueceu a outra.
+8. Fatore: $\frac{(x-3)(x+2)}{(x-2)(x+2)}$. Em $x = -2$ o fator cancela:
+   **buraco**, com limite $\frac{-5}{-4} = \frac{5}{4}$. Em $x = 2$ o fator
+   $(x-2)$ não cancela e o numerador vale $-4 \neq 0$: **assíntota vertical**.
+9. $Q(x) = x^3 + x - 3$ é polinômio, logo contínua. $Q(1) = -1 < 0$ e
+   $Q(2) = 8 - 3 + 2 = 7 > 0$. Sinais opostos: existe raiz em $\,]1, 2[$.
+10. Para $x \neq 4$, $\frac{(x-4)(x+4)}{x-4} = x + 4$, e o limite em 4 é 8.
+    Continuidade exige $k = $ limite: **$k = 8$**. Se você respondeu $k = 0$
+    por substituir $x = 4$ na fração, caiu no $\frac{0}{0}$ que a lição de
+    cálculo de limites mandou reescrever antes.
+11. Pela esquerda e no ponto, $2k + 1$; pela direita, $x^2 \to 4$. Igualando,
+    $2k + 1 = 4$ e **$k = \frac{3}{2}$**.
+12. $F(x) = 2^x - 3x$ é contínua, porque é diferença de uma exponencial e um
+    polinômio. $F(0) = 1 - 0 = 1 > 0$ e $F(1) = 2 - 3 = -1 < 0$. Sinais
+    opostos: existe $c$ em $\,]0, 1[$ com $2^c = 3c$. (Fica perto de 0,458, mas
+    a pergunta não pedia o valor.)
+13. Candidatos: divisores de $-3$ sobre divisores de 1, isto é, $\pm 1, \pm 3$.
+    $Q(1) = -1$, $Q(-1) = -5$, $Q(3) = 27$, $Q(-3) = -33$: nenhum zera, logo
+    não há raiz racional. Bisseção em $[1, 2]$, com $Q(1) = -1$ e $Q(2) = 7$:
+
+    | Passo | Intervalo | $m$ | $Q(m)$ | Sinal | Novo intervalo |
+    |:---:|---|---:|---:|:---:|---|
+    | 1 | $[1;\ 2]$ | $1{,}5$ | $1{,}875$ | $+$ | $[1;\ 1{,}5]$ |
+    | 2 | $[1;\ 1{,}5]$ | $1{,}25$ | $0{,}2031$ | $+$ | $[1;\ 1{,}25]$ |
+    | 3 | $[1;\ 1{,}25]$ | $1{,}125$ | $-0{,}4512$ | $-$ | $[1{,}125;\ 1{,}25]$ |
+    | 4 | $[1{,}125;\ 1{,}25]$ | $1{,}1875$ | $-0{,}1379$ | $-$ | $[1{,}1875;\ 1{,}25]$ |
+
+    Intervalo final: $[1{,}1875;\ 1{,}25]$, de largura $\frac{1}{16}$. A raiz
+    é $\approx 1{,}2134$. Se o seu passo 3 ficou com $[1;\ 1{,}125]$, você
+    manteve o lado errado: $Q(1)$ e $Q(1{,}125)$ são ambos negativos, então a
+    troca de sinal está do outro lado.
+14. a) Sim. Em $[10, 1000]$, $C$ é contínua (o 0 fica fora), $C(10) = 92$ e
+    $C(1000) = 12{,}8$; o 16 está entre os dois. &nbsp; b) Resolvendo,
+    $\frac{800}{x} = 4$ dá $x = 200$ peças — um inteiro, então este lote
+    **existe**. Compare com o exemplo 6, em que R\$ 15 caía em 266,7 peças: o
+    teorema garante o valor para a função; se ele cai num inteiro é uma
+    questão de contexto, não de continuidade.
+15. a) $V$ é polinômio, logo contínua em $[0, 15]$. $V(0) = 500$ e
+    $V(15) = 500 - 300 - 225 = -25$. Como $200$ está entre $500$ e $-25$, existe
+    um instante com exatamente 200 litros. &nbsp; b) $500 - 20t - t^2 = 200$ dá
+    $t^2 + 20t - 300 = 0$; por Bhaskara, $\Delta = 400 + 1200 = 1600$,
+    $\sqrt{\Delta} = 40$, e $t = \frac{-20 \pm 40}{2}$, isto é, $t = 10$ ou
+    $t = -30$. Só $t = 10$ está no intervalo. **Conferindo**:
+    $V(10) = 500 - 200 - 100 = 200$. O teorema afirmava que o instante existia;
+    a equação disse qual é. Repare que $V(15) < 0$ não tem sentido físico: o
+    modelo vale até o tanque esvaziar, e o exercício só usou o intervalo para
+    aplicar o teorema.
+16. O limite de $x$ em $a$ é $a$, e o de uma constante é a própria constante.
+    Pela propriedade do produto, o limite de $x^n$ em $a$ é $a^n$, e o de
+    $c \times x^n$ é $c \times a^n$. Pela propriedade da soma, o limite de uma
+    soma dessas parcelas é a soma dos limites — que é exatamente o polinômio
+    calculado em $a$. Limite igual ao valor, em qualquer $a$: contínuo em
+    $\mathbb{R}$.
+17. Cada passo corta o intervalo ao meio, então a largura é multiplicada por
+    $\frac{1}{2}$ a cada passo; depois de $n$ passos, é $(b-a) \times
+    \frac{1}{2^n}$. Com $b - a = 1$, queremos $\frac{1}{2^n} < 0{,}001$, isto é,
+    $2^n > 1000$. Como $2^9 = 512$ e $2^{10} = 1024$, são **dez passos**.
+18. **Nenhuma** raiz é impossível: $-2$ e $3$ têm sinais opostos, e o teorema
+    garante pelo menos uma. **Exatamente duas** também é impossível, e o motivo
+    é o sinal: a função começa negativa e termina positiva, então precisa
+    cruzar o zero um número **ímpar** de vezes — uma, três, cinco. Com duas
+    travessias ela voltaria ao negativo e não chegaria a 3. (Isso supõe que
+    ela cruza o eixo, e não somente o toca; tocar sem cruzar é um caso que o
+    exercício não considera.)
+
+</details>
+
+## 16. Revisão curta
+
+- Uma função é **contínua em $a$** quando $\lim_{x \to a} f(x) = f(a)$: o
+  valor existe, o limite existe, e os dois coincidem.
+- A definição da lição de função por partes já era esta, escrita sem a
+  palavra limite. Agora é uma linha.
+- Três jeitos de falhar: **buraco** (o limite existe, o valor não, ou está no
+  lugar errado — removível), **salto** (os lados discordam) e **assíntota** (a
+  função dispara).
+- **Bico não é descontinuidade.** $\lvert x \rvert$ é contínua em 0.
+- Continuidade é propriedade **de cada ponto**; uma função pode ser
+  descontínua num só ponto e contínua em todos os outros.
+- Polinômios, racionais, raízes, exponenciais, logaritmos e trigonométricas são
+  contínuas **em todo o domínio**. Somas, produtos, quocientes e composições de
+  contínuas são contínuos. Só é preciso conferir fronteiras de funções por
+  partes e zeros de denominadores.
+- Substituir $x = a$ direto num limite é afirmar continuidade em $a$.
+- **Teorema do Valor Intermediário**: contínua em $[a, b]$ assume todo valor
+  entre $f(a)$ e $f(b)$. Com sinais opostos nas pontas, há uma raiz no meio —
+  sem precisar resolver a equação.
+- **Bisseção**: corte o intervalo ao meio, fique com a metade em que os sinais
+  das pontas são opostos, repita. Dez passos dão três casas decimais a partir
+  de largura 1.
+- O teorema fala da função contínua; se o contexto só aceita inteiros, confira
+  se o valor garantido é atingível.
+
+Antes de avançar, verifique se você consegue explicar, sem olhar, por que a
+função $g$ com o buraco tampado em 7 tem limite 4 e mesmo assim é descontínua.
+A próxima página usa continuidade para prender uma função entre duas outras —
+o **teorema do confronto** — e com ele prova o limite de $\frac{\sen x}{x}$
+que a lição de radianos só tabelou.

@@ -1,0 +1,889 @@
+---
+title: "Derivadas de seno e cosseno: o ritmo de uma onda"
+sidebar_label: Derivadas de seno e cosseno
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Derivadas de seno e cosseno: o ritmo de uma onda
+
+## 1. Problema motivador: em que ritmo a maré sobe?
+
+A [Revisão geral](../revisao-geral) trouxe a altura da maré num porto:
+
+$$
+h(t) = 2 + 1{,}5\,\sen\!\left(\frac{\pi t}{6}\right)
+$$
+
+metros, com $t$ em horas. O exercício 12 pediu o período, a altura máxima e a
+mínima, e o gabarito respondeu: período de 12 horas, máximo de 3,5 m às 3 h e
+às 15 h, mínimo de 0,5 m às 9 h e às 21 h.
+
+Um operador de porto precisa de outra informação. Um navio só pode atracar
+enquanto a água estiver subindo a menos de 0,5 metro por hora. A pergunta dele
+não é “qual é a altura”, e sim:
+
+> Em que ritmo a água está subindo **agora**? Em metros por hora, à 0 h e às
+> 3 h?
+
+Isso é uma taxa instantânea, ou seja, uma **derivada**, como a lição
+[A derivada](./a-derivada) definiu. Mas todas as derivadas que o curso conhece
+são de potências: $x^2$, $\frac{1}{x}$, $\sqrt{x}$. Nenhuma regra estudada até
+aqui diz o que fazer com um seno. Uma estimativa numérica, com $h = 0{,}001$
+hora, já responde ao operador — mas responde para **um** instante, e ele quer
+o painel inteiro: a taxa a qualquer hora do dia.
+
+Esta página deduz a derivada do seno e a do cosseno a partir da definição, e
+volta à maré no final com uma fórmula para a taxa em qualquer instante.
+
+## 2. Mapa das ideias
+
+- **derivada do seno** — $(\sen x)' = \cos x$: a inclinação da senoide em cada
+  ponto é o cosseno daquele ponto;
+- **derivada do cosseno** — $(\cos x)' = -\sen x$, com o sinal de menos;
+- **fórmula da soma** — $\sen(x+h) = \sen x \cos h + \cos x \sen h$, a
+  reescrita que destrava o quociente de diferenças;
+- **os dois limites da Parte I** — $\lim_{h \to 0}\frac{\sen h}{h} = 1$ e
+  $\lim_{h \to 0}\frac{1 - \cos h}{h} = 0$, os dois números que a
+  demonstração precisa;
+- **derivada da tangente** — $(\tg x)' = \frac{1}{\cos^2 x} = \sec^2 x$, que sai
+  da regra do quociente;
+- **o fator $k$** — $(\sen kx)' = k\cos kx$, pela regra da cadeia.
+
+Exemplo: em $x = \pi$, a senoide desce com inclinação $\cos \pi = -1$.
+Contraexemplo: $(\cos x)'$ **não** é $\sen x$. Em $x = 1$ a estimativa numérica
+dá $-0{,}8415$, e $\sen 1 = +0{,}8415$: mesmo tamanho, sinal trocado.
+
+## 3. Para que serve
+
+- marés, respiração, batimento cardíaco, corrente alternada: em tudo o que
+  oscila, a derivada do seno é a velocidade da oscilação;
+- um ponto que gira: a velocidade vertical de uma cadeira de roda-gigante é a
+  derivada de uma senoide;
+- som e luz: a intensidade de uma onda varia como seno, e a rapidez dessa
+  variação é a derivada;
+- máximos e mínimos de qualquer grandeza periódica, que a Parte III vai achar
+  igualando a derivada a zero;
+- e, dentro da matemática, fechar a lista de derivadas das funções que o curso
+  conhece. Depois desta página, faltam só exponencial e logaritmo.
+
+Dentro do curso, esta lição também paga uma dívida antiga. A lição de
+[radianos](../geometria/radianos) disse que o cálculo insiste em radianos
+porque só nessa unidade as fórmulas $(\sen x)' = \cos x$ e
+$(\cos x)' = -\sen x$ saem sem constantes penduradas. Aqui isso deixa de ser
+promessa.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [Soma, diferença e arco duplo](../geometria/soma-diferenca-e-arco-duplo):
+como se escreve o seno de uma soma?** O seno mistura os dois tipos e soma:
+$\sen(a+b) = \sen a\cos b + \cos a\sen b$. O cosseno usa os iguais e subtrai:
+$\cos(a+b) = \cos a\cos b - \sen a\sen b$. Teste rápido: com $a = b = 30^\circ$,
+$\sen 60^\circ = 0{,}866$, e a fórmula dá
+$0{,}5 \times 0{,}866 + 0{,}866 \times 0{,}5 = 0{,}866$. Confere.
+
+**2. De [Gráficos do seno e do cosseno](../geometria/graficos-seno-e-cosseno):
+qual é a relação entre as duas curvas?** O cosseno é o seno adiantado em
+$\frac{\pi}{2}$: $\cos x = \sen\!\left(x + \frac{\pi}{2}\right)$. As duas curvas
+têm o mesmo formato, e uma está deslocada em relação à outra. Guarde essa
+figura, porque a derivada do seno vai desenhá-la de novo.
+
+**3. De [Radianos](../geometria/radianos): por que o cálculo usa radianos?**
+Porque só em radianos $\sen x \approx x$ para $x$ pequeno. Em graus,
+$\sen 0{,}01^\circ \approx 0{,}000175$, e a razão $\frac{\sen x}{x}$ dá 0,0175,
+não 1. Esta página mostra onde exatamente esse fato entra.
+
+**4. De [Teorema do confronto](./teorema-do-confronto): quais são os dois
+limites demonstrados lá?** O limite fundamental,
+$\lim_{x \to 0}\frac{\sen x}{x} = 1$, e o corolário,
+$\lim_{x \to 0}\frac{1 - \cos x}{x} = 0$. Aquela lição avisou que a
+demonstração da derivada do seno ia precisar dos dois. É agora.
+
+**5. De [A derivada](./a-derivada): qual é a definição, e como se confere uma
+derivada com um número?** $f'(a) = \lim_{h \to 0}\frac{f(a+h) - f(a)}{h}$. A
+conferência usa o quociente centrado $\frac{f(a+h) - f(a-h)}{2h}$ com
+$h = 0{,}001$: a fórmula deduzida e esse número precisam concordar nas
+primeiras casas. Aqui a calculadora tem que estar **em radianos**.
+
+**6. De [Regra da cadeia](./regra-da-cadeia) e [Produto e
+quociente](./regras-do-produto-e-do-quociente): o que fazer com $f(3x)$ e com
+$\frac{f}{g}$?** A cadeia diz que $(f(3x))' = f'(3x) \times 3$: a derivada de
+dentro multiplica. O quociente diz que
+$\left(\frac{f}{g}\right)' = \frac{f'g - fg'}{g^2}$. As duas regras vão
+transformar as duas derivadas desta página em seis.
+
+O item 4 é o mais importante. Sem os dois limites do confronto, a demonstração
+desta página trava no mesmo $\frac{0}{0}$ em que a lição de radianos travou.
+
+## 5. Intuição: a onda tem um ritmo que muda a cada ponto
+
+Olhe a senoide como o registro de uma cadeira de roda-gigante: altura em função
+do ângulo girado. Em vez de perguntar “qual é a altura”, pergunte “com que
+rapidez a altura está mudando”.
+
+No começo, em $x = 0$, a cadeira está na altura do centro e **subindo depressa**.
+Em $x = \frac{\pi}{2}$, no topo, ela **para de subir** por um instante: a
+inclinação da curva ali é zero. Em $x = \pi$, de volta à altura do centro, ela
+**desce depressa**. Em $x = \frac{3\pi}{2}$, no ponto mais baixo, para de novo.
+E em $x = 2\pi$ tudo recomeça.
+
+Anote os ritmos: forte para cima, zero, forte para baixo, zero, forte para
+cima. Isso também é uma onda. Ela começa no alto, em vez de começar no meio —
+e uma onda que começa no alto é o **cosseno**.
+
+A intuição diz, então, que a derivada do seno deve ser o cosseno. A página
+confirma isso de três formas: com números, com a figura, e com a demonstração.
+
+## 6. Modelo visual: ler a inclinação e desenhá-la embaixo
+
+Meça a inclinação da senoide em alguns pontos, com o quociente centrado e
+$h = 0{,}001$, em radianos:
+
+| $x$ | $0$ | $\frac{\pi}{4}$ | $\frac{\pi}{2}$ | $\frac{3\pi}{4}$ | $\pi$ | $\frac{5\pi}{4}$ | $\frac{3\pi}{2}$ | $\frac{7\pi}{4}$ | $2\pi$ |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| inclinação de $\sen x$ | $1$ | $0{,}7071$ | $0$ | $-0{,}7071$ | $-1$ | $-0{,}7071$ | $0$ | $0{,}7071$ | $1$ |
+| $\cos x$ | $1$ | $0{,}7071$ | $0$ | $-0{,}7071$ | $-1$ | $-0{,}7071$ | $0$ | $0{,}7071$ | $1$ |
+
+As duas linhas são iguais em todos os nove pontos. A figura de cima marca
+quatro tangentes sobre a senoide; a de baixo desenha as inclinações lidas, e o
+que aparece é a curva do cosseno.
+
+<CartesianPlane
+  xMin={-0.6} xMax={6.9} yMin={-1.6} yMax={1.6}
+  xUnit={50} yUnit={54}
+  xStep={1.5707963} yStep={0.5}
+  xTicks={[
+    {at: 1.5707963, label: '\\frac{\\pi}{2}'},
+    {at: 3.1415927, label: '\\pi'},
+    {at: 4.712389, label: '\\frac{3\\pi}{2}'},
+    {at: 6.2831853, label: '2\\pi'},
+  ]}
+  yTicks={[{at: 1, label: '1'}, {at: -1, label: '-1'}]}
+  functions={[{f: (x) => Math.sin(x), tone: 1}]}
+  segments={[
+    {from: [-0.55, -0.55], to: [0.55, 0.55], tone: 2},
+    {from: [1.0207963, 1], to: [2.1207963, 1], tone: 2},
+    {from: [2.5915927, 0.55], to: [3.6915927, -0.55], tone: 2},
+    {from: [4.162389, -1], to: [5.262389, -1], tone: 2},
+  ]}
+  points={[
+    {at: [0, 0], tone: 2},
+    {at: [1.5707963, 1], tone: 2},
+    {at: [3.1415927, 0], tone: 2},
+    {at: [4.712389, -1], tone: 2},
+  ]}
+  labels={[
+    {at: [0.55, 0.55], math: '1', tone: 2, dx: 16, dy: -22},
+    {at: [2.1207963, 1], math: '0', tone: 2, dx: 14, dy: -6},
+    {at: [3.6915927, -0.55], math: '-1', tone: 2, dx: 18, dy: 6},
+    {at: [5.262389, -1], math: '0', tone: 2, dx: 14, dy: 6},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Em cima: a senoide com quatro tangentes, de inclinações 1, 0, −1 e 0."
+/>
+
+<CartesianPlane
+  xMin={-0.6} xMax={6.9} yMin={-1.6} yMax={1.6}
+  xUnit={50} yUnit={54}
+  xStep={1.5707963} yStep={0.5}
+  xTicks={[
+    {at: 1.5707963, label: '\\frac{\\pi}{2}'},
+    {at: 3.1415927, label: '\\pi'},
+    {at: 4.712389, label: '\\frac{3\\pi}{2}'},
+    {at: 6.2831853, label: '2\\pi'},
+  ]}
+  yTicks={[{at: 1, label: '1'}, {at: -1, label: '-1'}]}
+  functions={[{f: (x) => Math.cos(x), tone: 3, dashed: true}]}
+  points={[
+    {at: [0, 1], tone: 2},
+    {at: [0.7853982, 0.7071], tone: 2},
+    {at: [1.5707963, 0], tone: 2},
+    {at: [2.3561945, -0.7071], tone: 2},
+    {at: [3.1415927, -1], tone: 2},
+    {at: [3.9269908, -0.7071], tone: 2},
+    {at: [4.712389, 0], tone: 2},
+    {at: [5.4977871, 0.7071], tone: 2},
+    {at: [6.2831853, 1], tone: 2},
+  ]}
+  labels={[{at: [5.9, 1.25], math: '\\cos x', tone: 3}]}
+  axisLabels={['x', "y'"]}
+  caption="Embaixo: as nove inclinações da tabela, marcadas como pontos. A curva tracejada que passa por todos eles é o cosseno."
+/>
+
+O desenho é convincente, mas nove pontos não são uma prova. Entre $\frac{\pi}{4}$
+e $\frac{\pi}{2}$ há infinitos pontos que a tabela não mediu. A demonstração da
+seção 8 cobre todos de uma vez.
+
+## 7. Ponte para a formalização: o quociente que trava e a reescrita que serve
+
+Pela definição, a derivada do seno em $x$ é
+
+$$
+(\sen x)' = \lim_{h \to 0} \frac{\sen(x+h) - \sen x}{h}.
+$$
+
+Substituir $h = 0$ dá $\frac{\sen x - \sen x}{0} = \frac{0}{0}$, a mesma
+indeterminação de toda derivada pela definição. Na lição
+[Calculando limites](./calculo-de-limites), a saída para o $\frac{0}{0}$ foi
+sempre a mesma: **reescrever a fração sem mudar o valor dela** até o $h$ do
+denominador cancelar. Nas potências, as reescritas foram pôr $h$ em
+evidência, somar frações e multiplicar pelo conjugado.
+
+Aqui nenhuma das três serve, porque $\sen(x+h)$ não é uma potência de
+$(x+h)$. O que existe para abrir $\sen(x+h)$ é a **fórmula da soma**. É a
+propriedade já estudada que permite a mudança, e é por isso que a lição de
+soma de arcos volta aqui.
+
+Antes da conta com letras, uma tabela em $x = 1$ diz o que esperar:
+
+| $h$ | $\frac{\sen(1+h) - \sen 1}{h}$ |
+|---:|---:|
+| $0{,}1$ | $0{,}49736$ |
+| $0{,}01$ | $0{,}53609$ |
+| $0{,}001$ | $0{,}53988$ |
+
+Os valores se acumulam perto de $0{,}5403$, e $\cos 1 = 0{,}5403$. A
+demonstração precisa entregar exatamente isso.
+
+## 8. A derivada do seno, pela definição
+
+### 8.1 Abrir o seno da soma
+
+O que queremos: cancelar o $h$ do denominador. Por que a forma atual não
+serve: $\sen(x+h)$ é um bloco fechado, e não dá para subtrair $\sen x$ dele.
+Qual propriedade permite a mudança: a fórmula da soma,
+$\sen(x+h) = \sen x\cos h + \cos x\sen h$. O que muda na escrita: um seno vira
+uma soma de dois produtos. O que permanece: o valor, para todo $x$ e todo $h$,
+porque a fórmula é uma identidade.
+
+$$
+\frac{\sen(x+h) - \sen x}{h}
+= \frac{\sen x\cos h + \cos x\sen h - \sen x}{h}.
+$$
+
+### 8.2 Separar o que tem $\sen x$ do que tem $\cos x$
+
+No numerador há dois termos com $\sen x$ — o $\sen x\cos h$ e o $-\sen x$ — e
+um com $\cos x$. Agrupe os dois primeiros e ponha $\sen x$ em evidência:
+$\sen x\cos h - \sen x = \sen x\,(\cos h - 1)$. Isso é a distributiva lida ao
+contrário, a mesma do [fator comum](../algebra/fator-comum-em-evidencia).
+
+$$
+\frac{\sen x\,(\cos h - 1) + \cos x\,\sen h}{h}
+= \sen x \times \frac{\cos h - 1}{h} + \cos x \times \frac{\sen h}{h}.
+$$
+
+O que mudou: uma fração virou duas parcelas, cada uma com um fator que **não
+depende de $h$** ($\sen x$ e $\cos x$) multiplicando uma fração que **só
+depende de $h$**. O que permaneceu: o valor, porque dividir uma soma por $h$ é
+dividir cada parcela por $h$.
+
+Repare no que aconteceu com a variável. O $x$ ficou fora das frações. Tudo o
+que tende a alguma coisa quando $h \to 0$ está dentro de duas frações que só
+envolvem $h$, e são exatamente as duas frações da lição do confronto.
+
+### 8.3 Os dois limites
+
+Quando $h \to 0$:
+
+- $\frac{\sen h}{h} \to 1$, pelo limite fundamental;
+- $\frac{\cos h - 1}{h} = -\frac{1 - \cos h}{h} \to -0 = 0$, pelo corolário.
+
+Os fatores $\sen x$ e $\cos x$ são constantes em relação a $h$, então o limite
+da soma é a soma dos limites, e o limite de cada produto é o produto dos
+limites:
+
+$$
+(\sen x)' = \sen x \times 0 + \cos x \times 1 = \cos x.
+$$
+
+> $$\boxed{(\sen x)' = \cos x}$$
+
+**Conferindo com um número.** Em $x = 1$, a fórmula dá $\cos 1 = 0{,}5403$. O
+quociente centrado com $h = 0{,}001$ dá $0{,}540302$. Confere. Em $x = \pi$, a
+fórmula dá $\cos \pi = -1$, o valor da terceira tangente da figura.
+
+**Contraexemplo, para delimitar.** A fórmula não diz que a derivada é o
+cosseno **do mesmo número que o seno vale**. Em $x = \frac{\pi}{2}$,
+$\sen x = 1$ e a derivada é $\cos\frac{\pi}{2} = 0$: a curva está no topo, e no
+topo a inclinação é zero. A derivada é o cosseno **da entrada** $x$, não do
+valor $\sen x$.
+
+### 8.4 Onde a unidade entrou
+
+O passo 8.3 usou $\frac{\sen h}{h} \to 1$. A lição do confronto provou isso
+comparando a área do setor, que vale $\frac{h}{2}$ **só em radianos**. Em
+graus, aquela razão tende a $\frac{\pi}{180}$, e a derivada sairia
+$\frac{\pi}{180}\cos x$. É aqui, e só aqui, que a unidade entra. A seção 12
+mostra isso com um número.
+
+## 9. A derivada do cosseno, por dois caminhos
+
+### 9.1 Pela definição
+
+O roteiro é o mesmo, com a fórmula do cosseno da soma,
+$\cos(x+h) = \cos x\cos h - \sen x\sen h$:
+
+$$
+\begin{aligned}
+\frac{\cos(x+h) - \cos x}{h}
+&= \frac{\cos x\cos h - \sen x\sen h - \cos x}{h}\\[4pt]
+&= \frac{\cos x\,(\cos h - 1) - \sen x\,\sen h}{h}\\[4pt]
+&= \cos x \times \frac{\cos h - 1}{h} - \sen x \times \frac{\sen h}{h}.
+\end{aligned}
+$$
+
+Na segunda linha, o fator comum $\cos x$ saiu dos dois termos que o tinham. Na
+terceira, a fração virou duas parcelas. Fazendo $h \to 0$, a primeira fração
+vai para 0 e a segunda para 1:
+
+$$
+(\cos x)' = \cos x \times 0 - \sen x \times 1 = -\sen x.
+$$
+
+> $$\boxed{(\cos x)' = -\sen x}$$
+
+O sinal de menos veio do sinal de menos da fórmula $\cos(a+b)$. Ele não é um
+detalhe de convenção: é a diferença entre subir e descer. Em $x = 1$, a
+tabela do quociente dá $-0{,}86706$; $-0{,}84416$; $-0{,}84174$ para
+$h = 0{,}1$; $0{,}01$; $0{,}001$, acumulando perto de $-0{,}8415 = -\sen 1$.
+
+### 9.2 Pela cadeia, e por que os dois caminhos concordam
+
+Há um segundo caminho, mais curto, que usa a relação entre as duas curvas. A
+lição de gráficos mostrou que o cosseno é o seno deslocado; uma forma dessa
+relação é
+
+$$
+\cos x = \sen\!\left(\frac{\pi}{2} - x\right).
+$$
+
+(Teste: em $x = 0$, $\sen\frac{\pi}{2} = 1 = \cos 0$.) O lado direito é uma
+composição: a função de fora é o seno, a de dentro é $u = \frac{\pi}{2} - x$,
+cuja derivada é $-1$. A [regra da cadeia](./regra-da-cadeia) dá
+
+$$
+(\cos x)' = \cos\!\left(\frac{\pi}{2} - x\right) \times (-1)
+= -\cos\!\left(\frac{\pi}{2} - x\right) = -\sen x,
+$$
+
+usando de novo a relação entre as curvas, agora ao contrário:
+$\cos\!\left(\frac{\pi}{2} - x\right) = \sen x$.
+
+Os dois caminhos dão $-\sen x$. O primeiro é a definição; o segundo reaproveita
+$(\sen x)' = \cos x$. Quando duas contas independentes concordam, cada uma
+confere a outra — e o $-1$ da derivada de dentro é o mesmo sinal de menos que
+apareceu na fórmula da soma.
+
+## 10. A tangente e as outras três
+
+A tangente é o quociente $\frac{\sen x}{\cos x}$. A regra do quociente, com
+$f = \sen x$ e $g = \cos x$:
+
+$$
+(\tg x)' = \frac{(\sen x)'\cos x - \sen x\,(\cos x)'}{\cos^2 x}
+= \frac{\cos x \cos x - \sen x\,(-\sen x)}{\cos^2 x}
+= \frac{\cos^2 x + \sen^2 x}{\cos^2 x}.
+$$
+
+O numerador é a relação fundamental $\sen^2 x + \cos^2 x = 1$, das
+[relações fundamentais](../geometria/relacoes-fundamentais). Logo:
+
+> $$\boxed{(\tg x)' = \frac{1}{\cos^2 x} = \sec^2 x}$$
+
+Os dois nomes são a mesma coisa: $\sec x = \frac{1}{\cos x}$, então
+$\sec^2 x = \frac{1}{\cos^2 x}$. Conferindo em $x = \frac{\pi}{4}$:
+$\cos\frac{\pi}{4} = \frac{\sqrt2}{2}$, o quadrado é $\frac12$, e a derivada
+vale 2. O quociente centrado dá $2{,}0000$.
+
+A derivada da tangente é sempre positiva, o que combina com o gráfico da
+lição [gráfico da tangente](../geometria/grafico-da-tangente): a curva só sobe,
+em cada ramo.
+
+As outras três saem do mesmo modo. Estão aqui para consulta; o exercício 20
+pede uma delas.
+
+| Função | Derivada | Como sai |
+|---|---|---|
+| $\sen x$ | $\cos x$ | definição, seção 8 |
+| $\cos x$ | $-\sen x$ | definição, seção 9 |
+| $\tg x = \frac{\sen x}{\cos x}$ | $\sec^2 x$ | quociente |
+| $\sec x = \frac{1}{\cos x}$ | $\sec x\,\tg x$ | quociente, ou $(1/g)' = -g'/g^2$ |
+| $\cossec x = \frac{1}{\sen x}$ | $-\cossec x\,\cotg x$ | idem |
+| $\cotg x = \frac{\cos x}{\sen x}$ | $-\cossec^2 x$ | quociente |
+
+## 11. O fator dentro do seno: a regra da cadeia
+
+A maré tem $\sen\!\left(\frac{\pi t}{6}\right)$, e não $\sen t$. Em geral, o
+que aparece nos modelos é $\sen(kx)$, com um número $k$ multiplicando a
+variável — o parâmetro que a lição de [parâmetros da
+onda](../geometria/parametros-das-funcoes-trigonometricas) chamou de ajuste do
+período.
+
+$\sen(kx)$ é uma composição: de dentro, $u = kx$, com $u' = k$; de fora, o
+seno. A cadeia dá
+
+$$
+(\sen kx)' = \cos(kx) \times k = k\cos(kx).
+$$
+
+> $$\boxed{(\sen kx)' = k\cos kx \qquad (\cos kx)' = -k\sen kx}$$
+
+**Por que o $k$ aparece na frente.** $\sen 2x$ completa uma onda inteira em
+metade do intervalo de $\sen x$: sobe de 0 a 1 enquanto $x$ vai de 0 a
+$\frac{\pi}{4}$, e não até $\frac{\pi}{2}$. Mesma subida em metade do caminho
+é o dobro da inclinação. O $k$ mede exatamente isso.
+
+**Conferindo.** $(\sen 3x)'$ em $x = 0{,}5$: a fórmula dá $3\cos 1{,}5 = 0{,}2122$;
+o quociente centrado dá $0{,}2122$. Sem o 3, sairia $\cos 1{,}5 = 0{,}0707$,
+três vezes menor — e o número denuncia o esquecimento.
+
+O mesmo vale para qualquer coisa dentro do seno, não só $kx$. Para
+$\sen(x^2)$, a função de dentro é $x^2$ e a derivada dela é $2x$:
+
+$$
+(\sen(x^2))' = \cos(x^2) \times 2x = 2x\cos(x^2).
+$$
+
+Compare com $(\sen x)^2$, que se escreve $\sen^2 x$. Ali a função de fora é o
+quadrado e a de dentro é o seno:
+
+$$
+(\sen^2 x)' = 2\sen x \times \cos x.
+$$
+
+Em $x = 1$: a primeira vale $2\cos 1 = 1{,}0806$; a segunda,
+$2\sen 1\cos 1 = 0{,}9093$. Duas funções diferentes, duas derivadas diferentes.
+A lição da cadeia anunciou esta armadilha com potências; aqui ela aparece com o
+seno, que é onde mais engana, porque $\sen^2 x$ esconde os parênteses.
+
+## 12. Resolvendo o problema da maré
+
+Com $h(t) = 2 + 1{,}5\,\sen\!\left(\frac{\pi t}{6}\right)$, derive termo a
+termo. A constante 2 tem derivada 0. O termo com seno é uma constante
+multiplicando $\sen(kt)$, com $k = \frac{\pi}{6}$:
+
+$$
+h'(t) = 1{,}5 \times \frac{\pi}{6}\cos\!\left(\frac{\pi t}{6}\right)
+= \frac{\pi}{4}\cos\!\left(\frac{\pi t}{6}\right).
+$$
+
+A unidade é metros por hora: a saída $h$ está em metros, a entrada $t$ em
+horas.
+
+**À 0 h:** $h'(0) = \frac{\pi}{4}\cos 0 = \frac{\pi}{4} \approx 0{,}785$ m/h. A
+água sobe a 78,5 centímetros por hora, o ritmo mais rápido do ciclo. Está
+**acima** do limite de 0,5 m/h do navio.
+
+**Às 3 h:** $h'(3) = \frac{\pi}{4}\cos\frac{\pi}{2} = 0$. A maré não está
+subindo nem descendo. É o instante de altura máxima, 3,5 m — o que bate com a
+resposta 12b da Revisão geral. A derivada zero no topo é a mesma tangente
+horizontal da figura da seção 6.
+
+**Às 6 h:** $h'(6) = \frac{\pi}{4}\cos\pi = -0{,}785$ m/h. A água desce no ritmo
+máximo. E às 9 h a derivada é zero de novo, no ponto mais baixo.
+
+Conferindo à 0 h com o quociente centrado e $h = 0{,}001$: $0{,}7854$. Confere.
+
+O painel inteiro do operador é a fórmula $h'(t) = \frac{\pi}{4}\cos\frac{\pi t}{6}$.
+O exercício 13 pergunta em que horas o navio pode atracar.
+
+## 13. Exemplos resolvidos
+
+### Exemplo 1: soma de seno e cosseno
+
+Calcule $f'\!\left(\frac{\pi}{6}\right)$ para $f(x) = 3\sen x - 2\cos x$.
+
+A regra da soma e da constante multiplicativa, da lição de
+[regras de derivação](./regras-de-derivacao), valem para qualquer função:
+
+$$
+f'(x) = 3\cos x - 2(-\sen x) = 3\cos x + 2\sen x.
+$$
+
+O sinal de menos do cosseno virou mais. Em $x = \frac{\pi}{6}$:
+$3 \times \frac{\sqrt3}{2} + 2 \times \frac12 = \frac{3\sqrt3}{2} + 1 \approx 3{,}598$.
+Quociente centrado: $3{,}598$.
+
+### Exemplo 2: produto com $x$
+
+*Pause e tente antes de ler.* Derive $g(x) = x\sen x$ e calcule $g'(\pi)$.
+
+Regra do produto, com $f = x$ e $g = \sen x$:
+
+$$
+g'(x) = 1 \times \sen x + x\cos x = \sen x + x\cos x.
+$$
+
+Em $x = \pi$: $\sen\pi + \pi\cos\pi = 0 + \pi \times (-1) = -\pi \approx -3{,}1416$.
+Quociente centrado: $-3{,}1416$.
+
+### Exemplo 3: um quociente
+
+*Pause e tente.* Derive $q(x) = \frac{\sen x}{x}$ e calcule
+$q'\!\left(\frac{\pi}{2}\right)$.
+
+É a função da lição do confronto, agora derivada. Regra do quociente:
+
+$$
+q'(x) = \frac{\cos x \times x - \sen x \times 1}{x^2} = \frac{x\cos x - \sen x}{x^2}.
+$$
+
+Em $x = \frac{\pi}{2}$: o cosseno é 0 e o seno é 1, então
+$q' = \frac{0 - 1}{(\pi/2)^2} = -\frac{4}{\pi^2} \approx -0{,}405$. A função
+está descendo ali, o que combina com a figura daquela lição: $\frac{\sen x}{x}$
+começa em 1 e cai.
+
+### Exemplo 4: a reta tangente ao cosseno
+
+*Pause e tente.* Escreva a reta tangente a $y = \cos x$ no ponto de abscissa
+$\frac{\pi}{3}$.
+
+A tangente é $y = f(a) + f'(a)(x - a)$. Aqui $f(a) = \cos\frac{\pi}{3} = \frac12$
+e $f'(a) = -\sen\frac{\pi}{3} = -\frac{\sqrt3}{2}$:
+
+$$
+y = \frac12 - \frac{\sqrt3}{2}\left(x - \frac{\pi}{3}\right).
+$$
+
+A inclinação é negativa: em $\frac{\pi}{3}$ o cosseno está descendo, entre o
+topo em 0 e o zero em $\frac{\pi}{2}$.
+
+### Exemplo 5: dentro ou fora
+
+*Pause e tente.* Derive $a(x) = \sen(x^2)$ e $b(x) = \sen^2 x$, e calcule as
+duas em $x = 1$.
+
+Foi feito na seção 11: $a'(x) = 2x\cos(x^2)$ e $b'(x) = 2\sen x\cos x$. Em
+$x = 1$: $a'(1) = 2\cos 1 = 1{,}0806$ e $b'(1) = 2\sen 1\cos 1 = 0{,}9093$.
+
+Repare que $b'(x) = 2\sen x\cos x = \sen 2x$, pela fórmula do arco duplo. É
+uma forma mais curta da mesma derivada, e $\sen 2 = 0{,}9093$ confere.
+
+### Exemplo 6: o que acontece em graus
+
+*Pause e tente.* Uma planilha calcula o seno com o ângulo em graus. Qual é a
+derivada de $g(x) = \sen(x^\circ)$ em $x = 60$?
+
+Seno de $x$ graus é seno de $\frac{\pi x}{180}$ radianos. Então
+$g(x) = \sen\!\left(\frac{\pi}{180}x\right)$, que é $\sen(kx)$ com
+$k = \frac{\pi}{180}$:
+
+$$
+g'(x) = \frac{\pi}{180}\cos\!\left(\frac{\pi}{180}x\right).
+$$
+
+Em $x = 60$: $\frac{\pi}{180} \times \cos 60^\circ = \frac{\pi}{180} \times \frac12
+\approx 0{,}008727$. O quociente centrado, com $h = 0{,}001$ grau, dá
+$0{,}008727$. É o fator $\frac{\pi}{180}$ pendurado que a lição de radianos
+anunciou: em graus, a derivada do seno **não** é o cosseno, é o cosseno vezes
+0,01745.
+
+## 14. Erros comuns
+
+> **Erro 1: $(\cos x)' = \sen x$, sem o sinal.** Teste em $x = 1$: o quociente
+> centrado dá $-0{,}8415$, e $\sen 1 = +0{,}8415$. O sinal está trocado. O menos
+> vem da fórmula $\cos(a+b) = \cos a\cos b - \sen a\sen b$, e o gráfico
+> confirma: logo depois de $x = 0$ o cosseno **desce**, então a derivada ali
+> tem que ser negativa.
+
+> **Erro 2: usar graus.** Com a calculadora em graus, o quociente centrado de
+> $\sen x$ em $x = 60$ dá $0{,}0087$, e não $\cos 60^\circ = 0{,}5$. Em graus a
+> derivada vem multiplicada por $\frac{\pi}{180}$, como o Exemplo 6 mostrou.
+> As fórmulas desta página valem em radianos, porque o limite
+> $\frac{\sen h}{h} \to 1$ só vale em radianos.
+
+> **Erro 3: tratar $\sen(x^2)$ como $\sen^2 x$.** São funções diferentes. Em
+> $x = 1$, as derivadas valem $1{,}0806$ e $0{,}9093$. Antes de derivar,
+> pergunte: o quadrado está **dentro** do seno ou **no** seno? Dentro, a
+> derivada de dentro é $2x$; no seno, a de fora é a do quadrado.
+
+> **Erro 4: $(\tg x)' = \sec x$.** Falta o quadrado. Em $x = \frac{\pi}{4}$,
+> $\sec x = \sqrt2 = 1{,}414$ e $\sec^2 x = 2$; o quociente centrado dá
+> $2{,}000$. O quadrado vem do $\cos^2 x$ no denominador da regra do quociente.
+
+> **Erro 5: esquecer o $k$.** $(\sen 3x)'$ não é $\cos 3x$. Em $x = 0{,}5$, a
+> derivada certa é $3\cos 1{,}5 = 0{,}2122$; sem o 3, sairia $0{,}0707$. A
+> curva $\sen 3x$ oscila três vezes mais depressa, e a inclinação triplica.
+
+> **Erro 6: confundir a derivada com a função.** $(\sen x)' = \cos x$ não diz
+> que o seno e o cosseno são iguais. Diz que a **inclinação** do seno em cada
+> ponto é o valor do cosseno naquele ponto. Em $x = \frac{\pi}{2}$, $\sen x = 1$
+> e a inclinação é $\cos\frac{\pi}{2} = 0$.
+
+> **Erro 7: derivar a fórmula da soma pela metade.** Ao abrir
+> $\sen(x+h)$, o termo $\sen x\cos h$ não some. Ele se junta ao $-\sen x$ e
+> forma $\sen x(\cos h - 1)$, que vai para zero **porque** o corolário diz
+> que $\frac{1 - \cos h}{h} \to 0$, não porque foi apagado.
+
+## 15. Perguntas de verificação
+
+1. Por que a derivada do seno pela definição precisa da fórmula da soma, e
+   não das reescritas das potências (fator comum, conjugado, soma de frações)?
+2. Quais são os dois limites que a demonstração usa, e de onde vem cada um?
+3. Onde, na demonstração, entra a exigência de radianos?
+4. Como o gráfico do seno já mostrava, antes de qualquer conta, que a derivada
+   dele devia ser o cosseno?
+5. Por que $(\cos x)'$ tem sinal negativo? Dê uma razão pela fórmula e uma pelo
+   gráfico.
+6. O que a regra do quociente faz com $\frac{\sen x}{\cos x}$, e por que o
+   resultado é sempre positivo?
+7. Por que $(\sen 2x)'$ tem um 2 na frente? Explique com a forma da curva.
+8. Qual é a diferença entre $\sen(x^2)$ e $\sen^2 x$ na hora de derivar?
+9. A maré tem derivada zero às 3 h. O que isso diz sobre a altura naquele
+   instante?
+10. Se alguém disser que $(\sen x)' = \cos x$ e mostrar como prova a tabela de
+    nove pontos da seção 6, o que falta para ser uma demonstração?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque $\sen(x+h)$ não é uma potência de $(x+h)$: não há $h$ para pôr em
+   evidência nem raiz para racionalizar. A única ferramenta do curso que abre
+   $\sen(x+h)$ em termos de $\sen x$ e $\cos x$ é a fórmula da soma.
+2. $\lim_{h \to 0}\frac{\sen h}{h} = 1$, demonstrado pelo teorema do confronto
+   com a cadeia de áreas no ciclo, e $\lim_{h \to 0}\frac{1 - \cos h}{h} = 0$,
+   o corolário, obtido multiplicando pelo conjugado $1 + \cos h$.
+3. No limite $\frac{\sen h}{h} \to 1$. A demonstração dele usou a área do setor
+   como $\frac{h}{2}$, e essa fórmula só vale com $h$ em radianos. Em graus, o
+   limite é $\frac{\pi}{180}$ e a derivada vem multiplicada por esse fator.
+4. Lendo a inclinação: forte para cima em 0, zero no topo em $\frac{\pi}{2}$,
+   forte para baixo em $\pi$, zero embaixo em $\frac{3\pi}{2}$. Esse padrão é
+   uma onda que começa no alto — o cosseno.
+5. Pela fórmula: $\cos(a+b)$ tem um sinal de menos entre os dois produtos, e
+   ele acompanha o termo $\sen x\sen h$, que sobrevive no limite. Pelo gráfico:
+   logo depois de $x = 0$ o cosseno desce, então a derivada ali é negativa, e
+   $-\sen x$ é negativa para $x$ pequeno positivo.
+6. Produz $\frac{\cos^2 x + \sen^2 x}{\cos^2 x}$, e a relação fundamental
+   transforma o numerador em 1. O resultado $\frac{1}{\cos^2 x}$ é um quadrado
+   no denominador de uma fração com numerador 1: sempre positivo. A tangente só
+   sobe, em cada ramo.
+7. $\sen 2x$ completa a mesma subida, de 0 a 1, em metade do intervalo. Mesma
+   variação de saída num intervalo de entrada duas vezes menor é o dobro da
+   taxa. A cadeia registra isso como a derivada de dentro, $(2x)' = 2$.
+8. Em $\sen(x^2)$, o quadrado está dentro: a função de fora é o seno e a
+   derivada de dentro é $2x$, dando $2x\cos(x^2)$. Em $\sen^2 x$, o quadrado é
+   a função de fora: $2\sen x$ vezes a derivada de dentro, $\cos x$.
+9. Que a altura não está mudando naquele instante: a tangente é horizontal.
+   Como a água subia antes e desce depois, é o instante de altura máxima, 3,5
+   m, como a Revisão geral calculou de outro modo.
+10. Falta cobrir os infinitos pontos entre os nove medidos. A tabela mostra
+    que a igualdade vale em nove entradas; a demonstração da seção 8 vale para
+    **todo** $x$, porque trabalha com a letra $x$ e não com valores.
+
+</details>
+
+## 16. Exercícios
+
+### 1. Reconhecimento
+
+1. Escreva a derivada de: a) $\sen x$; b) $\cos x$; c) $\tg x$; d) $5\sen x$.
+2. Olhando só o gráfico do seno, diga em quais pontos de $[0, 2\pi]$ a derivada
+   é zero, onde ela vale 1 e onde vale $-1$.
+3. Qual das duas está certa: $(\cos x)' = \sen x$ ou $(\cos x)' = -\sen x$?
+   Decida com o quociente centrado em $x = \frac{\pi}{2}$, $h = 0{,}001$.
+
+### 2. Explicação
+
+4. Explique, com as próprias palavras, por que a demonstração de $(\sen x)'$
+   termina com $\sen x \times 0 + \cos x \times 1$. De onde vêm o 0 e o 1?
+5. Explique por que a derivada do seno só é o cosseno quando o ângulo está em
+   radianos.
+6. A lição de gráficos disse que o cosseno é o seno adiantado em
+   $\frac{\pi}{2}$. Como essa frase se conecta com $(\sen x)' = \cos x$?
+
+### 3. Aplicação direta
+
+7. Derive: a) $f(x) = 4\sen x + \cos x$; b) $g(x) = x^2\cos x$;
+   c) $h(x) = \dfrac{\sen x}{1 + \cos x}$; d) $k(x) = \cos 5x$.
+8. Para $f(x) = \sen x\cos x$, calcule $f'\!\left(\frac{\pi}{3}\right)$.
+9. Escreva a reta tangente a $y = \sen x$ em $x = \frac{\pi}{6}$.
+
+### 4. Variação
+
+10. Derive: a) $\sen(x^2)$; b) $\sen^2 x$; c) $\cos\sqrt{x}$; d) $\sqrt{\sen x}$.
+11. Um pistão oscila com posição $s(t) = 3\cos 2t$ centímetros, $t$ em
+    segundos. a) Qual é a velocidade em $t = \frac{\pi}{4}$? b) Em que
+    instantes a velocidade é zero?
+12. Derive $y = \sen x$ duas vezes seguidas e compare o resultado com a
+    própria função. O que você observa?
+
+<details>
+<summary>Dica para o exercício 11</summary>
+
+Velocidade é a derivada da posição. A posição é $3\cos(2t)$: constante
+multiplicando $\cos(kt)$ com $k = 2$. A velocidade zera quando o seno que
+aparece na derivada zera.
+
+</details>
+
+### 5. Problema misto
+
+13. A maré do motivador, $h(t) = 2 + 1{,}5\,\sen\!\left(\frac{\pi t}{6}\right)$.
+    a) Calcule a taxa de subida em $t = 1$ h e em $t = 2$ h. b) O navio só pode
+    atracar com a água subindo a menos de 0,5 m/h. Entre 0 h e 3 h, a partir de
+    que instante isso acontece? c) Em que instantes do dia a água sobe mais
+    depressa?
+14. A cadeira da roda-gigante de [gráficos do seno e do
+    cosseno](../geometria/graficos-seno-e-cosseno) tem altura
+    $h = 22 + 20\sen\theta$ metros. A roda dá uma volta a cada 120 segundos,
+    então $\theta = \frac{2\pi}{120}t = \frac{\pi}{60}t$ radianos, com $t$ em
+    segundos. a) Escreva $h$ em função de $t$. b) Com que velocidade vertical,
+    em metros por segundo, a cadeira sobe no instante em que
+    $\theta = \frac{\pi}{6}$?
+15. A lição do confronto usou a aproximação $\sen x \approx x$ para $x$
+    pequeno. Escreva a reta tangente a $y = \sen x$ em $x = 0$ e explique o
+    que essa aproximação tem a ver com a tangente.
+16. Uma planilha calcula $\sen$ com o ângulo em graus. Qual é a derivada de
+    $g(x) = \sen(x^\circ)$ em $x = 30$? Confira com o quociente centrado.
+
+<details>
+<summary>Dica para o exercício 13b</summary>
+
+A taxa é $h'(t) = \frac{\pi}{4}\cos\frac{\pi t}{6}$. Você quer
+$\frac{\pi}{4}\cos\frac{\pi t}{6} < 0{,}5$, isto é,
+$\cos\frac{\pi t}{6} < \frac{0{,}5}{\pi/4} = \frac{2}{\pi} \approx 0{,}6366$.
+Resolva com $\arccos$, como na lição de [equações
+trigonométricas](../geometria/equacoes-trigonometricas), lembrando que entre
+0 h e 3 h o ângulo $\frac{\pi t}{6}$ vai de 0 a $\frac{\pi}{2}$.
+
+</details>
+
+### 6. Justificativa
+
+17. Demonstre $(\cos x)' = -\sen x$ pela definição, escrevendo cada passo e
+    dizendo qual propriedade o autoriza.
+18. Mostre que $(\sen(x + c))' = \cos(x + c)$ para qualquer constante $c$, e
+    explique o que isso diz sobre deslocar uma onda.
+19. A derivada de $\sen^2 x$ pode ser escrita como $2\sen x\cos x$ ou como
+    $\sen 2x$. Mostre que as duas formas são iguais e diga qual propriedade
+    liga uma à outra.
+20. Deduza $(\sec x)' = \sec x\,\tg x$ a partir de $\sec x = \frac{1}{\cos x}$.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) $\cos x$; b) $-\sen x$; c) $\sec^2 x = \frac{1}{\cos^2 x}$; d) $5\cos x$.
+2. Derivada zero no topo e no fundo: $\frac{\pi}{2}$ e $\frac{3\pi}{2}$.
+   Derivada 1 onde a curva cruza o eixo subindo: $0$ e $2\pi$. Derivada $-1$
+   onde cruza descendo: $\pi$. São os valores de $\cos x$ nesses pontos.
+3. A segunda. Em $x = \frac{\pi}{2}$ o quociente centrado dá $-1{,}0000$;
+   $-\sen\frac{\pi}{2} = -1$ confere, e $\sen\frac{\pi}{2} = +1$ tem o sinal
+   errado.
+4. Depois de abrir $\sen(x+h)$ e separar, sobram
+   $\sen x \times \frac{\cos h - 1}{h}$ e $\cos x \times \frac{\sen h}{h}$. O 0
+   é o limite de $\frac{\cos h - 1}{h}$, o corolário do confronto com o sinal
+   trocado. O 1 é o limite fundamental $\frac{\sen h}{h}$. Os fatores $\sen x$
+   e $\cos x$ não dependem de $h$ e ficam como estão.
+5. Porque o passo $\frac{\sen h}{h} \to 1$ foi demonstrado com a área do setor
+   igual a $\frac{h}{2}$, que só vale em radianos. Em graus a razão tende a
+   $\frac{\pi}{180}$, e a derivada de $\sen(x^\circ)$ sai
+   $\frac{\pi}{180}\cos(x^\circ)$, como o Exemplo 6 e o exercício 16 mostram.
+6. A derivada do seno é a curva das inclinações dele. Essa curva tem a forma
+   do seno, mas começa no alto, porque a inclinação é máxima em 0. Começar no
+   alto é estar adiantada em um quarto de volta, $\frac{\pi}{2}$. Então a
+   derivada do seno é o seno adiantado em $\frac{\pi}{2}$, que é o cosseno.
+7. a) $4\cos x - \sen x$. b) Produto: $2x\cos x - x^2\sen x$. c) Quociente:
+   $\frac{\cos x(1 + \cos x) - \sen x(-\sen x)}{(1 + \cos x)^2}
+   = \frac{\cos x + \cos^2 x + \sen^2 x}{(1 + \cos x)^2}
+   = \frac{1 + \cos x}{(1 + \cos x)^2} = \frac{1}{1 + \cos x}$. Em $x = 1$,
+   vale $0{,}6492$, e o quociente centrado confirma. d) $-5\sen 5x$. Se você
+   encontrou $-\sen 5x$, esqueceu a derivada de dentro.
+8. Produto: $f'(x) = \cos x\cos x + \sen x(-\sen x) = \cos^2 x - \sen^2 x$,
+   que pelo arco duplo é $\cos 2x$. Em $\frac{\pi}{3}$:
+   $\cos\frac{2\pi}{3} = -\frac12$.
+9. $f\!\left(\frac{\pi}{6}\right) = \frac12$ e
+   $f'\!\left(\frac{\pi}{6}\right) = \cos\frac{\pi}{6} = \frac{\sqrt3}{2}$. Reta:
+   $y = \frac12 + \frac{\sqrt3}{2}\left(x - \frac{\pi}{6}\right)$.
+10. a) $2x\cos(x^2)$. b) $2\sen x\cos x$. c) Dentro é $\sqrt{x}$, com derivada
+    $\frac{1}{2\sqrt{x}}$: $-\sen\sqrt{x} \times \frac{1}{2\sqrt{x}}
+    = -\frac{\sen\sqrt{x}}{2\sqrt{x}}$. Em $x = 2$: $-0{,}3492$. d) Fora é a
+    raiz, dentro é o seno: $\frac{\cos x}{2\sqrt{\sen x}}$. Em $x = 1$:
+    $0{,}2945$.
+11. a) $s'(t) = 3 \times (-2\sen 2t) = -6\sen 2t$. Em $t = \frac{\pi}{4}$:
+    $-6\sen\frac{\pi}{2} = -6$ cm/s. O pistão passa pela posição central
+    descendo, na velocidade máxima. b) $\sen 2t = 0$ quando $2t = k\pi$, isto
+    é, $t = \frac{k\pi}{2}$: nos extremos do movimento, $s = \pm 3$ cm.
+12. $y' = \cos x$ e, derivando de novo, $y'' = -\sen x = -y$. A derivada da
+    derivada do seno é o seno com o sinal trocado. A lição de [segunda
+    derivada](./segunda-derivada-e-concavidade) dá nome a isso, e é essa
+    propriedade que faz o seno descrever tudo o que oscila.
+13. a) $h'(1) = \frac{\pi}{4}\cos\frac{\pi}{6} = \frac{\pi}{4} \times \frac{\sqrt3}{2}
+    \approx 0{,}680$ m/h; $h'(2) = \frac{\pi}{4}\cos\frac{\pi}{3} = \frac{\pi}{8}
+    \approx 0{,}393$ m/h. b) Precisa de $\cos\frac{\pi t}{6} < \frac{2}{\pi}
+    \approx 0{,}6366$. Entre 0 e $\frac{\pi}{2}$ o cosseno desce, então isso
+    vale para $\frac{\pi t}{6} > \arccos 0{,}6366 \approx 0{,}8807$, ou seja,
+    $t > \frac{6 \times 0{,}8807}{\pi} \approx 1{,}68$ h. A partir de cerca de
+    1 h 41 min a subida fica abaixo de 0,5 m/h — coerente com o item a, que deu
+    0,680 em 1 h e 0,393 em 2 h. c) Quando $\cos\frac{\pi t}{6} = 1$: em
+    $t = 0$, $12$, $24$ h, com $0{,}785$ m/h. Nas horas de maré média, subindo.
+14. a) $h(t) = 22 + 20\sen\!\left(\frac{\pi}{60}t\right)$. b)
+    $h'(t) = 20 \times \frac{\pi}{60}\cos\!\left(\frac{\pi}{60}t\right)
+    = \frac{\pi}{3}\cos\theta$. Com $\theta = \frac{\pi}{6}$:
+    $\frac{\pi}{3} \times \frac{\sqrt3}{2} \approx 0{,}907$ m/s. Se você
+    encontrou $20\cos\frac{\pi}{6} \approx 17{,}3$, derivou em relação a
+    $\theta$ e esqueceu o fator $\frac{\pi}{60}$ da cadeia — a unidade denuncia:
+    isso seria metros por radiano, não por segundo.
+15. $f(0) = 0$ e $f'(0) = \cos 0 = 1$, então a tangente é $y = x$. A
+    aproximação $\sen x \approx x$ para $x$ pequeno é substituir a curva pela
+    tangente dela em 0. Perto do ponto de tangência as duas quase coincidem,
+    que é o que a lição do confronto mediu com o erro $1 - \cos x$.
+16. $g(x) = \sen\!\left(\frac{\pi}{180}x\right)$, então
+    $g'(x) = \frac{\pi}{180}\cos\!\left(\frac{\pi}{180}x\right)$. Em $x = 30$:
+    $\frac{\pi}{180} \times \frac{\sqrt3}{2} \approx 0{,}01511$. O quociente
+    centrado, com $h = 0{,}001$ grau, dá $0{,}01511$. Se você encontrou
+    $0{,}866$, esqueceu o fator de conversão: isso é $\cos 30^\circ$, a
+    resposta em radianos.
+17. $\frac{\cos(x+h) - \cos x}{h}$; abrir com a fórmula do cosseno da soma
+    (identidade, não muda o valor):
+    $\frac{\cos x\cos h - \sen x\sen h - \cos x}{h}$; pôr $\cos x$ em
+    evidência nos dois termos que o têm (distributiva):
+    $\frac{\cos x(\cos h - 1) - \sen x\sen h}{h}$; dividir cada parcela por
+    $h$: $\cos x \times \frac{\cos h - 1}{h} - \sen x \times \frac{\sen h}{h}$;
+    fazer $h \to 0$ com o corolário (0) e o limite fundamental (1):
+    $\cos x \times 0 - \sen x \times 1 = -\sen x$.
+18. A função de dentro é $x + c$, com derivada 1. Pela cadeia,
+    $(\sen(x + c))' = \cos(x + c) \times 1 = \cos(x + c)$. Deslocar a onda
+    para a esquerda em $c$ desloca a curva das inclinações pela mesma
+    quantidade: a derivada de uma onda deslocada é a derivada deslocada. Com
+    $c = \frac{\pi}{2}$, isso é a seção 9.2 lida ao contrário.
+19. Pela cadeia, $(\sen^2 x)' = 2\sen x\cos x$. A fórmula do arco duplo, da
+    lição de soma e diferença, diz que $\sen 2x = 2\sen x\cos x$. Logo as duas
+    formas são o mesmo número em todo $x$; em $x = 1$, ambas dão $0{,}9093$.
+20. $\sec x = \frac{1}{\cos x}$ é $\frac{1}{g}$ com $g = \cos x$. Pela regra
+    $\left(\frac{1}{g}\right)' = -\frac{g'}{g^2}$:
+    $(\sec x)' = -\frac{-\sen x}{\cos^2 x} = \frac{\sen x}{\cos^2 x}
+    = \frac{1}{\cos x} \times \frac{\sen x}{\cos x} = \sec x\,\tg x$. Em
+    $x = 1$: $2{,}8825$, que o quociente centrado confirma.
+
+</details>
+
+## 17. Revisão curta
+
+- $(\sen x)' = \cos x$ e $(\cos x)' = -\sen x$. A inclinação da senoide em
+  cada ponto é o cosseno daquele ponto; a do cosseno é o seno com o sinal
+  trocado.
+- A demonstração abre $\sen(x+h)$ com a **fórmula da soma**, separa em duas
+  frações que só dependem de $h$, e usa os **dois limites** da lição do
+  confronto: $\frac{\sen h}{h} \to 1$ e $\frac{1 - \cos h}{h} \to 0$.
+- As fórmulas valem **em radianos**. Em graus, cada derivada ganha um fator
+  $\frac{\pi}{180}$, porque o limite fundamental muda.
+- $(\tg x)' = \sec^2 x = \frac{1}{\cos^2 x}$, pela regra do quociente e pela
+  relação fundamental. As outras três saem do mesmo jeito.
+- Com a cadeia, $(\sen kx)' = k\cos kx$: o $k$ na frente é a curva oscilando
+  $k$ vezes mais depressa. E $\sen(x^2)$ e $\sen^2 x$ são funções diferentes,
+  com derivadas diferentes.
+- **Confira com um número**, com a calculadora em radianos: a fórmula e o
+  quociente centrado com $h = 0{,}001$ precisam concordar.
+
+Antes de avançar, verifique se você consegue fazer três coisas: derivar
+$\cos x$ pela definição sem consultar; explicar onde a demonstração usa
+radianos; e derivar $2\sen 3x$ e $\sen^2 x$ sem confundir o que está dentro
+com o que está fora.
+
+A próxima lição, [derivadas de exponencial e
+logaritmo](./derivadas-de-exponencial-e-logaritmo), fecha a lista de derivadas
+do curso e paga a última promessa antiga: por que $e^x$ é igual à própria taxa
+de variação. Depois, a Parte III usa todas essas derivadas para achar máximos,
+mínimos e a forma de qualquer gráfico — inclusive o instante exato em que a
+maré para de subir.

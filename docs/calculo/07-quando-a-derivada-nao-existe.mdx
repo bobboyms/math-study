@@ -1,0 +1,845 @@
+---
+title: "Quando a derivada não existe: bico, tangente vertical e salto"
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Quando a derivada não existe: bico, tangente vertical e salto
+
+## 1. Problema motivador: o custo de errar a meta de estoque
+
+Um depósito trabalha com uma meta de 500 unidades de um produto. Ficar abaixo
+da meta custa venda perdida; ficar acima custa espaço e capital parado. O
+gestor estima que **cada unidade de desvio**, para cima ou para baixo, custa
+R\$ 3 por mês. O custo mensal do desvio, em função do estoque $x$, é
+
+$$
+C(x) = 3\,\lvert x - 500 \rvert.
+$$
+
+A lição de [valor absoluto](../numeros-e-operacoes/valor-absoluto) leu
+$\lvert x - 500 \rvert$ como a **distância** de $x$ até 500. Com 520 unidades, a
+distância é 20 e o custo é R\$ 60; com 470, a distância é 30 e o custo é
+R\$ 90.
+
+A lição anterior, [A derivada](./a-derivada), ensinou a perguntar: **a que taxa
+o custo muda por unidade de estoque?** Essa taxa é a derivada $C'(x)$. Longe da
+meta a resposta é imediata. Com 520 unidades, acrescentar uma unidade aumenta
+o desvio em 1 e o custo em R\$ 3: a taxa é 3 reais por unidade. Com 470,
+acrescentar uma unidade **diminui** o desvio em 1 e o custo cai R\$ 3: a taxa
+é $-3$.
+
+O problema está exatamente na meta. Com $x = 500$, o quociente de diferenças é
+
+$$
+\frac{C(500 + h) - C(500)}{h} = \frac{3\,\lvert h \rvert - 0}{h} = \frac{3\,\lvert h \rvert}{h}.
+$$
+
+Com $h$ positivo, $\lvert h \rvert = h$ e o quociente vale 3. Com $h$ negativo,
+$\lvert h \rvert = -h$ e o quociente vale $-3$. Os dois lados **não concordam**,
+e a lição de limite foi clara: quando os lados discordam, o limite não existe.
+
+Então qual é a taxa de variação do custo **na meta**? A resposta honesta é que
+não existe um número que a descreva. Esta página explica por que isso acontece,
+em que outras situações acontece, e o que ainda se pode dizer quando a
+derivada falha.
+
+## 2. Mapa das ideias
+
+- uma função é **derivável** em $a$ quando o limite do quociente de diferenças
+  existe: os dois lados concordam e o valor comum é um número;
+- as **derivadas laterais** são os limites do quociente por um lado só;
+- um **bico** é um ponto em que as derivadas laterais existem e são
+  diferentes: o gráfico muda de direção bruscamente;
+- uma **tangente vertical** é um ponto em que o quociente cresce sem limite: a
+  direção existe, mas a inclinação não é um número;
+- num **salto** (descontinuidade), a derivada nunca existe;
+- **toda função derivável é contínua**, e o contrário é falso.
+
+## 3. Para que serve
+
+- reconhecer, numa tarifa por faixas, num imposto progressivo ou numa multa
+  por desvio, o ponto em que a taxa muda bruscamente — e não fingir que há um
+  número ali;
+- saber onde a fórmula da derivada **falha**, o que a lição de [máximos e
+  mínimos](./maximos-e-minimos) vai transformar em regra: o mínimo de uma
+  função pode estar num ponto em que a derivada não existe, como o bico de
+  $\lvert x \rvert$;
+- emendar duas fórmulas numa função por partes de modo que a junção fique
+  **suave**, sem bico — o que se faz ao projetar uma curva de rodovia, uma
+  peça ou um gráfico de tarifa;
+- e, dentro da matemática, delimitar o conceito: saber quando a derivada
+  existe passa por saber quando ela não existe.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [função modular e por partes](../funcoes/funcao-modular-e-por-partes):
+qual é o gráfico de $\lvert x \rvert$, e por que ele é contínuo na origem?**
+Um V com o bico em $(0, 0)$: a reta $y = x$ à direita e a reta $y = -x$ à
+esquerda. Ele é contínuo porque as duas fórmulas dão o mesmo valor na
+fronteira, $0 = 0$, e o traço não se rompe. Aquela lição avisou que bico e
+salto se parecem no desenho, mas são coisas diferentes: o bico não rompe o
+traço, o salto rompe.
+
+**2. De [limite de uma função](./limite-de-uma-funcao): quando um limite
+existe?** Quando os dois limites laterais existem e são **iguais**. O exemplo
+daquela lição foi $\frac{\lvert x \rvert}{x}$ em 0: pela direita vale 1, pela
+esquerda vale $-1$, e o limite não existe. Esse mesmo quociente é o que aparece
+aqui, com outro nome.
+
+**3. De [continuidade](./continuidade): o bico de $\lvert x \rvert$ é uma
+descontinuidade?** Não. As três condições valem em 0: a função existe ali,
+o limite existe e vale 0, e os dois são iguais. Aquela lição classificou as
+descontinuidades em três tipos — buraco, salto e assíntota — e deixou o bico
+de fora de propósito, dizendo que ele é assunto desta página.
+
+**4. De [funções potência e radicais](../funcoes/funcoes-potencia-e-radicais):
+o que $\sqrt[3]{x}$ tem de diferente de $\sqrt{x}$?** A raiz cúbica aceita
+entradas negativas e atravessa a origem: $\sqrt[3]{-8} = -2$. As duas curvas
+sobem cada vez mais devagar quando $x$ cresce; perto da origem, ao contrário,
+sobem muito depressa. Esse “muito depressa” é o que vai virar tangente
+vertical.
+
+**5. De [A derivada](./a-derivada): o que é $f'(a)$, e o que o exercício 27
+provou?** $f'(a) = \lim_{h \to 0} \frac{f(a+h) - f(a)}{h}$, quando esse limite
+existe. O exercício 27 mostrou que, se a derivada existe em $a$, então $f$ é
+contínua em $a$. Esta página retoma essa prova e mostra que ela **não** anda
+para trás.
+
+O item 2 é o mais importante. Toda a página se resume a aplicar uma regra da
+lição de limite ao quociente de diferenças: **sem concordância dos lados, não
+há limite; sem limite, não há derivada.**
+
+## 5. Intuição: a tangente é uma direção, e nem todo ponto tem uma só
+
+Pense na tangente como a **direção** em que a curva está indo ao passar por um
+ponto. Numa curva lisa, como a parábola, há uma direção só em cada ponto: um
+carro percorrendo a curva vira o volante aos poucos, e em cada instante os
+faróis apontam para um lugar definido.
+
+Há três maneiras de isso falhar.
+
+**O bico.** Num V, o carro chega à origem apontando para baixo e para a
+direita, e sai apontando para cima e para a direita. Não existe uma única
+direção “na origem”: há a direção de chegada e a de saída, e elas são
+diferentes. Nenhuma reta merece o nome de tangente.
+
+**A tangente vertical.** Na raiz cúbica, o carro atravessa a origem apontando
+**para cima**, na vertical. A direção existe e é uma só. Mas a inclinação de
+uma reta vertical não é um número: subir sem andar para o lado não tem
+“quanto sobe por unidade andada”. A tangente existe como reta; a derivada, que
+é a inclinação dela, não.
+
+**O salto.** Se o traço se rompe, o carro não passa pelo ponto. Ele teria que
+se teletransportar de um pedaço para outro, e não há direção de passagem
+porque não há passagem.
+
+Nos três casos, a definição da derivada registra a falha do mesmo jeito: o
+limite do quociente de diferenças não existe.
+
+## 6. Modelo visual: as secantes que não se decidem
+
+A lição anterior mostrou a secante girando até a tangente. Nos três desenhos
+abaixo, as secantes **não** convergem para uma reta com inclinação numérica.
+
+<CartesianPlane
+  xMin={-3}
+  xMax={3}
+  yMin={-1}
+  yMax={3.5}
+  xUnit={50}
+  yUnit={50}
+  functions={[{f: (x) => Math.abs(x), domain: [-3, 3], tone: 1}]}
+  segments={[
+    {from: [0, 0], to: [2, 2], tone: 2},
+    {from: [0, 0], to: [-2, 2], tone: 3},
+  ]}
+  points={[
+    {at: [0, 0], label: '(0,\\ 0)', tone: 1, dx: 0, dy: 26},
+    {at: [2, 2], tone: 2},
+    {at: [-2, 2], tone: 3},
+  ]}
+  labels={[
+    {at: [1.6, 0.9], math: '\\text{inclinação } 1', tone: 2, dx: 30},
+    {at: [-1.6, 0.9], math: '\\text{inclinação } -1', tone: 3, dx: -36},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="O bico de |x|. Toda secante pela direita tem inclinação 1; toda secante pela esquerda tem inclinação −1. Não importa quanto h encolha: os dois lados nunca concordam."
+/>
+
+No V, o segundo ponto pode se aproximar da origem quanto quiser. Pela direita,
+todas as secantes coincidem com a própria semirreta $y = x$: inclinação 1
+sempre. Pela esquerda, coincidem com $y = -x$: inclinação $-1$ sempre. Não há
+giro nem convergência. Os lados estão travados em números diferentes.
+
+<CartesianPlane
+  xMin={-1.5}
+  xMax={1.5}
+  yMin={-1.3}
+  yMax={1.3}
+  xUnit={100}
+  yUnit={100}
+  xStep={0.5}
+  yStep={0.5}
+  functions={[{f: (x) => Math.cbrt(x), domain: [-1.5, 1.5], tone: 1}]}
+  segments={[
+    {from: [0, 0], to: [0.125, 0.5], tone: 2},
+    {from: [0, 0], to: [0.001, 0.1], tone: 2},
+    {from: [0, 0], to: [1, 1], tone: 2},
+  ]}
+  lines={[{x: 0, dashed: true, tone: 3}]}
+  points={[
+    {at: [1, 1], label: 'h = 1:\\ 1', tone: 2, dx: 40, dy: 0},
+    {at: [0.125, 0.5], label: 'h = 0{,}125:\\ 4', tone: 2, dx: 62, dy: 0},
+    {at: [0.001, 0.1], label: 'h = 0{,}001:\\ 100', tone: 2, dx: 74, dy: 4},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A raiz cúbica na origem. Três secantes por (0, 0), com inclinações 1, 4 e 100. Quanto menor o h, mais em pé a secante fica; a posição-limite é o eixo vertical, tracejado, cuja inclinação não é um número."
+/>
+
+Na raiz cúbica as secantes **giram** e convergem para uma posição: a vertical.
+O problema não é falta de concordância, é que a inclinação delas cresce sem
+limite. A tabela da seção 8 mostra os números.
+
+<CartesianPlane
+  xMin={-1}
+  xMax={4}
+  yMin={-1}
+  yMax={6}
+  xUnit={50}
+  yUnit={40}
+  functions={[
+    {f: (x) => x, domain: [-1, 1], tone: 1},
+    {f: (x) => x + 2, domain: [1, 4], tone: 1},
+  ]}
+  segments={[
+    {from: [1, 3], to: [0.5, 0.5], tone: 3},
+    {from: [1, 3], to: [0.9, 0.9], tone: 3},
+  ]}
+  points={[
+    {at: [1, 1], open: true, tone: 1},
+    {at: [1, 3], label: '(1,\\ 3)', tone: 1, dx: -30, dy: -6},
+    {at: [0.5, 0.5], tone: 3},
+    {at: [0.9, 0.9], tone: 3},
+  ]}
+  labels={[
+    {at: [0.55, 2.4], math: '\\text{inclinação } 5', tone: 3, dx: -20},
+    {at: [0.2, 4.2], math: '\\text{inclinação } 21', tone: 3, dx: 6},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Um salto em x = 1. As secantes pela esquerda ligam (1, 3) a pontos do pedaço de baixo: ficam cada vez mais em pé, porque precisam vencer o degrau de altura 2 num trecho horizontal cada vez menor."
+/>
+
+No salto, a secante pela esquerda liga o ponto $(1, 3)$ a pontos do pedaço de
+baixo. A altura a vencer é sempre quase 2, e a largura encolhe. A inclinação
+explode. Pela direita, ao contrário, as secantes têm inclinação 1. Os lados
+não concordam, e um deles nem sequer é um número.
+
+## 7. Ponte para a formalização: separar os dois lados
+
+A definição da derivada pede o limite de $\frac{f(a+h) - f(a)}{h}$ quando
+$h \to 0$. A lição de limite ensinou a olhar cada lado separadamente, com os
+limites laterais $h \to 0^{+}$ e $h \to 0^{-}$. Aplicar isso ao quociente de
+diferenças dá dois números — ou dois comportamentos — que podem ser comparados.
+
+Isso é o que a intuição da seção 5 chamava de “direção de chegada” e “direção
+de saída”. A direção de saída é a inclinação que as secantes pela direita
+perseguem; a de chegada, a que as secantes pela esquerda perseguem. A derivada
+existe quando as duas são o mesmo número.
+
+Nada de novo entra aqui. A definição de derivada é a mesma da lição anterior;
+o que muda é a lente: em vez de perguntar “o limite existe?”, perguntamos “os
+dois lados existem, e são iguais?”, que é a mesma pergunta em duas partes.
+
+## 8. Formalização: derivadas laterais e os três casos
+
+> As **derivadas laterais** de $f$ em $a$ são
+> $$
+> f'_{+}(a) = \lim_{h \to 0^{+}} \frac{f(a+h) - f(a)}{h}
+> \qquad\text{e}\qquad
+> f'_{-}(a) = \lim_{h \to 0^{-}} \frac{f(a+h) - f(a)}{h}.
+> $$
+> A função é **derivável em $a$** exatamente quando as duas existem, são
+> números, e são iguais. Nesse caso $f'(a)$ é o valor comum.
+
+**Exemplo.** $f(x) = x^2$ em $a = 0$. O quociente é $\frac{h^2 - 0}{h} = h$
+para $h \neq 0$. Pela direita, $h \to 0^{+}$ dá 0; pela esquerda, $h \to 0^{-}$
+dá 0. As duas derivadas laterais valem 0, logo $f'(0) = 0$: a parábola tem
+tangente horizontal no vértice.
+
+**Contraexemplo.** $f(x) = \lvert x \rvert$ em $a = 0$. O quociente é
+$\frac{\lvert h \rvert}{h}$. Pela direita vale 1, pela esquerda vale $-1$. As
+duas derivadas laterais existem, mas são diferentes. A função **não é
+derivável** em 0.
+
+A tabela abaixo mostra os dois quocientes lado a lado. É a tabela que a lição
+de limite fez para $\frac{\lvert x \rvert}{x}$, agora lida como derivada.
+
+| $h$ | $\frac{\lvert h \rvert}{h}$ (o V) | $\frac{h^2}{h} = h$ (a parábola) |
+|---:|---:|---:|
+| $0{,}5$ | $1$ | $0{,}5$ |
+| $0{,}1$ | $1$ | $0{,}1$ |
+| $0{,}01$ | $1$ | $0{,}01$ |
+| $-0{,}01$ | $-1$ | $-0{,}01$ |
+| $-0{,}1$ | $-1$ | $-0{,}1$ |
+| $-0{,}5$ | $-1$ | $-0{,}5$ |
+
+Na parábola os dois lados se aproximam do mesmo 0. No V, os dois lados estão
+parados em 1 e em $-1$: não há aproximação nenhuma a fazer.
+
+### Caso 1: o bico
+
+> Um **bico** (ou ponto anguloso) é um ponto em que $f$ é contínua, as duas
+> derivadas laterais existem e são números, mas são **diferentes**.
+
+O V é o exemplo. Todo gráfico de $\lvert \text{expressão} \rvert$ tem um bico
+onde a expressão de dentro troca de sinal, porque ali o gráfico é refletido
+para cima e a direção muda de repente. O custo de desvio do motivador tem o
+bico em $x = 500$.
+
+**Exemplo com contas.** $f(x) = \lvert x - 3 \rvert$ em $a = 3$. O quociente é
+$\frac{\lvert 3 + h - 3 \rvert - 0}{h} = \frac{\lvert h \rvert}{h}$: derivadas
+laterais 1 e $-1$. Bico em 3.
+
+**Contraexemplo, para delimitar.** Nem todo módulo produz bico. Tome
+$g(x) = x\,\lvert x \rvert$ em $a = 0$. O quociente é
+
+$$
+\frac{h\,\lvert h \rvert - 0}{h} = \lvert h \rvert, \qquad h \neq 0,
+$$
+
+porque o $h$ do numerador cancela com o do denominador. E $\lvert h \rvert$ vai
+a 0 pelos dois lados. As derivadas laterais valem 0 e 0: $g$ **é** derivável em
+0, com $g'(0) = 0$. O que aconteceu é que $x\,\lvert x \rvert$ é $x^2$ à direita
+e $-x^2$ à esquerda, e as duas parábolas chegam à origem na horizontal. O
+módulo estava lá; o bico, não. O bico não é uma propriedade do símbolo
+$\lvert\ \rvert$, é uma propriedade dos limites laterais.
+
+### Caso 2: a tangente vertical
+
+> Há uma **tangente vertical** em $a$ quando $f$ é contínua em $a$ e o
+> quociente de diferenças cresce sem limite (para $+\infty$ ou para $-\infty$)
+> pelos dois lados, com o mesmo sinal.
+
+O exemplo é $f(x) = \sqrt[3]{x}$ em $a = 0$. O quociente é
+
+$$
+\frac{\sqrt[3]{h} - 0}{h} = \frac{h^{1/3}}{h} = h^{1/3 - 1} = h^{-2/3} = \frac{1}{\sqrt[3]{h^2}}.
+$$
+
+A passagem usou a regra dos expoentes $\frac{a^m}{a^n} = a^{m-n}$ da lição de
+potências, com $m = \frac{1}{3}$ e $n = 1$. Como $h^2$ é positivo para qualquer
+$h \neq 0$, o quociente é positivo pelos dois lados, e ele cresce conforme $h$
+encolhe:
+
+| $h$ | $\frac{\sqrt[3]{h}}{h}$ |
+|---:|---:|
+| $0{,}1$ | $4{,}642$ |
+| $0{,}01$ | $21{,}544$ |
+| $0{,}001$ | $100$ |
+| $-0{,}001$ | $100$ |
+| $-0{,}01$ | $21{,}544$ |
+| $-0{,}1$ | $4{,}642$ |
+
+Os dois lados concordam em **crescer sem limite**. Isso não é um número, então
+a derivada não existe. Mas a curva tem uma direção bem definida na origem: a
+vertical. É a reta tracejada da figura.
+
+**Contraexemplo, para delimitar.** $\sqrt{x}$ em $a = 4$ não tem tangente
+vertical: a lição anterior calculou $f'(4) = \frac{1}{4}$, um número. A raiz
+quadrada só fica vertical em $x = 0$, e ali só o lado direito existe, porque o
+domínio é $[0, +\infty[$. O quociente pela direita é
+$\frac{\sqrt{h}}{h} = \frac{1}{\sqrt{h}}$, que cresce sem limite: com
+$h = 0{,}0001$ vale 100. A raiz quadrada **começa na vertical**, e é por isso
+que a fórmula $\frac{1}{2\sqrt{x}}$ não existe em $x = 0$ — o denominador
+zeraria.
+
+**Uma variação importante.** Se os dois lados crescem sem limite com **sinais
+opostos**, a curva também fica vertical, mas forma um bico apontando para cima
+ou para baixo. É o caso de $\sqrt[3]{x^2}$ em 0: o quociente
+$\frac{h^{2/3}}{h} = h^{-1/3}$ vale $+100$ com $h = 0{,}001$ e $-100$ com
+$h = -0{,}001$. Alguns livros chamam isso de **cúspide**. Para o que interessa
+aqui, o veredito é o mesmo: a derivada não existe.
+
+### Caso 3: o salto
+
+> Se $f$ é **descontínua** em $a$, então $f$ **não é derivável** em $a$.
+
+Este caso não precisa de conta nova: ele é uma consequência do resultado
+seguinte, e vale enunciá-lo com cuidado.
+
+### Derivável implica contínua
+
+O exercício 27 da lição anterior provou isto, e a prova cabe em três linhas.
+Para $h \neq 0$, a diferença $f(a+h) - f(a)$ pode ser escrita como um produto,
+multiplicando e dividindo por $h$:
+
+$$
+f(a+h) - f(a) = \frac{f(a+h) - f(a)}{h} \times h.
+$$
+
+**O que mudou na escrita:** a diferença virou um produto de dois fatores. **O
+que permaneceu:** o valor, porque multiplicar por $\frac{h}{h} = 1$ não muda
+nada. Conferindo com $f(x) = x^2$, $a = 2$, $h = 0{,}001$: a diferença é
+$2{,}001^2 - 4 = 0{,}004001$, e o produto é
+$4{,}001 \times 0{,}001 = 0{,}004001$.
+
+Agora faça $h \to 0$. Se $f$ é derivável em $a$, o primeiro fator tende a
+$f'(a)$, que é um número. O segundo fator tende a 0. Pela propriedade do limite
+do produto, a diferença tende a $f'(a) \times 0 = 0$. Ou seja,
+$f(a+h) \to f(a)$: a função é contínua em $a$.
+
+> **Toda função derivável em $a$ é contínua em $a$.**
+
+Lida de trás para a frente, a frase diz: **se $f$ não é contínua em $a$, então
+não é derivável em $a$**. É o caso 3. Num salto, a diferença $f(a+h) - f(a)$
+não vai a zero por um dos lados; então o quociente, que é essa diferença
+dividida por um $h$ que vai a zero, cresce sem limite por aquele lado. Foi o
+que a terceira figura mostrou: inclinações 5, 21, e crescendo.
+
+**A recíproca é falsa.** Contínua **não** implica derivável. O V é contínuo em 0
+e não é derivável ali; a raiz cúbica também. A tabela resume:
+
+| | Contínua em $a$? | Derivável em $a$? |
+|---|---|---|
+| $x^2$ em 0 | sim | sim |
+| $\lvert x \rvert$ em 0 (bico) | sim | **não** |
+| $\sqrt[3]{x}$ em 0 (vertical) | sim | **não** |
+| salto em $a$ | **não** | **não** |
+
+A coluna da direita nunca tem “sim” onde a da esquerda tem “não”. É a única
+combinação proibida.
+
+## 9. Resolvendo o problema da meta de estoque
+
+Volte a $C(x) = 3\,\lvert x - 500 \rvert$. Reescrevendo o módulo sem barras,
+como a lição de função modular ensinou:
+
+$$
+C(x) = \begin{cases}
+3(x - 500), & \text{se } x \ge 500 \\[4pt]
+3(500 - x), & \text{se } x < 500
+\end{cases}
+$$
+
+Cada parte é uma reta, e a derivada de uma reta é a inclinação dela (exercício
+26 da lição anterior). Então:
+
+- para $x > 500$, $C'(x) = 3$: cada unidade a mais custa R\$ 3 a mais;
+- para $x < 500$, $C'(x) = -3$: cada unidade a mais **reduz** o custo em R\$ 3;
+- em $x = 500$, as derivadas laterais são 3 e $-3$. Não são iguais, e **$C'(500)$
+  não existe**.
+
+O que isso significa para o gestor? Que não há “taxa de variação do custo na
+meta”. Há duas taxas, uma para cada lado, e a pergunta “quanto muda o custo
+por unidade quando estou na meta?” precisa de um complemento: **para que
+lado?** Para cima, R\$ 3 por unidade; para baixo, também R\$ 3 por unidade, só
+que de aumento ao se afastar. O bico é a expressão gráfica de que a meta é o
+ponto de custo mínimo — e a lição de máximos e mínimos vai usar exatamente
+isso: um mínimo pode estar onde a derivada não existe.
+
+### A derivada de $\lvert x \rvert$ fora do zero
+
+O raciocínio do motivador vale para o V puro. Para $x > 0$, $\lvert x \rvert = x$
+e a derivada é 1. Para $x < 0$, $\lvert x \rvert = -x$ e a derivada é $-1$. Em
+$x = 0$ ela não existe. As duas linhas cabem numa fórmula só:
+
+$$
+\left(\lvert x \rvert\right)' = \frac{x}{\lvert x \rvert}, \qquad x \neq 0.
+$$
+
+Conferindo: em $x = -2$, a fórmula dá $\frac{-2}{2} = -1$, e o quociente
+centrado com $h = 0{,}0001$ dá $-1{,}0000$. Em $x = 5$, dá $\frac{5}{5} = 1$.
+A expressão $\frac{x}{\lvert x \rvert}$ é a função que a lição de limite
+estudou em 0 — ela vale $\pm 1$ e não tem limite na origem, o que é outra forma
+de ver que a derivada de $\lvert x \rvert$ falha ali.
+
+## 10. Exemplos resolvidos
+
+### Exemplo 1: um bico fora da origem
+
+Onde $f(x) = \lvert 2x - 6 \rvert$ não é derivável? Qual é a derivada nos
+outros pontos?
+
+A expressão de dentro, $2x - 6$, troca de sinal em $x = 3$. À direita de 3,
+$f(x) = 2x - 6$, com derivada 2. À esquerda, $f(x) = 6 - 2x$, com derivada
+$-2$. Em $x = 3$ as derivadas laterais são 2 e $-2$: bico, e a derivada não
+existe. Conferindo pelo quociente com $h = 0{,}001$: à direita dá $2{,}000$, à
+esquerda dá $-2{,}000$.
+
+### Exemplo 2: uma tangente vertical deslocada
+
+*Pause e tente antes de ler.* A função $f(x) = \sqrt[3]{x - 2}$ é derivável em
+$x = 2$?
+
+É a raiz cúbica movida 2 unidades para a direita, pela lição de transformações
+de gráficos. O quociente em $a = 2$ é
+
+$$
+\frac{\sqrt[3]{2 + h - 2} - \sqrt[3]{0}}{h} = \frac{\sqrt[3]{h}}{h} = h^{-2/3},
+$$
+
+o mesmo da seção 8. Com $h = \pm 0{,}001$ ele vale 100 pelos dois lados, e
+cresce sem limite. Tangente vertical em $x = 2$; **não** derivável ali. Em
+qualquer outro ponto ela é derivável — a lição de [regras de
+derivação](./regras-de-derivacao) dá a fórmula.
+
+### Exemplo 3: emendar duas fórmulas sem bico
+
+*Pause e tente.* A função
+
+$$
+f(x) = \begin{cases}
+x^2, & \text{se } x \le 1 \\[4pt]
+2x + k, & \text{se } x > 1
+\end{cases}
+$$
+
+deve ser derivável em $x = 1$. Que valor de $k$ faz isso acontecer?
+
+Há duas exigências, e a ordem importa.
+
+**Primeira: continuidade.** Derivável implica contínua, então a função precisa
+antes de tudo não saltar em 1. A fórmula de baixo dá $1^2 = 1$. A de cima dá
+$2 \times 1 + k = 2 + k$. Igualando, $2 + k = 1$, logo $k = -1$.
+
+**Segunda: as derivadas laterais.** Pela esquerda, a função é $x^2$, e a
+derivada de $x^2$ em 1 é $2 \times 1 = 2$. Pela direita, a função é $2x - 1$,
+uma reta de inclinação 2. As duas derivadas laterais valem 2. Iguais: a função
+é derivável em 1, com $f'(1) = 2$.
+
+**Conferindo com um número.** Com $k = -1$ e $h = 0{,}001$: o quociente pela
+direita é $\frac{2(1{,}001) - 1 - 1}{0{,}001} = 2{,}000$; pela esquerda,
+$\frac{0{,}999^2 - 1}{-0{,}001} = 1{,}999$. Concordam em 2.
+
+Repare que a continuidade sozinha não garantiria nada. Se a segunda fórmula
+fosse $3x + k$, o mesmo $k$ que cola as partes ($k = -2$) daria derivadas
+laterais 2 e 3: contínua em 1, com bico em 1. **Colar as alturas é uma
+condição; colar as inclinações é outra.** Uma emenda suave exige as duas.
+
+### Exemplo 4: a emenda com dois parâmetros
+
+*Pause e tente.* Encontre $a$ e $b$ para que
+
+$$
+f(x) = \begin{cases}
+x^3, & \text{se } x \le 1 \\[4pt]
+ax + b, & \text{se } x > 1
+\end{cases}
+$$
+
+seja derivável em $x = 1$.
+
+A derivada de $x^3$ é $3x^2$ (lição anterior), que em 1 vale 3. A reta
+$ax + b$ tem inclinação $a$. Para as inclinações colarem, $a = 3$. Para as
+alturas colarem, $1^3 = 3 \times 1 + b$, logo $b = -2$. A reta é $y = 3x - 2$:
+ela é a **tangente** a $x^3$ em $(1, 1)$, pela fórmula $y = f(a) + f'(a)(x-a)$
+da lição anterior. Faz sentido: a única reta que continua $x^3$ sem bico a
+partir de $(1, 1)$ é a que tem a mesma altura e a mesma direção da curva ali.
+Conferindo: quocientes $3{,}000$ à direita e $2{,}997$ à esquerda com
+$h = 0{,}001$, os dois em direção a 3.
+
+### Exemplo 5: o imposto progressivo
+
+*Pause e tente.* Um imposto isenta rendas até R\$ 2.000 e cobra 15% sobre o que
+passa disso:
+
+$$
+I(r) = \begin{cases}
+0, & \text{se } r \le 2000 \\[4pt]
+0{,}15\,(r - 2000), & \text{se } r > 2000
+\end{cases}
+$$
+
+$I$ é contínua em 2000? É derivável ali?
+
+**Contínua**: as duas fórmulas dão 0 em 2000. Sim. Não há salto: ganhar um
+real a mais que 2.000 custa 15 centavos, não um degrau inteiro de imposto.
+
+**Derivável**: pela esquerda a função é constante, derivada 0. Pela direita é
+uma reta de inclinação $0{,}15$. Derivadas laterais 0 e $0{,}15$: diferentes.
+**Não** derivável em 2000; há um bico. É o desenho da lição de função modular
+(o exemplo 4 daquela página era uma faixa de imposto), agora com o nome certo.
+
+A leitura econômica é a mesma do motivador: a taxa marginal de imposto muda
+bruscamente na fronteira da faixa. Abaixo dela, um real a mais não custa nada;
+acima, custa 15 centavos. Não existe “a taxa em R\$ 2.000”.
+
+## 11. Erros comuns
+
+> **Erro 1: “contínua, logo derivável”.** A implicação anda só num sentido.
+> Derivável garante contínua; contínua não garante nada sobre a derivada. O V
+> é o contraexemplo mais simples: contínuo em 0, sem derivada em 0. Se você
+> concluiu que uma função por partes é derivável na fronteira porque as
+> alturas coincidem, faltou conferir as inclinações — veja o exemplo 3.
+
+> **Erro 2: “a derivada de $\lvert x \rvert$ em 0 é 0, por simetria”.** A
+> tentação é dizer que, como há inclinação 1 de um lado e $-1$ do outro, a
+> “média” é 0. Mas a derivada não é uma média de lados: é um limite, e o
+> limite exige que os lados **concordem**. Eles não concordam, e o resultado é
+> “não existe”, não “zero”. Compare com $x\,\lvert x \rvert$, cuja derivada em 0
+> **é** zero — porque ali os dois lados dão 0 de fato, sem média nenhuma.
+
+> **Erro 3: “a tangente vertical é uma derivada infinita, então ela existe”.**
+> A reta tangente existe, sim. A derivada não, porque derivada é um número e
+> “cresce sem limite” não é um número. Escrever $f'(0) = \infty$ para a raiz
+> cúbica é o mesmo abuso que a lição de limites infinitos proibiu: $\infty$
+> descreve um comportamento, não um valor. Diga “o quociente cresce sem
+> limite; a derivada não existe; a tangente é vertical”.
+
+> **Erro 4: “tem módulo, logo tem bico”.** O bico aparece onde a expressão de
+> dentro troca de sinal **e** as inclinações dos dois lados diferem.
+> $x\,\lvert x \rvert$ tem módulo e não tem bico, porque as duas metades chegam
+> à origem com inclinação zero. Sempre calcule as derivadas laterais em vez de
+> julgar pelo símbolo.
+
+> **Erro 5: confundir bico com salto.** Os dois quebram a derivada, mas por
+> motivos diferentes, e a lição de continuidade já separou os dois: no bico o
+> traço não se rompe (a função é contínua); no salto ele se rompe. A
+> consequência prática é que o bico ainda pode ser um máximo ou mínimo da
+> função, como a meta de estoque; o salto é outro tipo de problema.
+
+> **Erro 6: derivar cada parte e esquecer a fronteira.** Numa função por
+> partes, derivar as fórmulas dá $f'$ **dentro** de cada trecho. Na fronteira,
+> nenhuma das duas fórmulas responde sozinha: é preciso comparar as derivadas
+> laterais. O exemplo 5 tem $I'(r) = 0$ de um lado e $0{,}15$ do outro, e
+> nenhum dos dois é $I'(2000)$.
+
+## 12. Perguntas de verificação
+
+1. O que precisa acontecer com as derivadas laterais para que $f$ seja
+   derivável em $a$?
+2. Por que o bico de $\lvert x \rvert$ não é uma descontinuidade, se ele quebra a
+   derivada?
+3. Na raiz cúbica, os dois lados do quociente concordam. Por que, mesmo assim,
+   a derivada não existe em 0?
+4. Explique com as próprias palavras por que “derivável implica contínua”.
+   Onde a prova usa que $f'(a)$ é um número?
+5. Dê um exemplo de função contínua e não derivável num ponto, e um de função
+   derivável que tem módulo na fórmula.
+6. Ao emendar $x^2$ com uma reta em $x = 1$, por que igualar as alturas não
+   garante a ausência de bico?
+7. O que a frase “a taxa marginal muda bruscamente na fronteira da faixa”
+   tem a ver com derivada lateral?
+8. A fórmula $\left(\lvert x \rvert\right)' = \frac{x}{\lvert x \rvert}$ está
+   certa em $x = 0$?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. As duas precisam existir como números e ser iguais. Se uma delas não é um
+   número, ou se são diferentes, o limite do quociente não existe e a função
+   não é derivável ali.
+2. Continuidade e derivabilidade fazem perguntas diferentes. A continuidade
+   pergunta se os **valores** dos dois lados chegam ao mesmo lugar, e no V
+   chegam: 0 e 0. A derivabilidade pergunta se as **inclinações** dos dois
+   lados chegam ao mesmo lugar, e no V não chegam: 1 e $-1$. O traço não se
+   rompe; a direção, sim.
+3. Porque concordar em “crescer sem limite” não é concordar num número.
+   Derivada é o limite do quociente, e esse limite tem que ser um número real.
+   A curva tem direção definida (vertical), mas inclinação vertical não é um
+   número.
+4. A diferença $f(a+h) - f(a)$ é igual ao quociente vezes $h$. Quando $h$ vai a
+   zero, o quociente vai a $f'(a)$ e o $h$ vai a zero, então o produto vai a
+   $f'(a) \times 0 = 0$. Logo $f(a+h)$ chega a $f(a)$, que é ser contínua. A
+   prova usa que $f'(a)$ é um número no passo “número vezes zero é zero”: se o
+   quociente crescesse sem limite, o produto “infinito vezes zero” não teria
+   valor definido — e é exatamente o que acontece no salto.
+5. Contínua e não derivável: $\lvert x \rvert$ em 0, ou $\sqrt[3]{x}$ em 0.
+   Derivável com módulo na fórmula: $x\,\lvert x \rvert$ em 0, com derivada 0.
+6. Porque a altura é uma condição e a inclinação é outra. Igualar as alturas
+   dá continuidade. As inclinações só coincidem se a reta tiver inclinação
+   igual à derivada de $x^2$ em 1, que é 2. Uma reta de inclinação 3 colaria as
+   alturas e deixaria um bico.
+7. A taxa marginal é a derivada do imposto em relação à renda. “Muda
+   bruscamente na fronteira” quer dizer que a derivada pela esquerda e a pela
+   direita são diferentes — 0 e $0{,}15$ no exemplo 5. É a definição de bico.
+8. Não. Em $x = 0$ a fórmula dá $\frac{0}{0}$, que não existe, e a derivada
+   também não existe ali. A fórmula está certa exatamente onde vale a
+   condição $x \neq 0$ escrita ao lado dela.
+
+</details>
+
+## 13. Exercícios
+
+### 1. Reconhecimento
+
+1. Para cada função, diga se ela é derivável em $a$ e, se não for, qual dos
+   três casos ocorre (bico, tangente vertical ou salto):
+   a) $\lvert x + 2 \rvert$ em $a = -2$;
+   b) $x^2$ em $a = -2$;
+   c) $\sqrt[3]{x + 1}$ em $a = -1$;
+   d) o frete que cobra R\$ 20 até 5 kg e R\$ 30 acima disso, em $a = 5$.
+2. Em cada gráfico descrito, há derivada no ponto indicado? a) Uma curva lisa
+   que passa pelo vértice de uma parábola. b) Um V invertido no vértice. c)
+   Uma curva que atravessa o ponto subindo na vertical.
+
+### 2. Explicação
+
+3. Explique, sem contas, por que nenhuma reta pode ser chamada de tangente ao
+   V na origem.
+4. Um colega diz: “a raiz quadrada é contínua em 0, então é derivável em 0”.
+   Diga o que está errado e o que a raiz quadrada faz em 0.
+5. Por que, numa função por partes, a derivada na fronteira não pode ser
+   obtida derivando só uma das fórmulas?
+
+### 3. Aplicação direta
+
+6. Calcule as derivadas laterais de $f(x) = \lvert x^2 - 4 \rvert$ em $x = 2$ e
+   diga se $f$ é derivável ali.
+7. Escreva a derivada de $g(x) = \lvert x - 5 \rvert$ para $x \neq 5$ como
+   função por partes, e diga o que acontece em 5.
+8. A função $f(x) = \lvert x \rvert^3$ é derivável em 0? Calcule o quociente de
+   diferenças pelos dois lados.
+
+### 4. Variação
+
+9. Encontre $k$ para que
+   $$
+   f(x) = \begin{cases}
+   3x + k, & \text{se } x < 2 \\[4pt]
+   x^2 + 1, & \text{se } x \ge 2
+   \end{cases}
+   $$
+   seja contínua em 2. Com esse $k$, ela é derivável em 2?
+10. Encontre $a$ e $b$ para que $f(x) = ax + b$ se $x < 2$, e $f(x) = x^2$ se
+    $x \ge 2$, seja derivável em 2.
+11. A função $h(x) = (x - 1)\,\lvert x - 1 \rvert$ tem módulo na fórmula. Ela é
+    derivável em 1?
+
+### 5. Problema misto
+
+12. Um plano de celular cobra R\$ 40 fixos por até 5 GB e R\$ 8 por cada GB
+    adicional, cobrado proporcionalmente. a) Escreva o custo $C(g)$ em função
+    dos gigabytes usados. b) $C$ é contínua em 5? c) Calcule as derivadas
+    laterais em 5 e interprete cada uma em reais por GB. d) Existe $C'(5)$?
+13. A função $w(x) = \lvert x - 1 \rvert + \lvert x + 1 \rvert$ tem dois módulos.
+    a) Reescreva-a sem barras, em três trechos. b) Onde ela não é derivável?
+    c) Qual é a derivada em cada trecho?
+
+### 6. Justificativa
+
+14. Mostre que, se $f$ tem um salto em $a$ (os limites laterais de $f$ existem e
+    são diferentes), então pelo menos uma das derivadas laterais não é um
+    número. Use a escrita $f(a+h) - f(a) = \frac{f(a+h) - f(a)}{h} \times h$.
+15. A função $f(x) = \sqrt[5]{x}$ é derivável em 0? Generalize: para que
+    valores de $n$ ímpar a função $\sqrt[n]{x}$ tem tangente vertical na
+    origem?
+
+<details>
+<summary>Dica</summary>
+
+- **Exercício 8:** para $h > 0$, $\lvert h \rvert^3 = h^3$; para $h < 0$,
+  $\lvert h \rvert^3 = -h^3$. Divida por $h$ em cada caso e veja o que sobra.
+- **Exercício 13:** os pontos em que cada módulo troca de sinal são $1$ e $-1$.
+  Nos trechos $x < -1$, $-1 \le x < 1$ e $x \ge 1$, cada módulo tem uma
+  fórmula fixa.
+- **Exercício 14:** num salto, a diferença $f(a+h) - f(a)$ não vai a zero por
+  um dos lados. O que acontece com um quociente cujo numerador fica longe de
+  zero enquanto o denominador vai a zero?
+
+</details>
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) Não derivável: bico (derivadas laterais 1 e $-1$). &nbsp; b) Derivável,
+   $f'(-2) = -4$: a parábola é lisa em todo ponto. &nbsp; c) Não derivável:
+   tangente vertical (é a raiz cúbica movida para a esquerda). &nbsp; d) Não
+   derivável: salto, porque a função é descontínua em 5 e descontínua nunca
+   é derivável.
+2. a) Sim, e vale 0: a tangente é horizontal. &nbsp; b) Não: bico, com
+   derivadas laterais de sinais trocados. &nbsp; c) Não: tangente vertical.
+3. Tangente é a posição-limite das secantes. Pela direita, todas as secantes
+   são a semirreta $y = x$; pela esquerda, todas são $y = -x$. Os dois lados
+   perseguem retas diferentes, então não há uma posição-limite comum. Qualquer
+   reta escolhida seria a tangente de um lado só.
+4. O erro é a implicação invertida: contínua não garante derivável. Em 0, a
+   raiz quadrada só tem o lado direito (o domínio é $[0, +\infty[$), e o
+   quociente $\frac{\sqrt{h}}{h} = \frac{1}{\sqrt{h}}$ cresce sem limite. A
+   curva começa na vertical; a derivada não existe em 0.
+5. Porque cada fórmula descreve a função de um lado só. Na fronteira, o limite
+   do quociente precisa dos dois lados, e cada lado é governado por uma fórmula
+   diferente. A derivada na fronteira existe somente quando as duas fórmulas
+   concordam na inclinação — e isso tem que ser conferido, não suposto.
+6. Para $x$ perto de 2 e maior que 2, $x^2 - 4 > 0$ e $f(x) = x^2 - 4$: o
+   quociente é $\frac{(2+h)^2 - 4}{h} = 4 + h \to 4$. Para $x$ menor que 2,
+   $x^2 - 4 < 0$ e $f(x) = 4 - x^2$: o quociente é $-(4 + h) \to -4$. Derivadas
+   laterais 4 e $-4$: bico, **não** derivável. Se você achou 4 dos dois lados,
+   esqueceu que o módulo reflete o pedaço negativo para cima e troca o sinal
+   da inclinação.
+7. $g'(x) = 1$ se $x > 5$ e $g'(x) = -1$ se $x < 5$; numa fórmula só,
+   $g'(x) = \frac{x - 5}{\lvert x - 5 \rvert}$. Em 5, bico: $g'(5)$ não existe.
+8. Para $h > 0$: $\frac{h^3}{h} = h^2 \to 0$. Para $h < 0$:
+   $\frac{-h^3}{h} = -h^2 \to 0$. Os dois lados dão 0: $f$ **é** derivável em 0,
+   com $f'(0) = 0$. É outro exemplo de módulo sem bico — o cubo achata as duas
+   metades até a horizontal antes de elas se encontrarem.
+9. Continuidade: $3 \times 2 + k = 2^2 + 1$, ou seja, $6 + k = 5$, logo
+   $k = -1$. Derivadas laterais: à esquerda a reta tem inclinação 3; à direita,
+   a derivada de $x^2 + 1$ em 2 é $2 \times 2 = 4$. São 3 e 4: contínua, mas
+   **não** derivável em 2 — bico. Conferindo pelo quociente com $h = 0{,}001$:
+   $4{,}001$ à direita e $3{,}000$ à esquerda.
+10. Inclinação: $a$ deve ser a derivada de $x^2$ em 2, que é 4. Altura:
+    $4 \times 2 + b = 4$, logo $b = -4$. A reta é $y = 4x - 4$, a tangente à
+    parábola em $(2, 4)$. Se você achou só o $b$ igualando alturas e deixou $a$
+    livre, faltou a segunda condição.
+11. Sim. O quociente em 1 é $\frac{h\,\lvert h \rvert}{h} = \lvert h \rvert \to 0$
+    pelos dois lados. $h'(1) = 0$. É o $x\,\lvert x \rvert$ da seção 8 movido
+    para a direita.
+12. a) $C(g) = 40$ se $g \le 5$, e $C(g) = 40 + 8(g - 5)$ se $g > 5$. &nbsp; b)
+    Sim: as duas fórmulas dão 40 em $g = 5$. &nbsp; c) Pela esquerda, 0 reais
+    por GB: dentro da franquia, usar mais não custa nada. Pela direita, 8 reais
+    por GB: cada gigabyte além da franquia custa R\$ 8. &nbsp; d) Não: 0 e 8 são
+    diferentes, e há um bico em 5. O custo é contínuo (não há degrau) e ainda
+    assim a taxa muda de repente.
+13. a) Para $x < -1$: $(1 - x) + (-x - 1) = -2x$. Para $-1 \le x < 1$:
+    $(1 - x) + (x + 1) = 2$. Para $x \ge 1$: $(x - 1) + (x + 1) = 2x$. &nbsp; b)
+    Em $-1$ (derivadas laterais $-2$ e $0$) e em $1$ (derivadas laterais $0$ e
+    $2$). Conferindo em 1 com $h = 0{,}001$: $2{,}000$ à direita e $0{,}000$ à
+    esquerda. &nbsp; c) $-2$, depois $0$, depois $2$. O gráfico é um vale de
+    fundo plano entre $-1$ e $1$, com dois bicos nas bordas do fundo.
+14. Suponha que o limite lateral de $f$ pela direita em $a$ seja $L \neq f(a)$.
+    Então, para $h$ pequeno e positivo, a diferença $f(a+h) - f(a)$ fica perto
+    de $L - f(a)$, que não é zero. O quociente é essa diferença dividida por
+    $h$, e $h$ vai a zero: um número que fica longe de zero, dividido por um
+    número cada vez menor, cresce sem limite. Logo a derivada lateral direita
+    não é um número. O mesmo argumento vale pela esquerda quando é o lado
+    esquerdo que salta. Em qualquer caso, $f$ não é derivável em $a$.
+15. O quociente é $\frac{h^{1/5}}{h} = h^{-4/5} = \frac{1}{\sqrt[5]{h^4}}$, positivo
+    pelos dois lados e crescendo sem limite: com $h = 0{,}001$ vale cerca de
+    251. Tangente vertical em 0; não derivável. Em geral, para $n$ ímpar maior
+    que 1, o quociente é $h^{1/n - 1}$, e o expoente $\frac{1}{n} - 1$ é
+    negativo, então o quociente cresce sem limite. Toda raiz de índice ímpar
+    maior que 1 começa a origem na vertical. Com $n = 1$ a “raiz” é o próprio
+    $x$, com derivada 1.
+
+</details>
+
+## 14. Revisão curta
+
+- A derivada em $a$ existe quando as **derivadas laterais** existem como
+  números e são iguais. É a regra da lição de limite aplicada ao quociente de
+  diferenças.
+- Três coisas quebram a derivada: o **bico** (laterais diferentes, como
+  $\lvert x \rvert$ em 0), a **tangente vertical** (quociente crescendo sem
+  limite, como $\sqrt[3]{x}$ em 0) e o **salto** (função descontínua).
+- **Derivável implica contínua**, porque $f(a+h) - f(a)$ é o quociente vezes
+  $h$, e “número vezes zero” é zero. A recíproca é falsa: o V é contínuo e não
+  derivável.
+- Módulo não é sinônimo de bico. $x\,\lvert x \rvert$ tem módulo e é derivável
+  em 0. Julgue pelas derivadas laterais, não pelo símbolo.
+- Para emendar duas fórmulas sem bico, cole as **alturas** (continuidade) e
+  cole as **inclinações** (derivadas laterais iguais). Uma condição não
+  substitui a outra.
+- Fora do zero, $\left(\lvert x \rvert\right)' = \frac{x}{\lvert x \rvert}$.
+
+Antes de avançar, verifique se você consegue fazer três coisas: dizer, sem
+calcular, o que acontece com a derivada de $\lvert x - 7 \rvert$ em 7 e por quê;
+explicar a diferença entre o bico e a tangente vertical em termos de secantes;
+e emendar $x^2$ com uma reta em $x = 3$ sem deixar bico.
+
+A lição seguinte, [regras de derivação](./regras-de-derivacao), volta às
+funções lisas e transforma o padrão $1$, $2x$, $3x^2$ da lição anterior numa
+fórmula geral para $x^n$. Os pontos desta página — bicos, verticais e saltos —
+vão reaparecer na lição de [máximos e mínimos](./maximos-e-minimos), como
+candidatos que a fórmula não enxerga e que o gráfico não deixa esquecer.

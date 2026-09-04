@@ -1,0 +1,877 @@
+---
+title: "O sinal da derivada: onde a função sobe e onde desce"
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+import NumberLine from '@site/src/components/NumberLine';
+
+# O sinal da derivada: onde a função sobe e onde desce
+
+## 1. Problema motivador: até que lote vale a pena produzir mais?
+
+Volte à serigrafia da página de [crescimento, sinal e
+simetria](../funcoes/crescimento-sinal-e-simetria). O lucro de um lote de $x$
+camisetas é
+
+$$
+L(x) = -x^2 + 100x - 1600,
+$$
+
+em reais. Naquela página o dono fez três perguntas, e respondemos as três
+**olhando o gráfico**: a parábola sobe até $x = 50$ e desce depois. Então
+aumentar a produção vale a pena até 50 camisetas, e a partir daí cada camiseta a
+mais **diminui** o lucro.
+
+Só que a resposta dependeu de duas coisas que nem sempre estão à mão. Primeiro,
+de a curva ser uma parábola, cujo vértice a lição de [função
+quadrática](../funcoes/funcao-quadratica) ensinou a calcular. Segundo, de ter um
+desenho confiável. Troque a fórmula por esta, de uma oficina em que o custo
+cresce mais depressa nos lotes grandes:
+
+$$
+P(x) = 2x^3 - 9x^2 + 12x - 3,
+$$
+
+com $x$ em centenas de peças e $P$ em milhares de reais. Não é parábola: não há
+vértice para calcular. E sem uma tabela extensa não sabemos nem se ela sobe,
+nem onde para de subir. A pergunta do dono continua a mesma:
+
+> **Em que faixa de produção o lucro ainda está subindo?** E onde ele começa a
+> cair?
+
+A lição anterior deu a ferramenta que responde isso sem desenho: a derivada
+mede a inclinação da curva em cada ponto. Inclinação positiva é subida. Esta
+página transforma essa observação num método, e o método vai responder à
+pergunta para $L$, para $P$ e para qualquer função que saibamos derivar.
+
+## 2. Mapa das ideias
+
+- onde a derivada é **positiva**, a função é **crescente**; onde é
+  **negativa**, é **decrescente**;
+- um **ponto crítico** é uma entrada em que a derivada vale zero ou não existe;
+  é o único lugar em que o sinal da derivada pode trocar;
+- o **quadro de sinais da derivada** organiza, trecho a trecho, onde $f'$ é
+  positiva e onde é negativa — é o mesmo quadro das inequações, aplicado a
+  $f'$ em vez de a $f$;
+- o sinal de $f$ e o sinal de $f'$ são perguntas **diferentes**: a primeira diz
+  se a curva está acima do eixo; a segunda, se ela sobe;
+- $f'(a) = 0$ **não** garante máximo nem mínimo em $a$: é candidato, não
+  veredicto.
+
+## 3. Para que serve
+
+- decidir em que faixa de produção aumentar a quantidade ainda melhora o lucro;
+- saber em que período uma população, um estoque ou uma temperatura está
+  subindo, e quando começa a cair;
+- localizar os candidatos a máximo e mínimo de uma função, o que a próxima
+  lição usa para achar o melhor valor;
+- verificar se uma função é sempre crescente, o que garante que ela tem
+  inversa;
+- e, dentro da matemática, desenhar o gráfico de uma função sem tabela de
+  pontos: os trechos de subida e descida são metade do esboço.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [crescimento, sinal e simetria](../funcoes/crescimento-sinal-e-simetria):
+o que significa uma função ser crescente num intervalo?** Que entradas maiores
+produzem saídas maiores: andando para a direita, a curva sobe. E a página
+insistiu num ponto que volta aqui com força: **crescente não é o mesmo que
+positiva**. A serigrafia entre 20 e 50 camisetas está no lucro e melhorando;
+entre 50 e 80, no lucro e piorando.
+
+**2. De [inequações do 2º grau](../equacoes/inequacoes-do-segundo-grau): como
+se descobre o sinal de $(x-2)(x-3)$ em cada trecho da reta?** Pelo quadro de
+sinais: as raízes 2 e 3 cortam a reta em três trechos, e em cada trecho o sinal
+de cada fator é fixo. Um ponto de teste por trecho decide: em $x = 0$ o produto
+é $(-2)(-3) = 6$, positivo; em $x = 2{,}5$ é $(0{,}5)(-0{,}5)$, negativo; em
+$x = 4$ é $(2)(1)$, positivo. Vamos montar exatamente esse quadro, só que para
+a derivada.
+
+**3. De [raízes racionais](../funcoes/raizes-racionais) e [fator comum em
+evidência](../algebra/fator-comum-em-evidencia): como fatorar
+$6x^2 - 18x + 12$?** Primeiro o fator comum 6: $6(x^2 - 3x + 2)$. Depois o
+trinômio: duas raízes cuja soma é 3 e cujo produto é 2, isto é, 1 e 2. Fica
+$6(x-1)(x-2)$. É a derivada de $P$ do motivador, e fatorar é o que vai deixar
+o sinal dela legível.
+
+**4. De [a derivada](./a-derivada): o que $f'(a)$ mede no gráfico?** A
+inclinação da reta tangente em $(a, f(a))$. Inclinação positiva é uma tangente
+que sobe da esquerda para a direita; negativa, uma que desce; zero, uma
+horizontal.
+
+**5. De [regras de derivação](./regras-de-derivacao): qual é a derivada de
+$-x^2 + 100x - 1600$?** Termo a termo: $-2x + 100 + 0$. A página já leu o sinal
+de $V'$ da caixa numa tabela de quatro valores e concluiu que o máximo estava
+entre 3,5 e 4. Esta lição faz isso de forma sistemática, sem depender de
+escolher bem os valores da tabela.
+
+O item 4 é a ponte inteira da página. Se ele está firme, o resto é organizar.
+
+## 5. Intuição: tangente que sobe, curva que sobe
+
+Imagine que você caminha sobre o gráfico da esquerda para a direita. Em cada
+passo, a tangente é a direção em que o seu pé aponta naquele instante. Se a
+tangente aponta para cima, o próximo passo é de subida; se aponta para baixo, é
+de descida.
+
+A derivada é o número que diz para onde a tangente aponta: $f'(a)$ positivo é
+“para cima”, negativo é “para baixo”. Então saber o sinal de $f'$ em cada
+ponto é saber, ponto a ponto, se a caminhada sobe ou desce.
+
+Há uma sutileza, e ela merece ser dita agora, porque vai voltar. A tangente em
+**um** ponto só fala daquele ponto. Para dizer que a função é crescente num
+**trecho inteiro**, precisamos que a derivada seja positiva em **todos** os
+pontos do trecho. Por isso o método desta página não testa um ponto: ele
+descobre os lugares em que o sinal de $f'$ pode mudar e garante o sinal em cada
+trecho entre eles.
+
+E onde o sinal de $f'$ pode mudar? Só onde $f'$ **vale zero** ou **não
+existe**. Uma derivada que existe e não é zero num ponto continua com o mesmo
+sinal por perto dele. Isso vale para as funções que estudamos, cujas derivadas
+são contínuas onde existem, e é o que autoriza o quadro de sinais: entre dois
+zeros consecutivos de $f'$, o sinal não troca.
+
+## 6. Modelo visual: a função em cima, a derivada embaixo
+
+Tome $f(x) = x^3 - 3x$. A derivada, pela regra da potência, é
+$f'(x) = 3x^2 - 3$. As duas figuras abaixo estão alinhadas: o mesmo $x$ fica na
+mesma posição horizontal nas duas.
+
+<CartesianPlane
+  xMin={-2.6}
+  xMax={2.6}
+  yMin={-3.2}
+  yMax={3.2}
+  xUnit={64}
+  yUnit={40}
+  functions={[{f: (x) => x * x * x - 3 * x, tone: 1}]}
+  lines={[
+    {m: 0, n: 2, dashed: true, tone: 3},
+    {m: 0, n: -2, dashed: true, tone: 3},
+  ]}
+  points={[
+    {at: [-1, 2], label: '(-1,\\ 2)', tone: 3, dx: -36, dy: -10},
+    {at: [1, -2], label: '(1,\\ -2)', tone: 3, dx: 36, dy: 12},
+  ]}
+  labels={[
+    {at: [-1.9, -2.2], math: '\\text{sobe}', tone: 1},
+    {at: [0, 0.6], math: '\\text{desce}', tone: 2},
+    {at: [1.9, 2.2], math: '\\text{sobe}', tone: 1},
+  ]}
+  axisLabels={['x', 'f(x)']}
+  caption="f(x) = x³ − 3x. A curva sobe até x = −1, desce entre −1 e 1, e volta a subir depois de 1. Nos dois pontos de virada a tangente é horizontal."
+/>
+
+<CartesianPlane
+  xMin={-2.6}
+  xMax={2.6}
+  yMin={-4}
+  yMax={10}
+  xUnit={64}
+  yUnit={19}
+  yStep={2}
+  functions={[{f: (x) => 3 * x * x - 3, tone: 2}]}
+  points={[
+    {at: [-1, 0], label: '-1', tone: 3, dx: -4, dy: -16},
+    {at: [1, 0], label: '1', tone: 3, dx: 4, dy: -16},
+  ]}
+  labels={[
+    {at: [-2, 6.5], math: "f' \\text{ positiva}", tone: 1},
+    {at: [0, -2.6], math: "f' \\text{ negativa}", tone: 2},
+    {at: [2, 6.5], math: "f' \\text{ positiva}", tone: 1},
+  ]}
+  axisLabels={['x', "f'(x)"]}
+  caption="A derivada f′(x) = 3x² − 3. Ela é positiva à esquerda de −1, negativa entre −1 e 1, positiva à direita de 1 — exatamente onde a curva de cima sobe, desce e sobe."
+/>
+
+Compare as duas figuras trecho a trecho:
+
+| Trecho | Sinal de $f'$ | O que $f$ faz |
+|---|---|---|
+| $x$ menor que $-1$ | positivo | sobe |
+| entre $-1$ e $1$ | negativo | desce |
+| $x$ maior que $1$ | positivo | sobe |
+
+Os pontos $-1$ e $1$ são onde $f'$ **vale zero**: a parábola de baixo toca o
+eixo, e a curva de cima tem tangente horizontal. São as fronteiras entre subida
+e descida.
+
+Toda a informação da tabela cabe numa reta numérica, que é o desenho que vamos
+usar daqui em diante:
+
+<NumberLine
+  min={-3}
+  max={3}
+  unit={64}
+  spans={[
+    {from: -3, to: -1, tone: 1, continuesLeft: true},
+    {from: -1, to: 1, tone: 2},
+    {from: 1, to: 3, tone: 1, continuesRight: true},
+  ]}
+  marks={[
+    {at: -1, label: '-1', tone: 3},
+    {at: 1, label: '1', tone: 3},
+  ]}
+  caption="O sinal de f′ = 3x² − 3 na reta: positivo, negativo, positivo. As marcas são os pontos em que f′ vale zero."
+/>
+
+Leia a reta assim: faixa do primeiro tom é subida de $f$; faixa do segundo tom
+é descida. É o quadro de sinais das inequações, com uma leitura nova em cima.
+
+## 7. Ponte para a formalização: por que o sinal num ponto vira subida num trecho
+
+A intuição da seção 5 disse: tangente para cima, próximo passo de subida. Vale
+ser honesto sobre o que isso prova e o que não prova.
+
+**O que a derivada num ponto garante.** Se $f'(a)$ é positivo, a secante entre
+$a$ e $a + h$ tem inclinação próxima de $f'(a)$ para $h$ pequeno, porque a
+inclinação da secante se aproxima de $f'(a)$ quando $h$ encolhe. Então, para
+$h$ pequeno e positivo, $f(a+h)$ é maior que $f(a)$. A função sobe **logo
+depois** de $a$.
+
+**O que falta.** “Logo depois de $a$” é uma vizinhança pequena. Para afirmar
+que $f$ é crescente num intervalo inteiro $]a, b[$, precisamos passar de “sobe
+um pouquinho perto de cada ponto” para “sobe entre dois pontos quaisquer do
+intervalo”. Essa passagem é verdadeira, mas exige um teorema — o **teorema do
+valor médio**, que é o assunto da lição [teorema do valor
+médio](./teorema-do-valor-medio). Ele diz que, entre dois pontos quaisquer, a
+taxa média é igual à derivada em algum ponto do meio. Se a derivada é positiva
+em todo o intervalo, a taxa média entre dois pontos quaisquer é positiva, e a
+função sobe entre eles.
+
+Esta página **usa** o resultado e deixa a prova para aquela lição. Não é
+diferente do que fizemos com a regra da potência para expoentes fracionários:
+enunciar, verificar em casos concretos, e demonstrar duas lições adiante.
+
+## 8. Formalização: o critério do sinal e o ponto crítico
+
+> **Critério do sinal da derivada.** Seja $f$ derivável em todo ponto de um
+> intervalo aberto $I$.
+>
+> - Se $f'(x)$ é **positivo** para todo $x$ em $I$, então $f$ é **crescente**
+>   em $I$.
+> - Se $f'(x)$ é **negativo** para todo $x$ em $I$, então $f$ é
+>   **decrescente** em $I$.
+> - Se $f'(x)$ é **zero** para todo $x$ em $I$, então $f$ é **constante** em
+>   $I$.
+
+**Exemplo.** Para $f(x) = x^3 - 3x$, temos $f'(x) = 3x^2 - 3$, que é positivo
+para todo $x$ maior que 1 (em $x = 2$, vale 9; em $x = 10$, vale 297; e a
+parábola só cresce dali em diante). Então $f$ é crescente em $]1, +\infty[$.
+Confira com dois pontos: $f(2) = 2$ e $f(3) = 18$. Entrada maior, saída maior.
+
+**Contraexemplo.** O critério pede o sinal em **todo** o intervalo. Para a
+mesma $f$, a derivada é positiva em $x = -2$ (vale 9) e positiva em $x = 2$
+(vale 9). Mas $f$ **não** é crescente em $]-2, 2[$: entre $-1$ e $1$ ela desce,
+e $f(-1) = 2$ é maior que $f(1) = -2$. Dois pontos com derivada positiva não
+dizem nada sobre o que acontece entre eles. Por isso o método não testa
+pontos soltos: ele localiza primeiro onde o sinal pode trocar.
+
+### O ponto crítico
+
+> Um **ponto crítico** de $f$ é uma entrada $a$ do domínio em que
+> $f'(a) = 0$ ou em que $f'(a)$ **não existe**.
+
+Os pontos críticos são os únicos lugares em que o sinal de $f'$ pode mudar.
+Fora deles, a derivada existe e é diferente de zero, e uma derivada contínua
+não troca de sinal sem passar por zero.
+
+**Exemplo.** Para $f(x) = x^3 - 3x$, os pontos críticos são $-1$ e $1$, as
+raízes de $3x^2 - 3 = 3(x-1)(x+1)$. Para $g(x) = \lvert x \rvert$, o ponto
+crítico é $0$: a derivada não existe ali, como a lição [quando a derivada não
+existe](./quando-a-derivada-nao-existe) mostrou. E o sinal de $g'$ troca
+exatamente em 0, de $-1$ para $1$.
+
+**Contraexemplo.** $x = 2$ **não** é ponto crítico de $f(x) = x^3 - 3x$:
+$f'(2) = 9$, que existe e não é zero. Nenhuma mudança de comportamento pode
+acontecer em 2. E o ponto $x = 1$ **não** é ponto crítico de $h(x) = \frac{1}{x-1}$,
+por um motivo diferente: 1 não está no **domínio** de $h$. Ele corta a reta em
+dois trechos, e o quadro precisa marcá-lo, mas não é candidato a nada — não
+existe $h(1)$ para ser máximo ou mínimo.
+
+Dois avisos que a próxima lição vai retomar:
+
+- ponto crítico é **candidato** a máximo ou mínimo, não veredicto. Em
+  $f(x) = x^3$, a derivada $3x^2$ vale zero em 0, e a função não tem máximo
+  nem mínimo ali: ela sobe antes e sobe depois, com uma parada de um instante;
+- o quadro de sinais tem que incluir os pontos onde $f'$ **não existe**. Quem
+  procura só as raízes de $f'$ deixa passar o bico de $\lvert x \rvert$ e o
+  mínimo de $x^{2/3}$, que aparecem nos exemplos.
+
+### O método
+
+Para descobrir onde $f$ sobe e onde desce:
+
+1. **Derive.** Calcule $f'(x)$ e, se puder, **fatore**. O sinal de um produto
+   se lê fator a fator, e o de uma soma não.
+2. **Ache os pontos críticos.** Resolva $f'(x) = 0$ e liste os pontos do
+   domínio em que $f'$ não existe. Anote também os pontos que **não** estão no
+   domínio de $f$ (denominador que zera): eles cortam a reta, embora não sejam
+   críticos.
+3. **Monte o quadro de sinais de $f'$.** Marque todos esses pontos na reta e,
+   em cada trecho entre dois consecutivos, escolha um ponto de teste e calcule
+   o sinal de $f'$ ali.
+4. **Leia.** Trecho com $f'$ positiva: $f$ crescente. Trecho com $f'$
+   negativa: $f$ decrescente. Escreva os intervalos.
+5. **Confira com dois pontos.** Escolha duas entradas num trecho de subida e
+   veja se a saída realmente aumentou. É a verificação que pega a maior parte
+   dos erros de sinal.
+
+O passo 3 é o quadro de sinais das inequações. A única novidade é que a
+expressão no quadro é $f'$, e a leitura no passo 4 é sobre $f$.
+
+## 9. Resolvendo o problema da serigrafia e da oficina
+
+**A serigrafia.** $L(x) = -x^2 + 100x - 1600$, com $x$ entre 0 e 100.
+
+1. Derivada: $L'(x) = -2x + 100$.
+2. Ponto crítico: $-2x + 100 = 0$ dá $x = 50$. A derivada de um polinômio
+   existe em todo ponto, então não há outro.
+3. Quadro: em $x = 30$, $L'(30) = -60 + 100 = 40$, positivo. Em $x = 60$,
+   $L'(60) = -120 + 100 = -20$, negativo.
+4. Leitura: $L$ cresce em $[0, 50[$ e decresce em $]50, 100]$.
+5. Conferindo: $L(30) = 500$ e $L(40) = 800$, subiu. $L(50) = 900$ e
+   $L(60) = 800$, desceu.
+
+É a resposta que o gráfico tinha dado, agora sem gráfico: aumentar o lote vale
+a pena até 50 camisetas. E repare no que saiu de graça no passo 2: o ponto
+crítico da parábola é $x = -\frac{b}{2a} = -\frac{100}{-2} = 50$, o vértice. A
+fórmula do vértice da lição de função quadrática é o que se obtém resolvendo
+$L'(x) = 0$ para uma parábola qualquer, como o exercício 24 pede para mostrar.
+
+**A oficina.** $P(x) = 2x^3 - 9x^2 + 12x - 3$, com $x$ em centenas de peças e
+$x \ge 0$.
+
+1. Derivada: $P'(x) = 6x^2 - 18x + 12 = 6(x - 1)(x - 2)$, a fatoração da
+   seção 4.
+2. Pontos críticos: $x = 1$ e $x = 2$.
+3. Quadro, com um ponto de teste por trecho:
+
+| Trecho | ponto de teste | $6(x-1)(x-2)$ | sinal de $P'$ |
+|---|---:|---|---|
+| $0 \le x$ menor que $1$ | $0$ | $6(-1)(-2) = 12$ | positivo |
+| entre $1$ e $2$ | $1{,}5$ | $6(0{,}5)(-0{,}5) = -1{,}5$ | negativo |
+| maior que $2$ | $3$ | $6(2)(1) = 12$ | positivo |
+
+<NumberLine
+  min={-0.5}
+  max={3.5}
+  unit={90}
+  spans={[
+    {from: 0, to: 1, tone: 1},
+    {from: 1, to: 2, tone: 2},
+    {from: 2, to: 3.5, tone: 1, continuesRight: true},
+  ]}
+  marks={[
+    {at: 0, label: '0', tone: 3},
+    {at: 1, label: '1', tone: 3},
+    {at: 2, label: '2', tone: 3},
+  ]}
+  caption="O sinal de P′ = 6(x − 1)(x − 2) a partir de x = 0: positivo até 1, negativo entre 1 e 2, positivo depois de 2."
+/>
+
+4. Leitura: o lucro **sobe** de 0 a 100 peças, **cai** entre 100 e 200 peças, e
+   **volta a subir** a partir de 200.
+5. Conferindo: $P(0) = -3$, $P(1) = 2$, $P(2) = 1$, $P(3) = 6$. Subiu de $-3$
+   para 2, desceu para 1, subiu para 6.
+
+A resposta ao dono é menos simples que a da serigrafia, e é por isso que
+precisávamos do método. Há **dois** trechos de subida. Um lote de 100 peças dá
+lucro de 2 mil reais; aumentar para 150 **piora**; mas a partir de 200 cada
+peça a mais volta a melhorar o resultado, e em 300 peças o lucro já é de 6
+mil. Se o dono só tem capacidade para 200 peças, o melhor lote é 100. Se pode
+ir além, a situação muda — e decidir “o melhor lote” com precisão, com as
+pontas do intervalo incluídas, é o assunto da próxima lição, [máximos e
+mínimos](./maximos-e-minimos).
+
+<CartesianPlane
+  xMin={-0.4}
+  xMax={3.4}
+  yMin={-4}
+  yMax={7}
+  xUnit={90}
+  yUnit={30}
+  functions={[{f: (x) => 2 * x * x * x - 9 * x * x + 12 * x - 3, domain: [0, 3.2], tone: 1}]}
+  points={[
+    {at: [1, 2], label: '(1,\\ 2)', tone: 3, dx: -30, dy: -12},
+    {at: [2, 1], label: '(2,\\ 1)', tone: 3, dx: 30, dy: 12},
+  ]}
+  axisLabels={['x', 'P']}
+  caption="O lucro da oficina, desenhado depois de conhecido o quadro: sobe até (1, 2), desce até (2, 1), sobe de novo. O quadro de sinais previu a forma inteira antes de qualquer ponto ser marcado."
+/>
+
+## 10. Exemplos resolvidos
+
+### Exemplo 1: um polinômio de grau 4
+
+Onde $f(x) = x^4 - 4x^3$ cresce e onde decresce?
+
+**Derivar e fatorar.** $f'(x) = 4x^3 - 12x^2 = 4x^2(x - 3)$.
+
+**Pontos críticos.** O produto é zero quando $x^2 = 0$ ou $x - 3 = 0$: em
+$x = 0$ e em $x = 3$.
+
+**Quadro.** O fator $4x^2$ é positivo em todo ponto fora de 0, porque um
+quadrado nunca é negativo. Então o sinal de $f'$ é o sinal de $x - 3$:
+
+| Trecho | ponto de teste | $4x^2(x-3)$ | sinal |
+|---|---:|---|---|
+| menor que $0$ | $-1$ | $4(1)(-4) = -16$ | negativo |
+| entre $0$ e $3$ | $1$ | $4(1)(-2) = -8$ | negativo |
+| maior que $3$ | $4$ | $4(16)(1) = 64$ | positivo |
+
+**Leitura.** $f$ decresce em $]-\infty, 3[$ e cresce em $]3, +\infty[$.
+
+O ponto crítico $x = 0$ **não separa nada**: a derivada é negativa antes e
+negativa depois. A curva desce, para por um instante em 0 com tangente
+horizontal, e continua descendo. É o aviso da seção 8 acontecendo: $f'(0) = 0$
+sem máximo nem mínimo em 0.
+
+**Conferindo.** $f(-1) = 5$, $f(0) = 0$, $f(1) = -3$, $f(3) = -27$,
+$f(4) = 0$. Desce, desce, desce até 3; sobe depois.
+
+### Exemplo 2: uma função racional
+
+*Pause e tente antes de ler.* Onde $h(x) = \dfrac{x^2}{x - 1}$ cresce?
+
+**Derivar.** Pela regra do quociente:
+
+$$
+h'(x) = \frac{2x(x-1) - x^2 \times 1}{(x-1)^2}
+= \frac{2x^2 - 2x - x^2}{(x-1)^2}
+= \frac{x^2 - 2x}{(x-1)^2}
+= \frac{x(x-2)}{(x-1)^2}.
+$$
+
+**Pontos críticos e cortes.** O numerador zera em $x = 0$ e $x = 2$: dois
+pontos críticos. O denominador zera em $x = 1$, que **não está no domínio** de
+$h$. Ele não é ponto crítico, mas corta a reta, e precisa entrar no quadro.
+
+**Quadro.** O denominador $(x-1)^2$ é positivo em todo ponto fora de 1. O sinal
+de $h'$ é o sinal de $x(x-2)$:
+
+| Trecho | teste | $x(x-2)$ | sinal de $h'$ |
+|---|---:|---|---|
+| menor que $0$ | $-1$ | $(-1)(-3) = 3$ | positivo |
+| entre $0$ e $1$ | $0{,}5$ | $(0{,}5)(-1{,}5) = -0{,}75$ | negativo |
+| entre $1$ e $2$ | $1{,}5$ | $(1{,}5)(-0{,}5) = -0{,}75$ | negativo |
+| maior que $2$ | $3$ | $(3)(1) = 3$ | positivo |
+
+**Leitura.** $h$ cresce em $]-\infty, 0[$ e em $]2, +\infty[$; decresce em
+$]0, 1[$ e em $]1, 2[$.
+
+Os dois trechos de descida ficam separados na resposta, e não é preciosismo:
+$h$ **não é** decrescente em $]0, 2[$ como um todo. Perto de 1 pela esquerda a
+função despenca para $-\infty$, e perto de 1 pela direita ela vem de
+$+\infty$. Em $x = 0{,}5$ ela vale $-0{,}5$; em $x = 1{,}5$ vale $4{,}5$. A
+entrada maior deu saída maior, o contrário de decrescente. O corte em 1
+interrompe o trecho, e a resposta precisa dizer isso.
+
+### Exemplo 3: a exponencial que sobe e depois cai
+
+*Pause e tente.* Onde $k(x) = x e^{-x}$ cresce?
+
+A derivada de $e^{-x}$ é $-e^{-x}$, pela regra da cadeia com a derivada da
+exponencial da lição [derivadas de exponencial e
+logaritmo](./derivadas-de-exponencial-e-logaritmo). Pela regra do produto:
+
+$$
+k'(x) = 1 \times e^{-x} + x \times (-e^{-x}) = e^{-x}(1 - x).
+$$
+
+O fator $e^{-x}$ é **sempre positivo**: uma exponencial nunca toca o zero. Então
+o sinal de $k'$ é o sinal de $1 - x$: positivo para $x$ menor que 1, negativo
+para $x$ maior que 1. Único ponto crítico: $x = 1$.
+
+**Leitura.** $k$ cresce em $]-\infty, 1[$ e decresce em $]1, +\infty[$. O
+maior valor fica em $x = 1$: $k(1) = e^{-1} \approx 0{,}368$.
+
+**Conferindo.** $k(0) = 0$, $k(0{,}5) \approx 0{,}303$, $k(1) \approx 0{,}368$,
+$k(2) \approx 0{,}271$, $k(5) \approx 0{,}034$. Sobe até 1, desce depois — e
+desce sem parar, porque $e^{-x}$ vence $x$ para $x$ grande, como a lição de
+[limites no infinito](./limites-infinitos-e-no-infinito) anunciou.
+
+Esta função descreve a concentração de um remédio no sangue: sobe enquanto o
+corpo absorve, atinge o pico, e cai enquanto o corpo elimina. O ponto crítico
+é a hora do pico.
+
+### Exemplo 4: a derivada que não existe num ponto
+
+*Pause e tente.* Onde $m(x) = x^{2/3}$ cresce?
+
+**Derivar.** $m'(x) = \frac{2}{3} x^{-1/3} = \dfrac{2}{3\sqrt[3]{x}}$.
+
+**Pontos críticos.** A derivada nunca é zero (o numerador é 2). Mas ela **não
+existe** em $x = 0$: o denominador zera. E $0$ está no domínio de $m$, porque
+$0^{2/3} = 0$. Logo $x = 0$ é ponto crítico.
+
+**Quadro.** A raiz cúbica tem o sinal de $x$. Então $m'$ é negativa para $x$
+menor que 0 e positiva para $x$ maior que 0.
+
+**Leitura.** $m$ decresce em $]-\infty, 0[$ e cresce em $]0, +\infty[$. O ponto
+$0$ é um **mínimo**, com $m(0) = 0$ — e o gráfico tem um bico ali, com
+tangente vertical dos dois lados.
+
+Quem procurasse só as raízes de $m'$ concluiria que não há ponto crítico e que
+a função é “sempre crescente” ou “sempre decrescente”, o que é falso. O ponto
+onde a derivada não existe é o que separa os dois trechos.
+
+### Exemplo 5: separar o sinal de $f$ do sinal de $f'$
+
+A oficina da [Revisão geral](../revisao-geral), exercício 7, tem lucro
+$L(x) = -2x^2 + 120x - 1000$. Em $x = 40$, a função é positiva? É crescente?
+
+**Sinal de $L$.** $L(40) = -3200 + 4800 - 1000 = 600$. Positivo: há lucro.
+
+**Sinal de $L'$.** $L'(x) = -4x + 120$, e $L'(40) = -160 + 120 = -40$.
+Negativo: a função está **decrescendo** em 40.
+
+As duas respostas vêm de **funções diferentes**. A Revisão respondeu a segunda
+pergunta olhando o vértice; aqui ela sai de $L'$. E o quadro de $L'$ completa:
+o ponto crítico é $x = 30$, $L$ cresce até 30 e decresce depois. Quarenta
+serviços ainda dão lucro, mas cada serviço a mais a partir de 30 tira dinheiro
+do resultado.
+
+### Exemplo 6: uma função sempre crescente
+
+*Pause e tente.* O custo $C(x) = x^3 - 12x^2 + 60x$, em reais, de produzir $x$
+peças pode diminuir em algum trecho?
+
+**Derivar.** $C'(x) = 3x^2 - 24x + 60 = 3(x^2 - 8x + 20)$.
+
+**Pontos críticos.** O discriminante de $x^2 - 8x + 20$ é
+$64 - 80 = -16$, negativo: não há raiz real. A derivada nunca é zero, e existe
+em todo ponto.
+
+**Quadro.** Sem ponto crítico, o sinal de $C'$ é o mesmo em toda a reta. Um
+único teste decide: $C'(0) = 60$, positivo.
+
+**Leitura.** $C$ é crescente em toda a reta. O custo nunca diminui. Isso é o que
+se espera de um custo — produzir mais nunca custa menos — e a derivada
+confirma sem que precisemos desenhar nada.
+
+## 11. Erros comuns
+
+> **Erro 1: achar que $f'(a) = 0$ garante máximo ou mínimo em $a$.** Em
+> $f(x) = x^3$, a derivada $3x^2$ vale zero em 0, e não há máximo nem mínimo
+> ali: $f(-0{,}1) = -0{,}001$ e $f(0{,}1) = 0{,}001$, a função continua
+> subindo. Ponto crítico é candidato. O veredicto vem do **sinal de $f'$ dos
+> dois lados**, e em $x^3$ o sinal é positivo dos dois lados.
+
+> **Erro 2: montar o quadro só com as raízes de $f'$.** Em $\lvert x \rvert$ a
+> derivada nunca é zero, e ainda assim a função troca de descida para subida em
+> 0. O ponto onde $f'$ **não existe** entra no quadro tanto quanto o ponto
+> onde ela vale zero.
+
+> **Erro 3: confundir o sinal de $f$ com o sinal de $f'$.** “A função é
+> positiva em 40” e “a função é crescente em 40” são perguntas sobre duas
+> funções diferentes, $f$ e $f'$. A oficina do exemplo 5 é positiva e
+> decrescente no mesmo ponto. Quem responde uma olhando a outra erra as duas.
+
+> **Erro 4: testar o sinal de $f'$ num ponto e generalizar.** $f'(-2) = 9$ e
+> $f'(2) = 9$ em $f(x) = x^3 - 3x$ não fazem de $f$ uma função crescente em
+> $]-2, 2[$: entre $-1$ e $1$ ela desce. O sinal num ponto só vale até o
+> próximo ponto crítico. Primeiro os pontos críticos, depois um teste **por
+> trecho**.
+
+> **Erro 5: esquecer o ponto fora do domínio.** Em $h(x) = \frac{x^2}{x-1}$, o
+> ponto $1$ não é crítico, mas corta a reta. Quem o ignora escreve
+> “decrescente em $]0, 2[$”, e a função dá um salto de $-\infty$ para
+> $+\infty$ no meio desse intervalo.
+
+> **Erro 6: escrever o intervalo de crescimento com os valores de $f$.** A
+> pergunta “onde a função cresce” se responde com entradas, no eixo
+> horizontal: “$P$ cresce em $[0, 1[$”. Escrever “cresce de $-3$ até $2$” é
+> descrever as saídas, e não diz para que lotes isso acontece.
+
+> **Erro 7: errar o sinal ao fatorar a derivada.** $6x^2 - 18x + 12$ é
+> $6(x-1)(x-2)$, e não $6(x+1)(x+2)$. Uma troca de sinal na fatoração inverte
+> o quadro inteiro. O passo 5 do método existe para isso: $P(0) = -3$ e
+> $P(1) = 2$ confirmam a subida que o quadro previu.
+
+## 12. Perguntas de verificação
+
+1. Por que o sinal de $f'$ num único ponto não é suficiente para dizer que $f$
+   é crescente num intervalo?
+2. O que é um ponto crítico, e por que ele tem duas definições (derivada zero
+   ou derivada inexistente)?
+3. Onde exatamente o sinal de $f'$ pode trocar? Por que não pode trocar em
+   outro lugar?
+4. Que ideia anterior é o quadro de sinais da derivada?
+5. Por que o ponto $x = 1$ entra no quadro de $h(x) = \frac{x^2}{x-1}$ se ele
+   não é ponto crítico?
+6. O que o fator $e^{-x}$ contribuiu para o quadro do exemplo 3?
+7. Uma função pode ser negativa e crescente ao mesmo tempo? Dê um exemplo com
+   fórmula e derivada.
+8. Por que $f'(0) = 0$ em $f(x) = x^4 - 4x^3$ não produz máximo nem mínimo?
+9. Qual é a relação entre o ponto crítico de uma parábola e a fórmula do
+   vértice?
+10. O que esta página usou sem demonstrar, e onde a demonstração vai aparecer?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque o sinal só vale até o próximo ponto crítico. Entre dois pontos com
+   derivada positiva pode haver um trecho de descida, como em $x^3 - 3x$ entre
+   $-2$ e $2$. Crescer num intervalo exige derivada positiva em todos os
+   pontos dele.
+2. É uma entrada do domínio em que $f'$ vale zero ou não existe. As duas
+   situações produzem tangente horizontal ou tangente inexistente (bico,
+   vertical), e nas duas o sinal da derivada pode trocar. Uma definição só
+   deixaria escapar $\lvert x \rvert$ em 0.
+3. Só nos pontos críticos e nos pontos fora do domínio. Fora deles a derivada
+   existe, é diferente de zero e é contínua; uma função contínua não troca de
+   sinal sem passar por zero.
+4. O quadro de sinais das inequações do 2º grau: marcar as fronteiras, testar
+   um ponto por trecho. A diferença é que a expressão no quadro é $f'$, e a
+   leitura é sobre o crescimento de $f$.
+5. Porque a função não existe em 1, e o comportamento à esquerda e à direita de
+   1 é independente: $h$ vai para $-\infty$ de um lado e vem de $+\infty$ do
+   outro. Um intervalo de crescimento ou decrescimento não pode atravessar um
+   ponto fora do domínio.
+6. Nada de sinal, porque é sempre positivo. Isso reduziu o quadro ao sinal do
+   outro fator, $1 - x$. Reconhecer fatores que nunca mudam de sinal (quadrados,
+   exponenciais, denominadores ao quadrado) encurta todo quadro.
+7. Sim: $f(x) = x^3$ em $x = -1$ é negativa ($-1$) e crescente ($f'(-1) = 3$).
+   Ou a serigrafia entre 0 e 20 camisetas: prejuízo, mas melhorando.
+8. Porque a derivada $4x^2(x-3)$ é negativa dos dois lados de 0: o fator
+   $4x^2$ não troca de sinal ao atravessar 0. A função desce, para um instante
+   e continua descendo.
+9. O ponto crítico de $ax^2 + bx + c$ é a raiz de $2ax + b = 0$, isto é,
+   $x = -\frac{b}{2a}$: a fórmula do vértice. O vértice é onde a tangente da
+   parábola fica horizontal.
+10. Usou que derivada positiva em todo o intervalo implica função crescente no
+    intervalo. A demonstração é o teorema do valor médio, na lição
+    [teorema do valor médio](./teorema-do-valor-medio).
+
+</details>
+
+## 13. Exercícios
+
+### 1. Reconhecimento
+
+1. Para cada derivada abaixo, diga em que trecho $f$ é crescente, sem calcular
+   nada além do sinal: a) $f'(x) = 5$; b) $f'(x) = -3x$; c) $f'(x) = x^2 + 1$;
+   d) $f'(x) = (x-2)(x+4)$.
+2. Quais destes pontos são críticos de $f(x) = x^3 - 12x$? a) $x = 2$; b)
+   $x = -2$; c) $x = 0$; d) $x = 12$.
+3. Um gráfico tem tangente horizontal em $x = 3$. Isso garante que 3 é ponto de
+   máximo ou de mínimo? Cite um contraexemplo desta página.
+4. Em $x = 4$, uma função vale $-7$ e a derivada dela vale $2$. A função é
+   positiva ali? É crescente?
+
+### 2. Explicação
+
+5. Explique com palavras por que um quadrado como $4x^2$ nunca troca de sinal,
+   e o que isso faz com o quadro de $4x^2(x-3)$.
+6. Por que a resposta do exemplo 2 separa $]0, 1[$ de $]1, 2[$ em vez de
+   escrever $]0, 2[$?
+7. O método da seção 8 termina com “confira com dois pontos”. Que tipo de erro
+   essa conferência pega, e que tipo ela **não** pega?
+
+### 3. Aplicação direta
+
+8. Determine os intervalos de crescimento e decrescimento de
+   $f(x) = x^2 - 6x + 5$.
+9. Determine os intervalos de crescimento e decrescimento de
+   $f(x) = x^3 - 12x$.
+10. Determine os intervalos de crescimento e decrescimento de
+    $f(x) = 2x^3 + 3x^2 - 12x + 1$.
+11. Mostre que $f(x) = x^3 + 3x + 7$ é crescente em toda a reta.
+
+### 4. Variação
+
+12. Determine os intervalos de crescimento e decrescimento de
+    $f(x) = \dfrac{x}{x^2 + 1}$.
+13. Determine os intervalos de crescimento e decrescimento de
+    $f(x) = \lvert x - 2 \rvert$. Onde está o ponto crítico, e por quê?
+14. Determine os intervalos de crescimento e decrescimento de
+    $f(x) = \dfrac{\ln x}{x}$, para $x$ positivo.
+15. Determine os intervalos de crescimento e decrescimento de
+    $f(x) = x^4 - 2x^2$.
+
+### 5. Problema misto
+
+16. A população de uma colônia de bactérias, em milhares, após $t$ horas de um
+    experimento é $N(t) = t^3 - 6t^2 + 9t + 5$, para $t$ entre 0 e 5. Em que
+    períodos a população cresce? Em que instante ela começa a diminuir, e por
+    quanto tempo?
+17. Uma empresa vende $x$ centenas de unidades e tem lucro, em milhares de
+    reais, $L(x) = -x^3 + 6x^2 - 9x + 1$, para $x$ entre 0 e 5. a) Em que faixa
+    de vendas aumentar a quantidade melhora o lucro? b) Em $x = 2$ a empresa
+    tem lucro? O lucro está crescendo?
+18. A altura, em metros, de um projétil após $t$ segundos é
+    $s(t) = -5t^2 + 30t + 2$. Até que instante ele sobe? Qual é a velocidade
+    nesse instante, e o que ela diz sobre o ponto mais alto?
+19. Um reservatório tem, após $t$ horas, $V(t) = 100 + 30t - 2t^2$ mil litros,
+    para $t$ entre 0 e 12. Descreva com palavras, usando a derivada, o que
+    acontece com o volume ao longo das 12 horas.
+
+### 6. Justificativa
+
+20. Use a derivada para mostrar que $f(x) = x^3$ é crescente em toda a reta,
+    mesmo tendo derivada zero em $x = 0$. Por que o zero isolado não estraga o
+    crescimento?
+21. Uma função tem $f'(x) = (x-1)^2(x-4)$. Sem desenhar, diga em que trechos
+    ela cresce e o que acontece em $x = 1$.
+22. Explique por que uma função com $f'(x) = 0$ em todo um intervalo é
+    constante nesse intervalo, usando a leitura da derivada como taxa
+    instantânea.
+23. Se $f$ é crescente num intervalo, a derivada dela é necessariamente
+    positiva em todo ponto do intervalo? Use $x^3$ para responder.
+24. Mostre que, para $f(x) = ax^2 + bx + c$ com $a \neq 0$, o único ponto
+    crítico é $x = -\frac{b}{2a}$, e que a função cresce à direita dele quando
+    $a$ é positivo e à esquerda dele quando $a$ é negativo. Compare com a
+    concavidade da parábola.
+
+<details>
+<summary>Dica para o exercício 12</summary>
+
+Depois de aplicar a regra do quociente, o denominador é um quadrado e não muda
+de sinal. Concentre-se no numerador, que é uma diferença de quadrados.
+
+</details>
+
+<details>
+<summary>Dica para o exercício 14</summary>
+
+A derivada de $\ln x$ é $\frac{1}{x}$. Depois do quociente, o sinal do numerador
+depende de comparar $\ln x$ com 1 — e $\ln x = 1$ acontece em $x = e$.
+
+</details>
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) Em toda a reta: derivada sempre positiva. b) Para $x$ menor que 0,
+   onde $-3x$ é positivo. c) Em toda a reta: $x^2 + 1$ é sempre positivo.
+   d) Fora das raízes: em $]-\infty, -4[$ e em $]2, +\infty[$, onde os dois
+   fatores têm o mesmo sinal.
+2. $f'(x) = 3x^2 - 12 = 3(x-2)(x+2)$. Críticos: a) sim e b) sim. c) Não:
+   $f'(0) = -12$. d) Não: $f'(12) = 420$. Se você marcou o 12, confundiu o
+   coeficiente da função com uma raiz da derivada.
+3. Não. $f(x) = x^3$ tem tangente horizontal em 0 e continua subindo; $x^4 -
+   4x^3$ tem tangente horizontal em 0 e continua descendo. Tangente horizontal
+   é candidatura, e o sinal de $f'$ dos dois lados decide.
+4. Negativa (vale $-7$, abaixo do eixo) e crescente (derivada 2, positiva). As
+   duas coisas ao mesmo tempo: no vermelho, mas melhorando.
+5. Um quadrado é zero ou positivo, porque multiplicar um número por ele mesmo
+   nunca dá negativo. Então $4x^2$ é positivo em todo ponto fora de 0, e o
+   sinal do produto $4x^2(x-3)$ é o sinal de $x - 3$: negativo antes de 3,
+   positivo depois. O ponto 0 é crítico, mas não separa sinais.
+6. Porque $x = 1$ não está no domínio, e $h$ não é decrescente em $]0, 2[$:
+   $h(0{,}5) = -0{,}5$ e $h(1{,}5) = 4{,}5$, a saída aumentou. Um intervalo de
+   decrescimento não pode atravessar um ponto em que a função não existe.
+7. Pega erro de **sinal** no quadro: se o quadro diz “sobe” e $f$ desceu entre
+   os dois pontos, algo está invertido. Não pega um ponto crítico
+   **esquecido** entre os dois pontos escolhidos, porque a função pode subir,
+   descer e subir e ainda assim terminar mais alta.
+8. $f'(x) = 2x - 6$, crítico em 3. Decresce em $]-\infty, 3[$, cresce em
+   $]3, +\infty[$. Confira: $f(0) = 5$, $f(3) = -4$, $f(6) = 5$.
+9. $f'(x) = 3(x-2)(x+2)$, críticos $-2$ e 2. Testes: $f'(-3) = 15$,
+   $f'(0) = -12$, $f'(3) = 15$. Cresce em $]-\infty, -2[$ e em
+   $]2, +\infty[$; decresce em $]-2, 2[$. Confira: $f(-2) = 16$, $f(2) = -16$.
+10. $f'(x) = 6x^2 + 6x - 12 = 6(x+2)(x-1)$, críticos $-2$ e 1. Cresce em
+    $]-\infty, -2[$ e em $]1, +\infty[$; decresce em $]-2, 1[$. Confira:
+    $f(-2) = 21$, $f(1) = -6$. Se você achou críticos $2$ e $-1$, trocou os
+    sinais na fatoração: $(x+2)(x-1) = x^2 + x - 2$, que é o trinômio certo.
+11. $f'(x) = 3x^2 + 3$, que é positivo em todo ponto, porque $3x^2$ nunca é
+    negativo e somar 3 deixa positivo. Sem ponto crítico, o sinal é único;
+    $f'(0) = 3$ decide: crescente em toda a reta.
+12. $f'(x) = \dfrac{(x^2+1) - x \times 2x}{(x^2+1)^2} = \dfrac{1 - x^2}{(x^2+1)^2}$.
+    O denominador é sempre positivo; o numerador $1 - x^2 = (1-x)(1+x)$ zera
+    em $\pm 1$ e é positivo entre eles. Cresce em $]-1, 1[$; decresce em
+    $]-\infty, -1[$ e em $]1, +\infty[$. Confira: $f(-1) = -0{,}5$,
+    $f(0) = 0$, $f(1) = 0{,}5$, $f(3) = 0{,}3$.
+13. Para $x$ maior que 2, $f(x) = x - 2$ e $f'(x) = 1$. Para $x$ menor que 2,
+    $f(x) = 2 - x$ e $f'(x) = -1$. Em $x = 2$ a derivada não existe (os dois
+    lados dão 1 e $-1$), e esse é o ponto crítico: a derivada nunca é zero,
+    mas o sinal troca ali. Decresce em $]-\infty, 2[$, cresce em
+    $]2, +\infty[$. Se você concluiu que não há ponto crítico, esqueceu a
+    segunda metade da definição.
+14. $f'(x) = \dfrac{\frac{1}{x} \times x - \ln x \times 1}{x^2} = \dfrac{1 - \ln x}{x^2}$.
+    Denominador positivo; numerador zero em $x = e$, positivo para $x$ menor
+    que $e$ (por exemplo $x = 1$: $1 - 0 = 1$), negativo para $x$ maior que
+    $e$ ($x = e^2$: $1 - 2 = -1$). Cresce em $]0, e[$, decresce em
+    $]e, +\infty[$. Confira: $f(1) = 0$, $f(e) \approx 0{,}368$,
+    $f(10) \approx 0{,}230$.
+15. $f'(x) = 4x^3 - 4x = 4x(x-1)(x+1)$, críticos $-1$, 0 e 1. Testes:
+    $f'(-2) = -24$, $f'(-0{,}5) = 1{,}5$, $f'(0{,}5) = -1{,}5$, $f'(2) = 24$.
+    Decresce em $]-\infty, -1[$ e em $]0, 1[$; cresce em $]-1, 0[$ e em
+    $]1, +\infty[$. Confira: $f(-1) = -1$, $f(0) = 0$, $f(1) = -1$.
+16. $N'(t) = 3t^2 - 12t + 9 = 3(t-1)(t-3)$, críticos $t = 1$ e $t = 3$.
+    Testes: $N'(0) = 9$, $N'(2) = -3$, $N'(4) = 9$. A população cresce de 0 a
+    1 h e de 3 a 5 h; começa a diminuir em $t = 1$ h e cai por 2 horas, até
+    $t = 3$ h. Valores: $N(0) = 5$, $N(1) = 9$, $N(3) = 5$, $N(5) = 25$ mil.
+17. a) $L'(x) = -3x^2 + 12x - 9 = -3(x-1)(x-3)$, críticos 1 e 3. Testes:
+    $L'(0) = -9$, $L'(2) = 3$, $L'(4) = -9$. Aumentar a quantidade melhora o
+    lucro para $x$ entre 1 e 3, isto é, entre 100 e 300 unidades. Antes de 100
+    e depois de 300, vender mais piora. b) $L(2) = -8 + 24 - 18 + 1 = -1$:
+    **prejuízo** de mil reais. E $L'(2) = 3$: **crescendo**. Negativa e
+    crescente ao mesmo tempo — no vermelho, melhorando.
+18. $s'(t) = -10t + 30$, zero em $t = 3$ s; positiva antes, negativa depois. O
+    projétil sobe até 3 s. A velocidade em 3 s é **zero**: o ponto mais alto
+    é o instante em que ele para de subir e ainda não começou a descer, com
+    $s(3) = 47$ m.
+19. $V'(t) = 30 - 4t$, zero em $t = 7{,}5$ h. De 0 a 7,5 h a derivada é
+    positiva e o volume sobe, cada vez mais devagar (a derivada cai de 30 para
+    0 mil litros por hora). Em 7,5 h o reservatório atinge o máximo,
+    $V(7{,}5) = 212{,}5$ mil litros. De 7,5 a 12 h a derivada é negativa e o
+    volume desce, cada vez mais depressa, até $V(12) = 172$ mil litros.
+20. $f'(x) = 3x^2$ é positiva em todo ponto fora de 0 e zero só em 0. Para
+    quaisquer $a$ menor que $b$, a função sobe em cada trecho de derivada
+    positiva, e o único ponto em que a derivada é zero não tem largura: parar
+    por um instante não desfaz uma subida. Por isso $x^3$ é crescente em toda
+    a reta: $f(-0{,}1)$ é menor que $f(0)$, que é menor que $f(0{,}1)$.
+21. O fator $(x-1)^2$ é zero em 1 e positivo em todo outro ponto; o sinal de
+    $f'$ é o de $x - 4$. Decresce em $]-\infty, 4[$, cresce em $]4, +\infty[$.
+    Em $x = 1$ há tangente horizontal, mas a função desce antes e desce
+    depois: ponto crítico sem máximo nem mínimo, como o 0 do exemplo 1.
+22. Derivada zero em todo ponto quer dizer taxa instantânea zero em todo
+    ponto: a saída não muda por unidade de entrada em lugar nenhum do
+    intervalo. Uma quantidade cuja taxa é sempre zero não sobe nem desce, e
+    fica no mesmo valor. A justificativa completa (a taxa média entre dois
+    pontos é a derivada em algum ponto do meio, logo zero) é o teorema do valor
+    médio.
+23. Não. $x^3$ é crescente em toda a reta e tem derivada zero em 0. Crescente
+    garante derivada **maior ou igual** a zero, não estritamente positiva. O
+    critério da seção 8 vai numa direção só: derivada positiva implica
+    crescente; a volta admite zeros isolados.
+24. $f'(x) = 2ax + b$, que existe em todo ponto e zera só em
+    $x = -\frac{b}{2a}$. Se $a$ é positivo, $2ax + b$ é uma reta crescente:
+    negativa à esquerda da raiz, positiva à direita — a parábola desce e depois
+    sobe, concavidade para cima, vértice no ponto mais baixo. Se $a$ é
+    negativo, a reta $2ax + b$ é decrescente, os sinais se invertem, e a
+    parábola sobe e depois desce, concavidade para baixo, vértice no ponto
+    mais alto. É a fórmula do vértice e a regra da concavidade, as duas saindo
+    da derivada.
+
+</details>
+
+## 14. Revisão curta
+
+- **Onde $f'$ é positiva, $f$ sobe; onde $f'$ é negativa, $f$ desce.** É a
+  leitura da derivada como inclinação da tangente, estendida a um trecho
+  inteiro.
+- O sinal de $f'$ só pode trocar num **ponto crítico** — derivada zero ou
+  inexistente — ou num ponto fora do domínio. Por isso o método começa
+  localizando esses pontos e só depois testa um ponto por trecho.
+- O quadro de sinais de $f'$ é o **mesmo quadro** das inequações; o que muda é
+  a leitura, que agora é sobre subida e descida de $f$.
+- Ponto crítico é **candidato**, não veredicto: $x^3$ em 0 tem derivada zero e
+  continua subindo. A próxima lição decide quem é máximo e quem é mínimo.
+- Sinal de $f$ e sinal de $f'$ são perguntas diferentes: a oficina em 40
+  serviços é positiva e decrescente.
+- A justificativa de que sinal positivo em todo o intervalo implica crescimento
+  no intervalo é o **teorema do valor médio**, duas lições adiante.
+
+Antes de avançar, verifique se você consegue: montar o quadro de sinais de
+$f'(x) = 6(x-1)(x-2)$ e ler os trechos de subida; explicar por que
+$\lvert x \rvert$ tem ponto crítico em 0 sem que a derivada valha zero; e dizer,
+para uma função dada por fórmula, se ela é positiva e se é crescente num ponto,
+respondendo as duas separadamente.
+
+A lição seguinte, [máximos e mínimos](./maximos-e-minimos), usa exatamente este
+quadro para decidir qual ponto crítico é máximo, qual é mínimo e qual não é
+nenhum dos dois — e volta à caixa de 30 cm por 20 cm para fechar a conta que a
+lição de polinômios deixou em aberto.

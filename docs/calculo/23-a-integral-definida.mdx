@@ -1,0 +1,999 @@
+---
+title: "A integral definida: área com sinal e suas propriedades"
+sidebar_label: A integral definida
+---
+
+import RiemannSum from '@site/src/components/RiemannSum';
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# A integral definida: área com sinal e suas propriedades
+
+## 1. Problema motivador: o carro dá ré
+
+O veículo de teste está de volta, e desta vez o painel registrou uma velocidade
+que **muda de sinal**. Durante 5 segundos, a velocidade foi
+
+$$
+v(t) = 6 - 2t \text{ m/s},
+$$
+
+com $t$ em segundos. Leia a tabela:
+
+| Instante $t$ (s) | 0 | 1 | 2 | 3 | 4 | 5 |
+|---:|---:|---:|---:|---:|---:|---:|
+| Velocidade $v(t)$ (m/s) | 6 | 4 | 2 | 0 | $-2$ | $-4$ |
+
+Até o instante 3 s a velocidade é positiva: o carro anda para a frente. Em
+3 s ela zera: o carro para. Depois disso ela é negativa: o carro **dá ré** e
+volta pelo mesmo caminho.
+
+A lição anterior, [a integral como área](./a-integral-como-area), ensinou que
+a distância percorrida é a área sob o gráfico da velocidade. Mas agora o
+gráfico tem um pedaço **abaixo do eixo**, e aparecem duas perguntas que
+parecem a mesma e não são:
+
+- **Onde o carro parou, em relação ao ponto de partida?** Isso é o
+  **deslocamento**: quanto ele avançou, descontando o que voltou.
+- **Quanto o carro andou ao todo?** Isso é a **distância percorrida**: os
+  metros para a frente somados aos metros de ré.
+
+Se o carro anda 9 metros para a frente e volta 4, o deslocamento é 5 metros e
+a distância percorrida é 13 metros. Os dois números são diferentes, e o que os
+separa é o **sinal** da velocidade no trecho de ré.
+
+Esta página responde às duas perguntas com a integral, e mostra que a
+diferença entre elas está numa decisão pequena: contar a área abaixo do eixo
+como negativa ou como positiva. Depois ela recolhe, do desenho, as regras que
+permitem calcular integrais em pedaços, somá-las e compará-las.
+
+## 2. Mapa das ideias
+
+- a **integral definida** $\int_a^b f(x)\,dx$ é a **área com sinal** entre o
+  gráfico de $f$ e o eixo horizontal, de $a$ até $b$: o que fica acima do eixo
+  conta positivo, o que fica abaixo conta negativo;
+- **deslocamento** é a integral da velocidade; **distância percorrida** é a
+  integral do valor absoluto da velocidade;
+- as **propriedades** da integral — soma, constante multiplicando, divisão do
+  intervalo, inversão dos limites, comparação — vêm direto do desenho e das
+  propriedades do limite;
+- para uma função **par**, a integral em $[-a, a]$ é o dobro da integral em
+  $[0, a]$; para uma função **ímpar**, ela é zero;
+- o **valor médio** de $f$ em $[a, b]$ é $\frac{1}{b-a}\int_a^b f(x)\,dx$: a
+  altura do retângulo que tem a mesma área com sinal que a curva.
+
+## 3. Para que serve
+
+- separar deslocamento de distância, saldo de movimentação, ganho líquido de
+  volume negociado;
+- calcular uma integral em partes quando a função tem fórmulas diferentes em
+  trechos diferentes, como a tarifa por faixa;
+- estimar uma integral que não se sabe calcular, prendendo-a entre duas que se
+  sabem;
+- achar a média de uma grandeza que varia continuamente: temperatura média do
+  dia, vazão média, custo médio por unidade;
+- e, dentro da matemática, preparar o [teorema fundamental do
+  cálculo](./teorema-fundamental-do-calculo): as propriedades desta página são
+  as que permitem tratar a integral como uma função do extremo superior.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [valor absoluto](../numeros-e-operacoes/valor-absoluto): qual é a
+diferença entre $-4$ e $\lvert -4 \rvert$?** O $-4$ carrega duas informações:
+está a 4 unidades do zero e está do lado negativo. O $\lvert -4 \rvert = 4$
+guarda só a primeira. Aquela página usou o velocímetro como imagem: ele marca
+60 km/h para o norte ou para o sul, porque apaga o lado e conserva o tamanho.
+Aqui a mesma distinção separa deslocamento de distância.
+
+**2. De [crescimento, sinal e simetria](../funcoes/crescimento-sinal-e-simetria):
+o que significa uma função ser positiva num intervalo? E ser par? E ímpar?**
+Positiva é ter o gráfico acima do eixo horizontal naquele trecho. Par é
+$f(-x) = f(x)$: o lado esquerdo do gráfico é o reflexo do direito, como em
+$x^2$. Ímpar é $f(-x) = -f(x)$: o lado esquerdo é o direito girado meia volta,
+como em $x^3$.
+
+**3. De [calculando limites](./calculo-de-limites): o limite de uma soma é a
+soma dos limites?** Sim, quando os dois limites existem. E o limite de uma
+constante vezes uma função é a constante vezes o limite. Essas duas
+propriedades vão virar, nesta página, as duas primeiras propriedades da
+integral.
+
+**4. De [a integral como área](./a-integral-como-area): o que é
+$\int_0^3 t^2\,dt$, e quanto vale?** É o limite das somas de Riemann
+$\sum f(x_i)\,\Delta x$ quando o número de retângulos cresce sem limite. Vale
+9: as somas pela esquerda e pela direita se aproximaram de 9 pelos dois lados.
+Aquela lição também calculou $\int_0^1 x^2\,dx = \frac{1}{3}$. Os dois valores
+vão ser reaproveitados aqui.
+
+**5. De [taxa média de variação](../funcoes/taxa-media-de-variacao): o que é
+a velocidade média de um trecho?** É a variação da posição dividida pelo tempo
+gasto. A viagem de ida a 60 km/h e volta a 40 km/h deu 48 km/h, e não 50,
+porque a média pesa cada trecho pela duração dele. Essa ideia de "média que
+pesa pelo tempo" vai reaparecer no valor médio de uma função.
+
+O item 4 é a base da página. Se a soma de Riemann e a notação $\int$ ainda
+estiverem nebulosas, vale reler a lição anterior antes de seguir.
+
+## 5. Intuição: um retângulo de altura negativa
+
+Volte à soma de Riemann. Cada parcela dela é
+
+$$
+f(x_i) \times \Delta x,
+$$
+
+a altura do retângulo vezes a largura. A largura $\Delta x$ é sempre positiva,
+porque é o tamanho de um pedaço do intervalo. Mas a altura é o **valor da
+função**, e nada impede que ela seja negativa.
+
+No motivador, com $\Delta x = 0{,}5$ s e o ponto médio de cada pedaço. São dez
+pedaços ao todo; a tabela mostra cinco deles:
+
+| Pedaço | ponto médio $t_i$ | $v(t_i)$ | $v(t_i) \times \Delta x$ |
+|---|---:|---:|---:|
+| $[0;\ 0{,}5]$ | 0,25 | 5,5 | 2,75 |
+| $[1;\ 1{,}5]$ | 1,25 | 3,5 | 1,75 |
+| $[2{,}5;\ 3]$ | 2,75 | 0,5 | 0,25 |
+| $[3{,}5;\ 4]$ | 3,75 | $-1{,}5$ | $-0{,}75$ |
+| $[4{,}5;\ 5]$ | 4,75 | $-3{,}5$ | $-1{,}75$ |
+
+As parcelas dos pedaços em que o carro dá ré saem **negativas**, porque a
+velocidade ali é negativa. A soma não "sabe" que aquilo é um retângulo abaixo
+do eixo: ela só multiplica um número negativo por um positivo e obtém um
+negativo. Ao somar as dez parcelas, os pedaços de ré **descontam** dos pedaços
+de avanço.
+
+Esse é o comportamento inteiro da página em uma frase: **a soma de Riemann
+subtrai o que fica abaixo do eixo**, e a integral, que é o limite dessas
+somas, herda a subtração.
+
+Se em vez de $v$ usarmos $\lvert v \rvert$, toda altura vira positiva, nenhuma
+parcela desconta nada, e a soma mede o total andado. As duas perguntas do
+motivador são as integrais de duas funções diferentes: $v$ e $\lvert v \rvert$.
+
+## 6. Modelo visual: retângulos que descem do eixo
+
+O desenho abaixo é a soma de Riemann de $v(t) = 6 - 2t$ em $[0, 5]$, com dez
+retângulos e a altura tomada no ponto médio. Repare nos quatro últimos: eles
+pendem **para baixo** do eixo.
+
+<RiemannSum
+  f={(t) => 6 - 2 * t}
+  a={0}
+  b={5}
+  n={10}
+  method="mid"
+  xUnit={64}
+  yUnit={22}
+  yStep={2}
+  axisLabels={['t', 'v']}
+  caption="Velocidade v(t) = 6 − 2t. Os seis primeiros retângulos ficam acima do eixo e contam positivo; os quatro últimos ficam abaixo e contam negativo."
+/>
+
+A soma na legenda deu 5: é o saldo entre os 9 dos seis retângulos de cima e os
+4 dos quatro de baixo. Como a função é uma reta, o ponto médio de cada pedaço acerta a
+área exata, e o 5 já é o valor da integral. Com uma curva, seria uma
+aproximação, e refinar os retângulos faria o valor se aproximar da integral,
+como na lição anterior.
+
+Agora o mesmo gráfico sem retângulos, com as duas regiões pintadas:
+
+<CartesianPlane
+  xMin={-0.5}
+  xMax={5.7}
+  yMin={-5}
+  yMax={7}
+  xUnit={64}
+  yUnit={22}
+  yStep={2}
+  polygons={[
+    {points: [[0, 0], [0, 6], [3, 0]], tone: 1},
+    {points: [[3, 0], [5, -4], [5, 0]], tone: 2},
+  ]}
+  functions={[{f: (t) => 6 - 2 * t, domain: [-0.3, 5.5], tone: 3}]}
+  points={[
+    {at: [3, 0], label: '(3,\\ 0)', tone: 3, dx: 22, dy: -14},
+  ]}
+  labels={[
+    {at: [1, 2], math: '+9', tone: 1},
+    {at: [4.35, -1.3], math: '-4', tone: 2},
+  ]}
+  axisLabels={['t', 'v']}
+  caption="Duas regiões triangulares. A de cima tem área 9 e conta +9; a de baixo tem área 4 e conta −4. A integral é 9 − 4 = 5."
+/>
+
+As duas regiões são triângulos, e as áreas saem pela fórmula da geometria:
+
+- acima do eixo, base 3 e altura 6: $\frac{3 \times 6}{2} = 9$;
+- abaixo do eixo, base 2 e altura 4: $\frac{2 \times 4}{2} = 4$.
+
+Como área, as duas são positivas — área não tem sinal. O sinal entra na
+**integral**, que conta a segunda região como $-4$.
+
+## 7. Ponte para a formalização: o sinal atravessa o limite
+
+Já sabemos que cada soma de Riemann de uma função negativa é negativa, porque
+cada parcela $f(x_i)\,\Delta x$ é negativa. A integral é o limite dessas
+somas. Falta uma pergunta: **o sinal sobrevive ao limite?**
+
+Sobrevive, e o argumento é o da lição de limites. Se todas as somas são
+negativas e se aproximam de um número $L$, então $L$ não pode ser positivo — se
+fosse, as somas teriam de chegar perto de um número positivo, e números
+negativos não chegam perto de um positivo sem passar pelo zero. Logo $L \le 0$.
+
+O mesmo raciocínio, aplicado pedaço a pedaço, diz o que acontece quando a
+função troca de sinal no meio do intervalo: as somas separam sozinhas o que
+está acima do que está abaixo, e o limite conserva a separação. É isso que
+autoriza a leitura "área de cima menos área de baixo".
+
+**O que muda na escrita.** Antes, "integral" era "área sob a curva". Agora é
+"área com sinal": o que está acima conta positivo, o que está abaixo conta
+negativo.
+
+**O que permanece.** A definição não mudou nada: continua sendo o limite das
+somas de Riemann. A leitura como área só valia sem ressalva quando a função
+era positiva; a nova leitura cobre os dois casos.
+
+## 8. A integral como área com sinal
+
+> Para $f$ contínua em $[a, b]$, a **integral definida**
+> $$\int_a^b f(x)\,dx$$
+> é o limite das somas de Riemann de $f$ em $[a, b]$. Geometricamente, ela é a
+> **área com sinal** entre o gráfico e o eixo horizontal: a área das regiões
+> acima do eixo **menos** a área das regiões abaixo dele.
+
+**Exemplo.** Para $v(t) = 6 - 2t$ em $[0, 5]$:
+
+$$
+\int_0^5 (6 - 2t)\,dt = 9 - 4 = 5.
+$$
+
+O 9 é a área do triângulo acima do eixo, e o 4 é a área do triângulo abaixo.
+
+**Contraexemplo, para delimitar a ideia.** Considere $\int_{-1}^{1} x\,dx$. O
+gráfico de $f(x) = x$ é uma reta pela origem: de $-1$ a 0 ela fica abaixo do
+eixo, e de 0 a 1 fica acima. Os dois triângulos têm área $\frac{1}{2}$ cada:
+
+$$
+\int_{-1}^{1} x\,dx = \frac{1}{2} - \frac{1}{2} = 0.
+$$
+
+A integral é zero, mas a função **não** é zero em nenhum ponto além do 0, e a
+região entre o gráfico e o eixo tem área total 1. Integral zero não significa
+"função nula" nem "área nenhuma". Significa que o que ficou acima **empatou**
+com o que ficou abaixo.
+
+Esse contraexemplo é a razão de a página distinguir com tanto cuidado a
+integral da área. Quando a pergunta é sobre a região desenhada, a resposta é
+1. Quando a pergunta é sobre a integral, a resposta é 0. As duas perguntas são
+legítimas; o erro é responder uma quando se fez a outra.
+
+### Leitura em cada contexto
+
+| Se $f$ é… | então $\int_a^b f\,dx$ é… | e $\int_a^b \lvert f \rvert\,dx$ é… |
+|---|---|---|
+| velocidade | deslocamento | distância percorrida |
+| vazão de um tanque (entra positivo, sai negativo) | variação do volume | volume total que passou pelo cano |
+| fluxo de caixa (recebe positivo, paga negativo) | saldo do período | movimentação total |
+| taxa de variação de qualquer grandeza | variação líquida da grandeza | soma de todas as variações, sem cancelar |
+
+A coluna do meio é o que a integral calcula por si. A coluna da direita exige
+trocar $f$ por $\lvert f \rvert$ antes de integrar, e a seção 12 mostra como
+fazer isso na prática.
+
+## 9. As propriedades da integral
+
+Cada regra abaixo vem de um desenho ou de uma propriedade do limite. Nenhuma
+precisa ser decorada: se esquecer, redesenhe.
+
+### Soma: a integral de uma soma é a soma das integrais
+
+$$
+\int_a^b \big(f(x) + g(x)\big)\,dx = \int_a^b f(x)\,dx + \int_a^b g(x)\,dx.
+$$
+
+**De onde vem.** Numa soma de Riemann de $f + g$, cada parcela é
+$\big(f(x_i) + g(x_i)\big)\Delta x = f(x_i)\Delta x + g(x_i)\Delta x$. Separar
+as parcelas de $f$ das de $g$ dá duas somas de Riemann, uma de cada função. O
+limite de uma soma é a soma dos limites, e cada limite é uma integral.
+
+**Exemplo.** A lição anterior calculou $\int_0^3 t^2\,dt = 9$, e o triângulo
+de $v(t) = 2t$ deu $\int_0^3 2t\,dt = 9$. Então
+
+$$
+\int_0^3 (t^2 + 2t)\,dt = 9 + 9 = 18,
+$$
+
+sem nenhum retângulo novo. Conferindo com uma soma de Riemann de $10^5$
+retângulos: 18,000.
+
+### Constante multiplicando: ela sai para fora
+
+$$
+\int_a^b c\,f(x)\,dx = c \int_a^b f(x)\,dx.
+$$
+
+**De onde vem.** Cada parcela $c\,f(x_i)\,\Delta x$ tem o fator $c$; colocar
+$c$ em evidência na soma inteira dá $c$ vezes a soma de Riemann de $f$. O
+limite de uma constante vezes uma função é a constante vezes o limite.
+
+**Exemplo.** $\int_0^3 5t^2\,dt = 5 \times 9 = 45$.
+
+**Atenção.** A regra vale para **constante**, não para função. Não existe
+"$\int f g = \int f \int g$" — a seção de erros comuns tem o contraexemplo.
+
+### Divisão do intervalo: integrar em pedaços
+
+$$
+\int_a^b f(x)\,dx + \int_b^c f(x)\,dx = \int_a^c f(x)\,dx, \qquad a \le b \le c.
+$$
+
+**De onde vem.** Do desenho: a região de $a$ até $c$ é a região de $a$ até $b$
+junto com a região de $b$ até $c$. As áreas com sinal se somam.
+
+<CartesianPlane
+  xMin={-0.4}
+  xMax={3.6}
+  yMin={-0.6}
+  yMax={9.8}
+  xUnit={72}
+  yUnit={19}
+  polygons={[
+    {points: [[0, 0], [0.5, 0.25], [1, 1], [1, 0]], tone: 1},
+    {points: [[1, 1], [1.5, 2.25], [2, 4], [2.5, 6.25], [3, 9], [3, 0], [1, 0]], tone: 2},
+  ]}
+  functions={[{f: (x) => x * x, domain: [-0.3, 3.2], tone: 3}]}
+  lines={[{x: 1, dashed: true, tone: 0}]}
+  labels={[
+    {at: [0.72, 0.12], math: '\\tfrac{1}{3}', tone: 1, dy: -16},
+    {at: [2.35, 2.2], math: '\\tfrac{26}{3}', tone: 2},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A região sob x² de 0 a 3 cortada em x = 1. A parte da esquerda vale 1/3; a da direita vale 9 − 1/3 = 26/3."
+/>
+
+**Exemplo.** Sabemos $\int_0^3 x^2\,dx = 9$ e $\int_0^1 x^2\,dx = \frac{1}{3}$.
+Então a parte de 1 a 3 sai por subtração:
+
+$$
+\int_1^3 x^2\,dx = \int_0^3 x^2\,dx - \int_0^1 x^2\,dx = 9 - \frac{1}{3} = \frac{26}{3} \approx 8{,}667.
+$$
+
+A soma de Riemann com $10^5$ retângulos em $[1, 3]$ dá 8,667. Confere.
+
+Essa regra é a que resolve funções definidas por partes: integra-se cada
+fórmula no trecho em que ela vale, e somam-se os resultados. É também a que
+separa avanço de ré no motivador.
+
+### Intervalo de largura zero
+
+$$
+\int_a^a f(x)\,dx = 0.
+$$
+
+**De onde vem.** Toda soma de Riemann em $[a, a]$ tem $\Delta x = 0$, e toda
+parcela é zero. Geometricamente, uma região de largura zero não tem área.
+
+### Inversão dos limites: trocar a ordem troca o sinal
+
+$$
+\int_b^a f(x)\,dx = -\int_a^b f(x)\,dx.
+$$
+
+**De onde vem.** Aqui o desenho não ajuda, porque "de $b$ até $a$" não é uma
+região diferente. A justificativa vem da soma: percorrer o intervalo de $b$
+para $a$ é dar passos $\Delta x$ **negativos**, de largura $\frac{a - b}{n}$,
+que é negativa quando $a$ é menor que $b$. Cada parcela $f(x_i)\,\Delta x$
+troca de sinal, a soma inteira troca, e o limite também.
+
+Essa é a única propriedade em que $\Delta x$ é negativo. Ela é uma convenção
+coerente com a divisão do intervalo: se $\int_a^b + \int_b^a$ tem de valer
+$\int_a^a = 0$, então $\int_b^a$ precisa ser o oposto de $\int_a^b$.
+
+**Exemplo.** $\int_3^0 t^2\,dt = -9$.
+
+### Comparação: função menor, integral menor
+
+Se $f(x) \le g(x)$ para todo $x$ em $[a, b]$, então
+
+$$
+\int_a^b f(x)\,dx \le \int_a^b g(x)\,dx.
+$$
+
+**De onde vem.** Cada parcela de Riemann de $f$ é menor ou igual à parcela
+correspondente de $g$, porque $\Delta x$ é positivo. Somas menores têm limite
+menor ou igual.
+
+**Exemplo.** Em $[0, 1]$, vale $x^2 \le x$ (um número entre 0 e 1 ao quadrado
+fica menor). Logo $\int_0^1 x^2\,dx \le \int_0^1 x\,dx$, isto é,
+$\frac{1}{3} \le \frac{1}{2}$. Verdadeiro.
+
+### Cotas: prender a integral entre dois retângulos
+
+Se $m \le f(x) \le M$ em $[a, b]$, então
+
+$$
+m\,(b - a) \le \int_a^b f(x)\,dx \le M\,(b - a).
+$$
+
+**De onde vem.** É a comparação aplicada às funções constantes $m$ e $M$: a
+integral de uma constante $c$ em $[a, b]$ é a área do retângulo, $c\,(b - a)$.
+O gráfico de $f$ fica preso entre os dois retângulos, e a integral fica presa
+entre as duas áreas.
+
+**Exemplo.** Em $[0, 3]$, $t^2$ fica entre 0 e 9. Então
+$0 \le \int_0^3 t^2\,dt \le 27$. O valor 9 está dentro da faixa. A cota é
+grosseira, mas serve para pegar um erro grosso: uma resposta 40 estaria
+errada sem precisar de conta nenhuma.
+
+**Contraexemplo da comparação.** Se $f \le g$ só num pedaço do intervalo, a
+regra não se aplica. Em $[0, 2]$, $x^2 \le x$ vale até $x = 1$ e falha depois,
+e de fato $\int_0^2 x^2\,dx$ é maior que $\int_0^2 x\,dx$ (a primeira vale
+$\frac{8}{3}$, a segunda vale 2). A hipótese "para todo $x$ do intervalo" não é
+enfeite.
+
+## 10. Simetria: função par e função ímpar
+
+Quando o intervalo é simétrico em torno do zero, $[-a, a]$, a paridade da
+função corta a conta pela metade ou a elimina.
+
+<CartesianPlane
+  xMin={-3.6}
+  xMax={3.6}
+  yMin={-1}
+  yMax={9.8}
+  xUnit={44}
+  yUnit={20}
+  polygons={[
+    {points: [[-3, 9], [-2.5, 6.25], [-2, 4], [-1.5, 2.25], [-1, 1], [-0.5, 0.25], [0, 0], [0, 0], [-3, 0]], tone: 1},
+    {points: [[0, 0], [0.5, 0.25], [1, 1], [1.5, 2.25], [2, 4], [2.5, 6.25], [3, 9], [3, 0]], tone: 1},
+  ]}
+  functions={[{f: (x) => x * x, domain: [-3.1, 3.1], tone: 3}]}
+  labels={[
+    {at: [-2.1, 1.4], math: '9', tone: 1},
+    {at: [2.1, 1.4], math: '9', tone: 1},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="x² é par: a região da esquerda é o reflexo da direita. A integral de −3 a 3 é 9 + 9 = 18."
+/>
+
+**Função par.** O gráfico à esquerda do eixo vertical é o reflexo do gráfico
+à direita. As duas regiões têm a mesma área com o mesmo sinal, então
+
+$$
+\int_{-a}^{a} f(x)\,dx = 2 \int_0^a f(x)\,dx \qquad (f \text{ par}).
+$$
+
+Exemplo: $\int_{-3}^{3} t^2\,dt = 2 \times 9 = 18$.
+
+<CartesianPlane
+  xMin={-2.6}
+  xMax={2.6}
+  yMin={-9}
+  yMax={9}
+  xUnit={56}
+  yUnit={16}
+  yStep={2}
+  polygons={[
+    {points: [[-2, -8], [-1.5, -3.375], [-1, -1], [-0.5, -0.125], [0, 0], [-2, 0]], tone: 2},
+    {points: [[0, 0], [0.5, 0.125], [1, 1], [1.5, 3.375], [2, 8], [2, 0]], tone: 1},
+  ]}
+  functions={[{f: (x) => x * x * x, domain: [-2.1, 2.1], tone: 3}]}
+  labels={[
+    {at: [-1.45, -2.2], math: '-4', tone: 2},
+    {at: [1.45, 2.2], math: '+4', tone: 1},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="x³ é ímpar: a região da esquerda é a da direita girada meia volta, e fica abaixo do eixo. A integral de −2 a 2 é −4 + 4 = 0."
+/>
+
+**Função ímpar.** O gráfico à esquerda é o da direita girado meia volta em
+torno da origem. As duas regiões têm a mesma área, mas uma fica acima e a
+outra abaixo do eixo: sinais opostos, e a soma se cancela:
+
+$$
+\int_{-a}^{a} f(x)\,dx = 0 \qquad (f \text{ ímpar}).
+$$
+
+Exemplo: $\int_{-2}^{2} x^3\,dx = 0$, sem nenhuma conta. O contraexemplo da
+seção 8, $\int_{-1}^{1} x\,dx = 0$, é o mesmo fato: $x$ é ímpar.
+
+**Contraexemplo.** $\int_{-1}^{2} x^3\,dx$ **não** é zero, porque o intervalo
+$[-1, 2]$ não é simétrico. A parte de $-1$ a 1 se cancela, e sobra a parte de
+1 a 2, que é positiva. A simetria da função só ajuda se o intervalo também for
+simétrico.
+
+**Uma função que não é par nem ímpar** não tem atalho. Mas às vezes ela é a
+soma de uma parte par com uma parte ímpar, e a propriedade da soma separa as
+duas: $\int_{-1}^{1} (x^3 + x^2)\,dx = 0 + 2 \times \frac{1}{3} = \frac{2}{3}$.
+
+## 11. O valor médio de uma função
+
+A velocidade do motivador variou de 6 m/s a $-4$ m/s. Qual foi a velocidade
+**média**?
+
+A lição de taxa média definiu velocidade média como deslocamento dividido pelo
+tempo. O deslocamento acabamos de calcular pela integral, e o tempo é a
+largura do intervalo:
+
+$$
+\text{velocidade média} = \frac{1}{5} \int_0^5 (6 - 2t)\,dt = \frac{5}{5} = 1 \text{ m/s}.
+$$
+
+Isso generaliza para qualquer função:
+
+> O **valor médio** de $f$ em $[a, b]$ é
+> $$\bar f = \frac{1}{b - a} \int_a^b f(x)\,dx.$$
+
+**Leitura geométrica.** Reescreva como $\bar f \times (b - a) = \int_a^b f\,dx$.
+O lado esquerdo é a área de um retângulo de base $b - a$ e altura $\bar f$. O
+valor médio é a **altura do retângulo que tem a mesma área com sinal que a
+curva**: aplaine as montanhas da curva para dentro dos vales até ficar reto, e
+a altura que sobra é $\bar f$.
+
+<CartesianPlane
+  xMin={-0.4}
+  xMax={3.6}
+  yMin={-0.6}
+  yMax={9.8}
+  xUnit={72}
+  yUnit={19}
+  polygons={[
+    {points: [[0, 0], [3, 0], [3, 3], [0, 3]], tone: 2, fill: false},
+    {points: [[0, 0], [0.5, 0.25], [1, 1], [1.5, 2.25], [2, 4], [2.5, 6.25], [3, 9], [3, 0]], tone: 1},
+  ]}
+  functions={[{f: (x) => x * x, domain: [-0.3, 3.2], tone: 3}]}
+  points={[{at: [1.732, 3], label: '(\\sqrt{3},\\ 3)', tone: 2, dx: -40, dy: -14}]}
+  labels={[{at: [3.25, 3], math: '\\bar f = 3', tone: 2, dx: 12}]}
+  axisLabels={['x', 'y']}
+  caption="x² em [0, 3] tem integral 9. O retângulo de base 3 e altura 3 tem a mesma área: o valor médio é 3, e a curva passa por ele em x = √3."
+/>
+
+**Exemplo.** O valor médio de $x^2$ em $[0, 3]$ é $\frac{9}{3} = 3$. A função
+começa em 0 e termina em 9; a média não é $\frac{0 + 9}{2} = 4{,}5$, porque a
+curva passa mais tempo perto de valores baixos do que de valores altos. É o
+mesmo aviso da viagem de ida e volta: **a média pesa cada valor pelo tempo em
+que ele vigora**, e a integral faz esse peso automaticamente.
+
+**Contraexemplo.** Esquecer de dividir pela largura dá 9, que é a integral, não
+a média. Uma "velocidade média de 9 m/s" num trecho em que a velocidade nunca
+passou de 6 é sinal de que faltou a divisão.
+
+Repare que a curva $x^2$ **atinge** o valor médio 3 dentro do intervalo, em
+$x = \sqrt{3} \approx 1{,}73$. Isso não é sorte: toda função contínua atinge
+seu valor médio em algum ponto do intervalo. É o **teorema do valor médio para
+integrais**, primo do [teorema do valor médio](./teorema-do-valor-medio) das
+derivadas, e o teorema fundamental vai transformar um no outro.
+
+## 12. Resolvendo o problema do carro
+
+Agora as duas perguntas do motivador, cada uma com a integral certa.
+
+**Deslocamento.** É a integral da velocidade:
+
+$$
+\int_0^5 (6 - 2t)\,dt = 9 - 4 = 5 \text{ m}.
+$$
+
+O carro parou 5 metros à frente do ponto de partida. Conferindo por outro
+caminho: a posição do carro é $s(t) = 6t - t^2$, porque a derivada disso é
+$6 - 2t$, como a Parte II ensinou; e $s(5) - s(0) = 30 - 25 - 0 = 5$. Bate.
+A relação entre "a derivada de $s$ é $v$" e "a integral de $v$ é a variação de
+$s$" é o assunto da [próxima lição](./teorema-fundamental-do-calculo).
+
+**Distância percorrida.** É a integral de $\lvert v \rvert$. Para calculá-la,
+o caminho é a propriedade da divisão do intervalo: separar o trecho em que $v$
+é positiva do trecho em que é negativa, e trocar o sinal do segundo.
+
+Onde $v$ troca de sinal? Em $6 - 2t = 0$, isto é, $t = 3$. Então
+
+$$
+\int_0^5 \lvert 6 - 2t \rvert\,dt
+= \int_0^3 (6 - 2t)\,dt + \int_3^5 \big(-(6 - 2t)\big)\,dt
+= 9 + 4 = 13 \text{ m}.
+$$
+
+No segundo pedaço, $-(6 - 2t) = 2t - 6$ é positiva, e a integral dela é a área
+do triângulo de baixo contada como positiva: 4.
+
+**Resumo.** Deslocamento 5 m, distância 13 m. A diferença, 8 m, é o dobro dos
+4 m de ré: o deslocamento desconta a ré uma vez, e a distância a soma uma vez.
+
+**Velocidade média** do trecho: $\frac{5}{5} = 1$ m/s. E a velocidade média
+*em módulo*, que um taxímetro cobraria: $\frac{13}{5} = 2{,}6$ m/s. Dois
+números diferentes para duas perguntas diferentes, como na Revisão geral a
+função positiva e a função crescente eram duas perguntas diferentes.
+
+## 13. Exemplos resolvidos
+
+### Exemplo 1: uma integral que a geometria já sabe
+
+Calcule $\int_{-2}^{2} \sqrt{4 - x^2}\,dx$.
+
+A curva $y = \sqrt{4 - x^2}$ satisfaz $x^2 + y^2 = 4$ com $y \ge 0$: é a
+metade de cima da circunferência de raio 2, da lição do
+[círculo](../geometria/circulo). A região entre ela e o eixo é um
+semicírculo, e a integral é a área dele:
+
+$$
+\int_{-2}^{2} \sqrt{4 - x^2}\,dx = \frac{\pi \times 2^2}{2} = 2\pi \approx 6{,}283.
+$$
+
+Uma soma de Riemann com $10^5$ retângulos dá 6,283. A geometria resolveu o que
+os retângulos só aproximam.
+
+### Exemplo 2: um trapézio
+
+*Pause e tente antes de ler.* Calcule $\int_1^4 (2x + 1)\,dx$.
+
+A reta $y = 2x + 1$ vale 3 em $x = 1$ e 9 em $x = 4$. A região é um trapézio
+de bases 3 e 9 e altura 3 (a largura do intervalo):
+
+$$
+\int_1^4 (2x + 1)\,dx = \frac{(3 + 9) \times 3}{2} = 18.
+$$
+
+Ou, pelas propriedades: $\int_1^4 2x\,dx + \int_1^4 1\,dx = 2 \times \frac{16 - 1}{2} + 3 = 15 + 3 = 18$.
+O primeiro termo é o dobro da diferença de dois triângulos; o segundo é um
+retângulo de base 3 e altura 1. Os dois caminhos dão 18.
+
+### Exemplo 3: triângulos com sinal
+
+*Pause e tente.* Calcule $\int_{-2}^{3} x\,dx$ e $\int_{-2}^{3} \lvert x \rvert\,dx$.
+
+A reta $y = x$ fica abaixo do eixo em $[-2, 0]$ e acima em $[0, 3]$. Os
+triângulos têm áreas $\frac{2 \times 2}{2} = 2$ e $\frac{3 \times 3}{2} = 4{,}5$.
+
+$$
+\int_{-2}^{3} x\,dx = -2 + 4{,}5 = 2{,}5,
+\qquad
+\int_{-2}^{3} \lvert x \rvert\,dx = 2 + 4{,}5 = 6{,}5.
+$$
+
+Se você encontrou 6,5 para a primeira, contou a área de baixo como positiva.
+Se encontrou 2,5 para a segunda, esqueceu que o valor absoluto vira o triângulo
+de baixo para cima.
+
+### Exemplo 4: fluxo de caixa
+
+*Pause e tente.* Uma loja registrou o fluxo de caixa de 30 dias como uma taxa
+$r(t)$, em reais por dia:
+
+- dos dias 0 a 10, entram R\$ 200 por dia (vendas à vista);
+- dos dias 10 a 20, saem R\$ 150 por dia (pagamento de fornecedores);
+- dos dias 20 a 30, entram R\$ 100 por dia.
+
+Qual é o saldo do mês? E a movimentação total?
+
+A taxa é uma função por partes, e a divisão do intervalo integra cada trecho
+separadamente. Cada trecho é um retângulo:
+
+$$
+\int_0^{30} r(t)\,dt = 200 \times 10 + (-150) \times 10 + 100 \times 10 = 2000 - 1500 + 1000 = 1500.
+$$
+
+O saldo é R\$ 1.500. A movimentação total é a integral de $\lvert r \rvert$:
+
+$$
+\int_0^{30} \lvert r(t) \rvert\,dt = 2000 + 1500 + 1000 = 4500.
+$$
+
+Passaram R\$ 4.500 pelo caixa, e sobraram R\$ 1.500. É o deslocamento e a
+distância do carro, com dinheiro no lugar de metros.
+
+### Exemplo 5: prender uma integral desconhecida
+
+*Pause e tente.* Sem calcular, mostre que $\int_1^2 \frac{1}{x}\,dx$ está entre
+0,5 e 1.
+
+Em $[1, 2]$, a função $\frac{1}{x}$ é decrescente: vale 1 em $x = 1$ e
+$\frac{1}{2}$ em $x = 2$. Então $\frac{1}{2} \le \frac{1}{x} \le 1$ em todo o
+intervalo, e as cotas dão
+
+$$
+\frac{1}{2} \times (2 - 1) \le \int_1^2 \frac{1}{x}\,dx \le 1 \times (2 - 1),
+$$
+
+isto é, a integral está entre 0,5 e 1. O valor exato, que a lição de
+[primitivas](./primitivas-e-substituicao) vai obter, é $\ln 2 \approx 0{,}693$
+— dentro da faixa. A cota não dá o número, mas descarta qualquer resposta fora
+de $[0{,}5;\ 1]$.
+
+### Exemplo 6: usar a simetria e a soma juntas
+
+*Pause e tente.* Calcule $\int_{-2}^{2} (x^3 + 3)\,dx$.
+
+A função não é par nem ímpar, mas é a soma de uma ímpar, $x^3$, com uma
+constante, que é par. Pela propriedade da soma:
+
+$$
+\int_{-2}^{2} (x^3 + 3)\,dx = \int_{-2}^{2} x^3\,dx + \int_{-2}^{2} 3\,dx = 0 + 3 \times 4 = 12.
+$$
+
+A parte ímpar se cancela sozinha; a parte constante é um retângulo de base 4 e
+altura 3.
+
+## 14. Erros comuns
+
+> **Erro 1: responder distância quando a pergunta é deslocamento, ou
+> vice-versa.** Para $v(t) = 6 - 2t$ em $[0, 5]$, a integral de $v$ dá 5 e a
+> de $\lvert v \rvert$ dá 13. Antes de integrar, decida qual pergunta está
+> sendo feita: "onde parou" pede $v$; "quanto andou" pede $\lvert v \rvert$.
+
+> **Erro 2: achar que integral negativa é erro de conta.** Uma integral
+> negativa diz que a região abaixo do eixo pesou mais. Em
+> $\int_0^2 (2x - 4)\,dx = -4$, a função é negativa no intervalo inteiro, e o
+> resultado tem de ser negativo. Uma conta que desse $+4$ é que estaria errada.
+
+> **Erro 3: integrar o produto como produto das integrais.** Em $[0, 1]$,
+> $\int_0^1 x \times x\,dx = \int_0^1 x^2\,dx = \frac{1}{3}$, mas
+> $\int_0^1 x\,dx \times \int_0^1 x\,dx = \frac{1}{2} \times \frac{1}{2} = \frac{1}{4}$.
+> A constante sai para fora da integral; uma função, não. É o mesmo aviso da
+> regra do produto das derivadas: a operação não atravessa a multiplicação.
+
+> **Erro 4: emendar intervalos na ordem errada.** A regra é
+> $\int_a^b + \int_b^c = \int_a^c$, com o mesmo $b$ no fim de um e no começo do
+> outro. Escrever $\int_0^3 + \int_5^3$ na esperança de obter $\int_0^5$ dá
+> $9 + (-\text{algo})$: o segundo pedaço entrou com os limites invertidos e
+> trocou de sinal.
+
+> **Erro 5: esquecer de dividir pela largura no valor médio.** A integral de
+> $x^2$ em $[0, 3]$ é 9; o valor médio é $\frac{9}{3} = 3$. Uma "média" maior
+> que o maior valor da função no intervalo denuncia a divisão que faltou.
+
+> **Erro 6: fazer a média dos extremos.** O valor médio de $x^2$ em $[0, 3]$
+> não é $\frac{0 + 9}{2} = 4{,}5$: a função passa mais tempo baixa do que alta.
+> É o erro da ida a 60 e volta a 40 dando 50 outra vez. A integral pesa cada
+> valor pelo tempo em que ele dura.
+
+> **Erro 7: usar a simetria num intervalo que não é simétrico.**
+> $\int_{-1}^{2} x^3\,dx$ não é zero. A regra da função ímpar exige $[-a, a]$.
+
+> **Erro 8: aplicar a comparação quando a desigualdade falha em parte do
+> intervalo.** $x^2 \le x$ vale em $[0, 1]$ e falha em $[1, 2]$; em $[0, 2]$ a
+> integral de $x^2$ é a maior. A hipótese é "para todo $x$ do intervalo".
+
+## 15. Perguntas de verificação
+
+1. Por que a soma de Riemann de uma função negativa é negativa, se a largura
+   $\Delta x$ é sempre positiva?
+2. O que significa dizer que $\int_{-1}^{1} x\,dx = 0$? A função é nula? A
+   região não tem área?
+3. Qual é a diferença entre $\int_a^b v\,dt$ e $\int_a^b \lvert v \rvert\,dt$
+   quando $v$ é uma velocidade?
+4. De onde vem a propriedade da soma? Que propriedade do limite ela usa?
+5. Por que $\int_b^a f\,dx = -\int_a^b f\,dx$, se a região desenhada é a mesma?
+6. A propriedade "constante sai para fora" vale para uma função multiplicando?
+   Dê um contraexemplo numérico.
+7. Por que a integral de uma função ímpar em $[-a, a]$ é zero, e por que a de
+   uma função par é o dobro da integral em $[0, a]$?
+8. O que o valor médio de $f$ em $[a, b]$ mede, geometricamente?
+9. O valor médio de $x^2$ em $[0, 3]$ é 3, mas a média dos valores nas pontas é
+   4,5. Qual dos dois é a média certa, e por quê?
+10. Se $f(x) \le g(x)$ só numa parte do intervalo, dá para concluir alguma
+    coisa sobre as integrais?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque a altura de cada retângulo é $f(x_i)$, que é negativa. O produto de
+   um negativo por um positivo é negativo, e a soma de parcelas negativas é
+   negativa.
+2. Significa que a área acima do eixo empatou com a área abaixo. A função não
+   é nula (só se anula em 0) e a região tem área total 1. Integral zero é
+   saldo zero, não ausência.
+3. A primeira é o deslocamento: quanto o móvel avançou, descontando o que
+   voltou. A segunda é a distância percorrida: tudo o que ele andou, sem
+   descontar.
+4. Do fato de cada parcela $\big(f(x_i) + g(x_i)\big)\Delta x$ se separar em
+   duas, uma de $f$ e uma de $g$. Depois usa que o limite de uma soma é a soma
+   dos limites.
+5. Porque percorrer o intervalo ao contrário dá $\Delta x$ negativo, e cada
+   parcela troca de sinal. A região é a mesma; o sentido de percurso não é.
+6. Não. $\int_0^1 x \times x\,dx = \frac{1}{3}$, mas
+   $\int_0^1 x\,dx \times \int_0^1 x\,dx = \frac{1}{4}$.
+7. Ímpar: as regiões dos dois lados têm a mesma área e sinais opostos, e se
+   cancelam. Par: têm a mesma área e o mesmo sinal, e se somam.
+8. A altura do retângulo de base $b - a$ que tem a mesma área com sinal que a
+   região sob a curva.
+9. O 3. A média certa pesa cada valor pelo tempo em que ele vigora, e a
+   função $x^2$ fica perto de valores baixos por mais tempo do que perto de
+   9. A média dos extremos ignora esse peso.
+10. Não, nada. A regra exige a desigualdade em todo o intervalo. Em $[0, 2]$,
+    $x^2 \le x$ só até 1, e a integral de $x^2$ acaba sendo a maior.
+
+</details>
+
+## 16. Exercícios
+
+### 1. Reconhecimento
+
+1. Sem calcular, diga se cada integral é positiva, negativa ou zero:
+   a) $\int_0^4 (x - 2)\,dx$; b) $\int_{-1}^{2} 3\,dx$; c) $\int_0^2 (2x - 4)\,dx$;
+   d) $\int_{-1}^{1} x^5\,dx$.
+2. Para cada situação, diga se a pergunta pede $\int f$ ou $\int \lvert f \rvert$:
+   a) "quantos litros passaram pelo cano, contando entrada e saída";
+   b) "quanto o nível do tanque mudou"; c) "qual foi o saldo do mês";
+   d) "quantos quilômetros o carro rodou".
+3. Qual das duas escritas está correta para a divisão do intervalo $[0, 5]$
+   em $[0, 3]$ e $[3, 5]$: $\int_0^3 + \int_3^5$ ou $\int_0^3 + \int_5^3$?
+
+### 2. Explicação
+
+4. Explique, com a soma de Riemann, por que a área abaixo do eixo entra na
+   integral com sinal negativo.
+5. Explique por que $\int_{-2}^{2} x^3\,dx = 0$ sem fazer nenhuma conta, e por
+   que o mesmo argumento não serve para $\int_{-1}^{2} x^3\,dx$.
+6. Um colega diz: "a integral de uma função em $[a, b]$ deu zero, então a
+   função é zero nesse intervalo". Corrija-o com um exemplo.
+
+### 3. Aplicação direta
+
+7. Calcule por geometria: a) $\int_{-1}^{2} 3\,dx$; b) $\int_0^2 (2x - 4)\,dx$;
+   c) $\int_{-3}^{3} \sqrt{9 - x^2}\,dx$; d) $\int_0^4 (x - 2)\,dx$.
+8. Sabendo que $\int_0^3 t^2\,dt = 9$ e $\int_0^1 t^2\,dt = \frac{1}{3}$,
+   calcule: a) $\int_0^3 (t^2 + 4)\,dt$; b) $\int_0^3 \frac{t^2}{3}\,dt$;
+   c) $\int_3^0 t^2\,dt$; d) $\int_1^3 t^2\,dt$; e) $\int_{-3}^{3} t^2\,dt$.
+9. Calcule $\int_{-3}^{3} (t^2 + 1)\,dt$ usando a paridade.
+10. Calcule o valor médio de $f(x) = 2x + 1$ em $[1, 4]$, e verifique que a
+    função atinge esse valor em algum ponto do intervalo.
+
+### 4. Variação
+
+11. Um móvel tem velocidade $v(t) = 4 - t$ m/s em $[0, 6]$. Calcule o
+    deslocamento e a distância percorrida.
+12. Outro móvel tem velocidade $v(t) = 10 - 5t$ m/s em $[0, 4]$. Calcule o
+    deslocamento e a distância percorrida, e explique o que o deslocamento
+    zero significa.
+13. Calcule $\int_{-1}^{1} (x^3 + x^2)\,dx$ separando a parte ímpar da parte
+    par.
+14. Sem calcular, prenda $\int_0^2 \sqrt{x + 1}\,dx$ entre dois números.
+
+### 5. Problema misto
+
+15. Um tanque recebe água a uma vazão $q(t) = 30 - 6t$ litros por minuto, com
+    $t$ em minutos, de $t = 0$ a $t = 8$. Vazão positiva é água entrando;
+    negativa é água saindo por um ralo. a) Em que instante a entrada vira
+    saída? b) Quanto o volume do tanque variou nos 8 minutos? c) Quantos
+    litros, ao todo, passaram pelos canos? d) Qual foi a vazão média?
+16. Uma loja tem taxa de caixa $r(t)$ igual a R\$ 200 por dia nos dias 0 a 10,
+    $-$R\$ 150 por dia nos dias 10 a 20 e R\$ 100 por dia nos dias 20 a 30.
+    O dono diz que "faturou R\$ 4.500 no mês". Um contador diz que "o saldo foi
+    R\$ 1.500". Os dois estão certos? Explique com integrais.
+17. A velocidade de um carro em $[0, 5]$ foi $v(t) = 6 - 2t$. O velocímetro,
+    que só marca números positivos, registrou o quê nos instantes 1, 3 e 4?
+    E qual é a integral do que o velocímetro marcou?
+
+### 6. Justificativa
+
+18. Mostre, a partir da definição por somas de Riemann, que
+    $\int_a^b c\,dx = c\,(b - a)$ para qualquer constante $c$, inclusive
+    negativa.
+19. Explique por que a convenção $\int_b^a = -\int_a^b$ é a única compatível
+    com a divisão do intervalo e com $\int_a^a = 0$.
+20. Por que a comparação de integrais exige $f \le g$ em **todo** o intervalo?
+    Dê um exemplo em que a desigualdade falha num pedaço e a conclusão falha
+    também.
+
+<details>
+<summary>Dica para o exercício 11</summary>
+
+Ache primeiro o instante em que a velocidade zera. Ele divide o intervalo no
+trecho de avanço e no trecho de ré. Cada trecho é um triângulo.
+
+</details>
+
+<details>
+<summary>Dica para o exercício 14</summary>
+
+Em $[0, 2]$, a função $\sqrt{x + 1}$ é crescente. O menor valor está em
+$x = 0$ e o maior em $x = 2$. Use as cotas.
+
+</details>
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) **Zero**: a reta $y = x - 2$ fica abaixo do eixo em $[0, 2]$ e acima em
+   $[2, 4]$, e os dois triângulos têm a mesma área (2 cada). b) **Positiva**:
+   uma constante positiva. c) **Negativa**: $2x - 4$ é negativa em todo o
+   intervalo $[0, 2[$. d) **Zero**: $x^5$ é ímpar e o intervalo é simétrico.
+2. a) $\int \lvert f \rvert$. b) $\int f$. c) $\int f$. d) $\int \lvert f \rvert$.
+   A regra: "variação" ou "saldo" pede o sinal; "total" ou "quanto passou" pede
+   o módulo.
+3. A primeira. Na segunda, o pedaço $\int_5^3$ está com os limites
+   invertidos e vale $-\int_3^5$.
+4. Cada parcela é $f(x_i)\,\Delta x$. A largura $\Delta x$ é positiva, mas a
+   altura $f(x_i)$ é negativa onde o gráfico está abaixo do eixo. O produto é
+   negativo, e essas parcelas descontam das positivas. O limite conserva o
+   sinal.
+5. $x^3$ é ímpar: $(-x)^3 = -x^3$. A região de $[-2, 0]$ é a de $[0, 2]$
+   girada meia volta, com a mesma área e sinal contrário, e as duas se
+   cancelam. Em $[-1, 2]$ só a parte de $[-1, 1]$ se cancela; sobra
+   $\int_1^2 x^3\,dx$, que é positiva.
+6. $\int_{-1}^{1} x\,dx = 0$, mas $f(x) = x$ só é zero em um ponto. A integral
+   zero significa que a área acima do eixo empatou com a área abaixo.
+7. a) Retângulo de base 3 e altura 3: **9**. b) Triângulo abaixo do eixo, base
+   2 e altura 4, área 4, contado negativo: **$-4$**. c) Semicírculo de raio 3:
+   $\frac{9\pi}{2} \approx 14{,}14$. d) **0**: dois triângulos de área 2, um
+   abaixo e um acima.
+8. a) $9 + 4 \times 3 = 21$. b) $\frac{9}{3} = 3$. c) $-9$. d)
+   $9 - \frac{1}{3} = \frac{26}{3} \approx 8{,}67$. e) $2 \times 9 = 18$.
+   Se você encontrou 13 em (a), somou o 4 sem multiplicar pela largura 3: a
+   integral da constante 4 em $[0, 3]$ é um retângulo de área 12.
+9. $t^2 + 1$ é par, então a integral é $2\int_0^3 (t^2 + 1)\,dt = 2(9 + 3) = 24$.
+10. $\int_1^4 (2x + 1)\,dx = 18$ (trapézio de bases 3 e 9, altura 3). O valor
+    médio é $\frac{18}{3} = 6$. A função vale 6 em $2x + 1 = 6$, isto é,
+    $x = 2{,}5$, que está em $[1, 4]$. Numa reta, o valor médio é o valor no
+    ponto médio.
+11. A velocidade zera em $t = 4$. Avanço em $[0, 4]$: triângulo de base 4 e
+    altura 4, área **8**. Ré em $[4, 6]$: triângulo de base 2 e altura 2, área
+    **2**. Deslocamento $8 - 2 = 6$ m; distância $8 + 2 = 10$ m. Conferindo
+    pela posição $s(t) = 4t - \frac{t^2}{2}$: $s(6) - s(0) = 24 - 18 = 6$.
+12. Zera em $t = 2$. Avanço em $[0, 2]$: base 2, altura 10, área 10. Ré em
+    $[2, 4]$: base 2, altura 10, área 10. Deslocamento $10 - 10 = 0$;
+    distância 20 m. Deslocamento zero significa que o móvel **voltou ao ponto
+    de partida**, não que ficou parado: ele andou 20 metros.
+13. $\int_{-1}^{1} x^3\,dx = 0$ (ímpar) e
+    $\int_{-1}^{1} x^2\,dx = 2 \times \frac{1}{3} = \frac{2}{3}$ (par). Total
+    $\frac{2}{3}$.
+14. Em $[0, 2]$, $1 \le \sqrt{x + 1} \le \sqrt{3}$. Então
+    $1 \times 2 \le \int_0^2 \sqrt{x + 1}\,dx \le \sqrt{3} \times 2$, ou seja,
+    a integral está entre 2 e $2\sqrt{3} \approx 3{,}46$. (O valor exato,
+    $\frac{2}{3}(3\sqrt{3} - 1) \approx 2{,}80$, está dentro da faixa.)
+15. a) $30 - 6t = 0$ em $t = 5$ min. b) Entrada em $[0, 5]$: triângulo de base
+    5 e altura 30, área 75. Saída em $[5, 8]$: a vazão vai de 0 a $-18$,
+    triângulo de base 3 e altura 18, área 27. Variação do volume:
+    $75 - 27 = 48$ litros. c) $75 + 27 = 102$ litros passaram pelos canos.
+    d) Vazão média: $\frac{48}{8} = 6$ litros por minuto. Se você respondeu
+    102 em (b), contou a saída como entrada.
+16. Os dois estão certos, mas falam de integrais diferentes. O contador
+    calculou $\int_0^{30} r\,dt = 2000 - 1500 + 1000 = 1500$: o saldo. O dono
+    calculou $\int_0^{30} \lvert r \rvert\,dt = 2000 + 1500 + 1000 = 4500$: a
+    movimentação, que não é "faturamento" — inclui os R\$ 1.500 que saíram.
+    O faturamento (só entradas) seria R\$ 3.000.
+17. O velocímetro marca $\lvert v \rvert$: 4 m/s em $t = 1$, 0 em $t = 3$ e
+    2 m/s em $t = 4$ (a velocidade era $-2$, mas o ponteiro não mostra
+    sinal). A integral do que ele marcou é $\int_0^5 \lvert v \rvert\,dt = 13$
+    m, a distância percorrida — é por isso que o hodômetro do carro só
+    aumenta.
+18. Toda parcela da soma de Riemann é $c \times \Delta x$, e há $n$ delas, com
+    $n\,\Delta x = b - a$. A soma é $c\,(b - a)$ para **qualquer** $n$, então o
+    limite também é $c\,(b - a)$. Com $c$ negativo, o resultado é negativo: um
+    retângulo abaixo do eixo.
+19. A divisão do intervalo diz $\int_a^b + \int_b^a = \int_a^a$. O lado
+    direito é zero, porque a largura é zero. Então $\int_b^a$ tem de ser o
+    número que somado a $\int_a^b$ dá zero, isto é, $-\int_a^b$. Qualquer
+    outra convenção quebraria uma das duas regras.
+20. Porque a comparação é feita parcela a parcela na soma de Riemann: cada
+    $f(x_i)\,\Delta x \le g(x_i)\,\Delta x$ exige $f(x_i) \le g(x_i)$ em cada
+    ponto escolhido. Se a desigualdade falha num trecho, as parcelas daquele
+    trecho podem pesar mais. Exemplo: em $[0, 2]$, $x^2 \le x$ falha em
+    $[1, 2]$, e $\int_0^2 x^2\,dx = \frac{8}{3}$ é maior que
+    $\int_0^2 x\,dx = 2$.
+
+</details>
+
+## 17. Revisão curta
+
+- A integral definida é **área com sinal**: o que fica acima do eixo conta
+  positivo, o que fica abaixo conta negativo. O sinal nasce na soma de Riemann,
+  onde a altura $f(x_i)$ pode ser negativa, e sobrevive ao limite.
+- **Deslocamento** é $\int v$; **distância** é $\int \lvert v \rvert$. Saldo e
+  movimentação, variação e total, seguem a mesma regra.
+- As **propriedades** vêm do desenho e do limite: soma, constante para fora,
+  divisão do intervalo, largura zero dá zero, inversão dos limites troca o
+  sinal, comparação e cotas.
+- **Par** em $[-a, a]$: o dobro de $[0, a]$. **Ímpar** em $[-a, a]$: zero.
+- O **valor médio** é $\frac{1}{b-a}\int_a^b f$: a altura do retângulo de
+  mesma área, e a média que pesa cada valor pelo tempo em que ele dura.
+
+Antes de avançar, verifique se você consegue fazer três coisas: dizer, olhando
+um gráfico, o sinal de uma integral; separar deslocamento de distância num
+problema de velocidade que troca de sinal; e calcular $\int_1^3 x^2\,dx$ a
+partir de $\int_0^3 x^2\,dx = 9$ e $\int_0^1 x^2\,dx = \frac{1}{3}$.
+
+Tudo nesta página foi calculado por geometria ou por somas de Riemann. A
+[próxima lição](./teorema-fundamental-do-calculo) mostra que a conta
+$s(5) - s(0) = 5$ do motivador não foi coincidência: a integral de $v$ é a
+variação de qualquer função cuja derivada seja $v$, e isso troca mil
+retângulos por uma subtração.

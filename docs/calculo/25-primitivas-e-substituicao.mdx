@@ -1,0 +1,1165 @@
+---
+title: "Primitivas e substituição: a tabela de derivadas lida ao contrário"
+sidebar_label: Primitivas e substituição
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Primitivas e substituição: a tabela de derivadas lida ao contrário
+
+## 1. Problema motivador: a bomba de irrigação
+
+Uma bomba de irrigação é ligada e a vazão dela, em litros por minuto, foi
+modelada por
+
+$$
+q(t) = \frac{200\,t}{t^2 + 1},
+$$
+
+com $t$ em minutos. A vazão começa em zero, porque o motor está pegando ritmo;
+sobe até 100 L/min em $t = 1$; e depois cai devagar, porque o filtro vai
+entupindo. A pergunta do operador é direta:
+
+> Quantos litros a bomba entregou nos primeiros 5 minutos?
+
+A lição do [teorema fundamental do cálculo](./teorema-fundamental-do-calculo)
+respondeu como fazer isso. O volume é a integral da vazão, e a integral se
+calcula achando uma função cuja derivada seja $q$:
+
+$$
+\text{volume} = \int_0^5 \frac{200\,t}{t^2 + 1}\,dt = Q(5) - Q(0),
+\qquad \text{com } Q'(t) = q(t).
+$$
+
+O método está pronto. Falta a peça central: **achar $Q$**. E aí o teorema
+fundamental fica em silêncio. Ele diz que serve qualquer função com a
+derivada certa — mas não diz como encontrá-la, e nenhuma das derivadas da
+Parte II tem a cara de $\frac{200t}{t^2+1}$.
+
+Guarde a bomba e olhe a versão mais nua da mesma dificuldade:
+
+$$
+\int 2x\,e^{x^2}\,dx = \ ?
+$$
+
+Nenhuma linha de uma tabela de derivadas produz $2x\,e^{x^2}$. Nem $e^x$, nem
+$x^n$, nem produto de duas dessas.
+
+Mas experimente derivar $e^{x^2}$. A função de dentro é $x^2$, a de fora é
+$e^u$, e a [regra da cadeia](./regra-da-cadeia) dá
+
+$$
+\left(e^{x^2}\right)' = e^{x^2} \times 2x = 2x\,e^{x^2}.
+$$
+
+É exatamente o integrando. A primitiva de $2x\,e^{x^2}$ é $e^{x^2}$, e a
+resposta estava guardada na regra da cadeia o tempo todo — só precisava ser
+lida de trás para a frente.
+
+Esta página faz duas coisas. Primeiro, escreve a **tabela de primitivas** do
+curso, que é a tabela de derivadas com as colunas trocadas. Depois, ensina a
+**substituição**, que é a regra da cadeia lida ao contrário e resolve, entre
+outras, a integral da bomba.
+
+## 2. Mapa das ideias
+
+- **primitiva** de $f$ é qualquer função $F$ com $F' = f$; duas primitivas da
+  mesma função diferem por uma constante, e por isso a resposta é
+  $F(x) + C$;
+- **integral indefinida** $\int f(x)\,dx$ é o nome dessa família inteira: uma
+  família de funções, não um número;
+- a **tabela de primitivas** é a tabela de derivadas lida da direita para a
+  esquerda;
+- **não existe** regra do produto nem do quociente para primitivas; existe
+  regra da soma e da constante;
+- **substituição**: se o integrando é $f(g(x))\,g'(x)$, a primitiva é
+  $F(g(x))$, com $F' = f$. É a regra da cadeia ao contrário;
+- o **teste** que decide se a substituição serve: a derivada de dentro está
+  multiplicando o resto, a menos de uma constante?
+- na **integral definida**, substituir muda também os limites: eles passam de
+  valores de $x$ para valores de $u$.
+
+## 3. Para que serve
+
+- recuperar uma quantidade a partir da taxa dela, quando a taxa é uma
+  composição: volume a partir de vazão, custo a partir de custo marginal,
+  posição a partir de velocidade;
+- calcular áreas e integrais definidas sem somas de Riemann, para uma família
+  de funções bem maior que a das potências;
+- resolver integrais com exponencial, logaritmo, raiz e trigonometria, que são
+  as que aparecem em modelos de crescimento, decaimento e oscilação;
+- e, dentro da matemática, fechar a simetria do capítulo: a Parte II montou
+  uma tabela de derivadas, e a Parte IV a usa nos dois sentidos.
+
+Uma ressalva honesta desde já. Derivar é um procedimento: dada a fórmula, as
+regras da Parte II sempre entregam a derivada. Integrar não é. Existem funções
+com fórmula simples cuja primitiva **não se escreve** com as funções deste
+curso, e $e^{x^2}$ é uma delas. A seção 10 mostra a diferença entre
+$\int e^{x^2}\,dx$, que não sai, e $\int 2x\,e^{x^2}\,dx$, que sai numa linha.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. Da [regra da cadeia](./regra-da-cadeia): qual é a derivada de uma
+composição?** Derivada de fora, calculada em dentro, vezes derivada de dentro:
+$(f \circ g)'(x) = f'\big(g(x)\big) \cdot g'(x)$. Em $(3x+1)^5$, a de dentro é
+$3x+1$, com derivada 3, e o resultado é $15(3x+1)^4$. Na notação de Leibniz,
+$\frac{dy}{dx} = \frac{dy}{du} \times \frac{du}{dx}$. Aquela lição terminou
+dizendo que a Parte IV leria essa regra ao contrário. É esta página.
+
+**2. Da [composição de funções](../funcoes/composicao-de-funcoes): como se
+reconhece a função de dentro numa fórmula?** Perguntando o que se calcularia
+primeiro. Em $\sqrt{x^2+1}$, primeiro se calcula $x^2+1$; então essa é a de
+dentro. Toda substituição começa com essa pergunta.
+
+**3. Da [derivada](./a-derivada) e das lições de regras: qual é a derivada de
+$x^n$, de $\frac{1}{x}$, de $e^x$, de $\sen x$?** São $n x^{n-1}$,
+$-\frac{1}{x^2}$, $e^x$ e $\cos x$. Cada uma dessas linhas vira uma linha da
+tabela desta página, lida no outro sentido.
+
+**4. Do [teorema fundamental do cálculo](./teorema-fundamental-do-calculo): o
+que ele afirma, e o que ele não entrega?** Afirma que
+$\int_a^b f(x)\,dx = F(b) - F(a)$ para qualquer $F$ com $F' = f$. Não entrega
+o $F$: encontrá-lo é o trabalho desta página.
+
+**5. Do [teorema do valor médio](./teorema-do-valor-medio): duas funções com a
+mesma derivada num intervalo são iguais?** Não: elas **diferem por uma
+constante**. Se $F' = G'$ em todo o intervalo, então $(F - G)' = 0$, e uma
+função de derivada zero num intervalo é constante. É esse corolário que
+explica o $+C$ de toda primitiva.
+
+**6. De [derivação implícita](./derivacao-implicita): quais derivadas novas
+aquela página produziu?** $(\arcsen x)' = \frac{1}{\sqrt{1 - x^2}}$ e
+$(\arctg x)' = \frac{1}{1 + x^2}$. Elas fecham a tabela de primitivas com duas
+linhas que, sem elas, não existiriam.
+
+O item 1 é o que carrega a página. A substituição inteira é a regra da cadeia
+com as duas pontas trocadas de lugar, e quem enxerga bem a camada de dentro
+numa fórmula já sabe metade do método.
+
+## 5. Intuição: ler a tabela da direita para a esquerda
+
+A Parte II montou, linha por linha, uma tabela de derivadas. Cada linha diz:
+**esta função tem aquela derivada**. Por exemplo, "a derivada de $\sen x$ é
+$\cos x$".
+
+Agora leia a mesma linha ao contrário: **aquela função é a derivada desta**.
+Isto é, "$\cos x$ é a derivada de $\sen x$" — ou seja, $\sen x$ é uma
+primitiva de $\cos x$.
+
+Nada foi calculado. A informação já estava lá; mudou a pergunta que se faz a
+ela. É o mesmo movimento das operações inversas do começo do curso: a tabuada
+que responde "$7 \times 8 = 56$" também responde "$56 \div 8 = 7$", desde que
+se leia na outra direção.
+
+Só que a leitura ao contrário tem uma sutileza que a leitura direta não tem.
+A derivada de $\sen x$ é $\cos x$. Mas a derivada de $\sen x + 5$ **também** é
+$\cos x$, porque a constante 5 tem derivada zero. E a de $\sen x - 17$ também.
+Existe uma família inteira de funções com a mesma derivada, e a leitura ao
+contrário não consegue escolher uma delas.
+
+Derivar apaga a constante. Ao desfazer a derivada, a constante não volta
+sozinha — e a resposta honesta é registrar que ela existe, escrevendo $+C$.
+
+## 6. Modelo visual: uma família de curvas paralelas
+
+Tome $f(x) = 2x$. As funções $x^2$, $x^2 + 3$ e $x^2 - 3$ têm todas a derivada
+$2x$. No gráfico, elas são a mesma curva em três alturas.
+
+<CartesianPlane
+  xMin={-2.4}
+  xMax={3.4}
+  yMin={-3.6}
+  yMax={7.6}
+  xUnit={52}
+  yUnit={28}
+  yStep={1}
+  yLabelEvery={2}
+  functions={[
+    {f: (x) => x * x + 3, domain: [-2.1, 2.1], tone: 1},
+    {f: (x) => x * x, domain: [-2.4, 2.4], tone: 2},
+    {f: (x) => x * x - 3, domain: [-2.4, 2.6], tone: 3},
+  ]}
+  segments={[
+    {from: [0.3, 2.6], to: [1.7, 5.4], tone: 1, dashed: true},
+    {from: [0.3, -0.4], to: [1.7, 2.4], tone: 2, dashed: true},
+    {from: [0.3, -3.4], to: [1.7, -0.6], tone: 3, dashed: true},
+  ]}
+  points={[
+    {at: [1, 4], tone: 1},
+    {at: [1, 1], tone: 2},
+    {at: [1, -2], tone: 3},
+  ]}
+  labels={[
+    {at: [2.1, 7.41], math: 'x^2 + 3', tone: 1, dx: 28},
+    {at: [2.4, 5.76], math: 'x^2', tone: 2, dx: 24},
+    {at: [2.6, 3.76], math: 'x^2 - 3', tone: 3, dx: 28},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Três primitivas de 2x. Em x = 1, as três tangentes têm a mesma inclinação, 2: as curvas sobem no mesmo ritmo, em alturas diferentes."
+/>
+
+As três tangentes desenhadas em $x = 1$ são paralelas, e a inclinação comum é
+$2 \times 1 = 2$. Isso vale em qualquer $x$: as curvas têm o mesmo ritmo de
+subida em todo ponto, e o que as separa é uma distância vertical fixa.
+
+Duas leituras saem da figura.
+
+**Quantas primitivas existem.** Infinitas, uma para cada altura. Deslizar a
+curva para cima ou para baixo não muda nenhuma inclinação, então não muda a
+derivada.
+
+**Por que só constantes.** Se duas curvas têm a mesma inclinação em todo
+ponto, a distância vertical entre elas nunca muda: se mudasse, num trecho uma
+estaria subindo mais que a outra, e as inclinações ali seriam diferentes. Esse
+é o argumento que o teorema do valor médio transforma em demonstração — e que
+o item 5 da seção 4 relembra.
+
+## 7. Primitiva, integral indefinida e a tabela
+
+> **Primitiva.** Uma função $F$ é uma **primitiva** de $f$ num intervalo
+> quando $F'(x) = f(x)$ para todo $x$ do intervalo.
+
+**Exemplo.** $F(x) = x^3$ é uma primitiva de $f(x) = 3x^2$, porque
+$(x^3)' = 3x^2$. E $x^3 + 40$ também é.
+
+**Contraexemplo.** $F(x) = x^3$ **não** é primitiva de $x^2$. Derivando, dá
+$3x^2$, que é o triplo de $x^2$. A primitiva de $x^2$ é $\frac{x^3}{3}$, e o
+teste é sempre o mesmo: **derive a resposta e veja se ela devolve o
+integrando**.
+
+Esse teste é a ferramenta de conferência da página inteira, e ele é mais
+barato que a integral. Toda resposta de primitiva pode ser verificada por
+quem a escreveu, sem gabarito.
+
+> **Integral indefinida.** A família de todas as primitivas de $f$ se escreve
+> $$
+> \int f(x)\,dx = F(x) + C,
+> $$
+> em que $F$ é uma primitiva qualquer e $C$ é uma constante arbitrária.
+
+Repare na diferença entre as duas escritas do capítulo:
+
+| Escrita | O que é | Exemplo |
+|---|---|---|
+| $\int_a^b f(x)\,dx$ | um **número**: a área com sinal entre $a$ e $b$ | $\int_0^3 t^2\,dt = 9$ |
+| $\int f(x)\,dx$ | uma **família de funções**: todas as primitivas de $f$ | $\int t^2\,dt = \frac{t^3}{3} + C$ |
+
+A primeira tem limites e devolve um número. A segunda não tem limites e
+devolve funções. Elas se encontram no teorema fundamental, que usa uma
+primitiva para calcular o número.
+
+### A tabela de primitivas do curso
+
+Cada linha é uma derivada da Parte II lida ao contrário. A coluna da direita
+mostra qual derivada confirma a linha.
+
+| $f(x)$ | $\int f(x)\,dx$ | Derivada que confirma |
+|---|---|---|
+| $x^n$, com $n \neq -1$ | $\dfrac{x^{n+1}}{n+1} + C$ | $\left(\dfrac{x^{n+1}}{n+1}\right)' = x^n$ |
+| $\dfrac{1}{x}$ | $\ln \lvert x \rvert + C$ | $(\ln x)' = \dfrac{1}{x}$ |
+| $e^x$ | $e^x + C$ | $(e^x)' = e^x$ |
+| $a^x$ | $\dfrac{a^x}{\ln a} + C$ | $(a^x)' = a^x \ln a$ |
+| $\cos x$ | $\sen x + C$ | $(\sen x)' = \cos x$ |
+| $\sen x$ | $-\cos x + C$ | $(\cos x)' = -\sen x$ |
+| $\sec^2 x = \dfrac{1}{\cos^2 x}$ | $\tg x + C$ | $(\tg x)' = \sec^2 x$ |
+| $\dfrac{1}{1 + x^2}$ | $\arctg x + C$ | $(\arctg x)' = \dfrac{1}{1+x^2}$ |
+| $\dfrac{1}{\sqrt{1 - x^2}}$ | $\arcsen x + C$ | $(\arcsen x)' = \dfrac{1}{\sqrt{1-x^2}}$ |
+
+Três observações sobre a tabela.
+
+**A linha da potência exclui $n = -1$, e o motivo está na própria fórmula.**
+Com $n = -1$, o denominador $n + 1$ vira zero, e $\frac{x^0}{0}$ não existe. É
+justamente por isso que a linha seguinte precisa existir: a primitiva de
+$x^{-1}$ não vem da regra da potência, e sim do logaritmo.
+
+**O módulo em $\ln \lvert x \rvert$ não é enfeite.** Para $x$ positivo,
+$(\ln x)' = \frac{1}{x}$, como a lição de exponenciais mostrou. Para $x$
+negativo, $\ln x$ nem existe, mas $\ln(-x)$ existe, e a cadeia dá
+$\left(\ln(-x)\right)' = \frac{-1}{-x} = \frac{1}{x}$: a mesma derivada.
+Escrever $\ln \lvert x \rvert$ cobre os dois lados de uma vez. Conferindo em
+$x = -3$: a derivada numérica de $\ln \lvert x \rvert$ ali dá $-0{,}3333$, e
+$\frac{1}{-3} = -0{,}3333$.
+
+**A linha de $\sen x$ carrega o sinal de menos.** A primitiva de $\sen x$ é
+$-\cos x$, e não $\cos x$. Derivando $\cos x$ sai $-\sen x$, que tem o sinal
+errado; derivando $-\cos x$ sai $-(-\sen x) = \sen x$, que é o integrando.
+Este é o erro mais frequente da tabela, e a conferência por derivação o pega
+em uma linha.
+
+### Soma e constante, sim; produto e quociente, não
+
+As duas regras que valem para primitivas vêm das regras correspondentes de
+derivadas, lidas ao contrário:
+
+$$
+\int \big(f(x) + g(x)\big)\,dx = \int f(x)\,dx + \int g(x)\,dx,
+\qquad
+\int c\,f(x)\,dx = c \int f(x)\,dx.
+$$
+
+**Por quê.** Se $F' = f$ e $G' = g$, então $(F + G)' = f + g$ pela regra da
+soma, e $(cF)' = c\,f$ pela regra da constante multiplicativa. Cada regra de
+derivada com a leitura invertida vira uma regra de primitiva.
+
+**Exemplo.** $\int (3x^2 - 4x + 5)\,dx = x^3 - 2x^2 + 5x + C$. Conferindo:
+a derivada de $x^3 - 2x^2 + 5x$ é $3x^2 - 4x + 5$. Confere.
+
+**Contraexemplo, e é o mais importante da seção.** Não existe
+$\int f\,g\,dx = \int f\,dx \times \int g\,dx$. Teste com $f = g = x$ em
+$\int x \times x\,dx$: o lado esquerdo é $\int x^2\,dx = \frac{x^3}{3} + C$; o
+lado direito seria $\frac{x^2}{2} \times \frac{x^2}{2} = \frac{x^4}{4}$, cuja
+derivada é $x^3$, e não $x^2$. As duas respostas nem têm o mesmo grau.
+
+Isso não é uma falha do capítulo: é uma diferença real entre derivar e
+integrar. A derivada tem regra para produto e para quociente; a primitiva não
+tem. Um exemplo concreto de quanto isso custa é $\int x\,e^x\,dx$: a resposta
+existe e é $(x - 1)e^x + C$ — confira derivando —, mas nenhuma ferramenta
+desta página a encontra. Ela sai por **integração por partes**, técnica de um
+curso de Cálculo 2.
+
+O que esta página oferece no lugar não é uma regra do produto. É um caso
+particular de produto, muito frequente, em que a segunda função é a derivada
+do que está dentro da primeira. Esse caso é a substituição.
+
+## 8. Ponte para a formalização: a cadeia com as pontas trocadas
+
+Escreva a regra da cadeia com $F$ no lugar de $f$, sendo $F$ uma primitiva
+qualquer de $f$, isto é, $F' = f$:
+
+$$
+\frac{d}{dx}\,F\big(g(x)\big) = F'\big(g(x)\big) \times g'(x) = f\big(g(x)\big)\,g'(x).
+$$
+
+Essa igualdade é uma linha da tabela de derivadas: à esquerda uma função, à
+direita a derivada dela. Leia ao contrário, como a seção 5 ensinou, e ela vira
+uma linha da tabela de primitivas:
+
+$$
+\int f\big(g(x)\big)\,g'(x)\,dx = F\big(g(x)\big) + C.
+$$
+
+Não houve conta nenhuma nessa passagem: houve uma troca de direção de leitura,
+e a igualdade que já estava demonstrada continua valendo. É assim com todas as
+regras: **toda regra de derivação vira uma regra de integração**, e a da
+cadeia vira a substituição.
+
+### O que muda na escrita, e o que permanece
+
+A fórmula acima já é o método, mas ela é desconfortável de usar: exige
+enxergar, no integrando, um $f$ composto com um $g$ **e** o fator $g'$
+multiplicando. A notação de substituição arruma isso.
+
+Chame $u = g(x)$, a função de dentro. Da notação de Leibniz da lição da
+cadeia, $\frac{du}{dx} = g'(x)$, e escrevemos
+
+$$
+du = g'(x)\,dx.
+$$
+
+**O que muda.** O integrando, escrito em $x$, passa a ser escrito em $u$: o
+bloco $g(x)$ vira a letra $u$, e o bloco $g'(x)\,dx$ vira $du$. A integral
+$\int f(g(x))\,g'(x)\,dx$ vira $\int f(u)\,du$, que é uma linha da tabela.
+
+**O que permanece.** A função que está sendo integrada. Nada foi somado,
+multiplicado nem cancelado; só se trocou o nome do que se olha. Por isso, no
+fim, é preciso desfazer a troca e voltar a escrever tudo em $x$.
+
+**Uma honestidade sobre o $du$.** A lição da derivada avisou que
+$\frac{du}{dx}$ **não** é uma fração, e a da cadeia repetiu o aviso. Então
+"multiplicar por $dx$ dos dois lados" não é uma manipulação legítima de
+frações. O que justifica a substituição é a igualdade da cadeia lida ao
+contrário, escrita no começo desta seção — ela não usa $du$ nenhum. A escrita
+$du = g'(x)\,dx$ é uma **abreviação** que registra a troca de variável de um
+jeito que se aplica com pouco esforço, exatamente como
+$\frac{dy}{dx} = \frac{dy}{du}\frac{du}{dx}$ é uma abreviação da cadeia. Ela
+funciona porque o resultado que ela abrevia foi demonstrado antes.
+
+## 9. Formalização: a regra da substituição
+
+> **Substituição.** Se $F$ é uma primitiva de $f$, então
+> $$
+> \int f\big(g(x)\big)\,g'(x)\,dx = F\big(g(x)\big) + C.
+> $$
+> Na prática, com $u = g(x)$ e $du = g'(x)\,dx$:
+> $$
+> \int f\big(g(x)\big)\,g'(x)\,dx = \int f(u)\,du.
+> $$
+
+**Exemplo.** $\int 2x\,e^{x^2}\,dx$, o motivador. Escolha $u = x^2$, a função
+de dentro. Então $du = 2x\,dx$, e o integrando tem exatamente essas duas
+peças: o $e^{x^2}$ vira $e^u$, e o $2x\,dx$ vira $du$.
+
+$$
+\int e^{x^2}\,\underbrace{2x\,dx}_{du}
+= \int e^u\,du
+= e^u + C
+= e^{x^2} + C.
+$$
+
+Conferindo por derivação: $\left(e^{x^2}\right)' = e^{x^2} \times 2x$, o
+integrando. Confere.
+
+**Contraexemplo, para delimitar o que a regra exige.** Em $\int e^{x^2}\,dx$ a
+escolha $u = x^2$ continua natural, e $du = 2x\,dx$ continua valendo. Mas o
+integrando **não tem** um $x$ multiplicando. Trocando o que dá para trocar,
+sobra
+
+$$
+\int e^u \frac{du}{2x},
+$$
+
+e o $x$ que restou não é nem $u$ nem $du$: a integral não ficou escrita em
+$u$. A substituição não se aplica. Esta integral, aliás, não tem primitiva
+escrita com as funções deste curso — o valor de $\int_0^1 e^{x^2}\,dx$ existe
+e vale aproximadamente $1{,}4627$, mas se obtém por somas de Riemann, não por
+fórmula.
+
+A diferença entre os dois casos é um fator $2x$. Ela é enorme, e é o assunto
+da seção seguinte.
+
+### O roteiro
+
+1. **Escolha $u$**: a função de dentro, aquela que você calcularia primeiro.
+2. **Calcule $du = g'(x)\,dx$.**
+3. **Verifique**: o $g'(x)$ está multiplicando o resto do integrando, a menos
+   de uma constante? Se não estiver, a substituição não serve, e vale tentar
+   outro $u$ antes de desistir.
+4. **Troque tudo**: depois da troca, nenhum $x$ pode sobrar na integral.
+5. **Integre em $u$** pela tabela da seção 7.
+6. **Volte a $x$**, trocando $u$ por $g(x)$ — ou, na integral definida, troque
+   os limites, como a seção 12 mostra.
+7. **Confira derivando** a resposta.
+
+O passo 4 é o que se esquece com mais frequência, e ele tem um sinal claro de
+alarme: se sobrou um $x$ solto depois da troca, a substituição não fechou.
+
+## 10. O teste: a derivada de dentro está multiplicando?
+
+Toda a decisão sobre usar ou não a substituição cabe numa pergunta:
+
+> Depois de escolher a função de dentro, a derivada dela aparece
+> multiplicando o resto do integrando — a menos de uma constante?
+
+A tabela abaixo aplica a pergunta a seis integrais. As três primeiras passam;
+as três últimas, não.
+
+| Integral | $u$ escolhido | $g'(x)$ | Está multiplicando? |
+|---|---|---|---|
+| $\int 2x\,e^{x^2}\,dx$ | $x^2$ | $2x$ | sim, exatamente |
+| $\int x\sqrt{x^2+1}\,dx$ | $x^2+1$ | $2x$ | sim, a menos do fator 2 |
+| $\int \dfrac{3x^2}{x^3+1}\,dx$ | $x^3+1$ | $3x^2$ | sim, exatamente |
+| $\int e^{x^2}\,dx$ | $x^2$ | $2x$ | não, não há $x$ |
+| $\int x^2 e^{x}\,dx$ | $x$ | $1$ | a troca não muda nada |
+| $\int \sqrt{x^2+1}\,dx$ | $x^2+1$ | $2x$ | não, não há $x$ |
+
+A última coluna decide. Quando a resposta é "sim, exatamente", a troca é
+imediata. Quando é "sim, a menos de uma constante", falta um ajuste, e é o
+próximo assunto. Quando é "não", esta página não resolve a integral.
+
+### Ajuste por constante, e por que $x$ não sai da integral
+
+Tome $\int e^{3x}\,dx$. A função de dentro é $3x$, com $du = 3\,dx$. O
+integrando tem $dx$, e não $3\,dx$: falta um fator 3.
+
+O conserto usa a regra da constante multiplicativa da seção 7, que permite
+trocar $dx$ por $\frac{1}{3} \times 3\,dx$ — o que é multiplicar por 1:
+
+$$
+\int e^{3x}\,dx
+= \frac{1}{3}\int e^{3x}\,\underbrace{3\,dx}_{du}
+= \frac{1}{3}\int e^u\,du
+= \frac{e^u}{3} + C
+= \frac{e^{3x}}{3} + C.
+$$
+
+Conferindo: $\left(\frac{e^{3x}}{3}\right)' = \frac{1}{3} \times 3e^{3x} = e^{3x}$.
+Confere. E a resposta sem o ajuste, $e^{3x}$, teria derivada $3e^{3x}$: o
+triplo do integrando. Em $x = 0{,}5$, o integrando vale $4{,}482$ e a derivada
+da resposta errada vale $13{,}45$.
+
+**Agora o limite dessa manobra.** O ajuste funcionou porque 3 é uma
+**constante**. Com uma variável, a mesma jogada é ilegítima. Em
+$\int e^{x^2}\,dx$ seria tentador escrever
+
+$$
+\int e^{x^2}\,dx \overset{?}{=} \frac{1}{2x}\int e^{x^2}\,2x\,dx
+= \frac{e^{x^2}}{2x} + C.
+$$
+
+Isso está errado, e a conferência denuncia: derivando $\frac{e^{x^2}}{2x}$ pela
+regra do quociente sai $e^{x^2} - \frac{e^{x^2}}{2x^2}$, que não é $e^{x^2}$.
+
+A razão de fundo é a mesma da lição da
+[integral definida](./a-integral-definida): **uma constante sai para fora da
+integral; uma função, não.** Colocar $\frac{1}{2x}$ do lado de fora afirma que
+aquele fator vale o mesmo em todo o intervalo, e ele não vale: muda com $x$.
+
+Um teste numérico fecha o argumento. Em $[0, 1]$,
+$\int_0^1 x\,e^{x^2}\,dx = 0{,}8591$, enquanto tirar o $x$ para fora e avaliar
+em $x = 1$ daria $1 \times 1{,}4627 = 1{,}4627$. Números diferentes.
+
+## 11. Exemplos com a variável de dentro em cada lugar
+
+Três padrões cobrem quase todos os casos do curso. Em cada um, a função de
+dentro aparece num lugar diferente da fórmula.
+
+**Dentro de uma potência.** $\int x\,(x^2+3)^4\,dx$. Escolha $u = x^2+3$, com
+$du = 2x\,dx$; o integrando tem $x\,dx$, metade disso:
+
+$$
+\int x\,(x^2+3)^4\,dx
+= \frac{1}{2}\int (x^2+3)^4\,2x\,dx
+= \frac{1}{2}\int u^4\,du
+= \frac{u^5}{10} + C
+= \frac{(x^2+3)^5}{10} + C.
+$$
+
+**Dentro de um denominador.** $\int \frac{2x}{x^2+1}\,dx$. Com $u = x^2+1$ e
+$du = 2x\,dx$, o numerador inteiro é o $du$:
+
+$$
+\int \frac{2x}{x^2+1}\,dx = \int \frac{du}{u} = \ln \lvert u \rvert + C
+= \ln(x^2+1) + C.
+$$
+
+O módulo pôde ser dispensado no fim porque $x^2 + 1$ é sempre positivo. Essa
+forma, "derivada do denominador sobre o denominador", é a mais reconhecível de
+todas, e a lição de exponenciais já a tinha do outro lado:
+$\left(\ln g\right)' = \frac{g'}{g}$.
+
+**Dentro de uma função trigonométrica.** $\int \sen(3x)\,dx$. Com $u = 3x$ e
+$du = 3\,dx$:
+
+$$
+\int \sen(3x)\,dx = \frac{1}{3}\int \sen u\,du = -\frac{\cos u}{3} + C
+= -\frac{\cos(3x)}{3} + C.
+$$
+
+Conferindo: a derivada de $-\frac{\cos 3x}{3}$ é
+$-\frac{1}{3} \times (-\sen 3x) \times 3 = \sen 3x$. Confere.
+
+## 12. Substituição na integral definida: trocar os limites
+
+A integral definida traz uma pergunta a mais. Os limites $a$ e $b$ são valores
+de $x$; depois da troca, a integral está escrita em $u$. Os limites ainda
+valem?
+
+Não valem, e o motivo é direto: eles nomeiam pontos da variável antiga.
+Existem dois caminhos, e vale conhecer os dois.
+
+**Caminho 1: voltar a $x$ no fim.** Faça a substituição como na integral
+indefinida, encontre a primitiva em $x$, e só então aplique os limites
+originais.
+
+**Caminho 2: trocar os limites.** Converta os extremos para valores de $u$
+usando a própria relação $u = g(x)$, e termine a conta em $u$, sem voltar.
+
+Compare os dois em $\int_1^2 x\,e^{x^2}\,dx$, com $u = x^2$ e
+$du = 2x\,dx$.
+
+*Pelo caminho 1.* A primitiva é $\frac{1}{2}e^{x^2}$, e
+
+$$
+\int_1^2 x\,e^{x^2}\,dx
+= \Big[\tfrac{1}{2}e^{x^2}\Big]_1^2
+= \frac{e^4 - e}{2} \approx 25{,}94.
+$$
+
+*Pelo caminho 2.* Quando $x = 1$, $u = 1^2 = 1$; quando $x = 2$, $u = 2^2 = 4$.
+Os limites viram 1 e 4:
+
+$$
+\int_1^2 x\,e^{x^2}\,dx
+= \frac{1}{2}\int_1^4 e^u\,du
+= \Big[\tfrac{1}{2}e^{u}\Big]_1^4
+= \frac{e^4 - e}{2} \approx 25{,}94.
+$$
+
+Mesmo número, e uma soma de Riemann com $10^5$ retângulos confirma: 25,9399.
+
+**Quando cada um é melhor.** O caminho 2 evita desfazer a substituição e
+costuma ser mais curto, principalmente quando a volta a $x$ é feia. O caminho
+1 é preferível quando você quer guardar a primitiva para usá-la em outros
+limites depois.
+
+**O que acontece se os limites não forem trocados.** Terminar em $u$ mas
+manter os extremos 1 e 2 daria $\frac{e^2 - e}{2} \approx 2{,}34$ — sete vezes
+menor que a resposta certa. O erro é grande porque os limites 1 e 2 descrevem
+um pedaço bem menor do eixo $u$ do que o pedaço de 1 a 4 que a região ocupa
+de fato.
+
+## 13. Resolvendo o problema da bomba
+
+De volta ao motivador, com a substituição pronta.
+
+$$
+\int_0^5 \frac{200\,t}{t^2+1}\,dt.
+$$
+
+**Escolha de $u$.** A função de dentro é o denominador, $u = t^2+1$.
+
+**Cálculo de $du$.** $du = 2t\,dt$.
+
+**Verificação.** O numerador é $200\,t\,dt$, que é $100 \times 2t\,dt = 100\,du$.
+A derivada de dentro está multiplicando, a menos da constante 100. A
+substituição serve.
+
+**Troca dos limites.** Quando $t = 0$, $u = 0^2+1 = 1$; quando $t = 5$,
+$u = 5^2+1 = 26$.
+
+$$
+\int_0^5 \frac{200\,t}{t^2+1}\,dt
+= 100\int_1^{26} \frac{du}{u}
+= 100\,\Big[\ln \lvert u \rvert\Big]_1^{26}
+= 100\,(\ln 26 - \ln 1).
+$$
+
+Como $\ln 1 = 0$ e $\ln 26 \approx 3{,}2581$:
+
+$$
+\text{volume} = 100 \ln 26 \approx 325{,}8 \text{ litros}.
+$$
+
+**Conferência.** Uma soma de Riemann com $10^5$ retângulos dá 325,8097 — as
+duas contas concordam nas quatro casas. E a primitiva também se confere
+direto: a derivada de $100\ln(t^2+1)$ é
+
+$$
+100 \times \frac{2t}{t^2+1} = \frac{200t}{t^2+1},
+$$
+
+o integrando.
+
+**Lendo o resultado.** Em 5 minutos a bomba entregou cerca de 326 litros. A
+vazão média foi $\frac{325{,}8}{5} \approx 65{,}2$ L/min, bem abaixo do pico de
+100 L/min em $t = 1$ — o que era de esperar, já que a bomba passou boa parte
+do tempo com o filtro parcialmente entupido, e a vazão no minuto 5 já tinha
+caído para $\frac{200 \times 5}{26} \approx 38{,}5$ L/min.
+
+Repare no que a página comprou. A lição da
+[integral como área](./a-integral-como-area) precisaria de milhares de
+retângulos para chegar a 325,8 com essa precisão. Aqui foram cinco linhas, e a
+resposta é exata.
+
+## 14. Exemplos resolvidos
+
+### Exemplo 1: uma potência de função
+
+Calcule $\int (2x+7)^5\,dx$.
+
+Função de dentro: $u = 2x+7$, com $du = 2\,dx$. Falta o fator 2, que é
+constante:
+
+$$
+\int (2x+7)^5\,dx
+= \frac{1}{2}\int u^5\,du
+= \frac{u^6}{12} + C
+= \frac{(2x+7)^6}{12} + C.
+$$
+
+Conferindo: a derivada de $\frac{(2x+7)^6}{12}$ é
+$\frac{6(2x+7)^5 \times 2}{12} = (2x+7)^5$. Confere.
+
+### Exemplo 2: raiz de uma função
+
+*Pause e tente antes de ler.* Calcule $\int x\sqrt{x^2+1}\,dx$.
+
+Escreva a raiz como potência para reconhecer a camada de fora:
+$\sqrt{x^2+1} = (x^2+1)^{1/2}$. Então $u = x^2+1$ e $du = 2x\,dx$; o integrando
+tem $x\,dx$, metade do $du$:
+
+$$
+\int x\,(x^2+1)^{1/2}\,dx
+= \frac{1}{2}\int u^{1/2}\,du
+= \frac{1}{2} \times \frac{u^{3/2}}{3/2} + C
+= \frac{u^{3/2}}{3} + C
+= \frac{(x^2+1)^{3/2}}{3} + C.
+$$
+
+O passo do meio usou a linha da potência com $n = \frac{1}{2}$: o novo expoente
+é $\frac{3}{2}$, e o denominador é esse mesmo $\frac{3}{2}$. Dividir por
+$\frac{3}{2}$ é multiplicar por $\frac{2}{3}$, e o $\frac{2}{3}$ com o
+$\frac{1}{2}$ de fora dão $\frac{1}{3}$.
+
+Conferindo em $x = 2$: a derivada numérica de $\frac{(x^2+1)^{3/2}}{3}$ dá
+$4{,}4721$, e o integrando $2\sqrt{5} = 4{,}4721$. Confere.
+
+### Exemplo 3: o logaritmo dentro do integrando
+
+*Pause e tente.* Calcule $\int \frac{\ln x}{x}\,dx$, para $x$ positivo.
+
+Este exemplo engana porque o candidato natural a "função de dentro" parece ser
+o $x$ do denominador. Aplique o teste do jeito certo: existe alguma função no
+integrando cuja derivada também está ali? Sim — a derivada de $\ln x$ é
+$\frac{1}{x}$, e $\frac{1}{x}$ é exatamente o outro fator.
+
+Com $u = \ln x$ e $du = \frac{1}{x}\,dx$:
+
+$$
+\int \ln x \times \frac{1}{x}\,dx
+= \int u\,du
+= \frac{u^2}{2} + C
+= \frac{(\ln x)^2}{2} + C.
+$$
+
+Conferindo em $x = 5$: a derivada numérica de $\frac{(\ln x)^2}{2}$ dá
+$0{,}3219$, e $\frac{\ln 5}{5} = \frac{1{,}6094}{5} = 0{,}3219$. Confere.
+
+A lição do exemplo: **a função de dentro não é sempre a que está entre
+parênteses.** Ela é a que tem a derivada presente no integrando.
+
+### Exemplo 4: uma definida com troca de limites
+
+*Pause e tente.* Calcule $\int_0^1 \frac{x}{(x^2+1)^2}\,dx$.
+
+Com $u = x^2+1$ e $du = 2x\,dx$, o integrando tem $x\,dx = \frac{du}{2}$. Os
+limites: $x = 0$ dá $u = 1$; $x = 1$ dá $u = 2$.
+
+$$
+\int_0^1 \frac{x}{(x^2+1)^2}\,dx
+= \frac{1}{2}\int_1^2 \frac{du}{u^2}
+= \frac{1}{2}\int_1^2 u^{-2}\,du
+= \frac{1}{2}\Big[-u^{-1}\Big]_1^2
+= \frac{1}{2}\left(-\frac{1}{2} + 1\right)
+= \frac{1}{4}.
+$$
+
+A soma de Riemann com $10^5$ retângulos dá 0,250000. Confere.
+
+Repare que os limites 0 e 1 sumiram cedo, logo depois da troca. Escrevê-los
+por engano no lugar de 1 e 2 daria uma integral de $u^{-2}$ passando por
+$u = 0$, onde a função nem existe — e o resultado seria um número sem sentido.
+
+### Exemplo 5: a tangente, e um sinal que precisa de atenção
+
+*Pause e tente.* Calcule $\int \tg x\,dx$.
+
+A tangente não está na tabela. Escreva-a como quociente:
+$\tg x = \frac{\sen x}{\cos x}$. Agora o denominador é $\cos x$, cuja derivada
+é $-\sen x$ — que aparece no numerador, a menos do sinal.
+
+Com $u = \cos x$ e $du = -\sen x\,dx$, temos $\sen x\,dx = -du$:
+
+$$
+\int \frac{\sen x}{\cos x}\,dx
+= \int \frac{-du}{u}
+= -\ln \lvert u \rvert + C
+= -\ln \lvert \cos x \rvert + C.
+$$
+
+O módulo agora é indispensável: o cosseno é negativo em metade do ciclo.
+
+Conferindo em $x = 1$: a derivada numérica de $-\ln \lvert \cos x \rvert$ dá
+$1{,}5574$, e $\tg 1 = 1{,}5574$. Confere. E, por curiosidade, a área sob a
+tangente entre 0 e 1 vale $-\ln(\cos 1) \approx 0{,}6156$, que a soma de
+Riemann confirma.
+
+### Exemplo 6: custo marginal e custo acumulado
+
+*Pause e tente.* O custo marginal de uma fábrica, em reais por peça, é
+
+$$
+C'(q) = \frac{q}{\sqrt{q^2 + 100}},
+$$
+
+com $q$ em peças. Quanto custa a mais produzir da peça 0 até a peça 30?
+
+O custo acumulado é a integral do custo marginal, pelo teorema fundamental:
+
+$$
+\int_0^{30} \frac{q}{\sqrt{q^2+100}}\,dq.
+$$
+
+Com $u = q^2+100$, $du = 2q\,dq$, e $q\,dq = \frac{du}{2}$. Limites: $q = 0$ dá
+$u = 100$; $q = 30$ dá $u = 1000$.
+
+$$
+\frac{1}{2}\int_{100}^{1000} u^{-1/2}\,du
+= \frac{1}{2}\Big[2u^{1/2}\Big]_{100}^{1000}
+= \sqrt{1000} - \sqrt{100}
+= 10\sqrt{10} - 10 \approx 21{,}62.
+$$
+
+São cerca de **R\$ 21,62** para produzir as 30 primeiras peças. A soma de
+Riemann confirma: 21,6228.
+
+Repare que o custo marginal cresce de 0 a $\frac{30}{\sqrt{1000}} \approx 0{,}95$
+real por peça ao longo do intervalo, e nunca chega a 1. Um custo total de
+21,62 reais para 30 peças, ou seja, cerca de 72 centavos por peça em média,
+é coerente com uma marginal que passeia entre 0 e 0,95.
+
+### Exemplo 7: uma que não sai
+
+*Pause e tente.* Tente calcular $\int \sqrt{x^2+1}\,dx$ e diga onde a
+substituição falha.
+
+Com $u = x^2+1$, $du = 2x\,dx$. O integrando é $\sqrt{u}\,dx$, e não há $x$
+multiplicando para formar o $du$. Trocando o que dá, sobraria
+$\int \sqrt{u}\,\frac{du}{2x}$, com um $x$ solto: a integral não ficou escrita
+em $u$.
+
+Compare com o Exemplo 2, $\int x\sqrt{x^2+1}\,dx$, que saiu numa linha. A
+diferença entre as duas é um único fator $x$, e ele decide se a integral é
+elementar ou não. (Esta em particular tem primitiva, mas ela exige uma técnica
+de Cálculo 2.)
+
+Esse exemplo existe para ajustar a expectativa: encontrar primitivas não é um
+procedimento garantido, como derivar é. Não achar uma não significa que você
+errou.
+
+## 15. Erros comuns
+
+> **Erro 1: esquecer de trocar os limites na integral definida.** Em
+> $\int_1^2 x\,e^{x^2}\,dx$, com $u = x^2$, os limites viram 1 e 4. Terminar em
+> $u$ com os limites antigos dá $\frac{e^2 - e}{2} \approx 2{,}34$, contra a
+> resposta certa $\frac{e^4 - e}{2} \approx 25{,}94$. A regra é simples de
+> lembrar: **trocou a variável, troque os limites** — ou volte a $x$ antes de
+> aplicá-los.
+
+> **Erro 2: substituir quando a derivada de dentro não está presente.** Em
+> $\int e^{x^2}\,dx$ não há $x$ multiplicando, e depois da troca sobraria um
+> $x$ solto. O teste da seção 10 pega isso antes de a conta começar.
+
+> **Erro 3: tirar $x$ para fora da integral.** Só constantes saem. Escrever
+> $\int e^{x^2}\,dx = \frac{1}{2x}\int 2x\,e^{x^2}\,dx$ produz
+> $\frac{e^{x^2}}{2x}$, cuja derivada não é o integrando. Numericamente:
+> $\int_0^1 x\,e^{x^2}\,dx = 0{,}8591$, e a manobra daria 1,4627.
+
+> **Erro 4: primitiva de $\frac{1}{x}$ pela regra da potência.** Com $n = -1$,
+> a fórmula $\frac{x^{n+1}}{n+1}$ vira $\frac{x^0}{0}$, e não existe divisão
+> por zero. A primitiva de $\frac{1}{x}$ é $\ln \lvert x \rvert$, e essa é a
+> razão de a linha da potência trazer a ressalva $n \neq -1$.
+
+> **Erro 5: esquecer o $+C$.** Numa integral **definida** o $C$ some na
+> subtração, porque $\big(F(b) + C\big) - \big(F(a) + C\big) = F(b) - F(a)$.
+> Numa integral **indefinida** ele faz parte da resposta: a pergunta é por
+> todas as primitivas, e omitir o $C$ entrega uma só.
+
+> **Erro 6: sinal trocado na primitiva do seno.** $\int \sen x\,dx$ é
+> $-\cos x + C$, não $\cos x + C$. Derive a resposta: a de $\cos x$ é
+> $-\sen x$, com o sinal errado. O mesmo cuidado vale no Exemplo 5, em que o
+> $du = -\sen x\,dx$ do cosseno carrega o menos para dentro da conta.
+
+> **Erro 7: procurar uma regra do produto para integrais.** Ela não existe.
+> $\int x\,e^x\,dx$ não é $\frac{x^2}{2}\,e^x$ — derive e veja. A substituição
+> resolve um caso particular de produto, aquele em que o segundo fator é a
+> derivada do que está dentro do primeiro, e nada além disso.
+
+## 16. Perguntas de verificação
+
+1. Por que a resposta de uma integral indefinida termina com $+C$? Que
+   resultado da Parte III garante que a diferença entre duas primitivas é
+   sempre uma constante?
+2. Qual é a diferença entre $\int_a^b f(x)\,dx$ e $\int f(x)\,dx$?
+3. Em que sentido a tabela de primitivas "já existia" antes desta página?
+4. Por que a linha da potência exclui $n = -1$, e o que preenche esse buraco?
+5. Por que a substituição é a regra da cadeia lida ao contrário?
+6. O que a escrita $du = g'(x)\,dx$ abrevia, e por que ela não é uma
+   manipulação de frações?
+7. Qual é o teste que decide se a substituição serve?
+8. Por que uma constante pode ser posta em evidência dentro da integral e uma
+   variável não?
+9. Numa integral definida, por que os limites mudam depois da substituição?
+10. Como conferir, sozinho, se uma primitiva que você escreveu está certa?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque derivar apaga qualquer constante aditiva, e a leitura ao contrário
+   não consegue recuperá-la: existem infinitas funções com a mesma derivada. O
+   corolário do teorema do valor médio garante que elas diferem por uma
+   constante, e por nada mais: se $F' = G'$ num intervalo, então $(F-G)' = 0$,
+   e uma função de derivada zero num intervalo é constante ali.
+2. A primeira é um **número**, a área com sinal entre $a$ e $b$. A segunda é
+   uma **família de funções**, todas as primitivas de $f$. O teorema
+   fundamental liga as duas: uma primitiva qualquer calcula o número.
+3. Cada linha dela é uma derivada da Parte II com as colunas trocadas. Nada foi
+   calculado de novo; mudou a direção da leitura, como "$7 \times 8 = 56$"
+   também responde "$56 \div 8 = 7$".
+4. Porque a fórmula $\frac{x^{n+1}}{n+1}$ teria denominador zero em $n = -1$.
+   O buraco é preenchido pela linha do logaritmo:
+   $\int \frac{1}{x}\,dx = \ln \lvert x \rvert + C$.
+5. Porque $\frac{d}{dx}F(g(x)) = f(g(x))\,g'(x)$ é uma linha da tabela de
+   derivadas; lida da direita para a esquerda, ela diz que $F(g(x))$ é uma
+   primitiva de $f(g(x))\,g'(x)$, que é exatamente a fórmula da substituição.
+6. Abrevia a troca de variável: o bloco $g(x)$ passa a se chamar $u$, e o
+   bloco $g'(x)\,dx$ passa a se chamar $du$. Não é manipulação de frações
+   porque $\frac{du}{dx}$ é um limite, não um quociente de dois números. O que
+   justifica o método é a igualdade da cadeia lida ao contrário, que não usa
+   $du$ nenhum.
+7. Depois de escolher a função de dentro, verificar se a derivada dela aparece
+   multiplicando o resto do integrando, a menos de uma constante. Se aparecer,
+   a substituição fecha; se não, ela não se aplica.
+8. Porque uma constante vale o mesmo em todos os pontos do intervalo, e por
+   isso pode ser recolhida de todas as parcelas da soma de Riemann de uma vez.
+   Uma variável muda de ponto para ponto, e não há um valor único para pôr do
+   lado de fora. O teste numérico da seção 10 mostra a diferença: 0,8591
+   contra 1,4627.
+9. Porque os limites nomeiam pontos da variável **antiga**. Depois da troca a
+   integral está escrita em $u$, e os extremos precisam ser os valores de $u$
+   correspondentes, obtidos por $u = g(x)$. A alternativa é voltar a $x$ antes
+   de aplicar os limites originais.
+10. Derivando a resposta. Se a derivada devolve o integrando, a primitiva está
+    certa; se não devolve, está errada. É a única conferência do capítulo que
+    não precisa de gabarito nem de calculadora.
+
+</details>
+
+## 17. Exercícios
+
+### 1. Reconhecimento
+
+1. Para cada integral, diga se uma linha da tabela resolve direto ou se é caso
+   de substituição: a) $\int x^4\,dx$; b) $\int 2x(x^2+5)^3\,dx$;
+   c) $\int \cos x\,dx$; d) $\int \frac{1}{x}\,dx$;
+   e) $\int \frac{3x^2}{x^3+1}\,dx$.
+2. Em cada uma, escolha $u$ e calcule $du$: a) $\int (2x+7)^5\,dx$;
+   b) $\int x\,e^{x^2}\,dx$; c) $\int \frac{\ln x}{x}\,dx$;
+   d) $\int \sen^3 x\,\cos x\,dx$.
+3. Escreva a primitiva, sem consultar a tabela: a) $x^7$; b) $\frac{1}{x}$;
+   c) $e^x$; d) $\sen x$; e) $\cos x$.
+
+### 2. Explicação
+
+4. Explique, com as próprias palavras, por que a substituição é a regra da
+   cadeia lida ao contrário. Use $\int 2x\,e^{x^2}\,dx$ como exemplo.
+5. Por que $\int x\,e^{x^2}\,dx$ sai por substituição e $\int e^{x^2}\,dx$
+   não? A diferença entre as duas é um fator $x$; explique por que ele muda
+   tudo.
+6. Um colega escreveu $\int e^{5x}\,dx = e^{5x} + C$. Mostre, sem tabela e sem
+   substituição, que a resposta está errada. Depois corrija.
+7. Por que existe regra da soma para primitivas e não existe regra do produto?
+
+### 3. Aplicação direta
+
+8. Calcule, pela tabela: a) $\int (3x^2 - 4x + 5)\,dx$;
+   b) $\int \left(\sqrt{x} + \frac{1}{x^2}\right)dx$;
+   c) $\int (2e^x - 3\sen x)\,dx$; d) $\int \frac{5}{x}\,dx$.
+9. Calcule por substituição: a) $\int (2x+7)^5\,dx$;
+   b) $\int 3x^2 e^{x^3}\,dx$; c) $\int \frac{2x}{x^2+4}\,dx$;
+   d) $\int \cos(5x)\,dx$.
+10. Calcule as definidas: a) $\int_0^2 (x^3+1)\,dx$; b) $\int_1^e \frac{1}{x}\,dx$;
+    c) $\int_0^{\pi} \sen x\,dx$.
+
+### 4. Variação
+
+11. Calcule $\int x(x^2+3)^4\,dx$ e depois $\int_0^2 x(x^2+3)^4\,dx$.
+12. Calcule $\int_1^e \frac{\ln x}{x}\,dx$ pelos dois caminhos da seção 12:
+    voltando a $x$ e trocando os limites. Os resultados batem?
+13. Calcule $\int \frac{e^x}{e^x+1}\,dx$ e depois $\int_0^1 \frac{e^x}{e^x+1}\,dx$.
+14. Calcule $\int \sen^3 x\,\cos x\,dx$ e $\int_0^{\pi/2} \sen^3 x\,\cos x\,dx$.
+15. Calcule $\int \frac{1}{3x+2}\,dx$ e $\int_0^2 \frac{1}{3x+2}\,dx$.
+16. Calcule $\int_{-3}^{-2} (2x+7)^5\,dx$ trocando os limites.
+
+<details>
+<summary>Dica para o exercício 12</summary>
+
+A função de dentro não é o $x$ do denominador. Procure, no integrando, uma
+função cuja derivada também esteja ali: a derivada de $\ln x$ é $\frac{1}{x}$,
+e $\frac{1}{x}$ é o outro fator.
+
+</details>
+
+<details>
+<summary>Dica para o exercício 14</summary>
+
+Escreva $\sen^3 x$ como $(\sen x)^3$. A função de dentro é $\sen x$, e a
+derivada dela, $\cos x$, está multiplicando.
+
+</details>
+
+### 5. Problema misto
+
+17. Um reservatório recebe água a uma vazão $q(t) = \frac{60\,t}{t^2+4}$ litros
+    por minuto, com $t$ em minutos. a) Qual é a vazão em $t = 0$ e em
+    $t = 2$? b) Quantos litros entraram nos primeiros 4 minutos?
+18. O custo marginal de uma oficina, em reais por peça, é
+    $C'(q) = \frac{q}{\sqrt{q^2 + 100}}$. a) Calcule o custo acumulado da peça
+    0 até a peça 30. b) Se o custo fixo é R\$ 500, qual é o custo total de
+    produzir 30 peças?
+19. Um móvel tem velocidade $v(t) = t\,e^{-t^2}$ metros por segundo. a) Qual é
+    o deslocamento entre $t = 0$ e $t = 2$? b) A velocidade é sempre positiva
+    nesse intervalo? O que isso diz sobre deslocamento e distância percorrida
+    aqui?
+20. Calcule a área da região entre a curva $y = \frac{x}{\sqrt{x^2+9}}$ e o
+    eixo horizontal, de $x = 0$ a $x = 4$.
+
+<details>
+<summary>Dica para o exercício 19</summary>
+
+Para o deslocamento, use $u = -t^2$, com $du = -2t\,dt$. Para a segunda
+pergunta, olhe o sinal de $t\,e^{-t^2}$ no intervalo: $e^{-t^2}$ é sempre
+positivo, então o sinal é o de $t$.
+
+</details>
+
+### 6. Justificativa
+
+21. Deduza a fórmula da substituição a partir da regra da cadeia, dizendo em
+    cada passo qual propriedade autoriza a passagem.
+22. Explique por que os limites de uma integral definida precisam ser trocados
+    depois da substituição. Use $\int_1^2 x\,e^{x^2}\,dx$ e mostre o número que
+    sai se eles não forem trocados.
+23. Mostre que $\int \tg x\,dx = -\ln \lvert \cos x \rvert + C$ e confira o
+    resultado derivando. Por que o módulo é indispensável aqui e dispensável em
+    $\int \frac{2x}{x^2+1}\,dx$?
+24. A primitiva de $x\,e^x$ é $(x-1)e^x + C$. a) Confira derivando.
+    b) Mostre que a substituição não a encontra, testando $u = x$ e $u = e^x$.
+    c) O que esse exercício diz sobre a diferença entre derivar e integrar?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) Tabela, linha da potência. b) Substituição, $u = x^2+5$. c) Tabela.
+   d) Tabela, linha do logaritmo. e) Substituição, $u = x^3+1$ (repare que
+   $3x^2$ é exatamente a derivada do denominador).
+2. a) $u = 2x+7$, $du = 2\,dx$. b) $u = x^2$, $du = 2x\,dx$. c) $u = \ln x$,
+   $du = \frac{1}{x}\,dx$. d) $u = \sen x$, $du = \cos x\,dx$. Se em (c) você
+   escolheu $u = x$, a troca não muda nada: o $u$ tem que ser a função cuja
+   derivada está presente.
+3. a) $\frac{x^8}{8} + C$; b) $\ln \lvert x \rvert + C$; c) $e^x + C$;
+   d) $-\cos x + C$; e) $\sen x + C$. O item (d) é o que mais recebe o sinal
+   errado.
+4. A regra da cadeia diz que a derivada de $e^{x^2}$ é $e^{x^2} \times 2x$.
+   Essa é uma linha de tabela: à esquerda uma função, à direita a derivada
+   dela. Lendo ao contrário, $e^{x^2}$ é uma primitiva de $2x\,e^{x^2}$, que é
+   o que a integral pedia. A substituição só organiza essa leitura invertida
+   num procedimento.
+5. Porque a substituição troca o bloco $g'(x)\,dx$ inteiro por $du$, e sem o
+   fator $x$ esse bloco não se forma. Sem ele, depois da troca sobra um $x$
+   solto, e a integral não ficou escrita em $u$. O fator $x$ é justamente o que
+   a regra da cadeia produziria ao derivar $e^{x^2}$; sem ele, não existe
+   função elementar cuja derivada seja $e^{x^2}$.
+6. Derive a resposta: $\left(e^{5x}\right)' = 5e^{5x}$, que é cinco vezes o
+   integrando. A resposta certa é $\frac{e^{5x}}{5} + C$, cuja derivada é
+   $\frac{5e^{5x}}{5} = e^{5x}$.
+7. Porque a regra da soma das derivadas, $(F+G)' = F' + G'$, lida ao contrário
+   dá a regra da soma das primitivas. Já a regra do produto,
+   $(FG)' = F'G + FG'$, lida ao contrário não isola $\int fg$: ela envolve
+   dois termos, e nenhum deles é o produto das primitivas. É essa leitura
+   invertida que dá origem à integração por partes, técnica de Cálculo 2.
+8. a) $x^3 - 2x^2 + 5x + C$. b) $\frac{2x^{3/2}}{3} - \frac{1}{x} + C$
+   (repare que $\frac{1}{x^2} = x^{-2}$, cuja primitiva é
+   $\frac{x^{-1}}{-1} = -\frac{1}{x}$). c) $2e^x + 3\cos x + C$ — o menos do
+   $\sen$ com o menos da primitiva dão mais. d) $5\ln \lvert x \rvert + C$.
+9. a) $\frac{(2x+7)^6}{12} + C$. b) $e^{x^3} + C$ (o $3x^2$ é exatamente o
+   $du$). c) $\ln(x^2+4) + C$. d) $\frac{\sen(5x)}{5} + C$. Se em (d) você
+   encontrou $5\sen(5x)$, multiplicou pelo fator em vez de dividir: confira
+   derivando.
+10. a) $\Big[\frac{x^4}{4} + x\Big]_0^2 = 4 + 2 = 6$. b)
+    $\Big[\ln \lvert x \rvert\Big]_1^e = 1 - 0 = 1$. c)
+    $\Big[-\cos x\Big]_0^{\pi} = 1 + 1 = 2$. As somas de Riemann com $10^5$
+    retângulos dão 6,000000, 1,000000 e 2,000000.
+11. $u = x^2+3$, $du = 2x\,dx$:
+    $\int x(x^2+3)^4\,dx = \frac{1}{2}\int u^4\,du = \frac{(x^2+3)^5}{10} + C$.
+    Para a definida, os limites viram $u = 3$ e $u = 7$:
+    $\frac{7^5 - 3^5}{10} = \frac{16807 - 243}{10} = 1656{,}4$. A soma de
+    Riemann confirma: 1656,400.
+12. $u = \ln x$, $du = \frac{1}{x}\,dx$. **Voltando a $x$:** a primitiva é
+    $\frac{(\ln x)^2}{2}$, e $\Big[\frac{(\ln x)^2}{2}\Big]_1^e = \frac{1}{2}$.
+    **Trocando os limites:** $x = 1$ dá
+    $u = \ln 1 = 0$; $x = e$ dá $u = \ln e = 1$; então
+    $\int_0^1 u\,du = \Big[\frac{u^2}{2}\Big]_0^1 = \frac{1}{2}$. Batem, e a
+    soma de Riemann dá 0,500000.
+13. $u = e^x + 1$, $du = e^x\,dx$: o numerador é o $du$ inteiro. Logo
+    $\int \frac{e^x}{e^x+1}\,dx = \ln(e^x+1) + C$ (o argumento é sempre
+    positivo, e o módulo pode ser dispensado). Definida:
+    $\ln(e+1) - \ln 2 = \ln\frac{e+1}{2} \approx 0{,}6201$. Riemann: 0,620115.
+14. $u = \sen x$, $du = \cos x\,dx$:
+    $\int (\sen x)^3\cos x\,dx = \frac{\sen^4 x}{4} + C$. Definida: os limites
+    viram $u = 0$ e $u = 1$, e $\int_0^1 u^3\,du = \frac{1}{4}$. Riemann:
+    0,250000.
+15. $u = 3x+2$, $du = 3\,dx$:
+    $\int \frac{1}{3x+2}\,dx = \frac{1}{3}\ln \lvert 3x+2 \rvert + C$.
+    Definida: $\frac{1}{3}(\ln 8 - \ln 2) = \frac{\ln 4}{3} \approx 0{,}4621$.
+    Riemann: 0,462098. Se você esqueceu o $\frac{1}{3}$, a resposta sai três
+    vezes maior; a conferência por derivação pega isso.
+16. $u = 2x+7$, $du = 2\,dx$. Limites: $x = -3$ dá $u = 1$; $x = -2$ dá
+    $u = 3$. Então $\frac{1}{2}\int_1^3 u^5\,du = \frac{729 - 1}{12}$, isto é,
+    $\frac{728}{12} = \frac{182}{3} \approx 60{,}67$. Riemann: 60,666667.
+17. a) $q(0) = 0$ e $q(2) = \frac{120}{8} = 15$ L/min. b) Com $u = t^2+4$,
+    $du = 2t\,dt$, o numerador $60t\,dt$ é $30\,du$. Limites: $t = 0$ dá
+    $u = 4$; $t = 4$ dá $u = 20$. Então
+    $30\Big[\ln u\Big]_4^{20} = 30(\ln 20 - \ln 4) = 30\ln 5 \approx 48{,}28$
+    litros. Riemann: 48,283.
+18. a) Com $u = q^2+100$, a integral vale $\sqrt{1000} - \sqrt{100}$, isto é,
+    $10\sqrt{10} - 10 \approx 21{,}62$ reais. b) O custo total é o fixo mais o
+    acumulado:
+    $500 + 21{,}62 = $ R\$ 521,62. Se você somou o custo marginal em vez de
+    integrá-lo, o erro é o mesmo que somar velocidades em vez de integrá-las
+    para achar a distância.
+19. a) Com $u = -t^2$, $du = -2t\,dt$, temos $t\,dt = -\frac{du}{2}$, e a
+    primitiva é $-\frac{e^{-t^2}}{2}$. Então
+    $\Big[-\frac{e^{-t^2}}{2}\Big]_0^2 = \frac{1 - e^{-4}}{2} \approx 0{,}4908$
+    metro. Riemann: 0,490842.
+    b) Sim: $e^{-t^2}$ é sempre positivo e $t$ é positivo em $]0, 2]$, então a
+    velocidade não muda de sinal. Quando a velocidade não troca de sinal,
+    deslocamento e distância percorrida coincidem — os dois valem 0,4908 m.
+20. Com $u = x^2+9$, $du = 2x\,dx$, a primitiva é $\sqrt{x^2+9}$. Limites:
+    $u = 9$ e $u = 25$. Área $= \sqrt{25} - \sqrt{9} = 5 - 3 = 2$. A função é
+    positiva em $]0, 4]$, então a integral é a própria área. Riemann: 2,000000.
+21. Parte-se da regra da cadeia aplicada a $F \circ g$, com $F' = f$:
+    $\frac{d}{dx}F(g(x)) = F'(g(x)) \times g'(x) = f(g(x))\,g'(x)$ — a
+    igualdade vale porque $F' = f$ por hipótese. Essa é uma afirmação da forma
+    "a derivada desta função é aquela". Pela definição de primitiva, lida ao
+    contrário, $F(g(x))$ é uma primitiva de $f(g(x))\,g'(x)$, isto é,
+    $\int f(g(x))\,g'(x)\,dx = F(g(x)) + C$. O $C$ entra porque toda primitiva
+    é determinada a menos de constante.
+22. Porque os limites nomeiam valores da variável antiga. Em
+    $\int_1^2 x\,e^{x^2}\,dx$ com $u = x^2$, os extremos corretos são
+    $u = 1$ e $u = 4$, e a resposta é $\frac{e^4 - e}{2} \approx 25{,}94$.
+    Mantendo 1 e 2 sairia $\frac{e^2 - e}{2} \approx 2{,}34$, quase sete vezes
+    menor: o intervalo de $u$ de 1 a 2 é um pedaço bem menor do que o de 1 a 4
+    que a região realmente ocupa.
+23. $\tg x = \frac{\sen x}{\cos x}$; com $u = \cos x$, $du = -\sen x\,dx$, o
+    numerador $\sen x\,dx$ é $-du$, e
+    $\int \frac{-du}{u} = -\ln \lvert u \rvert + C = -\ln \lvert \cos x \rvert + C$.
+    Conferindo em $x = 1$: a derivada numérica dá 1,5574, e $\tg 1 = 1{,}5574$.
+    O módulo é indispensável porque o cosseno é negativo em metade do ciclo, e
+    o logaritmo de número negativo não existe. Em $\int \frac{2x}{x^2+1}\,dx$
+    ele pode ser dispensado porque $x^2+1$ é positivo para todo $x$.
+24. a) $\big((x-1)e^x\big)' = 1 \times e^x + (x-1)e^x = e^x(1 + x - 1) = x\,e^x$.
+    Confere. b) Com $u = x$, $du = dx$: a integral vira $\int u\,e^u\,du$, que
+    é o mesmo problema com outra letra. Com $u = e^x$, $du = e^x\,dx$: a
+    integral vira $\int x\,du$, e sobra um $x$ que não é $u$ — para eliminá-lo
+    seria preciso escrever $x = \ln u$, e o integrando $\int \ln u\,du$ não
+    está na tabela nem sai por substituição. c) Que derivar é um procedimento
+    e integrar não é. As regras da Parte II sempre entregam a derivada de uma
+    fórmula; nenhuma lista de regras de integração cobre todos os casos, e
+    achar uma primitiva envolve reconhecer padrões e, às vezes, técnicas que
+    este curso não traz.
+
+</details>
+
+## 18. Revisão curta
+
+- **Primitiva** de $f$ é qualquer $F$ com $F' = f$. Como derivar apaga
+  constantes, a resposta é uma família: $\int f(x)\,dx = F(x) + C$. O
+  teorema do valor médio garante que não há mais nada além do $C$.
+- A **tabela de primitivas** é a tabela de derivadas lida da direita para a
+  esquerda. A linha da potência vale para $n \neq -1$; o buraco em $n = -1$ é
+  preenchido por $\ln \lvert x \rvert$.
+- Valem as regras da **soma** e da **constante**. Não existe regra do produto
+  nem do quociente para primitivas — e é essa ausência que torna a integração
+  mais difícil que a derivação.
+- A **substituição** é a regra da cadeia lida ao contrário: com $u = g(x)$ e
+  $du = g'(x)\,dx$, a integral $\int f(g(x))\,g'(x)\,dx$ vira $\int f(u)\,du$.
+- O **teste** que decide: depois de escolher a função de dentro, a derivada
+  dela está multiplicando o resto, a menos de uma constante? Constante se
+  ajusta; variável, não.
+- Na integral **definida**, ou se volta a $x$ antes de aplicar os limites, ou
+  se trocam os limites para valores de $u$. Esquecer disso muda a resposta.
+- **Confira sempre derivando.** É a única verificação do capítulo que dispensa
+  gabarito e calculadora.
+
+Antes de avançar, verifique se você consegue fazer três coisas: escrever de
+memória as primitivas de $x^n$, $\frac{1}{x}$, $e^x$, $\sen x$ e $\cos x$;
+decidir, olhando um integrando, se a substituição serve; e calcular
+$\int_0^2 \frac{2x}{x^2+4}\,dx$ trocando os limites.
+
+A última lição do capítulo, [área entre curvas](./area-entre-curvas), usa tudo
+o que a Parte IV construiu numa pergunta só: quando duas curvas se cruzam, a
+região entre elas tem área, e ela é a integral da diferença. É também onde o
+curso termina, com uma palavra sobre o que um Cálculo 2 faria a seguir — a
+começar pela integração por partes, que resolve o $\int x\,e^x\,dx$ que esta
+página deixou em aberto.

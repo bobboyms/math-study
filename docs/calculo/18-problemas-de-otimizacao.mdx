@@ -1,0 +1,928 @@
+---
+title: "Problemas de otimização: o melhor valor possível"
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+import GeoFigure from '@site/src/components/GeoFigure';
+import SolidFigure from '@site/src/components/SolidFigure';
+
+# Problemas de otimização: o melhor valor possível
+
+## 1. Problema motivador: a lata que gasta menos metal
+
+Uma fábrica de conservas vai lançar uma lata cilíndrica de **1 litro**, com
+tampa e fundo. O metal é comprado por área, então a pergunta da fábrica é
+direta:
+
+> Entre todas as latas de 1 litro, qual é a que usa **menos** folha de metal?
+> Que raio e que altura ela tem?
+
+Não é uma pergunta de "quanto vale". É uma pergunta de "qual é o melhor entre
+infinitos candidatos". Existem infinitas latas de 1 litro: uma fina e alta,
+como um tubo; uma larga e baixa, como uma marmita; e todas as intermediárias.
+Cada uma gasta uma quantidade diferente de metal.
+
+Dá para começar testando. A lição de [volumes e
+superfícies](../geometria/volumes-e-superficies) deu as duas fórmulas do
+cilindro: volume $V = \pi r^2 h$ e superfície total
+$S = 2\pi r^2 + 2\pi r h$ (duas tampas mais a parede). Com $V = 1000$ cm³,
+escolhido um raio, a altura fica determinada, e a superfície sai:
+
+| raio $r$ (cm) | altura $h$ (cm) | superfície $S$ (cm²) |
+|---:|---:|---:|
+| 2 | 79,6 | 1025,1 |
+| 3 | 35,4 | 723,2 |
+| 4 | 19,9 | 600,5 |
+| 5 | 12,7 | 557,1 |
+| 6 | 8,8 | 559,5 |
+| 8 | 5,0 | 652,1 |
+
+A tabela diz que o melhor raio está entre 5 e 6 cm. Mas não diz **onde**, e
+qualquer aposta em 5,5 ou 5,3 é chute. É a mesma situação da caixa de 30 cm
+por 20 cm, que a lição de [máximos e mínimos](./maximos-e-minimos) fechou com
+a derivada. A diferença é que, na caixa, a fórmula do volume já vinha pronta
+com uma variável só. Aqui há duas, $r$ e $h$, e uma condição que as amarra.
+Aprender a **montar** a função certa, com uma variável só e o domínio certo, é
+o assunto desta página. Depois disso, a derivada faz o que já sabe fazer.
+
+## 2. Mapa das ideias
+
+- **otimizar** é achar o maior ou o menor valor possível de uma grandeza;
+- a **função objetivo** é a grandeza a otimizar, escrita como função das
+  medidas do problema;
+- a **restrição** é a condição que as medidas têm de obedecer (o volume é
+  1 litro, a cerca tem 100 m);
+- **reduzir a uma variável** é usar a restrição para eliminar uma das medidas
+  da função objetivo;
+- o **domínio do problema** é a faixa de valores em que a situação existe de
+  verdade, e ele faz parte da resposta;
+- os **candidatos** ao melhor valor são os pontos críticos e as pontas do
+  domínio, exatamente como na lição anterior sobre extremos.
+
+## 3. Para que serve
+
+- a embalagem que gasta menos material para um volume dado;
+- o preço que dá o maior lucro, quando vender mais caro reduz a quantidade
+  vendida;
+- a cerca, o galpão ou o terreno com a maior área para um material fixo;
+- o caminho mais rápido quando os trechos têm velocidades diferentes;
+- o ponto de uma curva mais próximo de um lugar dado;
+- e, dentro da matemática, é a aplicação mais direta de tudo o que as três
+  lições anteriores construíram: sinal da derivada, pontos críticos e o teste
+  que decide máximo e mínimo.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [máximos e mínimos](./maximos-e-minimos): quem são os candidatos a
+maior valor de uma função num intervalo fechado?** Os pontos críticos dentro
+do intervalo e as duas pontas. Calcula-se a função em todos e compara-se. E
+num intervalo aberto, em que as pontas não existem, o sinal da derivada
+decide: se $f'$ é positiva antes do ponto crítico e negativa depois, é máximo.
+
+**2. De [o sinal da derivada](./sinal-da-derivada): como se descobre onde uma
+função sobe e onde desce?** Pelo quadro de sinais de $f'$: os pontos críticos
+cortam a reta, e um ponto de teste em cada trecho decide o sinal. Sinal
+positivo é subida.
+
+**3. De [volumes e superfícies](../geometria/volumes-e-superficies): quais são
+as fórmulas do cilindro?** Volume $V = \pi r^2 h$; superfície total
+$S = 2\pi r^2 + 2\pi r h$, que é a soma de duas tampas circulares com a parede
+desenrolada, um retângulo de base $2\pi r$ e altura $h$.
+
+**4. De [sistemas de duas equações](../equacoes/sistemas-de-duas-equacoes):
+como se usa uma equação para eliminar uma letra da outra?** Pela
+**substituição**: isola-se uma letra na equação mais simples e troca-se, na
+outra, essa letra pela expressão encontrada. No retângulo de perímetro 34 com
+$c = l + 5$, o $c$ foi trocado por $l + 5$ e sobrou uma equação em $l$ só. É
+exatamente o movimento que vai eliminar o $h$ da lata.
+
+**5. De [domínio e imagem](../funcoes/dominio-e-imagem): de onde vem a
+restrição de domínio num problema aplicado?** Do próprio problema, não da
+álgebra. A fórmula da caixa $V(x) = x(30-2x)(20-2x)$ calcula para qualquer
+$x$, mas só existe caixa quando $0 < x < 10$. Fora daí a fórmula segue
+produzindo números que não descrevem caixa nenhuma.
+
+**6. De [plano cartesiano e distância](../geometria/plano-cartesiano-e-distancia):
+qual é a distância entre $(x_1, y_1)$ e $(x_2, y_2)$?** É a hipotenusa do
+triângulo de catetos $x_2 - x_1$ e $y_2 - y_1$:
+$d = \sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}$.
+
+**7. De [taxas relacionadas](./taxas-relacionadas): por que aquela lição
+insistiu num roteiro numerado?** Porque o erro típico não era de conta, e sim
+de **ordem**: substituir antes de derivar apagava a informação. Aqui o
+roteiro volta com o mesmo papel. Os erros desta página também são de
+organização: otimizar a função errada, esquecer o domínio, responder à
+pergunta errada.
+
+Os itens 1, 4 e 5 são os pilares. Se algum deles estiver enferrujado, vale
+reler a página antes de seguir, porque toda a lição é a combinação dos três.
+
+## 5. Intuição: uma variável a mais do que equações
+
+A lata tem duas medidas livres, $r$ e $h$, e a superfície depende das duas.
+Se fosse só isso, não haveria "melhor lata": qualquer lata poderia ser
+encolhida até gastar quase nada de metal. O que torna o problema interessante
+é a **restrição**: o volume tem de ser 1000 cm³. Ela tira uma das liberdades.
+Escolhido o raio, a altura não é mais escolha — é consequência.
+
+Esse é o formato de todo problema desta página:
+
+- uma grandeza que queremos tornar máxima ou mínima (a superfície);
+- medidas que podem variar (raio e altura);
+- uma condição que amarra as medidas (o volume fixo).
+
+Enquanto a grandeza depende de duas medidas, a derivada que conhecemos não se
+aplica: ela deriva funções de **uma** variável. Então o trabalho central é
+usar a restrição para escrever a grandeza em função de uma medida só. Depois
+disso, o problema vira o da lição anterior: achar o máximo ou o mínimo de uma
+função num intervalo.
+
+E há um detalhe que a intuição costuma pular. A função resultante só descreve
+a situação **dentro de uma faixa** de valores. Uma lata de raio zero não é
+lata; uma cerca de lado negativo não é cerca. A faixa em que o problema
+existe é o domínio, e o melhor valor tem de ser procurado dentro dela.
+
+## 6. Modelo visual: a lata e a curva do metal gasto
+
+<SolidFigure
+  kind="cylinder"
+  rx={58}
+  ry={20}
+  height={116}
+  radiusLabel="r"
+  heightLabel="h"
+  caption="Uma lata de 1 litro: escolhido o raio r, a altura h fica determinada pelo volume. A superfície é a soma das duas tampas com a parede."
+/>
+
+A tabela da seção 1 é a curva abaixo, ponto a ponto. O eixo horizontal é o
+raio; o vertical, a superfície de metal. As duas curvas tracejadas são as
+parcelas da soma: as **tampas**, $2\pi r^2$, que crescem com o raio; e a
+**parede**, $\frac{2000}{r}$, que encolhe com o raio, porque uma lata larga é
+baixa.
+
+<CartesianPlane
+  xMin={0}
+  xMax={12}
+  yMin={0}
+  yMax={1200}
+  xUnit={40}
+  yUnit={0.2}
+  yStep={200}
+  functions={[
+    {f: (r) => 2 * Math.PI * r * r + 2000 / r, domain: [0.5, 12], tone: 1},
+    {f: (r) => 2 * Math.PI * r * r, domain: [0, 12], tone: 2, dashed: true},
+    {f: (r) => 2000 / r, domain: [0.5, 12], tone: 3, dashed: true},
+  ]}
+  lines={[{x: 5.42, dashed: true, tone: 0}]}
+  points={[{at: [5.42, 553.6], label: '(5{,}42;\\ 553{,}6)', tone: 1, dx: 62, dy: -12}]}
+  labels={[
+    {at: [10.6, 1000], math: '\\text{tampas}', tone: 2, fontSize: 13},
+    {at: [10.6, 340], math: '\\text{parede}', tone: 3, fontSize: 13},
+    {at: [3.2, 1080], math: 'S(r)', tone: 1, fontSize: 14},
+  ]}
+  axisLabels={['r', 'S']}
+  caption="A superfície total S(r) é a soma das tampas (que crescem com r) com a parede (que encolhe com r). O mínimo fica onde a curva cheia para de descer e começa a subir: r ≈ 5,42 cm."
+/>
+
+Duas leituras da figura:
+
+- para raios pequenos, quem manda é a **parede**: a lata é um tubo alto, e a
+  parede consome quase todo o metal. A curva cheia desce depressa quando o
+  raio aumenta, porque a parede encolhe depressa;
+- para raios grandes, quem manda são as **tampas**: a lata é um disco largo,
+  e as duas tampas dominam. A curva cheia sobe.
+
+O mínimo está no ponto em que a descida da parede e a subida das tampas se
+compensam. É onde a inclinação da curva cheia é zero — e inclinação zero é
+derivada zero. Isso é o que a derivada vai localizar com exatidão.
+
+## 7. Ponte para a formalização: por que trocar uma medida pela outra é legítimo
+
+Antes de derivar, a superfície precisa virar função de uma variável só. O
+movimento é a substituição da lição de sistemas, e vale dizer com cuidado o
+que ele faz.
+
+**O que queremos.** Uma função $S(r)$ de uma letra só, que dê a superfície de
+**cada lata de 1 litro** a partir do raio.
+
+**Por que a forma atual não serve.** $S = 2\pi r^2 + 2\pi r h$ depende de duas
+letras. Para derivar em relação a $r$, o $h$ teria de ser constante — e ele
+não é: ao mudar o raio de uma lata de 1 litro, a altura muda junto.
+
+**Qual propriedade autoriza a troca.** A restrição $\pi r^2 h = 1000$ é uma
+equação nas mesmas duas letras. Dividindo os dois lados por $\pi r^2$ (que não
+é zero, porque $r > 0$), ela vira
+
+$$
+h = \frac{1000}{\pi r^2}.
+$$
+
+Isso diz: para cada raio, existe **uma única** altura que fecha 1 litro. Então
+$h$ não é uma segunda variável livre; é uma função de $r$.
+
+**O que muda na escrita.** Toda ocorrência de $h$ em $S$ é trocada por
+$\frac{1000}{\pi r^2}$:
+
+$$
+S = 2\pi r^2 + 2\pi r \times \frac{1000}{\pi r^2}
+= 2\pi r^2 + \frac{2000}{r}.
+$$
+
+Na segunda parcela, o $\pi$ cancelou com o $\pi$ e um $r$ cancelou com um dos
+dois $r$ do denominador. Sobrou $\frac{2000}{r}$.
+
+**O que permanece igual.** A superfície de cada lata. $S(r)$ dá, para cada
+raio, exatamente a mesma superfície que a fórmula de duas letras daria com a
+altura correspondente. Confira com um caso da tabela: para $r = 5$, a fórmula
+nova dá $2\pi \times 25 + 400 = 157{,}1 + 400 = 557{,}1$; e a fórmula antiga,
+com $h = \frac{1000}{25\pi} = 12{,}73$, dá $157{,}1 + 2\pi \times 5 \times
+12{,}73 = 157{,}1 + 400{,}0 = 557{,}1$. Mesmo número.
+
+**O que a troca acrescentou.** Um domínio. A fórmula $S(r)$ só descreve latas
+quando $r > 0$. Em $r = 0$ ela nem existe (divisão por zero), e para $r$
+negativo ela calcula um número que não é lata nenhuma. O domínio do problema
+é $]0, +\infty[$, e vamos precisar dele para decidir se o ponto crítico é
+mesmo o mínimo.
+
+## 8. O roteiro em oito passos
+
+> **Problema de otimização.** Uma grandeza depende de uma ou mais medidas
+> ligadas por uma restrição. Encontrar o valor das medidas que torna a
+> grandeza máxima ou mínima, e o valor que ela atinge ali.
+
+O roteiro, sempre nesta ordem:
+
+1. **Desenhe** a situação, marcando o que pode variar e o que é fixo.
+2. **Nomeie** cada medida que varia com uma letra, com unidade.
+3. **Escreva a função objetivo**: a grandeza a otimizar, em função das
+   medidas. Confira que é **ela** que a pergunta pede (área, custo, tempo,
+   lucro), e não uma vizinha.
+4. **Escreva a restrição**: a equação que amarra as medidas.
+5. **Reduza a uma variável**: isole uma medida na restrição e substitua na
+   função objetivo.
+6. **Determine o domínio do problema**: a faixa em que a situação existe.
+7. **Derive e ache os candidatos**: os pontos críticos dentro do domínio e,
+   se o domínio for fechado, as pontas.
+8. **Teste os candidatos e responda à pergunta feita**, com unidade. Se
+   pediram a medida, dê a medida; se pediram o valor máximo, dê o valor;
+   se pediram os dois, dê os dois.
+
+### Um exemplo pequeno, guiado
+
+*Dois números positivos somam 20. Qual é o maior produto que eles podem ter?*
+
+1. Não há figura; duas quantidades e uma soma fixa.
+2. Os números: $x$ e $y$.
+3. Função objetivo: o produto, $P = xy$. É o que a pergunta pede.
+4. Restrição: $x + y = 20$.
+5. Isolando $y = 20 - x$ e substituindo: $P(x) = x(20 - x) = 20x - x^2$.
+6. Domínio: os dois números são positivos, então $x > 0$ e $20 - x > 0$, isto
+   é, $0 < x < 20$.
+7. $P'(x) = 20 - 2x$, que zera em $x = 10$. É o único ponto crítico, e está no
+   domínio. O domínio é aberto, sem pontas.
+8. Teste: $P'(5) = 10$, positivo; $P'(15) = -10$, negativo. A função sobe até
+   10 e desce depois: **máximo**. Os números são $10$ e $10$, e o produto
+   máximo é $100$.
+
+Uma conferência de bom senso: $9 \times 11 = 99$ e $8 \times 12 = 96$. Nenhum
+par de soma 20 passa de 100.
+
+### Contraexemplos: um para cada armadilha do roteiro
+
+Cada passo do roteiro existe porque há um jeito conhecido de errar sem ele.
+
+- **Sem o passo 3 (função certa).** Se a pergunta fosse "qual par de soma 20
+  tem a maior **soma dos quadrados**", a função objetivo seria
+  $x^2 + (20-x)^2$, e a resposta mudaria por completo: essa função tem
+  **mínimo** em $x = 10$ (vale 200) e cresce nas pontas. Otimizar $xy$ nesse
+  caso seria resolver outro problema.
+- **Sem o passo 5 (uma variável).** Derivar $P = xy$ "em relação a $x$"
+  tratando $y$ como constante daria $P' = y$, que nunca é zero. O problema
+  parece não ter solução, e o defeito é que $y$ não é constante.
+- **Sem o passo 6 (domínio).** A função $P(x) = 20x - x^2$ está definida para
+  todo $x$, mas $x = 25$ daria $y = -5$, e "número positivo" exclui isso. O
+  domínio é o que separa a fórmula do problema.
+- **Sem o passo 8 (testar e responder).** Achar $x = 10$ e parar deixaria a
+  pergunta sem resposta, porque a pergunta era sobre o **produto**, não sobre
+  os números. E encontrar $f' = 0$ sem testar pode entregar um mínimo quando
+  se procurava um máximo — o exemplo 3 adiante tem exatamente isso.
+
+## 9. Resolvendo o problema da lata
+
+Pelo roteiro.
+
+1. A figura da seção 6: cilindro com tampa e fundo.
+2. Raio $r$ e altura $h$, em centímetros.
+3. Função objetivo: a superfície, $S = 2\pi r^2 + 2\pi r h$, em cm². É o metal
+   gasto, que é o que a fábrica quer minimizar.
+4. Restrição: $\pi r^2 h = 1000$.
+5. Feito na seção 7: $S(r) = 2\pi r^2 + \dfrac{2000}{r}$.
+6. Domínio: $r > 0$. Não há limite superior imposto pelo problema (uma lata
+   pode ser arbitrariamente larga), então o domínio é $]0, +\infty[$, aberto
+   nos dois lados.
+7. Derivando com a regra da potência, escrevendo $\frac{2000}{r}$ como
+   $2000\,r^{-1}$:
+   $$
+   S'(r) = 4\pi r - \frac{2000}{r^2}.
+   $$
+   Zerando: $4\pi r = \dfrac{2000}{r^2}$. Multiplicando os dois lados por
+   $r^2$ (que não é zero no domínio) e dividindo por $4\pi$:
+   $$
+   r^3 = \frac{2000}{4\pi} = \frac{500}{\pi},
+   \qquad
+   r = \sqrt[3]{\frac{500}{\pi}} \approx 5{,}42 \text{ cm}.
+   $$
+   É o único ponto crítico. Como o domínio é aberto, não há pontas.
+8. Teste pelo sinal de $S'$: em $r = 4$, $S'(4) = 50{,}3 - 125 = -74{,}7$,
+   negativo; em $r = 7$, $S'(7) = 88{,}0 - 40{,}8 = 47{,}1$, positivo. A
+   superfície desce até $5{,}42$ e sobe depois: é **mínimo**, e é o mínimo de
+   todo o domínio, porque a função só desce antes dele e só sobe depois.
+
+A altura sai da restrição: $h = \dfrac{1000}{\pi \times 5{,}42^2} \approx
+10{,}84$ cm. E a superfície mínima:
+$S(5{,}42) = 2\pi \times 29{,}37 + \dfrac{2000}{5{,}42} \approx 184{,}6 + 369{,}0
+= 553{,}6$ cm².
+
+**A resposta à pergunta feita.** Raio de 5,42 cm, altura de 10,84 cm,
+553,6 cm² de metal. Menos que qualquer linha da tabela da seção 1 — a linha
+de $r = 5$ tinha 557,1, e a de $r = 6$, 559,5.
+
+**Uma observação que não é coincidência.** A altura, 10,84, é exatamente o
+dobro do raio, 5,42. A lata mais econômica tem **altura igual ao diâmetro**:
+vista de lado, ela é um quadrado. E isso não depende do volume ser 1 litro.
+Refazendo a conta com um volume $V$ qualquer no lugar de 1000, o ponto
+crítico sai de $4\pi r = \dfrac{2V}{r^2}$, isto é, $r^3 = \dfrac{V}{2\pi}$; e
+a altura correspondente é
+$h = \dfrac{V}{\pi r^2} = \dfrac{V}{\pi r^2} \times \dfrac{r}{r}
+= \dfrac{V}{\pi r^3} \times r = \dfrac{V}{\pi} \times \dfrac{2\pi}{V} \times r
+= 2r$. Vale para qualquer volume.
+
+Se as latas do supermercado não são assim (a de refrigerante tem altura perto
+de 1,8 diâmetros), é porque o problema real tem outros custos: a tampa é mais
+grossa que a parede, o encaixe na mão importa, o transporte também. O
+exercício 13 refaz a conta com a tampa mais cara, e o resultado muda.
+
+## 10. Exemplos resolvidos
+
+### Exemplo 1: a cerca com um lado no rio
+
+Um produtor tem 100 m de cerca e quer fechar um terreno retangular na beira
+de um rio reto. O lado do rio não precisa de cerca. Qual é a maior área que
+ele consegue cercar?
+
+*Pause e tente antes de ler.* Desenhe, nomeie os lados, escreva a área e a
+restrição.
+
+<GeoFigure
+  unit={40}
+  padding={52}
+  bounds={[-0.6, -0.9, 6.2, 3.4]}
+  polygons={[{points: [[0, 0], [5, 0], [5, 2.5], [0, 2.5]], tone: 2}]}
+  segments={[{from: [-0.5, 0], to: [5.6, 0], tone: 1}]}
+  labels={[
+    {at: [2.5, -0.5], math: '\\text{rio}', tone: 1, fontSize: 13},
+    {at: [-0.3, 1.25], math: 'x', tone: 2, fontSize: 14},
+    {at: [5.3, 1.25], math: 'x', tone: 2, fontSize: 14},
+    {at: [2.5, 2.85], math: 'y', tone: 2, fontSize: 14},
+  ]}
+  caption="Três lados de cerca: dois de comprimento x, perpendiculares ao rio, e um de comprimento y, paralelo a ele. O rio fecha o quarto lado."
+/>
+
+1. A figura acima.
+2. $x$ é o lado perpendicular ao rio (há dois iguais); $y$ é o lado paralelo.
+   Os dois em metros.
+3. Função objetivo: a área, $A = xy$, em m².
+4. Restrição: a cerca cobre três lados, $2x + y = 100$.
+5. Isolando $y = 100 - 2x$: $A(x) = x(100 - 2x) = 100x - 2x^2$.
+6. Domínio: $x > 0$ e $y = 100 - 2x > 0$, isto é, $x < 50$. Domínio
+   $]0, 50[$.
+7. $A'(x) = 100 - 4x$, que zera em $x = 25$.
+8. Teste: $A'(10) = 60$, positivo; $A'(40) = -60$, negativo. Sobe e desce:
+   máximo. Com $x = 25$, $y = 100 - 50 = 50$, e $A = 25 \times 50 = 1250$ m².
+
+**A resposta:** 25 m nos dois lados perpendiculares ao rio, 50 m no lado
+paralelo, 1250 m² cercados.
+
+**Um erro que a resposta desmonta.** A tentação é fazer um quadrado, que "é a
+forma mais eficiente". Com três lados iguais de $\frac{100}{3} = 33{,}3$ m, a
+área seria $33{,}3^2 = 1111$ m² — quase 140 m² a menos. O quadrado é a melhor
+forma quando os **quatro** lados custam cerca; com o rio pagando um lado, o
+melhor é esticar o terreno ao longo dele.
+
+### Exemplo 2: o preço que dá o maior lucro
+
+Uma loja vende um produto por $p$ reais a unidade. A experiência mostra que a
+quantidade vendida por mês cai quando o preço sobe: $q = 200 - 2p$. Cada
+unidade custa R\$ 20 para a loja, mais R\$ 500 fixos por mês. Que preço dá o
+maior lucro?
+
+*Pause e tente.* A pergunta é sobre lucro, e lucro não é receita.
+
+1. Não há figura; há uma reta de demanda.
+2. Preço $p$ (reais), quantidade $q$ (unidades por mês).
+3. Função objetivo: o **lucro**, que é receita menos custo. Receita é
+   $R = pq$; custo é $C = 20q + 500$. Então $L = pq - 20q - 500$.
+4. Restrição: $q = 200 - 2p$. Aqui ela já vem isolada.
+5. Substituindo:
+   $$
+   L(p) = p(200 - 2p) - 20(200 - 2p) - 500 = -2p^2 + 240p - 4500.
+   $$
+   Conferindo a expansão: $p(200 - 2p) = 200p - 2p^2$;
+   $-20(200 - 2p) = -4000 + 40p$; somando com o $-500$:
+   $-2p^2 + 240p - 4500$.
+6. Domínio: o preço não é negativo, e a quantidade também não: $200 - 2p \ge 0$
+   dá $p \le 100$. Domínio $[0, 100]$, fechado.
+7. $L'(p) = -4p + 240$, que zera em $p = 60$. Candidatos: $60$ e as pontas
+   $0$ e $100$.
+8. Testando os três: $L(0) = -4500$; $L(100) = -20000 + 24000 - 4500 = -500$;
+   $L(60) = -7200 + 14400 - 4500 = 2700$. O maior é em $p = 60$.
+
+**A resposta:** preço de R\$ 60, com $q = 200 - 120 = 80$ unidades por mês e
+lucro de R\$ 2.700.
+
+**O erro que este exemplo foi feito para mostrar.** Se a loja otimizasse a
+**receita** em vez do lucro, faria $R(p) = 200p - 2p^2$, $R'(p) = 200 - 4p$,
+e escolheria $p = 50$. A receita seria maior, R\$ 5.000 contra R\$ 4.800 —
+mas o lucro seria **menor**: $L(50) = -5000 + 12000 - 4500 = 2500$, contra
+2700 em $p = 60$. Vender mais barato aumenta o faturamento e o custo ao mesmo
+tempo, e o custo cresce mais depressa. A função objetivo tem de ser a que a
+pergunta pede.
+
+### Exemplo 3: o ponto da parábola mais perto de um lugar dado
+
+Qual é o ponto da parábola $y = x^2$ mais próximo do ponto $(0, 3)$?
+
+*Pause e tente.* A grandeza a minimizar é uma distância; a restrição é que o
+ponto está na curva.
+
+1. A parábola e o ponto $(0, 3)$ no eixo dela, acima do vértice.
+2. O ponto procurado é $(x, y)$.
+3. Função objetivo: a distância de $(x, y)$ a $(0, 3)$, que pela fórmula da
+   distância é $d = \sqrt{x^2 + (y - 3)^2}$.
+4. Restrição: o ponto está na parábola, $y = x^2$.
+5. Substituindo: $d(x) = \sqrt{x^2 + (x^2 - 3)^2}$.
+
+Antes de derivar, uma simplificação que vale a pena. A raiz quadrada torna a
+derivada carregada. Mas **o ponto que minimiza $d$ é o mesmo que minimiza
+$d^2$**: a raiz quadrada é crescente, então quando $d^2$ é o menor possível,
+$d = \sqrt{d^2}$ também é. Trabalhamos com
+
+$$
+D(x) = d(x)^2 = x^2 + (x^2 - 3)^2.
+$$
+
+6. Domínio: todo $x$ real. A parábola não acaba.
+7. Derivando, com a regra da cadeia na segunda parcela:
+   $$
+   D'(x) = 2x + 2(x^2 - 3) \times 2x = 2x\left[1 + 2(x^2 - 3)\right]
+   = 2x(2x^2 - 5).
+   $$
+   Os pontos críticos: $x = 0$ e $2x^2 = 5$, isto é,
+   $x = \pm\sqrt{\tfrac{5}{2}} \approx \pm 1{,}581$. Três candidatos, sem
+   pontas.
+8. Teste pelo sinal de $D' = 2x(2x^2 - 5)$: em $x = -2$, $(-4)(3) < 0$; em
+   $x = -1$, $(-2)(-3) > 0$; em $x = 1$, $(2)(-3) < 0$; em $x = 2$,
+   $(4)(3) > 0$. Então $D$ desce, sobe, desce, sobe. Os pontos
+   $\pm 1{,}581$ são **mínimos**; o ponto $x = 0$ é um **máximo local**.
+
+**A resposta:** dois pontos, simétricos, $(\pm 1{,}581;\ 2{,}5)$, porque
+$y = x^2 = \frac{5}{2}$. A distância mínima é $\sqrt{D} = \sqrt{2{,}75} \approx
+1{,}658$.
+
+**O que $x = 0$ ensina.** O vértice $(0, 0)$ tem derivada de $D$ igual a zero
+e está a distância 3 do ponto dado — a **maior** entre os pontos próximos, não
+a menor. Quem parasse na primeira raiz de $D'$ sem testar entregaria o pior
+candidato como se fosse o melhor. O passo 8 não é burocracia.
+
+### Exemplo 4: a caixa de base quadrada com tampa mais cara
+
+Uma caixa fechada de base quadrada deve ter 4 litros de volume. O material
+das laterais e do fundo custa R\$ 0,02 por cm²; o da tampa, reforçada, custa
+R\$ 0,04 por cm². Que dimensões dão o menor custo?
+
+*Pause e tente.* A função objetivo é **custo**, não área.
+
+1. Bloco de base quadrada de lado $x$ e altura $h$.
+2. $x$ e $h$ em centímetros. O volume é $4000$ cm³.
+3. Função objetivo: o custo. Áreas: fundo $x^2$, tampa $x^2$, quatro laterais
+   $4xh$. Custo:
+   $$
+   C = 0{,}02\,(x^2 + 4xh) + 0{,}04\,x^2 = 0{,}06\,x^2 + 0{,}08\,xh.
+   $$
+4. Restrição: $x^2 h = 4000$.
+5. $h = \dfrac{4000}{x^2}$, e então
+   $0{,}08\,x \times \dfrac{4000}{x^2} = \dfrac{320}{x}$:
+   $$
+   C(x) = 0{,}06\,x^2 + \frac{320}{x}.
+   $$
+6. Domínio: $x > 0$.
+7. $C'(x) = 0{,}12\,x - \dfrac{320}{x^2}$. Zerando: $0{,}12\,x^3 = 320$,
+   $x^3 = 2666{,}7$, $x = \sqrt[3]{2666{,}7} \approx 13{,}87$ cm.
+8. Teste: $C'(10) = 1{,}2 - 3{,}2 < 0$; $C'(20) = 2{,}4 - 0{,}8 > 0$. Mínimo.
+   Altura: $h = \dfrac{4000}{13{,}87^2} \approx 20{,}80$ cm. Custo:
+   $C = 0{,}06 \times 192{,}3 + \dfrac{320}{13{,}87} \approx 11{,}54 + 23{,}08
+   = 34{,}61$.
+
+**A resposta:** base de 13,87 cm por 13,87 cm, altura de 20,80 cm, custo de
+R\$ 34,61.
+
+Repare que a caixa mais barata **não é um cubo**, embora o cubo seja a caixa
+de base quadrada com menor **área** para um volume dado. A tampa cara empurra
+a solução para uma caixa mais alta e estreita, com tampa menor. A função
+objetivo muda, e a resposta muda com ela.
+
+### Exemplo 5: o caminho mais rápido entre areia e água
+
+Um salva-vidas está na beira da água, num ponto $A$. Um banhista precisa de
+ajuda num ponto $B$ que está 40 m ao longo da margem e 30 m para dentro da
+água. O salva-vidas corre a 5 m/s na areia e nada a 3 m/s. Ele corre pela
+margem até um ponto $P$ e dali nada em linha reta até $B$. Onde deve estar
+$P$ para ele chegar o mais rápido possível?
+
+*Pause e tente.* A grandeza a minimizar é **tempo**, e tempo é distância
+dividida por velocidade, trecho a trecho.
+
+<GeoFigure
+  unit={38}
+  padding={54}
+  bounds={[-1.4, -4.5, 5.4, 0.9]}
+  segments={[
+    {from: [-0.5, 0], to: [4.8, 0], tone: 0},
+    {from: [0, 0], to: [1.75, 0], tone: 2},
+    {from: [1.75, 0], to: [4, -3], tone: 1},
+    {from: [4, 0], to: [4, -3], tone: 0, dashed: true},
+  ]}
+  points={[
+    {at: [0, 0], label: 'A', tone: 2, place: 'above'},
+    {at: [1.75, 0], label: 'P', tone: 2, place: 'above'},
+    {at: [4, -3], label: 'B', tone: 1, place: 'below'},
+  ]}
+  labels={[
+    {at: [0.875, 0.42], math: 's', tone: 2, fontSize: 14},
+    {at: [2.9, 0.42], math: '40 - s', tone: 0, fontSize: 13},
+    {at: [4.35, -1.5], math: '30', tone: 0, fontSize: 13},
+    {at: [2.0, -3.9], math: '\\sqrt{(40-s)^2 + 30^2}', tone: 1, fontSize: 12},
+    {at: [-0.75, -0.9], math: '\\text{água}', tone: 1, fontSize: 12, halo: false},
+    {at: [-0.75, 0.62], math: '\\text{areia}', tone: 2, fontSize: 12, halo: false},
+  ]}
+  caption="O salva-vidas corre s metros pela margem (tom laranja) e nada o resto em linha reta (tom azul). Um s maior encurta o nado, que é lento, mas alonga a corrida."
+/>
+
+1. A figura acima. A margem é uma reta; $B$ está a 40 m ao longo dela e 30 m
+   para dentro.
+2. $s$ é a distância corrida pela margem, de $A$ até $P$, em metros.
+3. Função objetivo: o tempo total. Corrida: $\dfrac{s}{5}$ segundos. Nado: a
+   distância de $P$ a $B$ é a hipotenusa de catetos $40 - s$ e $30$, dividida
+   por 3:
+   $$
+   T(s) = \frac{s}{5} + \frac{\sqrt{(40 - s)^2 + 900}}{3}.
+   $$
+4. e 5. Aqui a restrição já está embutida: escolher $P$ é escolher $s$, e
+   tudo ficou em função de $s$ desde o início. Nem todo problema tem uma
+   equação de restrição separada.
+6. Domínio: $P$ fica entre $A$ e o ponto da margem em frente a $B$, então
+   $0 \le s \le 40$. Fechado.
+7. Derivando, com a cadeia na raiz:
+   $$
+   T'(s) = \frac{1}{5} + \frac{1}{3} \times \frac{-2(40 - s)}{2\sqrt{(40-s)^2 + 900}}
+   = \frac{1}{5} - \frac{40 - s}{3\sqrt{(40-s)^2 + 900}}.
+   $$
+   Zerando e chamando $u = 40 - s$ para aliviar a escrita:
+   $\dfrac{u}{\sqrt{u^2 + 900}} = \dfrac{3}{5}$. Elevando ao quadrado (os
+   dois lados são positivos, então não entra raiz falsa):
+   $25u^2 = 9u^2 + 8100$, $16u^2 = 8100$, $u^2 = 506{,}25$, $u = 22{,}5$. Logo
+   $s = 40 - 22{,}5 = 17{,}5$ m. Candidatos: $17{,}5$ e as pontas $0$ e $40$.
+8. Testando: $T(0) = 0 + \dfrac{50}{3} = 16{,}67$ s (nadar direto);
+   $T(40) = 8 + 10 = 18$ s (correr tudo e nadar 30 m); $T(17{,}5) = 3{,}5 +
+   \dfrac{37{,}5}{3} = 3{,}5 + 12{,}5 = 16$ s. O menor é em $17{,}5$.
+
+**A resposta:** correr 17,5 m pela margem e nadar dali. O tempo é 16 s —
+dois terços de segundo a menos que nadar em linha reta desde o início, e dois
+segundos a menos que correr até a frente de $B$.
+
+Vale notar o que a conta diz sobre a forma: o ponto ótimo **não** é o
+caminho mais curto (que seria nadar direto, $s = 0$) nem o que maximiza a
+corrida rápida ($s = 40$). É um meio-termo em que cada metro a mais de corrida
+deixa de compensar o metro a menos de nado. É a mesma lógica da lata: o mínimo
+fica onde as duas parcelas se equilibram.
+
+## 11. Erros comuns
+
+> **Erro 1: otimizar a função errada.** No exemplo 2, maximizar a receita dá
+> $p = 50$; maximizar o lucro dá $p = 60$. Os dois estão certos para a
+> própria pergunta e errados para a outra. Antes de derivar, releia a
+> pergunta e confira que a função escrita é **aquela** grandeza: custo não é
+> área, lucro não é receita, tempo não é distância.
+
+> **Erro 2: esquecer o domínio e aceitar uma resposta impossível.** Na cerca,
+> a fórmula $A(x) = 100x - 2x^2$ aceita $x = 60$, que daria $y = -20$. Um
+> lado negativo não é cerca. Na caixa da lição de polinômios, $x = 12$ daria
+> largura negativa. O domínio é a lista do que existe, e todo candidato fora
+> dele é descartado antes de qualquer teste.
+
+> **Erro 3: parar em $f'(a) = 0$ sem testar.** No exemplo 3, $x = 0$ zera a
+> derivada e é um **máximo local** da distância — o oposto do que se
+> procurava. Ponto crítico é candidato; o sinal da derivada (ou a comparação
+> com as pontas) é o veredicto.
+
+> **Erro 4: esquecer as pontas de um domínio fechado.** Se o lucro do exemplo
+> 2 fosse $L(p) = 240p - 4500$ (sem o termo quadrático), a derivada nunca
+> zeraria e o máximo estaria na ponta $p = 100$. Num intervalo fechado, as
+> pontas são candidatos tão legítimos quanto os pontos críticos, como a lição
+> de [máximos e mínimos](./maximos-e-minimos) mostrou.
+
+> **Erro 5: responder à pergunta errada.** "Qual é a maior área?" pede um
+> número em m², 1250. "Quais são as dimensões?" pede 25 m e 50 m. Achar
+> $x = 25$ e escrever "a resposta é 25" não responde a nenhuma das duas.
+> Volte à pergunta no último passo.
+
+> **Erro 6: derivar antes de reduzir a uma variável.** Derivar $S = 2\pi r^2 +
+> 2\pi r h$ "em $r$" como se $h$ fosse constante dá $4\pi r + 2\pi h$, que
+> nunca é zero para $r, h > 0$. A conta afirma que não há lata melhor, e o
+> defeito é que $h$ depende de $r$. A restrição entra **antes** da derivada.
+
+> **Erro 7: esquecer a unidade, ou misturar unidades.** A lata é de 1 litro,
+> mas as medidas estão em centímetros: o volume tem de entrar como 1000 cm³.
+> Com "1" no lugar de "1000", o raio sairia dez vezes menor que o certo, sem
+> nenhum aviso da álgebra.
+
+## 12. Perguntas de verificação
+
+1. Por que a superfície da lata precisou ser reescrita como função de $r$
+   só, antes de derivar?
+2. O que a restrição $\pi r^2 h = 1000$ afirma sobre a relação entre $r$ e
+   $h$?
+3. Por que o domínio da lata é aberto, e o do lucro do exemplo 2 é fechado?
+   O que isso muda na lista de candidatos?
+4. No exemplo 3, por que trocar $d$ por $d^2$ não muda o ponto que
+   minimiza?
+5. Na cerca, por que o quadrado não é a melhor forma?
+6. Um ponto crítico dentro do domínio é sempre a resposta? Dê um caso desta
+   página em que não é.
+7. O que aconteceria se, na lata, a derivada fosse tomada em relação a $h$
+   em vez de $r$? O resultado mudaria?
+8. Por que o salva-vidas não nada em linha reta desde o início, se essa é a
+   menor distância?
+9. Qual é a diferença entre "a grandeza máxima" e "o valor da medida em que
+   ela ocorre"? Dê os dois para a cerca.
+10. Em que passo do roteiro a pergunta "é custo ou é área?" precisa ser
+    respondida, e por que não pode ficar para o final?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque a derivada que o curso ensinou é de funções de uma variável. Com
+   duas letras livres, não há "a derivada" da superfície; e tratar $h$ como
+   constante seria falso, porque a altura muda quando o raio muda.
+2. Que, para cada raio, há exatamente uma altura que fecha 1 litro:
+   $h = \frac{1000}{\pi r^2}$. A altura deixa de ser escolha e vira função do
+   raio.
+3. A lata aceita qualquer raio positivo, sem limite superior e sem incluir o
+   zero: $]0, +\infty[$, sem pontas. O preço do exemplo 2 fica entre 0 e 100,
+   com os extremos possíveis: $[0, 100]$. Num domínio fechado as pontas
+   entram na lista de candidatos; num aberto, não existem, e o sinal da
+   derivada tem de decidir sozinho.
+4. Porque a raiz quadrada é crescente: se $D$ é o menor possível num ponto,
+   $\sqrt{D}$ também é, e no mesmo ponto. Os valores mínimos são diferentes
+   ($2{,}75$ e $1{,}658$), mas o $x$ em que ocorrem é o mesmo.
+5. Porque o rio paga um dos quatro lados. Com quatro lados de cerca, o
+   quadrado é ótimo; com três, vale a pena esticar o terreno ao longo do
+   rio, e a área ótima tem o lado paralelo com o dobro do perpendicular.
+6. Não. No exemplo 3, $x = 0$ é ponto crítico de $D$ e é um máximo local da
+   distância, não o mínimo procurado. Só o teste pelo sinal da derivada, ou
+   a comparação com os outros candidatos, decide.
+7. Não mudaria. Isolando $r$ na restrição em vez de $h$ ($r = \sqrt{1000/(\pi h)}$)
+   e derivando em $h$, o mínimo sai no mesmo par $(r, h)$. A escolha da
+   variável muda a dificuldade da conta, não a resposta. Aqui isolar $h$ é
+   mais simples porque evita a raiz.
+8. Porque ele nada devagar. Cada metro corrido a 5 m/s custa 0,2 s; cada
+   metro nadado a 3 m/s custa 0,33 s. Correr um trecho pela margem alonga o
+   caminho, mas troca metros lentos por metros rápidos. O ótimo é o ponto
+   em que essa troca deixa de compensar.
+9. A grandeza máxima é a área, 1250 m². As medidas em que ela ocorre são
+   25 m e 50 m. São respostas a perguntas diferentes, e o roteiro termina
+   respondendo à que foi feita.
+10. No passo 3, ao escrever a função objetivo. Se a função errada for
+    escrita ali, todos os passos seguintes serão feitos corretamente sobre
+    o problema errado, e nada na conta vai acusar.
+
+</details>
+
+## 13. Exercícios
+
+### 1. Reconhecimento
+
+1. Em cada situação, diga qual é a **função objetivo** e qual é a
+   **restrição**: a) uma caixa aberta de volume máximo feita de uma folha de
+   24 cm por 24 cm; b) o retângulo de área 100 m² com o menor perímetro;
+   c) o preço que dá a maior receita quando $q = 500 - 5p$.
+2. Para cada função objetivo do exercício 1, escreva o domínio do problema.
+3. Diga se cada domínio abaixo é aberto ou fechado, e o que isso muda na
+   lista de candidatos: a) $]0, 50[$; b) $[0, 100]$; c) $]0, +\infty[$.
+
+### 2. Explicação
+
+4. Explique, com as próprias palavras, por que a restrição tem de entrar na
+   função objetivo **antes** da derivada, e não depois.
+5. No exemplo 2, a receita máxima e o lucro máximo ocorrem em preços
+   diferentes. Explique por que isso não é contradição.
+6. Por que, num problema de distância mínima, é legítimo minimizar o
+   quadrado da distância? E por que **não** seria legítimo minimizar, por
+   exemplo, $d - 5$ no lugar de $d$? (Dica: é legítimo, mas por outro
+   motivo — pense no que uma subtração de constante faz com o ponto de
+   mínimo.)
+
+### 3. Aplicação direta
+
+7. Dois números positivos somam 30. Qual é o maior produto possível, e
+   quais são os números?
+8. Um retângulo tem perímetro de 40 cm. Quais dimensões dão a maior área, e
+   qual é ela?
+9. De uma folha quadrada de 24 cm de lado, cortam-se quadrados iguais de
+   lado $x$ nos quatro cantos e dobram-se as abas, formando uma caixa sem
+   tampa. Qual corte dá o maior volume, e qual é o volume?
+
+### 4. Variação
+
+10. A cerca do exemplo 1 ganha uma divisória interna, paralela aos lados
+    perpendiculares ao rio, que separa o terreno em duas partes. Ainda são
+    100 m de cerca ao todo. Quais são as dimensões de maior área agora?
+11. A loja do exemplo 2 muda de fornecedor: a demanda passa a ser
+    $q = 300 - 3p$ e o custo, $C = 10q + 800$. Qual é o preço de maior
+    lucro, e qual é o lucro?
+12. Refaça o exemplo 3 para o ponto $(0, 1)$ no lugar de $(0, 3)$. O que
+    muda na lista de candidatos?
+13. Na lata do motivador, a tampa e o fundo são feitos de chapa mais grossa,
+    que custa o **dobro** por cm² da chapa da parede. Minimizando o **custo**
+    em vez da área, qual é a razão entre a altura e o raio da lata ótima?
+
+### 5. Problema misto
+
+14. Qual é o ponto da reta $y = 2x + 1$ mais próximo da origem? Depois de
+    achar, confira com a lição de [paralelas e
+    perpendiculares](../geometria/paralelas-e-perpendiculares): o segmento
+    da origem até esse ponto deveria ser perpendicular à reta.
+15. Um pomar tem 50 macieiras, e cada uma produz 800 maçãs por ano. Para
+    cada árvore plantada a mais, a produção de **todas** as árvores cai 10
+    maçãs por ano, por causa da sombra. Quantas árvores a mais maximizam a
+    colheita, e qual é ela?
+16. Um duto de água precisa ligar uma bomba $A$, numa margem de um rio de
+    300 m de largura, a um reservatório $B$ na outra margem, 500 m rio
+    abaixo. O trecho sob a água custa R\$ 5 por metro; o trecho por terra,
+    R\$ 3 por metro. O duto sai de $A$ em linha reta sob a água até um ponto
+    $P$ da outra margem e segue por terra até $B$. Onde deve estar $P$ para
+    o custo ser mínimo, e qual é o custo?
+
+<details>
+<summary>Dica para o 16</summary>
+
+Chame de $x$ a distância, ao longo da outra margem, entre o ponto em frente a
+$A$ e o ponto $P$. O trecho sob a água mede $\sqrt{x^2 + 300^2}$; o trecho por
+terra mede $500 - x$. A estrutura é a do exemplo 5, com custo no lugar de
+tempo.
+
+</details>
+
+### 6. Justificativa
+
+17. Mostre que, para qualquer volume $V$, a lata de superfície mínima tem
+    altura igual ao diâmetro. (A seção 9 fez a conta; refaça-a sem olhar.)
+18. Na cerca do exemplo 1, o domínio $]0, 50[$ é aberto. Explique por que,
+    mesmo sem pontas para comparar, dá para ter certeza de que $x = 25$ é o
+    **maior** valor de $A$ em todo o domínio, e não só um máximo local.
+19. Explique por que, num problema de otimização, a derivada da função
+    objetivo zerar no ponto ótimo é uma consequência do ponto ser ótimo — e
+    não o contrário. Use o exemplo 3 como apoio.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) Objetivo: o volume $V = x(24-2x)^2$; a restrição já está embutida na
+   folha (o corte $x$ determina tudo). b) Objetivo: o perímetro
+   $P = 2x + 2y$; restrição: $xy = 100$. c) Objetivo: a receita $R = pq$;
+   restrição: $q = 500 - 5p$.
+2. a) $0 < x < 12$, para sobrar base ($24 - 2x > 0$). b) $x > 0$ (e $y$ sai
+   positivo automaticamente). c) $0 \le p \le 100$, para a quantidade não ser
+   negativa.
+3. a) Aberto: sem pontas; só pontos críticos, e o sinal da derivada decide.
+   b) Fechado: as pontas 0 e 100 entram na lista. c) Aberto e sem limite
+   superior: só pontos críticos.
+4. Porque, enquanto a restrição não entra, a função objetivo depende de duas
+   medidas que não são independentes. Derivar em relação a uma delas como se
+   a outra fosse constante descreve uma situação falsa (a altura não fica
+   parada quando o raio muda). Depois da substituição, sobra uma variável de
+   verdade, e a derivada mede o que deve medir.
+5. Receita e lucro são funções diferentes de $p$: lucro é receita menos
+   custo, e o custo também depende de $p$ (porque depende de $q$). Cada uma
+   tem o próprio máximo. Baixar o preço de 60 para 50 aumenta a receita em
+   200 e aumenta o custo em 400: a receita sobe e o lucro cai.
+6. Minimizar $d^2$ dá o mesmo ponto porque elevar ao quadrado é crescente
+   para números não negativos: ordem preservada, mínimo no mesmo lugar.
+   Minimizar $d - 5$ também daria o mesmo ponto, porque subtrair uma
+   constante desloca todos os valores igualmente e não muda onde o menor
+   está — mas isso não simplifica nada. A troca por $d^2$ é útil porque
+   **elimina a raiz** da derivada.
+7. $P(x) = x(30 - x)$, $P' = 30 - 2x$, $x = 15$. Os números são 15 e 15, e
+   o produto máximo é 225. Se você encontrou 30, esqueceu de que $P$ é o
+   produto, não a soma.
+8. $A(x) = x(20 - x)$ (porque $x + y = 20$), $A' = 20 - 2x$, $x = 10$. O
+   quadrado de 10 cm por 10 cm, com 100 cm². Aqui os quatro lados custam
+   perímetro, e o quadrado é a melhor forma.
+9. $V(x) = x(24 - 2x)^2$ com $0 < x < 12$. Pela regra do produto e da
+   cadeia,
+   $V'(x) = (24 - 2x)^2 + x \times 2(24 - 2x)(-2) = (24 - 2x)(24 - 6x)$.
+   Zeros: $x = 12$ (fora do domínio, volume zero) e $x = 4$. Teste:
+   $V'(3) = 18 \times 6$, positivo; $V'(5) = 14 \times (-6)$, negativo:
+   máximo. $V(4) = 4 \times 16^2 = 1024$ cm³. Conferência: $V(3) = 972$
+   e $V(5) = 980$, os dois menores.
+10. Agora são três lados perpendiculares ao rio: $3x + y = 100$, e
+    $A(x) = x(100 - 3x)$ com $0 < x < \frac{100}{3}$. $A' = 100 - 6x$ zera em
+    $x = \frac{50}{3} \approx 16{,}67$ m; $y = 100 - 50 = 50$ m. Área
+    $\frac{50}{3} \times 50 \approx 833{,}3$ m². O lado paralelo ao rio
+    continua 50 m; a divisória "custou" área ao encurtar os outros.
+11. $L(p) = p(300 - 3p) - 10(300 - 3p) - 800 = -3p^2 + 330p - 3800$.
+    $L' = -6p + 330$, $p = 55$. Domínio $[0, 100]$: $L(0) = -3800$,
+    $L(100) = -800$, $L(55) = 5275$. Preço R\$ 55, com $q = 135$ unidades e
+    lucro de R\$ 5.275.
+12. $D(x) = x^2 + (x^2 - 1)^2$, $D' = 2x + 4x(x^2 - 1) = 2x(2x^2 - 1)$.
+    Candidatos: $0$ e $\pm\sqrt{\tfrac{1}{2}} \approx \pm 0{,}707$. Os dois
+    últimos são mínimos, com $y = 0{,}5$ e $D = 0{,}5 + 0{,}25 = 0{,}75$,
+    distância $\approx 0{,}866$; o zero continua máximo local. A estrutura é a
+    mesma, com os pontos mais perto do vértice. (Com o ponto $(0, k)$ e
+    $k \le \frac{1}{2}$, os dois candidatos laterais desaparecem e o vértice
+    passa a ser o mínimo — vale testar.)
+13. Chamando de 1 o custo por cm² da parede, o custo da lata é
+    $C = 2 \times 2\pi r^2 + 2\pi r h = 4\pi r^2 + \frac{2000}{r}$ depois da
+    substituição. $C' = 8\pi r - \frac{2000}{r^2}$ zera em
+    $r^3 = \frac{250}{\pi}$, $r \approx 4{,}30$ cm, e então
+    $h = \frac{1000}{\pi r^2} \approx 17{,}2$ cm. A razão é $h = 4r$: altura
+    igual a **dois** diâmetros. A tampa cara empurra a lata para mais alta e
+    estreita, com tampas menores — na direção das latas reais.
+14. $D(x) = x^2 + (2x + 1)^2$, $D' = 2x + 4(2x + 1) = 10x + 4$, $x = -0{,}4$;
+    $y = 0{,}2$. O ponto é $(-0{,}4;\ 0{,}2)$, a distância $\sqrt{0{,}2}
+    \approx 0{,}447$. Conferência geométrica: a reta tem inclinação 2; a reta
+    da origem ao ponto tem inclinação $\frac{0{,}2}{-0{,}4} = -\frac{1}{2}$;
+    o produto é $-1$, perpendiculares. Se você encontrou $x = 0{,}4$, errou
+    o sinal ao isolar.
+15. Com $x$ árvores a mais: $P(x) = (50 + x)(800 - 10x)$, para
+    $0 \le x \le 80$. $P' = 800 - 10x - 10(50 + x) = 300 - 20x$, $x = 15$.
+    Pontas: $P(0) = 40000$, $P(80) = 0$; $P(15) = 65 \times 650 = 42250$.
+    Quinze árvores a mais, 42 250 maçãs. Se você encontrou $x = 30$,
+    provavelmente derivou só um dos fatores: é um produto, e os dois
+    dependem de $x$.
+16. $C(x) = 5\sqrt{x^2 + 90000} + 3(500 - x)$, com $0 \le x \le 500$.
+    $C' = \frac{5x}{\sqrt{x^2 + 90000}} - 3 = 0$ dá $25x^2 = 9x^2 + 810000$,
+    $x^2 = 50625$, $x = 225$. Pontas: $C(0) = 1500 + 1500 = 3000$;
+    $C(500) = 5 \times 583{,}1 = 2915{,}5$; $C(225) = 5 \times 375 + 3 \times
+    275 = 1875 + 825 = 2700$. O ponto $P$ fica 225 m rio abaixo do ponto em
+    frente a $A$, e o custo é R\$ 2.700. Se você achou 3000, mandou o duto
+    direto pela água até em frente e depois por terra — é a ponta $x = 0$, e
+    é a pior das três.
+17. Com volume $V$: $h = \frac{V}{\pi r^2}$ e $S(r) = 2\pi r^2 +
+    \frac{2V}{r}$. $S' = 4\pi r - \frac{2V}{r^2} = 0$ dá $r^3 = \frac{V}{2\pi}$.
+    Então $h = \frac{V}{\pi r^2} = \frac{V}{\pi r^3} \times r =
+    \frac{V}{\pi} \times \frac{2\pi}{V} \times r = 2r$. O volume cancelou:
+    vale para qualquer lata.
+18. Porque o quadro de sinais de $A' = 100 - 4x$ cobre o domínio inteiro:
+    positivo em todo $]0, 25[$ e negativo em todo $]25, 50[$. Uma função que
+    só sobe antes de um ponto e só desce depois dele tem nesse ponto o seu
+    maior valor em todo o intervalo, e não somente perto dele. É o critério
+    do sinal da derivada aplicado a cada lado.
+19. Se um ponto interior é o melhor de todos e a função é derivável ali, a
+    tangente tem de ser horizontal — uma inclinação diferente de zero
+    permitiria melhorar andando para um dos lados. Então "ótimo" implica
+    "derivada zero". O contrário falha: no exemplo 3, $x = 0$ tem derivada
+    zero e é o **pior** dos candidatos próximos. Derivada zero é uma
+    peneira que deixa passar os candidatos; o teste é que escolhe.
+
+</details>
+
+## 14. Revisão curta
+
+- Um problema de otimização tem **função objetivo**, **restrição** e
+  **domínio**. Os três precisam estar escritos antes de qualquer derivada.
+- A restrição serve para **eliminar uma variável** da função objetivo, por
+  substituição. Sem isso a derivada não se aplica; com isso, o problema vira
+  o da lição anterior.
+- O **domínio vem do problema**, não da fórmula: lado positivo, quantidade
+  não negativa, corte menor que a folha. Ele decide quais candidatos
+  existem e se há pontas para testar.
+- Os candidatos são os **pontos críticos dentro do domínio** e as **pontas**,
+  quando o domínio as tem. O sinal da derivada, ou a comparação dos valores,
+  decide quem é o ótimo.
+- A resposta é à **pergunta feita**, com unidade: a medida, o valor máximo,
+  ou os dois.
+- A lata ótima tem altura igual ao diâmetro; a cerca ótima na beira do rio
+  tem o lado paralelo com o dobro do perpendicular; o lucro máximo não está
+  no preço de receita máxima. Nenhum desses resultados era adivinhável, e
+  todos saíram do mesmo roteiro.
+
+Antes de avançar, verifique se você consegue: montar $S(r)$ da lata a partir
+das duas fórmulas do cilindro sem olhar a seção 7; dizer por que a caixa do
+exemplo 4 não é um cubo; e explicar o que o passo 8 do roteiro impede, usando
+o ponto $x = 0$ do exemplo 3.
+
+A lição seguinte, [segunda derivada e concavidade](./segunda-derivada-e-concavidade),
+traz um segundo teste para decidir máximo e mínimo, que dispensa o quadro de
+sinais quando a segunda derivada é simples de calcular — e diz o que a
+derivada da derivada revela sobre a forma do gráfico.

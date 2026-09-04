@@ -71,7 +71,7 @@ fatoração e em raízes — as duas ferramentas reaparecem aqui como informaç�
 sobre a **forma da curva**.
 
 Ao fim do roteiro, você saberá reconhecer e analisar as principais famílias
-algébricas que o Cálculo I pressupõe. Os capítulos seguintes completam a base
+algébricas que o [Cálculo 1](../calculo/) pressupõe. Os capítulos seguintes completam a base
 com [exponenciais e logaritmos](../exponenciais-e-logaritmos/) e com as
 [funções trigonométricas](../geometria/graficos-seno-e-cosseno). Não existe uma
 lista de “todas as funções”: o objetivo é dominar as famílias fundamentais e as

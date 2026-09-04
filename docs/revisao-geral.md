@@ -224,18 +224,22 @@ que ficou em aberto aqui é uma pergunta de cálculo.
 
 Onde exatamente está o máximo do volume da caixa? Sabemos que existe e mais ou
 menos onde fica, mas não temos fórmula para achá-lo em grau 3. **A derivada
-tem.**
+tem** — é a lição de [máximos e mínimos](./calculo/maximos-e-minimos).
 
 Qual é a taxa de variação de uma função **num ponto**, e não entre dois pontos?
 Aqui só conseguimos calcular a taxa média de um trecho. **A derivada é a taxa
-instantânea.**
+instantânea** — é a lição [A derivada](./calculo/a-derivada).
 
 Por que $e$ é a base preferida? Foi anunciado, não demonstrado: $e^x$ é a única
-exponencial igual à sua própria taxa de variação. **É um resultado de cálculo.**
+exponencial igual à sua própria taxa de variação. **É um resultado de
+cálculo** — a lição de [derivadas de exponencial e
+logaritmo](./calculo/derivadas-de-exponencial-e-logaritmo) o demonstra.
 
 O que exatamente significa “aproximar-se sem alcançar”, na assíntota de uma
 racional ou no valor que $\left(1+\frac1n\right)^n$ persegue? **É o conceito de
-limite.**
+limite** — a primeira lição do capítulo, [Limite de uma
+função](./calculo/limite-de-uma-funcao), e a do [teorema do
+confronto](./calculo/teorema-do-confronto).
 
 Três coisas deste curso reaparecem quase imediatamente lá:
 
@@ -245,7 +249,8 @@ Três coisas deste curso reaparecem quase imediatamente lá:
 - o **valor absoluto**, com que se escreve a definição de limite.
 
 Se você chegou até aqui entendendo — e não decorando —, tem tudo o que um
-primeiro curso de cálculo assume de antemão.
+primeiro curso de cálculo assume de antemão. Esse curso é o próximo capítulo:
+[Cálculo 1](./calculo/).
 
 ## Fontes consultadas
 

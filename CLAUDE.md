@@ -36,8 +36,10 @@ só de acentuação sem o usuário pedir.
 
 ### Estrutura
 
-- Conteúdo de estudo em `docs/`, organizado por capítulo (`matematica-basica/`,
-  `funcoes/`, `historia/`).
+- Conteúdo de estudo em `docs/`, organizado por capítulo (`historia/`,
+  `numeros-e-operacoes/`, `algebra/`, `equacoes/`, `funcoes/`,
+  `exponenciais-e-logaritmos/`, `geometria/`, `calculo/`), mais
+  `docs/revisao-geral.md` entre a geometria e o cálculo.
 - `.md` para páginas de texto. `.mdx` apenas quando a página importa um
   componente React.
 - Componentes visuais em `src/components/<Nome>/index.jsx`, documentados em
@@ -158,6 +160,13 @@ símbolos diferentes significam a mesma coisa:
 - MMC e MDC: `\operatorname{mmc}(12,18)` e `\operatorname{mdc}(48,60)`;
 - continuação: `\ldots`;
 - texto dentro de fórmula: `\text{área} = \text{lado} \times \text{lado}`;
+- limite: `\lim_{x \to 2} f(x)`; limites laterais `x \to 2^{+}` e
+  `x \to 2^{-}`; infinito sempre com sinal, `+\infty` e `-\infty`;
+- derivada: `f'(x)` como notação principal, `\frac{dy}{dx}` quando a lição
+  precisar dela (apresentada em `calculo/a-derivada`); segunda derivada
+  `f''(x)`;
+- integral: `\int_a^b f(x)\,dx`, com o `\,` antes de `dx`;
+- variação: `\Delta x` (introduzido em `funcoes/taxa-media-de-variacao`);
 - valor absoluto: `\lvert x \rvert`, **nunca** `|x|`. Com a barra crua o KaTeX
   não sabe que ela abre um delimitador e trata o sinal seguinte como operador
   binário: `$|-5|$` sai como “∣ − 5∣”, com um vão visível depois da barra.

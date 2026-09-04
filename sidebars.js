@@ -509,6 +509,151 @@ const sidebars = {
       id: 'revisao-geral',
       label: '8. Revisão geral',
     },
+    {
+      type: 'category',
+      label: '9. Cálculo 1',
+      link: {
+        type: 'doc',
+        id: 'calculo/index',
+      },
+      items: [
+        {
+          type: 'doc',
+          id: 'calculo/index',
+          label: '9.1 Roteiro do capítulo',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/limite-de-uma-funcao',
+          label: '9.2 Limite de uma função',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/calculo-de-limites',
+          label: '9.3 Calculando limites',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/limites-infinitos-e-no-infinito',
+          label: '9.4 Limites infinitos e no infinito',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/continuidade',
+          label: '9.5 Continuidade',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/teorema-do-confronto',
+          label: '9.6 Teorema do confronto',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/a-derivada',
+          label: '9.7 A derivada',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/quando-a-derivada-nao-existe',
+          label: '9.8 Quando a derivada não existe',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/regras-de-derivacao',
+          label: '9.9 Regras de derivação',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/regras-do-produto-e-do-quociente',
+          label: '9.10 Produto e quociente',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/regra-da-cadeia',
+          label: '9.11 Regra da cadeia',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/derivadas-de-seno-e-cosseno',
+          label: '9.12 Derivadas de seno e cosseno',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/derivadas-de-exponencial-e-logaritmo',
+          label: '9.13 Exponencial e logaritmo',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/derivacao-implicita',
+          label: '9.14 Derivação implícita',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/taxas-relacionadas',
+          label: '9.15 Taxas relacionadas',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/sinal-da-derivada',
+          label: '9.16 O sinal da derivada',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/maximos-e-minimos',
+          label: '9.17 Máximos e mínimos',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/teorema-do-valor-medio',
+          label: '9.18 Teorema do valor médio',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/problemas-de-otimizacao',
+          label: '9.19 Problemas de otimização',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/segunda-derivada-e-concavidade',
+          label: '9.20 Segunda derivada e concavidade',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/esboco-de-graficos',
+          label: '9.21 Esboço de gráficos',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/regra-de-lhopital',
+          label: "9.22 Regra de L'Hôpital",
+        },
+        {
+          type: 'doc',
+          id: 'calculo/a-integral-como-area',
+          label: '9.23 A integral como área',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/a-integral-definida',
+          label: '9.24 A integral definida',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/teorema-fundamental-do-calculo',
+          label: '9.25 Teorema fundamental',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/primitivas-e-substituicao',
+          label: '9.26 Primitivas e substituição',
+        },
+        {
+          type: 'doc',
+          id: 'calculo/area-entre-curvas',
+          label: '9.27 Área entre curvas',
+        },
+      ],
+    },
   ],
 };
 

@@ -1,0 +1,852 @@
+---
+title: "Regra de L'Hôpital: limites indeterminados pelo quociente das derivadas"
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Regra de L'Hôpital: limites indeterminados pelo quociente das derivadas
+
+## 1. Problema motivador: dois limites que o capítulo aceitou sem calcular
+
+Duas contas ficaram em aberto neste capítulo, e as duas foram aceitas com
+base numa tabela.
+
+A primeira é da lição de [derivadas de exponencial e
+logaritmo](./derivadas-de-exponencial-e-logaritmo). Ela mostrou que
+$\frac{e^h - 1}{h}$ se aproxima de 1 quando $h$ se aproxima de zero:
+
+| $h$ | $0{,}01$ | $0{,}001$ | $0{,}0001$ | $-0{,}0001$ | $-0{,}001$ |
+|---:|---:|---:|---:|---:|---:|
+| $\frac{e^h - 1}{h}$ | $1{,}005017$ | $1{,}000500$ | $1{,}000050$ | $0{,}999950$ | $0{,}999500$ |
+
+Nenhuma das três reescritas da lição de [cálculo de
+limites](./calculo-de-limites) alcança essa fração. Não há fator comum para
+cancelar, não há raiz para o conjugado, não há fração dentro de fração. A
+tabela convence, mas não calcula.
+
+A segunda é da lição de [limites infinitos e no
+infinito](./limites-infinitos-e-no-infinito). Ela enunciou a **hierarquia de
+crescimento** — polinômio dividido por exponencial se aproxima de zero — e
+disse, com as palavras dela: “Esta lição não demonstra essa hierarquia. A
+demonstração fica para a regra de L'Hôpital, que usa derivadas.”
+
+| $x$ | 5 | 10 | 20 | 50 |
+|---:|---:|---:|---:|---:|
+| $\frac{x}{e^x}$ | $0{,}0337$ | $0{,}00045$ | $4{,}1 \times 10^{-8}$ | $9{,}6 \times 10^{-21}$ |
+
+> Esta lição paga as duas promessas com uma única ferramenta. Ela transforma
+> um limite que trava em $\frac{0}{0}$ ou em $\frac{\infty}{\infty}$ em outro
+> limite, feito com as **derivadas** do numerador e do denominador — e o
+> segundo, quase sempre, não trava.
+
+Um aviso antes de começar: esta ferramenta é a quarta, não a primeira. As
+três reescritas da lição de cálculo de limites continuam sendo o caminho
+certo sempre que funcionam. A regra desta página serve para os casos em que
+elas não alcançam.
+
+## 2. Mapa das ideias
+
+- **forma indeterminada** — o resultado $\frac{0}{0}$ ou $\frac{\infty}{\infty}$
+  que a substituição direta produz e que não decide o limite;
+- **aproximação linear** — perto de $a$, uma função derivável quase coincide
+  com a própria tangente: $f(x) \approx f(a) + f'(a)(x - a)$;
+- **regra de L'Hôpital** — se $\frac{f}{g}$ é indeterminada em $a$, então
+  $\lim \frac{f(x)}{g(x)} = \lim \frac{f'(x)}{g'(x)}$, desde que o segundo
+  limite exista;
+- **aplicação repetida** — quando o quociente das derivadas ainda é
+  indeterminado, a regra pode ser aplicada de novo;
+- **outras indeterminações** — $0 \times \infty$, $\infty - \infty$ e
+  $1^{\infty}$ não são quocientes, mas podem ser reescritas como um.
+
+## 3. Para que serve
+
+- calcular limites que as três reescritas não alcançam, em especial os que
+  misturam exponencial, logaritmo ou seno com polinômios;
+- **demonstrar** a hierarquia de crescimento: logaritmo, potências,
+  exponencial;
+- achar assíntotas horizontais de funções como $x e^{-x}$ e $\frac{\ln x}{x}$,
+  que a lição de [esboço de gráficos](./esboco-de-graficos) desenha;
+- fechar com uma conta a definição do número $e$ como o limite de
+  $\left(1 + \frac{1}{n}\right)^n$;
+- e, dentro da matemática, entender por que duas funções que zeram no mesmo
+  ponto se comparam pelas **inclinações** ali.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [cálculo de limites](./calculo-de-limites): o que significa
+$\frac{0}{0}$?** Significa “ainda não determinado”. A tabela daquela lição
+mostrou quatro frações que dão $\frac{0}{0}$ em zero e têm limites 1, 5, 0 e
+nenhum. A forma não decide; a reescrita decide. As três reescritas são fatorar
+e cancelar, multiplicar pelo conjugado e somar as frações do numerador.
+
+**2. De [limites infinitos e no infinito](./limites-infinitos-e-no-infinito):
+$\frac{\infty}{\infty}$ é um resultado?** Não. É um aviso de que numerador e
+denominador crescem os dois sem parar, e a pergunta é quem cresce mais rápido.
+Para quocientes de polinômios, dividir pelo maior grau responde. Para
+$\frac{x}{e^x}$, aquela lição só tinha a tabela.
+
+**3. De [a derivada](./a-derivada): o que é a reta tangente, e o que ela tem
+a ver com a função perto do ponto?** A tangente em $a$ é
+$y = f(a) + f'(a)(x - a)$. Perto de $a$, reta e curva quase se confundem: para
+$f(x) = x^2$ em $a = 3$, a reta dá 8,4 em $x = 2{,}9$ e a curva dá 8,41. É essa
+proximidade que esta lição usa.
+
+**4. De [derivadas de exponencial e
+logaritmo](./derivadas-de-exponencial-e-logaritmo) e de [derivadas de seno e
+cosseno](./derivadas-de-seno-e-cosseno): quanto valem $(e^x)'$, $(\ln x)'$ e
+$(\sen x)'$?** Valem $e^x$, $\frac{1}{x}$ e $\cos x$. A regra desta página só
+funciona porque essas derivadas já estão prontas.
+
+**5. Do [teorema do valor médio](./teorema-do-valor-medio): o que ele diz?**
+Que entre $a$ e $b$ existe um ponto $c$ em que a taxa instantânea é igual à
+taxa média do trecho. A demonstração completa da regra desta página usa uma
+versão dele para duas funções ao mesmo tempo. A lição apresenta a ideia num
+caso simples e diz onde para.
+
+## 5. Intuição: duas retas que partem do mesmo ponto
+
+Pense em dois corredores que largam do mesmo lugar, no mesmo instante, e que
+mantêm cada um a sua velocidade. Depois de um segundo, o primeiro está a 3 m
+da largada e o segundo a 6 m. A razão entre as distâncias é $\frac{3}{6} =
+\frac{1}{2}$. Depois de meio segundo, 1,5 m e 3 m: a razão é a mesma,
+$\frac{1}{2}$. Depois de um centésimo de segundo, 0,03 m e 0,06 m: $\frac{1}{2}$
+de novo.
+
+A razão entre as distâncias não depende do instante. Ela é a razão entre as
+**velocidades**, $\frac{3}{6}$. E isso só acontece porque os dois **largaram
+do mesmo ponto**: se o primeiro tivesse começado 10 m à frente, a razão entre
+as distâncias mudaria a cada instante e não seria a razão das velocidades.
+
+Agora troque “corredor” por “função” e “velocidade” por “derivada”. Duas
+funções que **zeram no mesmo ponto** $a$ são dois corredores largando juntos.
+Perto de $a$, cada uma se afasta do zero no ritmo da própria derivada. A razão
+entre elas, perto de $a$, é a razão entre as derivadas.
+
+A analogia diz qual parte corresponde a qual: o instante é a distância
+$x - a$ até o ponto; a distância percorrida é o valor $f(x)$; a velocidade é
+$f'(a)$. E ela diz onde deixa de valer: se os corredores não largam do mesmo
+ponto — se $f(a)$ ou $g(a)$ não é zero —, a razão entre distâncias não tem nada
+a ver com a razão entre velocidades. É a condição da regra, e ela não é
+detalhe.
+
+## 6. Modelo visual: duas curvas que se confundem com a mesma reta
+
+O desenho mostra $e^x - 1$ e $x$ perto de zero. As duas zeram em $x = 0$. As
+duas têm tangente de inclinação 1 ali: a de $x$ é a própria reta, e a de
+$e^x - 1$ é $y = x$, porque $(e^x - 1)' = e^x$ vale 1 em zero.
+
+<CartesianPlane
+  xMin={-1.6}
+  xMax={1.6}
+  yMin={-1.2}
+  yMax={2.2}
+  xUnit={110}
+  yUnit={80}
+  xStep={0.5}
+  yStep={0.5}
+  xLabelEvery={2}
+  yLabelEvery={2}
+  functions={[
+    {f: (x) => Math.exp(x) - 1, tone: 1},
+    {f: (x) => x, tone: 2},
+  ]}
+  points={[{at: [0, 0], tone: 3}]}
+  labels={[
+    {at: [1.15, 1.95], math: 'e^x - 1', tone: 1, dx: -30},
+    {at: [1.3, 0.95], math: 'y = x', tone: 2, dx: 10, dy: 10},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Perto da origem, e^x − 1 e a reta y = x quase coincidem: as duas zeram em 0 e as duas sobem com inclinação 1. A razão entre elas se aproxima da razão entre as inclinações, 1/1 = 1."
+/>
+
+Longe da origem as curvas se separam: em $x = 1$, uma vale 1,718 e a outra
+vale 1. Mas o limite não olha para longe. Ele olha para a vizinhança de zero,
+e ali as duas curvas são, cada uma, quase a própria tangente. A razão
+$\frac{e^x - 1}{x}$ é, para $x$ pequeno, quase a razão entre as duas tangentes.
+As duas tangentes têm inclinação 1. A razão é 1.
+
+## 7. Ponte para a formalização: trocar cada função pela própria tangente
+
+Vale escrever o que o desenho fez, passo a passo, porque é a justificativa da
+regra.
+
+**O que queremos.** O limite de $\frac{f(x)}{g(x)}$ quando $x$ se aproxima de
+$a$, no caso em que $f(a) = 0$ e $g(a) = 0$.
+
+**Por que a forma atual não serve.** Substituir $x = a$ dá $\frac{0}{0}$, que
+não decide.
+
+**Qual propriedade permite a mudança.** A reta tangente. Perto de $a$, uma
+função derivável quase coincide com a tangente:
+
+$$
+f(x) \approx f(a) + f'(a)(x - a).
+$$
+
+Como $f(a) = 0$, sobra $f(x) \approx f'(a)(x - a)$. Pelo mesmo motivo,
+$g(x) \approx g'(a)(x - a)$.
+
+**O que muda na escrita.** O quociente das funções vira o quociente das
+tangentes:
+
+$$
+\frac{f(x)}{g(x)} \approx \frac{f'(a)(x - a)}{g'(a)(x - a)}.
+$$
+
+**O que permanece.** O fator $(x - a)$ aparece em cima e embaixo. Ele não é
+zero, porque o limite só consulta $x \neq a$ — é o mesmo argumento que
+autorizou cancelar $(x - a)$ na lição de cálculo de limites. Cancelando:
+
+$$
+\frac{f(x)}{g(x)} \approx \frac{f'(a)}{g'(a)}.
+$$
+
+**Por que a condição $f(a) = g(a) = 0$ é indispensável.** Se $f(a)$ não fosse
+zero, a aproximação seria $f(x) \approx f(a) + f'(a)(x - a)$, com uma parcela
+$f(a)$ sobrando. Essa parcela não tem o fator $(x - a)$, e o cancelamento não
+acontece. Os corredores não largaram do mesmo ponto.
+
+**Como conferir com um caso concreto.** Para $\frac{e^x - 1}{x}$ em zero:
+$f(x) = e^x - 1$, $f'(x) = e^x$, $f'(0) = 1$; $g(x) = x$, $g'(0) = 1$. A regra
+prevê $\frac{1}{1} = 1$. A tabela do motivador dava 1,0005 e 0,9995 em
+$h = \pm 0{,}001$. Confere.
+
+Há um “aproximadamente” nessa conta, e ele precisa virar uma igualdade de
+limites para a regra ser um teorema. A seção 9 faz isso no caso mais simples.
+
+## 8. A regra
+
+> **Regra de L'Hôpital.** Suponha que $f$ e $g$ sejam deriváveis perto de $a$
+> (não necessariamente em $a$), com $g'(x) \neq 0$ perto de $a$, e que
+> $\lim_{x \to a} \frac{f(x)}{g(x)}$ seja da forma $\frac{0}{0}$ ou
+> $\frac{\infty}{\infty}$. Se o limite
+> $$
+> \lim_{x \to a} \frac{f'(x)}{g'(x)}
+> $$
+> existe (ou é $+\infty$ ou $-\infty$), então
+> $$
+> \boxed{\lim_{x \to a} \frac{f(x)}{g(x)} = \lim_{x \to a} \frac{f'(x)}{g'(x)}.}
+> $$
+> O mesmo vale com $x \to +\infty$, $x \to -\infty$ e com limites laterais.
+
+Três observações sobre o enunciado, porque cada uma corresponde a um erro
+comum da seção 12.
+
+**Primeira: a regra não deriva o quociente.** Ela deriva o numerador e deriva
+o denominador, **separadamente**, e monta um quociente novo. A regra do
+quociente da lição de [produto e
+quociente](./regras-do-produto-e-do-quociente) não entra aqui.
+
+**Segunda: a regra só vale para forma indeterminada.** Se a substituição
+direta já dá um número, o número é a resposta, e trocar pelo quociente das
+derivadas produz outra coisa.
+
+**Terceira: “se o limite das derivadas existe”.** A regra é uma implicação de
+mão única. Quando o quociente das derivadas tem limite, o quociente original
+tem o mesmo. Quando o quociente das derivadas **não** tem limite, a regra não
+diz nada — nem que o original existe, nem que não existe.
+
+**Exemplo.** $\lim_{x \to 0} \frac{e^x - 1}{x}$. Substituição direta:
+$\frac{e^0 - 1}{0} = \frac{0}{0}$, indeterminada. Derivadas: $(e^x - 1)' = e^x$
+e $(x)' = 1$. O novo limite é
+
+$$
+\lim_{x \to 0} \frac{e^x}{1} = \frac{e^0}{1} = 1.
+$$
+
+Logo $\lim_{x \to 0} \frac{e^x - 1}{x} = 1$. A primeira promessa do motivador
+está paga: o número que a lição de exponencial leu numa tabela sai de uma
+linha.
+
+**Contraexemplo, para delimitar.** $\lim_{x \to 0} \frac{x + 1}{x + 2}$.
+Substituição direta: $\frac{1}{2}$. **Não é indeterminada**, e a resposta é
+$\frac{1}{2}$ — confira: em $x = 0{,}001$ a fração vale $0{,}50025$. Se alguém
+aplicasse a regra mesmo assim, derivaria numerador e denominador e obteria
+$\frac{1}{1} = 1$. Errado. Os corredores não largaram do mesmo ponto, e a razão
+das velocidades não descreve a razão das posições.
+
+## 9. Por que funciona: a demonstração no caso simples
+
+O caso simples é aquele em que $f$ e $g$ são deriváveis **em** $a$, com
+$f(a) = g(a) = 0$ e $g'(a) \neq 0$. Ele cobre o exemplo da seção 8 e a maior
+parte dos exemplos desta página.
+
+Como $f(a) = 0$ e $g(a) = 0$, dá para subtrair zero de cada um sem mudar nada:
+
+$$
+\frac{f(x)}{g(x)} = \frac{f(x) - f(a)}{g(x) - g(a)}.
+$$
+
+Agora divida numerador e denominador por $x - a$, que não é zero para
+$x \neq a$. Dividir os dois pela mesma coisa não muda o quociente:
+
+$$
+\frac{f(x) - f(a)}{g(x) - g(a)}
+=
+\frac{\dfrac{f(x) - f(a)}{x - a}}{\dfrac{g(x) - g(a)}{x - a}}.
+$$
+
+Cada uma das duas frações é um **quociente de diferenças**, o da definição de
+derivada. Quando $x$ se aproxima de $a$, o de cima se aproxima de $f'(a)$ e o
+de baixo de $g'(a)$. Pela propriedade do quociente da lição de cálculo de
+limites, que vale porque $g'(a) \neq 0$:
+
+$$
+\lim_{x \to a} \frac{f(x)}{g(x)} = \frac{f'(a)}{g'(a)}.
+$$
+
+É a regra, no caso em que as derivadas em $a$ existem e $g'(a) \neq 0$. A
+diferença para o enunciado geral é pequena na escrita e grande na prova: o
+enunciado geral não exige que $f$ e $g$ sejam deriváveis em $a$, aceita
+$\frac{\infty}{\infty}$ e aceita $x \to +\infty$. Esses casos usam uma versão
+do teorema do valor médio para duas funções ao mesmo tempo, chamada teorema
+de Cauchy, e ficam de fora deste curso. O que fica é o argumento acima, que
+mostra de onde a regra vem e por que a condição $f(a) = g(a) = 0$ é a
+primeira coisa a conferir.
+
+## 10. Aplicar mais de uma vez: a hierarquia de crescimento demonstrada
+
+A regra pode produzir um quociente que ainda é indeterminado. Nesse caso,
+confira a indeterminação de novo e aplique de novo.
+
+**Exemplo: $\lim_{x \to +\infty} \frac{x^2}{e^x}$.** Substituição:
+$\frac{\infty}{\infty}$. Derivadas: $2x$ e $e^x$. O novo limite,
+$\lim \frac{2x}{e^x}$, ainda é $\frac{\infty}{\infty}$. Derivadas de novo: 2 e
+$e^x$. Agora
+
+$$
+\lim_{x \to +\infty} \frac{2}{e^x} = 0,
+$$
+
+porque $e^x$ cresce sem parar e o numerador é fixo. Voltando pela cadeia de
+igualdades: $\lim \frac{x^2}{e^x} = \lim \frac{2x}{e^x} = \lim \frac{2}{e^x} =
+0$. Conferindo: em $x = 20$ a fração original vale $8{,}2 \times 10^{-7}$.
+
+**O caso geral.** Para $\frac{x^n}{e^x}$ com $n$ natural, cada aplicação da
+regra baixa o grau do numerador em uma unidade e deixa o denominador em $e^x$:
+$\frac{x^n}{e^x}$, depois $\frac{n x^{n-1}}{e^x}$, depois
+$\frac{n(n-1) x^{n-2}}{e^x}$, e assim por diante. Depois de $n$ aplicações o
+numerador é a constante $n \times (n-1) \times \ldots \times 1$, e
+$\frac{\text{constante}}{e^x}$ se aproxima de zero. Logo
+
+$$
+\lim_{x \to +\infty} \frac{x^n}{e^x} = 0 \quad \text{para todo } n.
+$$
+
+Para outra base $b > 1$, escreva $b^x = e^{x \ln b}$: cada derivada do
+denominador traz um fator $\ln b$, que é uma constante positiva, e o argumento
+é o mesmo. Para $\frac{x^3}{2^x}$, as três aplicações dão
+$\frac{3x^2}{2^x \ln 2}$, depois $\frac{6x}{2^x (\ln 2)^2}$, depois
+$\frac{6}{2^x (\ln 2)^3}$, que se aproxima de zero.
+
+**O logaritmo.** $\lim_{x \to +\infty} \frac{\ln x}{x}$ é $\frac{\infty}{\infty}$.
+Derivadas: $\frac{1}{x}$ e 1. Então
+
+$$
+\lim_{x \to +\infty} \frac{\ln x}{x} = \lim_{x \to +\infty} \frac{1/x}{1} = 0.
+$$
+
+Em $x = 10^4$ a fração vale $0{,}00092$, como a tabela da lição de limites no
+infinito já mostrava.
+
+> A **hierarquia de crescimento** está demonstrada: o logaritmo cresce mais
+> devagar que qualquer potência, e qualquer potência cresce mais devagar que
+> qualquer exponencial de base maior que 1. Em quociente, o de baixo dividido
+> pelo de cima se aproxima de zero. A lição de limites no infinito pediu que
+> isso fosse aceito até aqui; agora é um resultado.
+
+A segunda promessa do motivador está paga.
+
+## 11. O limite do seno, e por que a Parte I não podia usar esta regra
+
+$\lim_{x \to 0} \frac{\sen x}{x}$ é $\frac{0}{0}$. Derivadas: $\cos x$ e 1. O
+novo limite é $\cos 0 = 1$. Uma linha, e o resultado que a lição do [teorema
+do confronto](./teorema-do-confronto) levou uma página inteira para
+demonstrar.
+
+Então por que aquela lição não fez assim? Porque **não podia**. A derivada do
+seno, $(\sen x)' = \cos x$, foi demonstrada na lição de derivadas de seno e
+cosseno **usando** o limite $\frac{\sen x}{x} \to 1$. Usar a derivada do seno
+para calcular esse limite seria usar o resultado para provar a si mesmo — um
+argumento em círculo, que não prova nada. O confronto geométrico era o caminho
+honesto, e continua sendo a demonstração. A regra de L'Hôpital aqui funciona
+como uma conferência, válida porque a derivada do seno já foi estabelecida por outro
+caminho.
+
+Vale guardar a lição do episódio: a regra de L'Hôpital depende de derivadas
+prontas. Ela nunca é a primeira ferramenta para um limite do qual uma derivada
+depende.
+
+## 12. Outras indeterminações levadas a quociente
+
+A regra só se aplica a quocientes. Três formas indeterminadas que não são
+quocientes podem ser reescritas como um.
+
+### Zero vezes infinito
+
+$\lim_{x \to 0^{+}} x \ln x$. Quando $x$ se aproxima de zero pela direita, $x$
+se aproxima de zero e $\ln x$ desce sem parar: forma $0 \times (-\infty)$. Não
+é quociente, mas vira um: escreva $x$ como $\frac{1}{1/x}$, e o produto vira
+
+$$
+x \ln x = \frac{\ln x}{1/x},
+$$
+
+que é $\frac{-\infty}{\infty}$, indeterminada e agora um quociente. Derivadas:
+$(\ln x)' = \frac{1}{x}$ e $(1/x)' = -\frac{1}{x^2}$. O novo quociente é
+
+$$
+\frac{1/x}{-1/x^2} = \frac{1}{x} \times \left(-x^2\right) = -x,
+$$
+
+que se aproxima de zero. Logo $\lim_{x \to 0^{+}} x \ln x = 0$. Conferindo:
+em $x = 0{,}001$ o produto vale $-0{,}0069$; em $x = 0{,}0001$, $-0{,}00092$.
+
+Por que mandar o $x$ para baixo, e não o $\ln x$? Mandar o $\ln x$ para baixo
+daria $\frac{x}{1/\ln x}$, e a derivada de $\frac{1}{\ln x}$ é mais feia do que
+a fração original. A escolha certa é a que deixa as derivadas simples, e em
+geral é a que manda a **potência** para o denominador.
+
+### Infinito menos infinito
+
+$\lim_{x \to 0} \left(\frac{1}{x} - \frac{1}{e^x - 1}\right)$. Cada parcela
+dispara quando $x$ se aproxima de zero, e a diferença é $\infty - \infty$, que
+não decide. Denominador comum, a terceira reescrita da lição de cálculo de
+limites:
+
+$$
+\frac{1}{x} - \frac{1}{e^x - 1} = \frac{(e^x - 1) - x}{x(e^x - 1)}.
+$$
+
+Agora é $\frac{0}{0}$. Derivadas: numerador $e^x - 1$; denominador, pela regra
+do produto, $(e^x - 1) + x e^x$. O novo quociente,
+$\frac{e^x - 1}{e^x - 1 + x e^x}$, ainda é $\frac{0}{0}$. De novo: numerador
+$e^x$; denominador $e^x + e^x + x e^x = 2e^x + x e^x$. Em zero:
+
+$$
+\frac{e^0}{2e^0 + 0} = \frac{1}{2}.
+$$
+
+Logo o limite é $\frac{1}{2}$. Conferindo: em $x = 0{,}001$ a diferença vale
+$0{,}49992$; em $x = -0{,}001$, $0{,}50008$.
+
+### Um elevado a infinito: o número $e$ fechado por uma conta
+
+$\lim_{x \to +\infty} \left(1 + \frac{1}{x}\right)^x$. A base se aproxima de 1
+e o expoente cresce sem parar: forma $1^{\infty}$. Ela não decide, porque
+“quase 1” elevado a “muito” pode dar qualquer coisa — depende de quem vence,
+a base chegando a 1 ou o expoente crescendo.
+
+O caminho é o logaritmo, que transforma potência em produto. Chame a
+expressão de $y$ e tome o logaritmo natural:
+
+$$
+\ln y = x \ln\left(1 + \frac{1}{x}\right).
+$$
+
+É $\infty \times 0$. Mande a potência para baixo:
+
+$$
+\ln y = \frac{\ln\left(1 + \frac{1}{x}\right)}{1/x},
+$$
+
+que é $\frac{0}{0}$. Derivadas, com a regra da cadeia no numerador:
+$\left[\ln\left(1 + \frac{1}{x}\right)\right]' = \frac{1}{1 + 1/x} \times
+\left(-\frac{1}{x^2}\right)$ e $(1/x)' = -\frac{1}{x^2}$. O fator
+$-\frac{1}{x^2}$ aparece em cima e embaixo e cancela:
+
+$$
+\lim_{x \to +\infty} \ln y = \lim_{x \to +\infty} \frac{1}{1 + 1/x} = \frac{1}{1 + 0} = 1.
+$$
+
+Se $\ln y$ se aproxima de 1, então $y$ se aproxima de $e^1 = e$. Isso usa que a
+exponencial é contínua, o que a lição de [continuidade](./continuidade)
+garantiu.
+
+> $$
+> \lim_{x \to +\infty} \left(1 + \frac{1}{x}\right)^x = e.
+> $$
+
+A lição do [número $e$](../exponenciais-e-logaritmos/decaimento-e-o-numero-e)
+definiu $e$ como o valor de que $\left(1 + \frac{1}{n}\right)^n$ se aproxima,
+com uma tabela. A lição de derivadas de exponencial caracterizou $e$ como a
+base em que $\frac{e^h - 1}{h} \to 1$, e disse que a coincidência das duas
+descrições ficava sem demonstração. A conta acima é essa demonstração:
+partindo da segunda caracterização (que é o que faz $(\ln x)' = \frac{1}{x}$
+funcionar), chega-se à primeira.
+
+## 13. Exemplos resolvidos
+
+### Exemplo 1: uma indeterminação com cosseno
+
+$\lim_{x \to 0} \frac{1 - \cos x}{x^2}$.
+
+Substituição: $\frac{1 - 1}{0} = \frac{0}{0}$. Derivadas: $\sen x$ e $2x$. O
+novo quociente, $\frac{\sen x}{2x}$, ainda é $\frac{0}{0}$ — mas aqui não é
+preciso derivar de novo: ele é $\frac{1}{2} \times \frac{\sen x}{x}$, e o
+limite fundamental dá $\frac{1}{2} \times 1 = \frac{1}{2}$. Derivar de novo
+também funciona: $\frac{\cos x}{2} \to \frac{1}{2}$. Conferindo: em
+$x = 0{,}01$ a fração vale $0{,}499996$.
+
+Repare que a lição do teorema do confronto obteve
+$\lim \frac{1 - \cos x}{x} = 0$. Aqui o denominador é $x^2$, e a resposta é
+outra. O expoente do denominador faz diferença.
+
+### Exemplo 2: comparar com a reescrita da Parte I
+
+*Pause e tente pelos dois caminhos.* $\lim_{x \to 1} \frac{x^3 - 1}{x^2 - 1}$.
+
+**Pela regra.** É $\frac{0}{0}$. Derivadas: $3x^2$ e $2x$. Em 1:
+$\frac{3}{2}$.
+
+**Por fatoração.** $x^3 - 1 = (x - 1)(x^2 + x + 1)$ e $x^2 - 1 = (x - 1)(x + 1)$.
+Cancelando $(x - 1)$: $\frac{x^2 + x + 1}{x + 1}$, que em 1 vale $\frac{3}{2}$.
+
+Os dois caminhos dão o mesmo número, como deve ser. Qual é melhor? Para
+quocientes de polinômios, a fatoração mostra **o que** está acontecendo — o
+fator $(x - 1)$ escondido em cima e embaixo. A regra é mais rápida e esconde
+isso. Quando as duas servem, a escolha é de gosto; quando o numerador tem
+$e^x$ ou $\ln x$, a fatoração não existe e a regra é o caminho.
+
+### Exemplo 3: logaritmo perto de 1
+
+*Pause e tente.* $\lim_{x \to 1} \frac{\ln x}{x - 1}$.
+
+$\frac{\ln 1}{0} = \frac{0}{0}$. Derivadas: $\frac{1}{x}$ e 1. Em 1: $1$.
+Conferindo: em $x = 1{,}001$ a fração vale $0{,}9995$.
+
+Leia o resultado: perto de 1, $\ln x \approx x - 1$. É a tangente ao
+logaritmo em $(1, 0)$, que tem inclinação $\frac{1}{1} = 1$. A regra de
+L'Hôpital, no fundo, comparou a tangente de $\ln x$ com a reta $x - 1$, que é
+a própria tangente.
+
+### Exemplo 4: três aplicações, ou uma com o limite fundamental
+
+*Pause e tente.* $\lim_{x \to 0} \frac{x - \sen x}{x^3}$.
+
+$\frac{0}{0}$. Derivadas: $1 - \cos x$ e $3x^2$. Ainda $\frac{0}{0}$. De novo:
+$\sen x$ e $6x$. Ainda $\frac{0}{0}$. De novo: $\cos x$ e 6. Em zero:
+$\frac{1}{6}$.
+
+Alternativa mais curta: depois da segunda aplicação, $\frac{\sen x}{6x} =
+\frac{1}{6} \times \frac{\sen x}{x} \to \frac{1}{6}$. Conferindo: em
+$x = 0{,}001$ a fração original vale $0{,}166667$.
+
+Antes de cada nova aplicação, confira que a forma continua indeterminada. Se
+depois da segunda derivada o quociente fosse $\frac{\sen x}{6}$, o limite seria
+0, e derivar de novo daria $\frac{\cos x}{0}$ — um absurdo produzido por
+aplicar a regra onde ela não vale.
+
+### Exemplo 5: uma potência com a variável na base e no expoente
+
+*Pause e tente.* $\lim_{x \to 0^{+}} x^x$.
+
+Forma $0^0$, que também não decide. Logaritmo: $\ln y = x \ln x$, que a seção
+12 já calculou: se aproxima de zero. Logo $y = x^x$ se aproxima de $e^0 = 1$.
+Conferindo: $0{,}001^{0{,}001} \approx 0{,}9931$ e
+$0{,}0001^{0{,}0001} \approx 0{,}9991$.
+
+### Exemplo 6: a assíntota horizontal de uma curva do esboço de gráficos
+
+A lição de esboço de gráficos desenha $f(x) = x e^{-x}$ e afirma que a curva
+tem assíntota horizontal $y = 0$ à direita. A afirmação é
+$\lim_{x \to +\infty} x e^{-x} = 0$, e agora ela é uma conta:
+$x e^{-x} = \frac{x}{e^x}$, forma $\frac{\infty}{\infty}$, derivadas 1 e $e^x$,
+limite $\frac{1}{e^x} \to 0$. Em $x = 20$ a função vale $4{,}1 \times 10^{-8}$.
+
+## 14. Erros comuns
+
+> **Erro 1: aplicar sem verificar a indeterminação.** Em
+> $\lim_{x \to 0} \frac{x + 1}{x + 2}$ a substituição direta dá $\frac{1}{2}$, e
+> essa é a resposta. Derivar em cima e embaixo dá 1, que é outro número. A
+> regra só existe para $\frac{0}{0}$ e $\frac{\infty}{\infty}$. A primeira coisa
+> a fazer, sempre, é substituir.
+
+> **Erro 2: derivar o quociente inteiro.** A regra deriva numerador e
+> denominador **separadamente**. Para $\frac{e^x - 1}{x}$, a derivada do
+> quociente pela regra do quociente é $\frac{x e^x - (e^x - 1)}{x^2}$, cujo
+> limite em zero é $\frac{1}{2}$ — e o limite certo é 1. Duas contas
+> diferentes, dois resultados diferentes, e só uma é a regra de L'Hôpital.
+
+> **Erro 3: concluir que o limite não existe quando o quociente das derivadas
+> não tem limite.** Em $\lim_{x \to +\infty} \frac{x + \sen x}{x}$, as
+> derivadas dão $\frac{1 + \cos x}{1}$, que oscila entre 0 e 2 sem se
+> aproximar de nada. A regra não conclui **nada** nesse caso. O limite
+> original existe e vale 1: dividindo por $x$, a fração é $1 + \frac{\sen x}{x}$,
+> e $\frac{\sen x}{x}$ está presa entre $-\frac{1}{x}$ e $\frac{1}{x}$, que vão a
+> zero. Em $x = 10^4$ a fração vale $0{,}99997$.
+
+> **Erro 4: achar que o denominador zerar já é $\frac{0}{0}$.** Em
+> $\lim_{x \to \pi} \frac{x}{\sen x}$, o denominador zera, mas o numerador vale
+> $\pi$. Não é indeterminação: é um número diferente de zero dividido por algo
+> cada vez menor, e o limite é infinito, com sinal diferente de cada lado
+> (a fração vale $-3143$ em $x = \pi + 0{,}001$ e $3141$ em $x = \pi - 0{,}001$).
+> Aplicar a regra daria $\frac{1}{\cos \pi} = -1$, que não tem nada a ver com a
+> resposta.
+
+> **Erro 5: aplicar a regra em círculo sem simplificar.** Em
+> $\lim_{x \to +\infty} \frac{e^x + e^{-x}}{e^x - e^{-x}}$, forma
+> $\frac{\infty}{\infty}$, as derivadas dão $\frac{e^x - e^{-x}}{e^x + e^{-x}}$,
+> e derivar de novo devolve a fração original. A regra gira sem sair do lugar.
+> A saída é a técnica da lição de limites no infinito: dividir em cima e
+> embaixo pelo termo dominante, $e^x$, o que dá
+> $\frac{1 + e^{-2x}}{1 - e^{-2x}} \to \frac{1}{1} = 1$.
+
+> **Erro 6: usar a regra para o limite de que uma derivada depende.** Calcular
+> $\frac{\sen x}{x} \to 1$ pela regra é usar $(\sen x)' = \cos x$, que foi
+> provada com esse mesmo limite. A seção 11 explica por que isso é um
+> argumento em círculo.
+
+## 15. Perguntas de verificação
+
+1. Por que a regra exige $f(a) = 0$ e $g(a) = 0$? O que quebra se $f(a) = 5$?
+2. Em que sentido a regra “troca cada função pela própria tangente”?
+3. A regra afirma que $\lim \frac{f}{g}$ e $\lim \frac{f'}{g'}$ são sempre
+   iguais?
+4. Por que $\frac{x^n}{e^x}$ se aproxima de zero para qualquer $n$, e não só
+   para $n = 1$ ou $n = 2$?
+5. Qual é a diferença entre derivar o quociente e aplicar a regra?
+6. Por que a lição do teorema do confronto não usou esta regra para
+   $\frac{\sen x}{x}$?
+7. Como um produto $0 \times \infty$ vira um quociente? E por que a escolha de
+   quem vai para o denominador importa?
+8. Como o logaritmo transforma a forma $1^{\infty}$ em algo que a regra
+   alcança?
+9. Quando é melhor fatorar do que aplicar a regra?
+10. Depois de aplicar a regra uma vez, o que precisa ser conferido antes de
+    aplicar de novo?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque a justificativa troca $f(x)$ por $f'(a)(x - a)$, o que só é a
+   tangente inteira quando $f(a) = 0$. Se $f(a) = 5$, a tangente é
+   $5 + f'(a)(x - a)$, a parcela 5 não tem o fator $(x - a)$, e o cancelamento
+   com o denominador não acontece. Os corredores não largaram do mesmo ponto.
+2. Perto de $a$, uma função derivável quase coincide com a tangente. Como as
+   duas tangentes passam pela origem (deslocada para $a$), o quociente das
+   funções é quase o quociente das inclinações das tangentes, que são as
+   derivadas.
+3. Não. Ela diz: **se** o limite das derivadas existe, então o limite original
+   existe e é igual. Quando o limite das derivadas não existe, a regra não
+   conclui nada, e o limite original pode existir mesmo assim, como
+   $\frac{x + \sen x}{x}$.
+4. Porque cada aplicação baixa o grau do numerador em 1 e mantém $e^x$ no
+   denominador. Depois de $n$ aplicações sobra uma constante sobre $e^x$, que
+   vai a zero. O argumento funciona para qualquer $n$ porque termina depois
+   de $n$ passos.
+5. Derivar o quociente usa a regra do quociente e produz
+   $\frac{f'g - fg'}{g^2}$. A regra de L'Hôpital deriva $f$ e $g$ separadamente
+   e monta $\frac{f'}{g'}$. São expressões diferentes, com limites diferentes;
+   só a segunda tem o mesmo limite que $\frac{f}{g}$.
+6. Porque a derivada do seno foi demonstrada usando esse limite. Usar a
+   derivada para calcular o limite seria provar o resultado com ele mesmo.
+7. Escrevendo um dos fatores como o inverso do inverso: $x \ln x =
+   \frac{\ln x}{1/x}$. A escolha importa porque as derivadas do novo quociente
+   precisam ser mais simples que a expressão original; mandar a potência
+   para baixo costuma ser a escolha que simplifica.
+8. Tomando o logaritmo, a potência vira produto: $\ln y = x \ln(1 + 1/x)$. O
+   produto é $\infty \times 0$, vira quociente, e a regra se aplica. No fim,
+   $y = e^{\ln y}$, e a continuidade da exponencial passa o limite para dentro.
+9. Quando numerador e denominador são polinômios, ou têm raízes que o
+   conjugado resolve: a fatoração mostra o fator escondido e ensina mais. A
+   regra é o caminho quando aparecem $e^x$, $\ln x$, $\sen x$ ou combinações
+   que nenhuma reescrita alcança.
+10. Que a nova forma continua sendo $\frac{0}{0}$ ou $\frac{\infty}{\infty}$.
+    Se ela já dá um número, esse número é a resposta, e derivar de novo
+    produz lixo.
+
+</details>
+
+## 16. Exercícios
+
+### 1. Reconhecimento
+
+1. Para cada limite, diga se a substituição direta produz uma forma
+   indeterminada ($\frac{0}{0}$ ou $\frac{\infty}{\infty}$) ou já produz a
+   resposta:
+   a) $\lim_{x \to 0} \frac{e^x - 1}{x}$; b) $\lim_{x \to 0} \frac{e^x + 1}{x + 2}$;
+   c) $\lim_{x \to +\infty} \frac{\ln x}{x^2}$; d) $\lim_{x \to 2} \frac{x - 2}{x^2 + 4}$;
+   e) $\lim_{x \to 0} \frac{\cos x}{x}$.
+2. Qual das duas expressões é a que a regra de L'Hôpital manda calcular para
+   $\lim_{x \to 0} \frac{\sen x}{x}$: $\frac{\cos x}{1}$ ou
+   $\frac{x \cos x - \sen x}{x^2}$?
+
+### 2. Explicação
+
+3. Explique com a analogia dos corredores por que
+   $\lim_{x \to 0} \frac{3x}{6x} = \frac{1}{2}$ é a razão entre as derivadas.
+4. Diga em uma frase por que a regra de L'Hôpital não decide
+   $\lim_{x \to +\infty} \frac{x + \sen x}{x}$, e em outra por que o limite
+   existe mesmo assim.
+
+### 3. Aplicação direta
+
+5. $\lim_{x \to 0} \frac{2^x - 1}{x}$.
+6. $\lim_{x \to 0} \frac{\sen 5x}{\sen 2x}$.
+7. $\lim_{x \to +\infty} \frac{\ln x}{\sqrt{x}}$.
+8. $\lim_{x \to +\infty} \frac{x^3}{2^x}$, aplicando a regra três vezes.
+9. $\lim_{x \to 0} \frac{\ln(1 + x)}{x}$.
+
+### 4. Variação
+
+10. $\lim_{x \to 0} \frac{e^x - 1 - x}{x^2}$ — a regra precisa ser aplicada
+    mais de uma vez.
+11. $\lim_{x \to 0} \frac{\tg x - x}{x^3}$. Depois da primeira aplicação, use
+    $\sec^2 x - 1 = \tg^2 x$ e o limite fundamental para encurtar.
+12. $\lim_{x \to 0^{+}} (1 + 2x)^{1/x}$ — passe pelo logaritmo.
+13. $\lim_{x \to 0} \left(\frac{1}{x} - \frac{1}{\ln(1 + x)}\right)$ —
+    denominador comum antes da regra.
+
+<details>
+<summary>Dica para o 12</summary>
+
+Chame a expressão de $y$. Então $\ln y = \frac{\ln(1 + 2x)}{x}$, que é
+$\frac{0}{0}$. O limite de $\ln y$ sai com uma aplicação. No fim, lembre que
+$y = e^{\ln y}$.
+
+</details>
+
+### 5. Problema misto
+
+14. Calcule $\lim_{x \to 0} \frac{\sqrt{1 + x} - 1}{x}$ de dois jeitos: pelo
+    conjugado, como na lição de cálculo de limites, e pela regra. Diga qual
+    caminho mostra melhor **por que** o resultado é o que é.
+15. Calcule $\lim_{x \to 0} \frac{\cos x - 1}{x \sen x}$ pela regra e
+    confira com $x = 0{,}001$.
+16. A lição de derivadas de exponencial e logaritmo obteve
+    $(a^x)' = a^x \ln a$. Use o exercício 5 para mostrar que o valor
+    $L(2) = \lim_{h \to 0} \frac{2^h - 1}{h}$ daquela lição é exatamente
+    $\ln 2$, e não só um número parecido com $0{,}693$.
+
+### 6. Justificativa
+
+17. Mostre, aplicando a regra três vezes, que $\lim_{x \to +\infty}
+    \frac{x^3}{e^x} = 0$, e explique por que o mesmo argumento funciona para
+    $x^{10}$.
+18. Um colega calculou $\lim_{x \to 0} \frac{x^2}{x}$ pela regra: derivou em
+    cima e embaixo, obteve $\frac{2x}{1}$, e disse “forma $\frac{0}{1}$, o
+    limite é 0”. Depois calculou $\lim_{x \to 0} \frac{x}{x^2}$ do mesmo jeito:
+    $\frac{1}{2x}$, “cresce sem limite”. Os dois resultados estão certos? A
+    regra era necessária?
+19. Explique por que a conta $\lim_{x \to 0} \frac{\sen x}{x} = \lim_{x \to 0}
+    \frac{\cos x}{1} = 1$ está correta hoje e estaria errada como demonstração
+    na Parte I.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) $\frac{0}{0}$, indeterminada. b) $\frac{2}{2} = 1$: já é a resposta, não
+   aplique a regra. c) $\frac{\infty}{\infty}$, indeterminada. d)
+   $\frac{0}{8} = 0$: resposta direta. e) $\frac{1}{0}$: não é indeterminada,
+   é um limite infinito, com sinais diferentes de cada lado.
+2. $\frac{\cos x}{1}$. A outra é a derivada do quociente inteiro, que é o
+   erro 2 da seção 14.
+3. $3x$ e $6x$ são dois corredores que largam juntos em $x = 0$, com
+   velocidades 3 e 6. A razão das posições em qualquer instante é
+   $\frac{3x}{6x} = \frac{1}{2}$, a razão das velocidades. Aqui a
+   coincidência é exata porque os dois correm em linha reta.
+4. As derivadas dão $1 + \cos x$, que oscila entre 0 e 2 sem se aproximar de
+   nada, e a regra só conclui quando esse limite existe. O limite original
+   existe porque a fração é $1 + \frac{\sen x}{x}$, e $\frac{\sen x}{x}$ está
+   presa entre $-\frac{1}{x}$ e $\frac{1}{x}$, que vão a zero — o teorema do
+   confronto dá 1.
+5. $\frac{0}{0}$; derivadas $2^x \ln 2$ e 1; limite $\ln 2 \approx 0{,}6931$.
+   Conferindo: em $x = 0{,}001$ a fração vale $0{,}69339$.
+6. $\frac{0}{0}$; derivadas $5 \cos 5x$ e $2 \cos 2x$; em zero,
+   $\frac{5}{2}$. Conferindo: $2{,}49999$ em $x = 0{,}001$. A lição do
+   confronto obteve o mesmo número reescrevendo com $\frac{\sen u}{u}$.
+7. $\frac{\infty}{\infty}$; derivadas $\frac{1}{x}$ e $\frac{1}{2\sqrt{x}}$; o
+   quociente é $\frac{1}{x} \times 2\sqrt{x} = \frac{2}{\sqrt{x}}$, que vai a
+   zero. Em $x = 10^6$ a fração vale $0{,}0138$; em $10^8$, $0{,}0018$. O
+   logaritmo perde até para a raiz quadrada.
+8. Três aplicações: $\frac{3x^2}{2^x \ln 2}$, $\frac{6x}{2^x (\ln 2)^2}$,
+   $\frac{6}{2^x (\ln 2)^3}$. A última vai a zero. Em $x = 50$ a fração
+   original vale $1{,}1 \times 10^{-10}$.
+9. $\frac{0}{0}$; derivadas $\frac{1}{1 + x}$ e 1; em zero, 1. Conferindo:
+   $0{,}9995$ em $x = 0{,}001$. Leitura: perto de zero, $\ln(1 + x) \approx x$.
+10. Primeira aplicação: $\frac{e^x - 1}{2x}$, ainda $\frac{0}{0}$. Segunda:
+    $\frac{e^x}{2}$, que em zero vale $\frac{1}{2}$. Conferindo: $0{,}50017$
+    em $x = 0{,}001$. Se você parou na primeira aplicação e respondeu
+    “$\frac{0}{0}$, não existe”, releia a seção 10: forma indeterminada não é
+    resposta.
+11. Primeira aplicação: $\frac{\sec^2 x - 1}{3x^2} = \frac{\tg^2 x}{3x^2} =
+    \frac{1}{3}\left(\frac{\tg x}{x}\right)^2$. Como $\frac{\tg x}{x} \to 1$
+    (exemplo 2 da lição do confronto), o limite é $\frac{1}{3}$. Conferindo:
+    $0{,}333333$ em $x = 0{,}001$.
+12. $\ln y = \frac{\ln(1 + 2x)}{x}$; derivadas $\frac{2}{1 + 2x}$ e 1; em zero,
+    2. Logo $y \to e^2 \approx 7{,}389$. Conferindo: $7{,}374$ em $x = 0{,}001$
+    e $7{,}404$ em $x = -0{,}001$, apertando 7,389 pelos dois lados. Se você
+    encontrou 2, esqueceu de voltar do logaritmo: o limite pedido é de $y$,
+    não de $\ln y$.
+13. Denominador comum: $\frac{\ln(1 + x) - x}{x \ln(1 + x)}$, forma
+    $\frac{0}{0}$. Derivadas: $\frac{1}{1 + x} - 1$ em cima; $\ln(1 + x) +
+    \frac{x}{1 + x}$ embaixo. Ainda $\frac{0}{0}$. De novo: $-\frac{1}{(1 + x)^2}$
+    em cima; $\frac{1}{1 + x} + \frac{1}{(1 + x)^2}$ embaixo. Em zero:
+    $\frac{-1}{1 + 1} = -\frac{1}{2}$. Conferindo: $-0{,}49992$ em $x = 0{,}001$.
+14. Conjugado: $\frac{(\sqrt{1 + x} - 1)(\sqrt{1 + x} + 1)}{x(\sqrt{1 + x} + 1)}
+    = \frac{x}{x(\sqrt{1 + x} + 1)} = \frac{1}{\sqrt{1 + x} + 1} \to
+    \frac{1}{2}$. Regra: derivadas $\frac{1}{2\sqrt{1 + x}}$ e 1, em zero
+    $\frac{1}{2}$. O conjugado mostra o fator $x$ escondido em cima e embaixo;
+    a regra mostra que $\frac{1}{2}$ é a inclinação de $\sqrt{1 + x}$ em zero.
+    Cada caminho ensina uma coisa; o resultado é o mesmo.
+15. $\frac{0}{0}$; derivadas $-\sen x$ e $\sen x + x \cos x$; ainda
+    $\frac{0}{0}$; de novo: $-\cos x$ e $2\cos x - x \sen x$; em zero,
+    $\frac{-1}{2}$. Conferindo: $-0{,}5000$ em $x = 0{,}001$.
+16. Pelo exercício 5, $\lim_{h \to 0} \frac{2^h - 1}{h} = \ln 2$, porque a
+    derivada de $2^h$ é $2^h \ln 2$, que em zero vale $\ln 2$. Então
+    $L(2) = \ln 2$ exatamente, e $0{,}6931$ é a aproximação decimal de
+    $\ln 2$. A tabela daquela lição estava certa; agora a igualdade é exata.
+17. $\frac{x^3}{e^x} \to \frac{3x^2}{e^x} \to \frac{6x}{e^x} \to
+    \frac{6}{e^x} \to 0$. Cada aplicação baixa o grau em 1 e o denominador
+    continua $e^x$. Para $x^{10}$, dez aplicações levam a
+    $\frac{10 \times 9 \times \ldots \times 1}{e^x}$, uma constante sobre
+    $e^x$, que vai a zero. O número de passos é finito, então o argumento
+    termina.
+18. Os dois resultados estão certos, e a regra não era necessária: cancelar
+    o $x$ resolve, como a lição de cálculo de limites fez na tabela das
+    quatro frações — $\frac{x^2}{x} = x \to 0$ e $\frac{x}{x^2} = \frac{1}{x}$,
+    que cresce sem limite. A regra funcionou, mas escondeu o cancelamento
+    que explica a resposta. Para quocientes de polinômios, fatorar vem
+    primeiro.
+19. Hoje está correta porque $(\sen x)' = \cos x$ já foi estabelecida na
+    lição de derivadas de seno e cosseno. Na Parte I estaria errada como
+    demonstração porque aquela derivada ainda não existia, e a sua prova
+    **usa** o limite $\frac{\sen x}{x} \to 1$. Provar o limite com a derivada
+    e a derivada com o limite é um círculo: nenhum dos dois fica provado.
+
+</details>
+
+## 17. Revisão curta
+
+- A **regra de L'Hôpital** troca $\lim \frac{f}{g}$ por $\lim \frac{f'}{g'}$
+  quando a forma é $\frac{0}{0}$ ou $\frac{\infty}{\infty}$ e o segundo limite
+  existe. As derivadas são de cima e de baixo **separadamente**, nunca do
+  quociente.
+- A razão é a **tangente**: perto do ponto, cada função é quase a própria
+  tangente, e duas tangentes que partem do mesmo zero se comparam pelas
+  inclinações. Sem $f(a) = g(a) = 0$, não há o que comparar.
+- Se o quociente das derivadas ainda é indeterminado, **confira e aplique de
+  novo**. Se ele já dá um número, pare: aplicar mais uma vez produz lixo.
+- Se o quociente das derivadas **não tem limite**, a regra não diz nada; o
+  limite original pode existir por outro caminho.
+- **Hierarquia de crescimento**, agora demonstrada: $\frac{x^n}{e^x} \to 0$
+  para todo $n$, e $\frac{\ln x}{x} \to 0$.
+- $0 \times \infty$ vira quociente mandando a potência para baixo;
+  $\infty - \infty$ vira quociente pelo denominador comum; $1^{\infty}$ e
+  $0^0$ passam pelo logaritmo. Foi assim que
+  $\left(1 + \frac{1}{x}\right)^x \to e$ saiu de uma conta.
+- A regra é a **quarta** ferramenta. Fatorar, conjugado e denominador comum
+  continuam sendo as primeiras, e a regra nunca pode ser usada para o limite
+  de que uma derivada depende.
+
+Antes de avançar, verifique se você consegue fazer três coisas: calcular
+$\lim_{x \to 0} \frac{e^{2x} - 1}{x}$ e conferir com $x = 0{,}001$; explicar
+por que $\lim_{x \to 0} \frac{x + 3}{x + 1}$ **não** é caso para a regra; e
+dizer, sem conta, quem vence entre $x^{100}$ e $1{,}01^x$ quando $x$ cresce
+sem parar.
+
+Com isto a Parte III está completa. A Parte IV inverte o problema do
+capítulo: em vez de perguntar a taxa dada a função, pergunta a função dada a
+taxa. A lição de [a integral como área](./a-integral-como-area) começa pelo
+velocímetro ao contrário.

@@ -1,0 +1,850 @@
+---
+title: "O teorema do valor médio: a taxa média é atingida em algum ponto"
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# O teorema do valor médio: a taxa média é atingida em algum ponto
+
+## 1. Problema motivador: a multa entre dois radares
+
+Numa rodovia com limite de 80 km/h, dois radares ficam a 10 km um do outro. Os
+dois registram a placa de cada carro e a hora exata da passagem. Um carro passa
+pelo primeiro radar às 14h00 e pelo segundo às 14h06.
+
+Ninguém viu o velocímetro. Mas a conta é imediata: 10 km em 6 minutos, isto é,
+em $\frac{6}{60} = 0{,}1$ hora, dá
+
+$$
+\frac{10}{0{,}1} = 100 \text{ km/h}
+$$
+
+de **velocidade média** no trecho. O motorista recebe uma multa por excesso de
+velocidade e contesta: “a média foi 100, mas isso não prova que eu estava a
+100 em nenhum momento. Posso ter andado a 80 quase o tempo todo e compensado
+num trecho curto”.
+
+> **A multa é justa?** Existe algum instante em que o velocímetro marcou
+> exatamente 100 km/h, mesmo sem ninguém ter olhado para ele?
+
+A lição de [taxa média de variação](../funcoes/taxa-media-de-variacao) deixou
+essa pergunta em aberto. Lá, o veículo teve média de 4 m/s entre 1 s e 3 s, e
+o velocímetro **passou** pelos 4 m/s aos 2 segundos. A página avisou que isso
+não era sorte na parábola, mas que “provar que ele é atingido é um teorema do
+cálculo, não desta página”. É este teorema. E ele responde à multa: **sim, em
+algum instante o carro estava exatamente a 100 km/h**, e a resposta não
+depende de saber em qual.
+
+Esta lição é diferente das anteriores. Ela não ensina uma técnica nova de
+cálculo. Ela **justifica** o que a lição de [sinal da
+derivada](./sinal-da-derivada) usou e deixou pendente: que derivada positiva
+em todo um intervalo obriga a função a subir nele. Se a técnica já funcionava,
+por que voltar? Porque, sem a justificativa, o critério do sinal é uma regra
+decorada, e regra decorada é o que este curso evita desde a primeira página.
+
+## 2. Mapa das ideias
+
+- a **taxa média** de $f$ entre $a$ e $b$ é a inclinação da secante,
+  $\frac{f(b) - f(a)}{b - a}$;
+- o **teorema de Rolle** diz que, se $f$ é contínua em $[a, b]$, derivável em
+  $]a, b[$ e $f(a) = f(b)$, então existe $c$ entre $a$ e $b$ com $f'(c) = 0$;
+- o **teorema do valor médio** diz que, nas mesmas condições sem a exigência
+  $f(a) = f(b)$, existe $c$ entre $a$ e $b$ em que a derivada é **igual à
+  taxa média**: $f'(c) = \frac{f(b) - f(a)}{b - a}$;
+- no gráfico: alguma **tangente é paralela à secante**;
+- os **corolários**: derivada zero num intervalo obriga a função a ser
+  constante; mesma derivada, funções que diferem por uma constante; derivada
+  positiva, função crescente;
+- o teorema garante que $c$ **existe**; não diz onde ele está nem quantos
+  são.
+
+## 3. Para que serve
+
+- justificar uma multa por radar de trecho, uma média de consumo, uma taxa de
+  crescimento medida em dois instantes: a taxa instantânea foi igual à média
+  em algum momento;
+- fechar a pendência da lição anterior: derivada positiva num intervalo
+  **implica** função crescente nele;
+- estimar quanto uma quantidade pode ter mudado sabendo só um teto para a
+  taxa dela, e nada mais — se a temperatura sobe no máximo 2 °C por minuto,
+  em meia hora sobe no máximo 60 °C;
+- garantir que duas funções com a mesma derivada diferem por uma constante,
+  que é o que dá sentido ao $+C$ das primitivas, na lição de [primitivas e
+  substituição](./primitivas-e-substituicao);
+- mostrar que uma equação tem **exatamente** uma raiz, e não só “pelo menos
+  uma”, como o Teorema do Valor Intermediário garantia.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [taxa média de variação](../funcoes/taxa-media-de-variacao): o que a
+inclinação da secante entre $(a, f(a))$ e $(b, f(b))$ mede?** A taxa média de
+$f$ no trecho: $\frac{f(b) - f(a)}{b - a}$. Para $s(t) = t^2$ entre 1 s e 3 s,
+ela vale $\frac{9 - 1}{2} = 4$ m/s. E a página mostrou que, **numa parábola**,
+esse número é exatamente a taxa instantânea no ponto médio do trecho: aos 2 s
+o velocímetro marcava $2 \times 2 = 4$.
+
+**2. Da mesma página, exercício 24: isso vale para qualquer função?** Não.
+Para $f(x) = x^3$ em $[0, 2]$, a taxa média é 4 e a instantânea no ponto médio
+$x = 1$ é 3. A coincidência é propriedade da parábola. O que sobrevive fora
+dela é a pergunta desta lição: a taxa média é atingida **em algum** ponto,
+mesmo que não seja o do meio?
+
+**3. De [a derivada](./a-derivada): o que $f'(c)$ é no gráfico?** A inclinação
+da reta tangente no ponto $(c, f(c))$. Duas retas com a mesma inclinação são
+paralelas. Então “$f'(c)$ igual à taxa média” se lê no desenho como “tangente
+em $c$ paralela à secante”.
+
+**4. De [continuidade](./continuidade): o que o Teorema do Valor Intermediário
+garante para uma função contínua em $[a, b]$?** Que ela assume todo valor
+entre $f(a)$ e $f(b)$, sem pular nenhum. Ele garante que um valor **existe**
+sem dizer onde está — a bisseção é quem o localiza. O teorema desta lição tem
+o mesmo feitio: garante um $c$, não o localiza.
+
+**5. De [quando a derivada não existe](./quando-a-derivada-nao-existe): a
+função $\lvert x \rvert$ é derivável em 0?** Não: as inclinações laterais são
+$-1$ e $1$, e não concordam. Ela é contínua em 0, mas tem um bico. Esse
+exemplo vai mostrar por que o teorema exige derivabilidade, e não só
+continuidade.
+
+**6. De [o sinal da derivada](./sinal-da-derivada): o que ficou por
+justificar?** A seção 7 daquela página foi honesta: a derivada positiva num
+ponto garante que a função sobe **logo depois** dele, numa vizinhança pequena.
+Passar de “sobe um pouquinho perto de cada ponto” para “sobe entre dois pontos
+quaisquer do intervalo” exige um teorema. Ele é o assunto desta página, e a
+seção 9 paga a dívida.
+
+Os itens 1 e 3 formam a ideia inteira: taxa média é inclinação da secante,
+derivada é inclinação da tangente, e o teorema diz que alguma tangente copia a
+inclinação da secante.
+
+## 5. Intuição: alguma tangente é paralela à secante
+
+Desenhe uma curva lisa, sem bicos e sem saltos, entre dois pontos $A$ e $B$.
+Trace a reta secante que liga $A$ a $B$. Agora imagine uma régua encostada na
+curva, deslizando de $A$ até $B$ sempre tangente a ela.
+
+No começo, a régua pode estar mais inclinada que a secante; no fim, menos. Ou
+o contrário. Ou pode começar e terminar mais inclinada, e passar por um trecho
+menos inclinado no meio. Em qualquer dos casos, em algum momento a régua fica
+**exatamente** paralela à secante. Não dá para ir de “mais inclinada” a “menos
+inclinada” sem passar por “igual”, porque a inclinação da régua muda sem
+pulos numa curva lisa.
+
+Traduzindo para o carro: a velocidade média foi 100. Se em todo instante o
+velocímetro marcasse menos que 100, a distância percorrida em 6 minutos seria
+menor que 10 km. Se marcasse sempre mais que 100, seria maior. Como foi
+exatamente 10 km, o velocímetro não pode ter ficado só abaixo nem só acima:
+ele passou por 100.
+
+Essa intuição tem dois pontos frágeis, e o teorema é o que os conserta. O
+primeiro é a “curva lisa”: com um bico, a régua pula de uma inclinação para
+outra sem passar pelas intermediárias. O segundo é o “sem saltos”: com um
+salto, a curva nem chega de $A$ a $B$ de forma contínua. As duas exigências
+viram as duas hipóteses do teorema.
+
+## 6. Modelo visual: a tangente que copia a secante
+
+Tome $f(x) = x^3$ no intervalo $[1, 3]$. A secante liga $(1, 1)$ a $(3, 27)$, e
+a inclinação dela é
+
+$$
+\frac{27 - 1}{3 - 1} = \frac{26}{2} = 13.
+$$
+
+A derivada é $f'(x) = 3x^2$. Procuramos o ponto em que a tangente tem
+inclinação 13: $3c^2 = 13$ dá $c = \sqrt{\tfrac{13}{3}} \approx 2{,}08$. Ali,
+$f(c) \approx 9{,}02$.
+
+<CartesianPlane
+  xMin={0}
+  xMax={3.6}
+  yMin={-2}
+  yMax={30}
+  xUnit={90}
+  yUnit={9}
+  xStep={0.5}
+  yStep={5}
+  functions={[{f: (x) => x * x * x, domain: [0, 3.15], tone: 1}]}
+  lines={[
+    {through: [[1, 1], [3, 27]], tone: 2},
+    {m: 13, n: -18.04, dashed: true, tone: 3},
+  ]}
+  points={[
+    {at: [1, 1], label: 'A(1, 1)', tone: 2, dx: 36, dy: 4},
+    {at: [3, 27], label: 'B(3, 27)', tone: 2, dx: -44, dy: 2},
+    {at: [2.082, 9.02], label: 'c \\approx 2{,}08', tone: 3, dx: 48, dy: 10},
+  ]}
+  labels={[
+    {at: [0.55, 20], math: '\\text{secante: } 13', tone: 2},
+    {at: [3.1, 13], math: '\\text{tangente: } 13', tone: 3},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Em f(x) = x³, a secante de (1, 1) a (3, 27) tem inclinação 13. A tangente tracejada, em c ≈ 2,08, tem a mesma inclinação: é paralela à secante."
+/>
+
+Repare que $c \approx 2{,}08$ **não** é o ponto médio 2. No ponto médio a
+inclinação é $3 \times 2^2 = 12$, e não 13. A tangente paralela existe, só que
+um pouco à direita do meio.
+
+Compare com a parábola $f(x) = x^2$ no mesmo intervalo $[1, 3]$. A secante
+liga $(1, 1)$ a $(3, 9)$ e tem inclinação $\frac{9 - 1}{2} = 4$. A derivada é
+$2x$, e $2c = 4$ dá $c = 2$: exatamente o ponto médio, como a lição de taxa
+média demonstrou.
+
+<CartesianPlane
+  xMin={-0.5}
+  xMax={4}
+  yMin={-1.5}
+  yMax={11}
+  xUnit={70}
+  yUnit={24}
+  yStep={2}
+  functions={[{f: (x) => x * x, domain: [-0.5, 3.3], tone: 1}]}
+  lines={[
+    {through: [[1, 1], [3, 9]], tone: 2},
+    {m: 4, n: -4, dashed: true, tone: 3},
+  ]}
+  points={[
+    {at: [1, 1], label: 'A', tone: 2, dx: 16, dy: 6},
+    {at: [3, 9], label: 'B', tone: 2, dx: -16, dy: -4},
+    {at: [2, 4], label: 'c = 2', tone: 3, dx: 30, dy: 12},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Na parábola, a tangente paralela à secante fica exatamente no ponto médio. Na cúbica anterior, não. O teorema garante o ponto; a posição dele depende da curva."
+/>
+
+As duas figuras mostram a mesma coisa de dois jeitos: existe um ponto em que a
+tangente é paralela à secante. O que muda entre elas é **onde** ele está. É
+isso que o teorema vai dizer: que o ponto existe, sem prometer a posição.
+
+## 7. Ponte para a formalização: começar pelo caso horizontal
+
+Provar o teorema direto, para uma secante inclinada, é mais difícil do que
+provar primeiro o caso em que a secante é **horizontal**, e depois inclinar. É
+assim que a matemática costuma fazer: resolver o caso simples com cuidado e
+reduzir o caso geral a ele.
+
+A secante é horizontal quando $f(a) = f(b)$: a função sai de uma altura e volta
+à mesma altura. Nesse caso, “tangente paralela à secante” quer dizer “tangente
+horizontal”, isto é, $f'(c) = 0$. E a intuição é a do carro que sai de casa e
+volta para casa: em algum instante ele parou ou inverteu o sentido, e nesse
+instante a velocidade era zero.
+
+Por que existe esse instante? Aqui entram dois resultados que a próxima lição,
+[máximos e mínimos](./maximos-e-minimos), enuncia e usa:
+
+- **Weierstrass:** uma função contínua num intervalo fechado $[a, b]$ atinge
+  um valor máximo e um valor mínimo em algum ponto do intervalo;
+- **Fermat:** se uma função derivável tem máximo ou mínimo num ponto
+  **interior** do intervalo, a derivada ali é zero — a tangente é horizontal,
+  porque a curva parou de subir para começar a descer, ou o contrário.
+
+Junte os dois. Como $f$ é contínua em $[a, b]$, ela atinge um máximo $M$ e um
+mínimo $m$. Há duas possibilidades. Se $M = m$, a função não sobe nem desce:
+é constante, e a derivada é zero em todo ponto — qualquer $c$ serve. Se
+$M \neq m$, pelo menos um dos dois é diferente de $f(a)$, que é igual a
+$f(b)$. Esse valor não pode estar nas pontas, porque nas pontas a função vale
+$f(a)$. Então ele está num ponto interior $c$, e por Fermat $f'(c) = 0$.
+
+Essa é a ideia inteira do teorema de Rolle. O caso inclinado vai sair dele com
+um único truque: subtrair a secante.
+
+## 8. Formalização: Rolle e o teorema do valor médio
+
+### O teorema de Rolle
+
+> **Teorema de Rolle.** Se $f$ é contínua em $[a, b]$, derivável em $]a, b[$ e
+> $f(a) = f(b)$, então existe pelo menos um $c$ em $]a, b[$ com $f'(c) = 0$.
+
+**Exemplo.** $f(x) = x^2 - 4x$ em $[0, 4]$. É polinômio, logo contínua e
+derivável em toda parte. E $f(0) = 0$, $f(4) = 16 - 16 = 0$: mesma altura nas
+pontas. O teorema garante um $c$ com derivada zero. Aqui dá para achá-lo:
+$f'(x) = 2x - 4 = 0$ em $c = 2$, o vértice da parábola.
+
+<CartesianPlane
+  xMin={-0.6}
+  xMax={4.6}
+  yMin={-5.2}
+  yMax={1.5}
+  xUnit={70}
+  yUnit={42}
+  functions={[{f: (x) => x * x - 4 * x, tone: 1}]}
+  lines={[
+    {m: 0, n: 0, tone: 2},
+    {m: 0, n: -4, dashed: true, tone: 3},
+  ]}
+  points={[
+    {at: [0, 0], label: 'A', tone: 2, dx: -14, dy: -8},
+    {at: [4, 0], label: 'B', tone: 2, dx: 14, dy: -8},
+    {at: [2, -4], label: 'c = 2', tone: 3, dx: 0, dy: 20},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Rolle em f(x) = x² − 4x no intervalo [0, 4]: as pontas têm a mesma altura, e em c = 2 a tangente é horizontal."
+/>
+
+**Contraexemplo.** $g(x) = \lvert x \rvert$ em $[-1, 1]$. As pontas têm a mesma
+altura: $g(-1) = g(1) = 1$. A função é contínua. Mas **não existe** $c$ com
+$g'(c) = 0$: à esquerda de 0 a derivada vale $-1$, à direita vale $1$, e em 0
+ela não existe. O teorema não se aplica porque falta a derivabilidade em
+$]-1, 1[$ — exatamente o bico. É o ponto frágil que a seção 5 anunciou: com um
+bico, a inclinação pula de $-1$ para $1$ sem passar por 0.
+
+Um segundo contraexemplo, para a outra hipótese: $h(x) = \frac{1}{x}$ em
+$[-1, 1]$ tem $h(-1) = -1$ e $h(1) = 1$, então nem entra em Rolle. Mas mesmo
+se tivesse pontas iguais, ela não é contínua em 0, e a conclusão poderia
+falhar. Continuidade no intervalo **fechado** é o que garante que a função
+atinge máximo e mínimo, e a prova precisa disso.
+
+### O teorema do valor médio
+
+Agora o caso geral. A secante pode estar inclinada, e o que queremos é uma
+tangente paralela a ela.
+
+> **Teorema do valor médio.** Se $f$ é contínua em $[a, b]$ e derivável em
+> $]a, b[$, então existe pelo menos um $c$ em $]a, b[$ com
+>
+> $$
+> f'(c) = \frac{f(b) - f(a)}{b - a}.
+> $$
+
+Em palavras: **em algum ponto do interior, a taxa instantânea é igual à taxa
+média do trecho**. No gráfico: alguma tangente é paralela à secante. Rolle é o
+caso particular em que $f(a) = f(b)$ e a taxa média vale zero.
+
+**A ideia da prova.** Chame de $m$ a inclinação da secante,
+$m = \frac{f(b) - f(a)}{b - a}$. A reta secante tem equação
+$y = f(a) + m(x - a)$: passa por $(a, f(a))$ com inclinação $m$, como a lição
+de [a derivada](./a-derivada) escreveu a tangente. Agora defina uma função
+auxiliar, que mede **a distância vertical entre a curva e a secante**:
+
+$$
+g(x) = f(x) - \big[f(a) + m(x - a)\big].
+$$
+
+**O que essa subtração faz.** Ela tira da curva a parte inclinada. Onde a
+curva está acima da secante, $g$ é positiva; onde está abaixo, negativa; onde
+as duas se encontram, $g$ é zero. E elas se encontram nas duas pontas:
+
+$$
+g(a) = f(a) - \big[f(a) + m \times 0\big] = 0,
+\qquad
+g(b) = f(b) - \big[f(a) + m(b - a)\big] = f(b) - f(a) - \big(f(b) - f(a)\big) = 0.
+$$
+
+No segundo cálculo, $m(b - a)$ é $\frac{f(b) - f(a)}{b - a} \times (b - a)$,
+que é $f(b) - f(a)$. Então $g(a) = g(b) = 0$: a função auxiliar tem pontas na
+**mesma altura**. Ela é contínua em $[a, b]$ e derivável em $]a, b[$, porque é
+$f$ menos uma função afim, e as duas são. Rolle se aplica a $g$: existe $c$ com
+$g'(c) = 0$.
+
+**O que $g'(c) = 0$ diz sobre $f$.** A derivada de $g$ é a derivada de $f$
+menos a derivada da reta, que é $m$: $g'(x) = f'(x) - m$. Então $g'(c) = 0$
+significa $f'(c) - m = 0$, isto é, $f'(c) = m$. É a conclusão do teorema.
+
+**Conferindo com a cúbica da seção 6.** Para $f(x) = x^3$ em $[1, 3]$, com
+$m = 13$: $g(x) = x^3 - [1 + 13(x - 1)]$. Nas pontas, $g(1) = 1 - 1 = 0$ e
+$g(3) = 27 - [1 + 26] = 0$. A derivada é $g'(x) = 3x^2 - 13$, que zera em
+$c = \sqrt{13/3} \approx 2{,}08$ — o mesmo ponto da figura. A prova não é um
+argumento abstrato: ela produz o $c$ que desenhamos.
+
+**Exemplo.** $f(x) = x^3 - 3x$ em $[0, 3]$. A taxa média é
+$\frac{f(3) - f(0)}{3} = \frac{18 - 0}{3} = 6$. O teorema garante $c$ com
+$f'(c) = 3c^2 - 3 = 6$, isto é, $c^2 = 3$, $c = \sqrt{3} \approx 1{,}73$. Está
+em $]0, 3[$, como prometido.
+
+**Contraexemplo.** $h(x) = \frac{1}{x}$ em $[-1, 1]$. A taxa média é
+$\frac{1 - (-1)}{2} = 1$. Mas a derivada é $h'(x) = -\frac{1}{x^2}$, que é
+**negativa** em todo ponto do domínio. Nenhum $c$ dá $h'(c) = 1$. Isso não
+contradiz o teorema: $h$ não é contínua em 0, então a hipótese falha e a
+conclusão não é garantida. É o segundo ponto frágil da seção 5: com um salto
+(aqui, uma assíntota), a curva nem liga $A$ a $B$.
+
+### O que o teorema garante e o que ele não garante
+
+Três coisas para guardar sobre o $c$:
+
+- **Ele existe.** Isso é tudo o que o teorema afirma. Para a multa, é
+  suficiente.
+- **O teorema não diz onde ele está.** Na parábola é o ponto médio; na
+  cúbica, não. Achar $c$ exige resolver a equação $f'(c) = m$, e às vezes
+  isso é impossível de fazer com exatidão. O teorema continua valendo.
+- **Pode haver mais de um.** Em $f(x) = \sen x$ no intervalo $[0, 2\pi]$, a
+  taxa média é $\frac{0 - 0}{2\pi} = 0$, e a derivada $\cos x$ zera em
+  $\frac{\pi}{2}$ e em $\frac{3\pi}{2}$. Dois pontos servem. O enunciado diz
+  “pelo menos um”.
+
+## 9. Os corolários: o que o teorema autoriza a concluir
+
+O teorema do valor médio raramente é usado para achar $c$. O uso principal é
+outro: ele liga a **derivada** ao **comportamento da função num trecho**, e
+disso saem três consequências que o resto do capítulo usa o tempo todo.
+
+### Derivada zero em todo o intervalo: função constante
+
+Suponha $f'(x) = 0$ para todo $x$ num intervalo $I$. Tome dois pontos
+quaisquer $a$ e $b$ de $I$, com $a$ menor que $b$. Pelo teorema,
+
+$$
+f(b) - f(a) = f'(c)(b - a)
+$$
+
+para algum $c$ entre eles. A igualdade é o teorema reescrito: multiplicamos os
+dois lados de $f'(c) = \frac{f(b) - f(a)}{b - a}$ por $b - a$, o que não muda a
+igualdade. Como $f'(c) = 0$, o lado direito é zero, e $f(b) = f(a)$. Dois
+pontos quaisquer têm a mesma saída: **a função é constante** em $I$.
+
+Isso parece óbvio demais para precisar de prova, e não é. A pergunta 22 da
+lição anterior pediu para explicar por que derivada zero em todo ponto força a
+função a ficar parada, e a resposta honesta era “é o teorema do valor médio”.
+Sem ele, sabemos que a função está parada **em cada instante**; é o teorema
+que transforma “parada em cada instante” em “no mesmo lugar em dois instantes
+quaisquer”.
+
+### Mesma derivada: diferem por uma constante
+
+Se $f'(x) = g'(x)$ em todo ponto de um intervalo, então a função $f - g$ tem
+derivada $f' - g' = 0$ em todo ponto. Pelo corolário anterior, $f - g$ é
+constante: $f(x) = g(x) + C$ para algum número $C$.
+
+**Exemplo.** $f(x) = \sen^2 x$ e $g(x) = -\cos^2 x$ têm a mesma derivada. Pela
+regra da cadeia, $f'(x) = 2\sen x \cos x$; e
+$g'(x) = -2\cos x \times (-\sen x) = 2\sen x \cos x$. Logo diferem por uma
+constante. Qual? Em $x = 0$: $f(0) = 0$ e $g(0) = -1$, então $C = 1$. De fato,
+$\sen^2 x = -\cos^2 x + 1$ é a relação fundamental
+$\sen^2 x + \cos^2 x = 1$, escrita de outro jeito.
+
+Este corolário é o que vai dar sentido ao $+C$ das primitivas: se duas funções
+têm a mesma derivada, elas só podem diferir por uma constante. A lição de
+[primitivas e substituição](./primitivas-e-substituicao) parte daqui.
+
+### Derivada positiva: função crescente
+
+Suponha $f'(x)$ positivo para todo $x$ no intervalo $I$. Tome $a$ menor que
+$b$ em $I$. Pelo teorema,
+
+$$
+f(b) - f(a) = f'(c)(b - a)
+$$
+
+para algum $c$ entre $a$ e $b$. O fator $f'(c)$ é positivo, porque $c$ está
+em $I$ e a derivada é positiva em todo $I$. O fator $b - a$ é positivo,
+porque $b$ é maior que $a$. Produto de dois positivos é positivo: $f(b)$ é
+maior que $f(a)$. Entrada maior, saída maior, para **qualquer** par de pontos
+do intervalo. Isso é a definição de crescente.
+
+> **Derivada positiva em todo o intervalo implica função crescente no
+> intervalo.** Com derivada negativa, o mesmo argumento dá $f(b)$ menor que
+> $f(a)$: função decrescente.
+
+Aqui fecha a pendência da lição [sinal da derivada](./sinal-da-derivada). A
+seção 7 dela disse que a derivada num ponto só garante subida **logo depois**
+do ponto, e que passar de “sobe um pouquinho perto de cada ponto” para “sobe
+entre dois pontos quaisquer” exigia um teorema. O teorema é este, e a prova
+coube em três linhas. Repare **onde** ele foi essencial: na igualdade
+$f(b) - f(a) = f'(c)(b - a)$, que liga a diferença das saídas nas pontas a uma
+derivada num ponto do meio. Nada na definição de derivada num ponto fornece
+essa ligação.
+
+## 10. Resolvendo o problema da multa
+
+A posição do carro ao longo do tempo é uma função $s(t)$, com $t$ em horas e
+$s$ em quilômetros. Ela é contínua, porque o carro não se teletransporta, e
+derivável, porque a velocidade existe em cada instante — o velocímetro marca
+alguma coisa o tempo todo. Entre $t = 0$ (primeiro radar) e $t = 0{,}1$
+(segundo radar, 6 minutos depois):
+
+$$
+\frac{s(0{,}1) - s(0)}{0{,}1 - 0} = \frac{10}{0{,}1} = 100 \text{ km/h}.
+$$
+
+Pelo teorema do valor médio, existe um instante $c$ entre $0$ e $0{,}1$ em que
+$s'(c) = 100$. A derivada da posição é a velocidade, então **o velocímetro
+marcou exatamente 100 km/h nesse instante**. A multa é justa.
+
+O que o teorema **não** diz, e a defesa do motorista pode explorar: ele não
+diz em qual instante isso aconteceu, nem por quanto tempo o carro ficou acima
+de 80. Pode ter sido um instante só. Mas o limite é de velocidade, não de
+tempo acima dela, e um instante a 100 km/h já é excesso.
+
+Vale ver também o que aconteceria se a média fosse **exatamente** 80. Aí o
+teorema garantiria um instante a 80, mas não um acima de 80. E se o carro
+andou sempre a 80? Média 80, sem infração. E se andou parte a 60 e parte a
+100? A média poderia dar 80, e teria havido excesso sem que o radar de trecho
+detectasse. O radar de trecho só pega quem excede **na média**; o teorema
+garante que quem excede na média excedeu em algum instante.
+
+## 11. Exemplos resolvidos
+
+### Exemplo 1: achar o ponto na parábola
+
+Encontre o $c$ do teorema para $f(x) = x^2 - 4x$ no intervalo $[0, 5]$.
+
+A taxa média é $\frac{f(5) - f(0)}{5 - 0} = \frac{5 - 0}{5} = 1$. A derivada é
+$f'(x) = 2x - 4$. Resolvendo $2c - 4 = 1$, vem $c = 2{,}5$: o ponto médio de 0
+e 5, como toda parábola.
+
+### Exemplo 2: achar o ponto numa raiz
+
+*Pause e tente.* Encontre $c$ para $f(x) = \sqrt{x}$ em $[1, 4]$.
+
+A taxa média é $\frac{\sqrt{4} - \sqrt{1}}{4 - 1} = \frac{2 - 1}{3} = \frac{1}{3}$.
+A derivada, da lição de [a derivada](./a-derivada), é
+$f'(x) = \frac{1}{2\sqrt{x}}$. Resolvendo $\frac{1}{2\sqrt{c}} = \frac{1}{3}$:
+$2\sqrt{c} = 3$, $\sqrt{c} = \frac{3}{2}$, $c = \frac{9}{4} = 2{,}25$. Está em
+$]1, 4[$. E **não** é o ponto médio $2{,}5$: a raiz não é parábola.
+
+Conferindo: $\frac{1}{2\sqrt{2{,}25}} = \frac{1}{2 \times 1{,}5} = \frac{1}{3}$.
+
+### Exemplo 3: um teto para a taxa vira um teto para a variação
+
+*Pause e tente.* Uma função tem $f(0) = 2$ e $f'(x) \le 3$ para todo $x$ em
+$[0, 5]$. Qual é o maior valor possível de $f(5)$?
+
+Pelo teorema, $f(5) - f(0) = f'(c) \times 5$ para algum $c$ em $]0, 5[$. Como
+$f'(c) \le 3$, o lado direito é no máximo $3 \times 5 = 15$. Então
+$f(5) \le 2 + 15 = 17$.
+
+Não sabemos a fórmula de $f$, e não precisamos. A pergunta é do tipo “se a
+temperatura sobe no máximo 3 graus por minuto, quanto ela pode subir em 5
+minutos?”, e a resposta é 15 graus. A diferença entre esse raciocínio de
+senso comum e o teorema é que o teorema vale mesmo quando a taxa varia de um
+instante para outro, e é ele que autoriza o senso comum.
+
+### Exemplo 4: exatamente uma raiz
+
+*Pause e tente.* A lição de [continuidade](./continuidade) usou a bisseção para
+localizar uma raiz de $x^3 + x - 3 = 0$ entre 1 e 2. O Teorema do Valor
+Intermediário garante **pelo menos** uma raiz. Mostre que é **exatamente**
+uma.
+
+Suponha que houvesse duas raízes, $r_1$ menor que $r_2$. Então
+$f(r_1) = f(r_2) = 0$: pontas na mesma altura. Pelo teorema de Rolle, haveria
+um $c$ entre elas com $f'(c) = 0$. Mas $f'(x) = 3x^2 + 1$, que é no mínimo 1
+e **nunca** zera. A suposição leva a uma contradição, então não há duas
+raízes. Com o Teorema do Valor Intermediário dando pelo menos uma e Rolle
+proibindo duas, a raiz é exatamente uma.
+
+Repare na divisão de trabalho entre os dois teoremas: um garante existência,
+o outro limita a quantidade.
+
+### Exemplo 5: por que não há $c$ no bico
+
+*Pause e tente.* Para $g(x) = \lvert x \rvert$ em $[-1, 2]$, a taxa média é
+$\frac{g(2) - g(-1)}{2 - (-1)} = \frac{2 - 1}{3} = \frac{1}{3}$. Existe $c$
+com $g'(c) = \frac{1}{3}$?
+
+Não. A derivada de $\lvert x \rvert$ vale $-1$ à esquerda de 0 e $1$ à
+direita, e não existe em 0. Nenhum ponto tem derivada $\frac{1}{3}$. O teorema
+não se aplica porque $g$ não é derivável em todo o interior: o 0 está dentro
+de $]-1, 2[$, e ali há um bico. Uma hipótese que falha em um único ponto já
+é suficiente para a conclusão deixar de ser garantida.
+
+### Exemplo 6: o ponto que não se acha com exatidão
+
+*Pause e tente.* Para $f(x) = e^x$ em $[0, 1]$, o teorema garante um $c$. Onde
+ele está?
+
+A taxa média é $\frac{e^1 - e^0}{1 - 0} = e - 1 \approx 1{,}718$. A derivada é
+$e^x$, então $e^c = e - 1$ e $c = \ln(e - 1) \approx 0{,}541$. Aqui deu para
+resolver com logaritmo. Para uma função como $x^5 + x$, a equação
+$5c^4 + 1 = m$ ainda se resolve; para $x + \sen x$, a equação
+$1 + \cos c = m$ também. Mas para muitas funções a equação $f'(c) = m$ não tem
+solução em fórmula, e o $c$ só se localiza por bisseção. O teorema garante que
+a bisseção tem o que procurar.
+
+## 12. Erros comuns
+
+> **Erro 1: achar que $c$ é o ponto médio.** É verdade só na parábola. Em
+> $f(x) = x^3$ no intervalo $[1, 3]$, o ponto médio é 2 e $f'(2) = 12$, mas a
+> taxa média é 13. O $c$ certo é $\sqrt{13/3} \approx 2{,}08$. A lição de taxa
+> média já tinha mostrado a falha em $x^3$; o teorema diz o que sobrevive: o
+> ponto existe, só não é o do meio.
+
+> **Erro 2: aplicar o teorema sem conferir as hipóteses.** Para
+> $h(x) = \frac{1}{x}$ em $[-1, 1]$, a taxa média é 1 e a derivada é sempre
+> negativa. Não há $c$. O teorema não falhou: ele nunca se aplicou, porque
+> $h$ não é contínua em 0. Antes de usar a conclusão, verifique continuidade
+> no fechado e derivabilidade no aberto.
+
+> **Erro 3: achar que o teorema entrega o valor de $c$.** Ele garante que $c$
+> existe. Localizá-lo é outro trabalho: resolver $f'(c) = m$, quando essa
+> equação tem solução em fórmula, ou bisseção, quando não tem. Para a multa,
+> o instante exato nem interessa.
+
+> **Erro 4: confundir “valor médio” com a média de $f(a)$ e $f(b)$.** O nome
+> vem da **taxa** média, $\frac{f(b) - f(a)}{b - a}$, e não da média
+> aritmética $\frac{f(a) + f(b)}{2}$. O teorema fala de inclinação, não de
+> altura. O teorema que fala de altura é o do Valor Intermediário: uma
+> função contínua atinge toda altura entre $f(a)$ e $f(b)$.
+
+> **Erro 5: achar que Rolle exige $f(a) = f(b) = 0$.** Exige só que as duas
+> pontas tenham a **mesma** altura, qualquer que seja ela. Para
+> $f(x) = x^2 - 4x + 7$ em $[0, 4]$, as pontas valem 7 e 7, e Rolle garante
+> $f'(c) = 0$ em $c = 2$.
+
+> **Erro 6: ler o teorema ao contrário.** Ele diz que a taxa instantânea
+> **em algum ponto** é igual à média. Não diz que a taxa é igual à média em
+> todo ponto, nem que a média é o valor típico da derivada. O carro passou por
+> 100 km/h num instante; pode ter andado a 70 e a 130 no resto do trecho.
+
+## 13. Perguntas de verificação
+
+1. Qual é a diferença entre o que o teorema de Rolle afirma e o que o teorema
+   do valor médio afirma?
+2. Por que a prova do teorema do valor médio subtrai a secante da função?
+3. O que a função auxiliar $g(x) = f(x) - [f(a) + m(x - a)]$ mede no
+   desenho?
+4. Onde exatamente a prova de Rolle usa que a função é contínua no intervalo
+   **fechado**?
+5. Por que $\lvert x \rvert$ em $[-1, 1]$ não contradiz o teorema de Rolle?
+6. O teorema garante um único $c$?
+7. Em que tipo de curva o $c$ é sempre o ponto médio?
+8. Como o teorema fecha a pendência da lição de sinal da derivada?
+9. Se $f'(x) = 0$ em todo ponto de um intervalo, por que $f$ é constante, e
+   por que isso precisa de um teorema?
+10. O que o teorema do valor médio tem em comum com o Teorema do Valor
+    Intermediário, e o que os distingue?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Rolle exige pontas na mesma altura e garante um ponto de derivada **zero**.
+   O teorema do valor médio dispensa essa exigência e garante um ponto em que a
+   derivada é igual à **taxa média** do trecho. Rolle é o caso particular em
+   que a taxa média vale zero.
+2. Porque Rolle só se aplica a funções com pontas na mesma altura. Subtrair a
+   secante “deita” o trecho: a nova função vale zero nas duas pontas, Rolle se
+   aplica a ela, e a derivada zero da nova função é a derivada de $f$ igual a
+   $m$.
+3. A distância vertical entre a curva e a secante em cada $x$: positiva onde a
+   curva está acima da secante, negativa onde está abaixo, zero onde se
+   encontram — em particular nas pontas.
+4. Ao afirmar que a função atinge um valor máximo e um mínimo (Weierstrass).
+   Uma função contínua num intervalo **aberto** pode não atingir: $\frac{1}{x}$
+   em $]0, 1[$ cresce sem limite perto de 0.
+5. As pontas têm a mesma altura e a função é contínua, mas ela **não é
+   derivável** em 0, que está no interior. Uma das hipóteses falha, e o
+   teorema não promete nada. E de fato não há ponto de derivada zero.
+6. Não: garante **pelo menos** um. $\sen x$ em $[0, 2\pi]$ tem dois pontos de
+   derivada zero, $\frac{\pi}{2}$ e $\frac{3\pi}{2}$.
+7. Na parábola, como a lição de taxa média demonstrou: a taxa média entre $a$ e
+   $b$ é $a + b$, e a derivada no ponto médio é $2 \times \frac{a + b}{2}$, o
+   mesmo número. Em outras curvas, o $c$ existe, mas não é o do meio.
+8. Aquela lição só garantia, pela definição de derivada, que a função sobe
+   **logo depois** de cada ponto de derivada positiva. O teorema dá
+   $f(b) - f(a) = f'(c)(b - a)$ para dois pontos **quaisquer** do intervalo;
+   com $f'(c)$ positivo e $b - a$ positivo, $f(b)$ é maior que $f(a)$. É a
+   definição de crescente no intervalo inteiro.
+9. Pelo teorema, $f(b) - f(a) = f'(c)(b - a) = 0$ para dois pontos quaisquer,
+   então todas as saídas são iguais. Precisa de teorema porque “derivada zero
+   em cada ponto” é informação sobre cada instante isolado; concluir algo sobre
+   dois instantes distintos exige ligar os dois, e é o teorema que faz a
+   ligação.
+10. Os dois garantem que um ponto **existe** sem dizer onde está, e os dois
+    exigem continuidade no intervalo fechado. O do Valor Intermediário fala de
+    **alturas**: a função atinge todo valor entre $f(a)$ e $f(b)$. O do valor
+    médio fala de **inclinações**: a derivada atinge a taxa média, e por isso
+    exige também derivabilidade no interior.
+
+</details>
+
+## 14. Exercícios
+
+### 1. Reconhecimento
+
+1. Em cada caso, diga se as hipóteses do teorema de Rolle valem no intervalo.
+   Quando não valerem, diga qual falha.
+   a) $x^2 - 1$ em $[-1, 1]$; b) $\lvert x - 1 \rvert$ em $[0, 2]$;
+   c) $\frac{1}{x}$ em $[-1, 1]$; d) $x^3$ em $[-2, 2]$.
+2. Para $f(x) = x^2$ em $[0, 6]$: qual é a inclinação da secante? Que valor de
+   $f'(c)$ o teorema do valor médio garante? Onde está o $c$?
+3. Diga se cada frase é a conclusão do teorema de Rolle, do teorema do valor
+   médio ou do Teorema do Valor Intermediário: a) existe $c$ com $f'(c) = 0$;
+   b) existe $c$ com $f'(c)$ igual à taxa média; c) $f$ atinge todo valor
+   entre $f(a)$ e $f(b)$.
+
+### 2. Explicação
+
+4. O teorema exige continuidade no intervalo **fechado** $[a, b]$, mas
+   derivabilidade só no **aberto** $]a, b[$. Mostre que $\sqrt{x}$ em
+   $[0, 4]$ não é derivável em 0 e, mesmo assim, o teorema se aplica e o $c$
+   existe. Encontre-o.
+5. Um carro sai de casa às 8h e volta para casa às 9h. Explique, com o teorema
+   de Rolle, por que em algum instante a velocidade dele foi zero. Que função
+   você está usando, e por que ela satisfaz as hipóteses?
+6. O teorema garante que $c$ existe. Ele diz quantos existem? Dê um exemplo
+   com pelo menos dois, diferente do da seção 8.
+
+### 3. Aplicação direta
+
+Encontre o $c$ do teorema do valor médio em cada caso.
+
+7. $f(x) = x^2 - 6x$ em $[1, 5]$.
+8. $f(x) = x^3$ em $[0, 2]$.
+9. $f(x) = \frac{1}{x}$ em $[1, 3]$.
+10. $f(x) = e^x$ em $[0, 1]$.
+
+### 4. Variação
+
+11. $f(x) = x^4$ em $[-1, 2]$. O $c$ é o ponto médio?
+12. $f(x) = \sqrt{x}$ em $[1, 9]$. Compare o $c$ com o ponto médio 5 e com
+    $\sqrt{1 \times 9}$.
+13. Mostre que, para $f(x) = x^2$ em qualquer intervalo $[a, b]$, o $c$ do
+    teorema é sempre o ponto médio $\frac{a + b}{2}$.
+14. Para $g(x) = \lvert x \rvert$ em $[-1, 2]$, a taxa média é $\frac{1}{3}$.
+    Existe $c$ com $g'(c) = \frac{1}{3}$? Por que isso não contradiz o
+    teorema?
+
+### 5. Problema misto
+
+15. A temperatura de um forno sobe a no máximo 2 °C por minuto. Às 0 min ela
+    é 20 °C. Qual é a maior temperatura possível aos 30 min? Se, além disso,
+    ela sobe a pelo menos 0,5 °C por minuto, qual é a menor?
+16. Dois pedágios ficam a 45 km um do outro. Um carro passa pelo primeiro às
+    10h00 e pelo segundo às 10h30. O limite é 80 km/h. A multa por excesso é
+    justificada? Explique com o teorema.
+17. Um tanque esvazia a uma taxa entre 1 e 3 litros por minuto, e tem 100 L em
+    $t = 0$. Entre quais valores está o volume aos 20 minutos?
+18. Mostre que $x^3 + x - 3 = 0$ tem exatamente uma raiz real. A lição de
+    continuidade já mostrou que há uma entre 1 e 2.
+19. Mostre que $x^5 + 2x + 1 = 0$ tem exatamente uma raiz real.
+
+<details>
+<summary>Dica para o 19</summary>
+
+Primeiro ache dois valores de $x$ com sinais opostos de $f$ para garantir uma
+raiz. Depois olhe a derivada: ela pode ser zero em algum ponto?
+
+</details>
+
+### 6. Justificativa
+
+20. Prove que, se $f'(x) = g'(x)$ para todo $x$ num intervalo, então
+    $f(x) - g(x)$ é constante nesse intervalo.
+21. Prove que, se $\lvert f'(x) \rvert \le M$ para todo $x$ em $[a, b]$, então
+    $\lvert f(b) - f(a) \rvert \le M(b - a)$.
+22. A lição de sinal da derivada mostrou que $f'(a)$ positivo garante subida
+    logo depois de $a$. Explique por que isso **não** é suficiente para concluir
+    que $f$ é crescente num intervalo, e o que o teorema do valor médio acrescenta.
+23. Na prova de Rolle, aponte onde entra Weierstrass e onde entra Fermat. Qual
+    dos dois falha para $\lvert x \rvert$ em $[-1, 1]$?
+
+<details>
+<summary>Dica para o 23</summary>
+
+Weierstrass fala de atingir máximo e mínimo; Fermat fala do que acontece com a
+derivada num máximo ou mínimo interior. Qual dos dois precisa de derivada?
+
+</details>
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) Valem: polinômio, e $f(-1) = f(1) = 0$. b) Não vale: as pontas têm a
+   mesma altura (1 e 1), mas há um bico em $x = 1$, no interior. c) Não vale:
+   a função não é contínua em 0. d) Não vale: $f(-2) = -8$ e $f(2) = 8$, alturas
+   diferentes. Para essa função vale o teorema do valor médio, mas não Rolle.
+2. Inclinação $\frac{36 - 0}{6} = 6$. O teorema garante $f'(c) = 6$; como
+   $f'(x) = 2x$, $c = 3$, o ponto médio.
+3. a) Rolle. b) Valor médio. c) Valor Intermediário — é sobre alturas, não
+   sobre derivadas.
+4. Em 0, o quociente $\frac{\sqrt{h} - 0}{h} = \frac{1}{\sqrt{h}}$ cresce sem
+   limite: tangente vertical, sem derivada. Mas 0 é uma **ponta**, e o teorema
+   só exige derivada no interior $]0, 4[$. A taxa média é
+   $\frac{2 - 0}{4} = \frac{1}{2}$; resolvendo $\frac{1}{2\sqrt{c}} = \frac{1}{2}$
+   vem $\sqrt{c} = 1$, $c = 1$.
+5. A função é a distância $d(t)$ do carro até a casa, contínua e derivável ao
+   longo da viagem. Nas pontas, $d(8) = d(9) = 0$: mesma altura. Rolle dá
+   $d'(c) = 0$ para algum instante $c$, e $d'$ é a velocidade. Isso inclui o
+   caso trivial de o carro nem ter saído: velocidade zero o tempo todo.
+6. Não diz. Exemplo: $f(x) = x^3 - x$ em $[-1, 1]$ tem $f(-1) = f(1) = 0$, e
+   $f'(x) = 3x^2 - 1$ zera em $c = \pm\frac{1}{\sqrt{3}} \approx \pm 0{,}577$.
+   Dois pontos.
+7. $f(1) = -5$ e $f(5) = -5$: taxa média zero (é Rolle). $2c - 6 = 0$ dá
+   $c = 3$.
+8. Taxa média $\frac{8 - 0}{2} = 4$. $3c^2 = 4$ dá $c = \sqrt{4/3} \approx 1{,}155$.
+   Se você encontrou 1, usou o ponto médio: em $x = 1$ a derivada é 3, não 4.
+9. Taxa média $\frac{\frac{1}{3} - 1}{2} = -\frac{1}{3}$. Derivada
+   $-\frac{1}{c^2} = -\frac{1}{3}$ dá $c^2 = 3$, $c = \sqrt{3} \approx 1{,}732$
+   (a raiz negativa fica fora do intervalo).
+10. Taxa média $e - 1 \approx 1{,}718$. $e^c = e - 1$ dá
+    $c = \ln(e - 1) \approx 0{,}541$.
+11. Taxa média $\frac{16 - 1}{3} = 5$. $4c^3 = 5$ dá
+    $c = \sqrt[3]{5/4} \approx 1{,}077$. O ponto médio seria $0{,}5$, e ali a
+    derivada vale $4 \times 0{,}125 = 0{,}5$, longe de 5.
+12. Taxa média $\frac{3 - 1}{8} = \frac{1}{4}$. $\frac{1}{2\sqrt{c}} = \frac{1}{4}$
+    dá $\sqrt{c} = 2$, $c = 4$. Não é o ponto médio 5; é
+    $\sqrt{1 \times 9} = 3$? Também não: é o quadrado da média das raízes,
+    $\left(\frac{1 + 3}{2}\right)^2 = 4$. Na raiz quadrada, o $c$ é o quadrado
+    da média aritmética de $\sqrt{a}$ e $\sqrt{b}$.
+13. Taxa média $\frac{b^2 - a^2}{b - a} = \frac{(b - a)(b + a)}{b - a} = a + b$,
+    como a lição de taxa média fatorou. Derivada $2c = a + b$ dá
+    $c = \frac{a + b}{2}$, para qualquer $a$ e $b$.
+14. Não existe: $g'$ vale $-1$ ou $1$, nunca $\frac{1}{3}$. Não contradiz
+    porque $g$ não é derivável em 0, que está no interior de $]-1, 2[$. A
+    hipótese de derivabilidade falha, e o teorema não promete nada.
+15. Pelo teorema, $T(30) - T(0) = T'(c) \times 30 \le 2 \times 30 = 60$, então
+    $T(30) \le 80$ °C. Com $T'(c) \ge 0{,}5$: $T(30) - 20 \ge 15$, então
+    $T(30) \ge 35$ °C. A temperatura final está entre 35 °C e 80 °C.
+16. 45 km em 0,5 h dá média de 90 km/h. Pelo teorema, em algum instante a
+    velocidade foi exatamente 90, acima do limite. Justificada.
+17. O volume decresce, então $V'(t)$ está entre $-3$ e $-1$. Pelo teorema,
+    $V(20) - 100 = V'(c) \times 20$, que está entre $-60$ e $-20$. Logo
+    $V(20)$ está entre 40 L e 80 L.
+18. Se houvesse duas raízes $r_1$ e $r_2$, Rolle daria $c$ entre elas com
+    $f'(c) = 0$. Mas $f'(x) = 3x^2 + 1 \ge 1$ nunca zera. Logo há no máximo
+    uma raiz; com a que a continuidade garantiu, exatamente uma.
+19. $f(-1) = -1 - 2 + 1 = -2$ e $f(0) = 1$: sinais opostos, e o Teorema do
+    Valor Intermediário dá uma raiz em $]-1, 0[$. A derivada é
+    $5x^4 + 2 \ge 2$, que nunca zera; por Rolle, duas raízes exigiriam um zero
+    da derivada entre elas. Logo exatamente uma raiz.
+20. A função $d(x) = f(x) - g(x)$ tem derivada $f'(x) - g'(x) = 0$ em todo
+    ponto. Para dois pontos quaisquer $a$ e $b$ do intervalo, o teorema dá
+    $d(b) - d(a) = d'(c)(b - a) = 0$, então $d(b) = d(a)$. Todas as saídas de
+    $d$ são iguais: $d$ é constante.
+21. O teorema dá $f(b) - f(a) = f'(c)(b - a)$. Tomando valor absoluto,
+    $\lvert f(b) - f(a) \rvert = \lvert f'(c) \rvert \times (b - a)$, porque
+    $b - a$ é positivo. Como $\lvert f'(c) \rvert \le M$, o produto é no máximo
+    $M(b - a)$.
+22. A derivada num ponto é um limite, e o limite só enxerga uma vizinhança
+    pequena do ponto. Ele diz que $f(a + h)$ supera $f(a)$ para $h$ pequeno,
+    sem dizer quão pequeno. Dois pontos distantes do intervalo não estão
+    ligados por essa informação. O teorema faz a ligação:
+    $f(b) - f(a) = f'(c)(b - a)$ compara dois pontos **quaisquer** por meio de
+    uma derivada, e o sinal dela decide o sinal da diferença.
+23. Weierstrass entra ao afirmar que $f$ atinge máximo e mínimo em $[a, b]$;
+    Fermat entra ao concluir que, num máximo ou mínimo interior, a derivada é
+    zero. Para $\lvert x \rvert$ em $[-1, 1]$, Weierstrass vale: o mínimo 0 é
+    atingido em 0, no interior. O que falha é Fermat: ele exige derivada no
+    ponto, e em 0 ela não existe.
+
+</details>
+
+## 15. Revisão curta
+
+- **Teorema do valor médio:** se $f$ é contínua em $[a, b]$ e derivável em
+  $]a, b[$, existe $c$ no interior com $f'(c) = \frac{f(b) - f(a)}{b - a}$. A
+  taxa instantânea iguala a taxa média em algum ponto; alguma tangente é
+  paralela à secante.
+- **Rolle** é o caso $f(a) = f(b)$: a taxa média é zero, e existe tangente
+  horizontal. A prova usa que uma função contínua atinge máximo e mínimo, e
+  que num extremo interior a derivada zera.
+- O caso geral sai de Rolle **subtraindo a secante**: a função auxiliar zera
+  nas pontas, e a derivada zero dela é $f'(c) = m$.
+- O teorema garante que $c$ **existe**. Não diz onde (só na parábola é o ponto
+  médio), nem quantos (pode haver vários).
+- **Corolários:** derivada zero num intervalo, função constante; mesma
+  derivada, funções que diferem por uma constante; derivada positiva, função
+  crescente. O último fecha a pendência da lição de sinal da derivada.
+- A multa é justa: velocidade média de 100 km/h obriga o velocímetro a ter
+  marcado 100 em algum instante.
+
+Antes de avançar, verifique se você consegue: escrever a função auxiliar da
+prova e conferir que ela zera nas duas pontas; achar o $c$ de $x^3$ em
+$[1, 3]$ e explicar por que ele não é 2; e provar em três linhas que derivada
+positiva num intervalo implica função crescente nele.
+
+A próxima lição, [problemas de otimização](./problemas-de-otimizacao), volta ao
+uso prático: modelar uma grandeza, derivar e escolher o melhor valor. Os
+teoremas desta página ficam por baixo, garantindo que os candidatos que o
+sinal da derivada aponta são de fato máximos e mínimos.
