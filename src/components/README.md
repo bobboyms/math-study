@@ -47,6 +47,8 @@ import AreaModel from '@site/src/components/AreaModel';
 | ponto, reta, circunferência e gráfico de função no plano | `CartesianPlane` |
 | seno e cosseno como coordenadas, quadrantes, arcos | `UnitCircle` |
 | cilindro, cone, esfera, bloco — volume e superfície | `SolidFigure` |
+| secante girando na direção da tangente, derivada como limite | `TangentExplorer` (interativo) |
+| área sob a curva por retângulos, soma de Riemann, integral | `RiemannSum` |
 | tabela de padrão (entrada → saída, ciclos, crescimento) | tabela markdown |
 | passos alinhados de uma manipulação | `\begin{array}` em KaTeX |
 
@@ -445,6 +447,80 @@ Sólidos em perspectiva simples, com a metade escondida da base tracejada.
 | `height`, `width`, `depth` | dimensões em pixels |
 | `radiusLabel`, `heightLabel`, `slantLabel` | cotas em LaTeX |
 | `extraLabels` | `[{x, y, math, tone}]` — rótulo solto em pixels do viewBox |
+
+## TangentExplorer
+
+O único componente interativo das lições de cálculo. Um controle deslizante
+para $h$ desenha a secante entre $A = (a, f(a))$ e $B = (a+h, f(a+h))$ e
+escreve a inclinação dela, **calculada dos valores da função**. Mexer em $h$ é
+a ideia da lição de derivada: ver a secante girar e a inclinação se aproximar
+de um número enquanto $h$ encolhe.
+
+```mdx
+import TangentExplorer from '@site/src/components/TangentExplorer';
+
+<TangentExplorer
+  f={(x) => x * x}
+  a={2}
+  hMin={-1.5}
+  hMax={2}
+  expression="f(x) = x^2"
+  caption="Arraste h até perto de zero e compare a inclinação da secante com a da reta tracejada."
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `f` | função JavaScript |
+| `a` | abscissa do ponto fixo $A$ |
+| `hMin`, `hMax`, `hStep` | intervalo e passo do controle (padrão $-1{,}5$ a $2$, passo $0{,}05$) |
+| `hInitial` | valor inicial de $h$ (padrão 1) |
+| `expression` | LaTeX da função para o rótulo (`"f(x) = x^2"`) |
+| `digits` | casas decimais da inclinação (padrão 3) |
+| `showTangent` | desenha a tangente tracejada, com inclinação obtida por diferença central (padrão `true`) |
+| `xMin`…`yMax`, `xUnit`, `yUnit`, `yStep`, `axisLabels` | janela, como no `CartesianPlane` |
+| `caption` | texto simples |
+
+Quando o controle chega em $h = 0$, o componente **não** desenha secante nem
+inclinação: escreve que os dois pontos coincidem e a divisão não existe. É de
+propósito — é o erro comum da lição, e a figura o mostra em vez de escondê-lo.
+
+É construído sobre o `CartesianPlane`, e por isso herda os tons, os rótulos em
+KaTeX e o tema escuro. Não usa JSXGraph.
+
+## RiemannSum
+
+Retângulos sobre o gráfico de $f$ em $[a, b]$, com a soma **calculada a partir
+dos parâmetros** e escrita na legenda — como o `FactorTree` faz com o número, a
+figura não tem como discordar da conta.
+
+```mdx
+import RiemannSum from '@site/src/components/RiemannSum';
+
+<RiemannSum
+  f={(t) => t * t}
+  a={0} b={3} n={10}
+  method="left"
+  caption="Velocidade v(t) = t² e dez retângulos de base 0,3."
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `f`, `a`, `b`, `n` | função, extremos e número de retângulos |
+| `method` | `'left'`, `'right'` ou `'mid'` — de onde vem a altura de cada retângulo |
+| `digits` | casas decimais da soma na legenda (padrão 3) |
+| `showSum` | escreve a soma na legenda (padrão `true`) |
+| `showRectangles` | `false` desenha só a curva e a janela — para a figura da "área exata" ao lado das aproximações |
+| `xMin`…`yMax`, `xUnit`, `yUnit`, `xStep`, `yStep`, `axisLabels` | janela; sem elas, sai automática a partir de $[a, b]$ e dos valores de $f$ |
+| `functions`, `points`, `labels` | extras, como no `CartesianPlane` |
+| `caption` | texto simples; a soma é acrescentada depois dele |
+
+Três tons: a curva (1), a parte de cada retângulo que fica **abaixo da curva**
+(2) e o **excesso** que passa por cima dela (3). Onde o retângulo fica todo sob
+a curva, a faixa que ele deixou de cobrir aparece sem cor — ela não entra na
+soma. Com $f$ negativa, os retângulos descem do eixo e o excesso é o que passa
+abaixo da curva.
 
 ---
 
