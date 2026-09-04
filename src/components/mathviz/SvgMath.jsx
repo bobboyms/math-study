@@ -60,12 +60,14 @@ export default function SvgMath({
         }}
       >
         {/* halo: fundo na cor da página, para o rótulo continuar legível
-            quando cruza um traço do desenho. */}
+            quando cruza um traço do desenho. Precisa ser `--mv-paper`, e não
+            `--ifm-background-color`: esta última é `#0000` no tema claro, o que
+            deixava o halo transparente justamente onde ele mais faz falta. */}
         <span
           style={
             halo
               ? {
-                  background: 'var(--ifm-background-color)',
+                  background: 'var(--mv-paper)',
                   padding: '1px 4px',
                   borderRadius: '3px',
                 }
