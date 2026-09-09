@@ -34,33 +34,35 @@ de funções, uma a uma; a última página reúne tudo numa ponte para o cálcul
 
 1. [Funções](./funcoes) — a regra que associa entrada e saída, a notação $f(x)$,
    o plano cartesiano e a leitura de um gráfico.
-2. [Domínio e imagem](./dominio-e-imagem) — quais entradas a regra aceita e
+2. [Como a matemática passou a usar gráficos](./historia-dos-graficos) — de
+   Oresme a Euler, a história que reuniu variação, equação, curva e função.
+3. [Domínio e imagem](./dominio-e-imagem) — quais entradas a regra aceita e
    quais saídas ela produz.
-3. [Crescimento, sinal e simetria](./crescimento-sinal-e-simetria) — o
+4. [Crescimento, sinal e simetria](./crescimento-sinal-e-simetria) — o
    vocabulário para descrever uma função olhando o gráfico.
-4. [Função afim](./funcao-afim) — taxa constante, inclinação e construção da
+5. [Função afim](./funcao-afim) — taxa constante, inclinação e construção da
    reta a partir de dois pontos.
-5. [Função quadrática](./funcao-quadratica) — a parábola, o vértice e a forma
+6. [Função quadrática](./funcao-quadratica) — a parábola, o vértice e a forma
    canônica.
-6. [Transformações de gráficos](./transformacoes-de-graficos) — mover, esticar e
+7. [Transformações de gráficos](./transformacoes-de-graficos) — mover, esticar e
    refletir uma curva conhecida.
-7. [Função modular e por partes](./funcao-modular-e-por-partes) — quando uma
+8. [Função modular e por partes](./funcao-modular-e-por-partes) — quando uma
    fórmula só não descreve a regra.
-8. [Composição de funções](./composicao-de-funcoes) — encaixar uma regra dentro
+9. [Composição de funções](./composicao-de-funcoes) — encaixar uma regra dentro
    de outra.
-9. [Função inversa](./funcao-inversa) — desfazer a regra.
-10. [Funções potência e radicais](./funcoes-potencia-e-radicais) — como o
+10. [Função inversa](./funcao-inversa) — desfazer a regra.
+11. [Funções potência e radicais](./funcoes-potencia-e-radicais) — como o
     expoente determina o gráfico e o domínio, e por que a raiz é a inversa da
     potência.
-11. [Função polinomial](./funcao-polinomial) — o que acontece com grau maior que
+12. [Função polinomial](./funcao-polinomial) — o que acontece com grau maior que
     dois.
-12. [Divisão de polinômios](./divisao-de-polinomios) — o teorema do resto e o
+13. [Divisão de polinômios](./divisao-de-polinomios) — o teorema do resto e o
     dispositivo de Briot-Ruffini.
-13. [Raízes racionais](./raizes-racionais) — como achar a primeira raiz de um
+14. [Raízes racionais](./raizes-racionais) — como achar a primeira raiz de um
     polinômio de grau alto.
-14. [Funções racionais](./funcoes-racionais) — quociente de polinômios,
+15. [Funções racionais](./funcoes-racionais) — quociente de polinômios,
     assíntotas e buracos.
-15. [Taxa média de variação](./taxa-media-de-variacao) — medir uma curva com
+16. [Taxa média de variação](./taxa-media-de-variacao) — medir uma curva com
     retas secantes e chegar ao quociente de diferenças.
 
 ## Para onde isso leva
