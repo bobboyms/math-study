@@ -1,52 +1,140 @@
 # Escrever ou revisar uma lição
 
-Usar com o `SKILL.md` de `tutor-matematica`. Este guia trata apenas da produção de páginas em `docs/`.
+Complementa o `SKILL.md`: perfil do aluno, princípios, continuidade, regra
+anti-mágica, erros comuns e estilo continuam valendo aqui. Este guia cobre o que
+é específico de produzir uma página em `docs/`.
 
 ## Antes de editar
 
-- Ler a lição anterior e a seguinte. Identificar o que já foi ensinado, o que será necessário depois e a ponte entre as ideias.
-- Consultar `src/components/README.md` antes de inserir ou criar um desenho.
-- Manter uma ideia central por página; cortar redundância, não profundidade.
+A maior parte do trabalho é melhorar lições que já existem, não criar novas.
 
-## Estrutura mínima
+Leia a lição anterior e a seguinte antes de mexer numa página. Isso revela o
+que já foi ensinado, o que virá e a ponte entre as ideias. Consulte também
+`src/components/README.md` antes de inserir ou criar um desenho.
 
-Adaptar os títulos ao assunto, mas preservar esta ordem mental:
+## Estrutura de uma lição
 
-1. Problema motivador concreto, resolvido mais adiante pela própria lição.
-2. Mapa das ideias: glossário curto dos termos a construir.
-3. Uso prático e matemático da ideia.
-4. Ideias anteriores que voltam: links e duas ou três perguntas de resgate, respondidas na página.
-5. Intuição sem símbolos.
-6. Modelo visual.
-7. Ponte que explica por que a formalização é legítima.
-8. Definições e fórmulas; cada definição com exemplo e contraexemplo.
-9. Exemplos resolvidos, do simples ao composto; convidar uma tentativa a partir do segundo.
-10. Perguntas de verificação sobre o porquê, com respostas em `<details>`.
-11. Exercícios e gabarito.
-12. Revisão curta: ideia central, uso e conexões.
+Respeite esta ordem mental. Os títulos podem ser descritivos, em vez de repetir
+os rótulos abaixo.
 
-Seguir sempre concreto → pictórico → abstrato. Não apresentar símbolos antes de a intuição e a imagem sustentá-los.
+1. **Problema motivador** — situação concreta que torna o conceito necessário,
+   antes de definições; a lição volta e o resolve quando a ferramenta estiver
+   pronta.
+2. **Mapa das ideias** — glossário mínimo dos termos que serão construídos.
+3. **Uso** — onde a ideia aparece na prática e dentro da matemática.
+4. **Ideias anteriores que voltam aqui** — nomeadas, ligadas à página onde
+   foram estudadas e reativadas com duas ou três perguntas respondidas. Citar
+   não basta: o aluno precisa trazer o bloco antigo de volta à memória.
+5. **Intuição** — a ideia nova em linguagem comum, sem símbolos.
+6. **Modelo visual** — tabela, desenho, reta numérica, área ou agrupamento.
+7. **Ponte para a formalização** — por que a passagem para símbolos é legítima.
+8. **Formalização** — definições e fórmulas, cada uma com exemplo e
+   contraexemplo. O contraexemplo delimita o conceito.
+9. **Exemplos resolvidos** — do simples ao composto. A partir do segundo,
+   convide o aluno a tentar antes de ler a solução.
+10. **Perguntas de verificação** — sobre o porquê, com respostas em
+    `<details>`. Pergunta sem resposta deixa quem estuda sozinho sem saída.
+11. **Exercícios** com gabarito.
+12. **Revisão curta** — ideia central, quando usá-la e com o que ela se conecta.
+
+Sempre siga concreto → pictórico → abstrato. Símbolo só depois de intuição e
+imagem.
 
 ## Linguagem
 
-- Trocar nomes abstratos de processos por ações que o aluno pode executar com papel e caneta. Explicar a ação junto da primeira menção a termos como “isolar”, “simplificar” ou “substituir”.
-- Usar uma ideia por frase. Quebrar frases longas, mas escrever o conectivo que mostra causa, contraste, condição ou consequência.
-- Usar analogias somente quando forem construídas: dizer a correspondência com o caso concreto e o limite da comparação. Remover metáforas decorativas, ironia e perguntas retóricas sem resposta.
-- Substituir “isso”, “essa forma” e referências soltas pelo nome da coisa. Dizer a origem de todo número que reaparece.
-- Remover “basta”, “apenas”, “é só”, “simplesmente”, “obviamente”, “claramente”, “naturalmente”, “fácil” e similares. Se a frase depender do advérbio, escrever o passo omitido.
-- Fazer uma passada final de linguagem apenas no texto novo ou alterado; apontar problemas fora do diff, em vez de reescrever a página inteira.
+A redação vale para corpo, exercícios, gabarito, dicas e legendas. O aluno lê
+sozinho; uma frase ambígua consome a atenção que deveria acompanhar a
+matemática.
+
+### Ação concreta, não nome abstrato
+
+Termos como “a manipulação”, “a obtenção”, “a aplicação da propriedade” e “o
+procedimento” escondem quem faz o quê. Escreva o verbo e o movimento que a mão
+faz com os números. Na primeira aparição, traduza verbos como “isolar”,
+“simplificar” ou “substituir” em uma ação; só depois o termo técnico pode andar
+sozinho.
+
+Palavras aparentemente comuns que também pedem explicação na primeira vez:
+**expressão, termo, parcela, fator, coeficiente, membro, satisfazer, verificar,
+admitir, conjunto solução** e **forma**.
+
+### Uma ideia por frase, com a ligação explícita
+
+Frase longa obriga o aluno a guardar coisas demais. Quebre-a, mas mantenha o
+conectivo que mostra causa, contraste, condição ou consequência: “Por isso”,
+“Mas”, “Então” ou “Só que”. Frases curtas justapostas não devem transferir ao
+aluno o trabalho de descobrir a relação entre elas.
+
+Sinais de que uma frase precisa ser quebrada: mais de 25 palavras, dois
+travessões, “— e”, “— ou seja”, “isto é” emendados ou orações explicativas
+dependuradas umas nas outras.
+
+### Analogia construída, não figura decorativa
+
+Uma analogia é útil quando diz qual parte corresponde a qual e onde deixa de
+valer. Metáfora decorativa, ironia e pergunta retórica sem resposta exigem que o
+aluno adivinhe o sentido; troque-as pelo que querem dizer literalmente.
+
+### Relações e referências escritas
+
+Escreva causa, condição, contraste, finalidade e consequência. Troque “isso”,
+“essa forma”, “ele”, “aqui” e “o mesmo raciocínio” pelo nome da coisa quando a
+referência puder ficar solta. Quando um número reaparecer, diga sua origem.
+
+Teste: para entender a frase, o aluno precisa de alguma ligação que o texto não
+escreveu? Se precisa, escreva-a.
+
+### Dificuldade não é tratada como trivial
+
+Corte “basta”, “apenas”, “é só”, “simplesmente”, “obviamente”, “claramente”,
+“naturalmente”, “evidentemente”, “fácil”, “nada mais é do que” e “como todos
+sabem”. Se a frase depende de um desses advérbios, ele está escondendo um passo:
+escreva o passo. Se o passo já foi ensinado na página, diga qual exemplo o
+ensina.
+
+Avisar que uma passagem é difícil ajuda; fingir que é fácil destrói a confiança
+do aluno. Depois de acertar o conteúdo, faça uma passada de linguagem por vez.
+Na revisão, limite essa passada ao trecho tocado; problemas fora do diff devem
+ser apontados, não reescritos sem necessidade.
 
 ## Recursos visuais
 
-- Preferir os componentes SVG existentes (`AreaModel`, `NumberLine`, `FractionBar`) para áreas, retas e frações; criar um novo componente em `src/components/` seguindo os tons existentes se nenhum servir.
-- Usar tabela Markdown para padrões entrada → saída e matriz KaTeX para alinhar manipulações algébricas.
-- Não usar arte ASCII como desenho didático. Reservá-la a fluxos ou alinhamento monoespaçado.
-- Usar componente interativo em MDX somente quando mudar um parâmetro for parte da ideia ensinada.
-- Conferir todo desenho renderizado nos temas claro e escuro e em largura de celular. Usar no máximo três cores.
+O modelo visual não é opcional. Escolha a ferramenta pela natureza da ideia:
+
+- **SVG** para áreas, retas numéricas e barras de fração. Use primeiro os
+  componentes documentados em `src/components/README.md` (`AreaModel`,
+  `NumberLine` e `FractionBar`). Se nenhum servir, crie um componente em
+  `src/components/` seguindo os tons `--mv-tone-1..3`.
+- **Tabela Markdown** para padrões que variam: entrada → saída, ciclos, tabuada
+  e crescimento.
+- **Matriz KaTeX** com `\begin{array}` para alinhar passos algébricos.
+- **Bloco `text`** apenas para fluxo ou alinhamento monoespaçado; nunca como
+  desenho didático quando SVG servir. Ao tocar numa arte ASCII por outro motivo,
+  converta-a para o recurso visual adequado.
+- **Componente interativo** em MDX somente quando alterar um parâmetro fizer
+  parte da própria ideia ensinada. Figura meramente ilustrativa deve ser SVG
+  estático.
+
+Confira cada visual na página renderizada, nos temas claro e escuro e em largura
+de celular. Não use mais de três cores; se parecer necessária uma quarta, duas
+regiões provavelmente representam a mesma quantidade.
 
 ## Exercícios e gabarito
 
-Organizar progressão: reconhecimento, explicação, aplicação direta, variação, problema misto e justificativa. Incluir dicas mínimas em `<details>` para os itens mais difíceis. Terminar toda lista com:
+Exercícios desenvolvem domínio, não repetição mecânica. Organize a progressão:
+
+1. Reconhecimento;
+2. Explicação;
+3. Aplicação direta;
+4. Variação;
+5. Problema misto;
+6. Justificativa.
+
+Perguntas úteis: que ideia anterior está sendo usada? O que mudou e o que
+permaneceu igual? Por que a operação é permitida? Como verificar com desenho ou
+número simples?
+
+Toda lista termina assim:
 
 ```md
 <details>
@@ -56,15 +144,34 @@ Organizar progressão: reconhecimento, explicação, aplicação direta, variaç
 </details>
 ```
 
-Explicar a razão nos itens conceituais e de justificativa. Quando houver um erro provável, incluir diagnóstico que ajude o aluno a localizá-lo.
+O gabarito explica a razão nos itens de explicação e justificativa. Para os
+mais difíceis, coloque uma dica em `<details>` antes do gabarito, com o menor
+empurrão útil. Quando houver erro previsível, inclua diagnóstico: ele substitui
+a devolutiva que um professor daria.
+
+## Tamanho, escopo e revisão
+
+Não há meta de linhas. A estrutura completa custa o que custa. O critério é
+**uma ideia central por página**: corte redundância, não profundidade. Só
+proponha dividir a página se a segunda ideia não depender da primeira; se
+depender, mantê-las juntas evita que a página nova comece reensinando a anterior.
+
+Ao aprofundar uma explicação, confira o fluxo da página inteira para não
+duplicar uma seção posterior. Se uma ideia foi usada antes de ser apresentada,
+o conserto pode estar na página anterior. Não renomeie títulos sem necessidade,
+pois eles são âncoras de links.
 
 ## Checklist didática
 
-- [ ] Explicar para que serve a ideia, que problema resolve, em que se apoia e o que muda ou permanece igual em cada transformação.
-- [ ] Resolver o problema motivador na própria página.
-- [ ] Dar exemplo e contraexemplo a toda definição nova.
-- [ ] Tratar erros comuns no corpo da lição.
-- [ ] Responder às perguntas de verificação.
-- [ ] Aplicar a passada de linguagem ao diff.
-- [ ] Conferir cada visual renderizado em claro, escuro e celular.
-- [ ] Reler como aluno e responder às perguntas que o texto ainda deixaria abertas.
+- [ ] A lição explica para que serve a ideia, que problema resolve, em que se
+      apoia, que ponte justifica cada transformação e o que muda ou permanece
+      igual em cada passo.
+- [ ] O problema motivador foi resolvido na própria lição.
+- [ ] Toda definição nova tem exemplo e contraexemplo.
+- [ ] Erros comuns aparecem no corpo da lição.
+- [ ] Perguntas de verificação têm resposta.
+- [ ] A passada de linguagem foi aplicada ao texto novo ou alterado.
+- [ ] Todo desenho novo foi conferido renderizado, em claro, escuro e celular.
+- [ ] A releitura final responde às perguntas que o aluno ainda faria.
+- [ ] Foram aplicados os requisitos de build, links, fórmulas e barra lateral
+      de `AGENTS.md`.
