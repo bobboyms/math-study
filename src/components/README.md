@@ -43,6 +43,7 @@ import AreaModel from '@site/src/components/AreaModel';
 | equação, operação aplicada aos dois lados | `Balance` |
 | expressão lida como procedimento, operação inversa | `FunctionMachine` |
 | decomposição em fatores primos | `FactorTree` |
+| escolhas em etapas, sequências e contagem das possibilidades | `ChoiceTree` |
 | ângulo, triângulo, figura plana com medidas, figura composta | `GeoFigure` |
 | ponto, reta, circunferência e gráfico de função no plano | `CartesianPlane` |
 | seno e cosseno como coordenadas, quadrantes, arcos | `UnitCircle` |
@@ -333,6 +334,36 @@ figura não tem como discordar da conta.
 
 A cada nível o menor primo sai à esquerda e o quociente desce à direita. As
 folhas coloridas são a decomposição. Número primo não gera árvore.
+
+## ChoiceTree
+
+Árvore de escolhas calculada a partir das opções de cada etapa. Cada caminho
+completo gera uma folha e uma sequência, escrita à direita. A legenda informa
+a quantidade de folhas. Não atribui probabilidades aos ramos.
+
+```mdx
+import ChoiceTree from '@site/src/components/ChoiceTree';
+
+<ChoiceTree
+  stages={['AB', '12'].map((options) => [...options])}
+  caption="Uma letra seguida de um algarismo."
+/>
+<ChoiceTree
+  stages={[['A', 'B', 'C'], ['A', 'B', 'C']]}
+  repeat={false}
+  caption="Duas letras diferentes, com ordem."
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `stages` | lista de etapas; cada etapa é uma lista de opções distintas em LaTeX |
+| `repeat` | `false` exclui opções que já apareceram no caminho (padrão `true`) |
+| `caption` | legenda em português; o total de resultados é acrescentado pelo componente |
+
+Use em exemplos pequenos, com duas etapas e até nove folhas. Rótulos de uma
+letra ou algarismo mantêm a figura legível no celular. A tabela da lição pode
+descrever por extenso o que cada símbolo representa.
 
 ## GeoFigure
 

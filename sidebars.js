@@ -659,6 +659,66 @@ const sidebars = {
         },
       ],
     },
+    {
+      type: 'category',
+      label: '10. Análise combinatória',
+      link: {
+        type: 'doc',
+        id: 'analise-combinatoria/index',
+      },
+      items: [
+        {
+          type: 'doc',
+          id: 'analise-combinatoria/index',
+          label: '10.1 Roteiro do capítulo',
+        },
+        {
+          type: 'doc',
+          id: 'analise-combinatoria/listagem-e-arvore-de-possibilidades',
+          label: '10.2 Listagem e árvore de possibilidades',
+        },
+        {
+          type: 'doc',
+          id: 'analise-combinatoria/principios-de-contagem',
+          label: '10.3 Princípios de contagem',
+        },
+        {
+          type: 'doc',
+          id: 'analise-combinatoria/fatorial-e-permutacoes',
+          label: '10.4 Fatorial e permutações',
+        },
+        {
+          type: 'doc',
+          id: 'analise-combinatoria/arranjos-e-sequencias',
+          label: '10.5 Arranjos e sequências',
+        },
+        {
+          type: 'doc',
+          id: 'analise-combinatoria/combinacoes',
+          label: '10.6 Combinações',
+        },
+        {
+          type: 'doc',
+          id: 'analise-combinatoria/permutacoes-com-repeticao',
+          label: '10.7 Permutações com repetição',
+        },
+        {
+          type: 'doc',
+          id: 'analise-combinatoria/restricoes-casos-e-complemento',
+          label: '10.8 Restrições, casos e complemento',
+        },
+        {
+          type: 'doc',
+          id: 'analise-combinatoria/binomio-de-newton',
+          label: '10.9 Binômio de Newton',
+        },
+        {
+          type: 'doc',
+          id: 'analise-combinatoria/da-contagem-a-probabilidade',
+          label: '10.10 Da contagem à probabilidade',
+        },
+      ],
+    },
   ],
 };
 

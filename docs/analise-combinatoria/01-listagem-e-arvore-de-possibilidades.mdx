@@ -1,0 +1,322 @@
+---
+title: Listagem e árvore de possibilidades
+---
+
+import ChoiceTree from '@site/src/components/ChoiceTree';
+
+# Listagem e árvore de possibilidades
+
+## Problema motivador: códigos de entrega
+
+Uma oficina identifica uma entrega com uma letra seguida de um algarismo.
+A letra informa o setor: A ou B. O algarismo informa o turno: 1 ou 2.
+
+Quantos códigos diferentes a oficina pode emitir? E como conferir que nenhum
+código foi esquecido?
+
+Ainda não precisamos de uma fórmula nova. Precisamos de uma maneira organizada
+de registrar as escolhas.
+
+## Mapa das ideias
+
+- **Resultado**: uma possibilidade completa, conforme as regras do problema.
+- **Listagem organizada**: registro dos resultados seguindo um critério fixo.
+- **Etapa**: uma escolha que faz parte da construção do resultado.
+- **Árvore de possibilidades**: desenho que mostra as escolhas em cada etapa.
+- **Ordem**: posição ou função ocupada por cada elemento.
+- **Repetição**: possibilidade de usar novamente um elemento já escolhido.
+
+## Para que serve
+
+Uma lista pequena permite conferir códigos, escalas e opções de compra.
+Também serve para testar uma fórmula: se a fórmula não concorda com uma lista
+completa, precisamos rever a contagem ou a interpretação do problema.
+
+Mais adiante, uma lista de resultados possíveis ajudará a construir o total
+usado numa probabilidade. Primeiro vamos aprender a contar esse total.
+
+## Ideias anteriores que voltam aqui
+
+Das [operações básicas](../numeros-e-operacoes/operacoes-basicas), voltam a
+adição e a multiplicação como contagem de grupos.
+
+Reative essas ideias:
+
+1. Dois grupos de duas peças têm quantas peças? $2 + 2 = 4$.
+2. Como escrever a mesma contagem com uma multiplicação? $2 \times 2 = 4$.
+3. Uma lista com A1 e A1 registra dois códigos diferentes? Não. São dois
+   registros do mesmo código.
+
+A terceira pergunta distingue a quantidade de linhas da lista da quantidade
+de resultados distintos. Essa diferença vai reaparecer nas combinações.
+
+## Intuição: terminar uma escolha antes de trocar a outra
+
+Segure a letra A e percorra os dois turnos: A1 e A2. Depois segure a letra B
+e percorra novamente os dois turnos: B1 e B2.
+
+Esse critério evita dois problemas. Nenhum turno é esquecido para uma letra.
+E uma letra não é retomada depois de seus códigos terem sido registrados.
+
+Compare as duas listas:
+
+| Lista | Registros | Problema |
+|---|---|---|
+| Organizada | A1, A2, B1, B2 | Cada código aparece uma vez |
+| Incompleta, com repetição | A1, B1, A1, B2 | A1 aparece duas vezes; A2 falta |
+
+As duas listas têm quatro registros. Somente a primeira tem quatro códigos
+distintos e cobre todas as possibilidades.
+
+## Modelo visual: a tabela e a árvore
+
+A tabela cruza uma escolha de setor com uma escolha de turno:
+
+| Setor / turno | 1 | 2 |
+|---|---|---|
+| A | A1 | A2 |
+| B | B1 | B2 |
+
+Cada célula é um resultado completo. A linha A contém dois resultados.
+A linha B contém outros dois.
+
+Na árvore, lemos da esquerda para a direita:
+
+<ChoiceTree
+  stages={[['A', 'B'], ['1', '2']]}
+  caption="Escolha o setor e, depois, o turno. À direita está o código completo de cada caminho."
+/>
+
+Cada bifurcação mostra uma escolha. Um caminho começa no início, passa por uma
+letra e termina num algarismo. A ponta final de um caminho é chamada **folha**.
+Nesta árvore, cada folha corresponde a um código diferente.
+
+## Do desenho à contagem
+
+Na árvore há dois caminhos que começam por A e dois que começam por B.
+Como esses grupos não compartilham códigos, contamos:
+
+$$
+2 + 2 = 2 \times 2 = 4.
+$$
+
+O primeiro 2 da multiplicação conta os setores. O segundo conta os turnos
+disponíveis para cada setor. A multiplicação registra o mesmo total que a
+lista; nenhum código mudou.
+
+**Resposta ao problema motivador:** a oficina pode emitir quatro códigos:
+A1, A2, B1 e B2.
+
+## O que significa contar resultados diferentes
+
+> Um **resultado** é uma escolha completa que atende às regras do problema.
+> Uma listagem completa deve registrar cada resultado distinto uma vez.
+
+A1 é um resultado da oficina porque tem uma letra permitida e um algarismo
+permitido. A, sozinho, é uma escolha parcial. C1 não atende à regra dos
+setores, e 1A não atende à ordem exigida.
+
+> Numa **árvore de possibilidades**, cada caminho completo representa uma
+> sequência de escolhas. Para contar resultados pelas folhas, resultados
+> distintos devem corresponder a caminhos distintos, sem duplicação.
+
+A árvore dos códigos atende a essa condição. Uma árvore que permita A na
+primeira etapa e termine sem escolher o turno está incompleta.
+
+Essa ressalva sobre duplicação importa. Se desenharmos primeiro Ana e depois
+Bruno, e depois Bruno e Ana, teremos dois caminhos. Dependendo do problema,
+esses caminhos podem representar a mesma equipe.
+
+## Ordem: a mesma pessoa em funções diferentes
+
+Considere Ana, Bruno e Carla. Para encurtar os registros, escreva A, B e C.
+Vamos escolher uma pessoa responsável e uma suplente. Ninguém pode ocupar
+os dois cargos ao mesmo tempo.
+
+| Responsável | Suplentes possíveis | Resultados |
+|---|---|---|
+| A | B, C | AB, AC |
+| B | A, C | BA, BC |
+| C | A, B | CA, CB |
+
+AB significa Ana responsável e Bruno suplente. BA significa Bruno responsável
+e Ana suplente. Trocar os nomes de posição troca quem ocupa cada cargo.
+
+> A **ordem importa** quando trocar elementos de posição ou de função muda
+> o resultado que o problema quer distinguir.
+
+Cargos de responsável e suplente são um exemplo. Uma equipe de duas pessoas
+sem cargos é um contraexemplo: Ana e Bruno formam a mesma equipe que Bruno e Ana.
+
+Na equipe sem cargos, os seis registros da tabela representam três equipes:
+AB, AC e BC. Cada equipe apareceu duas vezes na tabela de cargos.
+
+## Repetição: a escolha continua disponível?
+
+Para os cargos, depois de escolher A, a opção A deixa de estar disponível:
+
+<ChoiceTree
+  stages={[['A', 'B', 'C'], ['A', 'B', 'C']]}
+  repeat={false}
+  caption="O primeiro nome ocupa um cargo e não pode ocupar o segundo. AB e BA são distribuições diferentes."
+/>
+
+Agora pense num código com duas letras, escolhidas entre A, B e C.
+Se o código permite repetir uma letra, AA é válido.
+
+> Há **repetição permitida** quando o mesmo elemento pode ser escolhido em
+> mais de uma etapa. Sem repetição, um elemento escolhido fica indisponível
+> nas próximas escolhas.
+
+Um código que aceita AA é um exemplo de repetição permitida. Dois cargos
+ocupados por pessoas diferentes são um contraexemplo.
+
+Permitir repetição não obriga a repetir. O código AB continua válido num
+sistema que permite AA.
+
+## Exemplos resolvidos
+
+### Exemplo 1: dois serviços e três horários
+
+Uma assistência oferece instalação (I) ou revisão (R). Cada serviço pode ser
+marcado de manhã (M), à tarde (T) ou à noite (N).
+
+Fixando I, temos IM, IT e IN. Fixando R, temos RM, RT e RN. São
+$3 + 3 = 6$ agendamentos possíveis. Cada registro informa serviço e horário.
+
+### Exemplo 2: selecionar um grupo
+
+**Pause e tente.** Há três fornecedores, A, B e C. Você quer contratar dois,
+sem distinguir primeiro e segundo contratado. Escreva todos os grupos.
+
+<details>
+<summary>Ver a solução</summary>
+
+Os grupos são AB, AC e BC: três grupos.
+
+BA não é outro grupo porque contém os mesmos fornecedores que AB. Neste
+problema, a ordem da contratação não faz parte do resultado.
+
+Uma conferência é agrupar os registros ordenados: AB com BA, AC com CA,
+BC com CB. Cada par descreve um grupo.
+
+</details>
+
+### Exemplo 3: duas posições com repetição
+
+**Pause e tente.** Um código tem duas posições. Em cada posição entra 0 ou 1.
+Pode haver repetição, e 01 é diferente de 10. Liste os códigos.
+
+<details>
+<summary>Ver a solução</summary>
+
+Fixe a primeira posição em 0: 00, 01. Depois fixe-a em 1: 10, 11.
+São quatro códigos.
+
+00 é válido porque repetir é permitido. O zero inicial também é permitido:
+estamos contando códigos, e não números de dois algarismos.
+
+</details>
+
+## Erros comuns
+
+**Contar os registros, sem conferir o que representam.** A lista AB, BA, AC,
+CA, BC, CB tem seis distribuições de dois cargos, mas três equipes sem cargos.
+
+**Trocar o problema de código pelo de número.** O código 01 tem duas posições.
+O número 01 é o número 1, escrito com um zero à esquerda. Num problema de
+números de dois algarismos, esse registro não vale.
+
+**Desenhar ramos que o enunciado proíbe.** Na árvore dos cargos, AA é inválido.
+Na árvore dos códigos com repetição, AA pode ser válido. A árvore precisa
+obedecer às regras, e não a um modelo memorizado.
+
+## Perguntas de verificação
+
+1. Por que a lista A1, A2, B1, B2 cobre todos os códigos da oficina?
+2. AB e BA sempre devem ser contados separadamente?
+3. O que muda numa árvore quando um elemento não pode se repetir?
+
+<details>
+<summary>Respostas das verificações</summary>
+
+1. Cada letra permitida foi combinada com cada turno permitido, uma vez.
+2. Não. Dependem do significado das posições. São diferentes para cargos,
+   mas representam o mesmo grupo quando não há cargos.
+3. Depois de usar o elemento, não desenhamos outro ramo com ele naquele caminho.
+
+</details>
+
+## Exercícios de domínio
+
+### 1. Reconhecimento
+
+1. Um pedido precisa de uma letra A ou B e um turno 1 ou 2. A lista
+   A1, A2, B1 está completa? Se não, qual resultado falta?
+2. Entre A1, A, C1 e 1A, qual registro é um resultado válido desse pedido?
+
+### 2. Explicação
+
+3. Escolher duas pessoas para uma equipe e escolher responsável e suplente
+   são a mesma contagem? Explique usando os nomes Ana e Bruno.
+
+### 3. Aplicação direta
+
+4. Um código começa com A, B ou C e termina com 1 ou 2. Liste todos os códigos.
+5. Um serviço pode ser I ou R, e o horário pode ser M ou T. Desenhe a árvore.
+   Quantas folhas representam agendamentos completos?
+
+### 4. Variação
+
+6. Liste os códigos de duas posições feitos com 0 e 1, permitindo repetição.
+7. Liste os mesmos códigos, agora proibindo repetição.
+
+### 5. Problema misto
+
+8. A, B e C disputam dois cargos diferentes. Liste as distribuições sem
+   repetir uma pessoa. Depois agrupe os registros que formam a mesma equipe.
+
+### 6. Justificativa
+
+9. Uma pessoa escreveu A1, A2, A1 e B2 e afirmou que há quatro códigos
+   distintos. Explique o erro e corrija a lista.
+10. Por que fixar a primeira escolha e percorrer todas as opções da segunda
+    ajuda a evitar esquecimentos?
+
+<details>
+<summary>Dica para o exercício 8</summary>
+
+Segure A no primeiro cargo e percorra as outras pessoas. Depois faça o mesmo
+com B e C. Para formar equipes, compare quem aparece em cada registro.
+
+</details>
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Não. Falta B2.
+2. A1. A está incompleto; C não é uma letra permitida; 1A inverte as etapas.
+3. Não. Ana responsável e Bruno suplente é diferente de Bruno responsável
+   e Ana suplente. Sem cargos, ambos representam a mesma equipe.
+4. A1, A2, B1, B2, C1, C2: seis códigos.
+5. O início se divide em I e R. Cada serviço se divide em M e T.
+   As quatro folhas são IM, IT, RM e RT.
+6. 00, 01, 10 e 11: quatro códigos.
+7. 01 e 10: dois códigos. 00 e 11 repetem um algarismo.
+8. AB, AC, BA, BC, CA e CB: seis distribuições. AB/BA, AC/CA e BC/CB
+   representam três equipes. Se encontrou seis equipes, contou suas ordens.
+9. A1 foi registrado duas vezes e B1 foi esquecido. A lista completa é
+   A1, A2, B1 e B2.
+10. Cada grupo fica encerrado antes de começar o seguinte. Se todas as primeiras
+    escolhas forem percorridas, cada resultado terá sido registrado uma vez.
+
+</details>
+
+## Revisão curta
+
+Antes de contar, descreva um resultado completo. Decida se a ordem importa
+e se a repetição é permitida. Uma listagem organizada ou uma árvore pequena
+permite conferir essas decisões.
+
+Na [próxima lição](./principios-de-contagem), a contagem dos ramos vai se tornar
+uma conta que dispensa escrever cada resultado.

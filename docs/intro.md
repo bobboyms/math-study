@@ -32,6 +32,8 @@ Estude os capítulos nesta ordem:
    os capítulos.
 9. [Cálculo 1](./calculo/) — medir o que muda a cada instante: limite,
    derivada e integral.
+10. [Análise combinatória](./analise-combinatoria/) — contar maneiras de
+    escolher e ordenar, construindo a base de contagem para probabilidade.
 
 A ordem segue a dependência entre as ideias, e cada capítulo abre dizendo o que
 herda do anterior. Aritmética sustenta a álgebra; a fatoração da álgebra é o que
@@ -44,6 +46,11 @@ Os oito primeiros capítulos cobrem o que um curso de cálculo assume de antemã
 O nono capítulo é esse curso: ele retoma as perguntas que ficaram em aberto —
 a taxa de variação num ponto, o máximo exato, a área sob uma curva — e as
 responde.
+
+O capítulo de análise combinatória abre outra linha de estudo: a preparação
+para probabilidade. Você pode estudá-lo depois de álgebra, sem precisar
+terminar os capítulos de geometria ou cálculo. Ele retoma operações, frações
+e potências para contar possibilidades.
 
 ## Como estudar cada página
 
