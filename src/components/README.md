@@ -1,7 +1,7 @@
 # Componentes visuais das lições
 
-Diagramas em SVG para a etapa "modelo visual" das lições. Todos são
-**estáticos**: renderizam no build, não têm estado, não têm interação. Custam
+Diagramas em SVG para a etapa "modelo visual" das lições. Os diagramas
+**estáticos** renderizam no build, não têm estado, não têm interação. Custam
 quase o mesmo que um bloco ` ```text ` e ficam com a mesma cara do resto da
 página, porque os rótulos são KaTeX — o mesmo motor das fórmulas do corpo do
 texto.
@@ -47,6 +47,9 @@ import AreaModel from '@site/src/components/AreaModel';
 | ângulo, triângulo, figura plana com medidas, figura composta | `GeoFigure` |
 | ponto, reta, circunferência e gráfico de função no plano | `CartesianPlane` |
 | seno e cosseno como coordenadas, quadrantes, arcos | `UnitCircle` |
+| o mesmo triângulo como razões, ponto do ciclo e ponto do gráfico | `TrigBridge` |
+| variar o giro e acompanhar uma coordenada no gráfico | `CycleGraphExplorer` (interativo) |
+| comparar amplitude, período, fase e deslocamento vertical | `TrigParametersExplorer` (interativo) |
 | cilindro, cone, esfera, bloco — volume e superfície | `SolidFigure` |
 | secante girando na direção da tangente, derivada como limite | `TangentExplorer` (interativo) |
 | área sob a curva por retângulos, soma de Riemann, integral | `RiemannSum` |
@@ -565,3 +568,60 @@ A caixa do `foreignObject` recorta o que passa dos limites. Rótulo encostado na
 borda do desenho precisa de `space` (largura disponível do lado ancorado) —
 foi o que fez o rótulo da linha aparecer cortado na primeira versão do
 `AreaModel`. Use `halo` quando o rótulo puder cruzar um traço do desenho.
+
+## TrigBridge
+
+Sequência estática do triângulo de catetos 4 e 3 e hipotenusa 5. As razões,
+as coordenadas do ciclo e o ponto do gráfico vêm das mesmas medidas.
+
+```mdx
+import TrigBridge from '@site/src/components/TrigBridge';
+
+<TrigBridge stage="ratios" />
+<TrigBridge stage="unit" />
+<TrigBridge stage="graph" />
+```
+
+`stage` aceita `ratios` (padrão), `unit` e `graph`. O estágio `unit` divide
+cada lado por 5 e posiciona a hipotenusa sobre o raio do ciclo. O estágio
+`graph` compara P(4/5, 3/5) no ciclo com Q(α, 3/5) no gráfico do seno.
+O ângulo é calculado das medidas, sem uma aproximação escrita à mão.
+
+## CycleGraphExplorer
+
+```mdx
+import CycleGraphExplorer from '@site/src/components/CycleGraphExplorer';
+
+<CycleGraphExplorer />
+```
+
+Sem props. Um controle varia o giro entre −360° e 720°, incluindo giros
+negativos e duas voltas completas. A seleção de seno ou cosseno transporta
+a coordenada correspondente para o gráfico. A entrada do gráfico é sempre
+em radianos; ciclo, ponto do gráfico e valores exibidos usam o mesmo ângulo.
+
+Antes do componente, peça uma previsão. Depois, proponha comparar uma volta
+completa, um giro negativo ou a escolha da outra coordenada. O componente
+oferece também botões para os quartos de volta e controles acessíveis por teclado.
+
+## TrigParametersExplorer
+
+```mdx
+import TrigParametersExplorer from '@site/src/components/TrigParametersExplorer';
+
+<TrigParametersExplorer />
+```
+
+Sem props. Quatro controles ajustam `a sen(bx+c)+d`, começando no seno básico.
+A curva ajustada é contínua e a referência é tracejada. Os eixos mantêm as
+mesmas escalas em todos os ajustes, para não ocultar as mudanças de amplitude
+ou período. A linha central tem o terceiro tom.
+
+Permite fatores negativos e zero. Quando `a=0` ou `b=0`, mostra uma constante,
+com amplitude zero e sem menor período positivo. Nos outros casos, calcula
+amplitude, período, imagem e deslocamento `−c/b` dos parâmetros atuais.
+As leituras numéricas são aproximadas a três casas decimais.
+
+Os dois exploradores e a sequência estática reutilizam `GeoFigure`,
+`UnitCircle` e `CartesianPlane`. A disposição em colunas vira uma coluna no
+celular; a paleta e o KaTeX seguem os mesmos tokens e macros do curso.

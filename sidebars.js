@@ -378,134 +378,176 @@ const sidebars = {
           label: '7.1 Roteiro do capítulo',
         },
         {
-          type: 'doc',
-          id: 'geometria/angulos',
-          label: '7.2 Ângulos',
+          type: 'category',
+          label: 'Módulo 1 — Ângulos e triângulos',
+          items: [
+            {
+              type: 'doc',
+              id: 'geometria/angulos',
+              label: '7.2 Ângulos',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/triangulos',
+              label: '7.3 Triângulos',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/semelhanca',
+              label: '7.4 Semelhança',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/teorema-de-pitagoras',
+              label: '7.5 Teorema de Pitágoras',
+            },
+          ],
         },
         {
-          type: 'doc',
-          id: 'geometria/triangulos',
-          label: '7.3 Triângulos',
+          type: 'category',
+          label: 'Módulo 2 — Áreas e volumes',
+          items: [
+            {
+              type: 'doc',
+              id: 'geometria/areas-de-poligonos',
+              label: '7.6 Áreas de polígonos',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/circulo',
+              label: '7.7 O círculo',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/figuras-compostas',
+              label: '7.8 Figuras compostas',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/volumes-e-superficies',
+              label: '7.9 Volumes e superfícies',
+            },
+          ],
         },
         {
-          type: 'doc',
-          id: 'geometria/semelhanca',
-          label: '7.4 Semelhança',
+          type: 'category',
+          label: 'Módulo 3 — Geometria analítica',
+          items: [
+            {
+              type: 'doc',
+              id: 'geometria/plano-cartesiano-e-distancia',
+              label: '7.10 Plano cartesiano e distância',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/equacao-da-reta',
+              label: '7.11 Equação da reta',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/paralelas-e-perpendiculares',
+              label: '7.12 Paralelas e perpendiculares',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/circunferencia-e-parabola',
+              label: '7.13 Circunferência e parábola',
+            },
+          ],
         },
         {
-          type: 'doc',
-          id: 'geometria/teorema-de-pitagoras',
-          label: '7.5 Teorema de Pitágoras',
+          type: 'category',
+          label: 'Módulo 4 — Trigonometria no triângulo',
+          items: [
+            {
+              type: 'doc',
+              id: 'geometria/razoes-trigonometricas',
+              label: '7.14 Seno, cosseno e tangente',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/angulos-notaveis',
+              label: '7.15 Ângulos notáveis',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/resolvendo-triangulos-retangulos',
+              label: '7.16 Resolvendo triângulos retângulos',
+            },
+          ],
         },
         {
-          type: 'doc',
-          id: 'geometria/areas-de-poligonos',
-          label: '7.6 Áreas de polígonos',
+          type: 'category',
+          label: 'Módulo 5 — Radianos e ciclo',
+          items: [
+            {
+              type: 'doc',
+              id: 'geometria/radianos',
+              label: '7.17 Radianos',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/ciclo-trigonometrico',
+              label: '7.18 O ciclo trigonométrico',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/reducao-ao-primeiro-quadrante',
+              label: '7.19 Redução ao 1º quadrante',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/arco-e-setor-circular',
+              label: '7.20 Arco e setor circular',
+            },
+          ],
         },
         {
-          type: 'doc',
-          id: 'geometria/circulo',
-          label: '7.7 O círculo',
+          type: 'category',
+          label: 'Módulo 6 — Funções trigonométricas',
+          items: [
+            {
+              type: 'doc',
+              id: 'geometria/graficos-seno-e-cosseno',
+              label: '7.21 Gráficos do seno e do cosseno',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/grafico-da-tangente',
+              label: '7.22 Gráfico da tangente',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/parametros-das-funcoes-trigonometricas',
+              label: '7.23 Os parâmetros da onda',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/funcoes-trigonometricas-inversas',
+              label: '7.24 Funções inversas',
+            },
+          ],
         },
         {
-          type: 'doc',
-          id: 'geometria/figuras-compostas',
-          label: '7.8 Figuras compostas',
-        },
-        {
-          type: 'doc',
-          id: 'geometria/volumes-e-superficies',
-          label: '7.9 Volumes e superfícies',
-        },
-        {
-          type: 'doc',
-          id: 'geometria/plano-cartesiano-e-distancia',
-          label: '7.10 Plano cartesiano e distância',
-        },
-        {
-          type: 'doc',
-          id: 'geometria/equacao-da-reta',
-          label: '7.11 Equação da reta',
-        },
-        {
-          type: 'doc',
-          id: 'geometria/paralelas-e-perpendiculares',
-          label: '7.12 Paralelas e perpendiculares',
-        },
-        {
-          type: 'doc',
-          id: 'geometria/circunferencia-e-parabola',
-          label: '7.13 Circunferência e parábola',
-        },
-        {
-          type: 'doc',
-          id: 'geometria/razoes-trigonometricas',
-          label: '7.14 Seno, cosseno e tangente',
-        },
-        {
-          type: 'doc',
-          id: 'geometria/angulos-notaveis',
-          label: '7.15 Ângulos notáveis',
-        },
-        {
-          type: 'doc',
-          id: 'geometria/resolvendo-triangulos-retangulos',
-          label: '7.16 Resolvendo triângulos retângulos',
-        },
-        {
-          type: 'doc',
-          id: 'geometria/radianos',
-          label: '7.17 Radianos',
-        },
-        {
-          type: 'doc',
-          id: 'geometria/ciclo-trigonometrico',
-          label: '7.18 O ciclo trigonométrico',
-        },
-        {
-          type: 'doc',
-          id: 'geometria/reducao-ao-primeiro-quadrante',
-          label: '7.19 Redução ao 1º quadrante',
-        },
-        {
-          type: 'doc',
-          id: 'geometria/arco-e-setor-circular',
-          label: '7.20 Arco e setor circular',
-        },
-        {
-          type: 'doc',
-          id: 'geometria/graficos-seno-e-cosseno',
-          label: '7.21 Gráficos do seno e do cosseno',
-        },
-        {
-          type: 'doc',
-          id: 'geometria/grafico-da-tangente',
-          label: '7.22 Gráfico da tangente',
-        },
-        {
-          type: 'doc',
-          id: 'geometria/parametros-das-funcoes-trigonometricas',
-          label: '7.23 Os parâmetros da onda',
-        },
-        {
-          type: 'doc',
-          id: 'geometria/funcoes-trigonometricas-inversas',
-          label: '7.24 Funções inversas',
-        },
-        {
-          type: 'doc',
-          id: 'geometria/relacoes-fundamentais',
-          label: '7.25 Relações fundamentais',
-        },
-        {
-          type: 'doc',
-          id: 'geometria/soma-diferenca-e-arco-duplo',
-          label: '7.26 Soma, diferença e arco duplo',
-        },
-        {
-          type: 'doc',
-          id: 'geometria/equacoes-trigonometricas',
-          label: '7.27 Equações trigonométricas',
+          type: 'category',
+          label: 'Módulo 7 — Identidades e equações',
+          items: [
+            {
+              type: 'doc',
+              id: 'geometria/relacoes-fundamentais',
+              label: '7.25 Relações fundamentais',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/soma-diferenca-e-arco-duplo',
+              label: '7.26 Soma, diferença e arco duplo',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/equacoes-trigonometricas',
+              label: '7.27 Equações trigonométricas',
+            },
+          ],
         },
       ],
     },
