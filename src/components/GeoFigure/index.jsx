@@ -283,6 +283,20 @@ export default function GeoFigure({
         {arcs.map((item, index) => {
           const c = P(item.at);
           const r = item.r * unit;
+          // Volta inteira: o arco começaria e terminaria no mesmo ponto, e o SVG
+          // não desenha arco de ponto a ele mesmo. Vira um círculo.
+          if (Math.abs(item.to - item.from) >= 360) {
+            return (
+              <circle
+                key={`arc-${index}`}
+                className={item.sector ? styles.face : styles.arcThick}
+                style={{'--tone': toneVar(item.tone)}}
+                cx={c[0]}
+                cy={c[1]}
+                r={r}
+              />
+            );
+          }
           const a1 = toRad(item.from);
           const a2 = toRad(item.to);
           const p1 = [c[0] + r * Math.cos(a1), c[1] - r * Math.sin(a1)];

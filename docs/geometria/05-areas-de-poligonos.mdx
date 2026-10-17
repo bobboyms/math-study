@@ -4,6 +4,7 @@ title: Áreas de polígonos
 
 import GeoFigure from '@site/src/components/GeoFigure';
 import AreaModel from '@site/src/components/AreaModel';
+import ShearExplorer from '@site/src/components/ShearExplorer';
 
 # Áreas: retângulo, quadrado, triângulo e trapézio
 
@@ -16,24 +17,25 @@ do instalador é comprar 10% a mais, para perdas de corte.
 > Quantas caixas comprar, e quanto isso vai custar?
 
 E não é só o piso. A parede do sótão, sob o telhado de duas águas, tem formato
-de **triângulo**, e a lateral do mesmo sótão tem formato de **trapézio** — uma
-parede que começa baixa e termina alta. As duas precisam de tinta, e o rendimento
-da lata também é dado em metros quadrados.
+de **triângulo**: 6 m de base e 2 m de altura no ponto mais alto. A lateral do
+mesmo sótão tem formato de **trapézio** — uma parede de 3 m de comprimento que
+começa com 2,5 m de altura e termina com 4 m. As duas precisam de tinta, e o
+rendimento da lata também é dado em metros quadrados.
 
 <GeoFigure
-  unit={34}
+  unit={30}
   padding={46}
   polygons={[
     {points: [[0, 0], [4.5, 0], [4.5, 3.2], [0, 3.2]], tone: 1},
-    {points: [[6.2, 0], [10.2, 0], [8.2, 2]], tone: 2},
-    {points: [[11.9, 0], [15.4, 0], [15.4, 2.6], [11.9, 1.4]], tone: 3},
+    {points: [[5.7, 0], [11.7, 0], [8.7, 2]], tone: 2},
+    {points: [[13.2, 0], [16.2, 0], [16.2, 4], [13.2, 2.5]], tone: 3},
   ]}
   labels={[
-    {at: [2.25, -0.46], math: '\\text{piso}', fontSize: 12, halo: false},
-    {at: [8.2, -0.46], math: '\\text{empena}', fontSize: 12, halo: false},
-    {at: [13.65, -0.46], math: '\\text{lateral}', fontSize: 12, halo: false},
+    {at: [2.25, -0.5], math: '\\text{piso}', fontSize: 12, halo: false},
+    {at: [8.7, -0.5], math: '\\text{empena}', fontSize: 12, halo: false},
+    {at: [14.7, -0.5], math: '\\text{lateral}', fontSize: 12, halo: false},
   ]}
-  caption="Três formatos, três fórmulas — mas, como veremos, uma ideia só."
+  caption="As três superfícies na mesma escala: piso de 4,50 m por 3,20 m, empena de 6 m por 2 m e lateral de 3 m de comprimento, com alturas de 2,5 m e 4 m. Três formatos, três fórmulas — mas, como veremos, uma ideia só."
 />
 
 Três formas diferentes, e a tentação é decorar três fórmulas soltas. Esta página
@@ -139,8 +141,8 @@ $$
 É a mesma leitura de multiplicação que o curso usou desde o começo. A novidade é
 o nome do resultado: **área**.
 
-Um detalhe que a figura resolve de graça: por que a unidade é “quadrado”, e não
-qualquer outra forma? Porque quadrados se encaixam sem sobra e sem sobreposição,
+A figura também responde a uma pergunta que costuma passar despercebida: por
+que a unidade é “quadrado”, e não qualquer outra forma? Porque quadrados se encaixam sem sobra e sem sobreposição,
 em qualquer quantidade, formando fileiras iguais. Círculos deixariam buracos;
 triângulos serviriam, mas a contagem em linhas e colunas ficaria torta.
 
@@ -190,6 +192,11 @@ retângulo “empurrado de lado”. Sua área não é o produto dos dois lados: 
 produto da base pela **altura**, e altura significa a distância perpendicular
 entre as duas bases paralelas.
 
+Exemplo: todo retângulo é um paralelogramo, porque seus lados opostos são
+paralelos. Contraexemplo: a lateral do sótão do problema motivador **não** é um
+paralelogramo. Ela tem só um par de lados paralelos (os dois lados verticais), e
+por isso é um trapézio, que tem fórmula própria, mais adiante.
+
 <GeoFigure
   unit={40}
   padding={50}
@@ -208,6 +215,22 @@ Por que $A = b \times h$, e não $b \times \ell$? Recorte o triângulo que sobra
 esquerda e deslize-o para a direita: ele encaixa exatamente no vão do outro lado,
 e o que sobra é um **retângulo** de base $b$ e altura $h$.
 
+<GeoFigure
+  unit={40}
+  padding={50}
+  polygons={[
+    {points: [[0, 0], [1.4, 0], [1.4, 2.4]], tone: 0, fill: false},
+    {points: [[1.4, 0], [4, 0], [5.4, 2.4], [1.4, 2.4]], tone: 2},
+    {points: [[4, 0], [5.4, 0], [5.4, 2.4]], tone: 3},
+  ]}
+  segments={[{from: [0.7, 1.4], to: [4.5, 1.4], tone: 3, arrow: true}]}
+  labels={[
+    {at: [3.4, -0.42], math: 'b', tone: 2, fontSize: 14},
+    {at: [5.72, 1.2], math: 'h', tone: 2, fontSize: 14},
+  ]}
+  caption="O triângulo recortado à esquerda (contorno vazio) foi deslizado uma distância b para a direita. A figura agora é um retângulo de base b e altura h."
+/>
+
 A área não mudou — nada foi acrescentado nem retirado, só mudou de lugar. Mas
 agora a figura é um retângulo, e para retângulo já sabemos a resposta.
 
@@ -216,11 +239,24 @@ agora a figura é um retângulo, e para retângulo já sabemos a resposta.
 > **Erro comum:** usar o lado inclinado como altura. Empurre um paralelogramo
 > cada vez mais: o lado inclinado continua com o mesmo comprimento, mas a figura
 > vai ficando achatada, e a área vai a zero. Se o lado inclinado decidisse a
-> área, ela não mudaria — e claramente muda.
+> área, ela não mudaria. Mas ela muda: a figura achatada cobre cada vez menos
+> chão.
+
+O explorador abaixo faz o movimento contrário: mantém a altura fixa e empurra o
+topo para o lado. O lado inclinado $\ell$ cresce, e o painel mostra o que
+aconteceria se a área fosse $b \times \ell$. *Antes de mexer, preveja:* a área
+de verdade vai aumentar, diminuir ou ficar igual?
+
+<ShearExplorer shape="parallelogram" />
+
+A área fica igual o tempo todo. O motivo é o recorte da figura anterior: em
+qualquer posição do topo, o triângulo da esquerda desliza para a direita e
+forma um retângulo de base 6 e altura 4. Só no retângulo, com o topo sem
+deslocamento, o lado inclinado coincide com a altura.
 
 ## Triângulo: metade de um paralelogramo
 
-Aqui está a construção mais rentável da página. Tome um triângulo qualquer e
+Aqui está a construção mais útil da página. Tome um triângulo qualquer e
 faça uma **cópia** dele, girada meia volta. As duas peças encaixam formando um
 paralelogramo:
 
@@ -286,6 +322,18 @@ perpendicular do vértice até a reta que contém a base. Se o pé dessa
 perpendicular cai fora do segmento, tudo bem — a fórmula continua valendo, porque
 a construção do paralelogramo continua funcionando.
 
+No explorador abaixo, a base mede 6 e o vértice de cima anda sobre uma reta
+paralela à base, sempre a 4 de altura. *Pause e tente:* leve o vértice para além
+da ponta direita da base, até a altura cair fora do triângulo. Observe o que
+acontece com os dois lados e com a área.
+
+<ShearExplorer shape="triangle" />
+
+Os dois lados mudam de tamanho a cada posição — o esquerdo vai de 4 a mais de 9.
+A área não sai de 12, porque base e altura não mudaram. Isso responde, de uma
+vez, às duas dúvidas desta seção: a altura que entra na fórmula é a
+perpendicular, e ela vale mesmo quando fica do lado de fora.
+
 > **Erro comum:** usar um dos lados inclinados como altura. Num triângulo de
 > lados 5, 6 e 7, nenhum desses números é altura de nada. Só num triângulo
 > **retângulo** um lado é altura do outro — os dois catetos são perpendiculares
@@ -298,6 +346,11 @@ Um **trapézio** tem um par de lados paralelos, de comprimentos diferentes: a
 base maior $B$ e a base menor $b$. A altura $h$ é a distância perpendicular
 entre elas.
 
+Exemplo: a lateral do sótão é um trapézio. Os dois lados verticais, de 2,5 m e
+4 m, são paralelos, e são eles as bases. Contraexemplo: um quadrilátero sem
+nenhum par de lados paralelos, como uma pipa, **não** é trapézio, e a fórmula
+desta seção não se aplica a ele.
+
 O mesmo truque do triângulo resolve: duplique e gire.
 
 <GeoFigure
@@ -305,7 +358,7 @@ O mesmo truque do triângulo resolve: duplique e gire.
   padding={50}
   polygons={[
     {points: [[0, 0], [4, 0], [3.2, 2.2], [1.2, 2.2]], tone: 1},
-    {points: [[4, 0], [3.2, 2.2], [7.2, 2.2], [5.2, 0]], tone: 2},
+    {points: [[4, 0], [6, 0], [7.2, 2.2], [3.2, 2.2]], tone: 2},
   ]}
   segments={[{from: [1.2, 0], to: [1.2, 2.2], tone: 3, dashed: true}]}
   angles={[{at: [1.2, 0], from: [4, 0], to: [1.2, 2.2], right: true, tone: 3}]}
@@ -313,7 +366,7 @@ O mesmo truque do triângulo resolve: duplique e gire.
     {at: [2, -0.42], math: 'B', tone: 1, fontSize: 14},
     {at: [2.2, 2.62], math: 'b', tone: 1, fontSize: 14},
     {at: [0.94, 1.1], math: 'h', tone: 3, fontSize: 14},
-    {at: [5.6, 1.1], math: '\\text{cópia}', tone: 2, fontSize: 12},
+    {at: [5.2, 1.1], math: '\\text{cópia}', tone: 2, fontSize: 12},
   ]}
   caption="Duas cópias do trapézio formam um paralelogramo de base B + b e altura h."
 />
@@ -330,9 +383,10 @@ $$
 A = \underbrace{\frac{B+b}{2}}_{\text{m\'edia das bases}} \times h.
 $$
 
-Ou seja: **o trapézio tem a área de um retângulo cuja base é a média das duas
-bases**. Um lado sobra, o outro falta, e as duas compensações se anulam
-exatamente na metade da altura.
+Ou seja: **o trapézio tem a mesma área de um retângulo de mesma altura, cuja
+base é a média das duas bases**. Na lateral do sótão, as bases medem 2,5 m e
+4 m, e a média é $\frac{2{,}5 + 4}{2} = 3{,}25$ m. A parede tem a mesma área de
+um retângulo de 3,25 m por 3 m.
 
 Isso dá um teste de sanidade barato: a área do trapézio tem de ficar **entre** a
 do retângulo com a base menor e a do retângulo com a base maior.
@@ -343,8 +397,8 @@ Vale ver quanto isso é econômico. A fórmula do trapézio contém as outras:
 
 | Se… | a fórmula vira | que é a área do |
 |---|---|---|
-| $B = b$ | $\frac{2b \cdot h}{2} = b h$ | retângulo (ou paralelogramo) |
-| $b = 0$ | $\frac{B \cdot h}{2}$ | triângulo |
+| $B = b$ | $\frac{2b \times h}{2} = b \times h$ | retângulo (ou paralelogramo) |
+| $b = 0$ | $\frac{B \times h}{2}$ | triângulo |
 
 Fazer a base menor encolher até zero é literalmente transformar o trapézio num
 triângulo, e a fórmula acompanha a transformação. Isso não é coincidência: as
@@ -377,9 +431,11 @@ $$
 7 \times 89 = 623.
 $$
 
-O piso sai por **R\$ 623**, cobrindo $7 \times 2{,}5 = 17{,}5$ m² — sobra
-$17{,}5 - 14{,}4 = 3{,}1$ m² de folga, um pouco acima dos 10% pedidos, que é o
-preço de a caixa ser indivisível.
+O piso sai por **R\$ 623**, cobrindo $7 \times 2{,}5 = 17{,}5$ m². Sobram
+$17{,}5 - 14{,}4 = 3{,}1$ m² de folga. Os 10% pedidos seriam só
+$14{,}4 \times 0{,}10 = 1{,}44$ m², então a folga real passa do dobro disso.
+É o preço de a caixa ser indivisível: a sétima caixa entra inteira, mesmo que
+só um terço dela seja necessário.
 
 **A empena.** A parede triangular sob o telhado tem 6 m de largura na base e 2 m
 de altura no ponto mais alto:
@@ -399,8 +455,9 @@ A = \frac{(4 + 2{,}5) \times 3}{2} = \frac{6{,}5 \times 3}{2}
 $$
 
 Teste de sanidade pela média das bases: uma parede retangular de 2,5 m por 3 m
-teria 7,5 m², e uma de 4 m por 3 m teria 12 m². O trapézio deu 9,75 m² —
-exatamente entre os dois, e mais perto do meio, como esperado. ✓
+teria 7,5 m², e uma de 4 m por 3 m teria 12 m². O trapézio deu 9,75 m², que
+fica entre os dois. Mais que isso: $\frac{7{,}5 + 12}{2} = 9{,}75$, o ponto
+exato do meio — como a leitura pela média das bases previa. ✓
 
 ## Exemplos resolvidos
 
@@ -510,6 +567,8 @@ quando a figura é irregular.
 5. Dois terrenos têm o mesmo perímetro. Eles têm necessariamente a mesma área?
 6. Se você dobra a base de um triângulo e mantém a altura, o que acontece com a
    área? E se dobra as duas?
+7. No explorador do triângulo, o lado esquerdo passa de 9, e a área continua 12.
+   O que esse experimento prova sobre usar um lado inclinado na fórmula?
 
 <details>
 <summary>Respostas para conferência</summary>
@@ -534,6 +593,10 @@ quando a figura é irregular.
 6. Dobrar só a base dobra a área — ela é proporcional à base. Dobrar as duas
    quadruplica, porque a área é o produto das duas: $2 \times 2 = 4$. É a regra
    do $k^2$.
+7. Que o lado inclinado não decide a área. Ele mudou de tamanho a cada posição,
+   e a área ficou parada. Se a fórmula usasse esse lado, ela daria uma área
+   diferente para cada posição, e a área de verdade não mudou. Quem ficou fixo
+   junto com a área foram a base e a altura perpendicular.
 
 </details>
 
@@ -589,6 +652,15 @@ rendimento.
     cumeeira. Calcule a área da empena e, usando
     [Pitágoras](./teorema-de-pitagoras), o comprimento de cada uma das duas
     águas do telhado (do beiral até a cumeeira).
+
+<details>
+<summary>Dica para o 13</summary>
+
+Desenhe a altura da cumeeira até o meio da base. Ela divide a empena em dois
+triângulos retângulos iguais. Em cada um, a água do telhado é a hipotenusa.
+Quanto medem os dois catetos?
+
+</details>
 14. Um piso quadrado de 5 m de lado será coberto com ladrilhos quadrados de
     25 cm de lado. Quantos ladrilhos são necessários? Resolva de duas maneiras:
     pela contagem em fileiras e pela divisão de áreas.
@@ -605,7 +677,8 @@ rendimento.
 <summary>Respostas para conferência</summary>
 
 1. (a) 28 m²; (b) 81 cm²; (c) 30 cm²; (d) $\frac{(7+3)\times5}{2} = 25$ m².
-2. (a) 30 000 cm²; (b) 2,5 m²; (c) 2 000 000 m².
+2. (a) 30 000 cm²; (b) 2,5 m²; (c) 2 000 000 m². Se você encontrou 300 cm² no
+   item (a), usou o fator do comprimento (100) em vez do fator da área (10 000).
 3. Os lados 6 e 8. O triângulo é retângulo ($36+64=100$), e os catetos são
    perpendiculares entre si — portanto um é altura relativa ao outro. A área é
    $\frac{6 \times 8}{2} = 24$.
@@ -621,12 +694,15 @@ rendimento.
 7. $96 = \frac{b \times 12}{2} \Rightarrow 192 = 12b \Rightarrow b = 16$ cm.
 8. $45 = \frac{(6+9)h}{2} \Rightarrow 90 = 15h \Rightarrow h = 6$ m.
 9. Área $= 14$ m²; com 10%, 15,4 m²; $15{,}4 \div 1{,}8 \approx 8{,}56$, logo
-   **9 caixas**.
+   **9 caixas**. Se você respondeu 8, arredondou para baixo — e 8 caixas
+   cobririam só 14,4 m², menos que os 15,4 m² necessários.
 10. Cada metade é um triângulo de catetos 12 e 30:
     $\frac{12 \times 30}{2} = 180$ m². (Também dá para ver como metade dos
     360 m² do retângulo.)
 11. Área $= \frac{(2{,}2+3{,}8) \times 4{,}5}{2} = \frac{6 \times 4{,}5}{2} =
     13{,}5$ m². Duas demãos: 27 m². $27 \div 12 = 2{,}25$, logo **3 latas**.
+    Se você encontrou 2 latas, provavelmente calculou uma demão só
+    ($13{,}5 \div 12 = 1{,}125$) ou arredondou 2,25 para baixo.
 12. Lado original $\sqrt{36} = 6$ m; novo lado $6 \times 1{,}5 = 9$ m; nova área
     $81$ m². Pela regra: $36 \times 1{,}5^2 = 36 \times 2{,}25 = 81$ m² ✓.
 13. Área $= \frac{7 \times 1{,}5}{2} = 5{,}25$ m². Cada água é a hipotenusa de um
@@ -641,10 +717,15 @@ rendimento.
     completam os cantos. A área do retângulo é $ab$, e o triângulo é metade
     dele.
 16. Porque $\frac{(B+b)h}{2}$ pode ser reagrupado como $\frac{B+b}{2} \times h$,
-    e $\frac{B+b}{2}$ é a média das bases. Geometricamente, o excesso da base
-    maior em relação à média é exatamente igual à falta da base menor; ao subir
-    da base para o topo, o que sobra de um lado preenche o que falta do outro, e
-    a compensação é exata na metade da altura.
+    e $\frac{B+b}{2}$ é a média das bases. Para ver o retângulo, trace uma linha
+    horizontal na metade da altura do trapézio. Ela mede exatamente a média das
+    bases. Agora desenhe um retângulo com essa linha como largura e com a mesma
+    altura $h$ do trapézio. Em cada lado inclinado, um triângulo do trapézio
+    fica para fora do retângulo, abaixo da linha do meio. E um triângulo do
+    mesmo tamanho falta dentro do retângulo, acima dela. Gire o triângulo que
+    sobra meia volta em torno do ponto médio do lado inclinado: ele encaixa
+    exatamente no buraco. O pedaço que sobra da base maior vai parar no canto
+    que falta da base menor, e a área não muda.
 
 **Se sua resposta não bateu:**
 

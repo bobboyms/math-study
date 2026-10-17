@@ -45,12 +45,17 @@ import AreaModel from '@site/src/components/AreaModel';
 | decomposição em fatores primos | `FactorTree` |
 | escolhas em etapas, sequências e contagem das possibilidades | `ChoiceTree` |
 | ângulo, triângulo, figura plana com medidas, figura composta | `GeoFigure` |
+| área constante com mesma base e altura; altura × lado inclinado | `ShearExplorer` (interativo) |
+| área do círculo por fatias remontadas, aproximar e refinar | `CircleSlices` (interativo) |
+| figura composta: soma × diferença, área × perímetro de um entalhe | `CompositeAreaExplorer` (interativo) |
+| conferir ângulo reto pela trena, recíproca de Pitágoras | `RightAngleExplorer` (interativo) |
 | ponto, reta, circunferência e gráfico de função no plano | `CartesianPlane` |
 | seno e cosseno como coordenadas, quadrantes, arcos | `UnitCircle` |
 | o mesmo triângulo como razões, ponto do ciclo e ponto do gráfico | `TrigBridge` |
 | variar o giro e acompanhar uma coordenada no gráfico | `CycleGraphExplorer` (interativo) |
 | comparar amplitude, período, fase e deslocamento vertical | `TrigParametersExplorer` (interativo) |
 | cilindro, cone, esfera, bloco — volume e superfície | `SolidFigure` |
+| volume do cilindro e do cone, efeito do $r^2$ contra o da altura | `CylinderConeExplorer` (interativo) |
 | secante girando na direção da tangente, derivada como limite | `TangentExplorer` (interativo) |
 | área sob a curva por retângulos, soma de Riemann, integral | `RiemannSum` |
 | tabela de padrão (entrada → saída, ciclos, crescimento) | tabela markdown |
@@ -400,6 +405,126 @@ porque todos são a mesma coisa: segmentos, arcos e rótulos.
 | `unit` | pixels por unidade do autor (padrão 34) |
 | `bounds` | `[xMin, yMin, xMax, yMax]` — força o enquadramento; sem isso ele sai do conteúdo |
 | `padding` | margem em pixels (padrão 44). **Aumente quando um rótulo encostar na borda** — o SVG recorta o que passa |
+
+## ShearExplorer
+
+Mesma base, mesma altura. Um controle deslizante empurra o topo da figura para o
+lado, sobre uma reta paralela à base. Os lados inclinados mudam de comprimento,
+e a área não muda. É o argumento interativo contra o erro de usar o lado
+inclinado como altura. No triângulo, o topo pode passar além das pontas da base:
+a altura cai fora da figura, a base é prolongada em tracejado e a área continua
+a mesma. No paralelogramo, o painel mostra também o produto errado $b \times \ell$
+mudando enquanto a área fica parada.
+
+```mdx
+import ShearExplorer from '@site/src/components/ShearExplorer';
+
+<ShearExplorer shape="triangle" />
+<ShearExplorer shape="parallelogram" />
+```
+
+| Prop | O que faz |
+|---|---|
+| `shape` | `'triangle'` (padrão) ou `'parallelogram'` |
+| `base`, `height` | medidas fixas (padrão 6 e 4) |
+| `sMin`, `sMax` | faixa do deslocamento do topo, passo 0,5 (padrão −3 a base + 3 no triângulo; 0 a 5 no paralelogramo) |
+| `initial` | deslocamento inicial (padrão 2) |
+
+## CircleSlices
+
+O círculo cortado em $n$ fatias iguais e remontado com as fatias alternadas,
+uma de ponta para cima, outra de ponta para baixo. As fatias são setores de
+verdade, com a borda curva, então o serrilhado aparece. Um retângulo tracejado
+de base $\pi r$ e altura $r$ fica por cima. O deslizante muda $n$ (sempre par),
+e o painel mostra, num círculo de raio 10 cm, a altura de cada dente e o avanço
+da lateral inclinada. A área não muda; só a diferença para o retângulo encolhe.
+É a dedução de $A = \pi r^2$.
+
+```mdx
+import CircleSlices from '@site/src/components/CircleSlices';
+
+<CircleSlices />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initialSlices` | número inicial de fatias, par (padrão 12) |
+| `min`, `max` | limites do deslizante (padrão 4 e 60) |
+
+## CompositeAreaExplorer
+
+Retângulo com um entalhe retangular recortado do lado de cima, **no canto** (L)
+ou **no meio** (U). Dois deslizantes mudam largura e profundidade do entalhe;
+dois botões trocam o desenho entre a decomposição por soma (pedaços, com a linha
+de corte tracejada) e por diferença (retângulo cheio menos o entalhe). O painel
+mostra as duas contas de área, o perímetro percorrendo a borda lado a lado e
+quanto daria somar os perímetros dos pedaços — sempre o dobro da linha de corte
+a mais. Mexer no entalhe é a ideia: as duas decomposições concordam, e área e
+perímetro mudam de forma independente (no canto o perímetro fica fixo; no meio,
+cresce duas vezes a profundidade).
+
+```mdx
+import CompositeAreaExplorer from '@site/src/components/CompositeAreaExplorer';
+
+<CompositeAreaExplorer />
+```
+
+| Prop | O que faz |
+|---|---|
+| `width`, `height` | retângulo envolvente, em metros (padrão 6 e 4) |
+| `initialNotchWidth`, `initialNotchDepth` | entalhe inicial, múltiplos de 0,5 (padrão 2 e 1,5 — a sala em L da lição) |
+| `initialPosition` | `'corner'` (padrão) ou `'middle'` |
+
+Os deslizantes andam de 0,5 em 0,5 m; no meio, a largura máxima deixa pernas de
+pelo menos 0,5 m.
+
+## CylinderConeExplorer
+
+Cilindro com o cone de mesma base e mesma altura desenhado dentro dele. Dois
+deslizantes, raio (1 a 4 dm) e altura (1 a 8 dm), e botões “Dobrar o raio”,
+“Dobrar a altura” e “Voltar ao início”. As medidas são em decímetros para o
+volume sair direto em litros. O painel mostra os dois volumes e o fator do
+volume em relação ao ponto de partida, escrito como
+(fator do raio)² × (fator da altura) — é o $r^2$ da fórmula em ação.
+
+```mdx
+import CylinderConeExplorer from '@site/src/components/CylinderConeExplorer';
+
+<CylinderConeExplorer />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initialRadius` | raio inicial em dm, múltiplo de 0,5 (padrão 2) |
+| `initialHeight` | altura inicial em dm, múltiplo de 0,5 (padrão 4) |
+
+O desenho tem escala fixa (pixels por decímetro), ao contrário do `SolidFigure`:
+o aluno precisa ver o cilindro engordar quando o raio cresce. Não troque pelo
+`SolidFigure`.
+
+## RightAngleExplorer
+
+O pedreiro sem esquadro. A linha da primeira parede é fixa; a da segunda gira em
+torno da estaca do canto, e o aluno a controla por um deslizante. O ângulo começa
+**escondido**: a única informação é a leitura da trena entre as marcas de 3 m e
+4 m, arredondada ao centímetro. O painel compara $d^2$ com $3^2 + 4^2$ e diz se o
+canto está aberto, fechado ou reto. Mexer na linha até a trena bater é a ideia
+da recíproca de Pitágoras.
+
+```mdx
+import RightAngleExplorer from '@site/src/components/RightAngleExplorer';
+
+<RightAngleExplorer />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initialAngle` | ângulo inicial do canto, em graus, múltiplo de 0,5 (padrão 84) |
+| `initialSize` | triângulo inicial: `0` é 60 cm · 80 cm · 1 m, `1` é 1,5 · 2 · 2,5 m, `2` é 3 · 4 · 5 m (padrão) |
+
+O arredondamento ao centímetro é parte do argumento, não detalhe: é ele que faz o
+triângulo pequeno aprovar um canto de 89,5° e o grande reprovar. Não troque por
+leitura exata.
 
 ## CartesianPlane
 

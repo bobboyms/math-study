@@ -3,6 +3,7 @@ title: O círculo
 ---
 
 import GeoFigure from '@site/src/components/GeoFigure';
+import CircleSlices from '@site/src/components/CircleSlices';
 
 # O círculo: de onde vem $\pi$
 
@@ -86,6 +87,20 @@ estratégia usada para deduzir todas as fórmulas de área?
 Recortar a figura e reencaixar as peças até formar um retângulo, sem alterar a
 quantidade de superfície. A mesma estratégia vai funcionar aqui — com uma
 diferença importante que a página vai destacar.
+
+</details>
+
+**4. Comprimentos e áreas numa ampliação** (de [Semelhança](./semelhanca) e
+[Áreas](./areas-de-poligonos)). Uma planta é ampliada com fator $k = 3$. O que
+acontece com um comprimento da planta? E com uma área?
+
+<details>
+<summary>Conferir</summary>
+
+O comprimento fica multiplicado por 3. A área fica multiplicada por
+$3^2 = 9$, porque ela cresce nas duas direções ao mesmo tempo. Essa diferença
+entre $k$ e $k^2$ vai explicar por que dobrar o raio dobra o contorno, mas
+quadruplica a área.
 
 </details>
 
@@ -182,31 +197,13 @@ fatias iguais, como uma pizza:
   caption="O círculo cortado em 12 fatias iguais. Cada fatia é quase um triângulo de altura r."
 />
 
-Agora desencaixe as fatias e arrume-as alternadamente, uma para cima, outra para
-baixo:
+Agora desencaixe as fatias e arrume-as alternadamente, uma com a ponta para
+cima, a seguinte com a ponta para baixo. O explorador abaixo faz essa montagem
+com as fatias de verdade, com a borda curva. Ele começa com as mesmas 12 fatias
+da figura acima. O retângulo tracejado, de base $\pi r$ e altura $r$, é a forma
+de que a montagem está tentando se aproximar.
 
-<GeoFigure
-  unit={40}
-  padding={44}
-  polygons={[
-    {points: [[0.0,0],[1.047,0],[0.524,2.0]], tone: 1},
-    {points: [[1.047,0],[2.094,0],[1.571,2.0]], tone: 1},
-    {points: [[2.094,0],[3.142,0],[2.618,2.0]], tone: 1},
-    {points: [[3.142,0],[4.189,0],[3.665,2.0]], tone: 1},
-    {points: [[4.189,0],[5.236,0],[4.712,2.0]], tone: 1},
-    {points: [[5.236,0],[6.283,0],[5.76,2.0]], tone: 1},
-    {points: [[0.524,2.0],[1.571,2.0],[1.047,0]], tone: 2},
-    {points: [[1.571,2.0],[2.618,2.0],[2.094,0]], tone: 2},
-    {points: [[2.618,2.0],[3.665,2.0],[3.142,0]], tone: 2},
-    {points: [[3.665,2.0],[4.712,2.0],[4.189,0]], tone: 2},
-    {points: [[4.712,2.0],[5.76,2.0],[5.236,0]], tone: 2},
-  ]}
-  dims={[
-    {from: [0, 0], to: [6.283, 0], label: '\\pi r', offset: 24, tone: 0},
-    {from: [6.283, 0], to: [6.283, 2], label: 'r', offset: 22, tone: 0},
-  ]}
-  caption="As mesmas fatias, alternadas. A figura já lembra um retângulo — e lembraria mais com 100 fatias, e ainda mais com 1000."
-/>
+<CircleSlices />
 
 Duas observações sobre a figura montada:
 
@@ -232,10 +229,26 @@ serrilhados, e as laterais são inclinadas. A conta acima usou a fórmula do
 retângulo numa figura que não é retângulo.
 
 O que salva o argumento é o **comportamento quando o número de fatias cresce**.
-Dobrando a quantidade de fatias, cada dente do serrilhado fica com metade da
-altura; multiplicando por 10, fica dez vezes menor. A diferença entre a figura e
-o retângulo não é eliminada em nenhum passo, mas fica **tão pequena quanto se
-queira**.
+Arraste o controle do explorador e acompanhe os dois números do painel, num
+círculo de raio 10 cm:
+
+| Fatias | Altura de cada dente | Avanço da lateral inclinada |
+|---:|---:|---:|
+| 12 | 0,34 cm | 2,59 cm |
+| 24 | 0,086 cm | 1,31 cm |
+| 120 | 0,0034 cm | 0,26 cm |
+
+Dobrando a quantidade de fatias, de 12 para 24, a lateral avança metade do que
+avançava. O dente encolhe ainda mais depressa: fica com cerca de um quarto da
+altura. Multiplicando por 10, de 12 para 120, a lateral fica dez vezes menor e o
+dente, cerca de cem vezes. Em nenhum passo a diferença entre a figura e o
+retângulo chega a zero. Mas ela fica **tão pequena quanto se queira**: escolha
+qualquer tamanho de erro, por menor que seja, e existe um número de fatias que
+deixa a diferença abaixo dele.
+
+E a área? Ela é a mesma em todas as montagens, porque as peças são sempre as do
+mesmo círculo. Só a forma muda. Então a área do círculo é igual à área de que as
+montagens se aproximam, que é a do retângulo: $\pi r \times r$.
 
 Esse tipo de argumento — “aproximar por figuras conhecidas e refinar sem
 limite” — é o embrião do cálculo integral, e o círculo é onde ele aparece pela
@@ -288,6 +301,7 @@ correspondente. É a mesma ideia de fração de um todo usada em
 <GeoFigure
   unit={44}
   padding={48}
+  bounds={[-2, -2, 2, 2]}
   arcs={[
     {at: [0, 0], r: 2, from: 0, to: 360, tone: 0},
     {at: [0, 0], r: 2, from: 0, to: 70, sector: true, tone: 2},
@@ -400,11 +414,19 @@ arredondamento — é a distributiva de
 ## Erros comuns
 
 > **Erro 1: usar diâmetro onde a fórmula pede raio.** Em $A = \pi r^2$, entrar
-> com o diâmetro quadruplica o resultado.
+> com o diâmetro quadruplica o resultado. Na mesa do problema motivador, a conta
+> errada $\pi \times 1{,}20^2 \approx 4{,}52$ m² daria quatro vezes os
+> 1,13 m² corretos — mais que os 1,44 m² do quadrado que contém o tampo, o que
+> já denuncia o erro.
 
 > **Erro 2: misturar as duas fórmulas.** Contorno tem $r$ na primeira potência e
-> resulta em metros; área tem $r^2$ e resulta em metros quadrados. Se a resposta
-> saiu na unidade errada, a fórmula estava errada.
+> resulta em metros; área tem $r^2$ e resulta em metros quadrados. Com
+> $r = 3$ m, o contorno é $2\pi \times 3 \approx 18{,}85$ m e a área é
+> $\pi \times 3^2 \approx 28{,}27$ m². Os números não batem, e isso ajuda a
+> perceber a troca. A armadilha está em $r = 2$: as duas contas dão
+> $4\pi \approx 12{,}57$. O número é o mesmo, mas um é 12,57 metros de borda e
+> o outro, 12,57 metros quadrados de região. Por isso, confira a unidade, não só
+> o número: se a resposta saiu na unidade errada, a fórmula estava errada.
 
 > **Erro 3: arredondar $\pi$ cedo demais.** Em contas encadeadas, mantenha $\pi$
 > como símbolo até o fim ($129\pi$) e só troque por 3,14159 no último passo.
@@ -432,7 +454,8 @@ arredondamento — é a distributiva de
    correspondentes não muda. Retângulos, ao contrário, têm formas diferentes
    (gordos, magros), então a razão entre seus lados varia de um para outro.
 2. Porque o erro cometido diminui indefinidamente quando o número de fatias
-   cresce: cada dente do serrilhado encolhe na mesma proporção. Nenhum passo
+   cresce: os dentes do serrilhado ficam mais baixos e a lateral fica menos
+   inclinada. A área das peças, essa, nunca muda. Nenhum passo
    finito dá um retângulo, mas a diferença fica menor que qualquer valor
    escolhido de antemão — que é o sentido preciso de “igual” aqui.
 3. O contorno dobra ($C = 2\pi r$ é proporcional a $r$); a área quadruplica
@@ -450,11 +473,17 @@ arredondamento — é a distributiva de
 
 ## Exercícios
 
+Nos itens 1, 2 e 7, use $\pi \approx 3{,}14$, como os enunciados pedem. Nos
+demais, use a tecla $\pi$ da calculadora e arredonde só a resposta final. As
+respostas foram calculadas assim, e por isso podem diferir das suas na última
+casa se você usar 3,14 em todos.
+
 ### 1. Reconhecimento
 
 1. Calcule o comprimento da circunferência: (a) $r = 4$ cm; (b) $d = 10$ m;
    (c) $r = 0{,}5$ m. Use $\pi \approx 3{,}14$.
-2. Calcule a área: (a) $r = 3$ cm; (b) $d = 8$ m; (c) $r = 10$ cm.
+2. Calcule a área: (a) $r = 3$ cm; (b) $d = 8$ m; (c) $r = 10$ cm. Use
+   $\pi \approx 3{,}14$.
 3. Um círculo tem raio 7 m. Qual é seu diâmetro? E sua maior corda?
 
 ### 2. Explicação
@@ -499,6 +528,15 @@ calçada.
 14. Uma roda de carro tem 62 cm de diâmetro e gira a 500 rotações por minuto.
     Qual é a velocidade do carro em km/h?
 
+<details>
+<summary>Dica para o 14</summary>
+
+Em uma rotação, o carro avança o contorno da roda. Calcule quantos metros ele
+anda em um minuto e, depois, em 60 minutos. Só no fim converta metros para
+quilômetros.
+
+</details>
+
 ### 6. Justificativa
 
 15. Explique por que a dedução da área do círculo não pode ser feita com um
@@ -531,8 +569,12 @@ calçada.
    \approx 6{,}28$ cm. Área: $\frac{1}{8} \times 64\pi = 8\pi \approx 25{,}13$
    cm².
 9. $\pi \times 25 \approx 78{,}5$ cm².
-10. A de raio menor (30 cm) dá mais voltas, na razão inversa dos raios:
-    $\frac{45}{30} = 1{,}5$ vez mais voltas.
+10. A de raio menor (30 cm) dá mais voltas. Cada volta avança um contorno, e o
+    contorno é proporcional ao raio: a roda de 45 cm avança 1,5 vez mais por
+    volta. Por isso, a roda de 30 cm precisa de 1,5 vez o número de voltas da
+    outra ($\frac{45}{30} = 1{,}5$). Se você respondeu que a roda maior dá mais
+    voltas, inverteu a proporção: roda maior avança mais a cada volta e
+    precisa de menos voltas.
 11. Área total $= \pi \times 17{,}5^2 = 306{,}25\pi \approx 962{,}1$ cm²; cada
     fatia $\approx 120{,}3$ cm². Borda de cada fatia (o arco):
     $\frac{1}{8} \times \pi \times 35 \approx 13{,}7$ cm.
@@ -541,8 +583,9 @@ calçada.
     logo raio 0,6: $\frac{\pi \times 0{,}36}{2} \approx 0{,}565$ m². Total
     $\approx 1{,}53$ m².
 14. Contorno $= \pi \times 0{,}62 \approx 1{,}948$ m. Em um minuto:
-    $500 \times 1{,}948 \approx 974$ m. Em uma hora: $58\,440$ m, ou cerca de
-    **58,4 km/h**.
+    $500 \times 1{,}948 \approx 974$ m. Em uma hora: $974 \times 60 =
+    58\,440$ m, ou cerca de **58,4 km/h**. Se você achou cerca de 117 km/h,
+    usou 62 cm como raio — 62 cm é o diâmetro.
 15. Porque a fronteira do círculo é **curva** e a de qualquer polígono é feita
     de segmentos retos. Nenhuma quantidade finita de peças com bordas retas
     reproduz exatamente a borda curva; sobra sempre uma diferença. No trapézio,
