@@ -398,7 +398,7 @@ porque todos são a mesma coisa: segmentos, arcos e rótulos.
 | `segments` | `[{from, to, tone, dashed, arrow}]` — `arrow: true` põe ponta no fim, `'both'` nas duas |
 | `dims` | `[{from, to, label, offset, tone}]` — cota: seta de duas pontas deslocada `offset` pixels para fora, com o rótulo no meio |
 | `angles` | `[{at, from, to, label, tone, right, radius, labelRadius}]` — `at` é o vértice, `from` e `to` são pontos nos dois lados; `right: true` desenha o quadradinho |
-| `arcs` | `[{at, r, from, to, tone, sector}]` — arco solto em graus; `sector: true` pinta a fatia |
+| `arcs` | `[{at, r, from, to, tone, sector}]` — arco solto em graus, de `from` até `to` no sentido anti-horário (escreva `from` menor que `to`: um semicírculo voltado para a direita é `from: -90, to: 90`); `sector: true` pinta a fatia; o enquadramento automático inclui o arco inteiro |
 | `ticks` | `[{from, to, count, tone}]` — traços no meio do lado, para marcar lados iguais |
 | `points` | `[{at, label, tone, place, distance, open}]` — `place` é `'above'`, `'below-left'` etc. |
 | `labels` | `[{at, math, tone, dx, dy, anchor}]` — rótulo solto, deslocável em pixels |

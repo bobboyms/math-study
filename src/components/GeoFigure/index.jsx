@@ -40,6 +40,20 @@ function arrowHead(x, y, dx, dy, size = 7) {
   return `M ${x} ${y} L ${bx + nx} ${by + ny} L ${bx - nx} ${by - ny} Z`;
 }
 
+// Pontos que delimitam um arco: as duas pontas e cada ponto cardeal (0°, 90°,
+// 180°, 270°) que caia dentro da varredura. Só o centro não basta — o círculo
+// inteiro sairia recortado num quadrado em volta dele.
+function arcExtent({at, r, from, to}) {
+  const lo = Math.min(from, to);
+  const hi = Math.max(from, to);
+  const angles = [from, to];
+  for (let a = Math.ceil(lo / 90) * 90; a <= hi; a += 90) angles.push(a);
+  return angles.map((a) => [
+    at[0] + r * Math.cos((a * Math.PI) / 180),
+    at[1] + r * Math.sin((a * Math.PI) / 180),
+  ]);
+}
+
 // Todos os pontos citados em qualquer prop, para o enquadramento automático.
 function collectPoints({polygons, segments, angles, points, labels, dims, arcs}) {
   const all = [];
@@ -47,7 +61,7 @@ function collectPoints({polygons, segments, angles, points, labels, dims, arcs})
   segments.forEach((item) => all.push(item.from, item.to));
   dims.forEach((item) => all.push(item.from, item.to));
   angles.forEach((item) => all.push(item.at, item.from, item.to));
-  arcs.forEach((item) => all.push(item.at));
+  arcs.forEach((item) => all.push(item.at, ...arcExtent(item)));
   points.forEach((item) => all.push(item.at));
   labels.forEach((item) => all.push(item.at));
   return all;
