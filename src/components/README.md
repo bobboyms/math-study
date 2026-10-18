@@ -40,6 +40,7 @@ import AreaModel from '@site/src/components/AreaModel';
 | frações, equivalência, denominador comum | `FractionBar` |
 | quantidade contável, grupos iguais, quadrado perfeito, comutativa | `DotArray` |
 | a unidade em 100 partes: decimal ↔ fração ↔ porcentagem | `PercentGrid` |
+| direta, inversa ou nenhuma: qual coluna (quociente ou produto) fica constante | `ProportionTable` (interativo) |
 | equação, operação aplicada aos dois lados | `Balance` |
 | expressão lida como procedimento, operação inversa | `FunctionMachine` |
 | decomposição em fatores primos | `FactorTree` |
@@ -525,6 +526,27 @@ import RightAngleExplorer from '@site/src/components/RightAngleExplorer';
 O arredondamento ao centímetro é parte do argumento, não detalhe: é ele que faz o
 triângulo pequeno aprovar um canto de 89,5° e o grande reprovar. Não troque por
 leitura exata.
+
+## ProportionTable
+
+Direta, inversa ou nenhuma das duas. Três situações fixas — gasolina a
+R\$ 6,20 o litro, viagem de 300 km e conta de luz com R\$ 30 de taxa mínima
+mais R\$ 0,80 por kWh. Uma tabela de duas linhas: a de referência fica parada,
+a outra segue um deslizante. As duas últimas colunas trazem o quociente
+$y \div x$ e o produto $x \times y$ de cada linha, e a coluna que não muda é
+destacada. Na conta de luz nenhuma fica parada, e o painel aponta a taxa fixa
+como culpada. Mexer no valor e ver qual coluna fica parada é a ideia do teste de
+proporcionalidade.
+
+```mdx
+import ProportionTable from '@site/src/components/ProportionTable';
+
+<ProportionTable />
+```
+
+Sem props: as três situações e seus números são os da lição
+`numeros-e-operacoes/razao-e-proporcao`, que os cita no texto. Se mudar um
+número aqui, mude lá também.
 
 ## CartesianPlane
 
