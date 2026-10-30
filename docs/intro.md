@@ -30,8 +30,9 @@ Estude os capítulos nesta ordem:
    endereço a cada ponto e ligar ângulo a comprimento.
 8. [Revisão geral](./revisao-geral) — o arco inteiro em exercícios que misturam
    os capítulos.
-9. [Cálculo 1](./calculo/) — medir o que muda a cada instante: limite,
-   derivada e integral.
+9. Cálculo — medir o que muda a cada instante. O capítulo começa pelo
+   [Cálculo 1](./calculo/calculo-1/): limite, derivada e integral. Os cursos
+   seguintes de cálculo entram no mesmo capítulo, depois dele.
 10. [Análise combinatória](./analise-combinatoria/) — contar maneiras de
     escolher e ordenar, construindo a base de contagem para probabilidade.
 

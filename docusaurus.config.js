@@ -47,6 +47,22 @@ const config = {
     ],
   ],
 
+  plugins: [
+    [
+      '@docusaurus/plugin-client-redirects',
+      {
+        // As lições do Cálculo 1 moraram em /calculo/<lição> até o capítulo
+        // Cálculo ganhar subdivisões. Os endereços antigos continuam valendo.
+        createRedirects(existingPath) {
+          if (existingPath.includes('/calculo/calculo-1')) {
+            return [existingPath.replace('/calculo/calculo-1', '/calculo')];
+          }
+          return undefined;
+        },
+      },
+    ],
+  ],
+
   stylesheets: [
     {
       href: 'https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css',

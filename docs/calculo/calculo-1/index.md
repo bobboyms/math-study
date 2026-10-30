@@ -19,26 +19,26 @@ Este capítulo paga essas promessas. A pergunta que o organiza é:
 
 ## O que vem antes
 
-De [Taxa média de variação](../funcoes/taxa-media-de-variacao): o quociente de
+De [Taxa média de variação](../../funcoes/taxa-media-de-variacao): o quociente de
 diferenças $\frac{f(a+h)-f(a)}{h}$ e a figura das secantes girando na direção
 da tangente. A lição terminou dizendo que faltava uma única passagem — dizer
 com rigor o que significa “$h$ se aproxima de zero”. É a primeira página deste
 capítulo.
 
-De [Álgebra](../algebra/): fatoração, conjugado e soma de frações algébricas.
+De [Álgebra](../../algebra/): fatoração, conjugado e soma de frações algébricas.
 Elas voltam quase intactas na segunda página, porque calcular um limite é,
 quase sempre, reescrever uma fração sem mudar o valor dela.
 
-De [Funções](../funcoes/): domínio, crescimento, composição e inversa. A regra
+De [Funções](../../funcoes/): domínio, crescimento, composição e inversa. A regra
 da cadeia é a composição de funções derivada; a derivada do logaritmo sai da
 inversa.
 
-De [Exponenciais e logaritmos](../exponenciais-e-logaritmos/) e de
-[Geometria e trigonometria](../geometria/): as famílias de funções que este
+De [Exponenciais e logaritmos](../../exponenciais-e-logaritmos/) e de
+[Geometria e trigonometria](../../geometria/): as famílias de funções que este
 capítulo aprende a derivar, e os radianos, sem os quais a derivada do seno não
 sai limpa.
 
-Se algum desses blocos estiver enferrujado, a [Revisão geral](../revisao-geral)
+Se algum desses blocos estiver enferrujado, a [Revisão geral](../../revisao-geral)
 diz o que conferir antes de começar.
 
 ## Os dois problemas que abrem e fecham o capítulo

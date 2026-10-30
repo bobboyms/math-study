@@ -40,6 +40,12 @@ só de acentuação sem o usuário pedir.
   `numeros-e-operacoes/`, `algebra/`, `equacoes/`, `funcoes/`,
   `exponenciais-e-logaritmos/`, `geometria/`, `calculo/`), mais
   `docs/revisao-geral.md` entre a geometria e o cálculo.
+- O capítulo de cálculo é dividido em cursos, um por pasta:
+  `docs/calculo/calculo-1/` hoje, e `calculo-2/`, `calculo-3/` quando vierem.
+  Na barra lateral, “9. Cálculo” contém a categoria “Cálculo 1”, como os
+  módulos da geometria. Os endereços antigos `/calculo/<lição>` redirecionam
+  para `/calculo/calculo-1/<lição>` (`plugin-client-redirects`, em
+  `docusaurus.config.js`).
 - `.md` para páginas de texto. `.mdx` apenas quando a página importa um
   componente React.
 - Componentes visuais em `src/components/<Nome>/index.jsx`, documentados em
@@ -76,8 +82,11 @@ title: Múltiplos, divisores e números primos
 ```
 
 O `title` é o `<h1>` da aba e do SEO; repita-o como `# Título` na primeira linha
-do corpo. Se o título completo ficar longo demais para a barra lateral, use
-`sidebar_label` no frontmatter em vez de encurtar o `title`.
+do corpo, **sem número**. O rótulo curto da barra lateral fica em `sidebars.js`.
+
+**Não use `sidebar_label` no frontmatter.** Ele tem prioridade sobre o rótulo
+de `sidebars.js`, e a lição aparece sem o número na barra lateral, nos botões
+Anterior/Próxima e no título — foi o defeito de sete lições do cálculo.
 
 ### Barra lateral
 
@@ -87,6 +96,11 @@ adicionada lá, ou ela existe no site sem nenhum caminho de navegação até ela
 Os rótulos seguem a numeração do capítulo: `'2.5 Frações'`, `'2.6 Decimais e
 porcentagem'`. Esses números são escritos à mão e **não** têm relação com o
 prefixo do arquivo — mantê-los sincronizados é responsabilidade de quem edita.
+
+O número do rótulo é a **única** fonte da numeração. O título grande da página
+o repete sozinho: `src/theme/MDXComponents.js` troca o `<h1>` do markdown por
+`src/components/TituloNumerado`, que lê o rótulo da página na barra lateral e
+põe o número na frente. Nunca escreva o número no `# Título`.
 
 ### Inserir uma lição no meio do capítulo
 
@@ -174,7 +188,7 @@ símbolos diferentes significam a mesma coisa:
 - limite: `\lim_{x \to 2} f(x)`; limites laterais `x \to 2^{+}` e
   `x \to 2^{-}`; infinito sempre com sinal, `+\infty` e `-\infty`;
 - derivada: `f'(x)` como notação principal, `\frac{dy}{dx}` quando a lição
-  precisar dela (apresentada em `calculo/a-derivada`); segunda derivada
+  precisar dela (apresentada em `calculo/calculo-1/a-derivada`); segunda derivada
   `f''(x)`;
 - integral: `\int_a^b f(x)\,dx`, com o `\,` antes de `dx`;
 - variação: `\Delta x` (introduzido em `funcoes/taxa-media-de-variacao`);
