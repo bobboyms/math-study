@@ -73,7 +73,7 @@ export default function TangentExplorer({
   const eps = 1e-5;
   const tangentSlope = (f(a + eps) - f(a - eps)) / (2 * eps);
 
-  const points = [{at: [a, fa], label: 'A', tone: 3, dx: -18, dy: 6}];
+  const points = [{at: [a, fa], label: 'A', tone: 3, dx: -16, dy: -14}];
   const lines = [];
   const segments = [];
   const labels = [];
@@ -83,7 +83,7 @@ export default function TangentExplorer({
   }
 
   if (!isZero) {
-    points.push({at: [a + h, fb], label: 'B', tone: 2, dx: 18, dy: -6});
+    points.push({at: [a + h, fb], label: 'B', tone: 2, dx: -16, dy: -14});
     lines.push({through: [[a, fa], [a + h, fb]], tone: 2});
     segments.push({from: [a, fa], to: [a + h, fa], dashed: true, tone: 2});
     segments.push({from: [a + h, fa], to: [a + h, fb], dashed: true, tone: 2});
