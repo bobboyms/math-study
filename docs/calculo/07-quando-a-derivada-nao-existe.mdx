@@ -161,7 +161,7 @@ abaixo, as secantes **não** convergem para uma reta com inclinação numérica.
   ]}
   labels={[
     {at: [1.6, 0.9], math: '\\text{inclinação } 1', tone: 2, dx: 30},
-    {at: [-1.6, 0.9], math: '\\text{inclinação } -1', tone: 3, dx: -36},
+    {at: [-1.6, 0.9], math: '\\text{inclinação } {-1}', tone: 3, dx: -36},
   ]}
   axisLabels={['x', 'y']}
   caption="O bico de |x|. Toda secante pela direita tem inclinação 1; toda secante pela esquerda tem inclinação −1. Não importa quanto h encolha: os dois lados nunca concordam."
@@ -173,7 +173,7 @@ sempre. Pela esquerda, coincidem com $y = -x$: inclinação $-1$ sempre. Não h�
 giro nem convergência. Os lados estão travados em números diferentes.
 
 <CartesianPlane
-  xMin={-1.5}
+  xMin={-2.2}
   xMax={1.5}
   yMin={-1.3}
   yMax={1.3}
@@ -181,7 +181,7 @@ giro nem convergência. Os lados estão travados em números diferentes.
   yUnit={100}
   xStep={0.5}
   yStep={0.5}
-  functions={[{f: (x) => Math.cbrt(x), domain: [-1.5, 1.5], tone: 1}]}
+  functions={[{f: (x) => Math.cbrt(x), domain: [-2.2, 1.5], tone: 1}]}
   segments={[
     {from: [0, 0], to: [0.125, 0.5], tone: 2},
     {from: [0, 0], to: [0.001, 0.1], tone: 2},
@@ -190,8 +190,8 @@ giro nem convergência. Os lados estão travados em números diferentes.
   lines={[{x: 0, dashed: true, tone: 3}]}
   points={[
     {at: [1, 1], label: 'h = 1:\\ 1', tone: 2, dx: 40, dy: 0},
-    {at: [0.125, 0.5], label: 'h = 0{,}125:\\ 4', tone: 2, dx: 62, dy: 0},
-    {at: [0.001, 0.1], label: 'h = 0{,}001:\\ 100', tone: 2, dx: 74, dy: 4},
+    {at: [0.125, 0.5], label: 'h = 0{,}125:\\ 4', tone: 2, dx: -82, dy: -25},
+    {at: [0.001, 0.1], label: 'h = 0{,}001:\\ 100', tone: 2, dx: -82, dy: -15},
   ]}
   axisLabels={['x', 'y']}
   caption="A raiz cúbica na origem. Três secantes por (0, 0), com inclinações 1, 4 e 100. Quanto menor o h, mais em pé a secante fica; a posição-limite é o eixo vertical, tracejado, cuja inclinação não é um número."
@@ -202,11 +202,11 @@ O problema não é falta de concordância, é que a inclinação delas cresce se
 limite. A tabela da seção 8 mostra os números.
 
 <CartesianPlane
-  xMin={-1}
+  xMin={-2.5}
   xMax={4}
   yMin={-1}
   yMax={6}
-  xUnit={50}
+  xUnit={60}
   yUnit={40}
   functions={[
     {f: (x) => x, domain: [-1, 1], tone: 1},
@@ -218,13 +218,13 @@ limite. A tabela da seção 8 mostra os números.
   ]}
   points={[
     {at: [1, 1], open: true, tone: 1},
-    {at: [1, 3], label: '(1,\\ 3)', tone: 1, dx: -30, dy: -6},
+    {at: [1, 3], label: '(1,\\ 3)', tone: 1, dx: 30, dy: 16},
     {at: [0.5, 0.5], tone: 3},
     {at: [0.9, 0.9], tone: 3},
   ]}
   labels={[
-    {at: [0.55, 2.4], math: '\\text{inclinação } 5', tone: 3, dx: -20},
-    {at: [0.2, 4.2], math: '\\text{inclinação } 21', tone: 3, dx: 6},
+    {at: [-0.95, 2.5], math: '\\text{inclinação } 5', tone: 3},
+    {at: [1.95, 1.4], math: '\\text{inclinação } 21', tone: 3},
   ]}
   axisLabels={['x', 'y']}
   caption="Um salto em x = 1. As secantes pela esquerda ligam (1, 3) a pontos do pedaço de baixo: ficam cada vez mais em pé, porque precisam vencer o degrau de altura 2 num trecho horizontal cada vez menor."
@@ -324,13 +324,23 @@ $\lvert\ \rvert$, é uma propriedade dos limites laterais.
 O exemplo é $f(x) = \sqrt[3]{x}$ em $a = 0$. O quociente é
 
 $$
-\frac{\sqrt[3]{h} - 0}{h} = \frac{h^{1/3}}{h} = h^{1/3 - 1} = h^{-2/3} = \frac{1}{\sqrt[3]{h^2}}.
+\frac{\sqrt[3]{h} - 0}{h} = \frac{\sqrt[3]{h}}{h}.
 $$
 
-A passagem usou a regra dos expoentes $\frac{a^m}{a^n} = a^{m-n}$ da lição de
-potências, com $m = \frac{1}{3}$ e $n = 1$. Como $h^2$ é positivo para qualquer
-$h \neq 0$, o quociente é positivo pelos dois lados, e ele cresce conforme $h$
-encolhe:
+Para simplificar, não use a regra dos expoentes $\frac{a^m}{a^n} = a^{m-n}$
+com $m = \frac{1}{3}$: a lição de potências só usou expoente fracionário com
+base positiva, e aqui $h$ também é negativo. Use a própria definição da raiz
+cúbica. O cubo de $\sqrt[3]{h}$ é $h$, para qualquer $h$, positivo ou
+negativo: $(\sqrt[3]{h})^3 = h$. Escrevendo o $h$ de baixo dessa forma,
+
+$$
+\frac{\sqrt[3]{h}}{h} = \frac{\sqrt[3]{h}}{(\sqrt[3]{h})^3} = \frac{1}{(\sqrt[3]{h})^2}.
+$$
+
+Cancelamos um fator $\sqrt[3]{h}$ em cima e embaixo. Isso é permitido porque
+esse fator não é zero quando $h \neq 0$. O que sobra embaixo é um quadrado, e
+um quadrado de número diferente de zero é positivo. Por isso, o quociente é
+positivo pelos dois lados, e ele cresce conforme $h$ encolhe:
 
 | $h$ | $\frac{\sqrt[3]{h}}{h}$ |
 |---:|---:|
@@ -356,9 +366,11 @@ zeraria.
 
 **Uma variação importante.** Se os dois lados crescem sem limite com **sinais
 opostos**, a curva também fica vertical, mas forma um bico apontando para cima
-ou para baixo. É o caso de $\sqrt[3]{x^2}$ em 0: o quociente
-$\frac{h^{2/3}}{h} = h^{-1/3}$ vale $+100$ com $h = 0{,}001$ e $-100$ com
-$h = -0{,}001$. Alguns livros chamam isso de **cúspide**. Para o que interessa
+ou para baixo. É o caso de $\sqrt[3]{x^2}$ em 0. Com a mesma troca de
+escrita — trocar $h$ por $(\sqrt[3]{h})^3$ e $h^2$ por $(\sqrt[3]{h})^6$ —, o
+quociente $\frac{\sqrt[3]{h^2}}{h}$ vira $\frac{(\sqrt[3]{h})^2}{(\sqrt[3]{h})^3}
+= \frac{1}{\sqrt[3]{h}}$. Ele vale $+10$ com $h = 0{,}001$ e $-10$ com
+$h = -0{,}001$; com $h = \pm 0{,}000001$, vale $\pm 100$. Alguns livros chamam isso de **cúspide**. Para o que interessa
 aqui, o veredito é o mesmo: a derivada não existe.
 
 ### Caso 3: o salto
@@ -433,8 +445,9 @@ Cada parte é uma reta, e a derivada de uma reta é a inclinação dela (exercí
 O que isso significa para o gestor? Que não há “taxa de variação do custo na
 meta”. Há duas taxas, uma para cada lado, e a pergunta “quanto muda o custo
 por unidade quando estou na meta?” precisa de um complemento: **para que
-lado?** Para cima, R\$ 3 por unidade; para baixo, também R\$ 3 por unidade, só
-que de aumento ao se afastar. O bico é a expressão gráfica de que a meta é o
+lado?** Para cima, a derivada lateral é 3: cada unidade a **mais** aumenta o
+custo em R\$ 3. Para baixo, a derivada lateral é $-3$: cada unidade a
+**menos** também aumenta o custo em R\$ 3. O bico é a expressão gráfica de que a meta é o
 ponto de custo mínimo — e a lição de máximos e mínimos vai usar exatamente
 isso: um mínimo pode estar onde a derivada não existe.
 
@@ -476,7 +489,7 @@ $x = 2$?
 de gráficos. O quociente em $a = 2$ é
 
 $$
-\frac{\sqrt[3]{2 + h - 2} - \sqrt[3]{0}}{h} = \frac{\sqrt[3]{h}}{h} = h^{-2/3},
+\frac{\sqrt[3]{2 + h - 2} - \sqrt[3]{0}}{h} = \frac{\sqrt[3]{h}}{h} = \frac{1}{(\sqrt[3]{h})^2},
 $$
 
 o mesmo da seção 8. Com $h = \pm 0{,}001$ ele vale 100 pelos dois lados, e
@@ -500,8 +513,8 @@ deve ser derivável em $x = 1$. Que valor de $k$ faz isso acontecer?
 Há duas exigências, e a ordem importa.
 
 **Primeira: continuidade.** Derivável implica contínua, então a função precisa
-antes de tudo não saltar em 1. A fórmula de baixo dá $1^2 = 1$. A de cima dá
-$2 \times 1 + k = 2 + k$. Igualando, $2 + k = 1$, logo $k = -1$.
+antes de tudo não saltar em 1. A fórmula de $x \le 1$ dá $1^2 = 1$. A de
+$x > 1$, levada até 1, dá $2 \times 1 + k = 2 + k$. Igualando, $2 + k = 1$, logo $k = -1$.
 
 **Segunda: as derivadas laterais.** Pela esquerda, a função é $x^2$, e a
 derivada de $x^2$ em 1 é $2 \times 1 = 2$. Pela direita, a função é $2x - 1$,
@@ -669,7 +682,8 @@ acima, custa 15 centavos. Não existe “a taxa em R\$ 2.000”.
    a) $\lvert x + 2 \rvert$ em $a = -2$;
    b) $x^2$ em $a = -2$;
    c) $\sqrt[3]{x + 1}$ em $a = -1$;
-   d) o frete que cobra R\$ 20 até 5 kg e R\$ 30 acima disso, em $a = 5$.
+   d) o frete da lição de continuidade, que cobra R\$ 20 até 5 kg e R\$ 35
+   acima disso, em $a = 5$.
 2. Em cada gráfico descrito, há derivada no ponto indicado? a) Uma curva lisa
    que passa pelo vértice de uma parábola. b) Um V invertido no vértice. c)
    Uma curva que atravessa o ponto subindo na vertical.
@@ -805,11 +819,12 @@ acima, custa 15 centavos. Não existe “a taxa em R\$ 2.000”.
     número cada vez menor, cresce sem limite. Logo a derivada lateral direita
     não é um número. O mesmo argumento vale pela esquerda quando é o lado
     esquerdo que salta. Em qualquer caso, $f$ não é derivável em $a$.
-15. O quociente é $\frac{h^{1/5}}{h} = h^{-4/5} = \frac{1}{\sqrt[5]{h^4}}$, positivo
+15. O quociente é $\frac{\sqrt[5]{h}}{h} = \frac{\sqrt[5]{h}}{(\sqrt[5]{h})^5} = \frac{1}{(\sqrt[5]{h})^4}$, positivo
     pelos dois lados e crescendo sem limite: com $h = 0{,}001$ vale cerca de
     251. Tangente vertical em 0; não derivável. Em geral, para $n$ ímpar maior
-    que 1, o quociente é $h^{1/n - 1}$, e o expoente $\frac{1}{n} - 1$ é
-    negativo, então o quociente cresce sem limite. Toda raiz de índice ímpar
+    que 1, o quociente é $\frac{1}{(\sqrt[n]{h})^{n-1}}$. O expoente $n - 1$ é
+    par, então o denominador é positivo dos dois lados e vai a zero junto com
+    $h$. Por isso o quociente cresce sem limite. Toda raiz de índice ímpar
     maior que 1 começa a origem na vertical. Com $n = 1$ a “raiz” é o próprio
     $x$, com derivada 1.
 
