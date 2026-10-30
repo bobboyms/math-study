@@ -8,9 +8,12 @@ import styles from './styles.module.css';
 //
 // `back` desenha a seta de volta por baixo, para os pares que desfazem um ao
 // outro (quadrado e raiz, multiplicar e dividir).
+//
+// `chipWidth` alarga as caixas quando um valor não cabe nos 82 px padrão
+// (como `u = 3x+1`): sem isso o KaTeX quebra a linha e o texto vaza da caixa.
 
 const PAD = 12;
-const CHIP_W = 82;
+const CHIP_W_PADRAO = 82;
 const CHIP_H = 40;
 const ARROW_W = 124;
 const OP_LIFT = 16;
@@ -20,7 +23,8 @@ function arrowHead(x, y, dir = 1, size = 7) {
   return `M ${x} ${y} L ${x - dir * size} ${y - size * 0.5} L ${x - dir * size} ${y + size * 0.5} Z`;
 }
 
-export default function FunctionMachine({input, steps, back, caption}) {
+export default function FunctionMachine({input, steps, back, caption, chipWidth}) {
+  const CHIP_W = chipWidth ?? CHIP_W_PADRAO;
   const chips = [input, ...steps.map((s) => s.value)];
   const viewW =
     PAD * 2 + chips.length * CHIP_W + steps.length * ARROW_W;

@@ -331,6 +331,7 @@ Cadeia de transformações: valor, operação, novo valor.
 | `input` | LaTeX do valor de entrada (desenhado com borda tracejada) |
 | `steps` | `[{op, value, tone?}]` — `op` vai sobre a seta, `value` é o chip seguinte |
 | `back` | seta de volta por baixo, para o par que desfaz (quadrado ↔ raiz) |
+| `chipWidth` | largura das caixas em px (padrão 82); aumente quando um valor como `u = 3x+1` quebraria a linha |
 
 ## FactorTree
 

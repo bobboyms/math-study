@@ -109,11 +109,23 @@ enxergar, numa fórmula, qual é a camada de dentro e qual é a de fora.
 
 ## 5. Intuição: cada camada multiplica a variação que recebe
 
-Pense em duas correias transportadoras em série. A primeira recebe uma
-variação em $x$ e entrega uma variação em $u$. A segunda recebe essa variação
-em $u$ e entrega uma variação em $y$. Cada correia **amplia ou reduz** o que
-recebe por um fator fixo, que é a taxa dela. A variação que sai no fim é a
-variação que entrou multiplicada pelos dois fatores, um depois do outro.
+Pense numa manivela ligada a duas engrenagens em série, $A$ e $B$. Cada volta
+da manivela faz $A$ dar 3 voltas. Cada volta de $A$ faz $B$ dar 2 voltas.
+Então uma volta da manivela faz $B$ dar $3 \times 2 = 6$ voltas: as 3 voltas
+de $A$ produzem, cada uma, 2 voltas de $B$.
+
+A correspondência com a cadeia, parte por parte:
+
+- as voltas da manivela são $x$, as de $A$ são $u$, as de $B$ são $y$;
+- o 3 é a taxa de $u$ em relação a $x$ — a camada de dentro;
+- o 2 é a taxa de $y$ em relação a $u$ — a camada de fora;
+- o 6 é a taxa de $y$ em relação a $x$, e ele é um **produto**, não uma soma.
+
+A variação que sai no fim é a variação que entrou multiplicada pelos dois
+fatores, um depois do outro. A analogia deixa de valer num ponto: numa
+engrenagem, a taxa é a mesma em qualquer posição. Numa função, a taxa muda de
+um ponto para outro. Por isso cada taxa precisa ser lida no ponto certo: a
+seção 6 mostra que a taxa de fora é calculada no valor que chega até ela.
 
 O exemplo do combustível é exatamente isso. Rodar 1 km a mais consome 0,08 L
 a mais (primeiro fator); consumir 0,08 L a mais custa $0{,}08 \times 6 = 0{,}48$
@@ -145,6 +157,7 @@ nova: sobre cada seta vai a taxa daquela etapa.
 
 <FunctionMachine
   input="x"
+  chipWidth={112}
   steps={[
     {op: '\\dfrac{du}{dx} = 3', value: 'u = 3x+1', tone: 1},
     {op: '\\dfrac{dy}{du} = 2u', value: 'y = u^2', tone: 2},
@@ -578,7 +591,7 @@ camadas são retas.
 
 ### 2. Explicação
 
-4. Explique, com a imagem das duas correias em série, por que a taxa da
+4. Explique, com a imagem das engrenagens em série, por que a taxa da
    cadeia é o produto das taxas e não a soma.
 5. Um colega diz que a regra da cadeia é “derivar e depois multiplicar pelo
    que está dentro”. Corrija a frase.
@@ -655,11 +668,13 @@ $\frac{dS}{dt}$ pela cadeia.
    1, e a cadeia não deixa fator.
 3. a) reais por dia; b) litros por hora; c) metros por segundo. Em cada caso
    a unidade do meio cancela.
-4. A primeira correia multiplica a variação de entrada pela taxa dela; a
-   segunda recebe esse resultado e multiplica pela taxa dela. Duas
-   multiplicações em série são uma multiplicação pelo produto. Somar as taxas
-   descreveria duas correias trabalhando lado a lado sobre a mesma entrada,
-   que é outra situação.
+4. Uma volta da manivela faz $A$ dar 3 voltas, e **cada uma** dessas 3 voltas
+   faz $B$ dar 2. Então $B$ dá $3 \times 2 = 6$ voltas, e não $3 + 2 = 5$. A
+   primeira engrenagem multiplica a variação que entra pela taxa dela; a
+   segunda multiplica o resultado pela taxa dela. Duas multiplicações em série
+   são uma multiplicação pelo produto. Somar as taxas descreveria duas
+   engrenagens movidas cada uma direto pela manivela, com as voltas somadas
+   no fim — outra situação.
 5. Faltam duas coisas. A derivada de fora é calculada **na saída de dentro**,
    não em $x$; e o que multiplica é a **derivada** do que está dentro, não o
    que está dentro. A frase correta: derivada de fora, calculada em dentro,
@@ -667,7 +682,8 @@ $\frac{dS}{dt}$ pela cadeia.
 6. a) $6(2x+5)^2$; em 0, $150$. b) $\dfrac{3}{2\sqrt{3x+4}}$; em 4,
    $\dfrac{3}{8} = 0{,}375$. c) $20x(x^2+1)^9$; em 1, $10\,240$.
    d) $-\dfrac{4x}{(x^2-3)^3}$; em 2, $-8$. Se você encontrou 75 em a),
-   esqueceu o fator 2 de dentro; se encontrou $-4$ em d), o mesmo.
+   esqueceu o fator 2 de dentro; se encontrou $-2$ em d), esqueceu a derivada
+   de dentro, $2x$, que em 2 vale 4.
 7. $\frac{dy}{du} = 3u^2$ e $\frac{du}{dx} = 4$, logo
    $\frac{dy}{dx} = 12u^2 = 12(4x-1)^2$. Em $x = 1$, $u = 3$ e o valor é
    $108$. Se você encontrou 12, avaliou $3u^2$ em $u = 1$ em vez de $u = 3$.
