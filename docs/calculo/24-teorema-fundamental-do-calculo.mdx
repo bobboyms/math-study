@@ -205,23 +205,25 @@ direita.
   yMax={9.6}
   xUnit={78}
   yUnit={19}
+  xTicks={[{at: 1, label: '1'}, {at: 3, label: '3'}]}
   polygons={[
-    {points: [[0, 0], [0.4, 0.16], [0.8, 0.64], [1.2, 1.44], [1.6, 2.56], [2, 4], [2, 0]], tone: 2},
+    {points: [...Array.from({length: 41}, (_, i) => { const x = (2 * i) / 40; return [x, x * x]; }), [2, 0]], tone: 2},
   ]}
   functions={[{f: (t) => t * t, domain: [-0.3, 3.1], tone: 1}]}
   lines={[{x: 2, dashed: true, tone: 0}]}
   points={[{at: [2, 4], tone: 1}]}
   labels={[
-    {at: [1.25, 0.9], math: 'A(2)', tone: 2},
-    {at: [2.55, 7.2], math: 'f(t) = t^2', tone: 1},
+    {at: [1.65, 0.75], math: 'A(2)', tone: 2},
+    {at: [1.25, 6.5], math: 'f(t) = t^2', tone: 1},
     {at: [2, -0.45], math: 'x = 2', tone: 0, dy: 4},
   ]}
   axisLabels={['t', 'y']}
   caption="A função área acumula desde 0 até o extremo móvel x. Na figura, x vale 2, e a região sombreada é A(2)."
 />
 
-Neste caso sabemos calcular $A$ para alguns valores, porque a lição anterior
-fez a conta geral para $t^2$: a área de 0 até $x$ vale $\frac{x^3}{3}$. Vamos
+Neste caso sabemos calcular $A$ para alguns valores, porque a lição de
+[integral como área](./a-integral-como-area) fez a conta geral para $t^2$, no
+exercício 16: a área de 0 até $x$ vale $\frac{x^3}{3}$. Vamos
 usar isso só para **conferir** o que a intuição prevê, e não como parte do
 argumento.
 
@@ -274,15 +276,16 @@ divisão do intervalo, escrita com os nomes desta página.
   yMax={9.6}
   xUnit={78}
   yUnit={19}
+  xTicks={[{at: 1, label: '1'}, {at: 3, label: '3'}]}
   polygons={[
-    {points: [[0, 0], [0.4, 0.16], [0.8, 0.64], [1.2, 1.44], [1.6, 2.56], [2, 4], [2, 0]], tone: 2},
-    {points: [[2, 0], [2, 4], [2.3, 5.29], [2.3, 0]], tone: 3},
+    {points: [...Array.from({length: 41}, (_, i) => { const x = (2 * i) / 40; return [x, x * x]; }), [2, 0]], tone: 2},
+    {points: [[2, 0], ...Array.from({length: 11}, (_, i) => { const x = 2 + (0.3 * i) / 10; return [x, x * x]; }), [2.3, 0]], tone: 3},
   ]}
   functions={[{f: (t) => t * t, domain: [-0.3, 3.1], tone: 1}]}
   points={[{at: [2, 4], tone: 1}, {at: [2.3, 5.29], tone: 1}]}
   labels={[
-    {at: [1.25, 0.9], math: 'A(x)', tone: 2},
-    {at: [2.15, 6.6], math: 'A(x+h) - A(x)', tone: 3, dx: 30},
+    {at: [1.65, 0.75], math: 'A(x)', tone: 2},
+    {at: [1.45, 6.8], math: 'A(x+h) - A(x)', tone: 3, fontSize: 13},
     {at: [2, -0.45], math: 'x', tone: 0, dy: 4},
     {at: [2.3, -0.45], math: 'x+h', tone: 0, dx: 16, dy: 4},
   ]}
@@ -315,7 +318,7 @@ quociente de diferenças teve na lição da derivada.
 **O que muda e o que permanece.** A escrita muda: a diferença de duas áreas
 virou uma área só, e depois um produto aproximado. A quantidade não muda em
 nenhum dos dois passos — o primeiro é uma igualdade exata, e o segundo é uma
-aproximação cujo erro encolhe com $h$. O que a próxima seção faz é trocar o
+aproximação cujo erro encolhe com $h$. O que a seção 9 faz é trocar o
 "aproximadamente" por um limite, e aí a igualdade volta a ser exata.
 
 ## 8. Primitiva: a pergunta da derivada, invertida
@@ -394,8 +397,10 @@ A(x + h) - A(x) = \int_x^{x+h} f(t)\,dt.
 $$
 
 Falta prender essa faixa entre dois retângulos. Chame de $m$ o menor valor de
-$f$ no pedaço $[x, x+h]$ e de $M$ o maior. As cotas da lição da integral
-definida dão
+$f$ no pedaço $[x, x+h]$ e de $M$ o maior. Esses dois valores existem: $f$ é
+contínua no intervalo fechado $[x, x+h]$, e o teorema de Weierstrass, da lição
+de [máximos e mínimos](./maximos-e-minimos), garante que ela atinge um menor e
+um maior valor ali. As cotas da lição da integral definida dão
 
 $$
 m\,h \le \int_x^{x+h} f(t)\,dt \le M\,h.
@@ -413,7 +418,10 @@ $[x, x+h]$ encolhe até virar o ponto $x$. Como $f$ é **contínua**, seus valor
 nesse pedaço ficam todos próximos de $f(x)$: tanto o menor deles, $m$, quanto o
 maior, $M$, se aproximam de $f(x)$. O quociente do meio está preso entre duas
 quantidades que vão para o mesmo lugar, e o [teorema do
-confronto](./teorema-do-confronto) obriga o quociente a ir junto:
+confronto](./teorema-do-confronto) obriga o quociente a ir junto. (A conta foi
+feita com $h$ positivo. Com $h$ negativo, o pedaço é $[x+h, x]$: a diferença
+$A(x+h) - A(x)$ fica negativa, o $h$ também, e a divisão chega à mesma
+desigualdade entre $m$ e $M$.)
 
 $$
 A'(x) = \lim_{h \to 0} \frac{A(x+h) - A(x)}{h} = f(x).
@@ -526,7 +534,7 @@ $$
 \int_0^3 t^2\,dt = \Big[\frac{t^3}{3}\Big]_0^3 = 9.
 $$
 
-Uma linha. A lição anterior gastou uma página, uma fórmula de soma de
+Uma linha. A lição de integral como área gastou uma página, uma fórmula de soma de
 quadrados e um limite no infinito para chegar ao mesmo número. Os dois
 caminhos concordam, o que era obrigatório: o teorema não muda o valor da
 integral, muda o modo de obtê-lo.
@@ -681,8 +689,8 @@ $$
 $$
 
 O primeiro resultado é a área do arco de seno acima do eixo. O segundo é zero
-porque, na volta completa, o arco de baixo cancela o de cima — o seno é ímpar
-em torno de $\pi$. Conferindo numericamente: 2,000 e 0,000.
+porque, na volta completa, o arco de baixo cancela o de cima: o arco de $\pi$
+a $2\pi$ é o arco de 0 a $\pi$ virado para baixo, com a mesma área. Conferindo numericamente: 2,000 e 0,000.
 
 ### Exemplo 5: recuperar o custo a partir do custo marginal
 
