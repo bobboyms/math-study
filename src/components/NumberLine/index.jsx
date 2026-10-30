@@ -42,6 +42,12 @@ function arrowHead(x, y, dx, dy, size = 7) {
   return `M ${x} ${y} L ${bx + nx} ${by + ny} L ${bx - nx} ${by - ny} Z`;
 }
 
+// Número do eixo como se escreve em português: vírgula decimal e sinal de
+// menos tipográfico ("−1,5"), igual à numeração do CartesianPlane.
+function numeroBr(value) {
+  return String(value).replace('-', '\u2212').replace('.', ',');
+}
+
 export default function NumberLine({
   min,
   max,
@@ -144,7 +150,7 @@ export default function NumberLine({
                 y={yLine + NUMBER_DROP}
                 textAnchor="middle"
               >
-                {value}
+                {numeroBr(value)}
               </text>
             )}
           </g>
