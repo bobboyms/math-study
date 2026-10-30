@@ -26,9 +26,23 @@ const STEP = 0.5;
 const SCALE = 22;
 const SQUASH = 0.3;
 const VIEW_W = 320;
-const VIEW_H = 310;
+// A escala é fixa, então o espaço vazio acima do desenho é o lugar que o
+// cilindro ocupa quando a altura chega ao máximo (8 dm). A margem foi reduzida
+// ao mínimo que ainda comporta essa altura.
+const VIEW_H = 286;
 const CX = 150;
-const BASE_Y = 250;
+const BASE_Y = 228;
+
+function arrowHead(x, y, dx, dy, size = 6) {
+  const len = Math.hypot(dx, dy) || 1;
+  const ux = dx / len;
+  const uy = dy / len;
+  const bx = x - ux * size;
+  const by = y - uy * size;
+  const nx = -uy * size * 0.5;
+  const ny = ux * size * 0.5;
+  return `M ${x} ${y} L ${bx + nx} ${by + ny} L ${bx - nx} ${by - ny} Z`;
+}
 
 const text = (value, digits = 3) => mathNumber(value, digits).replace('{,}', ',');
 
@@ -79,6 +93,7 @@ export default function CylinderConeExplorer({initialRadius = 2, initialHeight =
           </g>
           <g style={{'--tone': 'var(--mv-tone-3)'}}>
             <line className={styles.measure} x1={CX} y1={BASE_Y} x2={CX + rx} y2={BASE_Y} />
+            <path className={styles.head} d={arrowHead(CX + rx, BASE_Y, 1, 0)} />
             <line
               className={styles.measure}
               x1={CX + rx + 18}
@@ -86,6 +101,8 @@ export default function CylinderConeExplorer({initialRadius = 2, initialHeight =
               x2={CX + rx + 18}
               y2={BASE_Y}
             />
+            <path className={styles.head} d={arrowHead(CX + rx + 18, topY, 0, -1)} />
+            <path className={styles.head} d={arrowHead(CX + rx + 18, BASE_Y, 0, 1)} />
           </g>
           <SvgMath x={CX + rx / 2} y={BASE_Y + ry + 12} math="r" tone={3} halo />
           <SvgMath x={CX + rx + 34} y={(topY + BASE_Y) / 2} math="h" tone={3} halo />

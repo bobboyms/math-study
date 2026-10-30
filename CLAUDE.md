@@ -225,6 +225,39 @@ aluno não tem como saber que o erro é do material.
 - **Diff mínimo.** Melhore a passagem problemática; não reescreva o que já está
   bom.
 
+## Conferência das figuras
+
+**Toda figura nova ou alterada precisa ser vista renderizada, com os olhos.**
+Antes de publicar (push na `main` é deploy em produção), confira todas as
+figuras das páginas que você tocou. O diff não mostra rótulo fora do lugar,
+figura torta nem desenho que contradiz o texto — e o usuário já encontrou
+vários desses defeitos em produção.
+
+Como fazer:
+
+1. Suba o site: `NODE_OPTIONS=--max-old-space-size=10240 npm run start -- --port 3300 --no-open`
+   (recarrega a cada edição; sem o `NODE_OPTIONS` ele cai por falta de memória).
+   Ou `npm run build` seguido de `npm run serve -- --port 3210` e `BASE=http://localhost:3210/math-study`.
+2. Instale o Playwright sem tocar no `package.json` — `npm i --no-save playwright`
+   — e capture as figuras, uma imagem por figura:
+   `node scripts/capturar-figuras.js <pasta-fora-do-repo> geometria/angulos geometria/triangulos`.
+   O `index.txt` da pasta liga cada imagem à legenda.
+3. Abra **cada** imagem e confira:
+   - rótulo junto do elemento a que se refere, sem cobrir linha nem outro rótulo,
+     sem corte na borda;
+   - lado que deveria ser horizontal ou vertical está mesmo; ângulo reto é reto;
+   - números, ângulos e proporções desenhados batem com o texto e a legenda —
+     confira as coordenadas com `python3` (ângulos com `atan2`), não a olho;
+   - arco do ângulo do lado certo;
+   - tema escuro (`THEME=dark`) quando a figura usa cor, e celular (`WIDTH=390`)
+     quando ela é larga.
+4. Corrija nas props da figura (`labelRadius`, `offset`, `anchor`, `padding`,
+   coordenadas), capture de novo e olhe outra vez.
+
+Armadilhas conhecidas do `GeoFigure`: num ângulo de exatamente 180° o rótulo
+cai em cima do vértice — use um rótulo solto (`labels`); `padding` baixo corta
+o rótulo na borda; acento combinado na legenda (como “B̂”) sai deslocado.
+
 ## Antes de concluir
 
 Toda entrega passa por esta lista:
@@ -233,6 +266,8 @@ Toda entrega passa por esta lista:
 - [ ] página nova está em `sidebars.js`, com o id **sem** prefixo numérico;
 - [ ] links relativos resolvem, e a numeração `2.x` está coerente;
 - [ ] fórmulas renderizam (confira no `npm run start`, não só no código-fonte);
+- [ ] cada figura das páginas tocadas foi capturada com
+      `scripts/capturar-figuras.js` e conferida com os olhos (seção acima);
 - [ ] valores em reais escritos como `R\$`;
 - [ ] todas as contas e o gabarito conferidos por cálculo;
 - [ ] acentuação completa no texto que você escreveu;

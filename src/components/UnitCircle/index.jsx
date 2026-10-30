@@ -47,7 +47,9 @@ export default function UnitCircle({
   caption,
 }) {
   const xExtent = showTangent ? 1.9 : 1.32;
-  const yExtent = 1.32;
+  // Com o eixo das tangentes, a altura acompanha o tangentClamp: o segmento e o
+  // rótulo "eixo das tangentes" precisam caber no desenho.
+  const yExtent = showTangent ? Math.max(1.32, tangentClamp + 0.15) : 1.32;
 
   const viewW = padding * 2 + 2 * xExtent * scale;
   const viewH = padding * 2 + 2 * yExtent * scale;
@@ -119,22 +121,16 @@ export default function UnitCircle({
           </g>
         )}
 
-        <line className={styles.axis} x1={X(-xExtent) + 6} y1={cy} x2={X(xExtent) - 6} y2={cy} />
-        <line className={styles.axis} x1={cx} y1={Y(-yExtent) + 6} x2={cx} y2={Y(yExtent) + 6} />
-        <path className={styles.axisHead} d={arrowHead(X(xExtent) - 6, cy, 1, 0)} />
-        <path className={styles.axisHead} d={arrowHead(cx, Y(yExtent) + 6, 0, -1)} />
-
-        <circle className={styles.circle} cx={cx} cy={cy} r={scale} />
-
+        {/* Os números 1 e −1 vêm antes da circunferência e dos eixos e ficam do
+            lado de fora do traço, sem halo: com halo, desenhados por cima, eles
+            abriam falhas visíveis na circunferência. */}
         {showUnitTicks && (
           <g>
             {[
-              // Deslocados para fora do traço da circunferência: encostados
-              // nele, o halo do rótulo não dá conta e a curva corta o número.
               [1, 0, '1', 13, 21],
-              [-1, 0, '-1', -13, 21],
-              [0, 1, '1', -19, -3],
-              [0, -1, '-1', -21, 3],
+              [-1, 0, '-1', -16, 17],
+              [0, 1, '1', -12, -14],
+              [0, -1, '-1', -16, 17],
             ].map(([px, py, text, dx, dy], index) => (
               <SvgMath
                 key={`ut-${index}`}
@@ -142,11 +138,17 @@ export default function UnitCircle({
                 y={Y(py) + dy}
                 math={text}
                 fontSize={13}
-                halo
               />
             ))}
           </g>
         )}
+
+        <line className={styles.axis} x1={X(-xExtent) + 6} y1={cy} x2={X(xExtent) - 6} y2={cy} />
+        <line className={styles.axis} x1={cx} y1={Y(-yExtent) + 6} x2={cx} y2={Y(yExtent) + 6} />
+        <path className={styles.axisHead} d={arrowHead(X(xExtent) - 6, cy, 1, 0)} />
+        <path className={styles.axisHead} d={arrowHead(cx, Y(yExtent) + 6, 0, -1)} />
+
+        <circle className={styles.circle} cx={cx} cy={cy} r={scale} />
 
         {showTangent && (
           <g>
@@ -226,6 +228,16 @@ export default function UnitCircle({
                     x2={X(1)}
                     y2={Y(Math.max(-tangentClamp, Math.min(tangentClamp, Math.tan(a))))}
                   />
+                  {item.tangentLabel && (
+                    <SvgMath
+                      x={X(1) + 16}
+                      y={Y(Math.max(-tangentClamp, Math.min(tangentClamp, Math.tan(a))))}
+                      math={item.tangentLabel}
+                      fontSize={15}
+                      tone={item.tone ?? 1}
+                      anchor="start"
+                    />
+                  )}
                 </>
               )}
 
@@ -241,16 +253,24 @@ export default function UnitCircle({
                   6,
                 )}
               />
-              {item.label && (
+              {item.label && (() => {
+                // Sem labelRadius explícito, o rótulo se afasta do vértice o
+                // bastante para ficar a ~17 px dos dois lados do ângulo: perto
+                // demais, o halo dele apaga um pedaço do raio e do cosseno.
+                const half = Math.abs(Math.sin(toRad(item.deg / 2)));
+                const lr = item.labelRadius ??
+                  Math.min(0.85, Math.max(0.4, 17 / scale / Math.max(half, 0.01)));
+                return (
                 <SvgMath
-                  x={X((item.labelRadius ?? 0.4) * Math.cos(toRad(item.deg / 2)))}
-                  y={Y((item.labelRadius ?? 0.4) * Math.sin(toRad(item.deg / 2)))}
+                  x={X(lr * Math.cos(toRad(item.deg / 2)))}
+                  y={Y(lr * Math.sin(toRad(item.deg / 2)))}
                   math={item.label}
                   fontSize={item.fontSize ?? 15}
                   tone={tone}
                   halo
                 />
-              )}
+                );
+              })()}
               <circle className={styles.dot} cx={X(px)} cy={Y(py)} r={5.5} />
               {/* O rótulo do ponto é ancorado para o lado de fora e recebe
                   `space` até a borda: sem isso, um rótulo longo como
@@ -283,7 +303,8 @@ export default function UnitCircle({
           const lr = item.labelRadius ?? 1.19;
           return (
             <g key={`mk-${index}`} style={{'--tone': toneVar(item.tone ?? 1)}}>
-              <circle className={styles.markDot} cx={X(px)} cy={Y(py)} r={4} />
+              {/* O ponto vem depois do rótulo: desenhado antes, o halo do
+                  rótulo comia um pedaço dele. */}
               {item.label && (
                 <SvgMath
                   x={X(lr * px)}
@@ -294,6 +315,7 @@ export default function UnitCircle({
                   halo
                 />
               )}
+              <circle className={styles.markDot} cx={X(px)} cy={Y(py)} r={4} />
             </g>
           );
         })}

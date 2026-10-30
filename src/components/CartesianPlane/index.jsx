@@ -29,9 +29,13 @@ function arrowHead(x, y, dx, dy, size = 7) {
   return `M ${x} ${y} L ${bx + nx} ${by + ny} L ${bx - nx} ${by - ny} Z`;
 }
 
-// Sinal de menos tipográfico (U+2212), o mesmo que o KaTeX usa. Com o hífen
-// comum, os números negativos do eixo destoam das fórmulas ao redor.
-const fmt = (v) => String(v).replace('-', '−');
+// Sinal de menos tipográfico (U+2212), o mesmo que o KaTeX usa, e vírgula
+// decimal, como no resto do curso. Com o hífen e o ponto, os números do eixo
+// destoariam das fórmulas ao redor.
+const fmt = (v) => String(v).replace('-', '−').replace('.', ',');
+
+// Largura aproximada de um número do eixo em 13px, para detectar colisão.
+const numberWidth = (v) => fmt(v).length * 7.5;
 
 function range(min, max, step) {
   const out = [];
@@ -89,6 +93,39 @@ export default function CartesianPlane({
     xTicks ?? gridXs.filter((v, i) => i % xLabelEvery === 0 && v !== 0).map((v) => ({at: v}));
   const numberedY =
     yTicks ?? gridYs.filter((v, i) => i % yLabelEvery === 0 && v !== 0).map((v) => ({at: v}));
+
+  // Perto da origem, o “−1” do eixo x e o “−1” do eixo y disputam o mesmo canto
+  // quando as unidades são pequenas, e os dois se leem como “−1−1”. Nesse
+  // caso, o número do eixo x é empurrado para a esquerda do seu traço, até
+  // abrir um vão de 5 px — ou, se não couber, sobe para cima do eixo. Nenhum
+  // número é apagado.
+  const yBoxes = numberedY.map((tick) => {
+    const w = tick.label ? 24 : numberWidth(tick.at);
+    return [axisX - 9 - w, Y(tick.at) - 8, axisX - 9, Y(tick.at) + 6];
+  });
+  const xWidth = (tick) => (tick.label ? 24 : numberWidth(tick.at));
+  const xShift = (tick) => {
+    const w = xWidth(tick);
+    const box = [X(tick.at) - w / 2, axisY + 14, X(tick.at) + w / 2, axisY + 32];
+    let shift = 0;
+    yBoxes.forEach((b) => {
+      const overlapsY = box[1] < b[3] && b[1] < box[3];
+      if (overlapsY && box[0] < b[2] && b[0] - 5 < box[2]) {
+        shift = Math.min(shift, b[0] - 5 - box[2]);
+      }
+    });
+    if (shift === 0) return {dx: 0, above: false};
+    // Empurrar não pode encostar o número no vizinho da esquerda. Se não houver
+    // espaço para os dois vãos (unidade pequena demais), o número sobe para
+    // cima do eixo, onde o canto está livre.
+    const left = numberedX
+      .filter((t) => t.at < tick.at)
+      .sort((p, q) => q.at - p.at)[0];
+    if (left && shift < X(left.at) + xWidth(left) / 2 + 5 - box[0]) {
+      return {dx: 0, above: true};
+    }
+    return {dx: shift, above: false};
+  };
 
   // Amostragem de uma função em passos de 1 pixel. O caminho é quebrado quando
   // o valor deixa de existir, sai muito da janela ou dá um salto grande — é
@@ -182,6 +219,13 @@ export default function CartesianPlane({
           </g>
         )}
 
+        {/* Camadas, de baixo para cima: malha; regiões, circunferências e
+            retas; eixos; números; gráficos de funções; e por fim o que o
+            autor marcou (segmentos, pontos, rótulos). Os gráficos de funções
+            passam por cima dos números: o fundo de um rótulo como π/2 nunca
+            apaga um pedaço da curva. As retas ficam por baixo, porque as
+            verticais (assíntotas) caem exatamente sobre o número do eixo, e
+            ali é o número que precisa ficar legível. */}
         <g clipPath={`url(#clip-${uid})`}>
           {polygons.map((item, index) => {
             const path = item.points.map(P);
@@ -223,18 +267,8 @@ export default function CartesianPlane({
               />
             );
           })}
-
-          {functions.map((item, index) => (
-            <path
-              key={`fn-${index}`}
-              className={item.dashed ? styles.curveDashed : styles.curve}
-              style={{'--tone': toneVar(item.tone ?? 1)}}
-              d={samplePath(item)}
-            />
-          ))}
         </g>
 
-        {/* Eixos por cima da malha e por baixo dos pontos. */}
         <line className={styles.axis} x1={padding - 10} y1={axisY} x2={viewW - padding + 10} y2={axisY} />
         <line className={styles.axis} x1={axisX} y1={viewH - padding + 10} x2={axisX} y2={padding - 10} />
         <path className={styles.axisHead} d={arrowHead(viewW - padding + 10, axisY, 1, 0)} />
@@ -252,9 +286,20 @@ export default function CartesianPlane({
                   y2={axisY + TICK}
                 />
                 {tick.label ? (
-                  <SvgMath x={X(tick.at)} y={axisY + 22} math={tick.label} fontSize={13} halo />
+                  <SvgMath
+                    x={X(tick.at) + xShift(tick).dx}
+                    y={xShift(tick).above ? axisY - 16 : axisY + 22}
+                    math={tick.label}
+                    fontSize={13}
+                    halo
+                  />
                 ) : (
-                  <text className={styles.number} x={X(tick.at)} y={axisY + 18} textAnchor="middle">
+                  <text
+                    className={styles.number}
+                    x={X(tick.at) + xShift(tick).dx}
+                    y={xShift(tick).above ? axisY - 19 : axisY + 18}
+                    textAnchor="middle"
+                  >
                     {fmt(tick.at)}
                   </text>
                 )}
@@ -293,6 +338,17 @@ export default function CartesianPlane({
             ))}
           </g>
         )}
+
+        <g clipPath={`url(#clip-${uid})`}>
+          {functions.map((item, index) => (
+            <path
+              key={`fn-${index}`}
+              className={item.dashed ? styles.curveDashed : styles.curve}
+              style={{'--tone': toneVar(item.tone ?? 1)}}
+              d={samplePath(item)}
+            />
+          ))}
+        </g>
 
         {axisLabels && (
           <g>

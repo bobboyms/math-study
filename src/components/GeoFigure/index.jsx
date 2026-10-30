@@ -268,7 +268,11 @@ export default function GeoFigure({
           // ele sempre cobrir o ângulo menor que 180°.
           const cross = ax * by - ay * bx;
           const sweep = cross > 0 ? 1 : 0;
-          const bis = [ax + bx, ay + by];
+          // Ângulo raso (180°): os dois vetores se anulam e a bissetriz some.
+          // Nesse caso o rótulo vai na perpendicular ao lado, do lado por onde
+          // o arco passa (o giro anti-horário de `from` para `to`).
+          const straight = Math.hypot(ax + bx, ay + by) < 1e-6;
+          const bis = straight ? [ay, -ax] : [ax + bx, ay + by];
           const bisLen = Math.hypot(bis[0], bis[1]) || 1;
           const labelR = item.labelRadius ?? r + 18;
 

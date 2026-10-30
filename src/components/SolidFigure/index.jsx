@@ -137,13 +137,17 @@ export default function SolidFigure({
               className={styles.head}
               d={arrowHead(cx + rx, kind === 'sphere' ? topY + rx : botY, 1, 0)}
             />
+            {/* O rótulo não pode ficar sobre a elipse tracejada da base, que
+                passa logo acima da seta. No cilindro e no cone ele vai para baixo
+                da base, centrado sob a seta; na esfera, cuja elipse do equador é
+                mais aberta, ele cabe no vão entre a seta e o tracejado. Sem halo:
+                o halo apagava um trecho do tracejado. */}
             <SvgMath
               x={cx + rx / 2}
-              y={(kind === 'sphere' ? topY + rx : botY) - 19}
+              y={kind === 'sphere' ? topY + rx - ry * 0.43 : botY + ry + 15}
               math={radiusLabel}
               fontSize={14}
               tone={2}
-              halo
             />
           </g>
         )}
@@ -175,7 +179,7 @@ export default function SolidFigure({
 
         {slantLabel && kind === 'cone' && (
           <SvgMath
-            x={cx - rx / 2 - 8}
+            x={cx - rx / 2 - 22}
             y={(topY - ry + botY) / 2}
             math={slantLabel}
             fontSize={14}

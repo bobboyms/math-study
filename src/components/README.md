@@ -586,6 +586,19 @@ cair em cima da numeração do eixo.
 Toda curva é recortada pela caixa do gráfico. Sem isso, a tangente sairia por
 cima do texto da lição.
 
+**Ordem das camadas**, de baixo para cima: malha; `polygons`, `circles` e
+`lines`; eixos; números dos eixos; `functions`; e por fim `segments`, `points`
+e `labels`. Os gráficos de `functions` passam por cima dos números, para que o
+fundo de um rótulo como $\frac{\pi}{2}$ nunca apague um pedaço da curva. As
+retas ficam por baixo: uma assíntota vertical cai exatamente sobre o número do
+eixo, e ali é o número que precisa ficar legível.
+
+A numeração automática sai com vírgula decimal e sinal de menos tipográfico
+(“0,5”, “−1,5”). Quando o “−1” do eixo x colidiria com o “−1” do eixo y perto
+da origem (unidades pequenas), o número do eixo x é empurrado para a esquerda
+do próprio traço, até abrir um vão; se a unidade for pequena demais para isso,
+ele sobe para cima do eixo. Nenhum número é omitido.
+
 ## UnitCircle
 
 A circunferência de raio 1 com o ângulo marcado a partir do eixo horizontal.
@@ -600,11 +613,11 @@ A circunferência de raio 1 com o ângulo marcado a partir do eixo horizontal.
 
 | Prop | O que faz |
 |---|---|
-| `angles` | `[{deg, label, tone, showProjections, showTangentSegment, pointLabel, pointDx, pointDy, labelRadius, arcRadius, sinTone, cosTone}]` |
+| `angles` | `[{deg, label, tone, showProjections, showTangentSegment, tangentLabel, pointLabel, pointDx, pointDy, labelRadius, arcRadius, sinTone, cosTone}]` — sem `labelRadius`, o rótulo do ângulo se afasta do centro o bastante para não encostar nos lados (ângulo pequeno, rótulo mais longe); `tangentLabel` escreve um rótulo (como `T`) na ponta do segmento da tangente |
 | `marks` | `[{deg, label, tone, labelRadius}]` — pontinho na circunferência com rótulo do lado de fora |
 | `quadrants` | escreve I, II, III, IV |
 | `quadrantNotes` | `[{quadrant: 1..4, math, tone, r}]` — texto dentro do quadrante (tabela de sinais) |
-| `showTangent` | desenha o eixo das tangentes em $x=1$; `tangentClamp` limita a altura |
+| `showTangent` | desenha o eixo das tangentes em $x=1$; `tangentClamp` limita a altura, e a altura da figura acompanha esse limite |
 | `scale` | pixels por raio (padrão 120) |
 
 `showProjections` desenha o cosseno no eixo horizontal e o seno no vertical
@@ -626,7 +639,7 @@ Sólidos em perspectiva simples, com a metade escondida da base tracejada.
 | `kind` | `'cylinder'`, `'cone'`, `'sphere'` ou `'box'` |
 | `rx`, `ry` | raio horizontal e achatamento da elipse da base |
 | `height`, `width`, `depth` | dimensões em pixels |
-| `radiusLabel`, `heightLabel`, `slantLabel` | cotas em LaTeX |
+| `radiusLabel`, `heightLabel`, `slantLabel` | cotas em LaTeX. No cilindro e no cone, o rótulo do raio fica abaixo da base, centrado sob a seta — não há espaço livre entre a seta e a elipse tracejada |
 | `extraLabels` | `[{x, y, math, tone}]` — rótulo solto em pixels do viewBox |
 
 ## TangentExplorer
