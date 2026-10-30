@@ -146,8 +146,7 @@ termina numa disparada ou num pico. E o sinal de $f''$ só faz sentido depois
 que se sabe onde a curva sobe: “côncava para baixo” numa subida é uma subida
 que perde força; numa descida, é uma descida que ganha força.
 
-Uma comparação ajuda a fixar a ideia, e ela é construída, não decorativa.
-Montar um mapa de trilha começa pelas fronteiras da reserva (domínio), depois
+Uma comparação ajuda a fixar a ideia. Montar um mapa de trilha começa pelas fronteiras da reserva (domínio), depois
 pelos rios que a trilha cruza (interseções), pelas cercas que ela nunca
 atravessa (assíntotas), pelos trechos de subida e descida (sinal de $f'$),
 pelos cumes e vales (extremos) e, por último, pela forma de cada subida:
@@ -544,8 +543,8 @@ conta como inflexão.
     {m: 1, n: -1, dashed: true, tone: 3},
   ]}
   points={[
-    {at: [-2, -4], label: '(-2,\\ -4)', tone: 2, dx: -44, dy: -10},
-    {at: [0, 0], label: '(0,\\ 0)', tone: 2, dx: 30, dy: 14},
+    {at: [-2, -4], label: '(-2,\\ -4)', tone: 2, dx: -14, dy: 22},
+    {at: [0, 0], label: '(0,\\ 0)', tone: 2, dx: 28, dy: -24},
   ]}
   labels={[
     {at: [-1, 6.2], math: 'x = -1', tone: 2, dx: -38, dy: 0},
@@ -621,7 +620,7 @@ numérica em 1 e 3: $-0{,}368$ e $0{,}050$, sinais opostos.
 
 Leia o que a inflexão diz no contexto do remédio: depois do pico em 1 hora, a
 concentração cai cada vez mais depressa até 2 horas, e a partir daí a queda
-**perde força**. Aos 2 horas a eliminação está no ritmo máximo. Sem o sinal de
+**perde força**. Às 2 horas a eliminação está no ritmo máximo. Sem o sinal de
 $k''$, essa informação não existe.
 
 **Passo 8 — tabela-resumo e desenho.**
@@ -648,7 +647,7 @@ $k''$, essa informação não existe.
   functions={[{f: (x) => x * Math.exp(-x), domain: [-1.05, 6.2], tone: 1}]}
   points={[
     {at: [1, 0.3679], label: '(1;\\ 0{,}37)', tone: 2, dx: 0, dy: -16},
-    {at: [2, 0.2707], label: '(2;\\ 0{,}27)', tone: 3, dx: 44, dy: -6},
+    {at: [2, 0.2707], label: '(2;\\ 0{,}27)', tone: 3, dx: 30, dy: -22},
     {at: [0, 0], tone: 1},
   ]}
   labels={[{at: [5, 0], math: 'y = 0', tone: 3, dy: 18}]}
@@ -688,8 +687,26 @@ $-1$. Sobe de $-1$ a $1$, desce fora.
 **Passo 6.** Máximo local em $(1;\ 0{,}5)$, mínimo local em $(-1;\ -0{,}5)$
 — o mínimo é o reflexo do máximo pela origem, como a simetria mandava.
 
-**Passo 7.** Derivando $q'$ (quociente de novo, ou produto com
-$(x^2+1)^{-2}$), o resultado, depois de simplificar, é
+**Passo 7.** Derive $q'$ pela regra do quociente. Em cima está $1 - x^2$, de
+derivada $-2x$. Embaixo está $(x^2+1)^2$, cuja derivada sai pela regra da
+cadeia: $2(x^2+1) \times 2x = 4x(x^2+1)$. Então
+
+$$
+q''(x) = \frac{-2x\,(x^2+1)^2 - (1 - x^2) \times 4x\,(x^2+1)}{(x^2+1)^4}.
+$$
+
+Este é o passo que mais trava, e vale fazê-lo devagar. As duas parcelas do
+numerador têm o fator $(x^2+1)$. Ponha esse fator em evidência:
+
+$$
+q''(x) = \frac{(x^2+1)\,\big[-2x(x^2+1) - 4x(1 - x^2)\big]}{(x^2+1)^4}.
+$$
+
+Agora $(x^2+1)$ multiplica o numerador inteiro e também o denominador. Por
+isso pode ser cancelado — é o cancelamento de **fator** da lição de [cálculo de
+limites](./calculo-de-limites), permitido porque $x^2 + 1$ nunca é zero.
+Embaixo sobram três fatores, $(x^2+1)^3$. Em cima, expanda o colchete:
+$-2x^3 - 2x - 4x + 4x^3 = 2x^3 - 6x = 2x(x^2 - 3)$. O resultado:
 
 $$
 q''(x) = \frac{2x(x^2 - 3)}{(x^2+1)^3}.
@@ -738,8 +755,8 @@ $(\sqrt{3};\ 0{,}433)$.
 />
 
 Repare no papel da simetria: as contas dos passos 5 a 7 foram feitas só para
-$x$ positivo, e o lado esquerdo saiu de graça — cada ponto do lado direito
-tem um gêmeo com as duas coordenadas trocadas de sinal. E o desenho oferece a
+$x$ positivo, e o lado esquerdo não precisou de conta nenhuma: cada ponto do
+lado direito tem um gêmeo com as duas coordenadas trocadas de sinal. E o desenho oferece a
 conferência: se o lado esquerdo tivesse saído com o máximo em cima, a
 simetria ímpar denunciaria o erro.
 
@@ -986,6 +1003,20 @@ Derive os dois lados de $f(-x) = f(x)$ com a regra da cadeia. O lado esquerdo
    inflexão em $(0, 0)$, para baixo à esquerda, para cima à direita.
    *Se você encontrou o máximo em $x = 2$, trocou o sinal do quadro de $g'$:
    em $x = 0$, $g'(0) = -12$, negativa, então entre $-2$ e 2 a curva desce.*
+
+<CartesianPlane
+  xMin={-4.5} xMax={4.5} yMin={-25} yMax={25}
+  xUnit={40} yUnit={6} yStep={10}
+  functions={[{f: (x) => x * x * x - 12 * x, tone: 1}]}
+  points={[
+    {at: [-2, 16], tone: 2},
+    {at: [2, -16], tone: 2},
+    {at: [0, 0], tone: 3},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Esboço de g(x) = x³ − 12x: máximo local em (−2, 16), mínimo local em (2, −16), inflexão na origem, raízes em 0 e ±3,46."
+/>
+
 9. **$r(x) = \dfrac{1}{x^2 - 1}$.** Domínio: $x \neq \pm 1$. Sem raiz (o
    numerador é 1); eixo vertical em $(0, -1)$. Par. Sinal: positiva fora de
    $[-1, 1]$, negativa dentro. Assíntotas verticais $x = 1$ e $x = -1$: em
@@ -999,6 +1030,24 @@ Derive os dois lados de $f(-x) = f(x)$ com a regra da cadeia. O lado esquerdo
    inflexão (a troca é através das assíntotas). Três ramos: dois de fora
    côncavos para cima descendo para $y = 0$, e um do meio em forma de arco
    para baixo com topo em $(0, -1)$.
+
+<CartesianPlane
+  xMin={-3.5} xMax={3.5} yMin={-4} yMax={4}
+  xUnit={50} yUnit={35}
+  functions={[
+    {f: (x) => 1 / (x * x - 1), domain: [-3.5, -1.03], tone: 1},
+    {f: (x) => 1 / (x * x - 1), domain: [-0.97, 0.97], tone: 1},
+    {f: (x) => 1 / (x * x - 1), domain: [1.03, 3.5], tone: 1},
+  ]}
+  lines={[
+    {x: -1, dashed: true, tone: 3},
+    {x: 1, dashed: true, tone: 3},
+  ]}
+  points={[{at: [0, -1], tone: 2}]}
+  axisLabels={['x', 'y']}
+  caption="Esboço de r(x) = 1/(x² − 1): três ramos separados pelas assíntotas x = −1 e x = 1. Os de fora descem para y = 0 por cima; o do meio é um arco com topo em (0, −1)."
+/>
+
 10. **$s(x) = x^4 - 2x^2$.** Domínio reais. Raízes: $x^2(x^2 - 2) = 0$, isto
     é, $0$ e $\pm\sqrt{2}$; $s(0) = 0$. Par. Sem assíntotas; $+\infty$ dos
     dois lados. $s'(x) = 4x^3 - 4x = 4x(x-1)(x+1)$: desce até $-1$, sobe de
@@ -1007,6 +1056,22 @@ Derive os dois lados de $f(-x) = f(x)$ com a regra da cadeia. O lado esquerdo
     \pm 0{,}577$; para cima fora desse intervalo, para baixo dentro; duas
     inflexões, em $(\pm 0{,}577;\ -0{,}556)$, com $s = \frac{1}{9} - \frac{2}{3}
     = -\frac{5}{9}$. Forma de W arredondado.
+
+<CartesianPlane
+  xMin={-2.2} xMax={2.2} yMin={-1.5} yMax={3}
+  xUnit={80} yUnit={60}
+  functions={[{f: (x) => x ** 4 - 2 * x * x, tone: 1}]}
+  points={[
+    {at: [-1, -1], tone: 2},
+    {at: [1, -1], tone: 2},
+    {at: [0, 0], tone: 2},
+    {at: [-0.577, -0.556], tone: 3},
+    {at: [0.577, -0.556], tone: 3},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Esboço de s(x) = x⁴ − 2x²: o W arredondado, com mínimos em (±1, −1), máximo local em (0, 0) e inflexões em (±0,577; −0,556)."
+/>
+
 11. **$u(x) = x + \dfrac{1}{x}$.** Domínio $x \neq 0$. Sem raiz ($x^2 + 1$
     nunca zera); sem ponto no eixo vertical. Ímpar. Vertical $x = 0$:
     $-\infty$ pela esquerda, $+\infty$ pela direita. Oblíqua $y = x$, já
@@ -1016,6 +1081,23 @@ Derive os dois lados de $f(-x) = f(x)$ com a regra da cadeia. O lado esquerdo
     $u''(x) = \dfrac{2}{x^3}$: para baixo à esquerda, para cima à direita, sem
     inflexão. *Se você usou a regra do quociente e chegou a
     $\frac{x^2 - 1}{x^2}$, está certo: é a mesma $u'$.*
+
+<CartesianPlane
+  xMin={-5} xMax={5} yMin={-7} yMax={7}
+  xUnit={36} yUnit={26} yStep={2}
+  functions={[
+    {f: (x) => x + 1 / x, domain: [-5, -0.15], tone: 1},
+    {f: (x) => x + 1 / x, domain: [0.15, 5], tone: 1},
+  ]}
+  lines={[{m: 1, n: 0, dashed: true, tone: 3}]}
+  points={[
+    {at: [-1, -2], tone: 2},
+    {at: [1, 2], tone: 2},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Esboço de u(x) = x + 1/x: dois ramos, com assíntota vertical no eixo y e oblíqua y = x (tracejada). Máximo local em (−1, −2), abaixo do mínimo local em (1, 2)."
+/>
+
 12. **$v(x) = e^{-x^2}$.** Domínio reais. Sem raiz; $(0, 1)$ no eixo
     vertical. Par. Sempre positiva. Horizontal $y = 0$ dos dois lados
     ($v(2) \approx 0{,}018$). $v'(x) = -2x e^{-x^2}$: sinal de $-x$; sobe até
@@ -1023,6 +1105,20 @@ Derive os dois lados de $f(-x) = f(x)$ com a regra da cadeia. O lado esquerdo
     zera em $\pm\frac{1}{\sqrt{2}} \approx \pm 0{,}707$; para baixo entre eles,
     para cima fora. Inflexões em $(\pm 0{,}707;\ 0{,}607)$, com
     $v = e^{-1/2}$. É a curva em forma de sino.
+
+<CartesianPlane
+  xMin={-3} xMax={3} yMin={-0.2} yMax={1.2}
+  xUnit={60} yUnit={150} yStep={0.5}
+  functions={[{f: (x) => Math.exp(-x * x), tone: 1}]}
+  points={[
+    {at: [0, 1], tone: 2},
+    {at: [-0.707, 0.607], tone: 3},
+    {at: [0.707, 0.607], tone: 3},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Esboço de v(x) = e^(−x²), a curva em sino: máximo em (0, 1), inflexões em (±0,707; 0,607), e y = 0 como assíntota dos dois lados."
+/>
+
 13. A raiz dupla em 1 faz a curva **encostar** no eixo sem cruzar: o sinal
     de $w$ não troca em 1. Domínio reais. Raízes $-2$ e $1$ (dupla);
     $w(0) = 2$. Sem simetria. Sem assíntotas; expandindo,
@@ -1031,6 +1127,21 @@ Derive os dois lados de $f(-x) = f(x)$ com a regra da cadeia. O lado esquerdo
     depois. Máximo local $(-1, 4)$, mínimo local $(1, 0)$ — o mínimo é
     exatamente o ponto em que a curva encosta no eixo, o que explica o
     “encostar sem cruzar”. $w''(x) = 6x$: inflexão em $(0, 2)$.
+
+<CartesianPlane
+  xMin={-3} xMax={3} yMin={-4} yMax={8}
+  xUnit={50} yUnit={22} yStep={2}
+  functions={[{f: (x) => (x - 1) * (x - 1) * (x + 2), tone: 1}]}
+  points={[
+    {at: [-1, 4], tone: 2},
+    {at: [1, 0], tone: 2},
+    {at: [0, 2], tone: 3},
+    {at: [-2, 0], tone: 1},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Esboço de w(x) = (x − 1)²(x + 2): cruza o eixo em −2 e só encosta nele em 1, que é o mínimo local. Máximo local em (−1, 4), inflexão em (0, 2)."
+/>
+
 14. Para $x$ positivo: sem raiz (sempre maior que 18), $C(x) \to +\infty$
     quando $x \to 0^{+}$ (vertical $x = 0$) e $C(x) \to 18$ quando
     $x \to +\infty$ (horizontal $y = 18$, chegando por cima).
@@ -1041,6 +1152,16 @@ Derive os dois lados de $f(-x) = f(x)$ com a regra da cadeia. O lado esquerdo
     concavidade para cima numa descida é uma descida que perde força. De 100
     para 1 000 peças o custo cai de 42 para 20,40; de 1 000 em diante, o
     ganho por peça a mais é minúsculo.
+
+<CartesianPlane
+  xMin={0} xMax={620} yMin={0} yMax={100}
+  xUnit={0.6} yUnit={2.8} xStep={100} yStep={20}
+  functions={[{f: (x) => 2400 / x + 18, domain: [25, 620], tone: 1}]}
+  lines={[{m: 0, n: 18, dashed: true, tone: 3}]}
+  axisLabels={['x', 'C']}
+  caption="Esboço do custo médio C(x) = 2400/x + 18 para x positivo: desce o tempo todo, cada vez mais devagar, e se aproxima de y = 18 (tracejada) sem chegar."
+/>
+
 15. $c'(t) = 10\,e^{-t/2}\left(1 - \frac{t}{2}\right)$: zera em $t = 2$, positiva
     antes, negativa depois. a) Pico em **2 horas**, com
     $c(2) = 20e^{-1} \approx 7{,}36$ mg/L.
@@ -1052,6 +1173,19 @@ Derive os dois lados de $f(-x) = f(x)$ com a regra da cadeia. O lado esquerdo
     concentração se aproxima de zero sem chegar ($c(10) \approx 0{,}67$).
     *Se você achou o pico em $t = 1$, esqueceu o $-\frac{1}{2}$ da regra da
     cadeia ao derivar $e^{-t/2}$.*
+
+<CartesianPlane
+  xMin={0} xMax={12} yMin={-1} yMax={8.5}
+  xUnit={30} yUnit={30} xStep={2} yStep={2}
+  functions={[{f: (t) => 10 * t * Math.exp(-t / 2), domain: [0, 12], tone: 1}]}
+  points={[
+    {at: [2, 7.358], tone: 2},
+    {at: [4, 5.413], tone: 3},
+  ]}
+  axisLabels={['t', 'c']}
+  caption="Esboço de c(t) = 10t·e^(−t/2): pico em (2; 7,36), inflexão em (4; 5,41), onde a queda é mais rápida, e aproximação de zero para t grande."
+/>
+
 16. **$z(x) = \dfrac{x^2 - 1}{x^2 + 1}$.** Domínio reais. Raízes $\pm 1$;
     $(0, -1)$ no eixo vertical. Par. Negativa entre $-1$ e 1, positiva fora.
     Horizontal $y = 1$ dos dois lados (graus iguais). $z'(x) =
@@ -1061,6 +1195,22 @@ Derive os dois lados de $f(-x) = f(x)$ com a regra da cadeia. O lado esquerdo
     $(\pm 0{,}577;\ -0{,}5)$. **Não cruza** $y = 1$: a equação $z(x) = 1$ dá
     $x^2 - 1 = x^2 + 1$, impossível. A curva chega a 1 por baixo dos dois
     lados ($z(10) \approx 0{,}98$).
+
+<CartesianPlane
+  xMin={-5} xMax={5} yMin={-1.5} yMax={1.5}
+  xUnit={36} yUnit={90} yStep={0.5}
+  yTicks={[{at: 1, label: '1'}, {at: 0.5, label: '0{,}5'}, {at: -1, label: '-1'}]}
+  functions={[{f: (x) => (x * x - 1) / (x * x + 1), tone: 1}]}
+  lines={[{m: 0, n: 1, dashed: true, tone: 3}]}
+  points={[
+    {at: [0, -1], tone: 2},
+    {at: [-0.577, -0.5], tone: 3},
+    {at: [0.577, -0.5], tone: 3},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Esboço de z(x) = (x² − 1)/(x² + 1): mínimo global em (0, −1), inflexões em (±0,577; −0,5), e a assíntota y = 1 (tracejada), de que a curva se aproxima por baixo sem cruzar."
+/>
+
 17. Derive os dois lados de $f(-x) = f(x)$. À esquerda, pela regra da cadeia,
     $f'(-x) \times (-1)$; à direita, $f'(x)$. Logo $-f'(-x) = f'(x)$, isto é,
     $f'(-x) = -f'(x)$: $f'$ é ímpar. Consequência: os pontos críticos de uma
