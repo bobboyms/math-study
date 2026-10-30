@@ -15,7 +15,7 @@ escolhidos ao acaso:
 - outro com ângulos 30°, 60° e 90°.
 
 <GeoFigure
-  unit={36}
+  unit={48}
   padding={52}
   polygons={[
     {points: [[0, 0], [2.6, 0], [0, 2.6]], tone: 1},
@@ -23,9 +23,9 @@ escolhidos ao acaso:
   ]}
   angles={[
     {at: [0, 0], from: [2.6, 0], to: [0, 2.6], right: true, tone: 1},
-    {at: [2.6, 0], from: [0, 0], to: [0, 2.6], label: '45^\\circ', tone: 1, radius: 24, labelRadius: 46},
+    {at: [2.6, 0], from: [0, 0], to: [0, 2.6], label: '45^\\circ', tone: 1, radius: 24, labelRadius: 70},
     {at: [4.2, 0], from: [7.2, 0], to: [4.2, 1.732], right: true, tone: 2},
-    {at: [7.2, 0], from: [4.2, 0], to: [4.2, 1.732], label: '30^\\circ', tone: 2, radius: 24, labelRadius: 46},
+    {at: [7.2, 0], from: [4.2, 0], to: [4.2, 1.732], label: '30^\\circ', tone: 2, radius: 24, labelRadius: 70},
     {at: [4.2, 1.732], from: [4.2, 0], to: [7.2, 0], label: '60^\\circ', tone: 2, radius: 24, labelRadius: 46},
   ]}
   caption="Os dois esquadros padrão. Por que exatamente 45° de um lado e 30°/60° do outro?"
@@ -146,7 +146,7 @@ com dois catetos iguais a 1 — e, porque os dois catetos são iguais, os dois
   labels={[
     {at: [0.5, -0.16], math: '1', fontSize: 14},
     {at: [1.14, 0.5], math: '1', fontSize: 14},
-    {at: [0.42, 0.62], math: '\\sqrt{2}', tone: 3, fontSize: 14},
+    {at: [0.28, 0.75], math: '\\sqrt{2}', tone: 3, fontSize: 14},
   ]}
   caption="Metade de um quadrado de lado 1. A diagonal, por Pitágoras, vale √2."
 />
@@ -188,7 +188,7 @@ Trace a altura a partir de um vértice. Ela corta a base ao meio e forma dois
 triângulos retângulos iguais.
 
 <GeoFigure
-  unit={64}
+  unit={80}
   padding={58}
   polygons={[
     {points: [[0, 0], [2, 0], [1, 1.732]], tone: 0, fill: false},
@@ -197,14 +197,14 @@ triângulos retângulos iguais.
   segments={[{from: [1, 0], to: [1, 1.732], tone: 3}]}
   angles={[
     {at: [1, 0], from: [2, 0], to: [1, 1.732], right: true, tone: 3},
-    {at: [2, 0], from: [1, 0], to: [1, 1.732], label: '60^\\circ', tone: 2, radius: 26, labelRadius: 48},
-    {at: [1, 1.732], from: [1, 0], to: [2, 0], label: '30^\\circ', tone: 2, radius: 26, labelRadius: 48},
+    {at: [2, 0], from: [1, 0], to: [1, 1.732], label: '60^\\circ', tone: 2, radius: 26, labelRadius: 42},
+    {at: [1, 1.732], from: [1, 0], to: [2, 0], label: '30^\\circ', tone: 2, radius: 30, labelRadius: 78},
   ]}
   labels={[
-    {at: [1.5, -0.18], math: '1', fontSize: 14},
-    {at: [0.5, -0.18], math: '1', fontSize: 14},
+    {at: [1.5, -0.22], math: '1', fontSize: 14},
+    {at: [0.5, -0.22], math: '1', fontSize: 14},
     {at: [1.68, 0.95], math: '2', fontSize: 14},
-    {at: [0.82, 0.9], math: '\\sqrt{3}', tone: 3, fontSize: 14},
+    {at: [0.68, 0.62], math: '\\sqrt{3}', tone: 3, fontSize: 14},
   ]}
   caption="Metade de um equilátero de lado 2: hipotenusa 2, cateto menor 1, altura √3."
 />
@@ -270,8 +270,24 @@ Em decimais, para conferência rápida:
 
 ### Três padrões que tornam a tabela quase desnecessária
 
-**1. A linha do seno é uma escada de raízes.** Escreva os cinco ângulos
-principais e observe:
+**1. A linha do seno é uma escada de raízes.** Antes da escada, falta um
+detalhe: os dois degraus das pontas, 0° e 90°. Num triângulo retângulo, os
+outros dois ângulos ficam sempre **entre** 0° e 90° — um ângulo de 0° ou um
+segundo ângulo de 90° não cabem nele. Então de onde viriam $\sen 0^\circ$ e
+$\sen 90^\circ$? Do que acontece **perto** dessas pontas. Fixe a hipotenusa em
+1 e imagine o triângulo mudando:
+
+- **ângulo encolhendo em direção a 0°:** o triângulo vai ficando achatado, e o
+  cateto oposto ao ângulo vai encolhendo até quase sumir. O seno, que é oposto
+  dividido por 1, se aproxima de **0**;
+- **ângulo crescendo em direção a 90°:** o triângulo vai ficando em pé, e o
+  cateto oposto vai ficando quase do tamanho da hipotenusa. O seno se aproxima
+  de **1**.
+
+Por isso se escreve $\sen 0^\circ = 0$ e $\sen 90^\circ = 1$. A definição
+oficial desses dois valores, sem precisar de “se aproximar”, vem na lição do
+[ciclo trigonométrico](./ciclo-trigonometrico) — e ela confirma exatamente
+esses números. Com as duas pontas no lugar, escreva os cinco ângulos e observe:
 
 $$
 \sen 0^\circ = \frac{\sqrt{0}}{2},\quad
@@ -282,8 +298,9 @@ $$
 $$
 
 Os numeradores são $\sqrt{0}, \sqrt{1}, \sqrt{2}, \sqrt{3}, \sqrt{4}$ — só
-contar. E de fato $\frac{\sqrt{1}}{2} = \frac{1}{2}$ e
-$\frac{\sqrt{4}}{2} = 1$, batendo com os valores conhecidos.
+contar. E de fato $\frac{\sqrt{1}}{2} = \frac{1}{2}$, o seno de 30° calculado
+no equilátero, e $\frac{\sqrt{4}}{2} = 1$, o valor de $\sen 90^\circ$ que
+acabamos de obter.
 
 **2. O cosseno é a mesma linha ao contrário.** Porque
 $\cos\alpha = \sen(90^\circ - \alpha)$: leia a linha do seno da direita para a
@@ -356,8 +373,18 @@ A diagonal corta o quadrado em dois triângulos retângulos isósceles, então o
 $$
 \cos 45^\circ = \frac{5}{d}
 \Longrightarrow
-d = \frac{5}{\frac{\sqrt{2}}{2}} = \frac{10}{\sqrt{2}} = 5\sqrt{2}
-\approx 7{,}07 \text{ m}.
+d = \frac{5}{\frac{\sqrt{2}}{2}} = \frac{10}{\sqrt{2}}.
+$$
+
+Dividir por $\frac{\sqrt{2}}{2}$ é multiplicar pelo inverso, $\frac{2}{\sqrt{2}}$:
+$5 \times \frac{2}{\sqrt{2}} = \frac{10}{\sqrt{2}}$. Ficou uma raiz no
+denominador. Para tirá-la, multiplique em cima e embaixo por $\sqrt{2}$ — é
+multiplicar por $\frac{\sqrt{2}}{\sqrt{2}} = 1$, então o valor não muda — e
+use $\sqrt{2} \times \sqrt{2} = 2$:
+
+$$
+d = \frac{10}{\sqrt{2}} \times \frac{\sqrt{2}}{\sqrt{2}}
+= \frac{10\sqrt{2}}{2} = 5\sqrt{2} \approx 7{,}07 \text{ m}.
 $$
 
 Confere com o resultado de [Pitágoras](./teorema-de-pitagoras): a diagonal de um
@@ -417,7 +444,8 @@ faz de cabeça.
 > pequeno. $\sen 30^\circ = 0{,}5$ é o menor da tabela entre os três.
 
 > **Erro 2: achar que $\sen(\alpha+\beta) = \sen\alpha + \sen\beta$.** Teste:
-> $\sen(30^\circ+60^\circ) = \sen 90^\circ = 1$, mas
+> $\sen(30^\circ+60^\circ) = \sen 90^\circ = 1$ (o degrau de cima da escada de
+> raízes), mas
 > $\sen 30^\circ + \sen 60^\circ = 0{,}5 + 0{,}866 = 1{,}366$. Não bate — e nem
 > poderia, já que o seno nunca passa de 1.
 
@@ -488,7 +516,9 @@ faz de cabeça.
 
 7. Calcule: (a) $\sen 30^\circ + \cos 60^\circ$;
    (b) $\tg 45^\circ \times \cos 30^\circ$;
-   (c) $\sen^2 45^\circ + \cos^2 45^\circ$.
+   (c) $\sen^2 45^\circ + \cos^2 45^\circ$. (A notação $\sen^2 45^\circ$
+   significa $(\sen 45^\circ)^2$: primeiro calcule o seno, depois eleve o
+   resultado ao quadrado. O mesmo vale para $\cos^2 45^\circ$.)
 8. Um triângulo retângulo tem hipotenusa 10 e um ângulo de 30°. Calcule os dois
    catetos, em forma exata.
 9. Num triângulo retângulo, o cateto adjacente a 60° mede 7. Calcule os outros
@@ -513,10 +543,12 @@ $\frac{1}{2}$ é multiplicar por 2.
 
 ### 5. Problema misto
 
-13. Um hexágono regular está inscrito numa circunferência de raio 1. Cada
-    vértice fica num ângulo múltiplo de 60°. Determine as coordenadas dos
-    vértices correspondentes a 0°, 60° e 120°, usando
-    $(\cos\theta, \sen\theta)$.
+13. No plano cartesiano, desenhe um triângulo retângulo de hipotenusa 1 com um
+    vértice na origem: o cateto adjacente fica deitado sobre o eixo horizontal,
+    o ângulo na origem mede $\theta$ e o ângulo reto fica embaixo do vértice de
+    cima. Determine as coordenadas do vértice de cima para $\theta = 60^\circ$
+    e para $\theta = 30^\circ$, em forma exata. Que relação existe entre as
+    coordenadas e $\cos\theta$, $\sen\theta$?
 14. Uma torre é vista a 30° de um ponto e a 60° de outro, 40 m mais próximo,
     ambos no mesmo alinhamento. Determine a altura da torre usando valores
     exatos.
@@ -569,13 +601,17 @@ uma com $\tg 30^\circ$ e $d$, outra com $\tg 60^\circ$ e $d - 40$ — e iguale.
     $\frac{6 \times 3\sqrt{3}}{2} = 9\sqrt{3} \approx 15{,}59$.
 12. $\frac{\sqrt{3}/2}{1/2} = \frac{\sqrt{3}}{2} \times 2 = \sqrt{3} =
     \tg 60^\circ$ ✓.
-13. $0^\circ$: $(\cos 0^\circ, \sen 0^\circ) = (1, 0)$.
+13. Com hipotenusa 1, o cateto deitado mede $1 \times \cos\theta$ e o cateto
+    em pé mede $1 \times \sen\theta$. O vértice de cima está a
+    $\cos\theta$ para a direita e a $\sen\theta$ para cima, então suas
+    coordenadas são $(\cos\theta, \sen\theta)$.
     $60^\circ$: $\left(\frac{1}{2}, \frac{\sqrt{3}}{2}\right)
-    \approx (0{,}5,\ 0{,}866)$.
-    $120^\circ$: por simetria em relação ao eixo vertical,
-    $\left(-\frac{1}{2}, \frac{\sqrt{3}}{2}\right)$. (O caso de 120° será
-    justificado em [Redução ao primeiro
-    quadrante](./reducao-ao-primeiro-quadrante).)
+    \approx (0{,}5;\ 0{,}866)$.
+    $30^\circ$: $\left(\frac{\sqrt{3}}{2}, \frac{1}{2}\right)
+    \approx (0{,}866;\ 0{,}5)$ — os mesmos números com os papéis trocados,
+    porque 30° e 60° são complementares. Essa ideia, “o ponto de coordenadas
+    $(\cos\theta, \sen\theta)$”, é o ponto de partida do
+    [ciclo trigonométrico](./ciclo-trigonometrico).
 14. $h = d\,\tg 30^\circ = \frac{d\sqrt{3}}{3}$ e
     $h = (d-40)\tg 60^\circ = (d-40)\sqrt{3}$. Igualando e dividindo por
     $\sqrt{3}$: $\frac{d}{3} = d - 40 \Rightarrow d = 3d - 120 \Rightarrow

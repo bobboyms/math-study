@@ -21,15 +21,15 @@ barra diagonal encontra o braço da parede formando 35°.
 <GeoFigure
   unit={44}
   padding={56}
-  polygons={[{points: [[0, 0], [0, 2.8], [2.8, 0]], tone: 1}]}
+  polygons={[{points: [[0, 0], [0, 3], [2.1, 0]], tone: 1}]}
   angles={[
-    {at: [0, 0], from: [0, 2.8], to: [2.8, 0], right: true, tone: 1},
-    {at: [0, 2.8], from: [0, 0], to: [2.8, 0], label: '35^\\circ', tone: 2, radius: 34, labelRadius: 58},
-    {at: [2.8, 0], from: [0, 0], to: [0, 2.8], label: '?', tone: 3, radius: 34, labelRadius: 54},
+    {at: [0, 0], from: [0, 3], to: [2.1, 0], right: true, tone: 1},
+    {at: [0, 3], from: [0, 0], to: [2.1, 0], label: '35^\\circ', tone: 2, radius: 34, labelRadius: 60},
+    {at: [2.1, 0], from: [0, 0], to: [0, 3], label: '?', tone: 3, radius: 30, labelRadius: 50},
   ]}
   labels={[
-    {at: [-0.45, 1.4], math: '\\text{parede}', fontSize: 12, halo: false},
-    {at: [1.4, -0.38], math: '\\text{prateleira}', fontSize: 12, halo: false},
+    {at: [-0.2, 1.5], math: '\\text{parede}', fontSize: 12, halo: false, anchor: 'end'},
+    {at: [1.05, -0.4], math: '\\text{prateleira}', fontSize: 12, halo: false},
   ]}
   caption="A mão-francesa é um triângulo. Dois dos três ângulos são conhecidos."
 />
@@ -270,8 +270,56 @@ triângulo tem um nome em cada lista.
 | isósceles | pelo menos dois iguais | os dois ângulos opostos aos lados iguais são iguais |
 | escaleno | os três diferentes | os três ângulos diferentes |
 
-A terceira coluna não é uma definição nova: ela **decorre** da primeira. No
-equilátero, os três ângulos são iguais e somam 180°, então cada um vale
+A terceira coluna não é uma definição nova: ela **decorre** da primeira. Para
+ver por quê, comece pelo isósceles.
+
+Recorte um triângulo isósceles de papel e dobre-o ao meio, de modo que os dois
+lados iguais fiquem um em cima do outro. A dobra passa pelo vértice de cima.
+Como os dois lados iguais têm o mesmo comprimento, a ponta de baixo de um cai
+exatamente sobre a ponta de baixo do outro. Por isso, a metade esquerda do
+triângulo cobre a metade direita por inteiro, sem sobra — e o canto de baixo da
+esquerda fica encaixado sobre o canto de baixo da direita. Dois cantos que se
+cobrem perfeitamente têm a mesma abertura: **os dois ângulos da base são
+iguais**.
+
+<GeoFigure
+  unit={44}
+  padding={50}
+  polygons={[{points: [[0, 0], [4, 0], [2, 3]], tone: 1}]}
+  segments={[{from: [2, 3], to: [2, 0], tone: 2, dashed: true}]}
+  ticks={[
+    {from: [0, 0], to: [2, 3], count: 1, tone: 1},
+    {from: [4, 0], to: [2, 3], count: 1, tone: 1},
+    {from: [0, 0], to: [2, 0], count: 2, tone: 2},
+    {from: [2, 0], to: [4, 0], count: 2, tone: 2},
+  ]}
+  angles={[
+    {at: [0, 0], from: [4, 0], to: [2, 3], label: '\\alpha', tone: 3, radius: 30, labelRadius: 50},
+    {at: [4, 0], from: [2, 3], to: [0, 0], label: '\\alpha', tone: 3, radius: 30, labelRadius: 50},
+    {at: [2, 0], from: [4, 0], to: [2, 3], right: true, tone: 2},
+  ]}
+  caption="A linha tracejada é a dobra. Ela leva um lado igual sobre o outro: os dois ângulos da base coincidem, a base fica cortada em duas metades iguais, e a dobra cai em ângulo reto sobre a base."
+/>
+
+A mesma dobra mostra mais duas coisas, que voltam no
+[teorema de Pitágoras](./teorema-de-pitagoras) e nas
+[áreas](./areas-de-poligonos):
+
+- a dobra corta a base em **duas metades iguais**, porque a metade esquerda
+  da base cobre a direita;
+- a dobra cai **em pé** sobre a base. Os dois ângulos que ela forma lá embaixo
+  também se cobrem, então são iguais. Juntos, eles formam um ângulo raso,
+  180°. Por isso, cada um vale $180 \div 2 = 90^\circ$.
+
+Essa linha, que sai do vértice de cima e cai em ângulo reto sobre a base, é a
+**altura** do triângulo. Em geral, altura é o segmento que sai de um vértice e
+cai em ângulo reto sobre o lado oposto. Todo triângulo tem altura — a página de
+[áreas](./areas-de-poligonos) volta a ela —, mas só no isósceles a altura
+relativa à base cai exatamente no meio dela.
+
+No equilátero, qualquer par de lados é um par de lados iguais. A dobra
+funciona com cada par, então os três ângulos são iguais. Como eles somam
+180°, cada um vale
 $180 \div 3 = 60^\circ$ — o triângulo equilátero tem seus ângulos determinados,
 sem nenhuma medição. Guarde esse 60°: ele é o ponto de partida dos
 [ângulos notáveis](./angulos-notaveis).
@@ -328,7 +376,7 @@ Este caso merece nomes próprios porque será o mais usado do capítulo inteiro.
     {at: [0, 2.4], from: [0, 0], to: [3.2, 0], label: '\\beta', tone: 3, radius: 32, labelRadius: 52},
   ]}
   labels={[
-    {at: [2.05, 1.5], math: '\\text{hipotenusa}', fontSize: 12},
+    {at: [1.75, 1.6], math: '\\text{hipotenusa}', fontSize: 12, anchor: 'start'},
     {at: [1.6, -0.38], math: '\\text{cateto}', fontSize: 12, halo: false},
     {at: [-0.68, 1.2], math: '\\text{cateto}', fontSize: 12, halo: false},
   ]}
@@ -401,7 +449,11 @@ encontram.
 > **Desigualdade triangular:** cada lado precisa ser menor que a soma dos outros
 > dois.
 
-Na prática, basta testar o maior lado. Exemplo: 6, 8 e 11 formam triângulo,
+Na prática, só o maior lado precisa ser testado. O motivo: o maior lado,
+somado a qualquer outro, já passa do terceiro — com 6, 8 e 11, por exemplo,
+$11 + 6$ já é maior que 8, e $11 + 8$ já é maior que 6. Os dois testes com o
+11 na soma passam sempre; só sobra conferir se o 11 é menor que $6 + 8$.
+Exemplo: 6, 8 e 11 formam triângulo,
 porque $6 + 8 = 14$, maior que 11. Contraexemplo: 2, 3 e 5 **não** formam — a
 soma dos menores dá exatamente 5, e os três lados ficariam achatados sobre uma
 reta, sem área. Empatar não basta; precisa sobrar.
