@@ -114,6 +114,12 @@ O cosseno é contínuo, então o limite é o valor da função: $\cos 0 = 1$.
 conjugado faz?** Multiplica $(a - b)$ por $(a + b)$ e produz $a^2 - b^2$, sem
 termo do meio. Aqui ele vai transformar $1 - \cos x$ em $\sen^2 x$.
 
+**8. De [Relações fundamentais](../geometria/relacoes-fundamentais): quanto
+vale $\sen^2 x + \cos^2 x$?** Sempre 1, para qualquer $x$. Vem do teorema de
+Pitágoras no ciclo de raio 1: o seno e o cosseno são os catetos, e o raio é a
+hipotenusa. Passando o $\cos^2 x$ para o outro lado, $1 - \cos^2 x = \sen^2 x$
+— é essa a forma que a seção 10 usa.
+
 O item 2 é o que sustenta a demonstração. Se a fórmula da área do setor não
 estiver disponível na memória, releia aquela página antes de seguir: a
 desigualdade central desta lição é uma comparação de três áreas, e uma delas é
@@ -166,16 +172,16 @@ vizinhança.
     {at: 1, label: '1'},
     {at: 1.5708, label: '\\frac{\\pi}{2}'},
   ]}
-  yTicks={[{at: 0.5, label: '0{,}5'}, {at: 1, label: '1'}]}
+  yTicks={[{at: 0.5, label: '0{,}5'}]}
   functions={[
-    {f: (x) => Math.cos(x), tone: 3},
-    {f: (x) => (Math.abs(x) < 1e-9 ? 1 : Math.sin(x) / x), tone: 1},
+    {f: (x) => Math.cos(x), tone: 3, domain: [-1.5708, 1.5708]},
+    {f: (x) => (Math.abs(x) < 1e-9 ? 1 : Math.sin(x) / x), tone: 1, domain: [-1.5708, 1.5708]},
   ]}
   lines={[{m: 0, n: 1, dashed: true, tone: 3}]}
   points={[{at: [0, 1], open: true, tone: 1, r: 5}]}
   labels={[
     {at: [1.15, 1.09], math: 'y = 1', tone: 3, fontSize: 13},
-    {at: [1.25, 0.22], math: '\\cos x', tone: 3, fontSize: 13},
+    {at: [0.98, 0.28], math: '\\cos x', tone: 3, fontSize: 13},
     {at: [-1.05, 0.93], math: '\\dfrac{\\sen x}{x}', tone: 1, fontSize: 13, dy: -14},
   ]}
   axisLabels={['x', 'y']}
@@ -271,16 +277,16 @@ $$
     {f: (x) => (Math.abs(x) < 1e-6 ? 0 : x * x * Math.sin(1 / x)), tone: 1},
   ]}
   labels={[
-    {at: [0.33, 0.13], math: 'y = x^2', tone: 3, fontSize: 13},
-    {at: [0.33, -0.13], math: 'y = -x^2', tone: 3, fontSize: 13},
+    {at: [0.27, 0.15], math: 'y = x^2', tone: 3, fontSize: 13},
+    {at: [0.27, -0.15], math: 'y = -x^2', tone: 3, fontSize: 13},
   ]}
   axisLabels={['x', 'y']}
   caption="A curva oscila cada vez mais depressa perto de zero, mas está presa entre as duas parábolas, e as duas se fecham em zero."
 />
 
 Repare no que **não** fizemos: não calculamos $\sen\frac{1}{x}$ em ponto
-nenhum, e não precisávamos. Prender a função bastou-lhe a informação que
-tínhamos sobre ela — o seno nunca sai de $[-1, 1]$.
+nenhum, e não precisávamos. Para prender a função, usamos uma única
+informação que já tínhamos sobre ela: o seno nunca sai de $[-1, 1]$.
 
 ### 7.3 Contraexemplo: prender não é suficiente
 
@@ -333,7 +339,7 @@ Tome um ângulo $x$ com $0 < x < \frac{\pi}{2}$ no ciclo trigonométrico. Marque
   points={[
     {at: [0, 0], label: 'O', place: 'below-left', tone: 0},
     {at: [1, 0], label: 'A', place: 'below-right', tone: 0},
-    {at: [0.766, 0.6428], label: 'P', place: 'above-left', tone: 0},
+    {at: [0.766, 0.6428], label: 'P', place: 'right', tone: 0},
     {at: [1, 0.8391], label: 'T', place: 'above-right', tone: 0},
   ]}
   labels={[
@@ -390,7 +396,7 @@ Agora olhe para três regiões do mesmo desenho:
   points={[
     {at: [0, 0], label: 'O', place: 'below-left', tone: 0},
     {at: [1, 0], label: 'A', place: 'below-right', tone: 0},
-    {at: [0.766, 0.6428], label: 'P', place: 'above-left', tone: 0},
+    {at: [0.766, 0.6428], label: 'P', place: 'right', tone: 0},
     {at: [1, 0.8391], label: 'T', place: 'above-right', tone: 0},
   ]}
   caption="As três regiões encaixadas. O triângulo pequeno é a parte azul. O setor é a parte azul mais a laranja. O triângulo grande é tudo: azul, laranja e verde."
@@ -572,8 +578,8 @@ As duas perguntas do começo eram: até que ângulo a troca de $\sen x$ por $x$
 é segura, e qual é o tamanho do erro.
 
 A cadeia $\cos x < \frac{\sen x}{x} < 1$ responde às duas de uma vez. O **erro
-relativo** de usar $x$ no lugar de $\sen x$ é a fração do valor verdadeiro que
-se erra:
+relativo** de usar $x$ no lugar de $\sen x$ é o tamanho do erro, $x - \sen x$,
+dividido por $x$, o valor que entra na conta:
 
 $$
 \text{erro relativo} = \frac{x - \sen x}{x} = 1 - \frac{\sen x}{x}.
@@ -1064,7 +1070,7 @@ depois use a função inversa da lição de
     $-0{,}0050$.
 14. a) $12 \times \sen 0{,}2 = 12 \times 0{,}19867 = 2{,}3840$ m. b) $12 \times 0{,}2 = 2{,}4$ m.
     c) A garantia é $1 - \cos 0{,}2 = 0{,}0199$, isto é, menos de 2%. O erro real
-    é $\frac{2{,}4 - 2{,}3840}{2{,}3840} = 0{,}0067$, ou 0,67% — dentro da
+    é $\frac{2{,}4 - 2{,}3840}{2{,}4} = 0{,}0067$, ou 0,67% — dentro da
     garantia.
 15. Precisamos de $1 - \cos x < 0{,}001$, ou seja, $\cos x > 0{,}999$. Como o
     cosseno decresce no primeiro quadrante, isso vale para
