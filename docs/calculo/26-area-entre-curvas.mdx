@@ -177,13 +177,13 @@ $y = x^2$, com uma faixa vertical destacada em $x = 0{,}5$.
     {f: (x) => x * x, domain: [-1.8, 2.2], tone: 1},
   ]}
   points={[
-    {at: [-1, 1], label: '(-1,\\ 1)', tone: 1, dx: -34, dy: -6},
+    {at: [-1, 1], label: '(-1,\\ 1)', tone: 1, dx: -42, dy: -16},
     {at: [2, 4], label: '(2,\\ 4)', tone: 1, dx: 32, dy: -8},
   ]}
   labels={[
     {at: [0.58, 1.45], math: 'f(x) - g(x)', tone: 3, dx: 62},
-    {at: [2.35, 4.6], math: 'y = x + 2', tone: 1, dx: -18},
-    {at: [-1.55, 3.1], math: 'y = x^2', tone: 1},
+    {at: [0.95, 3.8], math: 'y = x + 2', tone: 1},
+    {at: [-1.05, 2.9], math: 'y = x^2', tone: 1},
   ]}
   axisLabels={['x', 'y']}
   caption="A região entre a reta e a parábola, de x = −1 a x = 2. A faixa vertical destacada tem altura f(x) − g(x); somar todas as faixas dá a área."
@@ -226,7 +226,8 @@ $$
 \text{área entre as curvas} = \int_a^b f(x)\,dx - \int_a^b g(x)\,dx.
 $$
 
-E agora entra uma propriedade da lição anterior: a integral de uma diferença é a
+E agora entra uma propriedade da lição de [integral definida](./a-integral-definida):
+a integral de uma diferença é a
 diferença das integrais. Lendo a igualdade de trás para a frente, as duas
 integrais viram uma só:
 
@@ -243,7 +244,7 @@ propriedade da soma garante a igualdade — ela não foi inventada aqui, veio da
 
 **Por que vale a pena a troca.** Porque a segunda escrita continua fazendo
 sentido quando as curvas **não** estão acima do eixo, e a primeira não. A
-subtração de áreas exige que as duas regiões estejam sob o eixo; a integral da
+subtração de áreas exige que as duas curvas estejam acima do eixo; a integral da
 diferença só usa a altura da faixa, e essa altura não muda quando a região sobe
 ou desce. A seção 10 desenvolve esse ponto.
 
@@ -349,7 +350,7 @@ $$
 
 com o entendimento de que, para calcular, o intervalo é cortado nos pontos de
 cruzamento e cada trecho é integrado com a ordem certa. É o mesmo passo que a
-lição anterior usou para separar distância percorrida de deslocamento: lá, o
+lição de integral definida usou para separar distância percorrida de deslocamento: lá, o
 corte era onde a velocidade zerava; aqui, é onde a diferença zera.
 
 ### O roteiro
@@ -431,6 +432,40 @@ $$
 
 o que dá $y = -1$ e $y = 2$. Testando em $y = 0$: a reta dá $x = 2$ e a parábola
 dá $x = 0$, então a reta está à direita.
+
+<CartesianPlane
+  xMin={-0.6}
+  xMax={4.8}
+  yMin={-1.8}
+  yMax={2.6}
+  xUnit={58}
+  yUnit={58}
+  polygons={[
+    {
+      points: [
+        ...Array.from({length: 31}, (_, i) => { const y = -1 + (3 * i) / 30; return [y * y, y]; }),
+        ...Array.from({length: 31}, (_, i) => { const y = 2 - (3 * i) / 30; return [y + 2, y]; }),
+      ],
+      tone: 1,
+    },
+    {points: [[0.42 * 0.42, 0.42], [2.42, 0.42], [2.58, 0.58], [0.58 * 0.58, 0.58]], tone: 2},
+  ]}
+  functions={[
+    {f: (x) => Math.sqrt(x), domain: [0, 4.8], tone: 1},
+    {f: (x) => -Math.sqrt(x), domain: [0, 3.2], tone: 1},
+  ]}
+  lines={[{m: 1, n: -2, tone: 3}]}
+  points={[
+    {at: [1, -1], label: '(1, -1)', tone: 0, dx: 62, dy: 0},
+    {at: [4, 2], label: '(4, 2)', tone: 0, dx: -30, dy: -12},
+  ]}
+  labels={[
+    {at: [0.9, 1.6], math: 'x = y^2', tone: 1},
+    {at: [3.35, 0.3], math: 'x = y + 2', tone: 3},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A região entre a parábola deitada x = y² e a reta x = y + 2. A faixa horizontal laranja, numa altura y qualquer, vai da parábola (à esquerda) até a reta (à direita): comprimento (y + 2) − y². Uma faixa vertical, ao contrário, mudaria de regra em x = 1."
+/>
 
 $$
 A = \int_{-1}^{2} \big[(y + 2) - y^2\big]\,dy
@@ -559,7 +594,7 @@ A soma de Riemann dá 21,333. Confere.
 Uma abreviação possível: a função $8 - 2x^2$ é **par**, e o intervalo é
 simétrico, então a integral é o dobro da metade direita:
 $2 \int_0^2 (8 - 2x^2)\,dx = 2 \times \frac{32}{3} = \frac{64}{3}$. É a
-propriedade da simetria da lição anterior, aplicada à diferença.
+propriedade da simetria da lição de integral definida, aplicada à diferença.
 
 ### Exemplo 2: seno e cosseno, com cruzamento no meio
 
@@ -750,8 +785,8 @@ O excedente é **R\$ 600**. Pela geometria: triângulo de base 20 e altura 60,
 > $f(x) = g(x)$ e veja quais soluções caem dentro do intervalo.
 
 > **Erro 3: achar que a área pode ser negativa.** Área é uma medida de tamanho,
-> e não tem sinal. A **integral** pode ser negativa, e é isso que a lição
-> anterior chamou de área com sinal. Se a pergunta é "qual é a área", a resposta
+> e não tem sinal. A **integral** pode ser negativa, e é isso que a lição de
+> integral definida chamou de área com sinal. Se a pergunta é "qual é a área", a resposta
 > é positiva sempre.
 
 > **Erro 4: usar $\lvert f \rvert - \lvert g \rvert$ em vez de
