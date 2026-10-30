@@ -152,12 +152,12 @@ ele.
     {f: (x) => Math.pow(3, x), domain: [-2.2, 1.5], tone: 2},
   ]}
   lines={[{m: 1, n: 1, dashed: true, tone: 1}]}
-  points={[{at: [0, 1], label: '(0,\\ 1)', tone: 1, dx: -36, dy: -4}]}
+  points={[{at: [0, 1], label: '(0,\\ 1)', tone: 1, dx: 36, dy: 18}]}
   labels={[
     {at: [1.75, 3.55], math: '2^x', tone: 3, dx: 16},
     {at: [1.35, 4.2], math: 'e^x', tone: 1, dx: -20},
     {at: [1.15, 4.8], math: '3^x', tone: 2, dx: -32},
-    {at: [-1.6, -0.35], math: 'y = x + 1', tone: 1, dx: 4},
+    {at: [1.7, 1.9], math: 'y = x + 1', tone: 1},
   ]}
   axisLabels={['x', 'y']}
   caption="As curvas 2^x, e^x e 3^x passam pelo mesmo ponto (0, 1) com inclinações diferentes: 0,69, 1 e 1,10. A reta tracejada y = x + 1, de inclinação exatamente 1, é a tangente de e^x nesse ponto."
@@ -268,9 +268,10 @@ $(1{,}0001)^{10000} \approx 2{,}7181$. É o $2{,}71828\ldots$ chegando.
 
 O que o curso **aceita sem demonstrar** é que os dois processos de aproximação
 chegam exatamente ao mesmo limite, e não a dois números que só coincidem nas
-primeiras casas. A demonstração rigorosa é matéria de um curso de análise. A
-tabela é a evidência que este curso oferece, e ela é a mesma evidência que
-convenceu os matemáticos do século XVII antes que a demonstração existisse.
+primeiras casas. Por enquanto, a tabela é a evidência que temos, e ela é a
+mesma evidência que convenceu os matemáticos do século XVII antes que a
+demonstração existisse. A demonstração precisa de uma ferramenta que ainda não
+temos, e vem na lição de [regra de L'Hôpital](./regra-de-lhopital).
 
 > O **número $e$** é a base cuja exponencial atravessa o ponto $(0, 1)$ com
 > inclinação 1. Equivalentemente, é a base em que
@@ -417,7 +418,9 @@ habitantes por ano. Repare que a taxa relativa é $\ln 1{,}03 = 0{,}02956$, e
 não $0{,}03$. O 3% é o acréscimo **de um ano inteiro**; $\ln 1{,}03$ é a taxa
 **instantânea** que, mantida continuamente, produz esses 3% ao fim do ano. As
 duas são próximas porque $\ln(1 + r) \approx r$ para $r$ pequeno, mas não são
-iguais.
+iguais. O motivo da aproximação aparece no Exemplo 4, adiante: perto de 1, o
+gráfico de $\ln x$ quase se confunde com a tangente $y = x - 1$. Trocando $x$
+por $1 + r$, isso dá $\ln(1 + r) \approx (1 + r) - 1 = r$.
 
 ## 12. A derivada do logaritmo natural
 
@@ -477,8 +480,8 @@ própria derivada é $e^x$, não a inversa dela.
     {at: [Math.E, 1], label: '(e,\\ 1)', tone: 2, dx: 30, dy: 22},
   ]}
   labels={[
-    {at: [1.55, 4.9], math: 'e^x', tone: 1, dx: 18},
-    {at: [5.0, 1.8], math: '\\ln x', tone: 2, dx: 0},
+    {at: [1.2, 4.6], math: 'e^x', tone: 1},
+    {at: [3.6, 1.75], math: '\\ln x', tone: 2},
     {at: [1.62, 4.3], math: 'y = ex', tone: 1, dx: 40, dy: 10},
     {at: [4.6, 1.5], math: 'y = x/e', tone: 2, dx: 10, dy: 22},
   ]}
@@ -660,7 +663,7 @@ $2^{t/3} = e^{(t/3)\ln 2} = e^{kt}$ com $k = \frac{\ln 2}{3} \approx 0{,}2310$.
 A taxa relativa é $k$: a cultura cresce cerca de **23,1% de si mesma por
 hora**. Repare que isso não é $\frac{100\%}{3} \approx 33\%$, que seria a
 resposta se o crescimento fosse por acréscimo fixo. O crescimento é
-multiplicativo, e 23,1% ao hora, compostos continuamente por 3 horas, dão
+multiplicativo, e 23,1% por hora, compostos continuamente por 3 horas, dão
 $e^{3 \times 0{,}2310} = e^{\ln 2} = 2$: o dobro, como o enunciado pede.
 
 ## 15. Erros comuns
@@ -735,8 +738,9 @@ $e^{3 \times 0{,}2310} = e^{\ln 2} = 2$: o dobro, como o enunciado pede.
 4. Se $L(a) = 1$, então $a^h \approx 1 + h$ para $h$ pequeno, logo
    $a \approx (1 + h)^{1/h}$, que com $h = \frac{1}{n}$ é a expressão da
    lição anterior. A tabela mostra que os dois processos chegam a 2,71828…; o
-   que fica sem demonstração é que o limite é exatamente o mesmo número, e não
-   dois que coincidem nas primeiras casas.
+   que fica sem demonstração, até a lição de regra de L'Hôpital, é que o
+   limite é exatamente o mesmo número, e não dois que coincidem nas primeiras
+   casas.
 5. Reescrevendo $a = e^{\ln a}$, temos $a^x = e^{x \ln a}$, que é $e^{kx}$
    com $k = \ln a$. A cadeia dá $\ln a \times e^{x \ln a} = a^x \ln a$.
 6. $k$ é a derivada dividida pela função: $\frac{P'}{P} = k$. Mede o
@@ -960,8 +964,8 @@ por $x^x$.
 - $e$ é a base em que a constante vale 1: $(e^x)' = e^x$. A curva de $e^x$
   atravessa $(0, 1)$ com inclinação exatamente 1, e essa escolha é o que faz
   as fórmulas de cálculo saírem sem constantes penduradas. A ligação com
-  $\left(1 + \frac{1}{n}\right)^n$ é numérica; a igualdade exata dos dois
-  limites o curso aceita sem demonstrar.
+  $\left(1 + \frac{1}{n}\right)^n$ aqui é numérica; a igualdade exata dos dois
+  limites é demonstrada na lição de regra de L'Hôpital.
 - Com a cadeia, $(e^{kx})' = k e^{kx}$, e $k$ é a **taxa relativa**: o
   crescimento por unidade de tempo por unidade do que já existe. É constante
   para a exponencial e só para ela.
@@ -981,9 +985,10 @@ $\frac{1}{x^2 + 1}$.
 
 A promessa da lição do número $e$ está paga: $e^x$ é a única exponencial igual à
 própria taxa de variação, e o motivo é a tabela da seção 8. A lição seguinte,
-[derivação implícita](./derivacao-implicita), dá nome ao truque que derivou
+[derivação implícita](./derivacao-implicita), dá nome ao método que derivou
 $\ln x$ — derivar os dois lados de uma relação — e o usa em curvas que não são
 gráfico de função nenhuma. Mais adiante, a [regra de
-L'Hôpital](./regra-de-lhopital) vai reencontrar o limite $\frac{e^h - 1}{h}$ e
-calculá-lo por outro caminho, e as [primitivas](./primitivas-e-substituicao)
+L'Hôpital](./regra-de-lhopital) vai demonstrar o que esta página aceitou: que
+o $e$ definido pela inclinação é o mesmo de $\left(1 + \frac{1}{n}\right)^n$.
+E as [primitivas](./primitivas-e-substituicao)
 vão ler a tabela desta página de trás para a frente.
