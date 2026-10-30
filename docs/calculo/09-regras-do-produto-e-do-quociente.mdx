@@ -321,9 +321,9 @@ constante multiplicativa da lição anterior, agora como consequência.
 Nos dois exemplos acima a regra parece dispensável: dava para multiplicar
 primeiro e derivar depois. Em polinômios isso é verdade, e muitas vezes é o
 caminho mais curto. A regra passa a ser necessária quando **os fatores não se
-multiplicam de forma útil**: $x^2 \sqrt{x}$ ainda se junta, mas
-$(x^2 + 1)\sqrt{x}$ não vira um monômio, e $x^2 \sen x$ não vira coisa
-nenhuma. A regra do produto deriva o produto sem precisar desfazê-lo.
+multiplicam de forma útil**. $x^2 \sqrt{x}$ ainda se junta numa potência só,
+$x^{5/2}$. Mas $x^2 \sen x$ não vira coisa nenhuma, e
+$(x^2 + 1)\sqrt{x + 1}$ também não. A regra do produto deriva o produto sem precisar desfazê-lo.
 
 ## 9. A derivada do inverso de uma função
 
@@ -332,8 +332,8 @@ $g$ é uma função derivável que não se anula.
 
 A lição de derivada calculou $\left(\frac{1}{x}\right)' = -\frac{1}{x^2}$ pela
 definição. Para uma função $g$ qualquer no lugar de $x$, dá para evitar o limite
-usando a regra do produto e um truque de escrita. Para todo $x$ em que
-$g(x) \neq 0$,
+usando a regra do produto e uma troca de escrita: escrever o número 1 como
+$g \times \frac{1}{g}$. Para todo $x$ em que $g(x) \neq 0$,
 
 $$
 g \times \frac{1}{g} = 1.
@@ -341,8 +341,8 @@ $$
 
 Os dois lados são a mesma função, a constante 1. Então as derivadas dos dois
 lados são iguais. À direita, a derivada de uma constante é zero. À esquerda,
-temos um produto, e a regra do produto se aplica com $f = g$ e o segundo fator
-igual a $\frac{1}{g}$:
+temos um produto, e a regra do produto se aplica com o primeiro fator igual a
+$g$ e o segundo igual a $\frac{1}{g}$:
 
 $$
 g' \times \frac{1}{g} + g \times \left(\frac{1}{g}\right)' = 0.
@@ -497,15 +497,19 @@ $f'(x) = 15x^4 - 6x^2 - 1$. Igual.
 **Conferindo com um número.** Em $x = 2$: $15 \times 16 - 6 \times 4 - 1 =
 240 - 24 - 1 = 215$. O quociente centrado com $h = 0{,}001$ dá $215{,}000$.
 
-Neste exemplo os dois caminhos custam quase o mesmo. O seguinte já não.
+Neste exemplo os dois caminhos custam quase o mesmo. No seguinte, a expansão
+ainda é possível, mas pede um passo a mais.
 
 ### Exemplo 2: polinômio vezes raiz
 
 *Pause e tente antes de ler.* Derive $f(x) = (x^2 + 1)\sqrt{x}$ e calcule
 $f'(4)$.
 
-Expandir não ajuda: $(x^2 + 1)\sqrt{x} = x^2\sqrt{x} + \sqrt{x}$, e o primeiro
-termo ainda é um produto. A regra do produto resolve direto, com
+Aqui os dois caminhos funcionam. Expandindo, $(x^2 + 1)\sqrt{x} =
+x^2\sqrt{x} + \sqrt{x}$, e o primeiro termo só vira uma potência depois de
+juntar os expoentes: $x^2 \times x^{1/2} = x^{5/2}$, como na lição de regras
+de derivação. Vamos pela regra do produto, que não depende desse passo, e
+conferir com a expansão no fim. Os fatores são
 $f = x^2 + 1$, $f' = 2x$, $g = \sqrt{x}$ e $g' = \frac{1}{2\sqrt{x}}$ da lição
 de derivada:
 
@@ -528,6 +532,12 @@ $$
 Em $x = 4$: $\frac{81}{4} = 20{,}25$. A mesma quantidade, escrita de outro
 jeito. Se o seu gabarito e o de outra pessoa tiverem formas diferentes, o
 teste é este: avaliar as duas num mesmo ponto.
+
+**Conferindo pela expansão.** $f(x) = x^{5/2} + x^{1/2}$, e a regra da
+potência dá $f'(x) = \frac{5}{2}x^{3/2} + \frac{1}{2}x^{-1/2}$. Em $x = 4$:
+$x^{3/2} = 8$ e $x^{-1/2} = \frac{1}{2}$, então
+$f'(4) = \frac{5}{2} \times 8 + \frac{1}{2} \times \frac{1}{2} = 20 + 0{,}25 =
+20{,}25$. O mesmo número pelos dois caminhos.
 
 ### Exemplo 3: uma função racional e as tangentes horizontais
 
@@ -573,8 +583,8 @@ conta para dizer onde uma função sobe e onde desce.
     {from: [-1.4, -0.828], to: [0.6, -0.828], tone: 3},
   ]}
   points={[
-    {at: [2.414, 4.828], label: '1 + \\sqrt{2}', tone: 3, dx: 34, dy: -14},
-    {at: [-0.414, -0.828], label: '1 - \\sqrt{2}', tone: 3, dx: -34, dy: 16},
+    {at: [2.414, 4.828], label: '1 + \\sqrt{2}', tone: 3, dx: 0, dy: 24},
+    {at: [-0.414, -0.828], label: '1 - \\sqrt{2}', tone: 3, dx: -14, dy: -36},
   ]}
   axisLabels={['x', 'y']}
   caption="A função (x² + 1)/(x − 1) tem assíntota vertical em x = 1 e duas tangentes horizontais, nos pontos em que o numerador da derivada zera: x = 1 ± √2."
@@ -600,6 +610,29 @@ Os dois concordam. Em $x = 2$: $-\frac{3}{16} = -0{,}1875$, e o quociente
 centrado dá $-0{,}1875$. Quando os dois caminhos existem, o da potência é mais
 curto; a derivada do inverso serve para os casos em que o denominador não é
 uma potência de $x$.
+
+### A regra da potência para expoente negativo
+
+A lição de [regras de derivação](./regras-de-derivacao) aceitou
+$(x^r)' = r\,x^{r-1}$ e avisou que, para expoente negativo, a justificativa
+sairia desta página. O Exemplo 4 conferiu um caso, $n = 3$. A mesma conta
+vale para qualquer inteiro positivo $n$.
+
+Escreva $x^{-n} = \frac{1}{x^n}$ e use a derivada do inverso com $g = x^n$.
+A derivada de $x^n$, que é $n\,x^{n-1}$, já foi demonstrada para $n$ inteiro
+positivo. Então
+
+$$
+(x^{-n})' = -\frac{n\,x^{n-1}}{(x^n)^2} = -\frac{n\,x^{n-1}}{x^{2n}}
+= -n\,x^{(n-1) - 2n} = -n\,x^{-n-1}.
+$$
+
+A passagem do meio subtraiu os expoentes, como no Exemplo 4. O expoente final,
+$-n-1$, é o expoente original, $-n$, menos 1. É exatamente o que a regra da
+potência diz para $r = -n$. Com isso, a regra fica demonstrada para todo
+expoente inteiro, positivo ou negativo, em todo $x \neq 0$. Falta só o
+expoente fracionário, que a lição de [derivação
+implícita](./derivacao-implicita) resolve.
 
 ### Exemplo 5: custo médio por peça
 
@@ -748,10 +781,11 @@ $1 \times 1 \times 3$ e $1 \times 2 \times 1$, que somam $6 + 3 + 2 = 11$.
 7. Avaliando as duas expressões num mesmo ponto, por exemplo $x = 4$. As duas
    dão $20{,}25$, então as duas estão certas: são a mesma função escrita de
    dois jeitos. Se dessem números diferentes, ao menos uma estaria errada.
-8. Vale expandir quando os fatores são polinômios e o produto sai curto, como
-   $(2x+1)(x^2 - 3)$. Não há como expandir de forma útil quando um fator não
-   se combina com o outro: $(x^2 + 1)\sqrt{x}$, ou produtos com seno e
-   exponencial, que as próximas lições derivam.
+8. Vale expandir quando os fatores se juntam em potências de $x$ e o
+   resultado sai curto, como $(2x+1)(x^2 - 3)$ ou $(x^2 + 1)\sqrt{x} =
+   x^{5/2} + x^{1/2}$. Não há como expandir de forma útil quando um fator não
+   se combina com o outro: $x^2 \sen x$, $(x^2 + 1)\sqrt{x + 1}$, ou produtos
+   com exponencial, que as próximas lições derivam.
 9. Reais por mês vezes assinantes por mês dá reais vezes assinantes por mês ao
    quadrado. Uma taxa de faturamento é reais por mês. A unidade errada é o
    sinal de que as duas taxas não deviam ser multiplicadas entre si.
@@ -874,8 +908,9 @@ $C'(q)\,q = C(q)$. Divida os dois lados por $q$.
    como $\frac{3x^2}{7}$.
 2. $(fg)'(2) = f'(2)\,g(2) + f(2)\,g'(2) = (-1)(5) + (3)(4) = -5 + 12 = 7$.
    $\left(\frac{f}{g}\right)'(2) = \frac{f'(2)\,g(2) - f(2)\,g'(2)}{g(2)^2} =
-   \frac{-5 - 12}{25} = -\frac{17}{25} = -0{,}68$. Se você encontrou $+0{,}28$
-   no segundo, trocou a ordem no numerador.
+   \frac{-5 - 12}{25} = -\frac{17}{25} = -0{,}68$. Se você encontrou $+0{,}68$
+   no segundo, trocou a ordem no numerador; se encontrou $+0{,}28$, usou $+$
+   no meio, como na regra do produto.
 3. Faixas: $50 \times 10 = 500$ e $200 \times 1 = 200$; canto: $1 \times 10 =
    10$. Soma: $710$. Área nova menos antiga: $51 \times 210 - 50 \times 200 =
    10710 - 10000 = 710$. Confere.
