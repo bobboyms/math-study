@@ -125,8 +125,8 @@ a altura do retângulo vezes a largura. A largura $\Delta x$ é sempre positiva,
 porque é o tamanho de um pedaço do intervalo. Mas a altura é o **valor da
 função**, e nada impede que ela seja negativa.
 
-No motivador, com $\Delta x = 0{,}5$ s e o ponto médio de cada pedaço. São dez
-pedaços ao todo; a tabela mostra cinco deles:
+No motivador, use $\Delta x = 0{,}5$ s e leia a altura no ponto médio de cada
+pedaço. São dez pedaços ao todo; a tabela mostra cinco deles:
 
 | Pedaço | ponto médio $t_i$ | $v(t_i)$ | $v(t_i) \times \Delta x$ |
 |---|---:|---:|---:|
@@ -215,15 +215,19 @@ Já sabemos que cada soma de Riemann de uma função negativa é negativa, porqu
 cada parcela $f(x_i)\,\Delta x$ é negativa. A integral é o limite dessas
 somas. Falta uma pergunta: **o sinal sobrevive ao limite?**
 
-Sobrevive, e o argumento é o da lição de limites. Se todas as somas são
-negativas e se aproximam de um número $L$, então $L$ não pode ser positivo — se
-fosse, as somas teriam de chegar perto de um número positivo, e números
-negativos não chegam perto de um positivo sem passar pelo zero. Logo $L \le 0$.
+Sobrevive, e o argumento é o da lição de limites. Suponha que todas as somas
+são negativas e se aproximam de um número $L$. Se $L$ fosse positivo, cada
+soma estaria a uma distância de $L$ **maior que o próprio** $L$: para ir de um
+número negativo até $L$, é preciso passar pelo zero, e só o trecho de 0 a $L$
+já mede $L$. Então as somas nunca chegariam tão perto de $L$ quanto se
+quisesse — e é isso que “se aproximar de $L$” exige. Logo $L \le 0$.
 
-O mesmo raciocínio, aplicado pedaço a pedaço, diz o que acontece quando a
-função troca de sinal no meio do intervalo: as somas separam sozinhas o que
-está acima do que está abaixo, e o limite conserva a separação. É isso que
-autoriza a leitura "área de cima menos área de baixo".
+E quando a função troca de sinal no meio do intervalo? Corte o intervalo no
+ponto da troca. A propriedade da divisão do intervalo, na seção 9, diz que a
+integral inteira é a soma das integrais dos dois pedaços. No pedaço em que a
+função é positiva, a integral é a área. No pedaço em que é negativa, pelo
+argumento acima, a integral é menos a área. Somando os dois, sai a leitura
+“área de cima menos área de baixo”.
 
 **O que muda na escrita.** Antes, "integral" era "área sob a curva". Agora é
 "área com sinal": o que está acima conta positivo, o que está abaixo conta
@@ -338,13 +342,13 @@ junto com a região de $b$ até $c$. As áreas com sinal se somam.
   xUnit={72}
   yUnit={19}
   polygons={[
-    {points: [[0, 0], [0.5, 0.25], [1, 1], [1, 0]], tone: 1},
-    {points: [[1, 1], [1.5, 2.25], [2, 4], [2.5, 6.25], [3, 9], [3, 0], [1, 0]], tone: 2},
+    {points: [...Array.from({length: 41}, (_, i) => { const x = 0 + (1 - 0) * i / 40; return [x, x * x]; }), [1, 0]], tone: 1},
+    {points: [...Array.from({length: 41}, (_, i) => { const x = 1 + (3 - 1) * i / 40; return [x, x * x]; }), [3, 0], [1, 0]], tone: 2},
   ]}
   functions={[{f: (x) => x * x, domain: [-0.3, 3.2], tone: 3}]}
   lines={[{x: 1, dashed: true, tone: 0}]}
   labels={[
-    {at: [0.72, 0.12], math: '\\tfrac{1}{3}', tone: 1, dy: -16},
+    {at: [0.5, 1.5], math: '\\tfrac{1}{3}', tone: 1},
     {at: [2.35, 2.2], math: '\\tfrac{26}{3}', tone: 2},
   ]}
   axisLabels={['x', 'y']}
@@ -444,8 +448,8 @@ função corta a conta pela metade ou a elimina.
   xUnit={44}
   yUnit={20}
   polygons={[
-    {points: [[-3, 9], [-2.5, 6.25], [-2, 4], [-1.5, 2.25], [-1, 1], [-0.5, 0.25], [0, 0], [0, 0], [-3, 0]], tone: 1},
-    {points: [[0, 0], [0.5, 0.25], [1, 1], [1.5, 2.25], [2, 4], [2.5, 6.25], [3, 9], [3, 0]], tone: 1},
+    {points: [...Array.from({length: 41}, (_, i) => { const x = -3 + (0 - (-3)) * i / 40; return [x, x * x]; }), [0, 0], [-3, 0]], tone: 1},
+    {points: [...Array.from({length: 41}, (_, i) => { const x = 0 + (3 - 0) * i / 40; return [x, x * x]; }), [3, 0]], tone: 1},
   ]}
   functions={[{f: (x) => x * x, domain: [-3.1, 3.1], tone: 3}]}
   labels={[
@@ -466,7 +470,7 @@ $$
 Exemplo: $\int_{-3}^{3} t^2\,dt = 2 \times 9 = 18$.
 
 <CartesianPlane
-  xMin={-2.6}
+  xMin={-3}
   xMax={2.6}
   yMin={-9}
   yMax={9}
@@ -474,16 +478,16 @@ Exemplo: $\int_{-3}^{3} t^2\,dt = 2 \times 9 = 18$.
   yUnit={16}
   yStep={2}
   polygons={[
-    {points: [[-2, -8], [-1.5, -3.375], [-1, -1], [-0.5, -0.125], [0, 0], [-2, 0]], tone: 2},
-    {points: [[0, 0], [0.5, 0.125], [1, 1], [1.5, 3.375], [2, 8], [2, 0]], tone: 1},
+    {points: [...Array.from({length: 41}, (_, i) => { const x = -2 + (0 - (-2)) * i / 40; return [x, x * x * x]; }), [0, 0], [-2, 0]], tone: 2},
+    {points: [...Array.from({length: 41}, (_, i) => { const x = 0 + (2 - 0) * i / 40; return [x, x * x * x]; }), [2, 0]], tone: 1},
   ]}
   functions={[{f: (x) => x * x * x, domain: [-2.1, 2.1], tone: 3}]}
   labels={[
-    {at: [-1.45, -2.2], math: '-4', tone: 2},
-    {at: [1.45, 2.2], math: '+4', tone: 1},
+    {at: [-2.42, -3.2], math: '-A', tone: 2},
+    {at: [1.65, 1.3], math: '+A', tone: 1},
   ]}
   axisLabels={['x', 'y']}
-  caption="x³ é ímpar: a região da esquerda é a da direita girada meia volta, e fica abaixo do eixo. A integral de −2 a 2 é −4 + 4 = 0."
+  caption="x³ é ímpar: a região da esquerda é a da direita girada meia volta, e fica abaixo do eixo. Seja qual for a área A de cada lado, a integral de −2 a 2 é −A + A = 0. A próxima lição mostra que A = 4."
 />
 
 **Função ímpar.** O gráfico à esquerda é o da direita girado meia volta em
@@ -539,7 +543,7 @@ a altura que sobra é $\bar f$.
   yUnit={19}
   polygons={[
     {points: [[0, 0], [3, 0], [3, 3], [0, 3]], tone: 2, fill: false},
-    {points: [[0, 0], [0.5, 0.25], [1, 1], [1.5, 2.25], [2, 4], [2.5, 6.25], [3, 9], [3, 0]], tone: 1},
+    {points: [...Array.from({length: 41}, (_, i) => { const x = 0 + (3 - 0) * i / 40; return [x, x * x]; }), [3, 0]], tone: 1},
   ]}
   functions={[{f: (x) => x * x, domain: [-0.3, 3.2], tone: 3}]}
   points={[{at: [1.732, 3], label: '(\\sqrt{3},\\ 3)', tone: 2, dx: -40, dy: -14}]}
@@ -632,9 +636,12 @@ $$
 \int_1^4 (2x + 1)\,dx = \frac{(3 + 9) \times 3}{2} = 18.
 $$
 
-Ou, pelas propriedades: $\int_1^4 2x\,dx + \int_1^4 1\,dx = 2 \times \frac{16 - 1}{2} + 3 = 15 + 3 = 18$.
-O primeiro termo é o dobro da diferença de dois triângulos; o segundo é um
-retângulo de base 3 e altura 1. Os dois caminhos dão 18.
+Ou, pelas propriedades: separe a soma, $\int_1^4 2x\,dx + \int_1^4 1\,dx$, e
+tire o 2 para fora, $2\int_1^4 x\,dx$. A região sob $y = x$ de 1 a 4 é um
+triângulo grande, de 0 a 4, menos um triângulo pequeno, de 0 a 1. O grande tem
+área $\frac{4 \times 4}{2} = 8$; o pequeno, $\frac{1 \times 1}{2} = 0{,}5$. A
+diferença é $7{,}5$, e o dobro dela é 15. O segundo termo é um retângulo de
+base 3 e altura 1, área 3. Total: $15 + 3 = 18$. Os dois caminhos dão 18.
 
 ### Exemplo 3: triângulos com sinal
 
@@ -693,8 +700,9 @@ $$
 \frac{1}{2} \times (2 - 1) \le \int_1^2 \frac{1}{x}\,dx \le 1 \times (2 - 1),
 $$
 
-isto é, a integral está entre 0,5 e 1. O valor exato, que a lição de
-[primitivas](./primitivas-e-substituicao) vai obter, é $\ln 2 \approx 0{,}693$
+isto é, a integral está entre 0,5 e 1. O valor exato, que a lição do
+[teorema fundamental](./teorema-fundamental-do-calculo) vai obter, é
+$\ln 2 \approx 0{,}693$
 — dentro da faixa. A cota não dá o número, mas descarta qualquer resposta fora
 de $[0{,}5;\ 1]$.
 
