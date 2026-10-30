@@ -151,13 +151,13 @@ uma função, e a regra da cadeia diz o que isso dá.
   xUnit={34}
   circles={[{center: [0, 0], r: 5, tone: 1}]}
   lines={[{m: -0.75, n: 6.25, tone: 3}]}
-  segments={[{from: [0, 0], to: [3, 4], tone: 2, label: '\\text{raio}', dx: -26, dy: 4}]}
+  segments={[{from: [0, 0], to: [3, 4], tone: 2, label: '\\text{raio}', dx: -28, dy: -8}]}
   points={[
-    {at: [3, 4], label: '(3,\\ 4)', tone: 3, dx: 30, dy: 2},
+    {at: [3, 4], label: '(3,\\ 4)', tone: 3, dx: 30, dy: -16},
     {at: [3, -4], label: '(3,\\ -4)', tone: 2, dx: 34, dy: 8, open: true},
   ]}
   labels={[
-    {at: [7, 1.7], math: '\\text{tangente}', tone: 3, dx: 0, dy: -10},
+    {at: [7, 2.7], math: '\\text{tangente}', tone: 3},
   ]}
   axisLabels={['x', 'y']}
   caption="A borda da pista, o raio até (3, 4) e a reta em que o carrinho escapa. A tangente é perpendicular ao raio: as inclinações 4/3 e −3/4 têm produto −1. Em (3, −4), o ponto vazio, a tangente teria outra inclinação."
@@ -421,14 +421,22 @@ implícita saiu sem que a raiz de Bhaskara aparecesse em nenhum momento.
 <CartesianPlane
   xMin={-4} xMax={4} yMin={-4} yMax={4}
   xUnit={40}
-  functions={[
-    {f: (x) => (-x + Math.sqrt(28 - 3 * x * x)) / 2, domain: [-3.05, 3.05], tone: 1},
-    {f: (x) => (-x - Math.sqrt(28 - 3 * x * x)) / 2, domain: [-3.05, 3.05], tone: 1},
-  ]}
+  segments={Array.from({length: 180}, (_, i) => {
+    // x² + xy + y² = 7 girada 45°: (3u² + v²)/2 = 7. A forma paramétrica fecha
+    // a elipse inteira; as duas raízes em x deixavam um vão onde a tangente
+    // fica vertical.
+    const ponto = (k) => {
+      const t = (2 * Math.PI * k) / 180;
+      const u = Math.sqrt(14 / 3) * Math.cos(t);
+      const v = Math.sqrt(14) * Math.sin(t);
+      return [(u - v) / Math.SQRT2, (u + v) / Math.SQRT2];
+    };
+    return {from: ponto(i), to: ponto(i + 1), tone: 1};
+  })}
   lines={[{m: -0.8, n: 2.8, tone: 3}]}
   points={[
     {at: [1, 2], label: '(1,\\ 2)', tone: 3, dx: 30, dy: -4},
-    {at: [1, -3], label: '(1,\\ -3)', tone: 2, dx: 34, dy: 10, open: true},
+    {at: [1, -3], label: '(1,\\ -3)', tone: 2, dx: 10, dy: 22, open: true},
   ]}
   axisLabels={['x', 'y']}
   caption="A curva x² + xy + y² = 7 é uma elipse inclinada. Em (1, 2) a tangente tem inclinação −4/5. O ponto vazio (1, −3) tem o mesmo x e outra inclinação: −1/5."
@@ -532,7 +540,9 @@ y^q = x^p.
 $$
 
 Agora os dois expoentes são inteiros, e a regra da potência para inteiros já
-está demonstrada. Derive os dois lados em relação a $x$. O lado esquerdo é uma
+está demonstrada: para inteiros positivos, na lição de [regras de
+derivação](./regras-de-derivacao); para negativos, na de [produto e
+quociente](./regras-do-produto-e-do-quociente). Derive os dois lados em relação a $x$. O lado esquerdo é uma
 potência de função, $q\,y^{q-1}\,y'$; o direito é $p\,x^{p-1}$:
 
 $$
@@ -634,9 +644,11 @@ Em $(3, 3)$: $y' = \frac{6 - 9}{9 - 6} = -1$. A tangente é
 $y = 3 - 1(x - 3) = -x + 6$.
 
 **Conferindo.** O ponto $(3, 3)$ está sobre a reta $y = x$, e a curva é
-simétrica em relação a essa reta (trocar $x$ por $y$ não muda a equação). Uma
-tangente num ponto do eixo de simetria precisa ser perpendicular a ele, e a
-perpendicular a $y = x$ tem inclinação $-1$. Confere pela geometria, e o
+simétrica em relação a essa reta (trocar $x$ por $y$ não muda a equação). Num
+ponto do eixo de simetria, a tangente só tem duas opções: ser perpendicular ao
+eixo ou correr ao longo dele. Aqui a curva atravessa a reta $y = x$ em vez de
+seguir junto dela, então sobra a perpendicular — e a perpendicular a $y = x$
+tem inclinação $-1$. Confere pela geometria, e o
 quociente centrado, calculado resolvendo a equação para $y$ perto de 3, dá
 $-1{,}0000$.
 
@@ -673,10 +685,12 @@ com $\sen y = x$ e $\tg y = x$ na seção 11.
 
 ### Exemplo 6: duas máquinas para a mesma produção
 
-*Pause e tente.* Uma oficina produz 400 peças por dia usando $x$ horas de uma
-máquina antiga e $y$ horas de uma máquina nova, com a relação
-$\sqrt{x}\,\sqrt{y} = 20$. Hoje ela usa 16 horas da antiga e 25 da nova (e de
-fato $\sqrt{16} \times \sqrt{25} = 4 \times 5 = 20$). Se ela aumentar um
+*Pause e tente.* Uma oficina usa $x$ horas de uma máquina antiga e $y$ horas
+de uma máquina nova, e produz $20\sqrt{x}\,\sqrt{y}$ peças por dia. Ela
+precisa manter 400 peças por dia: $20\sqrt{x}\,\sqrt{y} = 400$. Dividindo os
+dois lados por 20, a relação fica $\sqrt{x}\,\sqrt{y} = 20$. Hoje ela usa 16
+horas da antiga e 25 da nova (e de fato
+$\sqrt{16} \times \sqrt{25} = 4 \times 5 = 20$). Se ela aumentar um
 pouco as horas da máquina antiga, em que ritmo pode reduzir as da nova sem
 mudar a produção?
 
@@ -698,8 +712,12 @@ y' = -\frac{y}{x}.
 $$
 
 Em $(16, 25)$: $y' = -\frac{25}{16} \approx -1{,}56$. Cada hora a mais na
-máquina antiga dispensa cerca de 1,56 hora da nova, **nesse ponto** — a troca
-não é de um para um, porque a máquina nova rende mais.
+máquina antiga dispensa cerca de 1,56 hora da nova, **nesse ponto**. A troca
+não é de um para um porque, nesse ponto, uma hora a mais da máquina antiga
+rende mais peças que uma hora a mais da nova. Confira com a fórmula da
+produção: com 17 horas da antiga e 25 da nova, saem
+$20 \times \sqrt{17} \times 5 \approx 412$ peças, 12 a mais; com 16 e 26,
+saem $20 \times 4 \times \sqrt{26} \approx 408$, só 8 a mais.
 
 **Conferindo.** Aqui dá para isolar: $\sqrt{xy} = 20$ vira $xy = 400$ e
 $y = \frac{400}{x}$, cuja derivada em 16 é $-\frac{400}{256} = -1{,}5625$.
@@ -932,7 +950,8 @@ positivo ou zero.
 10. $2xy + x^2\,y' + y' = 0$, $y'(x^2 + 1) = -2xy$, $y' = -\frac{2xy}{x^2 + 1}
     = -\frac{8}{5} = -1{,}6$. Confere com $y = \frac{10}{x^2 + 1}$, cuja
     derivada em 2 é $-\frac{20 \times 2}{25} = -1{,}6$. *Se encontrou
-    $-\frac{4}{5}$, derivou $x^2 y$ como $x^2\,y'$ e perdeu a parcela $2xy$.*
+    $y' = 0$, derivou $x^2 y$ como $x^2\,y'$ e perdeu a parcela $2xy$; se
+    encontrou $-8$, perdeu a parcela $x^2\,y'$.*
 11. $1 + \cos y \times y' = 0$, $y' = -\frac{1}{\cos y} = -\frac{1}{\cos 0} =
     -1$. Confere com $y = \arcsen(1 - x)$, cujo quociente centrado em 1 dá
     $-1{,}0000$.
