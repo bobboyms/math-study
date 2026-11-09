@@ -36,7 +36,10 @@ consequência direta da fórmula da distância.
 - **equação geral** — $x^2 + y^2 + Dx + Ey + F = 0$; é a reduzida desenvolvida;
 - **parábola** — o conjunto dos pontos equidistantes de um ponto (foco) e de uma
   reta (diretriz); é a curva de $y = ax^2+bx+c$;
-- **forma canônica da parábola** — $y = a(x-h)^2 + k$, com vértice $(h,k)$.
+- **vértice** — o ponto da parábola no meio do caminho entre o foco e a
+  diretriz; $p$ é a distância do vértice até o foco;
+- **forma canônica da parábola** — $y = a(x-h)^2 + k$, com vértice $(h,k)$ e
+  $a = \frac{1}{4p}$.
 
 Exemplo: $(x-3)^2 + (y+2)^2 = 25$ tem centro $(3,-2)$ e raio 5. Contraexemplo:
 o centro **não** é $(-3, 2)$ — os sinais dentro dos parênteses aparecem
@@ -107,36 +110,121 @@ como gráfico de uma função.
 
 ## Circunferência: a distância fixada
 
-Comece pela definição, em palavras:
+A borda da área de cobertura é formada pelos pontos que ficam **exatamente** a
+5 km da antena. Ainda não temos uma equação para essa borda. Vamos construí-la
+com a única ferramenta de distância que o curso já tem: a fórmula da distância,
+que vem do teorema de Pitágoras.
+
+### Primeiro com números: pontos a 5 km da antena
+
+A antena está em $(3, 4)$. Alguns pontos a 5 km dela se acham sem conta,
+andando em linha reta a partir da antena:
+
+- 5 para a direita: $(8, 4)$;
+- 5 para a esquerda: $(-2, 4)$;
+- 5 para cima: $(3, 9)$;
+- 5 para baixo: $(3, -1)$.
+
+Os pontos fora dessas quatro direções pedem uma conta. Teste o ponto $(7, 7)$.
+Saindo da antena, o caminho até ele tem duas partes:
+
+- **na horizontal**, de $x = 3$ até $x = 7$: um deslocamento de $7 - 3 = 4$;
+- **na vertical**, de $y = 4$ até $y = 7$: um deslocamento de $7 - 4 = 3$.
+
+Esses dois deslocamentos são os catetos de um triângulo retângulo. A distância
+em linha reta é a hipotenusa. Foi exatamente assim que a fórmula da distância
+foi construída em [Plano cartesiano](./plano-cartesiano-e-distancia). Pelo
+teorema de Pitágoras, o quadrado da distância é
+
+$$
+4^2 + 3^2 = 16 + 9 = 25 = 5^2.
+$$
+
+A distância é 5. Então $(7, 7)$ é um ponto da borda.
+
+### Agora um ponto qualquer, com a mesma conta
+
+Agora pegue um ponto $(x, y)$ cujas coordenadas não conhecemos. Repita **a
+mesma conta**, trocando os números do ponto pelas letras:
+
+| Passo | Com o ponto $(7, 7)$ | Com o ponto $(x, y)$ |
+|---|---|---|
+| deslocamento horizontal | $7 - 3$ | $x - 3$ |
+| deslocamento vertical | $7 - 4$ | $y - 4$ |
+| quadrado da distância (Pitágoras) | $(7-3)^2 + (7-4)^2$ | $(x-3)^2 + (y-4)^2$ |
+
+O ponto $(x, y)$ está na borda quando a distância dele até a antena é 5. Isso é
+o mesmo que o quadrado dessa distância ser $5^2 = 25$. Escrevendo essa condição
+com a última linha da tabela:
+
+$$
+(x-3)^2 + (y-4)^2 = 25.
+$$
+
+<CartesianPlane
+  xMin={-3} xMax={10} yMin={-2} yMax={10}
+  xUnit={27}
+  circles={[{center: [3, 4], r: 5, tone: 1}]}
+  points={[
+    {at: [3, 4], label: '(3,\\,4)', tone: 2, dx: -24, dy: -14},
+    {at: [7, 7], label: '(x,\\,y)', tone: 3, dx: 26, dy: -10},
+    {at: [7, 4], tone: 0, r: 3},
+  ]}
+  segments={[
+    {from: [3, 4], to: [7, 7], tone: 2, label: '5', dx: -10, dy: -12},
+    {from: [3, 4], to: [7, 4], tone: 3, dashed: true, label: 'x - 3', dy: 16},
+    {from: [7, 4], to: [7, 7], tone: 3, dashed: true, label: 'y - 4', dx: -26, dy: 8},
+  ]}
+  caption="Do centro até um ponto da borda: um deslocamento horizontal, um vertical, e a hipotenusa de 5 km. Pitágoras liga os três."
+/>
+
+Essa equação funciona como um teste que se aplica a cada ponto do plano: “o
+deslocamento horizontal ao quadrado, mais o vertical ao quadrado, dá 25?”. Os
+pontos que passam no teste são exatamente os pontos da borda. Juntos, eles
+formam a circunferência.
+
+**Conferência com os pontos achados sem conta.** Para $(8, 4)$: $(8-3)^2 +
+(4-4)^2 = 25 + 0 = 25$ ✓. Para $(3, -1)$: $(3-3)^2 + (-1-4)^2 = 0 + 25 = 25$ ✓.
+
+**E se o ponto estiver à esquerda ou abaixo da antena?** Teste $(-1, 1)$. Os
+deslocamentos saem negativos: $-1 - 3 = -4$ e $1 - 4 = -3$. O sinal só diz o
+sentido, para a esquerda e para baixo. Elevando ao quadrado, o sinal some:
+$(-4)^2 + (-3)^2 = 16 + 9 = 25$ ✓. Esse ponto também está a 5 km, porque o
+triângulo é o mesmo de antes, virado para o outro lado. É o motivo visto na
+seção “Por que a ordem da subtração não importa”, de
+[Plano cartesiano](./plano-cartesiano-e-distancia): o quadrado apaga o sentido e
+guarda só o tamanho.
+
+### Com letras: qualquer centro, qualquer raio
+
+Na conta da antena, nada dependeu de os números serem 3, 4 e 5. O 3 e o 4 foram
+as coordenadas do centro, subtraídas para medir os deslocamentos. O 5 foi a
+distância exigida. Trocando esses números por letras, a mesma conta vale para
+qualquer circunferência:
 
 > Uma **circunferência** de centro $C(a,b)$ e raio $r$ é o conjunto de todos os
 > pontos $(x,y)$ do plano cuja distância até $C$ é exatamente $r$.
 
-Traduza isso com a fórmula da distância:
+A distância de $(x, y)$ até $(a, b)$ é dada pela fórmula da distância. Exigir
+que ela seja $r$ dá a equação
 
 $$
 \sqrt{(x-a)^2 + (y-b)^2} = r.
 $$
 
-Elevando os dois lados ao quadrado — operação legítima aqui porque os dois lados
-são positivos, então nenhuma solução nova é criada:
+A raiz atrapalha as contas, e por isso vamos trocá-la pelos quadrados. Os dois
+lados da igualdade são números não negativos: uma distância e um raio. Para
+números não negativos, “ser iguais” e “ter quadrados iguais” é a mesma
+condição. Por exemplo, o único número não negativo cujo quadrado é 25 é o 5.
+Então, elevar os dois lados ao quadrado não acrescenta nem tira nenhum ponto da
+curva:
 
 > $$(x-a)^2 + (y-b)^2 = r^2.$$
 
-<CartesianPlane
-  xMin={-2} xMax={9} yMin={-2} yMax={9}
-  xUnit={30}
-  circles={[{center: [3, 4], r: 3, tone: 1}]}
-  points={[
-    {at: [3, 4], label: 'C(a,b)', tone: 2, dy: -18},
-    {at: [6, 4], tone: 3},
-  ]}
-  segments={[{from: [3, 4], to: [6, 4], tone: 3, label: 'r', dy: -14}]}
-  caption="Todo ponto da curva está à mesma distância r do centro. A equação apenas escreve essa frase."
-/>
-
-Isso não é uma fórmula a decorar: é a definição, com a raiz retirada. Se em algum
-momento você esquecer a equação, reescreva a frase e eleve ao quadrado.
+Essa é a **equação reduzida** da circunferência. Ela não é uma fórmula a
+decorar: é a frase “distância até o centro igual a $r$”, escrita com Pitágoras e
+sem a raiz. Se em algum momento você esquecer a equação, refaça o caminho desta
+seção com um ponto numérico.
 
 ### Lendo centro e raio
 
@@ -146,9 +234,11 @@ Dado $(x-3)^2 + (y+2)^2 = 25$:
 - o raio é $\sqrt{25} = 5$.
 
 > **Erro comum 1: sinal do centro.** A equação padrão tem **menos**:
-> $(x - a)$ e $(y - b)$. Quando aparece $(y+2)$, leia-a como $(y - (-2))$, e a
-> coordenada é $-2$. Uma checagem: substitua o centro na equação; o resultado
-> tem de ser 0, não $r^2$.
+> $(x - a)$ e $(y - b)$. O motivo está na dedução: $x - a$ é o deslocamento
+> horizontal a partir do centro, e medir um deslocamento é subtrair a posição
+> de partida. Quando aparece $(y+2)$, leia-a como $(y - (-2))$, e a coordenada
+> é $-2$. Uma checagem: substitua o centro na equação; o resultado tem de ser
+> 0, porque o centro está a distância zero dele mesmo.
 
 > **Erro comum 2: confundir $r$ com $r^2$.** O número do lado direito é o raio
 > **ao quadrado**. Em $= 25$, o raio é 5. Em $= 5$, o raio é $\sqrt{5} \approx
@@ -288,54 +378,121 @@ num ponto.
 ## Parábola: a outra curva com equação
 
 A parábola já apareceu no curso como gráfico de
-[função quadrática](../funcoes/funcao-quadratica). Aqui ela ganha uma segunda
-identidade, geométrica — e é dela que vêm as aplicações.
+[função quadrática](../funcoes/funcao-quadratica). Lá, ela nasceu de uma conta:
+cada entrada $x$ era elevada ao quadrado, e os pontos marcados formavam a
+curva. Aqui vamos fazer o caminho que fizemos com a circunferência. Partimos de
+uma frase sobre **distâncias**, sem nenhuma fórmula, e traduzimos essa frase em
+equação. No fim, a equação que vai aparecer é a da função quadrática. Isso vai
+mostrar que aquela curva tem uma propriedade geométrica que a conta sozinha não
+revelava — e é dessa propriedade que vêm as antenas e os faróis.
+
+A frase é esta:
 
 > Uma **parábola** é o conjunto dos pontos que estão à mesma distância de um
 > ponto fixo (o **foco**) e de uma reta fixa (a **diretriz**).
 
+Falta dizer o que é a distância de um ponto até uma reta. É o comprimento do
+caminho mais curto do ponto até a reta. Neste curso, a diretriz será sempre
+horizontal. Para chegar a uma reta horizontal pelo caminho mais curto, o ponto
+desce (ou sobe) em linha reta. Por isso, a distância é a diferença entre a
+altura do ponto e a altura da reta.
+
+Exemplo com a diretriz $y = -1$: o ponto $(5, 3)$ está a $3 - (-1) = 4$ da
+diretriz. A coordenada horizontal, 5, não entra nessa conta.
+
+### Construindo a curva ponto a ponto
+
+Vamos usar o foco $F = (0, 1)$ e a diretriz $y = -1$. A pergunta é: quais
+pontos estão à mesma distância dos dois? Antes de qualquer equação, vamos
+procurar alguns desses pontos por tentativa.
+
+**O ponto mais baixo.** O foco está na altura 1, e a diretriz na altura $-1$. O
+ponto $(0, 0)$ fica exatamente no meio do caminho entre eles: está a 1 do foco
+(subindo) e a 1 da diretriz (descendo). Ele pertence à curva. Esse ponto é o
+**vértice**, e ele fica sempre no meio do caminho entre o foco e a diretriz.
+
+**Na altura do foco, $y = 1$.** Um ponto nessa altura está a $1 - (-1) = 2$ da
+diretriz. Então ele precisa estar também a 2 do foco. Como o ponto e o foco
+estão na mesma altura, a distância entre eles é só o afastamento horizontal.
+Andando 2 para a direita ou 2 para a esquerda do foco, encontramos $(2, 1)$ e
+$(-2, 1)$.
+
+**Mais alto, em $y = 4$.** Agora a distância até a diretriz é
+$4 - (-1) = 5$. O ponto precisa estar a 5 do foco. Do foco até o ponto há um
+deslocamento vertical de $4 - 1 = 3$ e um horizontal que ainda não conhecemos.
+Pelo teorema de Pitágoras, o horizontal ao quadrado mais $3^2$ tem de dar
+$5^2 = 25$. Então o horizontal ao quadrado vale $25 - 9 = 16$, e o deslocamento
+horizontal é 4. Os pontos são $(4, 4)$ e $(-4, 4)$ — o mesmo triângulo de lados
+3, 4 e 5 da antena.
+
+| Altura $y$ | Distância até a diretriz | Pontos encontrados |
+|---|---|---|
+| 0 | 1 | $(0, 0)$ |
+| 1 | 2 | $(2, 1)$ e $(-2, 1)$ |
+| 4 | 5 | $(4, 4)$ e $(-4, 4)$ |
+
 <CartesianPlane
-  xMin={-4} xMax={4} yMin={-2} yMax={6}
-  xUnit={34}
-  functions={[{f: (x) => x * x / 4, tone: 1}]}
+  xMin={-5} xMax={5} yMin={-2} yMax={6}
+  xUnit={32}
   lines={[{m: 0, n: -1, tone: 3, dashed: true}]}
   points={[
-    {at: [0, 1], label: 'F', tone: 2, dx: 14, dy: 14},
-    {at: [3, 2.25], tone: 2},
-    {at: [3, -1], tone: 3},
+    {at: [0, 1], label: 'F', tone: 2, dx: -14, dy: -6},
+    {at: [0, 0], tone: 1},
+    {at: [2, 1], tone: 1},
+    {at: [-2, 1], tone: 1},
+    {at: [4, 4], label: '(4,\\,4)', tone: 1, dx: -30, dy: -8},
+    {at: [-4, 4], tone: 1},
+    {at: [4, -1], tone: 3, r: 3},
   ]}
   segments={[
-    {from: [3, 2.25], to: [0, 1], tone: 2, dashed: true},
-    {from: [3, 2.25], to: [3, -1], tone: 3, dashed: true},
+    {from: [4, 4], to: [0, 1], tone: 2, dashed: true, label: '5', dx: -8, dy: -12},
+    {from: [4, 4], to: [4, -1], tone: 3, dashed: true, label: '5', dx: 12},
   ]}
   labels={[
-    {at: [-2.6, -1], math: '\\text{diretriz}', tone: 3, fontSize: 12, dy: 16},
+    {at: [-3.2, -1], math: '\\text{diretriz}', tone: 3, fontSize: 12, dy: 16},
   ]}
-  caption="Cada ponto da curva está à mesma distância do foco F e da reta diretriz. Os dois segmentos tracejados têm o mesmo comprimento."
+  caption="Os cinco pontos achados por tentativa. O ponto (4, 4) está a 5 do foco F e a 5 da diretriz: os dois tracejados têm o mesmo comprimento."
 />
 
-Essa propriedade é o motivo de as antenas parabólicas existirem: um sinal que
-chega paralelo ao eixo da parábola, ao refletir na superfície, converge **todo**
-para o foco. É a mesma geometria, invertida, que faz o farol de um carro
-projetar um feixe paralelo a partir de uma lâmpada colocada no foco. (Essa
-propriedade de reflexão não será demonstrada aqui: a prova precisa de
-ferramentas que este curso não desenvolve. Fica registrada como fato.)
+Duas coisas já aparecem no desenho:
+
+- **a curva se abre ao subir.** Quanto mais alto o ponto, mais longe ele está
+  da diretriz. Então ele pode estar mais longe do foco, e isso o afasta para os
+  lados;
+- **a curva é simétrica.** O foco está sobre o eixo vertical. Por isso, um ponto
+  à direita e o seu espelho à esquerda, na mesma altura, estão à mesma distância
+  do foco.
+
+**Pause e tente:** compare a coordenada $x$ e a coordenada $y$ dos pontos da
+tabela. Você consegue achar uma relação entre elas que valha nas três linhas?
+
+<details>
+<summary>Conferir a relação</summary>
+
+Em todos os pontos, $x^2$ é 4 vezes $y$: $0^2 = 4 \times 0$, $2^2 = 4 \times 1$
+e $4^2 = 4 \times 4$. Ou seja, $y = \frac{x^2}{4}$.
+
+Três pontos sugerem a relação, mas não garantem que ela valha para todos os
+outros. Essa garantia vem da conta da próxima seção.
+
+</details>
 
 ### Da definição à equação
 
 A definição fala de distâncias. Então, para transformá-la em equação, usamos a
 mesma ferramenta da circunferência: a
-[fórmula da distância](./plano-cartesiano-e-distancia). Vamos fazer a conta
-com a parábola da figura, que tem o foco em $F = (0, 1)$ e a diretriz na reta
-horizontal $y = -1$.
+[fórmula da distância](./plano-cartesiano-e-distancia). É a conta que fizemos
+para os pontos da tabela, agora com um ponto qualquer $(x, y)$ no lugar de um
+ponto numérico.
 
-Pegue um ponto qualquer $(x, y)$ e escreva as duas distâncias.
+Escreva as duas distâncias.
 
 - **Até o foco.** Pela fórmula da distância entre $(x, y)$ e $(0, 1)$:
   $\sqrt{(x-0)^2 + (y-1)^2} = \sqrt{x^2 + (y-1)^2}$.
-- **Até a diretriz.** A diretriz é horizontal. Por isso, o caminho mais curto
-  até ela é descer (ou subir) em linha reta, e a distância é a diferença de
-  alturas: $\lvert y - (-1) \rvert = \lvert y + 1 \rvert$.
+- **Até a diretriz.** É a diferença de alturas, como vimos acima:
+  $\lvert y - (-1) \rvert = \lvert y + 1 \rvert$. As barras de
+  [valor absoluto](../funcoes/funcao-modular-e-por-partes) garantem que a
+  distância saia positiva mesmo se o ponto estivesse abaixo da diretriz.
 
 O ponto está na parábola quando as duas distâncias são iguais:
 
@@ -375,47 +532,157 @@ $$
 y = \frac{x^2}{4}.
 $$
 
-**Conferência com a figura.** O ponto marcado na curva é $(3;\ 2{,}25)$. Na
-equação, $\frac{3^2}{4} = \frac{9}{4} = 2{,}25$ ✓. E as duas distâncias batem:
-até o foco, $\sqrt{3^2 + 1{,}25^2} = \sqrt{10{,}5625} = 3{,}25$; até a diretriz,
-$2{,}25 + 1 = 3{,}25$ ✓.
+É a relação que a tabela sugeria, agora garantida para todo ponto da curva.
 
-A definição geométrica produziu uma equação do tipo $y = ax^2$, com
-$a = \frac{1}{4}$ — o gráfico de uma [função quadrática](../funcoes/funcao-quadratica)
-com vértice na origem. Se o foco e a diretriz fossem mudados de lugar juntos, a
-curva seria deslocada; se o foco ficasse mais longe da diretriz, a curva ficaria
-mais aberta. Deslocar e esticar um gráfico são as transformações de
-[Transformações de gráficos](../funcoes/transformacoes-de-graficos), e elas
-levam $y = \frac{x^2}{4}$ a qualquer parábola de eixo vertical. Escrita com os
-parênteses abertos, essa parábola tem a forma que você já conhece da função
-quadrática.
+<CartesianPlane
+  xMin={-5} xMax={5} yMin={-2} yMax={6}
+  xUnit={32}
+  functions={[{f: (x) => x * x / 4, tone: 1}]}
+  lines={[{m: 0, n: -1, tone: 3, dashed: true}]}
+  points={[
+    {at: [0, 1], label: 'F', tone: 2, dx: 14, dy: 14},
+    {at: [0, 0], tone: 1},
+    {at: [2, 1], tone: 1},
+    {at: [-2, 1], tone: 1},
+    {at: [4, 4], tone: 1},
+    {at: [-4, 4], tone: 1},
+    {at: [3, 2.25], tone: 2},
+    {at: [3, -1], tone: 3},
+  ]}
+  segments={[
+    {from: [3, 2.25], to: [0, 1], tone: 2, dashed: true},
+    {from: [3, 2.25], to: [3, -1], tone: 3, dashed: true},
+  ]}
+  labels={[
+    {at: [-3.2, -1], math: '\\text{diretriz}', tone: 3, fontSize: 12, dy: 16},
+  ]}
+  caption="O gráfico de y = x²/4 passa pelos cinco pontos da tabela. O ponto (3; 2,25) também é da curva: os dois tracejados que saem dele têm o mesmo comprimento."
+/>
+
+**Conferência com um ponto novo.** O ponto $(3;\ 2{,}25)$ não estava na tabela.
+Na equação, $\frac{3^2}{4} = \frac{9}{4} = 2{,}25$ ✓. E as duas distâncias
+batem: até o foco, $\sqrt{3^2 + 1{,}25^2} = \sqrt{10{,}5625} = 3{,}25$; até a
+diretriz, $2{,}25 + 1 = 3{,}25$ ✓.
+
+**Contraexemplo.** O ponto $(2, 2)$ está fora da curva: a equação daria
+$y = \frac{2^2}{4} = 1$, e não 2. As distâncias confirmam: até o foco,
+$\sqrt{2^2 + 1^2} = \sqrt{5} \approx 2{,}24$; até a diretriz, $2 + 1 = 3$. Como
+as distâncias são diferentes, o ponto não pertence à parábola.
+
+### O que muda quando o foco se afasta
+
+No exemplo, o foco estava a 1 do vértice. Vamos repetir a conta com o foco a uma
+distância qualquer $p$ acima do vértice: foco em $(0, p)$ e diretriz $y = -p$.
+O vértice continua em $(0, 0)$, no meio do caminho entre os dois.
+
+Os passos são os mesmos da seção anterior, com $p$ no lugar do 1:
+
+| O que fazemos | Como fica a equação |
+|---|---|
+| distância até o foco igual à distância até a diretriz | $\sqrt{x^2 + (y-p)^2} = \lvert y + p \rvert$ |
+| elevar os dois lados ao quadrado | $x^2 + (y-p)^2 = (y+p)^2$ |
+| abrir os dois quadrados | $x^2 + y^2 - 2py + p^2 = y^2 + 2py + p^2$ |
+| tirar $y^2 + p^2$ dos dois lados | $x^2 - 2py = 2py$ |
+| somar $2py$ aos dois lados | $x^2 = 4py$ |
+| dividir os dois lados por $4p$ | $y = \frac{1}{4p} \times x^2$ |
+
+A divisão por $4p$ é permitida porque $p$ não é zero: o foco nunca fica em cima
+da diretriz.
+
+Confira com o exemplo: com $p = 1$, sai $y = \frac{1}{4} \times x^2$, que é o
+$y = \frac{x^2}{4}$ de antes ✓.
+
+O resultado é uma função quadrática $y = ax^2$, e o número que multiplica o
+$x^2$ é
+
+> $$a = \frac{1}{4p}.$$
+
+Veja o que essa relação diz com três valores de $p$:
+
+| Distância $p$ do vértice ao foco | $a = \frac{1}{4p}$ | Equação | Curva |
+|---|---|---|---|
+| $\frac{1}{4}$ | $1$ | $y = x^2$ | mais fechada |
+| $1$ | $\frac{1}{4}$ | $y = \frac{x^2}{4}$ | |
+| $2$ | $\frac{1}{8}$ | $y = \frac{x^2}{8}$ | mais aberta |
+
+Foco perto do vértice dá $a$ grande e uma curva estreita. Foco longe dá $a$
+pequeno e uma curva aberta. É o papel de $a$ que você viu em
+[Função quadrática](../funcoes/funcao-quadratica), agora com um motivo
+geométrico.
+
+A relação também pode ser lida ao contrário: dada a parábola $y = ax^2$, o foco
+fica a $p = \frac{1}{4a}$ acima do vértice. Por exemplo, $y = x^2$ tem $a = 1$,
+então $p = \frac{1}{4}$: foco em $\left(0, \frac{1}{4}\right)$ e diretriz
+$y = -\frac{1}{4}$. Confira com o ponto $(1, 1)$, que está no gráfico de
+$y = x^2$: até o foco, $\sqrt{1^2 + 0{,}75^2} = \sqrt{1{,}5625} = 1{,}25$; até a
+diretriz, $1 + 0{,}25 = 1{,}25$ ✓. A parábola mais básica da função quadrática
+também é uma curva de foco e diretriz.
+
+Se o foco ficar **abaixo** da diretriz, a mesma conta vale com $p$ negativo. Aí
+$a$ também sai negativo, e a curva abre para baixo.
+
+### Levar o vértice para outro lugar
+
+Até aqui o vértice ficou na origem. Agora imagine o desenho todo — foco,
+diretriz e curva — feito numa folha transparente sobre o plano. Arraste a folha
+$h$ unidades para a direita e $k$ para cima, sem girar nem esticar. Cada ponto
+do desenho anda exatamente o mesmo tanto. Por isso, a distância entre dois
+pontos do desenho não muda. Um ponto da curva que estava à mesma distância do
+foco e da diretriz continua estando, porque os três andaram juntos.
+
+Então a curva arrastada é a parábola do foco e da diretriz arrastados:
+
+- o vértice sai de $(0, 0)$ e vai para $(h, k)$;
+- o foco sai de $(0, p)$ e vai para $(h, k + p)$;
+- a diretriz sai de $y = -p$ e vai para $y = k - p$.
+
+Falta a equação da curva arrastada. Ela vem de
+[Transformações de gráficos](../funcoes/transformacoes-de-graficos): mover o
+gráfico de $y = f(x)$ $h$ unidades para a direita e $k$ para cima produz o
+gráfico de $y = f(x - h) + k$. Aplicando isso a $f(x) = a x^2$:
+
+> $$y = a(x-h)^2 + k, \qquad \text{com } a = \frac{1}{4p}.$$
+>
+> Vértice $(h, k)$, foco $(h, k + p)$, diretriz $y = k - p$.
+
+Essa é a **forma canônica** da parábola. Ela saiu da definição geométrica,
+passo a passo: distâncias, Pitágoras, quadrados e, no fim, um deslocamento do
+desenho. (O exercício 18 refaz essa dedução sem arrastar a folha, só com a
+fórmula da distância.)
 
 ### A forma canônica e o vértice
 
-Em coordenadas, a parábola de eixo vertical é
+Nos enunciados, a parábola costuma aparecer com os parênteses abertos, na forma
+$y = ax^2 + bx + c$. Abrir os parênteses de $a(x-h)^2 + k$ sempre produz uma
+expressão desse tipo. E o caminho de volta, de $ax^2 + bx + c$ para
+$a(x-h)^2 + k$, é completar o quadrado, como em
+[Função quadrática](../funcoes/funcao-quadratica). Por isso, toda função
+quadrática tem um foco e uma diretriz, e podemos encontrá-los.
 
-$$
-y = ax^2 + bx + c,
-$$
+**Exemplo.** Coloque $y = x^2 - 6x + 5$ na forma canônica e encontre o vértice,
+o foco e a diretriz.
 
-e completar o quadrado — de novo — a coloca na forma que exibe o vértice:
-
-> $$y = a(x-h)^2 + k,$$
->
-> com vértice em $(h,k)$.
-
-**Exemplo.** Coloque $y = x^2 - 6x + 5$ na forma canônica.
+O $-6x$ é o termo do meio de $(x-3)^2 = x^2 - 6x + 9$, porque $-6$ é o dobro
+de $-3$. Para formar esse quadrado, precisamos de um $+9$ que a expressão não
+tem. Então somamos 9 e, logo em seguida, subtraímos 9:
 
 $$
 y = (x^2 - 6x) + 5 = (x^2 - 6x + 9) - 9 + 5 = (x-3)^2 - 4.
 $$
 
-Vértice em $(3, -4)$.
-
 Repare no detalhe que difere do caso da circunferência: aqui o 9 foi somado
 **e subtraído no mesmo lado**, porque não há outro lado para compensar — a
 igualdade é $y = \ldots$, e mexer no lado direito exigiria mexer em $y$. Somar e
 subtrair o mesmo número é somar zero, e portanto não muda nada.
+
+Agora leia a forma canônica:
+
+- **vértice.** O quadrado $(x-3)^2$ nunca é negativo e só vale zero em $x = 3$.
+  Então o menor valor de $y$ é $0 - 4 = -4$, atingido em $x = 3$. O vértice é
+  $(3, -4)$;
+- **foco.** Aqui $a = 1$, então $p = \frac{1}{4a} = \frac{1}{4} = 0{,}25$. O
+  foco fica $0{,}25$ acima do vértice, em $(3;\ -3{,}75)$;
+- **diretriz.** Fica $0{,}25$ abaixo do vértice: $y = -4{,}25$.
 
 <CartesianPlane
   xMin={-1} xMax={7} yMin={-5} yMax={6}
@@ -432,6 +699,22 @@ subtrair o mesmo número é somar zero, e portanto não muda nada.
 Confira com as raízes: $x^2 - 6x + 5 = (x-1)(x-5)$, então a curva cruza o eixo
 horizontal em 1 e em 5. O vértice fica no meio delas, em $x = 3$ ✓ — resultado
 da simetria da parábola, já visto no capítulo de funções.
+
+Confira também o foco com a raiz $(1, 0)$. Até o foco, a distância é
+$\sqrt{(1-3)^2 + (0 - (-3{,}75))^2} = \sqrt{4 + 14{,}0625} = \sqrt{18{,}0625} =
+4{,}25$. Até a diretriz, é $0 - (-4{,}25) = 4{,}25$ ✓. O gráfico da função
+quadrática é mesmo a curva dos pontos equidistantes desse foco e dessa diretriz.
+
+### Por que as antenas usam a parábola
+
+Essa propriedade é o motivo de as antenas parabólicas existirem: um sinal que
+chega paralelo ao eixo da parábola, ao refletir na superfície, converge **todo**
+para o foco. É a mesma geometria, invertida, que faz o farol de um carro
+projetar um feixe paralelo a partir de uma lâmpada colocada no foco. (Essa
+propriedade de reflexão não será demonstrada aqui: a prova precisa de
+ferramentas que este curso não desenvolve. Fica registrada como fato.) Por
+isso, quem fabrica uma antena precisa saber onde fica o foco: é lá que se
+instala o receptor. O exercício 15 faz essa conta.
 
 ### O paralelo entre as duas curvas
 
@@ -558,6 +841,12 @@ Verificação com o ponto: $2 \times 16 - 32 + 3 = 3$ ✓.
 > der zero, é um único ponto. E se os coeficientes de $x^2$ e $y^2$ forem
 > diferentes, a curva é outra, que este curso não estuda — não é circunferência.
 
+> **Erro 5: confundir $a$ com $p$.** Em $y = x^2$, o número que multiplica
+> $x^2$ é $a = 1$, mas o foco **não** está a 1 do vértice. A distância é
+> $p = \frac{1}{4a} = \frac{1}{4}$. Teste com o ponto $(1, 1)$: com o foco em
+> $(0, 1)$, as distâncias seriam 1 até o foco e 2 até a diretriz $y = -1$ —
+> diferentes, então esse foco está errado.
+
 ## Perguntas de verificação
 
 1. Por que a equação da circunferência é a fórmula da distância elevada ao
@@ -571,6 +860,9 @@ Verificação com o ponto: $2 \times 16 - 32 + 3 = 3$ ✓.
    somado e subtraído no mesmo lado. Por que a diferença?
 6. Que propriedade geométrica da parábola explica o funcionamento de uma antena
    parabólica?
+7. Se o foco se aproxima do vértice, a parábola fica mais aberta ou mais
+   fechada? Explique pela relação $a = \frac{1}{4p}$ e também pela definição,
+   sem contas.
 
 <details>
 <summary>Respostas para conferência</summary>
@@ -597,6 +889,12 @@ Verificação com o ponto: $2 \times 16 - 32 + 3 = 3$ ✓.
    consequência disso, que esta página afirma sem demonstrar, é que raios que
    chegam paralelos ao eixo refletem todos para o foco — o que concentra o
    sinal num único ponto, onde fica o receptor.
+7. Mais fechada. Pela relação, $p$ menor faz $\frac{1}{4p}$ maior, e um $a$
+   maior faz o $y$ crescer mais depressa, o que estreita a curva. Pela
+   definição: com o foco perto do vértice, a diretriz também fica perto. Um
+   ponto da curva numa certa altura tem de estar tão perto do foco quanto da
+   diretriz. Por isso ele não pode se afastar muito do foco para os lados, e a
+   curva fica estreita.
 
 </details>
 
@@ -653,15 +951,41 @@ raio é metade do diâmetro.
     duas torres, que distam 200 m uma da outra. Escreva a equação do cabo
     tomando o ponto mais baixo como origem, e calcule a altura do cabo a 50 m
     do centro.
+15. Uma antena parabólica tem 1,2 m de diâmetro e 15 cm de profundidade, do
+    fundo até a borda. O receptor precisa ficar no foco. A que altura acima do
+    fundo da antena ele deve ser instalado?
+
+<details>
+<summary>Dica para o 15</summary>
+
+Desenhe o perfil da antena com o fundo na origem. Então a curva é $y = ax^2$, e
+a borda fica em $x = 0{,}6$ (metade do diâmetro), com $y = 0{,}15$. Ache $a$ e
+depois use $p = \frac{1}{4a}$.
+
+</details>
 
 ### 6. Justificativa
 
-15. Mostre algebricamente que a equação geral
+16. Mostre algebricamente que a equação geral
     $x^2+y^2+Dx+Ey+F=0$ representa uma circunferência de centro
     $\left(-\frac{D}{2}, -\frac{E}{2}\right)$ e determine a condição sobre
     $D$, $E$ e $F$ para que o raio exista.
-16. Explique por que, na forma canônica $y = a(x-h)^2+k$, o vértice é
+17. Explique por que, na forma canônica $y = a(x-h)^2+k$, o vértice é
     necessariamente $(h,k)$ — sem recorrer a gráfico.
+18. Refaça a dedução da forma canônica sem arrastar o desenho: tome o foco em
+    $(h, k+p)$ e a diretriz $y = k - p$, escreva as duas distâncias de um ponto
+    $(x, y)$ e mostre que a igualdade entre elas leva a
+    $y = \frac{1}{4p}(x-h)^2 + k$.
+
+<details>
+<summary>Dica para o 18</summary>
+
+Trate $y - k$ como um bloco só, como se fosse uma letra. A distância até o foco
+tem $(y - k - p)^2$, que é o quadrado de “bloco menos $p$”; a distância até a
+diretriz tem $(y - k + p)^2$, que é o quadrado de “bloco mais $p$”. Daí em
+diante, os passos são os da seção “O que muda quando o foco se afasta”.
+
+</details>
 
 <details>
 <summary>Respostas para conferência</summary>
@@ -695,16 +1019,29 @@ raio é metade do diâmetro.
     torres ficam em $x = \pm 100$ com $y = 40$: $40 = a \times 10\,000
     \Rightarrow a = 0{,}004$. Logo $y = 0{,}004x^2$. A 50 m do centro:
     $y = 0{,}004 \times 2\,500 = 10$ m.
-15. Completando os quadrados:
+15. Com o fundo na origem, a curva é $y = ax^2$. A borda está em
+    $(0{,}6;\ 0{,}15)$: $0{,}15 = a \times 0{,}36$, então
+    $a = \frac{0{,}15}{0{,}36} = \frac{5}{12}$. O foco fica a
+    $p = \frac{1}{4a} = \frac{1}{4 \times \frac{5}{12}} = \frac{12}{20} = 0{,}6$ m
+    acima do fundo: o receptor vai a 60 cm. Se você usou $x = 1{,}2$, tomou o
+    diâmetro inteiro: a borda está a metade dele do centro.
+16. Completando os quadrados:
     $\left(x+\frac{D}{2}\right)^2 + \left(y+\frac{E}{2}\right)^2 =
     \frac{D^2}{4} + \frac{E^2}{4} - F$. O centro é
     $\left(-\frac{D}{2}, -\frac{E}{2}\right)$, e o raio existe quando o lado
     direito é positivo, ou seja, quando $D^2 + E^2 - 4F > 0$.
-16. O termo $a(x-h)^2$ é sempre não negativo se $a > 0$ (e não positivo se
+17. O termo $a(x-h)^2$ é sempre não negativo se $a > 0$ (e não positivo se
     $a < 0$), e vale **zero** exatamente quando $x = h$. Então, para $a>0$, o
     menor valor possível de $y$ é $k$, atingido só em $x = h$ — o que
     caracteriza o ponto mínimo. Para $a<0$, o mesmo raciocínio dá o ponto
     máximo. Em ambos os casos, o vértice é $(h,k)$.
+18. Distância até o foco: $\sqrt{(x-h)^2 + (y-k-p)^2}$. Distância até a
+    diretriz: $\lvert y - k + p \rvert$. Igualando e elevando ao quadrado:
+    $(x-h)^2 + (y-k-p)^2 = (y-k+p)^2$. Com $B = y - k$, os dois quadrados são
+    $B^2 - 2pB + p^2$ e $B^2 + 2pB + p^2$. Tirando $B^2 + p^2$ dos dois lados,
+    sobra $(x-h)^2 - 2pB = 2pB$, ou seja, $(x-h)^2 = 4pB = 4p(y-k)$. Dividindo
+    por $4p$ e somando $k$: $y = \frac{1}{4p}(x-h)^2 + k$. É o mesmo resultado
+    obtido arrastando o desenho.
 
 **Se sua resposta não bateu:**
 
@@ -724,9 +1061,13 @@ direito, confira se esse número representa o raio ou o seu quadrado.
   $(x-a)^2+(y-b)^2$ seja menor, igual ou maior que $r^2$ — sem calcular raiz.
 - A **equação geral** $x^2+y^2+Dx+Ey+F=0$ vira a reduzida **completando o
   quadrado** duas vezes, somando nos dois lados.
-- **Parábola:** pontos equidistantes de um foco e de uma diretriz; em
-  coordenadas, $y = a(x-h)^2+k$, com vértice $(h,k)$, obtida completando o
-  quadrado — aqui somando e subtraindo no mesmo lado.
+- **Parábola:** pontos equidistantes de um foco e de uma diretriz. Escrevendo
+  as duas distâncias e igualando, sai $y = \frac{1}{4p}x^2$, com o vértice na
+  origem e o foco a $p$ dele; arrastando o desenho, sai a forma canônica
+  $y = a(x-h)^2+k$, com vértice $(h,k)$ e $a = \frac{1}{4p}$.
+- De $y = ax^2+bx+c$ se chega à forma canônica **completando o quadrado** —
+  aqui somando e subtraindo no mesmo lado. Por isso, o gráfico de toda função
+  quadrática tem um foco e uma diretriz.
 - A propriedade do foco é o que faz antenas parabólicas e faróis funcionarem.
 
 Encerra-se a geometria analítica. O próximo módulo volta ao triângulo retângulo
