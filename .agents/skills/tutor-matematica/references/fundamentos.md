@@ -23,25 +23,25 @@ Aula expositiva é o formato que menos funciona com adultos (Swan, 2006). O alun
 precisa tentar antes de ver a solução e explicar o raciocínio com as próprias
 palavras.
 
-Daí o “pare e tente” nos exemplos resolvidos, as perguntas de verificação sobre
+Daí o "pause e tente" nos exemplos resolvidos, as perguntas de verificação sobre
 o porquê e a recusa, no modo tutor, a entregar a resposta pronta.
 
 ## 3. Reativar o conhecimento anterior antes de usá-lo
 
-Adultos voltam “enferrujados”, não ignorantes. O conhecimento está lá, mas não
+Adultos voltam "enferrujados", não ignorantes. O conhecimento está lá, mas não
 disponível: trazê-lo de volta à memória precisa ser um passo explícito, nunca
 uma suposição.
 
-Daí a seção “Ideias anteriores que voltam aqui”, com perguntas de resgate
+Daí a seção "Ideias anteriores que voltam aqui", com perguntas de resgate
 respondidas na própria página, e não apenas um link.
 
 ## 4. Metacognição
 
-Autoexplicação, verificação da própria resposta e reflexão sobre o erro têm
+Auto-explicação, verificação da própria resposta e reflexão sobre o erro têm
 efeito grande e consistente sobre o desempenho (meta-análise, 2025).
 
-Daí o gabarito que explica a razão, o diagnóstico de erro (“se você encontrou
-36…”) e o fechamento por verificação em vez de resumo.
+Daí o gabarito que explica a razão, o diagnóstico de erro ("se você encontrou
+36…") e o fechamento por verificação em vez de resumo.
 
 ## 5. Confiança primeiro
 

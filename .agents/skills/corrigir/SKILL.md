@@ -6,7 +6,7 @@ description: Corrige as resoluções que o aluno salvou no caderno — imagens d
 # Corrigir o caderno
 
 O aluno resolve exercícios à mão no quadro digital (`npm run quadro`); cada
-clique em “Salvar para correção” grava um PNG em `caderno/imagens/`, com data e
+clique em "Salvar para correção" grava um PNG em `caderno/imagens/`, com data e
 hora no nome. Este fluxo corrige essas resoluções.
 
 ## Passos
@@ -16,19 +16,19 @@ hora no nome. Este fluxo corrige essas resoluções.
    anti-mágica e o tratamento de erros comuns definidos lá.
 
 2. **Localize o material.** Sem indicação em contrário, corrija a imagem mais
-   recente: `ls -t caderno/imagens/ | head`. Se o aluno pedir “tudo de hoje” ou
+   recente: `ls -t caderno/imagens/ | head`. Se o aluno pedir "tudo de hoje" ou
    citar um exercício pelo nome, selecione pelos carimbos de data e pelos
    títulos nos nomes de arquivo. Na dúvida entre duas imagens, pergunte.
 
-3. **Leia a imagem com a ferramenta de visualização disponível** — em Codex,
-   use `view_image` — e transcreva na resposta o que o aluno escreveu:
-   enunciado, cada passo e resposta final, para ele confirmar que você leu
-   certo. Se algum trecho estiver ilegível, diga qual e peça que reescreva ou
-   salve uma foto melhor. **Não adivinhe conta ilegível.**
+3. **Leia a imagem com a ferramenta `view_image`** e transcreva na resposta o que o
+   aluno escreveu — enunciado, cada passo, resposta final — para ele confirmar
+   que você leu certo. Se algum trecho estiver ilegível, diga qual e peça que
+   reescreva ou salve uma foto melhor. **Não adivinhe conta ilegível.**
 
-4. **Confira toda conta com `python3 -c`**, nunca de cabeça. Refaça o caminho
-   do aluno passo a passo — o objetivo é achar **em qual passo** o raciocínio
-   quebrou, não só dizer se a resposta final bate.
+4. **Confira toda conta com `python3 -c`**, nunca de cabeça (regra de
+   `AGENTS.md`). Refaça o caminho do aluno passo a passo — o objetivo é achar
+   **em qual passo** o raciocínio quebrou, não só dizer se a resposta final
+   bate.
 
 5. **Responda como tutor**, exercício por exercício:
    - comece pelo que está genuinamente certo — método válido, passo bem
@@ -54,5 +54,3 @@ hora no nome. Este fluxo corrige essas resoluções.
   apague**.
 - Se a dificuldade revelar lacuna numa lição do curso, aponte isso ao final da
   correção — consertar a lição é tarefa separada, que o aluno decide.
-- Se houver dúvida sobre como conduzir a conversa, consulte os
-  [critérios de correção](references/criterios-de-correcao.md).
