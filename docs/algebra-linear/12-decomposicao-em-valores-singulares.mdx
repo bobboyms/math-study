@@ -1,0 +1,1446 @@
+---
+title: Decomposição em valores singulares
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Decomposição em valores singulares: girar, esticar e girar de novo
+
+## 1. Problema motivador: uma foto em 13 números
+
+Um aplicativo de mensagens guarda uma miniatura de cada foto enviada. Para
+caber neste exemplo, a miniatura tem só $6 \times 6$ pixels, em tons de cinza.
+Cada pixel é um número de brilho: 0 é preto, 9 é o branco mais forte. Uma das
+miniaturas é esta tabela de 36 números:
+
+| | col. 1 | col. 2 | col. 3 | col. 4 | col. 5 | col. 6 |
+|---|---|---|---|---|---|---|
+| **linha 1** | 2 | 2 | 3 | 3 | 1 | 1 |
+| **linha 2** | 3 | 3 | 6 | 6 | 2 | 2 |
+| **linha 3** | 3 | 3 | 9 | 9 | 3 | 3 |
+| **linha 4** | 3 | 3 | 9 | 9 | 3 | 3 |
+| **linha 5** | 2 | 2 | 6 | 6 | 2 | 2 |
+| **linha 6** | 1 | 1 | 3 | 3 | 1 | 1 |
+
+No desenho abaixo, cada pixel é uma bolinha, e quanto mais claro o pixel,
+maior a bolinha: a área da bolinha cresce na proporção do brilho.
+
+<CartesianPlane
+  xMin={0} xMax={7} yMin={0} yMax={7}
+  xUnit={40}
+  showGrid={false}
+  showNumbers={false}
+  points={[[2, 2, 3, 3, 1, 1], [3, 3, 6, 6, 2, 2], [3, 3, 9, 9, 3, 3], [3, 3, 9, 9, 3, 3], [2, 2, 6, 6, 2, 2], [1, 1, 3, 3, 1, 1]].flatMap((row, i) => row.map((v, j) => ({at: [j + 1, 6 - i], r: 5.2 * Math.sqrt(v), tone: 1})))}
+  caption="A miniatura de 6 por 6 pixels. Cada bolinha é um pixel; o tamanho da bolinha mostra o brilho, de 1 (bolinha menor) a 9 (maior). Há uma faixa vertical clara no meio, mais forte nas linhas do centro, e um pequeno logotipo no canto de cima, à esquerda."
+/>
+
+Olhando a tabela, dá para ver estrutura. As colunas 1 e 2 são iguais, as 3 e
+4 também, e as 5 e 6 também. E quase toda linha parece um múltiplo da última
+linha, $(1,\ 1,\ 3,\ 3,\ 1,\ 1)$: a linha 3 é o triplo dela, a linha 5 é o
+dobro. Só o canto de cima, à esquerda, foge do padrão: é o logotipo do
+aplicativo.
+
+Numa foto de verdade, com um milhão de pixels, guardar todos os números ocupa
+espaço e demora para enviar.
+
+> 1. Dá para guardar esta miniatura com **bem menos** que 36 números, sem
+>    perder quase nada?
+> 2. Se for preciso perder alguma coisa, o que se perde, e quanto? Existe um
+>    jeito de medir a perda e de escolher o que guardar para que ela seja a
+>    **menor possível**?
+
+A ferramenta que responde às duas perguntas se chama **decomposição em
+valores singulares**. Ela escreve qualquer matriz como uma soma de “camadas”
+simples, em ordem de importância. A seção 9 aplica a ferramenta à miniatura.
+
+Um aviso antes de começar: esta é a lição mais difícil do capítulo. Ela usa
+quase tudo o que veio antes: transposta, produto de matrizes, matriz inversa,
+determinante, autovalores e projeção. O caminho foi dividido em passos curtos.
+Se um passo não fechar na primeira leitura, isso é esperado. Siga até o
+exemplo numérico que vem logo depois dele e volte.
+
+## 2. Mapa das ideias
+
+- **matriz simétrica**: a matriz que é igual à própria transposta,
+  $S^{\mathsf{T}} = S$;
+- **matriz ortogonal**: a matriz quadrada cujas colunas têm comprimento 1 e
+  são perpendiculares duas a duas; ela gira (ou espelha) o plano sem mudar
+  nenhum comprimento;
+- **valores singulares** de $A$: os números $\sigma_1 \geq \sigma_2 \geq
+  \ldots \geq 0$ que dizem quanto $A$ estica o plano em cada direção especial;
+  em $2 \times 2$, são os dois semieixos da elipse em que $A$ transforma o
+  círculo de raio 1;
+- **vetores singulares**: as direções especiais. Os $\vec{v}_i$ ficam no
+  plano de partida; os $\vec{u}_i$, no plano de chegada;
+- **decomposição em valores singulares**: $A = U\Sigma V^{\mathsf{T}}$, que se
+  lê “gire com $V^{\mathsf{T}}$, estique com $\Sigma$, gire com $U$”;
+- **camada de posto 1**: $\sigma_i\vec{u}_i\vec{v}_i^{\mathsf{T}}$, uma matriz
+  em que toda linha é múltiplo de uma mesma linha;
+- **aproximação de posto 1**: ficar só com a primeira camada, que é a mais
+  importante.
+
+O nome em inglês é *singular value decomposition*. Por isso a ferramenta é
+conhecida pela sigla **SVD**, inclusive em textos em português.
+
+## 3. Para que serve
+
+- **Compressão de imagens e de dados.** Uma imagem é uma matriz. A SVD mostra
+  quais camadas carregam quase toda a informação e quais podem ser
+  descartadas, e diz quanto se perde.
+- **Recomendação.** A tabela de clientes por filmes de uma loja de streaming
+  tem milhões de linhas e milhares de colunas, e quase todas as entradas estão
+  vazias. Aproximar essa tabela por poucas camadas revela “gostos” escondidos,
+  como “gosta de suspense” ou “prefere filmes antigos”. Uma variante dessa
+  ideia esteve entre as peças centrais das equipes que venceram o famoso
+  concurso da Netflix, disputado entre 2006 e 2009.
+- **Análise de componentes principais (PCA).** É a mesma decomposição aplicada
+  a uma tabela de dados. A seção 9 volta a ela.
+- **Aprendizado de máquina.** Os modelos de linguagem grandes têm matrizes de
+  pesos com milhões de entradas. Uma técnica muito usada para adaptá-los a
+  uma tarefa nova, chamada LoRA, treina só uma correção de posto baixo, uma
+  soma de poucas camadas como as desta lição. Isso custa uma fração pequena
+  do esforço de treinar a matriz inteira.
+- **Dentro da matemática.** A SVD existe para **toda** matriz, inclusive as
+  retangulares e as que não têm autovetores suficientes. Por isso ela costuma
+  ser chamada de o resultado mais útil da álgebra linear.
+
+## 4. Ideias anteriores que voltam aqui
+
+Seis peças antigas sustentam esta lição. Responda cada pergunta antes de abrir
+a resposta.
+
+**1. De [Produto escalar](../geometria/produto-escalar).** Calcule
+$(1,\ 3) \cdot (-3,\ 1)$. O que o resultado diz sobre os dois vetores? E
+quanto vale $(1,\ 3) \cdot (1,\ 3)$?
+
+<details>
+<summary>Conferir</summary>
+
+$(1,\ 3) \cdot (-3,\ 1) = 1 \times (-3) + 3 \times 1 = 0$. Produto escalar
+zero quer dizer que os vetores são **perpendiculares**. E
+$(1,\ 3) \cdot (1,\ 3) = 1 + 9 = 10$, que é o quadrado do comprimento:
+$\lVert (1,\ 3) \rVert = \sqrt{10}$. O produto de um vetor por ele mesmo dá o
+quadrado do comprimento. Essas duas leituras são as mais usadas nesta lição.
+
+</details>
+
+**2. De [Matrizes](./matrizes) e [Produto de matrizes](./produto-de-matrizes).**
+Qual é a transposta de $\begin{bmatrix} 3 & 0 \\ 4 & 5 \end{bmatrix}$? E qual
+regra dá a transposta de um produto $AB$?
+
+<details>
+<summary>Conferir</summary>
+
+A transposta troca linhas por colunas: a primeira linha, $(3,\ 0)$, vira a
+primeira coluna. Fica $\begin{bmatrix} 3 & 4 \\ 0 & 5 \end{bmatrix}$. A regra do
+produto inverte a ordem: $(AB)^{\mathsf{T}} = B^{\mathsf{T}}A^{\mathsf{T}}$.
+
+</details>
+
+**3. De [Transformações lineares](./transformacoes-lineares).** Escreva a
+matriz que gira o plano $45^\circ$ no sentido anti-horário. Uma rotação muda
+o comprimento de algum vetor?
+
+<details>
+<summary>Conferir</summary>
+
+A rotação de $\theta$ é
+$R_\theta = \begin{bmatrix} \cos\theta & -\sen\theta \\ \sen\theta & \cos\theta \end{bmatrix}$.
+Com $\theta = 45^\circ$, $\cos 45^\circ = \sen 45^\circ = \frac{\sqrt{2}}{2}$:
+
+$$
+R_{45^\circ} = \frac{\sqrt{2}}{2}\begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix}.
+$$
+
+Uma rotação gira sem mudar de forma: nenhum comprimento muda, e ângulos
+retos continuam retos.
+
+</details>
+
+**4. De [Autovalores e autovetores](./autovalores-e-autovetores).** Para
+$S = \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix}$, quais são os autovalores e
+os autovetores?
+
+<details>
+<summary>Conferir</summary>
+
+O traço é $2 + 2 = 4$ e o determinante é $4 - 1 = 3$. A equação
+característica é $\lambda^2 - 4\lambda + 3 = 0$, com raízes 3 e 1. Para
+$\lambda = 3$, o autovetor é $(1,\ 1)$: $S(1,\ 1) = (3,\ 3)$. Para
+$\lambda = 1$, o autovetor é $(-1,\ 1)$: $S(-1,\ 1) = (-1,\ 1)$. Repare que
+$(1,\ 1) \cdot (-1,\ 1) = 0$: os dois autovetores são perpendiculares. A seção
+8.2 mostra que isso não é coincidência.
+
+</details>
+
+**5. De [Base, dimensão e posto](./base-dimensao-e-posto).** Qual é o posto de
+$\begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}$?
+
+<details>
+<summary>Conferir</summary>
+
+A segunda linha é o dobro da primeira, e a segunda coluna é o dobro da
+primeira. Escalonando ($L_2 \leftarrow L_2 - 2L_1$), sobra um único pivô. O
+posto é 1: só uma coluna carrega informação de verdade.
+
+</details>
+
+**6. De [Determinante](./determinante).** Uma matriz tem determinante $15$.
+Por quanto ela multiplica a área de qualquer figura? E uma rotação, por quanto
+multiplica as áreas?
+
+<details>
+<summary>Conferir</summary>
+
+O determinante é o fator de área, com sinal. Com $\det A = 15$, toda área
+fica 15 vezes maior. Uma rotação não muda forma nem tamanho, então o fator de
+área dela é 1. Um espelho também não muda o tamanho das áreas: o determinante
+dele é $-1$, e o sinal só avisa que a figura foi virada do avesso.
+
+</details>
+
+## 5. Intuição: todo círculo vira uma elipse
+
+Imagine o plano desenhado numa lona de borracha. Uma transformação linear
+estica, encolhe e entorta a lona inteira, sempre do mesmo jeito em toda
+parte: é o que a lição de transformações mostrou com a malha de quadrados
+virando malha de paralelogramos. Nessa comparação, a lona é o plano, e o
+jeito de esticar é a matriz. A comparação deixa de valer num ponto: uma lona
+de verdade pode rasgar ou dobrar, e uma transformação linear não dobra
+nada.
+
+Agora desenhe na lona um **círculo** de raio 1 com centro na origem. Depois de
+esticar, o círculo vira uma figura oval. Essa figura é sempre uma **elipse**
+(ou, no caso extremo em que a matriz achata o plano, um segmento de reta).
+
+Uma elipse tem duas medidas que chamam atenção:
+
+- o **semieixo maior**: a maior distância do centro até a borda;
+- o **semieixo menor**: a menor distância do centro até a borda.
+
+Os dois semieixos são **perpendiculares** entre si. E a pergunta que organiza
+esta lição é: de que pontos do círculo eles vieram?
+
+A resposta, que a seção 8 vai demonstrar, é a parte surpreendente. Os dois
+pontos de partida também são perpendiculares. Existem duas direções
+perpendiculares no plano de partida que a matriz leva em duas direções
+perpendiculares no plano de chegada. Uma é a direção que mais estica; a outra,
+a que menos estica.
+
+Isso quer dizer que qualquer matriz $2 \times 2$, por mais torta que pareça,
+faz só três coisas, uma depois da outra:
+
+1. **gira** o plano até que as duas direções especiais fiquem deitadas sobre os
+   eixos;
+2. **estica** cada eixo por um número: o primeiro por $\sigma_1$, o segundo por
+   $\sigma_2$;
+3. **gira** de novo, levando os eixos esticados até as direções dos semieixos
+   da elipse.
+
+Os dois números de esticar, $\sigma_1$ e $\sigma_2$, são os **valores
+singulares** da matriz.
+
+## 6. Modelo visual: girar, esticar, girar
+
+Comece pela matriz simétrica da pergunta 4 da seção 4,
+$S = \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix}$. Ela já mostrou duas
+direções especiais: $(1,\ 1)$, que ela estica 3 vezes, e $(-1,\ 1)$, que ela
+não estica. Com comprimento 1, essas direções são
+
+$$
+\vec{v}_1 = \frac{\sqrt{2}}{2}(1,\ 1), \qquad \vec{v}_2 = \frac{\sqrt{2}}{2}(-1,\ 1).
+$$
+
+As quatro figuras abaixo acompanham o círculo de raio 1 e as duas setas
+$\vec{v}_1$ (azul) e $\vec{v}_2$ (laranja) durante os três passos. As quatro
+figuras usam a mesma escala.
+
+<CartesianPlane
+  xMin={-3.5} xMax={3.5} yMin={-3.5} yMax={3.5}
+  xUnit={34}
+  circles={[{center: [0, 0], r: 1, tone: 3}]}
+  segments={[
+    {from: [0, 0], to: [0.7071, 0.7071], arrow: true, tone: 1},
+    {from: [0, 0], to: [-0.7071, 0.7071], arrow: true, tone: 2},
+  ]}
+  labels={[
+    {at: [1.15, 1.2], math: '\\vec{v}_1', tone: 1},
+    {at: [-1.15, 1.2], math: '\\vec{v}_2', tone: 2},
+  ]}
+  caption="Antes de tudo: o círculo de raio 1 e as duas direções especiais de S, perpendiculares, nas diagonais."
+/>
+
+<CartesianPlane
+  xMin={-3.5} xMax={3.5} yMin={-3.5} yMax={3.5}
+  xUnit={34}
+  circles={[{center: [0, 0], r: 1, tone: 3}]}
+  segments={[
+    {from: [0, 0], to: [1, 0], arrow: true, tone: 1},
+    {from: [0, 0], to: [0, 1], arrow: true, tone: 2},
+  ]}
+  labels={[
+    {at: [1.55, 0.35], math: '\\vec{e}_1', tone: 1},
+    {at: [-0.45, 1.45], math: '\\vec{e}_2', tone: 2},
+  ]}
+  caption="Passo 1, girar 45° no sentido horário. O círculo continua o mesmo círculo, mas as setas agora estão deitadas sobre os eixos: v₁ virou e₁ e v₂ virou e₂."
+/>
+
+<CartesianPlane
+  xMin={-3.5} xMax={3.5} yMin={-3.5} yMax={3.5}
+  xUnit={34}
+  polygons={[{points: Array.from({length: 72}, (_, k) => [3 * Math.cos(k * Math.PI / 36), Math.sin(k * Math.PI / 36)]), fill: false, tone: 3}]}
+  segments={[
+    {from: [0, 0], to: [3, 0], arrow: true, tone: 1},
+    {from: [0, 0], to: [0, 1], arrow: true, tone: 2},
+  ]}
+  labels={[
+    {at: [1.6, 0.42], math: '3\\vec{e}_1', tone: 1},
+    {at: [-0.45, 1.45], math: '\\vec{e}_2', tone: 2},
+  ]}
+  caption="Passo 2, esticar. O eixo horizontal é esticado 3 vezes e o vertical fica como está. O círculo virou uma elipse deitada, de semieixos 3 e 1."
+/>
+
+<CartesianPlane
+  xMin={-3.5} xMax={3.5} yMin={-3.5} yMax={3.5}
+  xUnit={34}
+  polygons={[{points: Array.from({length: 72}, (_, k) => [0.7071 * (3 * Math.cos(k * Math.PI / 36) - Math.sin(k * Math.PI / 36)), 0.7071 * (3 * Math.cos(k * Math.PI / 36) + Math.sin(k * Math.PI / 36))]), fill: false, tone: 3}]}
+  segments={[
+    {from: [0, 0], to: [2.1213, 2.1213], arrow: true, tone: 1},
+    {from: [0, 0], to: [-0.7071, 0.7071], arrow: true, tone: 2},
+  ]}
+  labels={[
+    {at: [2.75, 2.15], math: 'S\\vec{v}_1', tone: 1},
+    {at: [-1.25, 1.15], math: 'S\\vec{v}_2', tone: 2},
+  ]}
+  caption="Passo 3, girar 45° de volta, no sentido anti-horário. A elipse ficou inclinada. É exatamente a imagem do círculo pela matriz S: v₁ foi esticado 3 vezes na própria direção, e v₂ ficou do mesmo tamanho."
+/>
+
+Para a matriz $S$, o terceiro passo desfez o giro do primeiro. Isso acontece
+porque $S$ é simétrica. Numa matriz qualquer, os dois giros são
+**diferentes**. Veja a matriz que vai acompanhar toda a seção 8:
+
+$$
+A = \begin{bmatrix} 3 & 0 \\ 4 & 5 \end{bmatrix}.
+$$
+
+Ela leva o ponto $(\cos t,\ \sen t)$ do círculo para
+$(3\cos t,\ 4\cos t + 5\sen t)$. A figura mostra o círculo tracejado e a
+elipse em que ele se transforma.
+
+<CartesianPlane
+  xMin={-5} xMax={5} yMin={-7} yMax={7}
+  xUnit={30}
+  circles={[{center: [0, 0], r: 1, tone: 3, dashed: true}]}
+  polygons={[{points: Array.from({length: 72}, (_, k) => [3 * Math.cos(k * Math.PI / 36), 4 * Math.cos(k * Math.PI / 36) + 5 * Math.sin(k * Math.PI / 36)]), fill: false, tone: 3}]}
+  segments={[
+    {from: [0, 0], to: [0.7071, 0.7071], arrow: true, tone: 1},
+    {from: [0, 0], to: [-0.7071, 0.7071], arrow: true, tone: 2},
+    {from: [0, 0], to: [2.1213, 6.364], arrow: true, tone: 1},
+    {from: [0, 0], to: [-2.1213, 0.7071], arrow: true, tone: 2},
+  ]}
+  labels={[
+    {at: [1.2, 0.35], math: '\\vec{v}_1', tone: 1},
+    {at: [-0.95, 1.3], math: '\\vec{v}_2', tone: 2},
+    {at: [2.1213, 6.364], math: 'A\\vec{v}_1', tone: 1, dx: 34, dy: 4},
+    {at: [-2.1213, 0.7071], math: 'A\\vec{v}_2', tone: 2, dx: -30, dy: -20},
+  ]}
+  caption="A matriz A leva o círculo tracejado de raio 1 na elipse inclinada. As direções de partida v₁ e v₂ (nas diagonais, perpendiculares) chegam nas direções dos dois semieixos, que também são perpendiculares. O semieixo maior mede cerca de 6,71; o menor, cerca de 2,24."
+/>
+
+Aqui as direções de partida são as mesmas diagonais de $S$, mas as de chegada
+não são: o semieixo maior aponta na direção de $(1,\ 3)$, inclinada cerca de
+$71{,}57^\circ$, e não $45^\circ$. Os números $6{,}71$ e $2{,}24$, e as
+direções, vão sair de contas na seção 8. Uma conferência rápida já é possível:
+o ponto $\vec{v}_1$ vai para
+$A\vec{v}_1 = \frac{\sqrt{2}}{2}(3,\ 9)$, de comprimento
+$\frac{\sqrt{2}}{2}\sqrt{9 + 81} = \frac{\sqrt{2}}{2}\sqrt{90} = \sqrt{45}
+\approx 6{,}71$.
+
+## 7. Ponte para a formalização: medir o esticamento com um produto escalar
+
+O modelo visual levanta duas perguntas que o desenho sozinho não responde:
+
+1. Como achar, **por conta**, as direções que mais e menos esticam?
+2. Por que elas são sempre perpendiculares?
+
+A ponte é uma ideia da pergunta 1 da seção 4: o produto de um vetor por ele
+mesmo dá o quadrado do comprimento. Então o quanto $A$ estica um vetor
+$\vec{v}$ de comprimento 1 é
+
+$$
+\lVert A\vec{v} \rVert^2 = (A\vec{v}) \cdot (A\vec{v}).
+$$
+
+A seção 8.3 vai reescrever esse produto escalar como
+$\vec{v} \cdot (A^{\mathsf{T}}A\,\vec{v})$. Essa forma nova é útil porque nela
+aparece uma matriz só, $A^{\mathsf{T}}A$, e essa matriz é **simétrica**. Para
+matrizes simétricas, a lição de autovalores já dá ferramentas prontas. O
+plano das próximas seções é este:
+
+| Passo | Seção | O que se ganha |
+|---|---|---|
+| escrever o produto escalar como produto de matrizes | 8.1 | poder mover uma matriz de um lado para o outro do ponto |
+| estudar matrizes simétricas | 8.2 | autovetores reais e perpendiculares |
+| estudar $A^{\mathsf{T}}A$ | 8.3 | ela é simétrica e mede o esticamento |
+| achar a maior e a menor esticada | 8.4 | as direções $\vec{v}_1$, $\vec{v}_2$ e os números $\sigma_1$, $\sigma_2$ |
+| achar as direções de chegada | 8.5 | os vetores $\vec{u}_1$, $\vec{u}_2$ |
+| montar a decomposição | 8.6 e 8.7 | $A = U\Sigma V^{\mathsf{T}}$ |
+| separar em camadas | 8.8 | a melhor aproximação, que resolve a miniatura |
+
+## 8. Formalização
+
+### 8.1 O produto escalar como produto de matrizes
+
+Um vetor $\vec{v}$ de $\mathbb{R}^n$, escrito em pé, é uma matriz $n \times 1$.
+A transposta dele, $\vec{v}^{\mathsf{T}}$, é o mesmo vetor deitado, uma matriz
+$1 \times n$. Pela regra das dimensões do
+[produto de matrizes](./produto-de-matrizes), uma matriz $1 \times n$ vezes uma
+$n \times 1$ dá uma matriz $1 \times 1$, ou seja, um único número:
+
+$$
+\vec{u}^{\mathsf{T}}\vec{v} = \begin{bmatrix} u_1 & u_2 \end{bmatrix}\begin{bmatrix} v_1 \\ v_2 \end{bmatrix} = u_1v_1 + u_2v_2 = \vec{u} \cdot \vec{v}.
+$$
+
+A conta de linha por coluna é exatamente “multiplica cada par e soma”. Por
+isso:
+
+> **O produto escalar é um produto de matrizes:**
+> $\vec{u} \cdot \vec{v} = \vec{u}^{\mathsf{T}}\vec{v}$.
+
+**Teste com números.** $\vec{u} = (1,\ 3)$ e $\vec{v} = (-3,\ 1)$:
+$\begin{bmatrix} 1 & 3 \end{bmatrix}\begin{bmatrix} -3 \\ 1 \end{bmatrix} = -3 + 3 = 0$,
+o mesmo resultado da pergunta 1 da seção 4.
+
+Essa forma permite **mover uma matriz para o outro lado do ponto**. Para
+qualquer matriz $A$:
+
+$$
+(A\vec{v}) \cdot \vec{w} = (A\vec{v})^{\mathsf{T}}\vec{w} = \vec{v}^{\mathsf{T}}A^{\mathsf{T}}\vec{w} = \vec{v} \cdot (A^{\mathsf{T}}\vec{w}).
+$$
+
+O primeiro sinal de igual é a forma nova do produto escalar. O segundo é a
+regra da transposta do produto, $(A\vec{v})^{\mathsf{T}} =
+\vec{v}^{\mathsf{T}}A^{\mathsf{T}}$, com a ordem invertida. O terceiro é a
+forma nova lida de volta. A matriz $A$ saiu do vetor da esquerda e foi para o
+da direita, **transposta**.
+
+**Teste com números.** $A = \begin{bmatrix} 3 & 0 \\ 4 & 5 \end{bmatrix}$,
+$\vec{v} = (1,\ 0)$ e $\vec{w} = (0,\ 1)$. Do lado esquerdo,
+$A\vec{v} = (3,\ 4)$ e $(3,\ 4) \cdot (0,\ 1) = 4$. Do lado direito,
+$A^{\mathsf{T}}\vec{w} = \begin{bmatrix} 3 & 4 \\ 0 & 5 \end{bmatrix}\begin{bmatrix} 0 \\ 1 \end{bmatrix} = (4,\ 5)$
+e $(1,\ 0) \cdot (4,\ 5) = 4$. Os dois lados dão 4.
+
+### 8.2 Matrizes simétricas
+
+> **Definição.** Uma matriz quadrada $S$ é **simétrica** quando
+> $S^{\mathsf{T}} = S$: a entrada da linha $i$, coluna $j$ é igual à da linha
+> $j$, coluna $i$.
+
+O nome vem do desenho da tabela: os números são espelhados em relação à
+diagonal principal.
+
+**Exemplo.** $S = \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix}$ é simétrica: o
+1 de cima, à direita, é igual ao 1 de baixo, à esquerda.
+
+**Contraexemplo.** $A = \begin{bmatrix} 3 & 0 \\ 4 & 5 \end{bmatrix}$ **não** é
+simétrica: acima da diagonal está 0, e abaixo está 4.
+
+Matrizes simétricas têm duas propriedades que as outras não têm.
+
+**Propriedade 1: os autovalores são sempre números reais.** Para
+$S = \begin{bmatrix} p & q \\ q & r \end{bmatrix}$, a equação característica é
+$\lambda^2 - (p + r)\lambda + (pr - q^2) = 0$. O discriminante da
+[fórmula de Bhaskara](../equacoes/formula-de-bhaskara) é
+
+$$
+\Delta = (p + r)^2 - 4(pr - q^2) = p^2 + 2pr + r^2 - 4pr + 4q^2 = (p - r)^2 + 4q^2.
+$$
+
+Uma soma de dois quadrados nunca é negativa. Então $\Delta \geq 0$, e a
+equação sempre tem raízes reais. Compare com a rotação de $90^\circ$ da lição
+de autovalores, que não é simétrica e ficou sem autovalores reais.
+
+**Propriedade 2: autovetores de autovalores diferentes são perpendiculares.**
+Este é o passo central da lição. Suponha $S\vec{w}_1 = \lambda_1\vec{w}_1$ e
+$S\vec{w}_2 = \lambda_2\vec{w}_2$, com $\lambda_1$ diferente de $\lambda_2$.
+Calcule o número $(S\vec{w}_1) \cdot \vec{w}_2$ de dois jeitos.
+
+- Usando que $\vec{w}_1$ é autovetor: $(S\vec{w}_1) \cdot \vec{w}_2 =
+  (\lambda_1\vec{w}_1) \cdot \vec{w}_2 = \lambda_1(\vec{w}_1 \cdot \vec{w}_2)$.
+- Movendo $S$ para o outro lado, pela seção 8.1, e usando que
+  $S^{\mathsf{T}} = S$: $(S\vec{w}_1) \cdot \vec{w}_2 = \vec{w}_1 \cdot
+  (S\vec{w}_2) = \vec{w}_1 \cdot (\lambda_2\vec{w}_2) = \lambda_2(\vec{w}_1
+  \cdot \vec{w}_2)$.
+
+Os dois jeitos calculam o mesmo número. Então
+$\lambda_1(\vec{w}_1 \cdot \vec{w}_2) = \lambda_2(\vec{w}_1 \cdot \vec{w}_2)$.
+Passando tudo para um lado:
+
+$$
+(\lambda_1 - \lambda_2)(\vec{w}_1 \cdot \vec{w}_2) = 0.
+$$
+
+Um produto de dois números só dá zero se um deles for zero. O primeiro,
+$\lambda_1 - \lambda_2$, não é zero, porque os autovalores são diferentes.
+Por isso o segundo é zero: $\vec{w}_1 \cdot \vec{w}_2 = 0$. Os autovetores são
+perpendiculares.
+
+Onde a simetria entrou: no segundo jeito, mover $S$ para o outro lado do ponto
+produz $S^{\mathsf{T}}$, e só porque $S^{\mathsf{T}} = S$ foi possível usar que
+$\vec{w}_2$ é autovetor de $S$.
+
+**Conferência.** Para $S = \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix}$, os
+autovetores $(1,\ 1)$ e $(-1,\ 1)$ têm produto escalar $-1 + 1 = 0$.
+**Contraexemplo, sem simetria.** A matriz
+$\begin{bmatrix} 4 & 1 \\ 2 & 3 \end{bmatrix}$, da lição de autovalores, tem
+autovetores $(1,\ 1)$ (autovalor 5) e $(1,\ -2)$ (autovalor 2). O produto
+escalar deles é $1 - 2 = -1$, diferente de zero: não são perpendiculares.
+
+### 8.3 A matriz $A^{\mathsf{T}}A$
+
+Para qualquer matriz $A$, mesmo retangular, a matriz $A^{\mathsf{T}}A$ é
+quadrada. Se $A$ é $m \times n$, então $A^{\mathsf{T}}$ é $n \times m$, e o
+produto é $n \times n$. Na lição de
+[mínimos quadrados](./minimos-quadrados), ela apareceu nas equações normais.
+Aqui ela tem três propriedades.
+
+**1. Ela é simétrica.** Pela regra da transposta do produto,
+$(A^{\mathsf{T}}A)^{\mathsf{T}} = A^{\mathsf{T}}(A^{\mathsf{T}})^{\mathsf{T}}
+= A^{\mathsf{T}}A$. Transpor duas vezes devolve a matriz original, por isso
+$(A^{\mathsf{T}})^{\mathsf{T}} = A$.
+
+**2. Ela mede o esticamento.** Pela seção 8.1, movendo o $A$ da esquerda para
+a direita:
+
+$$
+\lVert A\vec{v} \rVert^2 = (A\vec{v}) \cdot (A\vec{v}) = \vec{v} \cdot (A^{\mathsf{T}}A\,\vec{v}).
+$$
+
+**3. Os autovalores dela nunca são negativos.** Se $\vec{w}$ é autovetor de
+$A^{\mathsf{T}}A$ com autovalor $\lambda$ e comprimento 1, a propriedade 2
+dá
+
+$$
+\lVert A\vec{w} \rVert^2 = \vec{w} \cdot (\lambda\vec{w}) = \lambda(\vec{w} \cdot \vec{w}) = \lambda \times 1 = \lambda.
+$$
+
+Um quadrado de comprimento nunca é negativo. Então $\lambda \geq 0$. E a
+conta diz mais: **o autovalor é o quadrado do esticamento** daquele
+autovetor.
+
+**Com a matriz $A$.**
+
+$$
+A^{\mathsf{T}}A = \begin{bmatrix} 3 & 4 \\ 0 & 5 \end{bmatrix}\begin{bmatrix} 3 & 0 \\ 4 & 5 \end{bmatrix} = \begin{bmatrix} 9 + 16 & 0 + 20 \\ 0 + 20 & 0 + 25 \end{bmatrix} = \begin{bmatrix} 25 & 20 \\ 20 & 25 \end{bmatrix}.
+$$
+
+É simétrica, como prometido. O traço é 50 e o determinante é
+$625 - 400 = 225$. A equação característica é
+$\lambda^2 - 50\lambda + 225 = 0$, com $\Delta = 2500 - 900 = 1600$ e raízes
+$\frac{50 \pm 40}{2}$: $\lambda_1 = 45$ e $\lambda_2 = 5$. Os autovetores:
+
+- para $\lambda_1 = 45$: $(1,\ 1)$, porque
+  $\begin{bmatrix} 25 & 20 \\ 20 & 25 \end{bmatrix}\begin{bmatrix} 1 \\ 1 \end{bmatrix} = (45,\ 45)$;
+- para $\lambda_2 = 5$: $(-1,\ 1)$, porque o produto dá $(-5,\ 5)$.
+
+São as duas diagonais da figura da seção 6, e são perpendiculares, como a
+seção 8.2 garantia.
+
+### 8.4 As direções de maior e menor esticamento
+
+Agora dá para responder à primeira pergunta da seção 7. Chame de $\vec{v}_1$ e
+$\vec{v}_2$ os autovetores de $A^{\mathsf{T}}A$, com comprimento 1, na ordem
+dos autovalores, $\lambda_1 \geq \lambda_2$. Pela seção 8.2, eles são
+perpendiculares.
+
+Todo vetor $\vec{v}$ de comprimento 1 pode ser escrito na base formada por
+eles: $\vec{v} = a\vec{v}_1 + b\vec{v}_2$. Como $\vec{v}_1$ e $\vec{v}_2$ são
+perpendiculares e de comprimento 1, Pitágoras dá $a^2 + b^2 = 1$. Calcule o
+esticamento ao quadrado pela propriedade 2 da seção 8.3:
+
+$$
+\vec{v} \cdot (A^{\mathsf{T}}A\,\vec{v}) = (a\vec{v}_1 + b\vec{v}_2) \cdot (a\lambda_1\vec{v}_1 + b\lambda_2\vec{v}_2) = \lambda_1a^2 + \lambda_2b^2.
+$$
+
+Na distributiva, sobram só dois termos. Os termos cruzados contêm
+$\vec{v}_1 \cdot \vec{v}_2 = 0$ e somem. Os outros dois contêm
+$\vec{v}_1 \cdot \vec{v}_1 = 1$ e $\vec{v}_2 \cdot \vec{v}_2 = 1$.
+
+O resultado $\lambda_1a^2 + \lambda_2b^2$ é uma média dos dois autovalores, com
+pesos $a^2$ e $b^2$ que somam 1. Uma média desse tipo nunca passa do maior
+nem fica abaixo do menor. Ela vale exatamente $\lambda_1$ quando $a^2 = 1$ e
+$b = 0$, isto é, quando $\vec{v} = \pm\vec{v}_1$. E vale exatamente
+$\lambda_2$ quando $\vec{v} = \pm\vec{v}_2$. Então:
+
+> - a direção que **mais** estica é $\vec{v}_1$, e o maior esticamento é
+>   $\sqrt{\lambda_1}$;
+> - a direção que **menos** estica é $\vec{v}_2$, e o menor esticamento é
+>   $\sqrt{\lambda_2}$;
+> - as duas direções são perpendiculares.
+
+A raiz aparece porque $\lambda$ mede o esticamento **ao quadrado**. Com a
+matriz $A$, o maior esticamento é $\sqrt{45} = 3\sqrt{5} \approx 6{,}71$ e o
+menor é $\sqrt{5} \approx 2{,}24$: os dois semieixos da elipse da seção 6.
+
+### 8.5 Valores singulares e vetores singulares
+
+> **Definição.** Seja $A$ uma matriz e sejam $\lambda_1 \geq \lambda_2 \geq
+> \ldots$ os autovalores de $A^{\mathsf{T}}A$, com autovetores
+> perpendiculares $\vec{v}_1,\ \vec{v}_2,\ \ldots$ de comprimento 1.
+>
+> - Os **valores singulares** de $A$ são $\sigma_i = \sqrt{\lambda_i}$.
+> - Os $\vec{v}_i$ são os **vetores singulares de partida**.
+> - Para cada $\sigma_i$ diferente de zero, o **vetor singular de chegada** é
+>   $\vec{u}_i = \dfrac{A\vec{v}_i}{\sigma_i}$.
+
+**Exemplo.** Os valores singulares de
+$A = \begin{bmatrix} 3 & 0 \\ 4 & 5 \end{bmatrix}$ são $\sigma_1 = 3\sqrt{5}$ e
+$\sigma_2 = \sqrt{5}$.
+
+**Contraexemplo.** Os valores singulares de $A$ **não** são 45 e 5. Esses são
+os autovalores de $A^{\mathsf{T}}A$, que medem o esticamento ao quadrado. E
+também **não** são 3 e 5, os autovalores da própria $A$. Esses saem da
+equação característica $(3 - \lambda)(5 - \lambda) - 0 \times 4 = 0$, porque
+a entrada de cima, à direita, é zero. Seção 11, erros 1 e 2.
+
+**Por que $\vec{u}_i$ tem comprimento 1.** Pela seção 8.4,
+$\lVert A\vec{v}_i \rVert = \sigma_i$. Dividir o vetor $A\vec{v}_i$ pelo
+próprio comprimento deixa um vetor de comprimento 1, na mesma direção.
+
+**Por que $\vec{u}_1$ e $\vec{u}_2$ são perpendiculares.** É a segunda
+pergunta da seção 7, e a resposta vem da seção 8.1:
+
+$$
+(A\vec{v}_1) \cdot (A\vec{v}_2) = \vec{v}_1 \cdot (A^{\mathsf{T}}A\,\vec{v}_2) = \vec{v}_1 \cdot (\lambda_2\vec{v}_2) = \lambda_2(\vec{v}_1 \cdot \vec{v}_2) = 0.
+$$
+
+Dividir por $\sigma_1$ e por $\sigma_2$ não muda o zero. Então
+$\vec{u}_1 \cdot \vec{u}_2 = 0$.
+
+**A conta completa com $A$.** Com comprimento 1, os vetores de partida são
+$\vec{v}_1 = \frac{1}{\sqrt{2}}(1,\ 1)$ e
+$\vec{v}_2 = \frac{1}{\sqrt{2}}(-1,\ 1)$. Os de chegada:
+
+$$
+\vec{u}_1 = \frac{A\vec{v}_1}{\sigma_1} = \frac{1}{3\sqrt{5}} \times \frac{1}{\sqrt{2}}(3,\ 9) = \frac{3}{3\sqrt{10}}(1,\ 3) = \frac{1}{\sqrt{10}}(1,\ 3),
+$$
+
+$$
+\vec{u}_2 = \frac{A\vec{v}_2}{\sigma_2} = \frac{1}{\sqrt{5}} \times \frac{1}{\sqrt{2}}(-3,\ 1) = \frac{1}{\sqrt{10}}(-3,\ 1).
+$$
+
+No primeiro, $A(1,\ 1) = (3,\ 4 + 5) = (3,\ 9) = 3(1,\ 3)$, e
+$\sqrt{5} \times \sqrt{2} = \sqrt{10}$. No segundo,
+$A(-1,\ 1) = (-3,\ -4 + 5) = (-3,\ 1)$. Conferência: $(1,\ 3) \cdot (-3,\ 1)
+= 0$, a pergunta 1 da seção 4. A direção $(1,\ 3)$ faz com o eixo $x$ um
+ângulo de $\arctg 3 \approx 71{,}57^\circ$: é o semieixo maior inclinado da
+figura.
+
+### 8.6 Matriz ortogonal: girar sem deformar
+
+Para escrever os três passos da seção 5 como matrizes, falta um nome para
+“matriz que gira”.
+
+> **Definição.** Uma matriz quadrada $Q$ é **ortogonal** quando suas colunas
+> têm comprimento 1 e são perpendiculares duas a duas. Escrito como produto de
+> matrizes: $Q^{\mathsf{T}}Q = I$.
+
+As duas formas dizem a mesma coisa. A entrada $(i,\ j)$ de $Q^{\mathsf{T}}Q$ é
+a linha $i$ de $Q^{\mathsf{T}}$, que é a coluna $i$ de $Q$, vezes a coluna $j$
+de $Q$. Pela seção 8.1, isso é o produto escalar da coluna $i$ com a coluna
+$j$. A diagonal de $I$ tem 1: cada coluna vezes ela mesma dá 1, comprimento 1.
+Fora da diagonal, $I$ tem 0: colunas diferentes são perpendiculares.
+
+**Exemplo.** $R_{45^\circ} = \frac{\sqrt{2}}{2}\begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix}$:
+as colunas $\frac{\sqrt{2}}{2}(1,\ 1)$ e $\frac{\sqrt{2}}{2}(-1,\ 1)$ têm
+comprimento 1 e produto escalar 0. Toda rotação é ortogonal. O espelho
+$\begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix}$ também é.
+
+**Contraexemplo.** $\begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix}$ tem colunas
+perpendiculares, mas de comprimento $\sqrt{2}$. Ela gira $45^\circ$ **e**
+estica $\sqrt{2}$ vezes. A conta mostra: $Q^{\mathsf{T}}Q = 2I$, e não $I$.
+
+Três consequências:
+
+- **A inversa é a transposta.** $Q^{\mathsf{T}}Q = I$ diz que $Q^{\mathsf{T}}$
+  desfaz $Q$. Pela lição de [matriz inversa](./matriz-inversa),
+  $Q^{-1} = Q^{\mathsf{T}}$. Para desfazer um giro, não é preciso
+  escalonar nada: a transposta já é a inversa.
+- **Comprimentos não mudam.** $\lVert Q\vec{v} \rVert^2 = \vec{v} \cdot
+  (Q^{\mathsf{T}}Q\vec{v}) = \vec{v} \cdot \vec{v} = \lVert \vec{v} \rVert^2$.
+- **Áreas não mudam de tamanho.** Em $2 \times 2$, uma matriz ortogonal é uma
+  rotação (determinante 1) ou um espelho (determinante $-1$).
+
+### 8.7 A decomposição $A = U\Sigma V^{\mathsf{T}}$
+
+Junte as peças. Ponha os vetores de partida como colunas de uma matriz $V$, os
+de chegada como colunas de uma matriz $U$, e os valores singulares na
+diagonal de uma matriz $\Sigma$:
+
+$$
+V = \begin{bmatrix} | & | \\ \vec{v}_1 & \vec{v}_2 \\ | & | \end{bmatrix}, \qquad
+U = \begin{bmatrix} | & | \\ \vec{u}_1 & \vec{u}_2 \\ | & | \end{bmatrix}, \qquad
+\Sigma = \begin{bmatrix} \sigma_1 & 0 \\ 0 & \sigma_2 \end{bmatrix}.
+$$
+
+$U$ e $V$ são ortogonais: suas colunas têm comprimento 1 e são
+perpendiculares (seções 8.4 e 8.5).
+
+**Passo 1: o que $A$ faz com as colunas de $V$.** A definição de $\vec{u}_i$
+diz que $A\vec{v}_i = \sigma_i\vec{u}_i$. Pela leitura por colunas do produto
+de matrizes, a coluna $i$ de $AV$ é $A\vec{v}_i$. E a coluna $i$ de $U\Sigma$
+é $\sigma_i\vec{u}_i$, porque multiplicar $U$ à direita por uma diagonal
+multiplica cada coluna de $U$ pelo número da diagonal. As duas matrizes têm as
+mesmas colunas:
+
+$$
+AV = U\Sigma.
+$$
+
+**Passo 2: isolar $A$.** Multiplique os dois lados, à direita, por
+$V^{\mathsf{T}}$. Como $V$ é ortogonal, $VV^{\mathsf{T}} = I$ (a inversa
+funciona dos dois lados). Do lado esquerdo sobra $AVV^{\mathsf{T}} = AI = A$:
+
+> **Decomposição em valores singulares.**
+>
+> $$A = U\Sigma V^{\mathsf{T}}.$$
+
+**A leitura.** Um vetor $\vec{x}$ é multiplicado primeiro pela matriz da
+direita. Então $A\vec{x} = U(\Sigma(V^{\mathsf{T}}\vec{x}))$ faz três coisas,
+na ordem:
+
+1. $V^{\mathsf{T}}$ **gira** (ou espelha): leva $\vec{v}_1$ para $\vec{e}_1$
+   e $\vec{v}_2$ para $\vec{e}_2$;
+2. $\Sigma$ **estica** o eixo $x$ por $\sigma_1$ e o eixo $y$ por $\sigma_2$;
+3. $U$ **gira** (ou espelha): leva $\vec{e}_1$ para $\vec{u}_1$ e $\vec{e}_2$
+   para $\vec{u}_2$.
+
+São os três passos da seção 5, agora como três matrizes.
+
+**Conferência exata com $A$.**
+
+$$
+U = \frac{1}{\sqrt{10}}\begin{bmatrix} 1 & -3 \\ 3 & 1 \end{bmatrix}, \qquad
+\Sigma = \begin{bmatrix} 3\sqrt{5} & 0 \\ 0 & \sqrt{5} \end{bmatrix}, \qquad
+V^{\mathsf{T}} = \frac{1}{\sqrt{2}}\begin{bmatrix} 1 & 1 \\ -1 & 1 \end{bmatrix}.
+$$
+
+Os números de fora das matrizes se juntam: em $\Sigma$, ponha $\sqrt{5}$ em
+evidência, $\Sigma = \sqrt{5}\begin{bmatrix} 3 & 0 \\ 0 & 1 \end{bmatrix}$. O
+fator total é $\frac{\sqrt{5}}{\sqrt{10}\sqrt{2}} = \frac{\sqrt{5}}{\sqrt{20}}
+= \frac{\sqrt{5}}{2\sqrt{5}} = \frac{1}{2}$. Sobra:
+
+$$
+U\Sigma V^{\mathsf{T}} = \frac{1}{2}\begin{bmatrix} 1 & -3 \\ 3 & 1 \end{bmatrix}\begin{bmatrix} 3 & 0 \\ 0 & 1 \end{bmatrix}\begin{bmatrix} 1 & 1 \\ -1 & 1 \end{bmatrix} = \frac{1}{2}\begin{bmatrix} 3 & -3 \\ 9 & 1 \end{bmatrix}\begin{bmatrix} 1 & 1 \\ -1 & 1 \end{bmatrix} = \frac{1}{2}\begin{bmatrix} 6 & 0 \\ 8 & 10 \end{bmatrix} = \begin{bmatrix} 3 & 0 \\ 4 & 5 \end{bmatrix}.
+$$
+
+É a matriz $A$. Os dois giros também têm leitura direta. $V^{\mathsf{T}}$ é a
+rotação de $-45^\circ$, a da figura da seção 6. $U$ é a rotação cujo
+primeiro eixo aponta na direção $(1,\ 3)$, um giro de cerca de
+$71{,}57^\circ$. Os dois giros são diferentes, como a seção 6 tinha avisado.
+
+**O que vale em geral.** Toda matriz tem uma decomposição em valores
+singulares, inclusive as retangulares. Se $A$ é $m \times n$:
+
+- $V$ é $n \times n$ e ortogonal; $U$ é $m \times m$ e ortogonal;
+- $\Sigma$ é $m \times n$, com os valores singulares na diagonal e zero em
+  todo o resto;
+- o número de valores singulares diferentes de zero é o **posto** de $A$.
+
+Esta lição não demonstra o caso geral. A demonstração repete os passos das
+seções 8.3 a 8.7 com $n$ vetores em vez de dois, mais um cuidado com os
+$\sigma_i$ iguais a zero, para os quais a fórmula de $\vec{u}_i$ divide por
+zero. No caso $2 \times 2$, esse cuidado aparece no Exemplo 2 da seção 10.
+
+**Uma ligação com o determinante.** $U$ e $V^{\mathsf{T}}$ não mudam o
+tamanho de nenhuma área. Só $\Sigma$ muda, e ela multiplica as áreas por
+$\sigma_1\sigma_2$. Então $\lvert \det A \rvert = \sigma_1\sigma_2$. Com a
+matriz $A$: $3\sqrt{5} \times \sqrt{5} = 15$, que é exatamente
+$\det A = 3 \times 5 - 0 \times 4 = 15$.
+
+### 8.8 Camadas de posto 1 e a melhor aproximação
+
+Agora o passo que resolve a miniatura. Escreva $U\Sigma V^{\mathsf{T}}$ de outro
+jeito. Pela leitura por colunas, $U\Sigma$ tem colunas $\sigma_1\vec{u}_1$ e
+$\sigma_2\vec{u}_2$. E $V^{\mathsf{T}}$ tem linhas $\vec{v}_1^{\mathsf{T}}$ e
+$\vec{v}_2^{\mathsf{T}}$. O produto de uma matriz de colunas por uma matriz de
+linhas se separa em uma parcela para cada par coluna-linha:
+
+$$
+A = \sigma_1\vec{u}_1\vec{v}_1^{\mathsf{T}} + \sigma_2\vec{u}_2\vec{v}_2^{\mathsf{T}}.
+$$
+
+Cada parcela é uma **camada**. Repare na forma de
+$\vec{u}\vec{v}^{\mathsf{T}}$: é uma coluna vezes uma linha. Pela regra das
+dimensões, $(2 \times 1)$ vezes $(1 \times 2)$ dá $2 \times 2$. A entrada
+$(i,\ j)$ é $u_i v_j$. Então cada linha da camada é a linha
+$\vec{v}^{\mathsf{T}}$ multiplicada por um número $u_i$: **toda linha é
+múltiplo de uma mesma linha**, e a camada tem posto 1.
+
+**As camadas de $A$.**
+
+$$
+\sigma_1\vec{u}_1\vec{v}_1^{\mathsf{T}} = 3\sqrt{5} \times \frac{1}{\sqrt{10}} \times \frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\ 3 \end{bmatrix}\begin{bmatrix} 1 & 1 \end{bmatrix} = \frac{3}{2}\begin{bmatrix} 1 & 1 \\ 3 & 3 \end{bmatrix} = \begin{bmatrix} 1{,}5 & 1{,}5 \\ 4{,}5 & 4{,}5 \end{bmatrix},
+$$
+
+$$
+\sigma_2\vec{u}_2\vec{v}_2^{\mathsf{T}} = \sqrt{5} \times \frac{1}{\sqrt{10}} \times \frac{1}{\sqrt{2}}\begin{bmatrix} -3 \\ 1 \end{bmatrix}\begin{bmatrix} -1 & 1 \end{bmatrix} = \frac{1}{2}\begin{bmatrix} 3 & -3 \\ -1 & 1 \end{bmatrix} = \begin{bmatrix} 1{,}5 & -1{,}5 \\ -0{,}5 & 0{,}5 \end{bmatrix}.
+$$
+
+Somando as duas: $\begin{bmatrix} 3 & 0 \\ 4 & 5 \end{bmatrix}$. As camadas
+reconstroem $A$.
+
+**Ficar só com a primeira camada.** Se for preciso guardar $A$ com menos
+informação, a ideia natural é ficar com a camada de $\sigma_1$, a maior. Essa
+é a **aproximação de posto 1**:
+
+$$
+A_1 = \sigma_1\vec{u}_1\vec{v}_1^{\mathsf{T}}.
+$$
+
+O erro é a camada descartada, $A - A_1 = \sigma_2\vec{u}_2\vec{v}_2^{\mathsf{T}}$.
+Para medir o erro, use a mesma régua dos [mínimos quadrados](./minimos-quadrados):
+some os quadrados das entradas. Para a camada descartada de $A$:
+$1{,}5^2 + 1{,}5^2 + 0{,}5^2 + 0{,}5^2 = 2{,}25 + 2{,}25 + 0{,}25 + 0{,}25 = 5$.
+É exatamente $\sigma_2^2 = 5$.
+
+Não é coincidência. As entradas da camada $\sigma\vec{u}\vec{v}^{\mathsf{T}}$
+são $\sigma u_iv_j$, e a soma dos quadrados delas é
+$\sigma^2(u_1^2 + u_2^2)(v_1^2 + v_2^2) = \sigma^2 \times 1 \times 1 =
+\sigma^2$. Os dois parênteses valem 1 porque $\vec{u}$ e $\vec{v}$ têm
+comprimento 1. Então:
+
+> **A soma dos quadrados dos erros da aproximação de posto 1 é $\sigma_2^2$**
+> (e, numa matriz maior, $\sigma_2^2 + \sigma_3^2 + \ldots$, a soma dos
+> quadrados dos valores singulares descartados).
+
+E há um resultado mais forte, que esta lição só enuncia, conhecido como
+teorema de Eckart-Young: **nenhuma** matriz de posto 1 fica mais perto de $A$
+do que $A_1$. Entre todas as matrizes em que toda linha é múltiplo de uma
+mesma linha, a primeira camada da SVD é a que erra menos. É o mesmo tipo de
+garantia dos mínimos quadrados: a melhor aproximação possível, medida pela
+soma dos quadrados.
+
+Uma última conta mostra quanto a primeira camada guarda. A soma dos quadrados
+de **todas** as entradas de $A$ é $9 + 0 + 16 + 25 = 50$, e
+$\sigma_1^2 + \sigma_2^2 = 45 + 5 = 50$. A primeira camada guarda
+$\frac{45}{50} = 90\%$ desse total, e a segunda, $10\%$.
+
+## 9. Resolvendo o problema da miniatura
+
+Chame de $M$ a matriz $6 \times 6$ da miniatura. A seção 8.8 diz o que fazer:
+calcular os valores singulares e ver quantas camadas importam.
+
+**Primeiro, sem o logotipo.** Tire o logotipo, isto é, troque os quatro
+números do canto pelos que seguiriam o padrão. A tabela fica
+
+| | col. 1 | col. 2 | col. 3 | col. 4 | col. 5 | col. 6 |
+|---|---|---|---|---|---|---|
+| **linha 1** | 1 | 1 | 3 | 3 | 1 | 1 |
+| **linha 2** | 2 | 2 | 6 | 6 | 2 | 2 |
+| **linha 3** | 3 | 3 | 9 | 9 | 3 | 3 |
+| **linha 4** | 3 | 3 | 9 | 9 | 3 | 3 |
+| **linha 5** | 2 | 2 | 6 | 6 | 2 | 2 |
+| **linha 6** | 1 | 1 | 3 | 3 | 1 | 1 |
+
+Toda linha é múltiplo de $(1,\ 1,\ 3,\ 3,\ 1,\ 1)$, com os multiplicadores
+$1,\ 2,\ 3,\ 3,\ 2,\ 1$. Essa matriz é uma coluna vezes uma linha:
+
+$$
+\vec{c}\,\vec{r}^{\mathsf{T}}, \qquad \vec{c} = (1,\ 2,\ 3,\ 3,\ 2,\ 1), \qquad \vec{r} = (1,\ 1,\ 3,\ 3,\ 1,\ 1).
+$$
+
+Ela tem posto 1 e é uma camada só. Para guardá-la, são suficientes os 12 números de
+$\vec{c}$ e $\vec{r}$, em vez de 36. Na forma da SVD, divida cada vetor pelo
+próprio comprimento: $\lVert \vec{c} \rVert = \sqrt{1 + 4 + 9 + 9 + 4 + 1} =
+\sqrt{28}$ e $\lVert \vec{r} \rVert = \sqrt{1 + 1 + 9 + 9 + 1 + 1} =
+\sqrt{22}$. Então $\vec{u}_1 = \vec{c}/\sqrt{28}$,
+$\vec{v}_1 = \vec{r}/\sqrt{22}$, e o único valor singular diferente de zero é
+$\sigma_1 = \sqrt{28} \times \sqrt{22} = \sqrt{616} \approx 24{,}82$.
+
+**Agora com o logotipo.** O logotipo acrescenta 1 aos quatro pixels do canto.
+Esse acréscimo também é uma coluna vezes uma linha, $\vec{d}\,\vec{d}^{\mathsf{T}}$
+com $\vec{d} = (1,\ 1,\ 0,\ 0,\ 0,\ 0)$. Então
+$M = \vec{c}\,\vec{r}^{\mathsf{T}} + \vec{d}\,\vec{d}^{\mathsf{T}}$ é a soma de
+duas matrizes de posto 1, e tem posto 2.
+
+Para uma matriz $6 \times 6$, a SVD é feita por computador. A conta é a mesma
+das seções 8.3 a 8.5: autovalores de $M^{\mathsf{T}}M$, depois as raízes. O
+resultado é
+
+| | $\sigma_1$ | $\sigma_2$ | $\sigma_3$ a $\sigma_6$ |
+|---|---|---|---|
+| valor singular | $\approx 25{,}08$ | $\approx 1{,}73$ | $0$ |
+| quadrado | $\approx 629{,}01$ | $\approx 2{,}99$ | $0$ |
+
+Três leituras dessa tabela:
+
+1. **Quatro valores singulares são zero.** Só duas camadas existem, como o
+   posto 2 previa. Guardar as duas camadas, cada uma com $1 + 6 + 6 = 13$
+   números ($\sigma$, $\vec{u}$ e $\vec{v}$), dá 26 números em vez de 36, sem
+   perder **nada**.
+2. **A primeira camada domina.** A soma dos quadrados de todos os pixels é 632,
+   e $629{,}01 + 2{,}99 = 632$. A primeira camada guarda
+   $\frac{629{,}01}{632} \approx 99{,}5\%$ desse total.
+3. **A segunda camada é quase só o logotipo.** Guardando só a primeira
+   camada, com 13 números, o erro é $\sigma_2^2 \approx 2{,}99$, somado nos 36
+   pixels.
+
+A aproximação de posto 1, $\sigma_1\vec{u}_1\vec{v}_1^{\mathsf{T}}$,
+arredondada para duas casas:
+
+| | col. 1 | col. 2 | col. 3 | col. 4 | col. 5 | col. 6 |
+|---|---|---|---|---|---|---|
+| **linha 1** | 1,21 | 1,21 | 3,26 | 3,26 | 1,09 | 1,09 |
+| **linha 2** | 2,31 | 2,31 | 6,23 | 6,23 | 2,08 | 2,08 |
+| **linha 3** | 3,30 | 3,30 | 8,90 | 8,90 | 2,97 | 2,97 |
+| **linha 4** | 3,30 | 3,30 | 8,90 | 8,90 | 2,97 | 2,97 |
+| **linha 5** | 2,20 | 2,20 | 5,93 | 5,93 | 1,98 | 1,98 |
+| **linha 6** | 1,10 | 1,10 | 2,97 | 2,97 | 0,99 | 0,99 |
+
+<CartesianPlane
+  xMin={0} xMax={7} yMin={0} yMax={7}
+  xUnit={40}
+  showGrid={false}
+  showNumbers={false}
+  points={[[1.21, 1.21, 3.26, 3.26, 1.09, 1.09], [2.31, 2.31, 6.23, 6.23, 2.08, 2.08], [3.30, 3.30, 8.90, 8.90, 2.97, 2.97], [3.30, 3.30, 8.90, 8.90, 2.97, 2.97], [2.20, 2.20, 5.93, 5.93, 1.98, 1.98], [1.10, 1.10, 2.97, 2.97, 0.99, 0.99]].flatMap((row, i) => row.map((v, j) => ({at: [j + 1, 6 - i], r: 5.2 * Math.sqrt(v), tone: 3})))}
+  caption="A miniatura reconstruída só com a primeira camada, guardada em 13 números. A faixa clara do meio está inteira. O que sumiu foi o logotipo: o canto de cima, à esquerda, voltou a seguir o padrão do resto."
+/>
+
+O maior erro de um pixel é cerca de $0{,}79$, justamente nos pixels do
+logotipo, que valiam 2 e voltaram para perto de $1{,}21$. Arredondando a
+aproximação para inteiros, ela devolve exatamente a miniatura **sem** o
+logotipo.
+
+**As respostas.**
+
+1. Sim. Com 13 números em vez de 36, a miniatura volta com $99{,}5\%$ da
+   soma dos quadrados. Com 26 números, volta inteira.
+2. O que se perde é a camada de $\sigma_2$, e a perda, medida pela soma dos
+   quadrados dos erros, é $\sigma_2^2 \approx 2{,}99$. Pelo teorema de
+   Eckart-Young, nenhuma outra escolha de 13 números nesse formato erraria
+   menos.
+
+Para comparar: uma ideia ingênua seria guardar os 13 pixels mais claros e
+zerar os outros 23. O erro seria a soma dos quadrados dos 23 pixels zerados,
+$119$, cerca de 40 vezes o erro da SVD, e ainda seria preciso guardar a
+posição de cada pixel.
+
+**Numa foto de verdade**, com $1000 \times 1000$ pixels, os valores singulares
+não caem para zero de repente, mas costumam cair depressa. Guardar 50 camadas
+custa $50 \times (1 + 1000 + 1000) = 100\,050$ números, cerca de $10\%$ do
+milhão original, e em geral a foto continua reconhecível.
+
+**A mesma ideia em dados: PCA.** Troque a foto por uma planilha: cada linha é
+um cliente, cada coluna é uma medida (idade, renda, gasto mensal, visitas).
+Subtraia de cada coluna a sua média, para que o que sobra seja só a variação
+em torno dela. Os vetores singulares de partida, $\vec{v}_1,\ \vec{v}_2,\
+\ldots$, são as **componentes principais**: as direções, no espaço das
+medidas, em que os clientes mais variam. Projetar cada cliente nas duas
+primeiras permite desenhar milhares de clientes num plano, perdendo o mínimo
+de informação. É a análise de componentes principais, a ferramenta mais usada
+para resumir dados com muitas colunas.
+
+## 10. Exemplos resolvidos
+
+### Exemplo 1: uma diagonal com um número negativo
+
+Ache a SVD de $D = \begin{bmatrix} -2 & 0 \\ 0 & 1 \end{bmatrix}$.
+
+*Pause e tente antes de ler.*
+
+$D^{\mathsf{T}}D = \begin{bmatrix} 4 & 0 \\ 0 & 1 \end{bmatrix}$. Ela já é
+diagonal: os autovalores são 4 e 1, com autovetores $\vec{e}_1$ e
+$\vec{e}_2$. Os valores singulares são $\sigma_1 = 2$ e $\sigma_2 = 1$, e
+$\vec{v}_1 = \vec{e}_1$, $\vec{v}_2 = \vec{e}_2$. Os de chegada:
+$\vec{u}_1 = D\vec{e}_1/2 = (-2,\ 0)/2 = (-1,\ 0)$ e
+$\vec{u}_2 = D\vec{e}_2/1 = (0,\ 1)$. Então
+
+$$
+D = \begin{bmatrix} -1 & 0 \\ 0 & 1 \end{bmatrix}\begin{bmatrix} 2 & 0 \\ 0 & 1 \end{bmatrix}\begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}.
+$$
+
+O autovalor $-2$ de $D$ virou o valor singular 2. O sinal foi parar em $U$,
+que é um espelho. **Valores singulares nunca são negativos**: eles medem
+quanto a matriz estica, e o “virar ao contrário” fica por conta dos giros e
+espelhos.
+
+### Exemplo 2: uma matriz de posto 1
+
+Ache os valores singulares e a SVD de
+$C = \begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}$.
+
+*Pause e tente antes de ler.*
+
+$C^{\mathsf{T}}C = \begin{bmatrix} 1 + 4 & 2 + 8 \\ 2 + 8 & 4 + 16 \end{bmatrix} = \begin{bmatrix} 5 & 10 \\ 10 & 20 \end{bmatrix}$.
+O traço é 25 e o determinante é $100 - 100 = 0$. A equação é
+$\lambda^2 - 25\lambda = 0$, com raízes 25 e 0. Os valores singulares são
+$\sigma_1 = 5$ e $\sigma_2 = 0$.
+
+Para $\lambda = 25$, o autovetor é $(1,\ 2)$:
+$C^{\mathsf{T}}C(1,\ 2) = (25,\ 50)$. Com comprimento 1,
+$\vec{v}_1 = \frac{1}{\sqrt{5}}(1,\ 2)$. Então
+$\vec{u}_1 = C\vec{v}_1/5 = \frac{1}{5\sqrt{5}}(5,\ 10) = \frac{1}{\sqrt{5}}(1,\ 2)$.
+
+Para $\sigma_2 = 0$, a fórmula $\vec{u}_2 = C\vec{v}_2/\sigma_2$ divide por
+zero e não serve. Mas nem é preciso: a camada de $\sigma_2$ é zero vezes
+alguma coisa. Para completar $U$, escolhe-se qualquer vetor de comprimento 1
+perpendicular a $\vec{u}_1$, como $\frac{1}{\sqrt{5}}(-2,\ 1)$. A matriz
+inteira é uma camada só:
+
+$$
+C = 5 \times \frac{1}{\sqrt{5}}\begin{bmatrix} 1 \\ 2 \end{bmatrix} \times \frac{1}{\sqrt{5}}\begin{bmatrix} 1 & 2 \end{bmatrix} = \begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}.
+$$
+
+No desenho, o círculo de raio 1 é achatado num **segmento** de meio
+comprimento 5, na direção de $(1,\ 2)$. Um valor singular zero quer dizer
+que uma direção foi esmagada: o posto é 1 e o determinante é 0, de acordo com
+$\lvert \det C \rvert = \sigma_1\sigma_2 = 5 \times 0$.
+
+### Exemplo 3: uma rotação
+
+Quais são os valores singulares de $R_{30^\circ}$?
+
+*Pause e tente antes de ler.*
+
+Uma rotação é ortogonal, então $R^{\mathsf{T}}R = I$. Os autovalores de $I$
+são 1 e 1, e os valores singulares são $\sigma_1 = \sigma_2 = 1$. O círculo
+vira o próprio círculo, só girado: não há direção que estique mais que outra.
+Uma SVD possível é $U = R_{30^\circ}$, $\Sigma = I$ e $V = I$.
+
+### Exemplo 4: quanto a primeira camada guarda
+
+Para $A = \begin{bmatrix} 3 & 0 \\ 4 & 5 \end{bmatrix}$, a aproximação de posto
+1 é $A_1 = \begin{bmatrix} 1{,}5 & 1{,}5 \\ 4{,}5 & 4{,}5 \end{bmatrix}$ (seção
+8.8). Confira, calculando entrada por entrada, que a soma dos quadrados dos
+erros é $\sigma_2^2$.
+
+*Pause e tente antes de ler.*
+
+$A - A_1 = \begin{bmatrix} 3 - 1{,}5 & 0 - 1{,}5 \\ 4 - 4{,}5 & 5 - 4{,}5 \end{bmatrix} = \begin{bmatrix} 1{,}5 & -1{,}5 \\ -0{,}5 & 0{,}5 \end{bmatrix}$.
+A soma dos quadrados é $2{,}25 + 2{,}25 + 0{,}25 + 0{,}25 = 5 = \sigma_2^2$. A
+primeira camada guarda $45$ dos $50$ da soma total, ou seja, $90\%$.
+
+Repare que $A_1$ tem as duas colunas iguais: toda linha é múltiplo de
+$(1,\ 1)$, que é a direção $\vec{v}_1$. A aproximação “achou” que $A$ estica
+principalmente a diagonal.
+
+### Exemplo 5: um cisalhamento
+
+Ache os valores singulares de
+$B = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}$ e compare com os
+autovalores de $B$.
+
+*Pause e tente antes de ler.*
+
+$B^{\mathsf{T}}B = \begin{bmatrix} 1 & 0 \\ 1 & 1 \end{bmatrix}\begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix} = \begin{bmatrix} 1 & 1 \\ 1 & 2 \end{bmatrix}$.
+O traço é 3 e o determinante é $2 - 1 = 1$. A equação é
+$\lambda^2 - 3\lambda + 1 = 0$, com $\Delta = 9 - 4 = 5$ e raízes
+$\lambda = \frac{3 \pm \sqrt{5}}{2}$, ou seja, cerca de $2{,}618$ e $0{,}382$.
+Os valores singulares são as raízes desses números: cerca de $1{,}618$ e
+$0{,}618$. (Dá para conferir que $\left(\frac{1 + \sqrt{5}}{2}\right)^2 =
+\frac{1 + 2\sqrt{5} + 5}{4} = \frac{3 + \sqrt{5}}{2}$, então
+$\sigma_1 = \frac{1 + \sqrt{5}}{2}$ exatamente.)
+
+Já os autovalores de $B$, que é triangular, são as entradas da diagonal:
+1 e 1. O cisalhamento não estica nenhuma das suas direções especiais, mas estica
+$1{,}618$ vezes a direção de $(1;\ 1{,}618)$. Produto dos valores singulares:
+$1{,}618 \times 0{,}618 \approx 1 = \det B$, como a seção 8.7 previa.
+
+## 11. Erros comuns
+
+**Erro 1: achar que valores singulares são os autovalores de $A$.** É o erro
+mais tentador, porque as duas ideias falam de “esticar”. Mas o autovalor diz
+quanto a matriz estica um vetor **que continua na mesma direção**. O valor
+singular diz quanto ela estica no máximo e no mínimo, **sem exigir** que a
+direção se mantenha. O cisalhamento do Exemplo 5 separa as duas coisas:
+autovalores 1 e 1, valores singulares $1{,}618$ e $0{,}618$. As duas listas
+coincidem quando a matriz é simétrica e não tem autovalores negativos, como
+$S$ na seção 6. Fora desse caso, não conte com isso.
+
+**Erro 2: esquecer a raiz.** Os autovalores de $A^{\mathsf{T}}A$ medem o
+esticamento **ao quadrado**. Para $A = \begin{bmatrix} 3 & 0 \\ 4 & 5 \end{bmatrix}$,
+dizer “o maior esticamento é 45” está errado. Teste: o vetor
+$\vec{v}_1 = \frac{1}{\sqrt{2}}(1,\ 1)$ vai para $\frac{1}{\sqrt{2}}(3,\ 9)$,
+de comprimento $\sqrt{45} \approx 6{,}71$, e não 45.
+
+**Erro 3: escrever $U\Sigma V$ em vez de $U\Sigma V^{\mathsf{T}}$.** O
+primeiro passo **gira $\vec{v}_1$ para o eixo $x$**, e quem faz isso é
+$V^{\mathsf{T}}$, a inversa de $V$. Teste com a matriz $A$: usando $V$ no
+lugar de $V^{\mathsf{T}}$, o produto dá
+$\begin{bmatrix} 0 & -3 \\ 5 & -4 \end{bmatrix}$, que não é $A$.
+
+**Erro 4: calcular os $\vec{u}_i$ por fora, sem a fórmula.** Os $\vec{u}_i$
+também são autovetores de $AA^{\mathsf{T}}$, e é tentador calculá-los por lá.
+O problema é o sinal: $(3,\ -1)$ e $(-3,\ 1)$ são os dois autovetores de
+comprimento $\sqrt{10}$ na mesma reta, e só um deles funciona com os
+$\vec{v}_i$ já escolhidos. Teste: trocando $\vec{u}_2$ por
+$\frac{1}{\sqrt{10}}(3,\ -1)$, o produto $U\Sigma V^{\mathsf{T}}$ dá
+$\begin{bmatrix} 0 & 3 \\ 5 & 4 \end{bmatrix}$, errado. A fórmula
+$\vec{u}_i = A\vec{v}_i/\sigma_i$ escolhe o sinal certo sozinha.
+
+**Erro 5: aceitar um valor singular negativo.** $\sigma_i = \sqrt{\lambda_i}$
+é uma raiz, e $\lambda_i \geq 0$ (seção 8.3). Se uma conta produzir
+$\sigma = -2$, o sinal pertence a $U$, como no Exemplo 1.
+
+**Erro 6: achar que comprimir é guardar os números maiores.** A miniatura
+mostrou o contrário: guardar os 13 pixels mais claros erra 119, e a primeira
+camada da SVD, também com 13 números, erra cerca de 3. A SVD não guarda
+pixels; ela guarda um **padrão** que se repete por toda a imagem.
+
+## 12. Perguntas de verificação
+
+**1.** Por que as direções de maior e de menor esticamento são sempre
+perpendiculares?
+
+<details>
+<summary>Resposta</summary>
+
+Porque elas são autovetores de $A^{\mathsf{T}}A$, e $A^{\mathsf{T}}A$ é
+simétrica. A seção 8.2 mostrou que autovetores de autovalores diferentes de
+uma matriz simétrica são perpendiculares: calculando
+$(S\vec{w}_1) \cdot \vec{w}_2$ de dois jeitos, sobra
+$(\lambda_1 - \lambda_2)(\vec{w}_1 \cdot \vec{w}_2) = 0$.
+
+</details>
+
+**2.** Uma matriz tem valores singulares 4 e 4. O que ela faz com o círculo de
+raio 1?
+
+<details>
+<summary>Resposta</summary>
+
+Leva num círculo de raio 4: os dois semieixos são iguais, e uma elipse com
+semieixos iguais é um círculo. A matriz é uma rotação (ou um espelho) seguida
+de uma ampliação de 4 vezes em todas as direções.
+
+</details>
+
+**3.** O que significa uma matriz $2 \times 2$ ter $\sigma_2 = 0$?
+
+<details>
+<summary>Resposta</summary>
+
+Que uma direção, $\vec{v}_2$, é esmagada até a origem. O círculo vira um
+segmento, o posto é 1, o determinante é 0 (porque
+$\lvert \det A \rvert = \sigma_1 \times 0$) e a matriz não tem inversa.
+
+</details>
+
+**4.** A matriz simétrica $\begin{bmatrix} -3 & 0 \\ 0 & 1 \end{bmatrix}$ tem
+autovalores $-3$ e 1. Quais são os valores singulares?
+
+<details>
+<summary>Resposta</summary>
+
+3 e 1. Os valores singulares são os comprimentos dos semieixos, e
+comprimento não tem sinal. O $-3$ diz que a direção $\vec{e}_1$ é esticada 3
+vezes **e invertida**; a inversão vai para $U$.
+
+</details>
+
+**5.** Por que a SVD usa $V^{\mathsf{T}}$ no primeiro passo, e não $V^{-1}$?
+
+<details>
+<summary>Resposta</summary>
+
+São a mesma matriz. $V$ é ortogonal, e para matriz ortogonal a inversa é a
+transposta (seção 8.6). Escrever $V^{\mathsf{T}}$ lembra que desfazer o giro
+não exige nenhuma conta: só trocar linhas por colunas.
+
+</details>
+
+**6.** Na miniatura, por que a primeira camada guardou a faixa e perdeu o
+logotipo, e não o contrário?
+
+<details>
+<summary>Resposta</summary>
+
+Porque as camadas vêm em ordem de tamanho, e o tamanho é medido pela soma dos
+quadrados. A faixa ocupa a imagem inteira e tem pixels de até 9: ela responde
+por quase toda a soma, $\sigma_1^2 \approx 629$. O logotipo é um acréscimo de
+1 em quatro pixels: ele responde por pouco, $\sigma_2^2 \approx 3$. A
+primeira camada é sempre o padrão que mais pesa.
+
+</details>
+
+## 13. Exercícios
+
+### 1. Reconhecimento
+
+1. Quais destas matrizes são simétricas? E quais são ortogonais?
+   (a) $\begin{bmatrix} 1 & 4 \\ 4 & 2 \end{bmatrix}$
+   (b) $\begin{bmatrix} 1 & 4 \\ -4 & 2 \end{bmatrix}$
+   (c) $\frac{1}{5}\begin{bmatrix} 3 & -4 \\ 4 & 3 \end{bmatrix}$
+   (d) $\begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}$
+   (e) $\begin{bmatrix} 1 & 1 \\ -1 & 1 \end{bmatrix}$
+2. Uma matriz $2 \times 2$ tem SVD com $\Sigma = \begin{bmatrix} 5 & 0 \\ 0 & 2 \end{bmatrix}$.
+   Qual é o maior esticamento que ela produz? O menor? Qual é
+   $\lvert \det A \rvert$? Qual é o posto?
+
+### 2. Explicação
+
+3. Explique, com suas palavras, por que um valor singular nunca é negativo,
+   mesmo quando a matriz tem um autovalor negativo.
+4. Uma foto de $1000 \times 1000$ pixels é guardada com uma única camada,
+   $\sigma_1\vec{u}_1\vec{v}_1^{\mathsf{T}}$. Quantos números são guardados? O
+   que essa camada consegue representar, e o que ela não consegue?
+
+### 3. Aplicação direta
+
+5. Ache os valores singulares e a SVD de
+   $\begin{bmatrix} 3 & 0 \\ 0 & -2 \end{bmatrix}$.
+6. Ache a SVD de $A = \begin{bmatrix} 2 & 2 \\ -1 & 1 \end{bmatrix}$. Siga os
+   passos: $A^{\mathsf{T}}A$, autovalores, $\vec{v}_1$ e $\vec{v}_2$,
+   $\sigma_1$ e $\sigma_2$, $\vec{u}_1$ e $\vec{u}_2$.
+
+<details>
+<summary>Dica para o exercício 6</summary>
+
+$A^{\mathsf{T}}A$ dá uma matriz parecida com a do exemplo da seção 8.3, com o
+mesmo número nas duas entradas da diagonal. Os autovetores de uma matriz
+assim são sempre $(1,\ 1)$ e $(-1,\ 1)$. Quando calcular os $\vec{u}_i$, você
+vai ter uma surpresa agradável.
+
+</details>
+
+### 4. Variação
+
+7. Ache a SVD de $\begin{bmatrix} 2 & 1 \\ 4 & 2 \end{bmatrix}$ e escreva a
+   matriz como uma única camada.
+8. Calcule os valores singulares de
+   $\begin{bmatrix} 1 & 0 \\ 1 & 1 \end{bmatrix}$ (o cisalhamento “para cima”)
+   e compare com os do Exemplo 5. Compare também com os autovalores.
+9. Os valores singulares de $A$ são $3\sqrt{5}$ e $\sqrt{5}$. Quais são os
+   valores singulares de $2A$? E de $-A$?
+
+### 5. Problema misto
+
+10. Uma miniatura $4 \times 4$ tem os brilhos
+    $\begin{bmatrix} 2 & 1 & 1 & 2 \\ 4 & 2 & 2 & 4 \\ 4 & 2 & 2 & 4 \\ 2 & 1 & 1 & 2 \end{bmatrix}$.
+    Mostre que ela é uma coluna vezes uma linha, ache $\sigma_1$,
+    $\vec{u}_1$ e $\vec{v}_1$, e diga quantos números são suficientes para guardá-la.
+11. Uma matriz $2 \times 2$ tem valores singulares 6 e 2. Um terreno de 3
+    hectares é transformado por ela. Qual a área nova? E o círculo de raio 2,
+    vira que figura, com que medidas?
+12. Calcule $A = R_{30^\circ}\begin{bmatrix} 4 & 0 \\ 0 & 1 \end{bmatrix}R_{30^\circ}^{\mathsf{T}}$.
+    Mostre que $A$ é simétrica e confira, pelo traço e pelo determinante, que
+    os autovalores dela são 4 e 1.
+
+<details>
+<summary>Dica para o exercício 12</summary>
+
+Use $\cos 30^\circ = \frac{\sqrt{3}}{2}$ e $\sen 30^\circ = \frac{1}{2}$.
+Multiplique primeiro $R_{30^\circ}$ pela diagonal: isso só multiplica a
+primeira coluna de $R_{30^\circ}$ por 4. Depois multiplique pela transposta.
+
+</details>
+
+### 6. Justificativa
+
+13. Mostre que $A^{\mathsf{T}}A$ é simétrica para qualquer matriz $A$.
+14. Mostre que $\lVert A\vec{v} \rVert^2 = \vec{v} \cdot (A^{\mathsf{T}}A\vec{v})$,
+    dizendo qual propriedade justifica cada sinal de igual.
+15. Explique por que $\vec{u}_1 \cdot \vec{u}_2 = 0$.
+16. Explique por que $\lvert \det A \rvert = \sigma_1\sigma_2$ para uma matriz
+    $2 \times 2$, usando o determinante como fator de área.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Simétricas: (a) e (d). A (b) não é: acima da diagonal está 4, abaixo está
+   $-4$. Ortogonais: (c), uma rotação (colunas $\frac{1}{5}(3,\ 4)$ e
+   $\frac{1}{5}(-4,\ 3)$, de comprimento $\frac{1}{5}\sqrt{9 + 16} = 1$ e
+   produto escalar $\frac{1}{25}(-12 + 12) = 0$), e (d), um espelho na reta
+   $y = x$. A (e) não é ortogonal: as colunas são perpendiculares mas têm
+   comprimento $\sqrt{2}$. Repare que (d) é simétrica **e** ortogonal ao mesmo
+   tempo. Se você marcou (e) como ortogonal, olhou só a perpendicularidade e
+   esqueceu do comprimento 1.
+2. O maior esticamento é 5 e o menor é 2.
+   $\lvert \det A \rvert = 5 \times 2 = 10$. O posto é 2, porque os dois
+   valores singulares são diferentes de zero.
+3. O valor singular é um comprimento: o semieixo da elipse, ou o esticamento
+   máximo ou mínimo. Comprimento não tem sinal. Na conta, ele é a raiz de um
+   autovalor de $A^{\mathsf{T}}A$, e esses autovalores são quadrados de
+   comprimentos, nunca negativos. O autovalor negativo de $A$ diz que uma
+   direção foi invertida, e essa inversão aparece em $U$ (um espelho), não em
+   $\Sigma$.
+4. $1 + 1000 + 1000 = 2001$ números, cerca de $0{,}2\%$ do milhão de pixels. A
+   camada representa só imagens em que toda linha é múltiplo de uma mesma
+   linha: um padrão de faixas, com brilho que varia ao longo das linhas e das
+   colunas de forma “separada”. Ela não consegue representar detalhes que
+   fujam desse padrão, como um rosto ou um texto.
+5. $\begin{bmatrix} 3 & 0 \\ 0 & -2 \end{bmatrix}^{\mathsf{T}}\begin{bmatrix} 3 & 0 \\ 0 & -2 \end{bmatrix} = \begin{bmatrix} 9 & 0 \\ 0 & 4 \end{bmatrix}$:
+   autovalores 9 e 4, valores singulares 3 e 2, $\vec{v}_1 = \vec{e}_1$,
+   $\vec{v}_2 = \vec{e}_2$. Então $\vec{u}_1 = (3,\ 0)/3 = (1,\ 0)$ e
+   $\vec{u}_2 = (0,\ -2)/2 = (0,\ -1)$. SVD:
+   $U = \begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix}$,
+   $\Sigma = \begin{bmatrix} 3 & 0 \\ 0 & 2 \end{bmatrix}$, $V = I$. Se você
+   escreveu $\sigma_2 = -2$, reveja o Erro 5.
+6. $A^{\mathsf{T}}A = \begin{bmatrix} 2 & -1 \\ 2 & 1 \end{bmatrix}\begin{bmatrix} 2 & 2 \\ -1 & 1 \end{bmatrix} = \begin{bmatrix} 5 & 3 \\ 3 & 5 \end{bmatrix}$.
+   Traço 10, determinante $25 - 9 = 16$; raízes de
+   $\lambda^2 - 10\lambda + 16 = 0$: 8 e 2. Autovetores $(1,\ 1)$ (para 8) e
+   $(-1,\ 1)$ (para 2), então $\vec{v}_1 = \frac{1}{\sqrt{2}}(1,\ 1)$ e
+   $\vec{v}_2 = \frac{1}{\sqrt{2}}(-1,\ 1)$. Valores singulares
+   $\sigma_1 = \sqrt{8} = 2\sqrt{2}$ e $\sigma_2 = \sqrt{2}$. Chegada:
+   $A\vec{v}_1 = \frac{1}{\sqrt{2}}(4,\ 0)$, e dividindo por $2\sqrt{2}$ sai
+   $\vec{u}_1 = (1,\ 0)$. $A\vec{v}_2 = \frac{1}{\sqrt{2}}(0,\ 2)$, e dividindo
+   por $\sqrt{2}$ sai $\vec{u}_2 = (0,\ 1)$. A surpresa: $U = I$. A matriz só
+   gira $-45^\circ$ e estica:
+   $A = \begin{bmatrix} 2\sqrt{2} & 0 \\ 0 & \sqrt{2} \end{bmatrix} \times \frac{1}{\sqrt{2}}\begin{bmatrix} 1 & 1 \\ -1 & 1 \end{bmatrix}$.
+   Conferência: o produto dá $\begin{bmatrix} 2 & 2 \\ -1 & 1 \end{bmatrix}$.
+   Se você achou $\sigma_1 = 8$, esqueceu a raiz (Erro 2).
+7. $A^{\mathsf{T}}A = \begin{bmatrix} 20 & 10 \\ 10 & 5 \end{bmatrix}$, traço
+   25, determinante 0: autovalores 25 e 0. $\sigma_1 = 5$, $\sigma_2 = 0$.
+   Para 25, o autovetor é $(2,\ 1)$, então
+   $\vec{v}_1 = \frac{1}{\sqrt{5}}(2,\ 1)$ e
+   $\vec{u}_1 = \frac{1}{5} \times \frac{1}{\sqrt{5}}(5,\ 10) = \frac{1}{\sqrt{5}}(1,\ 2)$.
+   Uma camada só:
+   $5 \times \frac{1}{\sqrt{5}}\begin{bmatrix} 1 \\ 2 \end{bmatrix} \times \frac{1}{\sqrt{5}}\begin{bmatrix} 2 & 1 \end{bmatrix} = \begin{bmatrix} 1 \\ 2 \end{bmatrix}\begin{bmatrix} 2 & 1 \end{bmatrix} = \begin{bmatrix} 2 & 1 \\ 4 & 2 \end{bmatrix}$.
+8. $\begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}\begin{bmatrix} 1 & 0 \\ 1 & 1 \end{bmatrix} = \begin{bmatrix} 2 & 1 \\ 1 & 1 \end{bmatrix}$.
+   Traço 3, determinante 1: a mesma equação do Exemplo 5,
+   $\lambda^2 - 3\lambda + 1 = 0$. Os valores singulares são os mesmos, cerca
+   de $1{,}618$ e $0{,}618$. Os autovalores da matriz saem de
+   $(1 - \lambda)(1 - \lambda) - 0 \times 1 = 0$: são 1 e 1.
+   Mais uma vez, autovalores e valores singulares são listas diferentes. A
+   coincidência entre os dois cisalhamentos tem razão: um é a transposta do
+   outro, e $A$ e $A^{\mathsf{T}}$ sempre têm os mesmos valores singulares.
+9. Para $2A$: $(2A)^{\mathsf{T}}(2A) = 4A^{\mathsf{T}}A$, com autovalores 4
+   vezes maiores, e raízes 2 vezes maiores: $6\sqrt{5}$ e $2\sqrt{5}$. Para
+   $-A$: $(-A)^{\mathsf{T}}(-A) = A^{\mathsf{T}}A$, a mesma matriz, então os
+   valores singulares são os mesmos, $3\sqrt{5}$ e $\sqrt{5}$. Faz sentido:
+   $-A$ estica igual a $A$ e depois inverte todas as setas, o que não muda
+   comprimento nenhum.
+10. As linhas são $1$, $2$, $2$ e $1$ vezes a linha $(2,\ 1,\ 1,\ 2)$. Então a
+    matriz é $\vec{c}\,\vec{r}^{\mathsf{T}}$ com $\vec{c} = (1,\ 2,\ 2,\ 1)$ e
+    $\vec{r} = (2,\ 1,\ 1,\ 2)$. Os comprimentos são
+    $\lVert \vec{c} \rVert = \sqrt{1 + 4 + 4 + 1} = \sqrt{10}$ e
+    $\lVert \vec{r} \rVert = \sqrt{4 + 1 + 1 + 4} = \sqrt{10}$. Então
+    $\vec{u}_1 = \frac{1}{\sqrt{10}}(1,\ 2,\ 2,\ 1)$,
+    $\vec{v}_1 = \frac{1}{\sqrt{10}}(2,\ 1,\ 1,\ 2)$ e
+    $\sigma_1 = \sqrt{10} \times \sqrt{10} = 10$. Os outros três valores
+    singulares são zero, porque o posto é 1. São suficientes 8 números ($\vec{c}$ e
+    $\vec{r}$), ou 9 na forma $\sigma_1$, $\vec{u}_1$, $\vec{v}_1$, em vez de
+    16. Conferência: a soma dos quadrados dos 16 brilhos, linha a linha, é
+    $10 + 40 + 40 + 10 = 100$, que é $\sigma_1^2 = 10^2$.
+11. O fator de área é $\lvert \det A \rvert = 6 \times 2 = 12$, então os 3
+    hectares viram 36 hectares. O círculo de raio 2 é o círculo de raio 1
+    ampliado 2 vezes; pela linearidade, a imagem é a elipse do círculo de
+    raio 1 ampliada 2 vezes: uma elipse de semieixos 12 e 4. Se você achou 6
+    e 2, esqueceu que o círculo tinha raio 2.
+12. Com $c = \frac{\sqrt{3}}{2}$ e $s = \frac{1}{2}$:
+    $R_{30^\circ}\begin{bmatrix} 4 & 0 \\ 0 & 1 \end{bmatrix} = \begin{bmatrix} 4c & -s \\ 4s & c \end{bmatrix}$.
+    Multiplicando pela transposta
+    $\begin{bmatrix} c & s \\ -s & c \end{bmatrix}$:
+    $A = \begin{bmatrix} 4c^2 + s^2 & 4cs - sc \\ 4sc - cs & 4s^2 + c^2 \end{bmatrix} = \begin{bmatrix} \frac{13}{4} & \frac{3\sqrt{3}}{4} \\ \frac{3\sqrt{3}}{4} & \frac{7}{4} \end{bmatrix}$.
+    As duas entradas fora da diagonal são iguais: é simétrica. Traço
+    $\frac{13}{4} + \frac{7}{4} = 5 = 4 + 1$. Determinante
+    $\frac{91}{16} - \frac{27}{16} = \frac{64}{16} = 4 = 4 \times 1$. A
+    equação $\lambda^2 - 5\lambda + 4 = 0$ tem raízes 4 e 1. É a SVD (e a
+    diagonalização) “de trás para a frente”: gire $-30^\circ$, estique o eixo
+    $x$ 4 vezes, gire $30^\circ$ de volta.
+13. Pela regra da transposta do produto,
+    $(A^{\mathsf{T}}A)^{\mathsf{T}} = A^{\mathsf{T}}(A^{\mathsf{T}})^{\mathsf{T}}$,
+    e transpor duas vezes devolve $A$. Então
+    $(A^{\mathsf{T}}A)^{\mathsf{T}} = A^{\mathsf{T}}A$: a matriz é igual à
+    própria transposta.
+14. $\lVert A\vec{v} \rVert^2 = (A\vec{v}) \cdot (A\vec{v})$, porque o produto
+    escalar de um vetor por ele mesmo é o quadrado do comprimento. Depois,
+    $(A\vec{v}) \cdot (A\vec{v}) = (A\vec{v})^{\mathsf{T}}(A\vec{v})$, a forma
+    do produto escalar como produto de matrizes. Em seguida,
+    $(A\vec{v})^{\mathsf{T}} = \vec{v}^{\mathsf{T}}A^{\mathsf{T}}$, pela
+    transposta do produto. Por fim,
+    $\vec{v}^{\mathsf{T}}(A^{\mathsf{T}}A\vec{v}) = \vec{v} \cdot (A^{\mathsf{T}}A\vec{v})$,
+    lendo a forma de volta. A associatividade do produto de matrizes permite
+    agrupar $A^{\mathsf{T}}A\vec{v}$.
+15. $\vec{u}_1 \cdot \vec{u}_2$ é
+    $\frac{1}{\sigma_1\sigma_2}(A\vec{v}_1) \cdot (A\vec{v}_2)$. Movendo o $A$
+    da esquerda para a direita (seção 8.1), o produto vira
+    $\vec{v}_1 \cdot (A^{\mathsf{T}}A\vec{v}_2) = \lambda_2(\vec{v}_1 \cdot \vec{v}_2)$.
+    E $\vec{v}_1 \cdot \vec{v}_2 = 0$, porque são autovetores da matriz
+    simétrica $A^{\mathsf{T}}A$ (seção 8.2). Então tudo é zero.
+16. $A = U\Sigma V^{\mathsf{T}}$ aplica três transformações. $V^{\mathsf{T}}$ e
+    $U$ são rotações ou espelhos: não mudam o tamanho de nenhuma área, e seus
+    determinantes são $1$ ou $-1$. $\Sigma$ estica um eixo por $\sigma_1$ e o
+    outro por $\sigma_2$: o quadrado de lado 1 vira um retângulo
+    $\sigma_1 \times \sigma_2$, e as áreas ficam multiplicadas por
+    $\sigma_1\sigma_2$. Pela regra do determinante do produto,
+    $\det A = (\pm 1) \times \sigma_1\sigma_2 \times (\pm 1)$, e sem o sinal
+    sobra $\lvert \det A \rvert = \sigma_1\sigma_2$.
+
+</details>
+
+## 14. Revisão curta
+
+- **A ideia central.** Toda matriz faz três coisas: gira, estica cada eixo por
+  um número e gira de novo. Em fórmula, $A = U\Sigma V^{\mathsf{T}}$. Os
+  números de esticar são os **valores singulares**.
+- **Como calcular.** Monte $A^{\mathsf{T}}A$, que é simétrica. Os autovetores
+  dela, com comprimento 1, são os $\vec{v}_i$. As raízes dos autovalores são
+  os $\sigma_i$. E $\vec{u}_i = A\vec{v}_i/\sigma_i$.
+- **Por que funciona.** Matrizes simétricas têm autovetores perpendiculares,
+  e $\lVert A\vec{v} \rVert^2 = \vec{v} \cdot (A^{\mathsf{T}}A\vec{v})$ liga o
+  esticamento de $A$ à matriz simétrica $A^{\mathsf{T}}A$.
+- **Para que usar.** A matriz é uma soma de camadas
+  $\sigma_i\vec{u}_i\vec{v}_i^{\mathsf{T}}$, em ordem de importância. Guardar as
+  primeiras camadas é a melhor compressão possível, e o erro é a soma dos
+  $\sigma^2$ descartados.
+- **Com o que se conecta.** Com autovalores (a conta), com o determinante
+  ($\lvert \det A \rvert = \sigma_1\sigma_2$), com o posto (o número de
+  $\sigma$ diferentes de zero) e com os mínimos quadrados (a mesma régua da
+  soma dos quadrados, e a mesma ideia de melhor aproximação).
+
+## 15. Para onde isso leva
+
+Esta é a última lição do capítulo. Vale olhar para trás antes de olhar para a
+frente.
+
+**O que você sabe agora.**
+
+| Ideia | O que ela responde |
+|---|---|
+| [vetores com muitas coordenadas](./vetores-com-muitas-coordenadas) | como comparar listas de números: distância e cosseno |
+| [matrizes](./matrizes) | como guardar uma tabela e multiplicá-la por um vetor |
+| [sistemas e escalonamento](./sistemas-lineares-e-escalonamento) | como achar os números que satisfazem várias equações ao mesmo tempo |
+| [combinação linear e independência](./combinacao-linear-e-independencia) | o que se alcança misturando vetores, e quando um deles sobra |
+| [transformações lineares](./transformacoes-lineares) | como uma matriz move o plano inteiro |
+| [produto de matrizes](./produto-de-matrizes) | como fazer duas transformações em sequência |
+| [matriz inversa](./matriz-inversa) | como desfazer uma transformação |
+| [determinante](./determinante) | quanto uma transformação multiplica as áreas |
+| [base, dimensão e posto](./base-dimensao-e-posto) | quantos números carregam informação de verdade |
+| [autovalores e autovetores](./autovalores-e-autovetores) | que direções uma matriz só estica, e o que acontece ao aplicá-la muitas vezes |
+| [mínimos quadrados](./minimos-quadrados) | qual é a melhor resposta quando nenhuma resposta é exata |
+| valores singulares | como escrever qualquer matriz em camadas, e qual é a melhor aproximação |
+
+**Onde isso encontra o deep learning.** Uma camada de uma rede neural faz duas
+coisas. Primeiro, a conta $\vec{y} = W\vec{x} + \vec{b}$ da lição de
+matrizes. Depois, uma “dobra” não linear, como a função que troca todo número
+negativo por zero. A lição de produto de matrizes mostrou por que a dobra é
+necessária: sem ela, várias camadas seguidas equivaleriam a uma camada só.
+
+**Treinar** uma rede é ajustar os números de cada $W$ e de cada $\vec{b}$ para
+que a rede erre menos. É a mesma pergunta dos mínimos quadrados: “quais
+números fazem a soma dos erros ao quadrado ser a menor possível?”. Só que, com
+a dobra no meio, não existe uma fórmula fechada como as equações normais.
+
+**O que ainda falta**, dito com honestidade:
+
+- **Cálculo de várias variáveis.** Sem fórmula fechada, o treino anda aos
+  poucos: em cada passo, ele muda os pesos na direção em que o erro diminui
+  mais depressa. Essa direção é o **gradiente**, um vetor de derivadas. Para
+  calculá-lo numa rede com muitas camadas, usa-se a regra da cadeia em várias
+  variáveis. Esse algoritmo se chama *backpropagation*. O curso já tem a
+  [regra da cadeia](../calculo/calculo-1/regra-da-cadeia) em uma variável; a
+  versão com muitas variáveis ainda não está no curso.
+- **Probabilidade e estatística.** Uma rede que classifica imagens devolve
+  probabilidades, e a medida de erro mais usada vem da probabilidade. O curso
+  tem só a introdução, em
+  [Da contagem à probabilidade](../analise-combinatoria/da-contagem-a-probabilidade).
+- **Otimização.** O estudo de como andar até o menor erro: gradiente
+  descendente, tamanho do passo, por que às vezes o treino trava. Ele usa os
+  dois itens acima.
+
+O que este capítulo deu é a linguagem em que tudo isso é escrito. Um artigo
+de deep learning é, em boa parte, álgebra linear: vetores de dados, matrizes
+de pesos, produtos escalares para medir semelhança, e decomposições para
+entender o que uma matriz faz.

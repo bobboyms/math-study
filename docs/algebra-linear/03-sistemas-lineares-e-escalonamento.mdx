@@ -1,0 +1,1433 @@
+---
+title: Sistemas lineares e escalonamento
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Sistemas lineares: a eliminação organizada em escada
+
+## 1. Problema motivador: o lanche do atleta
+
+Uma nutricionista monta o plano de lanches de um atleta com três alimentos:
+iogurte, granola e castanhas. Cada alimento é vendido em porções, e cada porção
+traz uma quantidade fixa de proteína, carboidrato e gordura:
+
+| Por porção | Iogurte | Granola | Castanhas |
+|---|---:|---:|---:|
+| Proteína (g) | 10 | 5 | 5 |
+| Carboidrato (g) | 10 | 20 | 5 |
+| Gordura (g) | 5 | 5 | 15 |
+
+O plano do dia pede **exatamente** 45 g de proteína, 90 g de carboidrato e
+55 g de gordura. Quantas porções de cada alimento o atleta deve comer?
+
+Chame de $x$ o número de porções de iogurte, $y$ o de granola e $z$ o de
+castanhas. Cada linha da tabela vira uma equação. A proteína, por exemplo, vem
+de 10 g por porção de iogurte, mais 5 g por porção de granola, mais 5 g por
+porção de castanhas:
+
+$$
+\begin{cases}
+10x + 5y + 5z = 45 & \text{(proteína)} \\
+10x + 20y + 5z = 90 & \text{(carboidrato)} \\
+5x + 5y + 15z = 55 & \text{(gordura)}
+\end{cases}
+$$
+
+São três equações e três incógnitas. Na lição de
+[sistemas de duas equações](../equacoes/sistemas-de-duas-equacoes) você
+resolveu sistemas com duas incógnitas por substituição ou por eliminação. Os
+dois métodos ainda funcionam aqui, mas o trabalho cresce depressa. Isolar o
+$x$ na primeira equação dá $x = \frac{45 - 5y - 5z}{10}$, e essa fração precisa
+ser levada para as outras duas equações. Daí sai um sistema de duas equações
+com frações, que ainda precisa ser resolvido. Nesse caminho, perder um sinal
+acontece com frequência. E, a cada sistema novo, é preciso decidir de novo
+qual passo dar em seguida.
+
+> Como resolver um sistema com três (ou trinta) incógnitas seguindo sempre o
+> mesmo roteiro, sem precisar inventar uma estratégia a cada vez?
+
+A resposta é a **eliminação de Gauss**, ou **escalonamento**: a eliminação que
+você já conhece, aplicada numa ordem fixa e registrada numa tabela de números.
+O plano do atleta é resolvido na seção 9.
+
+## 2. Mapa das ideias
+
+- **sistema linear**: um conjunto de equações que devem valer ao mesmo tempo,
+  em que cada incógnita aparece só multiplicada por um número e somada às
+  outras, sem potências e sem produtos entre incógnitas;
+- **solução do sistema**: uma lista de valores, um para cada incógnita, que
+  satisfaz **todas** as equações;
+- **forma matricial** $A\vec{x} = \vec{b}$: o sistema escrito como uma matriz
+  de coeficientes vezes o vetor das incógnitas;
+- **matriz aumentada** $[A \mid \vec{b}]$: a tabela dos coeficientes com a
+  coluna dos resultados acrescentada à direita;
+- **operações elementares**: os três movimentos permitidos com as linhas —
+  trocar duas linhas de lugar, multiplicar uma linha por um número diferente de
+  zero, e somar a uma linha um múltiplo de outra;
+- **sistemas equivalentes**: sistemas com exatamente as mesmas soluções;
+- **forma escalonada**: o formato de escada a que a eliminação leva a matriz;
+- **pivô**: o primeiro número diferente de zero de cada linha, na forma
+  escalonada;
+- **substituição de trás para a frente**: resolver a última equação primeiro e
+  subir, uma equação por vez;
+- **variável livre**: uma incógnita que pode assumir qualquer valor, quando o
+  sistema tem infinitas soluções.
+
+## 3. Para que serve
+
+- **Dietas, rações e misturas.** Quanto de cada ingrediente para atingir
+  várias metas ao mesmo tempo — proteína e gordura numa dieta, resistência e
+  custo numa mistura de concreto, teor de cada metal numa liga.
+- **Preços a partir de totais.** Várias notas fiscais com os mesmos produtos
+  em quantidades diferentes. Cada nota vira uma equação.
+- **Circuitos e redes.** As correntes de um circuito elétrico e os fluxos de
+  uma rede de tubulações obedecem a uma equação por nó.
+- **Computação.** Programas de engenharia, de previsão do tempo e de
+  computação gráfica resolvem sistemas com milhões de incógnitas. O que eles
+  executam é o roteiro desta lição, repetido muitas vezes.
+- **Dentro da álgebra linear.** Quase toda pergunta do capítulo — um vetor é
+  combinação de outros? uma matriz tem inversa? quantas colunas carregam
+  informação nova? — se responde escalonando uma matriz. Esta é a ferramenta de
+  trabalho do capítulo inteiro.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [equações do 1º grau](../equacoes/equacoes-do-primeiro-grau).** O que
+permite somar 8 aos dois lados de uma equação sem mudar a solução dela?
+
+<details>
+<summary>Conferir</summary>
+
+A equação é uma balança em equilíbrio: os dois lados valem o mesmo. Fazer a
+mesma coisa com os dois pratos mantém o equilíbrio. Somar 8 só de um lado
+desequilibraria a balança. Por isso as operações que resolvem equações são
+sempre aplicadas **aos dois lados**. Multiplicar ou dividir os dois lados
+também vale, desde que o número não seja zero.
+
+</details>
+
+**2. De [sistemas de duas equações](../equacoes/sistemas-de-duas-equacoes).**
+Resolva por eliminação:
+
+$$
+\begin{cases}
+x + y = 5 \\
+2x - y = 1
+\end{cases}
+$$
+
+<details>
+<summary>Conferir</summary>
+
+Somando as duas equações, o $y$ some: $(x + y) + (2x - y) = 5 + 1$, ou seja,
+$3x = 6$ e $x = 2$. Voltando à primeira, $2 + y = 5$, então $y = 3$. Conferindo
+na segunda: $2 \times 2 - 3 = 1$. A solução é $(2,\ 3)$.
+
+Somar duas equações é legítimo pela mesma razão da balança: se $A = B$ e
+$C = D$, então $A + C = B + D$, porque estamos acrescentando a mesma
+quantidade aos dois lados, escrita de dois jeitos.
+
+</details>
+
+**3. Da mesma lição: os três desfechos.** Um sistema de duas equações com duas
+incógnitas pode ter quantas soluções? O que acontece com as retas em cada
+caso?
+
+<details>
+<summary>Conferir</summary>
+
+Uma solução (as retas se cruzam num ponto), nenhuma (as retas são paralelas)
+ou infinitas (as duas equações descrevem a mesma reta). Durante a eliminação,
+os dois últimos casos aparecem quando as incógnitas somem todas: se sobra uma
+igualdade falsa, como $0 = 2$, não há solução; se sobra $0 = 0$, há infinitas.
+
+</details>
+
+**4. De [Matrizes](./matrizes).** Para $A = \begin{bmatrix} 1 & 1 \\ 2 & -1
+\end{bmatrix}$ e $\vec{x} = \begin{bmatrix} x \\ y \end{bmatrix}$, quanto vale
+$A\vec{x}$? E se $\vec{x} = \begin{bmatrix} 2 \\ 3 \end{bmatrix}$?
+
+<details>
+<summary>Conferir</summary>
+
+Cada linha de $A$ faz um produto escalar com $\vec{x}$. A primeira linha dá
+$1 \times x + 1 \times y = x + y$, e a segunda dá $2 \times x + (-1) \times y =
+2x - y$:
+
+$$
+A\vec{x} = \begin{bmatrix} x + y \\ 2x - y \end{bmatrix}.
+$$
+
+Com $x = 2$ e $y = 3$, o resultado é $\begin{bmatrix} 5 \\ 1 \end{bmatrix}$.
+Repare que essas são exatamente as duas contas do sistema da pergunta 2. A
+lição de matrizes também mostrou a outra leitura do mesmo produto: o resultado
+é uma mistura das colunas de $A$, com os pesos $x$ e $y$.
+
+</details>
+
+## 5. Intuição: eliminar uma incógnita por vez, de cima para baixo
+
+Na lição de sistemas de duas equações, a eliminação tinha um objetivo: fazer
+uma incógnita sumir de uma das equações. Depois disso sobrava uma equação com
+uma incógnita só, que você sabia resolver.
+
+Com três incógnitas, a ideia é a mesma, repetida:
+
+1. use a primeira equação para tirar o $x$ de **todas** as equações abaixo
+   dela;
+2. agora as equações de baixo só têm $y$ e $z$. Use a segunda equação para
+   tirar o $y$ das equações abaixo dela;
+3. a última equação ficou só com o $z$. Resolva-a.
+
+O sistema fica com formato de escada: a primeira equação tem as três
+incógnitas, a segunda tem duas, a terceira tem uma.
+
+$$
+\left\{\begin{array}{rcrcrcl}
+\square\, x & + & \square\, y & + & \square\, z & = & \square \\
+ & & \square\, y & + & \square\, z & = & \square \\
+ & & & & \square\, z & = & \square
+\end{array}\right.
+$$
+
+Com a escada pronta, a volta é rápida. A última equação dá o $z$. Levando o $z$
+para a equação de cima, sobra só o $y$. Levando $y$ e $z$ para a primeira,
+sobra só o $x$.
+
+Duas observações fazem desse roteiro um método, e não um truque:
+
+- **cada passo é uma operação que você já conhece**: multiplicar uma equação
+  por um número e somá-la a outra. Nada de novo acontece com as equações; o que
+  é novo é a **ordem** em que os passos são dados;
+- **as letras não trabalham.** Em todos os passos, quem muda são os
+  coeficientes e os resultados. O $x$, o $y$ e o $z$ só ficam ali marcando a
+  coluna. Por isso, daqui a pouco, vamos parar de escrevê-los.
+
+## 6. Modelo visual: as retas mudam, o ponto fica
+
+Com duas incógnitas dá para ver o que um passo de eliminação faz. Tome o
+sistema da pergunta 2 da seção 4:
+
+$$
+\begin{cases}
+x + y = 5 \\
+2x - y = 1
+\end{cases}
+$$
+
+Um passo de eliminação troca a segunda equação por “segunda menos duas vezes a
+primeira”. Faça a conta parcela por parcela: $2x - 2x = 0$, $-y - 2y = -3y$ e
+$1 - 2 \times 5 = -9$. A segunda equação vira $-3y = -9$, que é o mesmo que
+$y = 3$.
+
+<CartesianPlane
+  xMin={-1} xMax={6} yMin={-2} yMax={6}
+  xUnit={42}
+  lines={[
+    {m: -1, n: 5, tone: 1},
+    {m: 2, n: -1, tone: 2},
+    {m: 0, n: 3, tone: 3, dashed: true},
+  ]}
+  points={[{at: [2, 3], tone: 0, label: '(2,\\ 3)', dx: -46, dy: 22}]}
+  labels={[
+    {at: [3.6, 0.6], math: 'x + y = 5', tone: 1, anchor: 'end'},
+    {at: [3.5, 6], math: '2x - y = 1', tone: 2, anchor: 'start', dx: 4, dy: 14},
+    {at: [6, 3], math: '-3y = -9', tone: 3, anchor: 'end', dx: -4, dy: 16},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Antes do passo, as retas x + y = 5 (azul) e 2x − y = 1 (laranja) se cruzam em (2, 3). Depois do passo, a segunda equação passa a ser −3y = −9, a reta horizontal y = 3 (verde, tracejada). A reta mudou, mas continua passando pelo mesmo ponto."
+/>
+
+O desenho mostra a ideia principal desta lição:
+
+- **a segunda reta mudou.** Era inclinada e virou horizontal. A equação nova é
+  outra equação;
+- **o ponto de cruzamento não mudou.** O sistema novo tem a mesma solução,
+  $(2,\ 3)$, que o antigo;
+- **o sistema novo tem uma conta a menos.** Uma reta horizontal diz o $y$ sem conta
+  nenhuma.
+
+Cada passo da eliminação troca uma equação por outra mais simples, sem mexer
+no conjunto de soluções. A seção 8 mostra por que isso é sempre verdade, e não
+só neste desenho.
+
+## 7. Ponte para a formalização: guardar só os números
+
+Compare o mesmo passo escrito de dois jeitos. À esquerda, com as letras; à
+direita, só com os coeficientes e o resultado de cada equação:
+
+$$
+\begin{array}{ccc}
+\left\{\begin{array}{rcrcr}
+x & + & y & = & 5 \\
+2x & - & y & = & 1
+\end{array}\right.
+& \qquad &
+\left[\begin{array}{cc|c}
+1 & 1 & 5 \\
+2 & -1 & 1
+\end{array}\right]
+\\[16pt]
+\downarrow & & \downarrow
+\\[6pt]
+\left\{\begin{array}{rcrcr}
+x & + & y & = & 5 \\
+ & & -3y & = & -9
+\end{array}\right.
+& \qquad &
+\left[\begin{array}{cc|c}
+1 & 1 & 5 \\
+0 & -3 & -9
+\end{array}\right]
+\end{array}
+$$
+
+Na tabela da direita, a primeira coluna guarda os coeficientes do $x$, a
+segunda os do $y$, e a coluna depois da barra guarda os resultados. A posição
+de cada número diz a que ele se refere, do mesmo jeito que numa planilha a
+coluna diz se o número é preço ou quantidade.
+
+Por que é legítimo abandonar as letras?
+
+- **o que queremos:** escrever menos e errar menos, num sistema que pode ter
+  muitas incógnitas;
+- **por que a escrita com letras atrapalha:** ela repete $x$, $y$ e $z$ em
+  todas as linhas e em todos os passos, sem que essas letras participem de
+  nenhuma conta;
+- **o que muda:** só a escrita. A informação do sistema está toda nos
+  números e na posição deles;
+- **o que permanece igual:** as contas. Subtrair duas vezes a primeira
+  equação da segunda é subtrair, coluna por coluna, duas vezes a primeira
+  linha da segunda linha. Os números calculados são os mesmos dos dois lados
+  do quadro acima;
+- **como verificar:** em qualquer momento, você pode reescrever a tabela como
+  equações e conferir uma solução nelas. A linha $[\,0 \;\; -3 \mid -9\,]$ volta
+  a ser $0x - 3y = -9$.
+
+## 8. Formalização
+
+### 8.1 Sistema linear
+
+> Um **sistema linear** é um conjunto de equações em que cada incógnita
+> aparece só multiplicada por um número, e os termos são somados. Uma
+> **solução** do sistema é uma lista de valores, um para cada incógnita, que
+> satisfaz todas as equações ao mesmo tempo.
+
+**Exemplo.** O sistema do atleta é linear: cada parcela é um número vezes uma
+incógnita, como $10x$ ou $5z$. A lista $(x,\ y,\ z) = (2,\ 3,\ 2)$ é uma
+solução, como a seção 9 vai mostrar.
+
+**Contraexemplo.** O sistema
+
+$$
+\begin{cases}
+x + y^2 = 5 \\
+xy = 2
+\end{cases}
+$$
+
+**não** é linear: há uma incógnita ao quadrado na primeira equação e um
+produto de duas incógnitas na segunda. O roteiro desta lição não se aplica a
+ele.
+
+Outro contraexemplo, agora de solução: $(3,\ 2)$ satisfaz $x + y = 5$, mas
+dá $2 \times 3 - 2 = 4$ na segunda equação, $2x - y = 1$. Satisfazer uma equação
+só não basta para ser solução do sistema.
+
+### 8.2 A forma matricial e a matriz aumentada
+
+O lado esquerdo do sistema do atleta é uma matriz vezes um vetor. Leia o
+produto $A\vec{x}$ linha por linha, como na lição de [matrizes](./matrizes):
+cada linha de $A$ faz um produto escalar com o vetor das incógnitas.
+
+$$
+\underbrace{\begin{bmatrix}
+10 & 5 & 5 \\
+10 & 20 & 5 \\
+5 & 5 & 15
+\end{bmatrix}}_{A}
+\underbrace{\begin{bmatrix} x \\ y \\ z \end{bmatrix}}_{\vec{x}}
+=
+\underbrace{\begin{bmatrix} 45 \\ 90 \\ 55 \end{bmatrix}}_{\vec{b}}
+$$
+
+A primeira linha de $A$ vezes $\vec{x}$ dá $10x + 5y + 5z$, que deve valer 45,
+a primeira coordenada de $\vec{b}$. As outras duas linhas dão as outras duas
+equações. Por isso um sistema linear inteiro cabe em três símbolos:
+
+> $$A\vec{x} = \vec{b}.$$
+>
+> $A$ é a **matriz dos coeficientes**, $\vec{x}$ é o **vetor das incógnitas** e
+> $\vec{b}$ é o **vetor dos resultados**.
+
+Para fazer contas, juntamos $A$ e $\vec{b}$ numa tabela só, separados por uma
+barra. Essa tabela é a **matriz aumentada**, escrita $[A \mid \vec{b}]$:
+
+$$
+\left[\begin{array}{ccc|c}
+10 & 5 & 5 & 45 \\
+10 & 20 & 5 & 90 \\
+5 & 5 & 15 & 55
+\end{array}\right]
+$$
+
+Cada linha da matriz aumentada é uma equação. Cada coluna à esquerda da barra
+pertence a uma incógnita. A barra está no lugar do sinal de igual.
+
+A outra leitura de $A\vec{x}$ também diz algo útil. O produto é uma mistura das
+colunas de $A$, com os pesos $x$, $y$ e $z$:
+
+$$
+x \begin{bmatrix} 10 \\ 10 \\ 5 \end{bmatrix}
++ y \begin{bmatrix} 5 \\ 20 \\ 5 \end{bmatrix}
++ z \begin{bmatrix} 5 \\ 5 \\ 15 \end{bmatrix}
+= \begin{bmatrix} 45 \\ 90 \\ 55 \end{bmatrix}.
+$$
+
+Cada coluna é a “ficha nutricional” de um alimento. A pergunta da
+nutricionista, lida assim, é: quantas porções de cada ficha somam a ficha do
+plano do dia? Resolver um sistema é descobrir a receita que mistura as colunas
+de $A$ para chegar a $\vec{b}$. A lição de
+[combinação linear e independência](./combinacao-linear-e-independencia) parte
+exatamente dessa leitura.
+
+### 8.3 As três operações elementares
+
+Uma linha da matriz aumentada é uma equação. Então só podemos fazer com as
+linhas o que a balança permite fazer com equações. São três movimentos, com
+uma notação curta para cada um. Nessa notação, $L_1$ é a primeira linha, $L_2$
+a segunda, e a seta $\leftarrow$ quer dizer “passa a ser”:
+
+| Operação | Notação | Exemplo |
+|---|---|---|
+| trocar duas linhas de lugar | $L_1 \leftrightarrow L_3$ | a primeira equação vai para baixo e a terceira sobe |
+| multiplicar uma linha por um número **diferente de zero** | $L_2 \leftarrow 3L_2$ | cada número da segunda linha, inclusive o depois da barra, é multiplicado por 3 |
+| somar a uma linha um múltiplo de outra | $L_2 \leftarrow L_2 - 2L_1$ | a segunda linha perde duas vezes a primeira, coluna por coluna |
+
+A terceira operação é a que elimina incógnitas. Ela é o passo da figura da
+seção 6: $L_2 \leftarrow L_2 - 2L_1$ transformou $[\,2 \;\; -1 \mid 1\,]$ em
+$[\,0 \;\; -3 \mid -9\,]$.
+
+Atenção à escrita $L_2 \leftarrow L_2 - 2L_1$: a linha que **muda** é a
+$L_2$, que aparece dos dois lados da seta. A $L_1$ só empresta seus números e
+continua igual.
+
+### 8.4 Por que as operações não mudam as soluções
+
+Este é o ponto mais importante da lição. Se ele não fechar na primeira
+leitura, volte a ele depois dos exemplos da seção 10.
+
+Dois sistemas com exatamente as mesmas soluções se chamam **equivalentes**. A
+afirmação é: **cada operação elementar transforma o sistema num sistema
+equivalente.** Para isso, ela precisa cumprir duas exigências:
+
+1. **não perder solução**: toda solução do sistema antigo continua sendo
+   solução do novo;
+2. **não criar solução**: toda solução do novo já era solução do antigo.
+
+Veja as duas exigências na terceira operação, com o sistema da seção 6.
+
+**Não perde.** O par $(2,\ 3)$ satisfaz as duas equações antigas:
+$2 + 3 = 5$ e $2 \times 2 - 3 = 1$. A equação nova é “segunda menos duas vezes
+a primeira”. Se a primeira equação vale para $(2,\ 3)$, os dois lados dela são
+iguais. Então tirar duas vezes o lado esquerdo de um lado e duas vezes o lado
+direito do outro é tirar a mesma quantidade dos dois pratos da balança. A
+igualdade sobrevive. Conferindo na equação nova: $-3 \times 3 = -9$. Confere.
+
+**Não cria.** A operação pode ser **desfeita**: partindo do sistema novo e
+fazendo $L_2 \leftarrow L_2 + 2L_1$, a segunda linha volta a ser o que era.
+Conferindo coluna por coluna: $0 + 2 \times 1 = 2$, $-3 + 2 \times 1 = -1$ e
+$-9 + 2 \times 5 = 1$. Voltou $[\,2 \;\; -1 \mid 1\,]$. Desfazer também é uma
+operação do mesmo tipo, então ela também não perde solução. Logo, uma solução
+do sistema novo, levada de volta, é solução do antigo.
+
+Um caso numérico mostra que nada foi criado. O par $(1,\ 4)$ satisfaz a
+primeira equação, porque $1 + 4 = 5$. Mas não satisfaz a segunda antiga:
+$2 \times 1 - 4 = -2$, e não 1. Na segunda nova, também falha: $-3 \times 4 =
+-12$, e não $-9$. Quem estava fora do conjunto de soluções continua fora.
+
+As outras duas operações seguem a mesma lógica:
+
+- **trocar linhas** não muda nenhuma equação, só a ordem em que estão
+  escritas. E se desfaz trocando de novo;
+- **multiplicar uma linha por $k$ diferente de zero** é multiplicar os dois
+  lados de uma equação pelo mesmo número. E se desfaz dividindo por $k$.
+
+> **As três operações elementares podem ser desfeitas por outra operação
+> elementar. Por isso elas nunca perdem nem criam soluções: o sistema que sai
+> de cada passo é equivalente ao que entrou.**
+
+**Contraexemplo: multiplicar por zero não é permitido.** Faça
+$L_2 \leftarrow 0 \times L_2$ no sistema da seção 6. A segunda linha vira
+$[\,0 \;\; 0 \mid 0\,]$, que é a equação $0 = 0$, verdadeira para qualquer par.
+Sobra só $x + y = 5$, e agora $(1,\ 4)$ passou a ser solução. Uma solução foi
+criada. O problema é que essa operação não pode ser desfeita: nenhum número
+multiplicado por zero traz de volta o $[\,2 \;\; -1 \mid 1\,]$. A informação da
+segunda equação se perdeu.
+
+### 8.5 Forma escalonada e pivô
+
+> Uma matriz está na **forma escalonada** quando:
+>
+> 1. as linhas formadas só por zeros, se houver, ficam embaixo de todas as
+>    outras;
+> 2. em cada linha que não é toda de zeros, o primeiro número diferente de
+>    zero fica **mais à direita** que o primeiro número diferente de zero da
+>    linha de cima.
+>
+> Esse primeiro número diferente de zero de cada linha se chama **pivô**.
+
+A segunda regra é a escada: cada degrau começa pelo menos uma coluna depois do
+degrau de cima. Abaixo de cada pivô, só há zeros.
+
+**Exemplo.** A matriz abaixo está na forma escalonada. Os pivôs estão em
+caixas: 1 na coluna 1, $-1$ na coluna 2 e $-15$ na coluna 3.
+
+$$
+\left[\begin{array}{ccc|c}
+\boxed{1} & 1 & 3 & 11 \\
+0 & \boxed{-1} & -5 & -13 \\
+0 & 0 & \boxed{-15} & -30
+\end{array}\right]
+$$
+
+**Contraexemplo.** A matriz abaixo **não** está na forma escalonada:
+
+$$
+\left[\begin{array}{ccc|c}
+1 & 1 & 1 & 4 \\
+0 & 0 & 1 & 3 \\
+0 & 2 & 1 & 5
+\end{array}\right]
+$$
+
+O primeiro número diferente de zero da terceira linha (o 2, na coluna 2) está
+à **esquerda** do primeiro da segunda linha (o 1, na coluna 3). A escada
+desceu e depois voltou. Uma troca $L_2 \leftrightarrow L_3$ conserta isso; o
+Exemplo 3 da seção 10 faz essa troca.
+
+A coluna depois da barra não entra na contagem dos pivôs. Ela guarda
+resultados, não coeficientes.
+
+### 8.6 O roteiro da eliminação de Gauss
+
+A **eliminação de Gauss** é a sequência de operações elementares que leva a
+matriz aumentada à forma escalonada. O roteiro, coluna por coluna:
+
+1. Na primeira coluna, escolha uma linha com número diferente de zero para
+   ser o pivô e, se preciso, troque-a para o topo. Um pivô igual a 1 deixa as
+   contas mais limpas, quando é possível escolher.
+2. Use a terceira operação para zerar todos os números **abaixo** do pivô:
+   para zerar o número $c$ de uma linha com o pivô $p$, faça
+   $L \leftarrow L - \frac{c}{p}\,L_{\text{pivô}}$.
+3. Esqueça a linha do pivô e repita os passos 1 e 2 na parte de baixo da
+   matriz, a partir da coluna seguinte.
+4. Pare quando não houver mais linhas abaixo, ou quando as linhas de baixo
+   forem todas de zeros à esquerda da barra.
+
+Nos passos da página, ao lado de cada matriz, aparece de onde veio cada linha
+nova. Uma linha sem anotação foi copiada sem mudança.
+
+### 8.7 Substituição de trás para a frente
+
+Com a matriz escalonada, volte a escrever as equações e resolva **de baixo
+para cima**. A última equação tem uma incógnita só. Cada equação acima dela
+tem uma incógnita a mais, e as outras já são conhecidas. Esse movimento se
+chama **substituição de trás para a frente**.
+
+### 8.8 Os três desfechos, lidos na forma escalonada
+
+A forma escalonada diz quantas soluções o sistema tem antes de qualquer conta
+de substituição. Olhe as linhas de baixo:
+
+| O que aparece na forma escalonada | Equação que a linha representa | Desfecho |
+|---|---|---|
+| uma linha $[\,0 \;\; 0 \;\; 0 \mid 5\,]$, com zeros à esquerda e um número diferente de zero depois da barra | $0 = 5$, falsa para qualquer escolha | **nenhuma** solução |
+| um pivô em cada coluna de incógnita, e nenhuma linha do tipo acima | uma escada completa | **uma** solução |
+| colunas de incógnita sem pivô, e nenhuma linha do tipo $0 = 5$ | menos equações úteis do que incógnitas | **infinitas** soluções |
+
+Uma linha toda de zeros, $[\,0 \;\; 0 \;\; 0 \mid 0\,]$, é a equação $0 = 0$.
+Ela é verdadeira sempre, e por isso não traz informação. **Não confunda**:
+$0 = 0$ não quer dizer “nenhuma solução”; quer dizer que aquela equação era
+repetição das outras.
+
+Estes são os mesmos três desfechos da lição de
+[sistemas de duas equações](../equacoes/sistemas-de-duas-equacoes), agora lidos
+na matriz em vez de no desenho:
+
+- **retas paralelas** viram uma linha $[\,0 \;\; 0 \mid c\,]$ com $c$
+  diferente de zero;
+- **retas iguais** viram uma linha $[\,0 \;\; 0 \mid 0\,]$;
+- **retas que se cruzam** viram dois pivôs, um para cada incógnita.
+
+<CartesianPlane
+  xMin={-4} xMax={4} yMin={-1} yMax={7}
+  xUnit={40} yUnit={30}
+  lines={[
+    {m: -2, n: 5, tone: 1},
+    {m: -2, n: 6, tone: 2},
+  ]}
+  labels={[
+    {at: [-0.6, 3.5], math: '2x + y = 5', tone: 1, anchor: 'end'},
+    {at: [1.4, 3.2], math: '4x + 2y = 12', tone: 2, anchor: 'start', dx: 14, dy: -4},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="O sistema 2x + y = 5 e 4x + 2y = 12 descreve duas retas paralelas: não há ponto comum. Escalonando, L2 ← L2 − 2L1 produz a linha [0 0 | 2], que é a equação 0 = 2."
+/>
+
+Confira a conta da legenda. A matriz aumentada é
+$\left[\begin{array}{cc|c} 2 & 1 & 5 \\ 4 & 2 & 12 \end{array}\right]$. Com
+$L_2 \leftarrow L_2 - 2L_1$: $4 - 2 \times 2 = 0$, $2 - 2 \times 1 = 0$ e
+$12 - 2 \times 5 = 2$. A segunda linha vira $[\,0 \;\; 0 \mid 2\,]$, isto é,
+$0x + 0y = 2$. Nenhum par faz zero valer 2.
+
+<CartesianPlane
+  xMin={-1} xMax={4} yMin={-1} yMax={7}
+  xUnit={40} yUnit={30}
+  lines={[{m: -2, n: 5, tone: 1}]}
+  points={[
+    {at: [0, 5], tone: 3, label: '(0,\\ 5)', dx: 30, dy: -6},
+    {at: [1, 3], tone: 3, label: '(1,\\ 3)', dx: 30, dy: -6},
+    {at: [2, 1], tone: 3, label: '(2,\\ 1)', dx: 30, dy: -6},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="O sistema 2x + y = 5 e 4x + 2y = 10 descreve a mesma reta duas vezes: todos os pontos dela são soluções. Escalonando, L2 ← L2 − 2L1 produz a linha [0 0 | 0], que é a equação 0 = 0."
+/>
+
+### 8.9 Variável livre e solução com parâmetro
+
+Quando sobram infinitas soluções, elas não são “qualquer coisa”. Elas seguem
+um padrão, e o padrão se escreve assim:
+
+- uma incógnita cuja coluna **não tem pivô** se chama **variável livre**. Ela
+  pode receber qualquer valor, e esse valor é chamado de **parâmetro**,
+  normalmente escrito $t$;
+- as incógnitas com pivô são calculadas, de trás para a frente, **em função de
+  $t$**.
+
+Cada valor de $t$ produz uma solução diferente. O Exemplo 5 da seção 10 faz
+isso por inteiro.
+
+## 9. Resolvendo o plano do atleta
+
+A matriz aumentada do sistema da seção 1 é:
+
+$$
+\left[\begin{array}{ccc|c}
+10 & 5 & 5 & 45 \\
+10 & 20 & 5 & 90 \\
+5 & 5 & 15 & 55
+\end{array}\right]
+$$
+
+**Passo 1: tirar o fator comum de cada linha.** Todos os números das três
+linhas são múltiplos de 5. Multiplicar cada linha por $\frac{1}{5}$ é dividir
+os dois lados de cada equação por 5. É a segunda operação elementar, com
+$k = \frac{1}{5}$, que é diferente de zero. Os números ficam menores, e as
+soluções não mudam:
+
+$$
+\left[\begin{array}{ccc|c}
+2 & 1 & 1 & 9 \\
+2 & 4 & 1 & 18 \\
+1 & 1 & 3 & 11
+\end{array}\right]
+\qquad
+\begin{array}{l}
+L_1 \leftarrow \tfrac{1}{5} L_1 \\
+L_2 \leftarrow \tfrac{1}{5} L_2 \\
+L_3 \leftarrow \tfrac{1}{5} L_3
+\end{array}
+$$
+
+**Passo 2: escolher o pivô da primeira coluna.** A terceira linha começa
+com 1. Um pivô 1 evita frações no passo seguinte, porque para zerar um número $c$
+abaixo dele a operação é $L \leftarrow L - c\,L_1$, sem divisão. Troque a
+primeira e a terceira linhas:
+
+$$
+\left[\begin{array}{ccc|c}
+1 & 1 & 3 & 11 \\
+2 & 4 & 1 & 18 \\
+2 & 1 & 1 & 9
+\end{array}\right]
+\qquad
+L_1 \leftrightarrow L_3
+$$
+
+**Passo 3: zerar a primeira coluna abaixo do pivô.** As duas linhas de baixo
+começam com 2. Tire de cada uma duas vezes a primeira linha. Na segunda
+linha, coluna por coluna: $2 - 2 \times 1 = 0$, $4 - 2 \times 1 = 2$,
+$1 - 2 \times 3 = -5$ e $18 - 2 \times 11 = -4$. Na terceira: $2 - 2 = 0$,
+$1 - 2 = -1$, $1 - 6 = -5$ e $9 - 22 = -13$.
+
+$$
+\left[\begin{array}{ccc|c}
+1 & 1 & 3 & 11 \\
+0 & 2 & -5 & -4 \\
+0 & -1 & -5 & -13
+\end{array}\right]
+\qquad
+\begin{array}{l}
+\phantom{L_1} \\
+L_2 \leftarrow L_2 - 2L_1 \\
+L_3 \leftarrow L_3 - 2L_1
+\end{array}
+$$
+
+O $x$ saiu das duas equações de baixo. Elas formam agora um sistema de duas
+equações com $y$ e $z$.
+
+**Passo 4: o pivô da segunda coluna.** Esqueça a primeira linha e olhe a
+parte de baixo, a partir da segunda coluna. Os candidatos a pivô são 2 e
+$-1$. Com o $-1$ no papel de pivô, o número 2 abaixo dele se zera somando duas
+vezes a linha do pivô, sem frações. Troque as duas linhas de baixo:
+
+$$
+\left[\begin{array}{ccc|c}
+1 & 1 & 3 & 11 \\
+0 & -1 & -5 & -13 \\
+0 & 2 & -5 & -4
+\end{array}\right]
+\qquad
+\begin{array}{l}
+\phantom{L_1} \\
+L_2 \leftrightarrow L_3 \\
+\phantom{L_1}
+\end{array}
+$$
+
+**Passo 5: zerar a segunda coluna abaixo do pivô.** Na terceira linha:
+$2 + 2 \times (-1) = 0$, $-5 + 2 \times (-5) = -15$ e
+$-4 + 2 \times (-13) = -30$.
+
+$$
+\left[\begin{array}{ccc|c}
+1 & 1 & 3 & 11 \\
+0 & -1 & -5 & -13 \\
+0 & 0 & -15 & -30
+\end{array}\right]
+\qquad
+\begin{array}{l}
+\phantom{L_1} \\
+\phantom{L_1} \\
+L_3 \leftarrow L_3 + 2L_2
+\end{array}
+$$
+
+A matriz está na forma escalonada, com um pivô em cada coluna de incógnita.
+Pela tabela da seção 8.8, o sistema tem **uma** solução.
+
+**Passo 6: substituição de trás para a frente.** Reescreva as linhas como
+equações:
+
+$$
+\left\{\begin{array}{rcrcrcr}
+x & + & y & + & 3z & = & 11 \\
+ & & -y & - & 5z & = & -13 \\
+ & & & & -15z & = & -30
+\end{array}\right.
+$$
+
+- última equação: $-15z = -30$, então $z = 2$;
+- equação do meio, com $z = 2$: $-y - 10 = -13$, então $-y = -3$ e $y = 3$;
+- primeira equação, com $y = 3$ e $z = 2$: $x + 3 + 6 = 11$, então $x = 2$.
+
+**Conferência no sistema original**, o de gramas, e não no escalonado:
+
+| Nutriente | Conta | Meta |
+|---|---|---:|
+| Proteína | $10 \times 2 + 5 \times 3 + 5 \times 2 = 20 + 15 + 10 = 45$ | 45 |
+| Carboidrato | $10 \times 2 + 20 \times 3 + 5 \times 2 = 20 + 60 + 10 = 90$ | 90 |
+| Gordura | $5 \times 2 + 5 \times 3 + 15 \times 2 = 10 + 15 + 30 = 55$ | 55 |
+
+O atleta deve comer **2 porções de iogurte, 3 de granola e 2 de
+castanhas**. E como o sistema tem uma solução só, esse é o **único** plano que
+atinge as três metas exatamente.
+
+Repare na escolha dos passos 2 e 4: trocar linhas para ter um pivô 1 ou $-1$
+não era obrigatório. Com outro pivô, as contas teriam frações e o resultado
+seria o mesmo. A troca só deixou o caminho mais curto.
+
+## 10. Exemplos resolvidos
+
+### Exemplo 1: os recibos da papelaria, em forma de matriz
+
+Na lição de sistemas de duas equações, dois recibos deram o sistema
+$3c + 2p = 58$ e $5c + 4p = 102$. Resolva por escalonamento.
+
+**Solução.** A matriz aumentada é
+$\left[\begin{array}{cc|c} 3 & 2 & 58 \\ 5 & 4 & 102 \end{array}\right]$. O pivô
+da primeira coluna é 3. Para zerar o 5 abaixo dele, tire da segunda linha
+$\frac{5}{3}$ da primeira: $5 - \frac{5}{3} \times 3 = 0$,
+$4 - \frac{5}{3} \times 2 = \frac{12 - 10}{3} = \frac{2}{3}$ e
+$102 - \frac{5}{3} \times 58 = \frac{306 - 290}{3} = \frac{16}{3}$.
+
+$$
+\left[\begin{array}{cc|c}
+3 & 2 & 58 \\
+0 & \tfrac{2}{3} & \tfrac{16}{3}
+\end{array}\right]
+\qquad
+\begin{array}{l}
+\phantom{L_1} \\
+L_2 \leftarrow L_2 - \tfrac{5}{3} L_1
+\end{array}
+$$
+
+De baixo para cima: $\frac{2}{3}p = \frac{16}{3}$ dá $p = 8$. E $3c + 16 = 58$ dá
+$c = 14$. São os mesmos R\$ 14 e R\$ 8 daquela lição.
+
+Frações aparecem quando o pivô não divide os números abaixo dele, e isso não é
+erro. Se preferir evitá-las, faça duas operações seguidas:
+$L_2 \leftarrow 3L_2$ (multiplicar por 3, que é diferente de zero) e depois
+$L_2 \leftarrow L_2 - 5L_1$. É o que a lição de duas equações fazia ao
+“preparar” as equações antes de subtrair.
+
+### Exemplo 2: três incógnitas sem troca de linhas
+
+Resolva:
+
+$$
+\begin{cases}
+x + 2y + z = 8 \\
+2x + 3y + 3z = 17 \\
+-x + y + 2z = 7
+\end{cases}
+$$
+
+Pause e tente antes de ler a solução.
+
+<details>
+<summary>Solução</summary>
+
+O pivô da primeira coluna é o 1 do topo. Zere o 2 com $L_2 - 2L_1$ e o $-1$
+com $L_3 + L_1$:
+
+$$
+\left[\begin{array}{ccc|c}
+1 & 2 & 1 & 8 \\
+0 & -1 & 1 & 1 \\
+0 & 3 & 3 & 15
+\end{array}\right]
+\qquad
+\begin{array}{l}
+\phantom{L_1} \\
+L_2 \leftarrow L_2 - 2L_1 \\
+L_3 \leftarrow L_3 + L_1
+\end{array}
+$$
+
+Contas da segunda linha: $2 - 2 = 0$, $3 - 4 = -1$, $3 - 2 = 1$, $17 - 16 = 1$.
+Da terceira: $-1 + 1 = 0$, $1 + 2 = 3$, $2 + 1 = 3$, $7 + 8 = 15$.
+
+O pivô da segunda coluna é $-1$. Zere o 3 abaixo dele com $L_3 + 3L_2$:
+$3 + 3 \times (-1) = 0$, $3 + 3 \times 1 = 6$ e $15 + 3 \times 1 = 18$.
+
+$$
+\left[\begin{array}{ccc|c}
+1 & 2 & 1 & 8 \\
+0 & -1 & 1 & 1 \\
+0 & 0 & 6 & 18
+\end{array}\right]
+\qquad
+\begin{array}{l}
+\phantom{L_1} \\
+\phantom{L_1} \\
+L_3 \leftarrow L_3 + 3L_2
+\end{array}
+$$
+
+De trás para a frente: $6z = 18$, então $z = 3$. Depois, $-y + 3 = 1$, então
+$y = 2$. Por fim, $x + 4 + 3 = 8$, então $x = 1$.
+
+Conferência nas equações originais: $1 + 4 + 3 = 8$; $2 + 6 + 9 = 17$;
+$-1 + 2 + 6 = 7$. A solução é $(1,\ 2,\ 3)$.
+
+</details>
+
+### Exemplo 3: quando o pivô some
+
+Resolva:
+
+$$
+\begin{cases}
+x + y + z = 4 \\
+2x + 2y + 3z = 11 \\
+x + 3y + 2z = 9
+\end{cases}
+$$
+
+Pause e tente.
+
+<details>
+<summary>Solução</summary>
+
+Zerando a primeira coluna com $L_2 - 2L_1$ e $L_3 - L_1$:
+
+$$
+\left[\begin{array}{ccc|c}
+1 & 1 & 1 & 4 \\
+0 & 0 & 1 & 3 \\
+0 & 2 & 1 & 5
+\end{array}\right]
+\qquad
+\begin{array}{l}
+\phantom{L_1} \\
+L_2 \leftarrow L_2 - 2L_1 \\
+L_3 \leftarrow L_3 - L_1
+\end{array}
+$$
+
+A segunda operação zerou **também** o $y$ da segunda linha: $2 - 2 \times 1 =
+0$. Agora a segunda linha não tem número diferente de zero na segunda coluna,
+e não pode ser o pivô dessa coluna. Essa matriz é o contraexemplo da seção
+8.5: a escada desce e volta.
+
+A saída é a primeira operação. A terceira linha tem um 2 na segunda coluna.
+Troque as duas:
+
+$$
+\left[\begin{array}{ccc|c}
+1 & 1 & 1 & 4 \\
+0 & 2 & 1 & 5 \\
+0 & 0 & 1 & 3
+\end{array}\right]
+\qquad
+\begin{array}{l}
+\phantom{L_1} \\
+L_2 \leftrightarrow L_3 \\
+\phantom{L_1}
+\end{array}
+$$
+
+A matriz já está escalonada. De trás para a frente: $z = 3$; depois
+$2y + 3 = 5$, então $y = 1$; por fim $x + 1 + 3 = 4$, então $x = 0$.
+
+Conferência: $0 + 1 + 3 = 4$; $0 + 2 + 9 = 11$; $0 + 3 + 6 = 9$. A solução é
+$(0,\ 1,\ 3)$. Uma incógnita valer zero é uma resposta legítima.
+
+</details>
+
+### Exemplo 4: um sistema sem solução
+
+Resolva:
+
+$$
+\begin{cases}
+x + y + z = 6 \\
+2x + y - z = 1 \\
+3x + 2y = 10
+\end{cases}
+$$
+
+Pause e tente.
+
+<details>
+<summary>Solução</summary>
+
+Na terceira equação, o $z$ não aparece: o coeficiente dele é 0. Na matriz, o
+zero precisa ser escrito, para que cada número continue na coluna certa.
+
+$$
+\left[\begin{array}{ccc|c}
+1 & 1 & 1 & 6 \\
+0 & -1 & -3 & -11 \\
+0 & -1 & -3 & -8
+\end{array}\right]
+\qquad
+\begin{array}{l}
+\phantom{L_1} \\
+L_2 \leftarrow L_2 - 2L_1 \\
+L_3 \leftarrow L_3 - 3L_1
+\end{array}
+$$
+
+Contas da terceira linha: $3 - 3 = 0$, $2 - 3 = -1$, $0 - 3 = -3$ e
+$10 - 18 = -8$. Agora zere o $-1$ da terceira linha com $L_3 - L_2$:
+
+$$
+\left[\begin{array}{ccc|c}
+1 & 1 & 1 & 6 \\
+0 & -1 & -3 & -11 \\
+0 & 0 & 0 & 3
+\end{array}\right]
+\qquad
+\begin{array}{l}
+\phantom{L_1} \\
+\phantom{L_1} \\
+L_3 \leftarrow L_3 - L_2
+\end{array}
+$$
+
+A última linha é a equação $0x + 0y + 0z = 3$, ou seja, $0 = 3$. Nenhuma
+escolha de $x$, $y$ e $z$ torna essa igualdade verdadeira. O sistema escalonado
+não tem solução e, como as operações não perdem soluções, o original também
+não tem.
+
+Daria para perceber o conflito olhando o sistema? A soma das duas primeiras
+equações é $3x + 2y = 7$, porque o $z$ e o $-z$ se cancelam. A terceira equação
+diz que a mesma combinação $3x + 2y$ vale 10. Ela não pode valer 7 e 10 ao
+mesmo tempo. O escalonamento descobriu esse conflito sem que fosse preciso
+procurá-lo.
+
+</details>
+
+### Exemplo 5: infinitas soluções
+
+Troque o 10 do Exemplo 4 por 7:
+
+$$
+\begin{cases}
+x + y + z = 6 \\
+2x + y - z = 1 \\
+3x + 2y = 7
+\end{cases}
+$$
+
+Pause e tente: use os mesmos passos do Exemplo 4.
+
+<details>
+<summary>Solução</summary>
+
+Os passos são os mesmos, e só a coluna depois da barra muda. Na terceira
+linha, $7 - 3 \times 6 = -11$, e depois $-11 - (-11) = 0$:
+
+$$
+\left[\begin{array}{ccc|c}
+1 & 1 & 1 & 6 \\
+0 & -1 & -3 & -11 \\
+0 & 0 & 0 & 0
+\end{array}\right]
+$$
+
+A última linha virou $0 = 0$: a terceira equação era a soma das duas
+primeiras, e não trazia informação nova. Sobram dois pivôs (colunas do $x$ e do
+$y$) para três incógnitas. A coluna do $z$ não tem pivô, então $z$ é a
+**variável livre**. Chame seu valor de $t$.
+
+De trás para a frente, agora em função de $t$:
+
+- com $z = t$, a segunda linha diz $-y - 3t = -11$. Somando $3t$ aos dois
+  lados, $-y = -11 + 3t$, e trocando os sinais, $y = 11 - 3t$;
+- a primeira linha diz $x + y + z = 6$. Com $y = 11 - 3t$ e $z = t$:
+  $x + 11 - 3t + t = 6$, então $x = 6 - 11 + 2t = -5 + 2t$.
+
+As soluções são todas as listas da forma
+
+$$
+(x,\ y,\ z) = (-5 + 2t,\ 11 - 3t,\ t), \quad \text{com } t \text{ qualquer número real.}
+$$
+
+Cada valor de $t$ dá uma solução. Com $t = 3$: $(1,\ 2,\ 3)$. Conferência:
+$1 + 2 + 3 = 6$; $2 + 2 - 3 = 1$; $3 + 4 = 7$. Com $t = 0$: $(-5,\ 11,\ 0)$.
+Conferência: $-5 + 11 + 0 = 6$; $-10 + 11 - 0 = 1$; $-15 + 22 = 7$.
+
+Infinitas soluções não quer dizer que qualquer lista sirva. A lista
+$(0,\ 0,\ 6)$ satisfaz a primeira equação, mas dá $-6$ na segunda, e não 1. Ela
+não tem a forma $(-5 + 2t,\ 11 - 3t,\ t)$: para ter $z = 6$, seria preciso
+$t = 6$, e então $x$ teria de ser $7$, e não 0.
+
+</details>
+
+### Exemplo 6: mais equações que incógnitas
+
+Resolva o sistema de três equações e duas incógnitas:
+
+$$
+\begin{cases}
+x + y = 5 \\
+2x - y = 1 \\
+x + 2y = 8
+\end{cases}
+$$
+
+Pause e tente.
+
+<details>
+<summary>Solução</summary>
+
+Zerando a primeira coluna e trocando as duas linhas de baixo para ter o pivô 1
+na segunda coluna:
+
+$$
+\left[\begin{array}{cc|c}
+1 & 1 & 5 \\
+0 & -3 & -9 \\
+0 & 1 & 3
+\end{array}\right]
+\ \to\
+\left[\begin{array}{cc|c}
+1 & 1 & 5 \\
+0 & 1 & 3 \\
+0 & -3 & -9
+\end{array}\right]
+\ \to\
+\left[\begin{array}{cc|c}
+1 & 1 & 5 \\
+0 & 1 & 3 \\
+0 & 0 & 0
+\end{array}\right]
+$$
+
+Os passos foram $L_2 \leftarrow L_2 - 2L_1$ e $L_3 \leftarrow L_3 - L_1$; depois
+$L_2 \leftrightarrow L_3$; por fim $L_3 \leftarrow L_3 + 3L_2$. A última linha
+virou $0 = 0$, e dois pivôs para duas incógnitas dão uma solução: $y = 3$ e
+$x = 2$. As três retas passam pelo mesmo ponto, $(2,\ 3)$.
+
+Se a terceira equação fosse $x + 2y = 9$, os mesmos passos terminariam em
+$[\,0 \;\; 0 \mid 3\,]$, e não haveria solução: as três retas formariam um
+triângulo, sem ponto comum às três. Com mais equações que incógnitas, isso é o
+que costuma acontecer com dados medidos de verdade, que sempre têm pequenos
+erros. A lição de mínimos quadrados, mais adiante neste capítulo, trata
+exatamente desse caso: quando não existe solução exata, qual é a melhor
+aproximação?
+
+</details>
+
+## 11. Erros comuns
+
+**1. Fazer a operação só à esquerda da barra.** A coluna depois da barra é o
+lado direito das equações. Esquecê-la é mexer num prato da balança só.
+Exemplo: em $\left[\begin{array}{cc|c} 1 & 1 & 4 \\ 3 & 2 & 10
+\end{array}\right]$, cuja solução é $(2,\ 2)$, a operação
+$L_2 \leftarrow L_2 - 3L_1$ dá $[\,0 \;\; -1 \mid -2\,]$, porque
+$10 - 3 \times 4 = -2$. Quem esquece a última coluna escreve
+$[\,0 \;\; -1 \mid 10\,]$, chega a $y = -10$ e $x = 14$, e esse par falha na
+segunda equação original: $3 \times 14 + 2 \times (-10) = 22$, e não 10.
+
+**2. Errar o sinal com números negativos.** Em $L_3 \leftarrow L_3 - 2L_1$,
+cada número da terceira linha perde o dobro do número da primeira na mesma
+coluna. Se a primeira linha tem $-3$, a conta é $\square - 2 \times (-3) =
+\square + 6$. Escreva a conta de cada coluna, com parênteses, até o
+movimento ficar automático.
+
+**3. Confundir $0 = 0$ com “sem solução”.** A linha $[\,0 \;\; 0 \;\; 0 \mid
+0\,]$ é uma equação sempre verdadeira, e sobra quando uma equação repetia as
+outras (Exemplo 5). Sem solução é a linha $[\,0 \;\; 0 \;\; 0 \mid c\,]$ com $c$
+diferente de zero (Exemplo 4).
+
+**4. Mudar duas linhas ao mesmo tempo, uma usando a outra.** No sistema
+$x + y = 3$ e $x - y = 1$, alguém faz, de uma vez, $L_1 \leftarrow L_1 - L_2$ e
+$L_2 \leftarrow L_2 - L_1$. As duas linhas novas são $[\,0 \;\; 2 \mid 2\,]$ e
+$[\,0 \;\; -2 \mid -2\,]$, e as duas só falam do $y$. O $x$ sumiu do sistema,
+e agora parece haver infinitas soluções, quando a única solução é $(2,\ 1)$. O
+problema: a segunda operação usou a $L_1$ antiga, que já não existe no
+sistema novo. Por isso o par de operações não pode ser desfeito. Faça uma
+operação de cada vez, e mantenha intacta a linha que empresta seus números.
+
+**5. Ler “infinitas soluções” como “qualquer lista serve”.** As soluções do
+Exemplo 5 seguem o padrão $(-5 + 2t,\ 11 - 3t,\ t)$. A lista $(0,\ 0,\ 6)$ não
+segue esse padrão e não é solução. A variável livre é livre; as outras
+dependem dela.
+
+**6. Conferir a resposta no sistema escalonado.** A substituição de trás para a
+frente usa o sistema escalonado, e por isso a resposta sempre “confere” nele.
+Um erro de conta durante o escalonamento produz um sistema escalonado errado,
+com uma resposta que satisfaz o sistema errado. A conferência que pega erros é
+nas equações **originais**.
+
+## 12. Perguntas de verificação
+
+1. Por que é permitido somar a uma linha um múltiplo de outra, se isso muda a
+   equação?
+2. Por que multiplicar uma linha por zero não é uma operação elementar?
+3. Uma linha toda de zeros, incluindo depois da barra, significa que o sistema
+   não tem solução?
+4. Trocar a primeira e a terceira **linhas** muda a ordem das incógnitas na
+   resposta? E trocar a primeira e a terceira **colunas**?
+5. Num sistema de três equações e três incógnitas, a forma escalonada tem três
+   pivôs. Quantas soluções o sistema tem?
+6. Um sistema de duas equações com três incógnitas pode ter solução única?
+7. Por que a conferência final deve ser feita no sistema original, e não no
+   escalonado?
+
+<details>
+<summary>Respostas</summary>
+
+1. A equação muda, mas o conjunto de soluções não. Toda solução do sistema
+   satisfaz as duas linhas envolvidas, e então satisfaz também a combinação
+   delas: é tirar a mesma quantidade dos dois pratos da balança. E a operação
+   pode ser desfeita somando de volta o mesmo múltiplo. Por isso também não
+   aparece solução nova.
+2. Porque ela não pode ser desfeita. A linha vira $0 = 0$, e a informação que
+   ela carregava se perde. Com isso podem surgir soluções que o sistema
+   original não tinha, como o par $(1,\ 4)$ da seção 8.4.
+3. Não. Ela é a equação $0 = 0$, sempre verdadeira. Indica que uma equação
+   era repetição das outras. O sistema sem solução tem uma linha de zeros à
+   esquerda da barra e um número diferente de zero depois dela.
+4. Trocar linhas não muda nada nas incógnitas: só a ordem em que as equações
+   estão escritas. Cada coluna continua pertencendo à mesma incógnita. Já
+   trocar colunas mudaria a que incógnita cada coluna se refere. Por isso
+   troca de colunas não é uma das operações elementares.
+5. Uma. Com um pivô em cada coluna, não há linha do tipo $0 = c$ (essa linha
+   não teria pivô à esquerda da barra), e nenhuma variável é livre. A
+   substituição de trás para a frente determina cada incógnita.
+6. Não. Cada pivô ocupa uma linha, então duas equações dão no máximo dois
+   pivôs. Com três incógnitas, pelo menos uma coluna fica sem pivô. Se o
+   sistema tiver solução, essa variável é livre, e as soluções são infinitas.
+   Se não tiver, são zero. Nunca exatamente uma.
+7. Porque a resposta sempre satisfaz o sistema escalonado: ela foi calculada a
+   partir dele. Se houve erro de conta no escalonamento, o sistema escalonado
+   já está errado, e só a conferência nas equações originais revela isso.
+
+</details>
+
+## 13. Exercícios
+
+### 1. Reconhecimento
+
+1. Escreva a matriz aumentada do sistema
+   $x + 2y - z = 4$, $\ 3x - y = 7$, $\ y + 5z = -2$.
+2. Quais matrizes estão na forma escalonada? Para as que não estão, diga qual
+   regra falha.
+
+   a) $\left[\begin{array}{ccc|c} 1 & 2 & 3 & 4 \\ 0 & 5 & 6 & 7 \\ 0 & 0 & 8 & 9 \end{array}\right]$
+   &nbsp; b) $\left[\begin{array}{ccc|c} 1 & 2 & 3 & 4 \\ 0 & 0 & 5 & 6 \\ 0 & 7 & 8 & 9 \end{array}\right]$
+
+   c) $\left[\begin{array}{ccc|c} 2 & 1 & 0 & 3 \\ 0 & 0 & 0 & 0 \\ 0 & 0 & 4 & 1 \end{array}\right]$
+   &nbsp; d) $\left[\begin{array}{ccc|c} 1 & 4 & -1 & 2 \\ 0 & 3 & 2 & 5 \\ 0 & 0 & 0 & 0 \end{array}\right]$
+3. Cada matriz abaixo já está escalonada. Diga, sem resolver, se o sistema tem
+   nenhuma, uma ou infinitas soluções.
+
+   a) $\left[\begin{array}{ccc|c} 1 & 2 & -1 & 3 \\ 0 & 1 & 4 & 2 \\ 0 & 0 & 0 & 5 \end{array}\right]$
+   &nbsp; b) $\left[\begin{array}{ccc|c} 1 & 2 & -1 & 3 \\ 0 & 1 & 4 & 2 \\ 0 & 0 & 2 & -4 \end{array}\right]$
+   &nbsp; c) $\left[\begin{array}{ccc|c} 1 & 2 & -1 & 3 \\ 0 & 1 & 4 & 2 \\ 0 & 0 & 0 & 0 \end{array}\right]$
+
+### 2. Explicação
+
+4. Explique, com a ideia da balança, por que trocar duas linhas e multiplicar
+   uma linha por 3 não mudam as soluções de um sistema.
+5. Uma colega escalonou
+   $\left[\begin{array}{cc|c} 1 & 1 & 4 \\ 3 & 2 & 10 \end{array}\right]$ com
+   $L_2 \leftarrow L_2 - 3L_1$ e escreveu
+   $\left[\begin{array}{cc|c} 1 & 1 & 4 \\ 0 & -1 & 10 \end{array}\right]$.
+   Qual foi o erro? Que resposta ela vai encontrar, e como uma conferência
+   revela o problema?
+6. Explique por que, no fim da eliminação, uma linha
+   $[\,0 \;\; 0 \;\; 0 \mid 5\,]$ prova que o sistema **original** não tem
+   solução, embora as linhas tenham sido alteradas no caminho.
+
+### 3. Aplicação direta
+
+7. Resolva por escalonamento e confira no sistema original:
+   $x + y + z = 6$, $\ 2x + 3y + z = 11$, $\ x - y + 2z = 5$.
+8. Resolva por escalonamento o sistema $2x + 3y = 16$, $\ 5x - 2y = 2$, que a
+   lição de sistemas de duas equações resolveu por eliminação. Faça de dois
+   jeitos: com frações e sem frações.
+
+### 4. Variação
+
+9. Resolva: $y + 2z = 7$, $\ x + y + z = 6$, $\ 2x + y + 3z = 14$. (Repare
+   onde está o primeiro número diferente de zero da primeira linha.)
+10. Resolva e escreva as soluções em função de um parâmetro $t$:
+    $x + 2y - z = 3$, $\ 2x + 5y + z = 9$, $\ x + 3y + 2z = 6$. Depois dê duas
+    soluções particulares e confira uma delas.
+11. Para que valores de $k$ o sistema
+    $x + y + z = 2$, $\ x + 2y + 3z = 5$, $\ 2x + 3y + 4z = k$ tem nenhuma
+    solução? E infinitas? Existe algum $k$ que dê solução única?
+
+<details>
+<summary>Dica para o 9</summary>
+
+A primeira linha não tem $x$: o coeficiente dele é 0, e um zero não pode ser
+pivô. Comece com uma troca de linhas.
+
+</details>
+
+<details>
+<summary>Dica para o 11</summary>
+
+Escalone com $k$ no lugar do número, como se fosse um número conhecido. As
+contas da coluna depois da barra vão ficar com $k$. Depois olhe a última
+linha.
+
+</details>
+
+### 5. Problema misto
+
+12. Numa lanchonete, três pedidos ficaram registrados: 2 cafés, 1 pão de
+    queijo e 1 suco custaram R\$ 23; 1 café, 3 pães de queijo e 2 sucos
+    custaram R\$ 35; 3 cafés, 2 pães de queijo e 1 suco custaram R\$ 32.
+    Quanto custa cada item?
+13. A nutricionista da seção 1 descobriu que, para outro atleta, só importam
+    duas metas: 45 g de proteína e 75 g de carboidrato. Os alimentos são os
+    mesmos. a) Monte o sistema e escalone. b) Escreva todas as soluções em
+    função de um parâmetro. c) Porções negativas não existem. Para que valores
+    do parâmetro o plano faz sentido? d) Se as porções tiverem de ser números
+    inteiros, quais são os planos possíveis?
+14. Releia a leitura por colunas da seção 8.2. Escreva o vetor das metas do
+    atleta, $(45,\ 90,\ 55)$, como combinação das três fichas nutricionais
+    usando a solução da seção 9, e confira coordenada por coordenada.
+
+<details>
+<summary>Dica para o 13</summary>
+
+São duas equações e três incógnitas: espere uma variável livre. Depois de
+escalonar, veja qual coluna fica sem pivô. Na parte c, escreva a condição
+“maior ou igual a zero” para cada incógnita.
+
+</details>
+
+### 6. Justificativa
+
+15. Mostre que a operação $L_2 \leftarrow L_2 + kL_1$ pode ser desfeita por
+    outra operação elementar, e explique por que isso garante que ela não cria
+    soluções.
+16. Explique por que um sistema com menos equações que incógnitas nunca tem
+    solução única.
+17. Explique por que, num sistema cuja coluna depois da barra é toda de zeros
+    ($A\vec{x} = \vec{0}$), o desfecho “nenhuma solução” é impossível.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. $\left[\begin{array}{ccc|c} 1 & 2 & -1 & 4 \\ 3 & -1 & 0 & 7 \\ 0 & 1 & 5 & -2 \end{array}\right]$.
+   As incógnitas que não aparecem numa equação entram com coeficiente 0. Se
+   você escreveu a segunda linha como $[\,3 \;\; -1 \mid 7\,]$, a linha ficou
+   com uma coluna a menos e os números saíram da coluna certa.
+2. a) sim. &nbsp; b) não: o primeiro número diferente de zero da terceira
+   linha (7, coluna 2) está à esquerda do da segunda linha (5, coluna 3).
+   &nbsp; c) não: a linha de zeros está acima de uma linha que não é de zeros.
+   &nbsp; d) sim: a linha de zeros está embaixo.
+3. a) nenhuma: a última linha é $0 = 5$. &nbsp; b) uma: há um pivô em cada
+   coluna de incógnita. &nbsp; c) infinitas: a última linha é $0 = 0$, e a
+   coluna do $z$ fica sem pivô.
+4. Trocar duas linhas é escrever as mesmas equações em outra ordem: as
+   balanças são as mesmas. Multiplicar uma linha por 3 é triplicar os dois
+   pratos de uma balança, que continua em equilíbrio. As duas operações se
+   desfazem (trocando de novo; dividindo por 3), então também não criam
+   solução.
+5. Ela fez a operação só à esquerda da barra. O certo é
+   $10 - 3 \times 4 = -2$, e não 10. Com a linha errada, ela encontra
+   $-y = 10$, isto é, $y = -10$, e depois $x = 4 - (-10) = 14$. Conferindo na
+   segunda equação original: $3 \times 14 + 2 \times (-10) = 42 - 20 = 22$, e
+   não 10. Com a linha certa, $-y = -2$ dá $y = 2$ e $x = 2$, e
+   $3 \times 2 + 2 \times 2 = 10$ confere.
+6. Cada operação elementar produz um sistema equivalente ao anterior: com as
+   mesmas soluções. Encadeando os passos, o sistema final tem as mesmas
+   soluções que o original. O sistema final tem a equação $0 = 5$, que nenhuma
+   lista satisfaz; então ele não tem solução, e o original também não.
+7. Com $L_2 \leftarrow L_2 - 2L_1$ e $L_3 \leftarrow L_3 - L_1$:
+   $\left[\begin{array}{ccc|c} 1 & 1 & 1 & 6 \\ 0 & 1 & -1 & -1 \\ 0 & -2 & 1 & -1 \end{array}\right]$.
+   Com $L_3 \leftarrow L_3 + 2L_2$, a última linha fica
+   $[\,0 \;\; 0 \;\; -1 \mid -3\,]$. Então $z = 3$; $y - 3 = -1$ dá $y = 2$;
+   $x + 2 + 3 = 6$ dá $x = 1$. Conferência: $1 + 2 + 3 = 6$;
+   $2 + 6 + 3 = 11$; $1 - 2 + 6 = 5$. Se na coluna do $z$ da terceira linha
+   apareceu 3, você subtraiu em vez de somar: a operação é
+   $L_3 \leftarrow L_3 + 2L_2$, e $1 + 2 \times (-1) = -1$.
+8. Com frações: $L_2 \leftarrow L_2 - \frac{5}{2}L_1$ dá
+   $[\,0 \;\; -\frac{19}{2} \mid -38\,]$, porque
+   $-2 - \frac{5}{2} \times 3 = -\frac{19}{2}$ e $2 - \frac{5}{2} \times 16 =
+   -38$. Então $y = -38 \div \left(-\frac{19}{2}\right) = 4$. Sem frações:
+   $L_2 \leftarrow 2L_2$ e depois $L_2 \leftarrow L_2 - 5L_1$ dão
+   $[\,0 \;\; -19 \mid -76\,]$, e $y = 4$ do mesmo jeito. Nos dois casos,
+   $2x + 12 = 16$ dá $x = 2$. A resposta $(2,\ 4)$ é a mesma da outra lição,
+   como tinha de ser.
+9. Troque $L_1 \leftrightarrow L_2$, para começar pela linha que tem $x$:
+   $[\,1 \;\; 1 \;\; 1 \mid 6\,]$, $[\,0 \;\; 1 \;\; 2 \mid 7\,]$,
+   $[\,2 \;\; 1 \;\; 3 \mid 14\,]$. Com $L_3 \leftarrow L_3 - 2L_1$:
+   $[\,0 \;\; -1 \;\; 1 \mid 2\,]$. Com $L_3 \leftarrow L_3 + L_2$:
+   $[\,0 \;\; 0 \;\; 3 \mid 9\,]$. Então $z = 3$, $y + 6 = 7$ dá $y = 1$, e
+   $x + 1 + 3 = 6$ dá $x = 2$. Conferência: $1 + 6 = 7$; $2 + 1 + 3 = 6$;
+   $4 + 1 + 9 = 14$. Se você tentou usar o 0 como pivô, chegou a uma divisão
+   por zero: um zero não consegue zerar nada abaixo dele.
+10. Com $L_2 \leftarrow L_2 - 2L_1$ e $L_3 \leftarrow L_3 - L_1$, as duas
+    linhas de baixo ficam iguais: $[\,0 \;\; 1 \;\; 3 \mid 3\,]$. Com
+    $L_3 \leftarrow L_3 - L_2$, a última vira $0 = 0$. O $z$ é livre:
+    $z = t$. Da segunda linha, $y + 3t = 3$, então $y = 3 - 3t$. Da primeira,
+    $x + 2(3 - 3t) - t = 3$, ou seja, $x + 6 - 7t = 3$, e $x = -3 + 7t$. As
+    soluções são $(-3 + 7t,\ 3 - 3t,\ t)$. Com $t = 0$: $(-3,\ 3,\ 0)$. Com
+    $t = 1$: $(4,\ 0,\ 1)$. Conferência de $(4,\ 0,\ 1)$: $4 + 0 - 1 = 3$;
+    $8 + 0 + 1 = 9$; $4 + 0 + 2 = 6$. Se sua resposta tem outro formato, como
+    $(4 - 7s,\ 3s,\ 1 - s)$, ela pode estar certa: o parâmetro pode ser
+    escolhido de outro jeito. Confira duas soluções suas no sistema original.
+11. Com $L_2 \leftarrow L_2 - L_1$ e $L_3 \leftarrow L_3 - 2L_1$:
+    $[\,0 \;\; 1 \;\; 2 \mid 3\,]$ e $[\,0 \;\; 1 \;\; 2 \mid k - 4\,]$. Com
+    $L_3 \leftarrow L_3 - L_2$: $[\,0 \;\; 0 \;\; 0 \mid k - 7\,]$. Se $k$ é
+    diferente de 7, a última linha é falsa: nenhuma solução. Se $k = 7$, ela é
+    $0 = 0$: infinitas soluções, da forma $(-1 + t,\ 3 - 2t,\ t)$. Nenhum $k$
+    dá solução única, porque a coluna do $z$ nunca ganha pivô: a terceira
+    linha à esquerda da barra é sempre a soma das duas primeiras.
+12. Com $c$, $p$ e $s$ para café, pão de queijo e suco, a matriz aumentada é
+    $\left[\begin{array}{ccc|c} 2 & 1 & 1 & 23 \\ 1 & 3 & 2 & 35 \\ 3 & 2 & 1 & 32 \end{array}\right]$.
+    Troque $L_1 \leftrightarrow L_2$ para ter pivô 1. Com
+    $L_2 \leftarrow L_2 - 2L_1$ e $L_3 \leftarrow L_3 - 3L_1$:
+    $[\,0 \;\; -5 \;\; -3 \mid -47\,]$ e $[\,0 \;\; -7 \;\; -5 \mid -73\,]$.
+    Para zerar o $-7$ sem frações, faça $L_3 \leftarrow 5L_3$ e depois
+    $L_3 \leftarrow L_3 - 7L_2$: $[\,0 \;\; 0 \;\; -4 \mid -36\,]$. Então
+    $s = 9$; $-5p - 27 = -47$ dá $p = 4$; $c + 12 + 18 = 35$ dá $c = 5$. Café
+    R\$ 5, pão de queijo R\$ 4, suco R\$ 9. Conferência:
+    $10 + 4 + 9 = 23$; $5 + 12 + 18 = 35$; $15 + 8 + 9 = 32$.
+13. a) $10x + 5y + 5z = 45$ e $10x + 20y + 5z = 75$. Dividindo as duas linhas
+    por 5: $[\,2 \;\; 1 \;\; 1 \mid 9\,]$ e $[\,2 \;\; 4 \;\; 1 \mid 15\,]$. Com
+    $L_2 \leftarrow L_2 - L_1$: $[\,0 \;\; 3 \;\; 0 \mid 6\,]$. &nbsp; b) A
+    segunda linha dá $y = 2$, sempre. O $z$ não tem pivô: $z = t$. Da primeira,
+    $2x + 2 + t = 9$, então $x = \frac{7 - t}{2}$. As soluções são
+    $\left(\frac{7 - t}{2},\ 2,\ t\right)$. &nbsp; c) $z = t$ precisa ser
+    maior ou igual a 0, e $x = \frac{7 - t}{2}$ também, o que pede $t$ menor ou
+    igual a 7. O plano faz sentido para $t$ entre 0 e 7. &nbsp; d) $x$ é
+    inteiro quando $7 - t$ é par, isto é, quando $t$ é ímpar: $t = 1, 3, 5, 7$.
+    Os planos são $(3,\ 2,\ 1)$, $(2,\ 2,\ 3)$, $(1,\ 2,\ 5)$ e $(0,\ 2,\ 7)$.
+    Conferindo $(1,\ 2,\ 5)$: proteína $10 + 10 + 25 = 45$, carboidrato
+    $10 + 40 + 25 = 75$. A granola fica fixa em 2 porções em todos os planos.
+    O motivo: iogurte e castanhas trazem a mesma quantidade de proteína e de
+    carboidrato (10 e 10; 5 e 5). Só a granola traz 15 g a mais de
+    carboidrato que de proteína. As metas pedem 30 g a mais de carboidrato, e
+    só 2 porções de granola produzem essa diferença.
+14. $2\,(10,\ 10,\ 5) + 3\,(5,\ 20,\ 5) + 2\,(5,\ 5,\ 15) = (20 + 15 + 10,\
+    20 + 60 + 10,\ 10 + 15 + 30) = (45,\ 90,\ 55)$. As porções da solução são
+    os pesos que misturam as fichas dos alimentos para dar a ficha do plano.
+15. Partindo do sistema novo, faça $L_2 \leftarrow L_2 - kL_1$. A linha
+    $L_1$ não mudou, então a segunda linha vira
+    $(L_2 + kL_1) - kL_1 = L_2$, a original. Como a operação inversa também
+    é do tipo “somar a uma linha um múltiplo de outra”, ela não perde
+    soluções. Então toda solução do sistema novo, levada de volta pela
+    inversa, continua solução: é solução do original. Nenhuma solução foi
+    criada.
+16. Na forma escalonada, cada pivô fica numa linha diferente. Com menos
+    equações que incógnitas, há menos pivôs que colunas de incógnita, e
+    alguma coluna fica sem pivô. Se o sistema tem solução, essa incógnita é
+    livre, e cada valor dela dá uma solução diferente: são infinitas. Se não
+    tem, são zero. Uma só, nunca.
+17. A lista $(0,\ 0,\ \ldots,\ 0)$ sempre satisfaz $A\vec{x} = \vec{0}$: cada
+    equação vira $0 = 0$. Então há pelo menos uma solução. Na eliminação, isso
+    aparece assim: a coluna depois da barra começa toda de zeros e continua de
+    zeros depois de qualquer operação, e por isso nunca surge uma linha do tipo
+    $0 = c$ com $c$ diferente de zero.
+
+**Se sua resposta não bateu:**
+
+Quase todo erro desta lista vem de três pontos. Confira se a operação foi
+feita também depois da barra. Confira os sinais nas contas com negativos,
+escrevendo cada coluna com parênteses. E confira a resposta nas equações
+originais: se ela falha lá, o erro está no escalonamento, e vale refazê-lo
+linha por linha.
+
+</details>
+
+## 14. Revisão curta
+
+- Um **sistema linear** se escreve $A\vec{x} = \vec{b}$ e se trabalha na
+  **matriz aumentada** $[A \mid \vec{b}]$: uma linha por equação, uma coluna
+  por incógnita, e a coluna dos resultados depois da barra.
+- As três **operações elementares** — trocar linhas, multiplicar uma linha por
+  um número diferente de zero, somar a uma linha um múltiplo de outra — são a
+  balança das equações aplicada a linhas. Cada uma pode ser desfeita, e por
+  isso nenhuma perde ou cria soluções.
+- A **eliminação de Gauss** zera os números abaixo de cada pivô, coluna por
+  coluna, até a **forma escalonada**. A **substituição de trás para a frente**
+  resolve a escada de baixo para cima.
+- A forma escalonada diz o desfecho: uma linha $0 = c$ com $c$ diferente de
+  zero, nenhuma solução; um pivô por incógnita, uma solução; colunas sem pivô,
+  infinitas soluções, escritas com uma **variável livre**.
+- É a eliminação da lição de sistemas de duas equações, agora numa ordem fixa
+  que funciona para qualquer número de incógnitas.
+
+A seção 8.2 deixou uma pergunta aberta: resolver $A\vec{x} = \vec{b}$ é achar a
+receita que mistura as colunas de $A$ para chegar a $\vec{b}$. Quando essa
+receita existe? E quando uma das colunas é desperdício, porque já se obtém
+misturando as outras? A próxima lição,
+[combinação linear e independência](./combinacao-linear-e-independencia),
+responde com a ferramenta desta: escalonando.

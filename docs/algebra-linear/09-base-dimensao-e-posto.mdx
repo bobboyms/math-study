@@ -1,0 +1,1225 @@
+---
+title: Base, dimensão e posto
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+import LinearMap from '@site/src/components/LinearMap';
+
+# Base, dimensão e posto: quantas colunas carregam informação
+
+## 1. Problema motivador: a planilha que parece ter cinco colunas
+
+Uma loja guarda, para cada cliente do mês, cinco números. Os gastos estão em
+centenas de reais: o 1 da primeira linha quer dizer R\$ 100.
+
+| Cliente | Loja física | Online | Total gasto | Pontos de fidelidade | Compras no mês |
+|---|---|---|---|---|---|
+| 1 | 1 | 0 | 1 | 2 | 1 |
+| 2 | 2 | 1 | 3 | 5 | 3 |
+| 3 | 0 | 3 | 3 | 3 | 2 |
+| 4 | 1 | 1 | 2 | 3 | 4 |
+| 5 | 3 | 2 | 5 | 8 | 2 |
+
+A loja dá 2 pontos por centena gasta na loja física e 1 ponto por centena
+gasta online. O total é a soma dos dois gastos.
+
+Um analista vai usar essa planilha para treinar um modelo de previsão. Ele
+quer saber, antes de começar, se as cinco colunas trazem cinco informações
+diferentes. Desconfia que não. A coluna do total, por exemplo, sai das duas
+primeiras.
+
+> Quantas colunas desta planilha carregam informação de verdade? Quais podem
+> ser apagadas sem perder nada, e quais relações exatas ligam as colunas que
+> sobram?
+
+Na lição [Combinação linear e
+independência](./combinacao-linear-e-independencia), uma planilha parecida
+tinha três colunas, e bastava perceber que o total era a soma das outras duas.
+Com cinco colunas, perceber no olho deixa de ser confiável. Esta lição constrói
+três números que respondem às perguntas acima: a **dimensão**, o **posto** e
+a dimensão do **núcleo**. A seção 9 resolve a planilha com um escalonamento só.
+
+## 2. Mapa das ideias
+
+Esta lição tem muitos nomes novos. Use esta lista como referência e volte a
+ela quando um termo parecer solto.
+
+- **base** de um conjunto de vetores: uma lista de vetores que gera tudo o que
+  o conjunto contém e não tem nenhum vetor sobrando;
+- **coordenadas numa base**: os coeficientes da receita que monta um vetor com
+  os vetores da base;
+- **subespaço**: um conjunto de vetores que contém o vetor nulo e do qual a
+  soma e a multiplicação por número nunca saem; no plano, é uma reta que passa
+  pela origem;
+- **dimensão** de um subespaço: quantos vetores tem uma base dele; toda base
+  do mesmo subespaço tem a mesma quantidade;
+- **espaço coluna** de uma matriz $A$: o conjunto gerado pelas colunas de $A$,
+  ou seja, tudo o que $A\vec{x}$ consegue alcançar;
+- **posto** de $A$: a dimensão do espaço coluna; na prática, o número de
+  pivôs da forma escalonada;
+- **núcleo** de $A$: o conjunto das soluções de $A\vec{x} = \vec{0}$; cada
+  vetor do núcleo é uma relação exata entre as colunas;
+- **teorema do posto**: posto mais dimensão do núcleo dá o número de colunas.
+
+## 3. Para que serve
+
+- **Limpar dados.** O posto de uma planilha diz quantas colunas são
+  necessárias para refazer todas as outras. Colunas a mais não acrescentam
+  informação e confundem modelos de previsão, como a lição anterior sobre
+  independência já avisou.
+- **Comprimir.** Uma imagem, uma tabela de notas de filmes ou uma lista de
+  medidas costuma ter posto **quase** baixo: quase tudo se explica com poucas
+  colunas. A lição [Valores
+  singulares](./decomposicao-em-valores-singulares) usa essa ideia para guardar
+  uma imagem com muito menos números.
+- **Saber se um sistema tem solução.** $A\vec{x} = \vec{b}$ tem solução
+  exatamente quando $\vec{b}$ está no espaço coluna de $A$. E o núcleo diz
+  quantas soluções há: se o núcleo tem mais que o vetor nulo, a solução nunca
+  é única.
+- **Trocar de ponto de vista.** Coordenadas numa base diferente da habitual
+  aparecem em mapas de ruas inclinadas, em gráficos de computador e, nas
+  próximas lições, em [Autovalores e
+  autovetores](./autovalores-e-autovetores), onde a base certa transforma uma
+  matriz cheia de entradas numa conta curta.
+
+## 4. Ideias anteriores que voltam aqui
+
+Esta lição se apoia quase toda nas duas anteriores sobre escalonamento e
+independência. Responda cada pergunta antes de abrir a resposta. Se alguma
+travar, releia a lição indicada antes de seguir.
+
+**1. Do [conjunto gerado](./combinacao-linear-e-independencia).** O que é o
+conjunto gerado por $(1,\ 2)$ sozinho? E por $(1,\ 2)$ e $(0,\ 1)$?
+
+<details>
+<summary>Conferir</summary>
+
+O conjunto gerado por $(1,\ 2)$ é formado por todos os múltiplos
+$t(1,\ 2) = (t,\ 2t)$. Desenhados a partir da origem, eles formam a reta
+$y = 2x$.
+
+Com $(1,\ 2)$ e $(0,\ 1)$, os dois vetores não são paralelos, e dois vetores
+não paralelos do plano geram o plano inteiro. Por exemplo,
+$(3,\ 1) = 3(1,\ 2) + (-5)(0,\ 1)$.
+
+</details>
+
+**2. Da [independência linear](./combinacao-linear-e-independencia).** Os
+vetores $(1,\ 2)$ e $(2,\ 4)$ são independentes?
+
+<details>
+<summary>Conferir</summary>
+
+Não. $(2,\ 4) = 2(1,\ 2)$, então o segundo é combinação do primeiro: ele
+sobra. Pela outra definição, a receita $2(1,\ 2) - (2,\ 4) = (0,\ 0)$ dá zero
+sem usar todos os coeficientes iguais a zero.
+
+</details>
+
+**3. Do teste por escalonamento, na mesma lição.** Os vetores viram colunas de
+uma matriz e a matriz é escalonada. O que uma coluna **sem pivô** diz sobre o
+vetor daquela coluna?
+
+<details>
+<summary>Conferir</summary>
+
+Diz que aquele vetor é combinação dos vetores das colunas com pivô que vêm
+antes dele: ele sobra. E a variável dessa coluna é **livre** no sistema
+$A\vec{c} = \vec{0}$. Escolher um valor para ela entrega a receita que dá zero.
+
+</details>
+
+**4. De [Sistemas lineares e
+escalonamento](./sistemas-lineares-e-escalonamento).** Resolva o sistema de
+uma equação só $x + 2y = 0$, com $y$ como variável livre.
+
+<details>
+<summary>Conferir</summary>
+
+Chame $y = t$, um número qualquer. Então $x = -2t$, e as soluções são
+$(x,\ y) = (-2t,\ t) = t(-2,\ 1)$. São infinitas, uma para cada valor de $t$,
+e todas são múltiplos de $(-2,\ 1)$.
+
+</details>
+
+**5. De [Matrizes](./matrizes).** Pela leitura das colunas, o que é
+$A\vec{x}$?
+
+<details>
+<summary>Conferir</summary>
+
+É a combinação linear das colunas de $A$, com os pesos dados pelas
+coordenadas de $\vec{x}$. Com colunas $\vec{a}_1$ e $\vec{a}_2$ e
+$\vec{x} = (3,\ -1)$, o resultado é $3\vec{a}_1 - \vec{a}_2$.
+
+</details>
+
+**6. De [Retas com vetores](../geometria/retas-com-vetores).** A reta que passa
+por $A = (0,\ 2)$ na direção $\vec{d} = (1,\ 2)$ se escreve
+$P(t) = A + t\vec{d}$. Ela passa pela origem?
+
+<details>
+<summary>Conferir</summary>
+
+Os pontos dela são $(t,\ 2 + 2t)$. Para passar pela origem, seria preciso
+$t = 0$ e $2 + 2t = 0$ ao mesmo tempo. Com $t = 0$, a segunda coordenada vale
+2, não 0. Então essa reta **não** passa pela origem. Ela é a reta
+$y = 2x + 2$, paralela a $y = 2x$ e deslocada 2 para cima.
+
+</details>
+
+## 5. Intuição: quantos números você precisa guardar
+
+Pense num arquivo de planilha que vai ocupar espaço num servidor. Se uma coluna
+pode ser refeita a partir das outras, ela não precisa ser guardada: um programa
+recalcula quando alguém pedir. A pergunta da lição é: **qual é o menor número
+de colunas que eu preciso guardar para refazer todas?**
+
+A resposta tem duas partes, e é importante separá-las.
+
+- **Quantas** colunas guardar é um número fixo. Na planilha da loja, a
+  resposta vai ser 3. Esse número é o **posto**.
+- **Quais** colunas guardar não é fixo. Você pode guardar “loja física”,
+  “online” e “compras”, e refazer o total e os pontos. Ou guardar “total”,
+  “online” e “compras”, e refazer a loja física como total menos online. As
+  duas escolhas servem. Cada escolha que serve é uma **base**.
+
+Há uma terceira informação, que costuma ser esquecida: **as receitas que
+refazem as colunas apagadas**. “Total = loja física + online” é uma delas.
+Essas relações formam o **núcleo**. E a conta final da lição é simples de
+dizer: o que você guarda mais as relações que você descobriu dá o número
+total de colunas.
+
+A mesma ideia vale fora das planilhas. Para dar um endereço a um ponto do
+plano, você precisa de dois números e não menos. Mas pode escolher os dois
+eixos que quiser, desde que não sejam paralelos: ruas na horizontal e na
+vertical, ou avenidas inclinadas. O “dois” não muda. Os eixos, sim.
+
+## 6. Modelo visual: um bairro com ruas inclinadas
+
+Num bairro planejado, as ruas não seguem o norte. Todas as avenidas correm na
+direção $\vec{b}_1 = (1,\ 1)$, para nordeste, e todas as travessas na direção
+$\vec{b}_2 = (1,\ -1)$, para sudeste. Cada quarteirão de avenida desloca
+$(1,\ 1)$, e cada quarteirão de travessa desloca $(1,\ -1)$.
+
+Um entregador sai da origem e precisa chegar ao ponto $(5,\ 1)$. No mapa
+quadriculado da prefeitura, ele andaria 5 para leste e 1 para norte. Mas ali
+não há ruas nessas direções. Ele só pode andar pelas avenidas e travessas.
+
+<CartesianPlane
+  xMin={-1} xMax={7} yMin={-2} yMax={5}
+  xUnit={46}
+  lines={[
+    {m: 1, n: 0, dashed: true, muted: true},
+    {m: 1, n: -2, dashed: true, muted: true},
+    {m: 1, n: -4, dashed: true, muted: true},
+    {m: 1, n: -6, dashed: true, muted: true},
+    {m: 1, n: 2, dashed: true, muted: true},
+    {m: -1, n: 0, dashed: true, muted: true},
+    {m: -1, n: 2, dashed: true, muted: true},
+    {m: -1, n: 4, dashed: true, muted: true},
+    {m: -1, n: 6, dashed: true, muted: true},
+    {m: -1, n: 8, dashed: true, muted: true},
+  ]}
+  segments={[
+    {from: [0, 0], to: [3, 3], arrow: true, tone: 1, label: '3\\vec{b}_1', dx: -26, dy: -6},
+    {from: [3, 3], to: [5, 1], arrow: true, tone: 2, label: '2\\vec{b}_2', dx: 26, dy: -4},
+    {from: [0, 0], to: [5, 1], arrow: true, tone: 3, label: '\\vec{v} = (5,\\ 1)', dx: 6, dy: -16},
+  ]}
+  caption="As linhas tracejadas são as ruas do bairro: avenidas na direção b₁ = (1, 1) e travessas na direção b₂ = (1, −1). Para chegar a (5, 1), o entregador anda 3 quarteirões de avenida e depois 2 de travessa."
+/>
+
+O caminho pelas ruas é: 3 quarteirões de avenida e depois 2 de travessa.
+Confira somando:
+
+$$
+3(1,\ 1) + 2(1,\ -1) = (3,\ 3) + (2,\ -2) = (5,\ 1).
+$$
+
+O mesmo ponto tem agora **dois endereços**:
+
+| Sistema de endereços | Peças usadas | Endereço de $(5,\ 1)$ |
+|---|---|---|
+| mapa da prefeitura | $\vec{e}_1 = (1,\ 0)$ e $\vec{e}_2 = (0,\ 1)$ | 5 e 1 |
+| ruas do bairro | $\vec{b}_1 = (1,\ 1)$ e $\vec{b}_2 = (1,\ -1)$ | 3 e 2 |
+
+O ponto não mudou de lugar. O que mudou foram as peças usadas para descrevê-lo.
+E as duas descrições usam **dois** números. Nenhuma das duas consegue usar um
+só, porque com uma direção só o entregador ficaria preso numa reta. Nenhuma
+precisa de três, porque duas direções não paralelas já alcançam o plano
+inteiro.
+
+## 7. Ponte para a formalização: “sem sobra” e “sem falta”
+
+O bairro mostra as duas exigências que uma lista de direções precisa cumprir
+para servir de sistema de endereços.
+
+- **Sem falta.** Toda casa do bairro precisa ter endereço. Em linguagem da
+  lição anterior: as direções precisam **gerar** o plano.
+- **Sem sobra.** Suponha que a prefeitura abrisse uma terceira direção de
+  rua, para leste, $(1,\ 0)$. Toda casa passaria a ter **muitos** endereços
+  diferentes. Para endereço, isso é ruim: duas pessoas descreveriam o mesmo
+  lugar com números diferentes. Em linguagem da lição anterior: as direções
+  precisam ser **independentes**.
+
+Veja a sobra acontecendo com o ponto $(5,\ 1)$. Escreva cada endereço como
+três números: quarteirões para leste, de avenida e de travessa. Três endereços
+diferentes levam ao mesmo ponto:
+
+| Endereço | Conta | Chegada |
+|---|---|---|
+| $(0,\ 3,\ 2)$ | $0(1,\ 0) + 3(1,\ 1) + 2(1,\ -1)$ | $(5,\ 1)$ |
+| $(4,\ 1,\ 0)$ | $4(1,\ 0) + 1(1,\ 1) + 0(1,\ -1)$ | $(5,\ 1)$ |
+| $(2,\ 2,\ 1)$ | $2(1,\ 0) + 2(1,\ 1) + 1(1,\ -1)$ | $(5,\ 1)$ |
+
+Confira a última linha coordenada a coordenada: $2 + 2 + 1 = 5$ e
+$0 + 2 - 1 = 1$. A causa é que a direção nova sobra: $(1,\ 0)$ é a metade de
+$(1,\ 1)$ mais a metade de $(1,\ -1)$, então ela já era alcançável sem
+abrir rua nenhuma.
+
+As duas exigências juntas definem uma **base**. A seção 8 escreve isso com
+precisão, e depois mede três coisas: quantos vetores uma base tem (dimensão),
+quantas colunas independentes uma matriz tem (posto) e quantas relações
+existem entre elas (núcleo).
+
+## 8. Formalização
+
+A seção 8.4 é a parte mais difícil da lição: o argumento de que toda base tem
+o mesmo tamanho é sobre **todas** as bases ao mesmo tempo, e não sobre uma
+conta. Se ela não fechar na primeira leitura, siga para 8.5 e volte depois do
+exemplo 3.
+
+### 8.1 Subespaço: onde as contas não escapam
+
+As bases desta lição vão servir para descrever conjuntos menores que o espaço
+inteiro, como a reta das soluções de $x + 2y = 0$. Mas não é qualquer
+conjunto que tem base. Ele precisa ter uma propriedade: somar dois vetores
+dele, ou multiplicar um vetor dele por um número, nunca leva para fora.
+
+> Um **subespaço** de $\mathbb{R}^n$ é um conjunto $S$ de vetores de
+> $\mathbb{R}^n$ que cumpre três condições:
+>
+> 1. o vetor nulo $\vec{0}$ está em $S$;
+> 2. se $\vec{u}$ e $\vec{v}$ estão em $S$, então $\vec{u} + \vec{v}$ está em
+>    $S$;
+> 3. se $\vec{v}$ está em $S$ e $k$ é um número qualquer, então $k\vec{v}$
+>    está em $S$.
+
+**Exemplo.** A reta $y = 2x$ é um subespaço de $\mathbb{R}^2$. Os vetores dela
+são da forma $(a,\ 2a)$. A origem está nela ($a = 0$). Somando dois deles,
+$(a,\ 2a) + (b,\ 2b) = (a + b,\ 2(a + b))$, que ainda tem a segunda
+coordenada igual ao dobro da primeira. E $k(a,\ 2a) = (ka,\ 2ka)$, que também
+tem. Teste com números: $(1,\ 2) + (2,\ 4) = (3,\ 6)$, e $6 = 2 \times 3$.
+
+**Contraexemplo.** A reta $y = 2x + 2$ **não** é um subespaço. Ela falha logo
+na primeira condição: na origem, $2 \times 0 + 2 = 2$, que não é 0. E falha
+também na segunda. Os pontos $(1,\ 4)$ e $(-1,\ 0)$ estão nela, porque
+$2 \times 1 + 2 = 4$ e $2 \times (-1) + 2 = 0$. A soma deles é $(0,\ 4)$, e
+$2 \times 0 + 2 = 2$, que não é 4: a soma saiu da reta.
+
+<CartesianPlane
+  xMin={-3} xMax={4} yMin={-2} yMax={7}
+  xUnit={40}
+  lines={[
+    {m: 2, n: 0, tone: 1},
+    {m: 2, n: 2, tone: 2},
+  ]}
+  segments={[
+    {from: [0, 0], to: [1, 4], arrow: true, tone: 2},
+    {from: [0, 0], to: [-1, 0], arrow: true, tone: 2},
+    {from: [0, 0], to: [0, 4], arrow: true, tone: 3},
+  ]}
+  points={[
+    {at: [1, 4], label: '(1,\\ 4)', tone: 2, dx: 34, dy: 4},
+    {at: [-1, 0], label: '(-1,\\ 0)', tone: 2, dx: -30, dy: -16},
+    {at: [0, 4], label: '(0,\\ 4)', tone: 3, dx: 24, dy: -18},
+  ]}
+  labels={[
+    {at: [2.9, 5.8], math: 'y = 2x', tone: 1, dx: 34},
+    {at: [-1.8, 3], math: 'y = 2x + 2', tone: 2},
+  ]}
+  caption="A reta azul, y = 2x, passa pela origem e é um subespaço. A reta laranja, y = 2x + 2, é paralela a ela, mas não passa pela origem. Somando dois vetores que apontam para pontos da reta laranja, o resultado (0, 4), em verde, cai fora dela."
+/>
+
+**Quais são os subespaços do plano.** São três tipos: o conjunto só com
+$\vec{0}$; as retas que passam pela origem; e o plano inteiro. No espaço
+$\mathbb{R}^3$, aparecem também os planos que passam pela origem. Um exemplo
+você já conhece: as cores que a loja de tintas alcançava com as bases P e Q, a
+lição de [independência](./combinacao-linear-e-independencia) mostrou, são
+exatamente as que obedecem à regra $x + z = 2y$. Esse conjunto é um plano pela
+origem dentro de $\mathbb{R}^3$, e é um subespaço.
+
+**Por que todo conjunto gerado é um subespaço.** Pegue o conjunto gerado por
+alguns vetores. A receita “zero de tudo” dá $\vec{0}$, então a condição 1
+vale. Somar duas receitas é somar os coeficientes correspondentes, o que dá
+outra receita, então a condição 2 vale. E multiplicar uma receita por $k$
+multiplica cada coeficiente por $k$, o que ainda é uma receita. É por isso que
+retas e planos **pela origem** aparecem tanto: são os conjuntos gerados por um
+ou dois vetores.
+
+### 8.2 Base
+
+> Uma **base** de um subespaço $S$ é uma lista de vetores de $S$ que cumpre
+> duas condições ao mesmo tempo:
+>
+> 1. os vetores **geram** $S$: todo vetor de $S$ é combinação linear deles;
+> 2. os vetores são **linearmente independentes**: nenhum deles sobra.
+
+As duas condições puxam em sentidos contrários. Gerar pede vetores
+suficientes; ser independente proíbe vetores demais. Uma base fica no ponto
+exato entre as duas: é um conjunto **mínimo** que gera, porque tirar qualquer
+vetor faz perder alguma coisa.
+
+**Exemplo.** $\vec{b}_1 = (1,\ 1)$ e $\vec{b}_2 = (1,\ -1)$ formam uma base de
+$\mathbb{R}^2$. Não são paralelos, porque nenhum múltiplo de $(1,\ 1)$ tem as
+duas coordenadas com sinais opostos. Então são independentes, e dois vetores
+independentes do plano geram o plano inteiro.
+
+**Primeiro contraexemplo: gera, mas sobra.** $(1,\ 0)$, $(1,\ 1)$ e
+$(1,\ -1)$ geram $\mathbb{R}^2$, mas não são uma base. Três vetores do plano
+são sempre dependentes, e aqui a receita que dá zero é
+$2(1,\ 0) - (1,\ 1) - (1,\ -1) = (0,\ 0)$. Por isso o ponto $(5,\ 1)$ teve
+vários endereços na seção 7.
+
+**Segundo contraexemplo: independente, mas não gera.** O vetor $(1,\ 1)$
+sozinho é independente, porque um vetor não nulo sozinho é sempre
+independente. Mas ele gera só a reta $y = x$. O ponto $(5,\ 1)$ não está nela,
+então $(1,\ 1)$ sozinho não é base de $\mathbb{R}^2$.
+
+**A base de sempre.** $\vec{e}_1 = (1,\ 0)$ e $\vec{e}_2 = (0,\ 1)$ formam a
+**base canônica** de $\mathbb{R}^2$. Em $\mathbb{R}^n$, a base canônica tem
+$n$ vetores, cada um com um 1 numa posição e zeros no resto. É a base que o
+curso usou até aqui sem dar nome: quando você escreve $(5,\ 1)$, está dizendo
+$5\vec{e}_1 + 1\vec{e}_2$.
+
+### 8.3 Coordenadas numa base
+
+Numa base, todo vetor tem **um único** endereço. Esse é o ganho de exigir as
+duas condições:
+
+- **existe** endereço, porque a base gera;
+- o endereço é **único**, porque a base é independente.
+
+A segunda afirmação merece uma conta. Suponha que $\vec{v}$ tivesse dois
+endereços na base $\vec{b}_1,\ \vec{b}_2$:
+$\vec{v} = a\vec{b}_1 + b\vec{b}_2$ e também $\vec{v} = c\vec{b}_1 +
+d\vec{b}_2$. Subtraia a segunda igualdade da primeira. O lado esquerdo vira
+$\vec{v} - \vec{v} = \vec{0}$, e o direito vira
+$(a - c)\vec{b}_1 + (b - d)\vec{b}_2$. Então
+
+$$
+(a - c)\vec{b}_1 + (b - d)\vec{b}_2 = \vec{0}.
+$$
+
+Como a base é independente, a única receita que dá zero é a trivial. Logo
+$a - c = 0$ e $b - d = 0$: os dois endereços eram o mesmo.
+
+> As **coordenadas de $\vec{v}$ na base** $\vec{b}_1,\ \ldots,\ \vec{b}_k$ são
+> os únicos números $c_1,\ \ldots,\ c_k$ tais que
+> $\vec{v} = c_1\vec{b}_1 + \cdots + c_k\vec{b}_k$.
+
+**Como achar as coordenadas.** Achar os coeficientes de uma receita é
+resolver um sistema, como na lição de independência. Para $\vec{v} = (5,\ 1)$
+na base do bairro, queremos $a(1,\ 1) + b(1,\ -1) = (5,\ 1)$. Comparando
+coordenada com coordenada:
+
+$$
+\begin{cases} a + b = 5 \\ a - b = 1 \end{cases}
+$$
+
+Somando as duas equações, $2a = 6$, então $a = 3$. Da primeira, $b = 5 - 3 =
+2$. As coordenadas de $(5,\ 1)$ na base do bairro são $(3,\ 2)$, como o
+desenho da seção 6 mostrava.
+
+**Um cuidado de leitura.** “$(3,\ 2)$” e “$(5,\ 1)$” descrevem o mesmo vetor.
+O par $(3,\ 2)$ só faz sentido junto com a base que foi usada. Sem dizer a
+base, quem lê vai entender a canônica, e vai desenhar o ponto errado. Por isso,
+ao dar coordenadas numa base diferente, diga sempre qual é a base.
+
+**Exemplo.** Na base do bairro, quais são as coordenadas de $(2,\ 2)$? A
+receita $2(1,\ 1) + 0(1,\ -1) = (2,\ 2)$ funciona, então as coordenadas são
+$(2,\ 0)$. O ponto fica exatamente sobre a avenida que sai da origem.
+
+**Contraexemplo.** Na lista $(1,\ 0)$, $(1,\ 1)$, $(1,\ -1)$, que não é base,
+não existe “as” coordenadas de $(5,\ 1)$: a seção 7 achou pelo menos duas
+receitas, $(4,\ 1,\ 0)$ e $(2,\ 2,\ 1)$. A palavra “coordenadas” só tem
+sentido numa base.
+
+### 8.4 Dimensão
+
+Toda base de $\mathbb{R}^2$ tem 2 vetores. Esse fato já estava na lição de
+independência, na seção sobre quantos vetores cabem em $\mathbb{R}^n$: mais de
+$n$ vetores são sempre dependentes, e menos de $n$ nunca geram tudo. Então uma
+base de $\mathbb{R}^n$, que precisa ser independente **e** gerar, tem
+exatamente $n$ vetores.
+
+O mesmo vale para qualquer subespaço, e esse é o fato central desta seção.
+
+> **Todas as bases de um mesmo subespaço têm a mesma quantidade de vetores.**
+> Essa quantidade se chama **dimensão** do subespaço.
+
+**Por que a quantidade não depende da base escolhida.** Esta é a passagem
+difícil. Suponha que um subespaço $S$ tivesse uma base com 2 vetores e outra
+com 3. A base de 2 vetores gera $S$. Então os 3 vetores da outra base são
+todos combinações de só 2 vetores. Escrevendo cada um dos 3 pelas suas
+coordenadas na base de 2, eles viram 3 listas de 2 números, ou seja, 3 vetores
+de $\mathbb{R}^2$. E 3 vetores de $\mathbb{R}^2$ são sempre dependentes. Uma
+receita que dá zero entre as coordenadas dá zero também entre os vetores
+originais. Então os 3 vetores seriam dependentes, e não poderiam formar uma
+base. A contradição mostra que as duas bases têm o mesmo tamanho. O argumento
+funciona com quaisquer dois tamanhos diferentes, não só 2 e 3.
+
+**Exemplos.**
+
+| Subespaço | Uma base | Dimensão |
+|---|---|---|
+| só o vetor nulo | nenhum vetor | 0 |
+| a reta $y = 2x$ em $\mathbb{R}^2$ | $(1,\ 2)$ | 1 |
+| o plano $\mathbb{R}^2$ inteiro | $(1,\ 0)$ e $(0,\ 1)$, ou $(1,\ 1)$ e $(1,\ -1)$ | 2 |
+| o plano $x + z = 2y$ em $\mathbb{R}^3$ | $(2,\ 1,\ 0)$ e $(0,\ 1,\ 2)$ | 2 |
+| o espaço $\mathbb{R}^n$ inteiro | a base canônica | $n$ |
+
+Repare na quarta linha. Os vetores desse plano têm **3** coordenadas, mas o
+plano tem dimensão **2**. A dimensão não conta coordenadas; conta direções
+independentes. Um plano é um plano, esteja ele desenhado no papel ou inclinado
+dentro do espaço.
+
+**Contraexemplo.** A reta $y = 2x + 2$ não tem dimensão, no sentido desta
+lição, porque não é um subespaço: não tem base. Nenhuma lista de vetores dela
+gera a própria reta, porque todo conjunto gerado contém a origem, e a origem
+não está nela.
+
+### 8.5 Espaço coluna e posto
+
+Volte à matriz como lista de colunas. Pela leitura das colunas de
+[Matrizes](./matrizes), $A\vec{x}$ é uma combinação das colunas de $A$. Então
+tudo o que $A\vec{x}$ consegue alcançar é o conjunto gerado pelas colunas.
+
+> O **espaço coluna** de $A$ é o conjunto gerado pelas colunas de $A$. O
+> **posto** de $A$ é a dimensão do espaço coluna: quantas colunas de $A$ são
+> necessárias para gerar todas as outras.
+
+O posto se calcula com o escalonamento que você já sabe fazer:
+
+> **O posto de $A$ é o número de pivôs da forma escalonada de $A$.** E as
+> colunas **da matriz original** que ficam nas posições dos pivôs formam uma
+> base do espaço coluna.
+
+**Por que as colunas originais, e não as escalonadas.** Este ponto confunde
+muita gente; leia devagar. Escalonar muda as colunas. Mas não muda **as
+relações** entre elas. Uma relação entre as colunas, como “a terceira é a
+primeira mais a segunda”, é uma receita $\vec{c}$ com $A\vec{c} = \vec{0}$. E
+as operações elementares nunca mudam o conjunto de soluções de um sistema,
+como a lição de [sistemas](./sistemas-lineares-e-escalonamento) mostrou. Então
+as receitas que valem entre as colunas escalonadas são exatamente as que valem
+entre as colunas originais.
+
+Na forma escalonada, as relações ficam fáceis de ler: as colunas com pivô são
+independentes, e cada coluna sem pivô é combinação das colunas com pivô que
+vêm antes dela. Como as relações são as mesmas, o mesmo vale para as colunas
+originais nas mesmas posições.
+
+Mas o espaço coluna, ele próprio, muda. Veja com
+$A = \begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}$:
+
+$$
+\begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}
+\xrightarrow{L_2 \leftarrow L_2 - 2L_1}
+\begin{bmatrix} 1 & 2 \\ 0 & 0 \end{bmatrix}
+$$
+
+Um pivô só, na primeira coluna: o posto é 1. A relação “segunda coluna = 2
+vezes a primeira” vale nas duas matrizes: $(2,\ 0) = 2(1,\ 0)$ e
+$(2,\ 4) = 2(1,\ 2)$. Mas o espaço coluna de $A$ é a reta gerada por
+$(1,\ 2)$, a reta $y = 2x$. Já a primeira coluna escalonada, $(1,\ 0)$, está
+no eixo $x$, fora dessa reta. Usar a coluna escalonada como base daria a reta
+errada.
+
+**Exemplo.** A matriz
+$\begin{bmatrix} 1 & 1 & 0 \\ 0 & 1 & 1 \\ 1 & 0 & 1 \end{bmatrix}$ tem posto
+3:
+
+$$
+\begin{bmatrix} 1 & 1 & 0 \\ 0 & 1 & 1 \\ 1 & 0 & 1 \end{bmatrix}
+\xrightarrow{L_3 \leftarrow L_3 - L_1}
+\begin{bmatrix} 1 & 1 & 0 \\ 0 & 1 & 1 \\ 0 & -1 & 1 \end{bmatrix}
+\xrightarrow{L_3 \leftarrow L_3 + L_2}
+\begin{bmatrix} 1 & 1 & 0 \\ 0 & 1 & 1 \\ 0 & 0 & 2 \end{bmatrix}
+$$
+
+Três pivôs, um em cada coluna. As três colunas são independentes e geram todo
+o $\mathbb{R}^3$.
+
+**Contraexemplo.** A matriz
+$\begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}$ tem duas colunas, nenhuma das
+duas é toda de zeros, e mesmo assim o posto é 1, e não 2. O posto conta
+colunas **independentes**, não colunas preenchidas.
+
+### 8.6 Núcleo
+
+> O **núcleo** de $A$ é o conjunto de todas as soluções do sistema
+> $A\vec{x} = \vec{0}$.
+
+O núcleo sempre contém $\vec{0}$, porque $A\vec{0} = \vec{0}$. A pergunta
+interessante é se ele contém **mais** alguma coisa.
+
+Cada vetor do núcleo tem duas leituras, e as duas são úteis.
+
+- **Leitura das colunas.** $A\vec{c} = \vec{0}$ quer dizer
+  $c_1\vec{a}_1 + c_2\vec{a}_2 + \cdots = \vec{0}$. É uma receita que dá zero
+  com as colunas: uma **relação exata** entre elas. Para
+  $A = \begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}$, o vetor $(-2,\ 1)$ está
+  no núcleo, e diz: “menos duas vezes a primeira coluna, mais a segunda, dá
+  zero”. Em outras palavras, a segunda é o dobro da primeira.
+- **Leitura da transformação.** Os vetores do núcleo são os que a
+  transformação $\vec{x} \mapsto A\vec{x}$ leva para a origem. Eles somem. E
+  somar um vetor do núcleo a qualquer entrada não muda a saída:
+  $A(\vec{x} + \vec{c}) = A\vec{x} + A\vec{c} = A\vec{x} + \vec{0}$. Por isso
+  uma matriz com núcleo maior que $\vec{0}$ perde informação: entradas
+  diferentes dão a mesma saída, e a [Matriz inversa](./matriz-inversa) não
+  pode existir.
+
+<LinearMap
+  matrix={[[1, 2], [2, 4]]}
+  window={[-4, 4, -3, 6]}
+  unit={30}
+  vectors={[{v: [-2, 1], label: '(-2,\\ 1)', imageLabel: ''}]}
+  basisLabels={{after: ['(1,\\ 2)', '(2,\\ 4)', [38, 8], [38, 2]]}}
+  caption="Antes: o vetor (−2, 1), do núcleo, em verde. Depois: a matriz com colunas (1, 2) e (2, 4) achata o plano inteiro sobre a reta y = 2x, que é o espaço coluna. As duas colunas caem nessa mesma reta, uma por cima da outra. O quadrado pintado vira um segmento, e o vetor (−2, 1) vai parar na origem: ele desapareceu."
+/>
+
+**O núcleo é um subespaço.** Se $A\vec{u} = \vec{0}$ e $A\vec{v} = \vec{0}$,
+então $A(\vec{u} + \vec{v}) = A\vec{u} + A\vec{v} = \vec{0} + \vec{0} =
+\vec{0}$, e $A(k\vec{u}) = kA\vec{u} = k\vec{0} = \vec{0}$. As duas igualdades
+usam as propriedades da multiplicação de matriz por vetor que a lição de
+[Transformações lineares](./transformacoes-lineares) chamou de linearidade.
+Então o núcleo tem base e dimensão.
+
+**Como achar uma base do núcleo.** Escalone e resolva $A\vec{x} = \vec{0}$
+com as variáveis livres como parâmetros, como na lição de sistemas. Cada
+variável livre dá um vetor da base: ponha 1 nela, 0 nas outras livres, e
+calcule as variáveis dos pivôs. Para $\begin{bmatrix} 1 & 2 \\ 2 & 4
+\end{bmatrix}$, a forma escalonada dá a equação $x + 2y = 0$, com $y$ livre.
+Com $y = 1$, sai $x = -2$: a base do núcleo é $(-2,\ 1)$, e a dimensão do
+núcleo é 1.
+
+**Exemplo.** O núcleo da matriz de posto 3 da seção 8.5 é só $\vec{0}$: com
+três pivôs em três colunas, não há variável livre, e o sistema homogêneo tem
+só a solução trivial. A dimensão do núcleo é 0.
+
+**Contraexemplo.** $(1,\ 1)$ **não** está no núcleo de
+$\begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}$: o produto dá
+$(1 + 2,\ 2 + 4) = (3,\ 6)$, que não é o vetor nulo.
+
+### 8.7 O teorema do posto
+
+Na forma escalonada, cada coluna está numa de duas situações: tem pivô ou não
+tem. Contando:
+
+- as colunas com pivô são o **posto**;
+- as colunas sem pivô são as variáveis livres, e cada variável livre dá um
+  vetor da base do núcleo; então elas são a **dimensão do núcleo**.
+
+> **Teorema do posto.** Para uma matriz $A$ com $n$ colunas,
+>
+> $$\operatorname{posto}(A) + \dim(\text{núcleo de } A) = n.$$
+
+Em palavras de planilha: as colunas que você guarda, mais as relações
+independentes que refazem as outras, dão o total de colunas. Cada coluna é
+ou guardada, ou refeita.
+
+**Conferências.**
+
+| Matriz | Colunas | Posto | Dimensão do núcleo | Soma |
+|---|---|---|---|---|
+| a $2 \times 2$ de colunas $(1,\ 2)$ e $(2,\ 4)$, da seção 8.5 | 2 | 1 | 1 | 2 |
+| a $3 \times 3$ de posto 3, da seção 8.5 | 3 | 3 | 0 | 3 |
+| a matriz $B$ logo abaixo | 4 | 2 | 2 | 4 |
+
+A matriz da terceira linha é
+
+$$
+B = \begin{bmatrix} 1 & 2 & 0 & 1 \\ 0 & 0 & 1 & 3 \end{bmatrix}.
+$$
+
+Ela já está escalonada, com pivôs nas colunas 1 e 3. As colunas
+2 e 4 são livres. A segunda linha diz $x_3 + 3x_4 = 0$, e a primeira diz
+$x_1 + 2x_2 + x_4 = 0$. Com $x_2 = 1$ e $x_4 = 0$, sai $(-2,\ 1,\ 0,\ 0)$. Com
+$x_2 = 0$ e $x_4 = 1$, sai $x_3 = -3$ e $x_1 = -1$, ou seja,
+$(-1,\ 0,\ -3,\ 1)$. Dois vetores na base do núcleo: dimensão 2.
+
+**Uma consequência para matrizes quadradas.** Se $A$ tem $n$ linhas e $n$
+colunas, há três afirmações que dizem a mesma coisa:
+
+- o posto de $A$ é $n$;
+- o núcleo de $A$ é só $\vec{0}$;
+- as colunas de $A$ formam uma base de $\mathbb{R}^n$.
+
+Elas andam juntas pelo teorema do posto: posto $n$ deixa $n - n = 0$ para o
+núcleo. Essas são as matrizes que têm inversa, e as que têm
+[determinante](./determinante) diferente de zero.
+
+## 9. Resolvendo o problema da planilha
+
+Cada coluna da planilha é um vetor de $\mathbb{R}^5$, com uma coordenada por
+cliente. Chame as colunas de $\vec{f}$ (loja física), $\vec{o}$ (online),
+$\vec{t}$ (total), $\vec{p}$ (pontos) e $\vec{n}$ (compras). A matriz da
+planilha é:
+
+$$
+A = \begin{bmatrix}
+1 & 0 & 1 & 2 & 1 \\
+2 & 1 & 3 & 5 & 3 \\
+0 & 3 & 3 & 3 & 2 \\
+1 & 1 & 2 & 3 & 4 \\
+3 & 2 & 5 & 8 & 2
+\end{bmatrix}
+$$
+
+**Passo 1: zerar a primeira coluna abaixo do pivô.** O pivô é o 1 do canto.
+As operações são $L_2 \leftarrow L_2 - 2L_1$, $L_4 \leftarrow L_4 - L_1$ e
+$L_5 \leftarrow L_5 - 3L_1$. A linha 3 já começa com 0 e fica como está.
+
+$$
+\begin{bmatrix}
+1 & 0 & 1 & 2 & 1 \\
+0 & 1 & 1 & 1 & 1 \\
+0 & 3 & 3 & 3 & 2 \\
+0 & 1 & 1 & 1 & 3 \\
+0 & 2 & 2 & 2 & -1
+\end{bmatrix}
+$$
+
+**Passo 2: zerar a segunda coluna abaixo do novo pivô.** O pivô é o 1 da
+linha 2. As operações são $L_3 \leftarrow L_3 - 3L_2$,
+$L_4 \leftarrow L_4 - L_2$ e $L_5 \leftarrow L_5 - 2L_2$.
+
+$$
+\begin{bmatrix}
+1 & 0 & 1 & 2 & 1 \\
+0 & 1 & 1 & 1 & 1 \\
+0 & 0 & 0 & 0 & -1 \\
+0 & 0 & 0 & 0 & 2 \\
+0 & 0 & 0 & 0 & -3
+\end{bmatrix}
+$$
+
+As colunas 3 e 4 zeraram nas linhas 3, 4 e 5. Por isso o próximo pivô não
+está na coluna 3 nem na 4: está na coluna 5, no $-1$ da linha 3.
+
+**Passo 3: zerar a quinta coluna abaixo do pivô $-1$.** As operações são
+$L_4 \leftarrow L_4 + 2L_3$ e $L_5 \leftarrow L_5 - 3L_3$.
+
+$$
+\begin{bmatrix}
+1 & 0 & 1 & 2 & 1 \\
+0 & 1 & 1 & 1 & 1 \\
+0 & 0 & 0 & 0 & -1 \\
+0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0
+\end{bmatrix}
+$$
+
+A matriz está escalonada. Agora as três perguntas da abertura têm resposta.
+
+**Quantas colunas carregam informação?** Há 3 pivôs, nas colunas 1, 2 e 5.
+O posto é **3**. A planilha tem cinco colunas, mas só três informações
+independentes.
+
+**Quais guardar?** As colunas **originais** nas posições dos pivôs:
+“loja física”, “online” e “compras”. Elas formam uma base do espaço coluna.
+As colunas 3 e 4, total e pontos, podem ser apagadas.
+
+**Que relações refazem as apagadas?** São o núcleo. As colunas sem pivô, 3 e
+4, dão as variáveis livres $x_3$ e $x_4$. Resolva $A\vec{x} = \vec{0}$ de
+trás para a frente pela forma escalonada:
+
+- a linha 3 diz $-x_5 = 0$, então $x_5 = 0$;
+- a linha 2 diz $x_2 + x_3 + x_4 + x_5 = 0$, então $x_2 = -x_3 - x_4$;
+- a linha 1 diz $x_1 + x_3 + 2x_4 + x_5 = 0$, então $x_1 = -x_3 - 2x_4$.
+
+Com $x_3 = 1$ e $x_4 = 0$, sai $(-1,\ -1,\ 1,\ 0,\ 0)$. Lida como receita das
+colunas, ela diz $-\vec{f} - \vec{o} + \vec{t} = \vec{0}$, ou seja,
+$\vec{t} = \vec{f} + \vec{o}$: o total é a soma dos gastos.
+
+Com $x_3 = 0$ e $x_4 = 1$, sai $(-2,\ -1,\ 0,\ 1,\ 0)$. Ela diz
+$\vec{p} = 2\vec{f} + \vec{o}$: os pontos são 2 por centena na loja física e
+1 por centena online. O escalonamento redescobriu a regra de pontos da loja
+sem que ninguém a contasse para ele.
+
+Confira as duas relações na tabela, cliente por cliente. Para o cliente 2:
+$2 + 1 = 3$, que é o total, e $2 \times 2 + 1 = 5$, que são os pontos. Para o
+cliente 5: $3 + 2 = 5$ e $2 \times 3 + 2 = 8$. As outras linhas batem do mesmo
+jeito.
+
+**O teorema do posto confere:** posto 3 mais núcleo de dimensão 2 dá 5, o
+número de colunas. Três colunas guardadas, duas refeitas por duas relações.
+
+**E a escolha da base não é única.** Em vez de “loja física”, o analista
+podia guardar “total”, porque $\vec{f} = \vec{t} - \vec{o}$ refaz a loja
+física. Guardar $\vec{t}$, $\vec{o}$ e $\vec{n}$ também dá uma base, também
+com três colunas. O que nunca muda é o **três**: é a dimensão do espaço
+coluna, e a seção 8.4 mostrou que ela não depende da base escolhida.
+
+**Uma conferência na forma escalonada.** Lá, a coluna 3 é $(1,\ 1,\ 0,\ 0,\
+0)$, que é a coluna 1 mais a coluna 2. E a coluna 4 é $(2,\ 1,\ 0,\ 0,\ 0)$,
+que é duas vezes a coluna 1 mais a coluna 2. São as mesmas relações da
+planilha original, como a seção 8.5 garantia.
+
+## 10. Exemplos resolvidos
+
+### Exemplo 1: coordenadas numa base nova
+
+Na base do bairro, $\vec{b}_1 = (1,\ 1)$ e $\vec{b}_2 = (1,\ -1)$, quais são
+as coordenadas de $\vec{v} = (7,\ 3)$?
+
+Queremos $a(1,\ 1) + b(1,\ -1) = (7,\ 3)$, ou seja, $a + b = 7$ e $a - b = 3$.
+Somando as duas equações, $2a = 10$, então $a = 5$. Da primeira, $b = 2$. As
+coordenadas são $(5,\ 2)$. Conferência: $5(1,\ 1) + 2(1,\ -1) = (5 + 2,\
+5 - 2) = (7,\ 3)$.
+
+### Exemplo 2: é base ou não é?
+
+Decida se cada lista é uma base de $\mathbb{R}^2$:
+(a) $(2,\ 1)$ e $(1,\ 3)$; (b) $(1,\ 2)$ e $(3,\ 6)$;
+(c) $(1,\ 0)$, $(0,\ 1)$ e $(1,\ 1)$.
+
+*Pause e tente antes de ler.*
+
+(a) Dois vetores do plano, não paralelos: a primeira coordenada de $(1,\ 3)$
+é metade da de $(2,\ 1)$, mas a segunda é o triplo, e nenhum múltiplo faz as
+duas coisas. São independentes e geram o plano: **é base**.
+
+(b) $(3,\ 6) = 3(1,\ 2)$: paralelos, dependentes. Geram só a reta $y = 2x$.
+**Não é base**: falha nas duas condições.
+
+(c) Três vetores do plano são sempre dependentes, e de fato
+$(1,\ 1) = (1,\ 0) + (0,\ 1)$. Eles geram o plano, mas sobra um. **Não é
+base**: gera, mas não é independente.
+
+### Exemplo 3: posto e núcleo de uma matriz $3 \times 3$
+
+Calcule o posto e uma base do núcleo de
+$A = \begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9 \end{bmatrix}$.
+
+*Pause e tente antes de ler.*
+
+$$
+\begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9 \end{bmatrix}
+\xrightarrow[L_3 \leftarrow L_3 - 7L_1]{L_2 \leftarrow L_2 - 4L_1}
+\begin{bmatrix} 1 & 2 & 3 \\ 0 & -3 & -6 \\ 0 & -6 & -12 \end{bmatrix}
+\xrightarrow{L_3 \leftarrow L_3 - 2L_2}
+\begin{bmatrix} 1 & 2 & 3 \\ 0 & -3 & -6 \\ 0 & 0 & 0 \end{bmatrix}
+$$
+
+Dois pivôs, nas colunas 1 e 2: o posto é 2. A coluna 3 é livre. Com
+$x_3 = 1$, a segunda linha dá $-3x_2 - 6 = 0$, então $x_2 = -2$. A primeira dá
+$x_1 + 2(-2) + 3 = 0$, então $x_1 = 1$. A base do núcleo é $(1,\ -2,\ 1)$.
+
+Lida como relação: primeira coluna, menos duas vezes a segunda, mais a
+terceira, dá zero. Confira:
+$(1,\ 4,\ 7) - 2(2,\ 5,\ 8) + (3,\ 6,\ 9) = (1 - 4 + 3,\ 4 - 10 + 6,\
+7 - 16 + 9) = (0,\ 0,\ 0)$.
+
+Teorema do posto: $2 + 1 = 3$ colunas. Uma matriz $3 \times 3$ com números
+todos diferentes, e ainda assim com uma coluna sobrando.
+
+### Exemplo 4: uma linha de números repetidos
+
+Calcule o posto e o núcleo de
+$A = \begin{bmatrix} 1 & 2 & 3 \\ 2 & 4 & 6 \end{bmatrix}$.
+
+*Pause e tente antes de ler.*
+
+$L_2 \leftarrow L_2 - 2L_1$ zera a segunda linha inteira. Sobra um pivô, na
+coluna 1: posto 1. As colunas 2 e 3 são livres, e a única equação é
+$x_1 + 2x_2 + 3x_3 = 0$.
+
+- Com $x_2 = 1$ e $x_3 = 0$: $x_1 = -2$, vetor $(-2,\ 1,\ 0)$.
+- Com $x_2 = 0$ e $x_3 = 1$: $x_1 = -3$, vetor $(-3,\ 0,\ 1)$.
+
+O núcleo tem dimensão 2, e $1 + 2 = 3$ colunas. As relações dizem: a
+segunda coluna é o dobro da primeira, e a terceira é o triplo.
+
+### Exemplo 5: um subespaço de $\mathbb{R}^3$ e as coordenadas nele
+
+O plano $x + z = 2y$, das cores alcançáveis da loja de tintas, tem a base
+$\vec{p} = (2,\ 1,\ 0)$ e $\vec{q} = (0,\ 1,\ 2)$. O vetor $(1,\ 1,\ 1)$ está
+nesse plano? Se estiver, quais são as coordenadas dele nessa base?
+
+*Pause e tente antes de ler.*
+
+Primeiro, a regra: $1 + 1 = 2 = 2 \times 1$. Está no plano. Agora a receita:
+$a(2,\ 1,\ 0) + b(0,\ 1,\ 2) = (2a,\ a + b,\ 2b)$. Para dar $(1,\ 1,\ 1)$,
+$2a = 1$ e $2b = 1$, então $a = \frac{1}{2}$ e $b = \frac{1}{2}$. A segunda
+coordenada confere: $\frac{1}{2} + \frac{1}{2} = 1$.
+
+As coordenadas de $(1,\ 1,\ 1)$ nessa base são $\left(\frac{1}{2},\
+\frac{1}{2}\right)$: **dois** números, embora o vetor tenha três coordenadas
+na base canônica. É a dimensão 2 do plano aparecendo na conta.
+
+### Exemplo 6: um parâmetro que muda o posto
+
+Para que valor de $k$ a matriz $\begin{bmatrix} 1 & 2 \\ 3 & k \end{bmatrix}$
+tem posto 1?
+
+*Pause e tente antes de ler.*
+
+$L_2 \leftarrow L_2 - 3L_1$ dá $\begin{bmatrix} 1 & 2 \\ 0 & k - 6
+\end{bmatrix}$. Se $k - 6 \neq 0$, há dois pivôs e o posto é 2. Se $k = 6$, a
+segunda linha zera, há um pivô só e o posto é 1. Conferência: com $k = 6$, a
+segunda coluna, $(2,\ 6)$, é o dobro da primeira, $(1,\ 3)$.
+
+## 11. Erros comuns
+
+> **Erro 1: achar que o posto é o número de colunas não nulas.**
+
+A matriz $\begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}$ tem duas colunas
+preenchidas e posto 1. O erro é tentador porque, quando uma coluna é toda
+zero, ela realmente não conta. Mas uma coluna pode ter números e mesmo assim
+ser combinação das outras. O posto só se lê depois de escalonar: conte os
+pivôs.
+
+> **Erro 2: usar as colunas da forma escalonada como base do espaço coluna.**
+
+Em $\begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}$, a primeira coluna
+escalonada é $(1,\ 0)$, que fica no eixo $x$. Mas o espaço coluna é a reta
+$y = 2x$, gerada por $(1,\ 2)$. O escalonamento preserva as **relações**
+entre as colunas, não as colunas. Use o escalonamento para descobrir **quais**
+posições têm pivô, e depois volte à matriz original para pegar as colunas.
+
+> **Erro 3: achar que a base de um espaço é uma só.**
+
+$\mathbb{R}^2$ tem infinitas bases: a canônica, a do bairro, $(2,\ 1)$ e
+$(1,\ 3)$, e qualquer outro par de vetores não paralelos. O que é único é o
+**tamanho** de todas elas, a dimensão. E, numa base escolhida, o que é único
+são as coordenadas de cada vetor.
+
+> **Erro 4: chamar de subespaço uma reta que não passa pela origem.**
+
+A reta $y = 2x + 2$ parece tão “reta” quanto $y = 2x$. Mas ela não contém
+$\vec{0}$, e a soma de dois vetores dela sai dela: $(1,\ 4) + (-1,\ 0) =
+(0,\ 4)$, fora da reta. Primeiro teste de qualquer candidato a subespaço: o
+vetor nulo está nele?
+
+> **Erro 5: confundir dimensão com número de coordenadas.**
+
+Os vetores do plano $x + z = 2y$ têm três coordenadas, mas o plano tem
+dimensão 2. A dimensão conta quantas direções independentes há **dentro** do
+subespaço, e não o tamanho das listas que descrevem seus vetores. O exemplo 5
+mostrou isso: na base certa, cada vetor desse plano tem só dois números.
+
+> **Erro 6: dizer que uma matriz “não tem núcleo”.**
+
+O núcleo sempre existe e sempre contém $\vec{0}$, porque $A\vec{0} = \vec{0}$
+para qualquer matriz. O que pode acontecer é ele ter **só** o vetor nulo:
+dimensão 0. Dizer “núcleo só com o vetor nulo” evita a confusão.
+
+## 12. Perguntas de verificação
+
+**1.** Por que uma base nunca contém o vetor nulo?
+
+<details>
+<summary>Resposta</summary>
+
+Porque uma lista que contém $\vec{0}$ é sempre dependente. A receita “1 vez o
+$\vec{0}$ e zero de todos os outros” dá $\vec{0}$ sem ser a trivial. E base
+precisa ser independente.
+
+</details>
+
+**2.** Dois alunos dão coordenadas diferentes para o mesmo vetor do plano. Os
+dois podem estar certos?
+
+<details>
+<summary>Resposta</summary>
+
+Sim, se usaram bases diferentes: $(5,\ 1)$ na base canônica e $(3,\ 2)$ na
+base do bairro são o mesmo vetor. Na **mesma** base, não: a independência
+garante que as coordenadas numa base são únicas.
+
+</details>
+
+**3.** Uma matriz tem 4 linhas e 7 colunas. Qual é o maior posto possível? E
+a menor dimensão possível do núcleo?
+
+<details>
+<summary>Resposta</summary>
+
+Cada pivô ocupa uma linha diferente, então há no máximo 4 pivôs: posto no
+máximo 4. Pelo teorema do posto, o núcleo tem dimensão $7 - \text{posto}$,
+que é no mínimo $7 - 4 = 3$. Essa matriz sempre tem pelo menos três relações
+independentes entre as colunas.
+
+</details>
+
+**4.** Por que o escalonamento não muda o núcleo, se muda as colunas?
+
+<details>
+<summary>Resposta</summary>
+
+O núcleo é o conjunto de soluções de $A\vec{x} = \vec{0}$. As operações
+elementares podem ser desfeitas por outra operação elementar, e por isso
+nunca perdem nem criam soluções de um sistema. O conjunto de soluções do
+sistema homogêneo, que é o núcleo, fica igual.
+
+</details>
+
+**5.** O conjunto dos vetores $(x,\ y)$ com $x \geq 0$ é um subespaço do
+plano?
+
+<details>
+<summary>Resposta</summary>
+
+Não. Ele contém $\vec{0}$ e é fechado para a soma (dois números não
+negativos somados dão não negativo). Mas falha na multiplicação por número:
+$(1,\ 0)$ está no conjunto e $(-1)(1,\ 0) = (-1,\ 0)$ não está.
+
+</details>
+
+**6.** Na planilha da seção 9, o analista apagou as colunas “total” e
+“pontos”. Que informação ele precisa guardar junto para conseguir refazê-las?
+
+<details>
+<summary>Resposta</summary>
+
+As relações do núcleo: $\vec{t} = \vec{f} + \vec{o}$ e $\vec{p} = 2\vec{f} +
+\vec{o}$. Sem elas, as três colunas guardadas não dizem como montar as outras
+duas. As colunas da base guardam a informação; as relações guardam as
+receitas.
+
+</details>
+
+**7.** Uma matriz $3 \times 3$ tem uma coluna que é a soma das outras duas.
+Ela tem inversa?
+
+<details>
+<summary>Resposta</summary>
+
+Não. A relação “terceira menos primeira menos segunda dá zero” é um vetor não
+nulo do núcleo, $(-1,\ -1,\ 1)$. Com núcleo maior que $\vec{0}$, entradas
+diferentes vão para a mesma saída, e não há como desfazer a transformação. Em
+termos de posto: ele é no máximo 2, e não 3.
+
+</details>
+
+## 13. Exercícios
+
+### 1. Reconhecimento
+
+1. Quais listas são bases de $\mathbb{R}^2$?
+   (a) $(1,\ 2)$ e $(3,\ 6)$; (b) $(1,\ 0)$, $(0,\ 1)$ e $(2,\ 3)$;
+   (c) $(2,\ 1)$ e $(1,\ 1)$; (d) $(4,\ 0)$ sozinho.
+2. Quais conjuntos são subespaços de $\mathbb{R}^2$?
+   (a) a reta $y = 3x$; (b) a reta $y = 3x + 1$; (c) o eixo $x$;
+   (d) o conjunto só com o vetor nulo.
+3. A forma escalonada de uma matriz $A$ com 5 colunas tem pivôs nas colunas
+   1, 3 e 4. Qual é o posto de $A$? Qual é a dimensão do núcleo? Quais
+   colunas de $A$ formam uma base do espaço coluna?
+
+### 2. Explicação
+
+4. Explique, com suas palavras, por que exigir que uma base seja
+   independente garante que cada vetor tenha um único endereço.
+5. Um colega escalonou uma matriz e disse: “a base do espaço coluna são as
+   colunas com pivô desta matriz escalonada aqui”. O que está errado, e como
+   corrigir?
+
+### 3. Aplicação direta
+
+6. Na base $\vec{b}_1 = (1,\ 1)$ e $\vec{b}_2 = (1,\ -1)$, ache as coordenadas
+   de $(4,\ 6)$.
+7. Calcule o posto e uma base do núcleo de
+   $\begin{bmatrix} 1 & 3 \\ 2 & 6 \end{bmatrix}$. Confira o teorema do
+   posto.
+8. Calcule o posto e uma base do núcleo de
+   $\begin{bmatrix} 1 & 2 & 1 & 0 \\ 2 & 4 & 0 & 2 \\ 3 & 6 & 1 & 2
+   \end{bmatrix}$.
+
+### 4. Variação
+
+9. O robô do depósito da lição de [soma de
+   vetores](../geometria/soma-de-vetores) tinha motores nas direções
+   $(2,\ 1)$ e $(1,\ 3)$. Mostre que eles formam uma base de $\mathbb{R}^2$ e
+   ache as coordenadas de $(7,\ 6)$ nessa base.
+10. Para que valores de $k$ a matriz
+    $\begin{bmatrix} 2 & k \\ 4 & 6 \end{bmatrix}$ tem posto 2?
+11. Uma matriz $3 \times 3$ tem núcleo de dimensão 1. Qual é o posto dela? Ela
+    tem inversa?
+
+### 5. Problema misto
+
+12. Uma empresa registra, para quatro funcionários, as horas normais do mês,
+    as horas extras, o total de horas e o salário. A hora normal paga
+    R\$ 20 e a hora extra paga R\$ 30.
+
+    | Funcionário | Horas normais | Horas extras | Total de horas | Salário (R\$) |
+    |---|---|---|---|---|
+    | 1 | 40 | 0 | 40 | 800 |
+    | 2 | 44 | 6 | 50 | 1060 |
+    | 3 | 38 | 10 | 48 | 1060 |
+    | 4 | 40 | 4 | 44 | 920 |
+
+    (a) Qual é o posto da matriz dessa tabela? (b) Escreva duas relações
+    independentes entre as colunas, como vetores do núcleo. (c) Confira o
+    teorema do posto.
+
+13. Na loja de tintas, as cores alcançáveis com as bases P e Q formam o plano
+    $x + z = 2y$. (a) Ache uma base desse plano diferente de
+    $(2,\ 1,\ 0)$ e $(0,\ 1,\ 2)$. (b) A cor $(3,\ 2,\ 1)$ está no plano? Se
+    estiver, dê as coordenadas dela na base $(2,\ 1,\ 0)$ e $(0,\ 1,\ 2)$.
+
+### 6. Justificativa
+
+14. Mostre que, se $\vec{u}$ e $\vec{v}$ estão no núcleo de $A$, então
+    $3\vec{u} - 2\vec{v}$ também está. Que propriedade da multiplicação de
+    matriz por vetor você usou?
+15. Explique por que uma matriz com 3 linhas e 5 colunas sempre tem um vetor
+    não nulo no núcleo.
+16. Explique por que, para uma matriz quadrada $n \times n$, “posto $n$” e
+    “núcleo só com o vetor nulo” são a mesma afirmação.
+
+<details>
+<summary>Dica para o exercício 12</summary>
+
+Antes de escalonar, olhe para as colunas e pergunte: alguma delas é soma de
+outras? Alguma é uma conta com as horas? Cada conta exata entre colunas é um
+vetor do núcleo.
+
+</details>
+
+<details>
+<summary>Dica para o exercício 15</summary>
+
+Quantos pivôs cabem numa matriz de 3 linhas? E o que sobra para as variáveis
+livres, com 5 colunas?
+
+</details>
+
+<details>
+<summary>Dica para o exercício 16</summary>
+
+Use o teorema do posto com $n$ colunas e veja o que sobra para o núcleo em
+cada caso.
+
+</details>
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Só (c) é base. (a) $(3,\ 6) = 3(1,\ 2)$: paralelos, não geram o plano.
+   (b) Gera, mas três vetores do plano são dependentes:
+   $(2,\ 3) = 2(1,\ 0) + 3(0,\ 1)$. (d) Um vetor só gera uma reta, o eixo
+   $x$. Em (c), $(2,\ 1)$ e $(1,\ 1)$ não são paralelos: todo múltiplo de
+   $(1,\ 1)$ tem as duas coordenadas iguais, e $(2,\ 1)$ não tem. *Se você
+   marcou (b), lembre-se de que base não pode ter sobra.*
+
+2. (a), (c) e (d) são subespaços. (b) não é: não passa pela origem, porque
+   $3 \times 0 + 1 = 1$. O eixo $x$ é a reta $y = 0$, que passa pela origem. O
+   conjunto só com $\vec{0}$ cumpre as três condições: $\vec{0} + \vec{0} =
+   \vec{0}$ e $k\vec{0} = \vec{0}$.
+
+3. Posto 3, porque há três pivôs. Núcleo de dimensão $5 - 3 = 2$, uma para
+   cada coluna sem pivô (a 2 e a 5). As colunas 1, 3 e 4 **da matriz
+   original** $A$ formam a base do espaço coluna.
+
+4. Se um vetor tivesse dois endereços, subtrair um do outro daria uma receita
+   que resulta em $\vec{0}$ com coeficientes $a - c$, $b - d$ e assim por
+   diante. Numa lista independente, a única receita que dá zero é a trivial,
+   então todas as diferenças são zero e os dois endereços coincidem.
+
+5. O escalonamento muda as colunas, e o espaço gerado por elas pode mudar.
+   Ele só preserva as relações entre as colunas. A correção: usar o
+   escalonamento para saber **em que posições** estão os pivôs e pegar as
+   colunas dessas posições na matriz **original**. *Exemplo do erro:* em
+   $\begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}$, a coluna escalonada
+   $(1,\ 0)$ não está no espaço coluna, que é a reta $y = 2x$.
+
+6. $a + b = 4$ e $a - b = 6$. Somando, $2a = 10$, $a = 5$; então $b = -1$.
+   Coordenadas $(5,\ -1)$. Conferência: $5(1,\ 1) - (1,\ -1) = (4,\ 6)$. *Se
+   você achou $(5,\ 1)$, provavelmente errou o sinal ao isolar $b$ em
+   $5 + b = 4$.*
+
+7. $L_2 \leftarrow L_2 - 2L_1$ zera a segunda linha. Um pivô: posto 1. A
+   equação $x_1 + 3x_2 = 0$, com $x_2 = 1$, dá $x_1 = -3$. Base do núcleo:
+   $(-3,\ 1)$. Teorema: $1 + 1 = 2$ colunas. A relação diz que a segunda
+   coluna é o triplo da primeira.
+
+8. $L_2 \leftarrow L_2 - 2L_1$ e $L_3 \leftarrow L_3 - 3L_1$ dão as linhas
+   $(0,\ 0,\ -2,\ 2)$ e $(0,\ 0,\ -2,\ 2)$. Depois $L_3 \leftarrow L_3 - L_2$
+   zera a terceira linha. Pivôs nas colunas 1 e 3: **posto 2**. Livres: $x_2$
+   e $x_4$. A segunda linha dá $-2x_3 + 2x_4 = 0$, ou $x_3 = x_4$. A primeira
+   dá $x_1 = -2x_2 - x_3$. Com $x_2 = 1$, $x_4 = 0$: $(-2,\ 1,\ 0,\ 0)$. Com
+   $x_2 = 0$, $x_4 = 1$: $x_3 = 1$ e $x_1 = -1$, ou seja, $(-1,\ 0,\ 1,\ 1)$.
+   Dimensão do núcleo 2, e $2 + 2 = 4$. *Se você achou posto 3, confira se
+   percebeu que, depois do primeiro passo, as linhas 2 e 3 ficaram iguais.*
+
+9. Não são paralelos: a primeira coordenada de $(1,\ 3)$ é metade da de
+   $(2,\ 1)$, mas a segunda é o triplo. Dois vetores independentes do plano
+   formam base. Coordenadas: $2a + b = 7$ e $a + 3b = 6$. Da primeira,
+   $b = 7 - 2a$; na segunda, $a + 21 - 6a = 6$, então $a = 3$ e $b = 1$.
+   Coordenadas $(3,\ 1)$, a receita “3 voltas do primeiro motor e 1 do
+   segundo” daquela lição.
+
+10. $L_2 \leftarrow L_2 - 2L_1$ dá a linha $(0,\ 6 - 2k)$. Posto 2 quando
+    $6 - 2k \neq 0$, ou seja, para todo $k$ diferente de 3. Com $k = 3$, a
+    segunda coluna $(3,\ 6)$ é $\frac{3}{2}$ da primeira, $(2,\ 4)$.
+
+11. Pelo teorema do posto, posto $= 3 - 1 = 2$. Não tem inversa: há um vetor
+    não nulo no núcleo, que a matriz leva para $\vec{0}$ junto com o próprio
+    $\vec{0}$; duas entradas diferentes com a mesma saída não podem ser
+    desfeitas.
+
+12. (a) **Posto 2.** O escalonamento zera as linhas 3 e 4 depois de dois
+    pivôs, nas colunas das horas normais e das horas extras. (b) Total =
+    normais + extras dá o vetor $(1,\ 1,\ -1,\ 0)$. Salário = 20 × normais +
+    30 × extras dá $(20,\ 30,\ 0,\ -1)$. Confira no funcionário 3:
+    $38 + 10 = 48$ e $20 \times 38 + 30 \times 10 = 760 + 300 = 1060$. (c)
+    $2 + 2 = 4$ colunas. *Se você encontrou posto 3, verifique o salário: ele
+    parece uma informação nova, mas é uma conta exata com as horas.*
+
+13. (a) Por exemplo, $(2,\ 1,\ 0)$ e $(2,\ 3,\ 4)$, que é a base R da loja:
+    $2 + 4 = 6 = 2 \times 3$, então está no plano, e não é paralelo a
+    $(2,\ 1,\ 0)$. Qualquer par de vetores não paralelos do plano serve. (b)
+    $3 + 1 = 4 = 2 \times 2$: está no plano. $a(2,\ 1,\ 0) + b(0,\ 1,\ 2) =
+    (2a,\ a + b,\ 2b) = (3,\ 2,\ 1)$ dá $a = \frac{3}{2}$ e $b = \frac{1}{2}$,
+    e a coordenada do meio confere: $\frac{3}{2} + \frac{1}{2} = 2$.
+    Coordenadas $\left(\frac{3}{2},\ \frac{1}{2}\right)$.
+
+14. $A(3\vec{u} - 2\vec{v}) = 3A\vec{u} - 2A\vec{v} = 3\vec{0} - 2\vec{0} =
+    \vec{0}$. Usamos a linearidade: $A$ aplicada a uma combinação é a mesma
+    combinação das imagens.
+
+15. Uma matriz de 3 linhas tem no máximo 3 pivôs, porque cada pivô ocupa uma
+    linha. Com 5 colunas, pelo menos 2 ficam sem pivô. Cada coluna sem pivô
+    é uma variável livre, e dar o valor 1 a ela produz uma solução não nula
+    de $A\vec{x} = \vec{0}$.
+
+16. Pelo teorema do posto, posto + dimensão do núcleo $= n$. Se o posto é
+    $n$, sobra $0$ para o núcleo, que então tem só o vetor nulo. E se o núcleo
+    tem só o vetor nulo, sua dimensão é 0, e o posto é $n - 0 = n$.
+
+</details>
+
+## 14. Revisão curta
+
+- Um **subespaço** contém $\vec{0}$ e não deixa a soma nem a multiplicação por
+  número escaparem. No plano, são as retas pela origem (além do próprio plano
+  e do $\vec{0}$ sozinho). Reta deslocada não é subespaço.
+- Uma **base** gera o subespaço e é independente: nada falta, nada sobra.
+  Numa base, cada vetor tem **coordenadas únicas**, achadas resolvendo um
+  sistema.
+- A **dimensão** é o número de vetores de uma base. Todas as bases do mesmo
+  subespaço têm o mesmo tamanho, e ele conta direções, não coordenadas.
+- O **posto** de uma matriz é a dimensão do espaço coluna: o número de
+  pivôs. A base do espaço coluna são as colunas **originais** nas posições dos
+  pivôs.
+- O **núcleo** são as soluções de $A\vec{x} = \vec{0}$: as relações exatas
+  entre as colunas, e as entradas que a matriz faz sumir.
+- **Teorema do posto:** posto + dimensão do núcleo = número de colunas. Cada
+  coluna é guardada ou refeita.
+
+A próxima lição, [Autovalores e autovetores](./autovalores-e-autovetores),
+procura uma base especial para uma matriz quadrada: uma base em que a matriz
+só estica cada vetor, sem girá-lo. Nessa base, aplicar a matriz cem vezes
+seguidas vira uma conta que cabe numa linha.

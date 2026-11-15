@@ -18,6 +18,12 @@ const TICK = 5;
 const toneVar = (tone) =>
   tone ? `var(--mv-tone-${tone})` : 'var(--ifm-color-emphasis-700)';
 
+// Linha-guia (malha auxiliar, prolongamento): cinza médio, que recua nos dois
+// temas. O neutro padrão (emphasis-700) fica quase branco no tema escuro e
+// compete com as setas quando há muitas guias.
+const lineTone = (item, fallback) =>
+  item.muted ? 'var(--mv-guide)' : toneVar(item.tone ?? fallback);
+
 function arrowHead(x, y, dx, dy, size = 7) {
   const len = Math.hypot(dx, dy) || 1;
   const ux = dx / len;
@@ -259,7 +265,7 @@ export default function CartesianPlane({
               <line
                 key={`line-${index}`}
                 className={item.dashed ? styles.curveDashed : styles.curve}
-                style={{'--tone': toneVar(item.tone ?? 1)}}
+                style={{'--tone': lineTone(item, 1)}}
                 x1={a[0]}
                 y1={a[1]}
                 x2={b[0]}
@@ -367,15 +373,27 @@ export default function CartesianPlane({
           const a = P(item.from);
           const b = P(item.to);
           const mid = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+          // Seta (vetor): a linha para um pouco antes da ponta, para que o
+          // traço arredondado não apareça por fora do triângulo da cabeça.
+          const len = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
+          const head = 11;
+          const cut = item.arrow ? Math.min(head * 0.8, len / 2) : 0;
+          const end = [b[0] - ((b[0] - a[0]) / len) * cut, b[1] - ((b[1] - a[1]) / len) * cut];
           return (
-            <g key={`seg-${index}`} style={{'--tone': toneVar(item.tone ?? 2)}}>
+            <g key={`seg-${index}`} style={{'--tone': lineTone(item, 2)}}>
               <line
                 className={item.dashed ? styles.segDashed : styles.seg}
                 x1={a[0]}
                 y1={a[1]}
-                x2={b[0]}
-                y2={b[1]}
+                x2={end[0]}
+                y2={end[1]}
               />
+              {item.arrow && (
+                <path
+                  className={styles.segHead}
+                  d={arrowHead(b[0], b[1], b[0] - a[0], b[1] - a[1], head)}
+                />
+              )}
               {item.label && (
                 <SvgMath
                   x={mid[0] + (item.dx ?? 0)}

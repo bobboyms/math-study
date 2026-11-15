@@ -1,0 +1,1183 @@
+---
+title: Retas com vetores
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Retas com vetores: a reta como trajetória
+
+## 1. Problema motivador: os dois drones do galpão
+
+Um galpão de logística usa drones para conferir o estoque das prateleiras. O
+sistema de controle enxerga o piso como um plano cartesiano, com coordenadas
+em metros. O primeiro número cresce para o leste, e o segundo cresce para o
+norte. O tempo é contado em segundos a partir do comando de partida.
+
+No instante zero, dois drones começam a voar em linha reta, cada um com
+velocidade constante:
+
+| Drone | Posição no instante 0 | Deslocamento a cada segundo |
+|---|---|---|
+| A | $(1,\ 2)$ | $(2,\ 1)$ |
+| B | $(9,\ 1)$ | $(-1,\ 2)$ |
+
+O drone A anda, a cada segundo, 2 metros para leste e 1 para norte. O drone B
+anda 1 metro para oeste e 2 para norte. Os dois voam na mesma altura.
+
+<CartesianPlane
+  xMin={0} xMax={11} yMin={0} yMax={10}
+  xUnit={32}
+  lines={[
+    {through: [[1, 2], [3, 3]], tone: 1, dashed: true},
+    {through: [[9, 1], [8, 3]], tone: 2, dashed: true},
+  ]}
+  segments={[
+    {from: [1, 2], to: [3, 3], tone: 1, arrow: true, label: '(2,\\ 1)', dx: -12, dy: -22},
+    {from: [9, 1], to: [8, 3], tone: 2, arrow: true, label: '(-1,\\ 2)', dx: -34, dy: 0},
+  ]}
+  points={[
+    {at: [1, 2], label: 'A', tone: 1, dx: -12, dy: 14},
+    {at: [9, 1], label: 'B', tone: 2, dx: 14, dy: 12},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="As posições de partida dos drones A e B, com o deslocamento de cada um a cada segundo. As linhas tracejadas são as rotas: o caminho que cada drone percorre se continuar voando."
+/>
+
+O engenheiro de segurança olha o desenho e faz duas perguntas:
+
+> As duas rotas se cruzam? Se se cruzam, os drones batem um no outro?
+
+O desenho sugere que as rotas se cruzam. Mas ele não diz **quando** cada drone
+passa pelo cruzamento, e uma batida só acontece se os dois estiverem no mesmo
+lugar **no mesmo instante**. Para responder, precisamos de uma descrição da
+reta que guarde o tempo. A equação $y = mx + n$ não guarda: ela diz por onde a
+reta passa, mas não em que ordem nem em que ritmo os pontos são visitados.
+Esta lição constrói essa descrição com vetores. A resposta ao engenheiro está
+na seção 9.
+
+## 2. Mapa das ideias
+
+- **vetor diretor** de uma reta: um vetor não nulo que aponta ao longo dela;
+  ele diz para onde a reta “anda”;
+- **equação vetorial da reta**: $P = A + t\vec{d}$, um ponto de partida $A$
+  mais um número $t$ de vezes o vetor diretor $\vec{d}$;
+- **parâmetro**: o número $t$ da equação vetorial; cada valor de $t$ produz um
+  ponto da reta. Na rota de um drone, $t$ é o tempo;
+- **equações paramétricas**: as duas coordenadas da equação vetorial escritas
+  separadamente, $x = x_0 + at$ e $y = y_0 + bt$;
+- **vetor normal** de uma reta: um vetor não nulo perpendicular a ela. Na
+  forma geral $ax + by + c = 0$, o vetor $(a,\ b)$ é normal à reta;
+- **distância de um ponto a uma reta**: o comprimento do menor caminho do
+  ponto até a reta, $\dfrac{\lvert a x_0 + b y_0 + c \rvert}{\sqrt{a^2 + b^2}}$.
+
+## 3. Para que serve
+
+- **Rastreamento.** Radares de aeroporto, sistemas de navios e aplicativos de
+  entrega descrevem cada veículo como “posição atual mais velocidade vezes
+  tempo”. É exatamente a equação vetorial desta lição, e é com ela que se
+  prevê se dois veículos vão chegar perto demais.
+- **Jogos e animação.** Um projétil num jogo anda, a cada quadro, um mesmo
+  deslocamento. Para saber se ele acerta uma parede, o programa resolve a
+  interseção de duas retas escritas com parâmetro.
+- **Computação gráfica.** Programas que desenham imagens realistas lançam
+  “raios” de luz a partir da câmera: cada raio é uma reta $A + t\vec{d}$, e o
+  programa procura o menor $t$ em que o raio encontra um objeto.
+- **Engenharia e robótica.** A distância de um ponto a uma reta decide se um
+  braço robótico passa longe o bastante de um obstáculo, ou a que distância
+  um poste fica de uma estrada.
+- **Dentro da matemática.** No capítulo de álgebra linear, as soluções de um
+  sistema com infinitas soluções vão aparecer escritas exatamente assim: um
+  ponto mais um número qualquer de vezes uma direção.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. Da lição [Vetores](./vetores) e de
+[Soma de vetores e multiplicação por número](./soma-de-vetores).** Um drone
+parte de $(1,\ 2)$ e faz o deslocamento $(2,\ 1)$ três vezes seguidas. Onde
+ele chega?
+
+<details>
+<summary>Conferir</summary>
+
+Fazer o deslocamento $(2,\ 1)$ três vezes é fazer o deslocamento
+$3(2,\ 1) = (6,\ 3)$, multiplicando cada coordenada por 3. Saída mais
+deslocamento dá a chegada:
+
+$$
+(1,\ 2) + (6,\ 3) = (7,\ 5).
+$$
+
+</details>
+
+**2. Também de [Soma de vetores](./soma-de-vetores).** Os vetores $(2,\ 1)$ e
+$(-6,\ -3)$ são paralelos? E $(2,\ 1)$ e $(1,\ 2)$?
+
+<details>
+<summary>Conferir</summary>
+
+Dois vetores não nulos são paralelos quando um é múltiplo do outro. Como
+$(-6,\ -3) = -3 \times (2,\ 1)$, os dois primeiros são paralelos, com sentidos
+opostos. Já $(1,\ 2)$ não é múltiplo de $(2,\ 1)$: para a primeira coordenada
+passar de 2 para 1, o número teria de ser $\frac{1}{2}$, mas
+$\frac{1}{2} \times 1 = \frac{1}{2}$, e não 2.
+
+</details>
+
+**3. Da [Equação da reta](./equacao-da-reta).** Qual é a equação reduzida da
+reta de inclinação $\frac{1}{2}$ que passa por $(1,\ 2)$? E como fica a reta
+$2x + 3y - 12 = 0$ na forma reduzida?
+
+<details>
+<summary>Conferir</summary>
+
+Pela forma ponto-inclinação, $y - 2 = \frac{1}{2}(x - 1)$. Somando 2 aos dois
+lados e distribuindo, $y = \frac{1}{2}x - \frac{1}{2} + 2 = \frac{1}{2}x +
+\frac{3}{2}$.
+
+Na segunda, isolamos $y$: $3y = -2x + 12$, e dividindo por 3,
+$y = -\frac{2}{3}x + 4$. A forma geral $ax + by + c = 0$ tem uma vantagem que
+a reduzida não tem: ela também descreve retas verticais, como $x - 5 = 0$.
+
+</details>
+
+**4. Do [Produto escalar](./produto-escalar).** Quanto vale
+$(2,\ 1) \cdot (-1,\ 2)$? O que esse resultado diz sobre os dois vetores?
+
+<details>
+<summary>Conferir</summary>
+
+$(2,\ 1) \cdot (-1,\ 2) = 2 \times (-1) + 1 \times 2 = -2 + 2 = 0$. Produto
+escalar zero entre vetores não nulos quer dizer que eles são perpendiculares.
+As rotas dos dois drones, portanto, se cruzam em ângulo reto.
+
+</details>
+
+**5. Ainda do [Produto escalar](./produto-escalar).** Como se calcula a parte
+de um vetor $\vec{w}$ que aponta na direção de outro vetor $\vec{n}$?
+
+<details>
+<summary>Conferir</summary>
+
+A parte de $\vec{w}$ na direção de $\vec{n}$ é o cateto adjacente do
+triângulo retângulo que tem $\vec{w}$ como hipotenusa:
+
+$$
+\lVert \vec{w} \rVert \cos\theta = \frac{\vec{w} \cdot \vec{n}}{\lVert \vec{n} \rVert}.
+$$
+
+A lição de [Projeção ortogonal](./projecao-ortogonal) chama esse número de
+componente de $\vec{w}$ na direção de $\vec{n}$. Ele é negativo quando o
+ângulo entre os dois vetores é obtuso, ou seja, quando $\vec{w}$ aponta
+“contra” $\vec{n}$.
+
+</details>
+
+**6. De [Sistemas de duas equações](../equacoes/sistemas-de-duas-equacoes).**
+Resolva o sistema $t = 2s - 1$ e $1 + 2t = 9 - s$.
+
+<details>
+<summary>Conferir</summary>
+
+A primeira equação já dá $t$ isolado. Trocamos o $t$ da segunda por $2s - 1$
+(substituição): $1 + 2(2s - 1) = 9 - s$, que é $4s - 1 = 9 - s$. Somando $s$ e
+1 aos dois lados, $5s = 10$, então $s = 2$. Voltando à primeira,
+$t = 2 \times 2 - 1 = 3$. Guarde este sistema: ele vai reaparecer na seção 9.
+
+</details>
+
+Se alguma resposta não veio, releia a página indicada antes de seguir. O resto
+da lição usa essas seis ideias sem explicá-las de novo.
+
+## 5. Intuição: uma reta é um caminho com passo constante
+
+A lição de [Equação da reta](./equacao-da-reta) descreveu a reta como uma
+**regra de pertencer**. A equação $y = \frac{1}{2}x + \frac{3}{2}$ funciona
+como um teste: você leva um ponto até ela e pergunta “este ponto passa no
+teste?”. O ponto $(3,\ 3)$ passa, porque $\frac{1}{2} \times 3 + \frac{3}{2} =
+3$. O ponto $(3,\ 4)$ não passa.
+
+Esta lição descreve a mesma reta de outro jeito: como uma **receita de
+caminhada**. Comece no ponto $(1,\ 2)$. A cada passo, ande o deslocamento
+$(2,\ 1)$. Os lugares por onde você passa formam a reta.
+
+Compare as duas descrições:
+
+- a regra de pertencer responde “este ponto está na reta?”;
+- a receita de caminhada responde “onde estou depois de tantos passos?”.
+
+A segunda é a que o engenheiro precisa. Ela traz junto o número de passos, e
+na rota de um drone o número de passos é o tempo.
+
+A receita também aceita passos que não são inteiros. Meio passo leva até a
+metade do deslocamento. E aceita passos negativos: andar $-1$ passo é andar o
+deslocamento ao contrário, que é onde o drone estava um segundo **antes** do
+instante zero. Com todos os números possíveis de passos, positivos, negativos
+e fracionários, a caminhada cobre a reta inteira, sem buracos.
+
+## 6. Modelo visual: a rota do drone A, segundo a segundo
+
+O desenho mostra a rota do drone A. Cada seta é o deslocamento $(2,\ 1)$ de um
+segundo. Os pontos marcam onde o drone está em alguns instantes.
+
+<CartesianPlane
+  xMin={-2} xMax={9} yMin={-1} yMax={7}
+  xUnit={36}
+  lines={[{through: [[1, 2], [3, 3]], tone: 0, dashed: true}]}
+  segments={[
+    {from: [1, 2], to: [3, 3], tone: 1, arrow: true},
+    {from: [3, 3], to: [5, 4], tone: 1, arrow: true},
+    {from: [5, 4], to: [7, 5], tone: 1, arrow: true},
+  ]}
+  points={[
+    {at: [-1, 1], label: 't = -1', tone: 2, dx: 12, dy: 18, r: 3.5},
+    {at: [1, 2], label: 't = 0', tone: 2, dx: 12, dy: 18, r: 3.5},
+    {at: [3, 3], label: 't = 1', tone: 2, dx: 12, dy: 18, r: 3.5},
+    {at: [4, 3.5], label: 't = 1{,}5', tone: 3, dx: -22, dy: -20, open: true, r: 4},
+    {at: [5, 4], label: 't = 2', tone: 2, dx: 12, dy: 18, r: 3.5},
+    {at: [7, 5], label: 't = 3', tone: 2, dx: 12, dy: 18, r: 3.5},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A rota do drone A. Cada seta é o deslocamento (2, 1) de um segundo. O ponto vazado é a posição no instante 1,5, a meio caminho entre os instantes 1 e 2. O ponto em t = −1 é onde o drone estaria um segundo antes da partida."
+/>
+
+Leia a figura de duas maneiras:
+
+- **por instante**: no instante 2, o drone está em $(5,\ 4)$, porque partiu de
+  $(1,\ 2)$ e fez o deslocamento $(2,\ 1)$ duas vezes;
+- **por lugar**: todos os pontos marcados estão sobre a mesma linha
+  tracejada, porque todos se obtêm de $(1,\ 2)$ somando múltiplos de um mesmo
+  vetor.
+
+Os pontos ficam igualmente espaçados: entre dois instantes inteiros
+seguidos, a distância é sempre $\lVert (2,\ 1) \rVert = \sqrt{5} \approx
+2{,}24$ metros. É isso que “velocidade constante” quer dizer no desenho.
+
+## 7. Ponte para a formalização: por que todo ponto da reta é alcançado
+
+A receita de caminhada produz pontos da reta. Falta mostrar a outra metade:
+que **todo** ponto da reta é produzido pela receita, para algum número de
+passos. Sem isso, poderia haver pontos da reta que a receita nunca alcança.
+
+Tome a reta que passa por $A$ e tem a direção do vetor $\vec{d}$. Escolha
+qualquer ponto $X$ dessa reta. A seta $\overrightarrow{AX}$ sai de $A$ e
+termina em $X$. Ela está deitada sobre a própria reta, então tem a mesma
+direção de $\vec{d}$: as duas setas são paralelas (ou $\overrightarrow{AX}$ é
+o vetor nulo, se $X = A$).
+
+Na lição de [Soma de vetores](./soma-de-vetores), vetores paralelos são
+múltiplos um do outro. Então existe um número $t$ com
+
+$$
+\overrightarrow{AX} = t\vec{d}.
+$$
+
+Como $\overrightarrow{AX} = X - A$, somando $A$ aos dois lados fica
+$X = A + t\vec{d}$. Esse é exatamente o ponto que a receita produz com $t$
+passos.
+
+As duas metades juntas dizem: **os pontos da reta são exatamente os pontos da
+forma $A + t\vec{d}$**. A receita não produz nada fora da reta, e não deixa
+nenhum ponto da reta de fora.
+
+## 8. Formalização
+
+### 8.1 A equação vetorial
+
+> A reta que passa pelo ponto $A$ e tem a direção do vetor não nulo
+> $\vec{d}$ é o conjunto dos pontos
+>
+> $$P = A + t\vec{d},$$
+>
+> com $t$ percorrendo todos os números reais. O vetor $\vec{d}$ é o **vetor
+> diretor** da reta, e o número $t$ é o **parâmetro**.
+
+- **Exemplo:** a rota do drone A é $P = (1,\ 2) + t(2,\ 1)$. Com $t = 2$, sai
+  $(1,\ 2) + (4,\ 2) = (5,\ 4)$, a posição no instante 2.
+- **Contraexemplo:** $P = (1,\ 2) + t(0,\ 0)$ **não** é uma reta. Qualquer que
+  seja $t$, o resultado é o próprio $(1,\ 2)$: andar zero vezes qualquer coisa
+  não sai do lugar. Por isso o vetor diretor precisa ser não nulo.
+
+Um segundo contraexemplo delimita o papel do $t$. Se você aceitar só
+$t \geq 0$, a receita produz meia reta, que começa em $A$ e segue num sentido
+só. Essa figura se chama **semirreta**. A rota de um drone que só existe a
+partir da partida é uma semirreta; a **reta** inteira precisa de todos os
+valores de $t$, negativos inclusive.
+
+### 8.2 As equações paramétricas
+
+A equação vetorial guarda duas contas numa só. Escrevendo
+$A = (x_0,\ y_0)$ e $\vec{d} = (a,\ b)$, e fazendo a soma coordenada a
+coordenada:
+
+$$
+(x,\ y) = (x_0,\ y_0) + t(a,\ b) = (x_0 + at,\ y_0 + bt).
+$$
+
+Dois vetores são iguais quando as coordenadas correspondentes são iguais.
+Por isso, essa igualdade de vetores é o mesmo que duas igualdades de números:
+
+> **Equações paramétricas** da reta:
+>
+> $$x = x_0 + at, \qquad y = y_0 + bt.$$
+
+Para o drone A: $x = 1 + 2t$ e $y = 2 + t$. Cada equação conta a história de
+uma coordenada só. A primeira diz que o drone anda 2 metros para leste por
+segundo. A segunda diz que ele anda 1 metro para norte por segundo.
+
+### 8.3 Uma reta, muitas equações vetoriais
+
+A mesma reta admite muitas equações vetoriais. Há duas escolhas livres:
+
+- **o ponto de partida**: qualquer ponto da reta serve. A rota do drone A
+  também se escreve $P = (5,\ 4) + t(2,\ 1)$. A única diferença é o relógio:
+  nessa versão, $t = 0$ corresponde ao instante em que o drone está em
+  $(5,\ 4)$;
+- **o vetor diretor**: qualquer múltiplo não nulo serve. A mesma reta é
+  $P = (1,\ 2) + t(-4,\ -2)$. Com esse diretor, cada passo anda o dobro e no
+  sentido contrário, mas os lugares visitados são os mesmos.
+
+**Exemplo:** $(5,\ 4) + t(-4,\ -2)$ descreve a mesma reta que
+$(1,\ 2) + t(2,\ 1)$. O ponto $(5,\ 4)$ está na segunda (é o caso $t = 2$), e
+$(-4,\ -2) = -2 \times (2,\ 1)$ é paralelo a $(2,\ 1)$.
+
+**Contraexemplo:** $(1,\ 2) + t(1,\ 2)$ **não** é a mesma reta. Ela parte do
+mesmo ponto, mas o diretor $(1,\ 2)$ não é múltiplo de $(2,\ 1)$, como você
+conferiu na pergunta de resgate 2. As duas retas se cruzam em $(1,\ 2)$ e
+depois se separam.
+
+Para conferir se duas equações vetoriais descrevem a mesma reta, faça os dois
+testes: os diretores são paralelos? O ponto de partida de uma está na outra?
+Se as duas respostas forem sim, é a mesma reta.
+
+### 8.4 Da equação vetorial para a reduzida, e de volta
+
+**Da vetorial para a reduzida.** A equação reduzida não tem $t$. Então o
+caminho é eliminar o $t$ das paramétricas. Para o drone A:
+
+$$
+x = 1 + 2t, \qquad y = 2 + t.
+$$
+
+Isolamos $t$ na primeira: subtraindo 1, $x - 1 = 2t$; dividindo por 2,
+$t = \frac{x - 1}{2}$. Agora trocamos o $t$ da segunda por essa expressão:
+
+$$
+y = 2 + \frac{x - 1}{2} = \frac{1}{2}x - \frac{1}{2} + 2 = \frac{1}{2}x + \frac{3}{2}.
+$$
+
+É a reta da pergunta de resgate 3. O que mudou foi a escrita: o $t$ sumiu, e
+com ele a informação de tempo. O que ficou igual foi o conjunto de pontos.
+Conferência: o ponto $(5,\ 4)$, que o drone visita em $t = 2$, satisfaz
+$\frac{1}{2} \times 5 + \frac{3}{2} = 4$.
+
+Repare no coeficiente angular: $m = \frac{1}{2}$. Ele é a segunda coordenada
+do diretor dividida pela primeira. Isso vale sempre, e o motivo é a definição
+de inclinação: cada passo anda $a$ na horizontal e $b$ na vertical, então a
+reta sobe $b$ a cada $a$ para a direita.
+
+> Se o diretor é $\vec{d} = (a,\ b)$ com $a \neq 0$, o coeficiente angular da
+> reta é $m = \dfrac{b}{a}$.
+
+Quando $a = 0$, o diretor é vertical, como $(0,\ 3)$. A divisão não existe,
+e a reta é vertical: a equação $x = x_0 + 0 \times t$ diz que $x$ fica parado
+em $x_0$. A forma vetorial descreve essa reta sem exceção nenhuma; quem não
+consegue descrevê-la é a forma reduzida.
+
+**Da reduzida para a vetorial.** A reta $y = mx + n$ passa por $(0,\ n)$, e a
+cada 1 para a direita ela sobe $m$. Então um diretor é $(1,\ m)$ e um ponto é
+$(0,\ n)$:
+
+$$
+P = (0,\ n) + t(1,\ m).
+$$
+
+Exemplo: $y = 3x - 2$ vira $P = (0,\ -2) + t(1,\ 3)$. Conferência com $t = 1$:
+o ponto $(1,\ 1)$ satisfaz $3 \times 1 - 2 = 1$.
+
+### 8.5 O vetor normal: o que $a$ e $b$ significam na forma geral
+
+A forma geral $ax + by + c = 0$ esconde um vetor. Considere a reta
+$2x + 3y - 12 = 0$. Três de seus pontos são $(0,\ 4)$, $(3,\ 2)$ e $(6,\ 0)$:
+em cada um, $2x + 3y$ dá 12.
+
+<CartesianPlane
+  xMin={-1} xMax={8} yMin={-1} yMax={6}
+  xUnit={40}
+  lines={[{through: [[0, 4], [6, 0]], tone: 0}]}
+  polygons={[{points: [[3, 2], [3.291, 1.806], [3.485, 2.097], [3.194, 2.291]], tone: 0, fill: false}]}
+  segments={[
+    {from: [3, 2], to: [6, 0], tone: 1, arrow: true, label: '\\vec{d} = (3,\\ -2)', dx: 44, dy: -10},
+    {from: [3, 2], to: [5, 5], tone: 2, arrow: true, label: '\\vec{n} = (2,\\ 3)', dx: 54, dy: 0},
+  ]}
+  points={[
+    {at: [0, 4], label: '(0,\\ 4)', tone: 0, dx: -30, dy: -14},
+    {at: [3, 2], label: '(3,\\ 2)', tone: 0, dx: -26, dy: 14},
+  ]}
+  labels={[{at: [0.9, 5.3], math: '2x + 3y - 12 = 0', anchor: 'start'}]}
+  axisLabels={['x', 'y']}
+  caption="A reta 2x + 3y − 12 = 0. O vetor d = (3, −2) anda ao longo dela. O vetor n = (2, 3), com os coeficientes de x e de y, forma ângulo reto com a reta."
+/>
+
+O vetor $(2,\ 3)$, formado pelos coeficientes de $x$ e de $y$, aparece no
+desenho perpendicular à reta. Isso não é coincidência deste exemplo. Vamos
+mostrar que acontece com qualquer reta $ax + by + c = 0$.
+
+Pegue dois pontos quaisquer da reta, $P_1 = (x_1,\ y_1)$ e
+$P_2 = (x_2,\ y_2)$. Como estão na reta, os dois satisfazem a equação:
+
+$$
+a x_1 + b y_1 + c = 0 \qquad\text{e}\qquad a x_2 + b y_2 + c = 0.
+$$
+
+Subtraia a primeira igualdade da segunda. Do lado direito, $0 - 0 = 0$. Do
+lado esquerdo, o $c$ some, porque $c - c = 0$, e o que sobra se agrupa assim:
+
+$$
+a(x_2 - x_1) + b(y_2 - y_1) = 0.
+$$
+
+O lado esquerdo é uma conta conhecida: multiplicar par com par e somar. É o
+produto escalar de $(a,\ b)$ com $(x_2 - x_1,\ y_2 - y_1)$, e esse segundo
+vetor é $\overrightarrow{P_1P_2}$, a seta que vai de um ponto da reta a outro.
+Então
+
+$$
+(a,\ b) \cdot \overrightarrow{P_1P_2} = 0.
+$$
+
+Produto escalar zero quer dizer ângulo reto. A seta $\overrightarrow{P_1P_2}$
+está deitada sobre a reta, e por isso $(a,\ b)$ é perpendicular à reta.
+
+> Na reta $ax + by + c = 0$, o vetor $\vec{n} = (a,\ b)$ é perpendicular à
+> reta. Ele se chama **vetor normal**. (Em geometria, “normal” é sinônimo de
+> perpendicular.) Um vetor diretor da mesma reta é $\vec{d} = (-b,\ a)$, ou
+> qualquer múltiplo não nulo dele.
+
+O diretor $(-b,\ a)$ se confere pelo produto escalar:
+$(a,\ b) \cdot (-b,\ a) = -ab + ba = 0$. Ele é o normal girado um quarto de
+volta, o mesmo giro que a lição de
+[Paralelas e perpendiculares](./paralelas-e-perpendiculares) usou para trocar
+as componentes de lugar e mudar um sinal.
+
+- **Exemplo:** em $2x + 3y - 12 = 0$, o normal é $(2,\ 3)$ e um diretor é
+  $(-3,\ 2)$. O desenho usa o oposto, $(3,\ -2)$, que é paralelo a ele e
+  aponta para a direita.
+- **Contraexemplo:** $(2,\ 3)$ **não** é um diretor dessa reta. Saindo de
+  $(3,\ 2)$ com o deslocamento $(2,\ 3)$, chega-se a $(5,\ 5)$, e
+  $2 \times 5 + 3 \times 5 - 12 = 13$, que não é zero. O ponto saiu da reta.
+
+**Por que a forma geral acomoda as verticais.** A reta vertical $x = 4$ se
+escreve $1x + 0y - 4 = 0$. O normal é $(1,\ 0)$, uma seta horizontal, e uma
+reta perpendicular a uma seta horizontal é vertical. Na forma geral, a reta é
+descrita pelo vetor perpendicular a ela, e todo vetor não nulo tem
+perpendicular, inclusive os horizontais. Na forma reduzida, a reta é
+descrita pela inclinação, e a vertical não tem inclinação.
+
+### 8.6 A reta dada por um ponto e pelo normal
+
+O raciocínio da seção anterior também anda ao contrário. Suponha que
+conhecemos um ponto $P_0 = (x_0,\ y_0)$ da reta e um vetor normal
+$\vec{n} = (a,\ b)$. Um ponto $P = (x,\ y)$ está na reta exatamente quando a
+seta $\overrightarrow{P_0P}$ é perpendicular a $\vec{n}$, isto é, quando o
+produto escalar dá zero:
+
+> $$a(x - x_0) + b(y - y_0) = 0.$$
+
+Distribuindo, fica $ax + by - (a x_0 + b y_0) = 0$, que é a forma geral com
+$c = -(a x_0 + b y_0)$.
+
+**Exemplo:** a reta que passa por $(3,\ 2)$ com normal $(2,\ 3)$ é
+$2(x - 3) + 3(y - 2) = 0$, ou $2x + 3y - 12 = 0$, a reta da figura.
+
+**Contraexemplo:** $2(x - 3) - 3(y - 2) = 0$ **não** tem normal $(2,\ 3)$. O
+sinal do meio virou parte do coeficiente de $y$: o normal dessa reta é
+$(2,\ -3)$.
+
+## 9. Resolvendo o problema dos drones
+
+As duas rotas, escritas com vetores:
+
+$$
+\text{drone A:}\quad P(t) = (1,\ 2) + t(2,\ 1) = (1 + 2t,\ 2 + t),
+$$
+
+$$
+\text{drone B:}\quad Q(t) = (9,\ 1) + t(-1,\ 2) = (9 - t,\ 1 + 2t).
+$$
+
+Em cada uma, $t$ é o tempo em segundos.
+
+### As rotas se cruzam?
+
+Esta pergunta é sobre **lugares**, não sobre instantes. Queremos saber se
+existe um ponto pelo qual A passa em **algum** instante e B passa em **algum**
+instante, não necessariamente o mesmo. Por isso, os dois instantes precisam
+de letras diferentes: chamamos de $t$ o instante do drone A e de $s$ o
+instante do drone B. Procuramos $t$ e $s$ com
+
+$$
+(1 + 2t,\ 2 + t) = (9 - s,\ 1 + 2s).
+$$
+
+Igualando as coordenadas correspondentes, saem duas equações:
+
+$$
+\begin{cases}
+1 + 2t = 9 - s \\
+2 + t = 1 + 2s
+\end{cases}
+$$
+
+Da segunda, subtraindo 2 dos dois lados, $t = 2s - 1$. É o sistema da pergunta
+de resgate 6, e a resposta foi $s = 2$ e $t = 3$.
+
+O ponto de cruzamento sai de qualquer uma das rotas:
+$P(3) = (1 + 6,\ 2 + 3) = (7,\ 5)$ e $Q(2) = (9 - 2,\ 1 + 4) = (7,\ 5)$. As
+duas contas dão o mesmo ponto, o que confere a solução. **Sim, as rotas se
+cruzam, no ponto $(7,\ 5)$.**
+
+### Os drones batem?
+
+Agora a pergunta é sobre o **mesmo instante**. O drone A passa por $(7,\ 5)$
+no instante 3. O drone B passa por $(7,\ 5)$ no instante 2. Quando B chega ao
+cruzamento, A ainda está em $P(2) = (5,\ 4)$. Quando A chega ao cruzamento, B
+já saiu e está em $Q(3) = (6,\ 7)$.
+
+<CartesianPlane
+  xMin={0} xMax={11} yMin={0} yMax={10}
+  xUnit={34}
+  lines={[
+    {through: [[1, 2], [3, 3]], tone: 1, dashed: true},
+    {through: [[9, 1], [8, 3]], tone: 2, dashed: true},
+  ]}
+  points={[
+    {at: [1, 2], label: '0', tone: 1, dx: 0, dy: 18},
+    {at: [3, 3], label: '1', tone: 1, dx: 0, dy: 18},
+    {at: [5, 4], label: '2', tone: 1, dx: 0, dy: 18},
+    {at: [9, 6], label: '4', tone: 1, dx: 0, dy: 18},
+    {at: [9, 1], label: '0', tone: 2, dx: 14, dy: 0},
+    {at: [8, 3], label: '1', tone: 2, dx: 14, dy: 0},
+    {at: [6, 7], label: '3', tone: 2, dx: 14, dy: 0},
+    {at: [5, 9], label: '4', tone: 2, dx: 14, dy: 0},
+    {at: [7, 5], tone: 3, r: 6},
+  ]}
+  labels={[
+    {at: [7, 5], math: 'A\\ \\text{em}\\ t = 3', tone: 1, dx: 16, dy: 24, anchor: 'start'},
+    {at: [7, 5], math: 'B\\ \\text{em}\\ t = 2', tone: 2, dx: -14, dy: -10, anchor: 'end'},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="As duas rotas com as posições de cada drone nos instantes 0 a 4 (A na cor azul, B na laranja). As rotas se cruzam em (7, 5), mas B passa por ali no instante 2, e A só no instante 3."
+/>
+
+Para ter certeza de que não há batida em **nenhum** instante, perguntamos se
+existe um único $t$ que coloque os dois no mesmo lugar. Agora a letra é a
+mesma nas duas rotas, de propósito:
+
+$$
+\begin{cases}
+1 + 2t = 9 - t \\
+2 + t = 1 + 2t
+\end{cases}
+$$
+
+A primeira equação dá $3t = 8$, ou $t = \frac{8}{3}$. A segunda dá $t = 1$.
+Nenhum número é igual a $\frac{8}{3}$ e a 1 ao mesmo tempo. Então não existe
+instante em que as duas coordenadas coincidam. **Os drones não batem.**
+
+A diferença entre as duas perguntas está toda na escolha das letras. Com
+letras diferentes, $t$ e $s$, cada drone pode passar pelo ponto quando
+quiser: a conta procura **lugares** comuns. Com a mesma letra, a conta exige
+que os dois estejam ali juntos: ela procura **encontros**.
+
+A equação reduzida das duas rotas responde à primeira pergunta, mas não à
+segunda, porque o tempo não aparece nela. É por isso que o engenheiro precisou
+da forma vetorial.
+
+## 10. A distância de um ponto a uma reta
+
+A lição de [Paralelas e perpendiculares](./paralelas-e-perpendiculares)
+calculou a distância do ponto $P(1,\ 8)$ à reta $y = 2x + 3$ em três passos:
+montar a reta perpendicular por $P$, resolver o sistema para achar o pé da
+perpendicular, e medir a distância entre $P$ e o pé. A resposta foi
+$\sqrt{1{,}8} \approx 1{,}34$. Agora vamos chegar a uma fórmula que faz as três
+etapas de uma vez, usando o vetor normal.
+
+### A ideia: medir na direção do normal
+
+A distância de um ponto a uma reta é medida na perpendicular. Qualquer outro
+caminho é a hipotenusa de um triângulo retângulo que tem a perpendicular como
+cateto, e a hipotenusa é mais longa. E a direção perpendicular à reta é a
+direção do vetor normal.
+
+Então o plano é este. Escolha um ponto $A$ qualquer da reta. A seta
+$\vec{w} = \overrightarrow{AP}$ vai da reta até o ponto, mas em geral
+inclinada. A distância procurada é **a parte de $\vec{w}$ que aponta na
+direção do normal** (sem o sinal, porque distância não é negativa).
+
+<CartesianPlane
+  xMin={-2} xMax={4} yMin={0} yMax={9}
+  xUnit={46}
+  lines={[{through: [[0, 3], [3, 9]], tone: 1}]}
+  polygons={[{points: [[2.2, 7.4], [2.066, 7.132], [1.798, 7.266], [1.932, 7.534]], tone: 0, fill: false}]}
+  segments={[
+    {from: [0, 3], to: [1, 8], tone: 0, arrow: true, label: '\\vec{w}', dx: 14, dy: 0},
+    {from: [0, 3], to: [2, 2], tone: 2, arrow: true, label: '\\vec{n} = (2,\\ -1)', dx: 50, dy: 40},
+    {from: [0, 3], to: [-1.2, 3.6], tone: 3, arrow: true},
+    {from: [1, 8], to: [2.2, 7.4], tone: 3, dashed: true, label: 'd', dx: 4, dy: -16},
+  ]}
+  points={[
+    {at: [0, 3], label: 'A(0,\\ 3)', tone: 0, dx: 38, dy: -12},
+    {at: [1, 8], label: 'P(1,\\ 8)', tone: 0, dx: -34, dy: -6},
+  ]}
+  labels={[{at: [2.8, 8.2], math: 'y = 2x + 3', tone: 1, anchor: 'start'}]}
+  axisLabels={['x', 'y']}
+  caption="A seta w vai de um ponto A da reta até P. A parte de w na direção do normal n (seta verde, perto de A) tem o mesmo comprimento que o segmento tracejado de P até a reta, que forma ângulo reto com ela. Esse comprimento é a distância d."
+/>
+
+Na figura, a seta verde perto de $A$ é a parte de $\vec{w}$ na direção do
+normal. Ela aponta no sentido contrário ao de $\vec{n}$, porque $P$ está do
+outro lado da reta. O segmento tracejado de $P$ até a reta tem o mesmo
+comprimento e a mesma direção que ela: é a mesma “quantidade de normal”
+desenhada em outro lugar.
+
+### A conta, com o exemplo
+
+A reta $y = 2x + 3$ na forma geral é $2x - y + 3 = 0$ (subtraímos $y$ dos dois
+lados e trocamos os lados). O normal é $\vec{n} = (2,\ -1)$, e o ponto
+$A = (0,\ 3)$ está na reta, porque $2 \times 0 - 3 + 3 = 0$.
+
+A seta de $A$ até $P$ é $\vec{w} = (1 - 0,\ 8 - 3) = (1,\ 5)$. A parte de
+$\vec{w}$ na direção de $\vec{n}$, como vimos na pergunta de resgate 5, é
+
+$$
+\frac{\vec{w} \cdot \vec{n}}{\lVert \vec{n} \rVert}
+= \frac{1 \times 2 + 5 \times (-1)}{\sqrt{2^2 + (-1)^2}}
+= \frac{-3}{\sqrt{5}}.
+$$
+
+O sinal negativo diz o que o desenho mostrou: $\vec{w}$ aponta contra o
+normal. A distância é o tamanho, sem o sinal:
+
+$$
+d = \frac{3}{\sqrt{5}} \approx 1{,}342.
+$$
+
+Conferência com a lição antiga: $\left(\frac{3}{\sqrt{5}}\right)^2 =
+\frac{9}{5} = 1{,}8$, então $\frac{3}{\sqrt{5}} = \sqrt{1{,}8}$. É o mesmo
+número, por um caminho diferente.
+
+### A fórmula geral
+
+Faça a mesma conta com letras. A reta é $ax + by + c = 0$, o normal é
+$\vec{n} = (a,\ b)$, o ponto é $P = (x_0,\ y_0)$ e $A = (x_A,\ y_A)$ é um ponto
+qualquer da reta. Então $\vec{w} = (x_0 - x_A,\ y_0 - y_A)$ e
+
+$$
+\vec{w} \cdot \vec{n} = a(x_0 - x_A) + b(y_0 - y_A) = a x_0 + b y_0 - (a x_A + b y_A).
+$$
+
+Agora use que $A$ está na reta: $a x_A + b y_A + c = 0$, ou seja,
+$a x_A + b y_A = -c$. Trocando o parêntese por $-c$, o sinal de menos da
+frente e o de $-c$ se cancelam:
+
+$$
+\vec{w} \cdot \vec{n} = a x_0 + b y_0 + c.
+$$
+
+O ponto $A$ sumiu da conta. Por isso a escolha de $A$ não importa: qualquer
+ponto da reta dá o mesmo resultado. Dividindo pelo módulo do normal e tirando
+o sinal com o valor absoluto:
+
+> A **distância** do ponto $(x_0,\ y_0)$ à reta $ax + by + c = 0$ é
+>
+> $$d = \frac{\lvert a x_0 + b y_0 + c \rvert}{\sqrt{a^2 + b^2}}.$$
+
+Leia o numerador como uma ação concreta: **coloque as coordenadas do ponto no
+lado esquerdo da equação da reta**. Se o ponto estivesse na reta, a conta daria
+zero. O quanto ela se afasta de zero mede o quanto o ponto se afasta da reta,
+numa escala que a divisão por $\sqrt{a^2 + b^2}$ corrige.
+
+- **Exemplo:** distância de $(4,\ 5)$ à reta $3x + 4y - 7 = 0$:
+  $\dfrac{\lvert 12 + 20 - 7 \rvert}{\sqrt{9 + 16}} = \dfrac{25}{5} = 5$.
+- **Contraexemplo:** para o ponto $(1,\ 1)$ e a mesma reta, o numerador é
+  $\lvert 3 + 4 - 7 \rvert = 0$, e a distância é zero. Isso **não** é um erro
+  da fórmula: o ponto $(1,\ 1)$ está na reta.
+
+**Os dois caminhos, comparados.** O caminho antigo (perpendicular, sistema,
+distância) entrega também o **pé** da perpendicular, o ponto da reta mais perto
+de $P$. A fórmula entrega só o número, mas em uma linha. Use a fórmula quando
+a pergunta é “a que distância?”. Use o caminho antigo, ou a condição de
+produto escalar zero do exemplo 6, quando a pergunta é “em que ponto?”.
+
+## 11. Exemplos resolvidos
+
+### Exemplo 1: a reta por dois pontos
+
+Escreva a equação vetorial e as paramétricas da reta que passa por
+$A(-1,\ 3)$ e $B(3,\ 1)$. Que ponto corresponde a $t = \frac{1}{2}$?
+
+Um diretor é a seta de um ponto ao outro:
+$\vec{d} = \overrightarrow{AB} = (3 - (-1),\ 1 - 3) = (4,\ -2)$. Partindo de
+$A$:
+
+$$
+P = (-1,\ 3) + t(4,\ -2), \qquad x = -1 + 4t, \qquad y = 3 - 2t.
+$$
+
+Com $t = 0$ o ponto é $A$, e com $t = 1$ é $A + \overrightarrow{AB} = B$. Com
+$t = \frac{1}{2}$, andamos metade da seta:
+$(-1 + 2,\ 3 - 1) = (1,\ 2)$. É o ponto médio de $AB$, o mesmo que a fórmula
+do ponto médio dá: $\left(\frac{-1 + 3}{2},\ \frac{3 + 1}{2}\right) = (1,\ 2)$.
+
+### Exemplo 2: o ponto está na reta?
+
+*Pause e tente antes de ler.* Os pontos $(7,\ -1)$ e $(9,\ -1)$ estão na reta
+do exemplo 1?
+
+Um ponto está na reta se existe **um único** $t$ que acerta as duas
+coordenadas.
+
+Para $(7,\ -1)$: a primeira coordenada pede $-1 + 4t = 7$, então $t = 2$. Com
+$t = 2$, a segunda dá $3 - 4 = -1$. Acertou: o ponto está na reta, no
+parâmetro $t = 2$.
+
+Para $(9,\ -1)$: a primeira pede $-1 + 4t = 9$, então $t = 2{,}5$. Com
+$t = 2{,}5$, a segunda dá $3 - 5 = -2$, e não $-1$. A primeira coordenada exige
+um $t$, e esse $t$ erra a segunda. O ponto não está na reta.
+
+### Exemplo 3: das paramétricas para a forma geral
+
+*Pause e tente antes de ler.* A reta $x = 2 + 3t$, $y = -1 + 2t$ na forma
+reduzida e na forma geral.
+
+Isolando $t$ na primeira, $t = \frac{x - 2}{3}$. Substituindo na segunda:
+
+$$
+y = -1 + 2 \times \frac{x - 2}{3} = \frac{2}{3}x - \frac{4}{3} - 1 = \frac{2}{3}x - \frac{7}{3}.
+$$
+
+O coeficiente angular $\frac{2}{3}$ é a razão $\frac{b}{a}$ do diretor
+$(3,\ 2)$, como esperado. Para a forma geral, multiplicamos os dois lados por
+3, o que tira os denominadores sem mudar a reta: $3y = 2x - 7$. Passando tudo
+para um lado, $2x - 3y - 7 = 0$.
+
+Conferência pelo normal: o normal $(2,\ -3)$ deve ser perpendicular ao diretor
+$(3,\ 2)$. De fato, $(2,\ -3) \cdot (3,\ 2) = 6 - 6 = 0$.
+
+### Exemplo 4: a perpendicular por um ponto
+
+*Pause e tente antes de ler.* Encontre a reta que passa por $(2,\ 1)$ e é
+perpendicular à reta $r: 3x - 4y + 5 = 0$.
+
+O normal de $r$ é $(3,\ -4)$: ele aponta perpendicular a $r$. A reta que
+queremos também é perpendicular a $r$, então ela anda na direção desse
+normal. **O normal de $r$ é o diretor da nova reta:**
+
+$$
+P = (2,\ 1) + t(3,\ -4).
+$$
+
+Na forma geral, precisamos de um normal da nova reta. Ele é perpendicular ao
+diretor $(3,\ -4)$; girando um quarto de volta, $(4,\ 3)$ serve, porque
+$(3,\ -4) \cdot (4,\ 3) = 12 - 12 = 0$. Pela seção 8.6:
+
+$$
+4(x - 2) + 3(y - 1) = 0 \quad\Longrightarrow\quad 4x + 3y - 11 = 0.
+$$
+
+Conferência: o ponto $(2,\ 1)$ dá $8 + 3 - 11 = 0$.
+
+Compare com o caminho da lição de paralelas e perpendiculares: lá, a
+inclinação de $r$ seria $\frac{3}{4}$, e a perpendicular teria inclinação
+$-\frac{4}{3}$. O resultado é o mesmo; o vetor só dispensa as frações e
+funciona também quando $r$ é vertical.
+
+### Exemplo 5: a distância pela fórmula
+
+*Pause e tente antes de ler.* Qual a distância do ponto $(-2,\ 6)$ à reta
+$y = \frac{3}{4}x - 1$?
+
+A fórmula pede a forma geral. Multiplicando os dois lados por 4, $4y = 3x - 4$,
+e passando tudo para um lado, $3x - 4y - 4 = 0$. Então:
+
+$$
+d = \frac{\lvert 3 \times (-2) - 4 \times 6 - 4 \rvert}{\sqrt{3^2 + (-4)^2}}
+= \frac{\lvert -6 - 24 - 4 \rvert}{5} = \frac{34}{5} = 6{,}8.
+$$
+
+O cuidado aqui é usar a forma geral **inteira**, com o $-4$ do final. Se você
+esquecer o $c$, encontra $\frac{30}{5} = 6$, que é a distância até outra reta,
+a paralela que passa pela origem.
+
+### Exemplo 6: quando o drone passa mais perto da base?
+
+*Pause e tente antes de ler.* A base de recarga do galpão está em
+$S = (4,\ 8)$. Em que instante o drone A passa mais perto da base, e a que
+distância?
+
+O ponto da rota mais perto de $S$ é o pé da perpendicular. Nesse ponto, a
+seta que liga o drone à base forma ângulo reto com a direção de voo
+$(2,\ 1)$. Em linguagem de produto escalar:
+
+$$
+\big(P(t) - S\big) \cdot (2,\ 1) = 0.
+$$
+
+Com $P(t) = (1 + 2t,\ 2 + t)$, a seta é
+$P(t) - S = (2t - 3,\ t - 6)$. O produto escalar com $(2,\ 1)$ é
+
+$$
+2(2t - 3) + 1(t - 6) = 4t - 6 + t - 6 = 5t - 12.
+$$
+
+Igualando a zero, $t = \frac{12}{5} = 2{,}4$ segundos. Nesse instante o drone
+está em $P(2{,}4) = (5{,}8;\ 4{,}4)$. A seta até a base é
+$(4 - 5{,}8;\ 8 - 4{,}4) = (-1{,}8;\ 3{,}6)$, e a distância é
+
+$$
+\sqrt{1{,}8^2 + 3{,}6^2} = \sqrt{3{,}24 + 12{,}96} = \sqrt{16{,}2} \approx 4{,}02 \text{ m}.
+$$
+
+<CartesianPlane
+  xMin={0} xMax={9} yMin={0} yMax={9}
+  xUnit={36}
+  lines={[{through: [[1, 2], [3, 3]], tone: 1, dashed: true}]}
+  polygons={[{points: [[5.8, 4.4], [5.532, 4.266], [5.398, 4.534], [5.666, 4.668]], tone: 0, fill: false}]}
+  segments={[
+    {from: [1, 2], to: [3, 3], tone: 1, arrow: true, label: '(2,\\ 1)', dx: -12, dy: -22},
+    {from: [5.8, 4.4], to: [4, 8], tone: 3, dashed: true, label: '4{,}02', dx: 26, dy: 4},
+  ]}
+  points={[
+    {at: [1, 2], label: 'A', tone: 1, dx: -12, dy: 14},
+    {at: [5.8, 4.4], label: 't = 2{,}4', tone: 1, dx: 34, dy: 14},
+    {at: [4, 8], label: 'S(4,\\ 8)', tone: 3, dx: 0, dy: -18},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A rota do drone A e a base S. O ponto da rota mais perto de S é o pé da perpendicular, alcançado no instante 2,4 s. A distância nesse instante é cerca de 4,02 m."
+/>
+
+Conferência pela fórmula da distância. A rota tem diretor $(2,\ 1)$, então um
+normal é $(1,\ -2)$. Pela seção 8.6, com o ponto $(1,\ 2)$:
+$1(x - 1) - 2(y - 2) = 0$, ou $x - 2y + 3 = 0$. A distância de $(4,\ 8)$ é
+$\dfrac{\lvert 4 - 16 + 3 \rvert}{\sqrt{1 + 4}} = \dfrac{9}{\sqrt{5}} \approx
+4{,}02$. Mesmo número. O caminho pelo produto escalar deu, além disso, o
+instante e o ponto, que a fórmula não dá.
+
+## 12. Erros comuns
+
+> **Erro 1: concluir que rotas que se cruzam significam batida.** As rotas
+> dos drones A e B se cruzam em $(7,\ 5)$, e os drones nunca se encontram:
+> passam por ali nos instantes 3 e 2. Cruzar é uma afirmação sobre lugares;
+> encontrar é uma afirmação sobre lugar **e** instante.
+
+> **Erro 2: usar a mesma letra para as duas retas ao procurar o cruzamento.**
+> Com a mesma letra, a conta procura um instante comum, não um ponto comum. Nos
+> drones, isso deu $t = \frac{8}{3}$ numa equação e $t = 1$ na outra. Quem não
+> percebe a armadilha conclui “as rotas não se cruzam”, e está errado: elas se
+> cruzam em $(7,\ 5)$. Para achar o cruzamento, uma letra para cada reta.
+
+> **Erro 3: ler $(a,\ b)$ da forma geral como diretor.** Em $2x + 3y - 12 = 0$,
+> o vetor $(2,\ 3)$ é **perpendicular** à reta. Teste: saindo de $(3,\ 2)$ na
+> direção $(2,\ 3)$ chega-se a $(5,\ 5)$, que dá $2 \times 5 + 3 \times 5 - 12
+> = 13 \neq 0$. O diretor é $(-3,\ 2)$: troque as coordenadas de lugar e mude
+> um sinal.
+
+> **Erro 4: inverter a razão do coeficiente angular.** Com diretor
+> $(a,\ b) = (2,\ 1)$, a inclinação é $\frac{b}{a} = \frac{1}{2}$, e não
+> $\frac{a}{b} = 2$. O que está em cima é o quanto a reta **sobe**, que é a
+> segunda coordenada. Confira no desenho: a rota do drone A sobe devagar,
+> então a inclinação tem de ser menor que 1.
+
+> **Erro 5: dividir por $a^2 + b^2$ em vez de $\sqrt{a^2 + b^2}$.** A
+> distância de $(4,\ 5)$ à reta $3x + 4y - 7 = 0$ é $\frac{25}{5} = 5$. Quem
+> divide por $9 + 16 = 25$ encontra 1. O denominador é o **módulo** do normal,
+> que tem raiz.
+
+> **Erro 6: esquecer o valor absoluto na distância.** Para o ponto $P(1,\ 8)$ e
+> a reta $2x - y + 3 = 0$, o numerador sem barras dá $2 - 8 + 3 = -3$. Uma
+> distância de $-\frac{3}{\sqrt{5}}$ não existe. O sinal só diz de que lado da
+> reta o ponto está; a distância é o tamanho, $\frac{3}{\sqrt{5}}$.
+
+## 13. Perguntas de verificação
+
+1. Por que a equação $y = mx + n$ não basta para responder se dois drones
+   batem, mesmo sabendo as rotas?
+2. Por que o vetor diretor de uma reta não pode ser o vetor nulo?
+3. Duas equações vetoriais, com pontos de partida diferentes e diretores
+   diferentes, podem descrever a mesma reta? Como conferir?
+4. Por que $t$ negativo faz sentido na equação vetorial, e o que ele quer dizer
+   na rota de um drone?
+5. Por que o vetor $(a,\ b)$ é perpendicular à reta $ax + by + c = 0$? Explique
+   sem refazer a conta inteira.
+6. Na dedução da fórmula da distância, escolhemos um ponto $A$ qualquer da
+   reta. Por que o resultado não depende dessa escolha?
+7. O que a fórmula da distância dá para um ponto que está na reta, e por quê?
+8. Quando vale a pena usar a fórmula da distância, e quando vale a pena usar a
+   condição de produto escalar zero, como no exemplo 6?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque $y = mx + n$ descreve só o conjunto de lugares da rota. Ela não diz
+   em que instante cada lugar é visitado. Uma batida exige mesmo lugar no
+   mesmo instante, e o instante não aparece na equação reduzida.
+2. Porque $A + t\vec{0} = A$ para todo $t$: a “receita de caminhada” não sai
+   do ponto de partida. Em vez de uma reta, sai um ponto só. Além disso, o
+   vetor nulo não tem direção, e o diretor existe justamente para dar a
+   direção.
+3. Podem. Confira duas coisas: se os diretores são paralelos (um é múltiplo do
+   outro) e se o ponto de partida de uma equação satisfaz a outra. Se as duas
+   respostas forem sim, as retas têm a mesma direção e um ponto em comum, e
+   por isso são a mesma reta.
+4. Porque a reta continua para os dois lados do ponto de partida, e
+   $t$ negativo leva para o lado oposto ao do diretor. Na rota de um drone, $t$
+   é o tempo, e $t = -1$ é onde ele estaria um segundo antes do instante zero,
+   se já estivesse voando na mesma rota.
+5. Porque, para dois pontos quaisquer da reta, a seta que liga um ao outro dá
+   produto escalar zero com $(a,\ b)$. Isso acontece porque os dois pontos dão
+   o mesmo valor para $ax + by$ (os dois dão $-c$), e a diferença desses
+   valores é exatamente o produto escalar. Produto escalar zero quer dizer
+   ângulo reto.
+6. Porque, quando a conta é feita com letras, o ponto $A$ entra só através de
+   $a x_A + b y_A$, e isso vale $-c$ para qualquer ponto da reta. O $A$ some do
+   resultado. No desenho: deslizar $A$ ao longo da reta não muda a parte de
+   $\vec{w}$ que aponta na direção do normal, porque o deslizamento é
+   perpendicular ao normal.
+7. Dá zero, porque o numerador $a x_0 + b y_0 + c$ é o lado esquerdo da
+   equação da reta calculado no ponto, e um ponto da reta zera esse lado. Faz
+   sentido: um ponto que está na reta tem distância zero até ela.
+8. A fórmula é a mais curta quando só se quer o número da distância. A
+   condição de produto escalar zero dá mais: o instante e o ponto da reta mais
+   perto. Se a pergunta é “quando?” ou “onde?”, use o produto escalar.
+
+</details>
+
+## 14. Exercícios
+
+### 1. Reconhecimento
+
+1. Quais destas equações descrevem a mesma reta que $(1,\ 2) + t(2,\ 1)$?
+   a) $(3,\ 3) + t(2,\ 1)$ &nbsp; b) $(1,\ 2) + t(-4,\ -2)$ &nbsp; c)
+   $(1,\ 2) + t(1,\ 2)$ &nbsp; d) $(5,\ 4) + t(6,\ 3)$ &nbsp; e)
+   $(0,\ 2) + t(2,\ 1)$.
+2. Para cada reta, dê um vetor normal e um vetor diretor. a)
+   $3x + y - 6 = 0$ &nbsp; b) $x - 4y + 2 = 0$ &nbsp; c) $x = 5$ &nbsp; d)
+   $y = 2x - 1$.
+
+### 2. Explicação
+
+3. Na rota $P(t) = (1,\ 2) + t(2,\ 1)$ do drone A, explique o que significa o
+   ponto obtido com $t = -2$.
+4. Um colega diz: “a reta $2x + 3y = 6$ aponta na direção $(2,\ 3)$”. Explique
+   o erro e diga qual é uma direção correta.
+5. Explique por que, para achar o ponto onde duas rotas se cruzam, é preciso
+   usar uma letra diferente para o parâmetro de cada rota.
+
+### 3. Aplicação direta
+
+6. Para a reta que passa por $A(2,\ -1)$ e $B(5,\ 3)$, escreva a equação
+   vetorial, as paramétricas, a reduzida e a geral.
+7. Calcule a distância do ponto $(3,\ -2)$ à reta $5x - 12y + 4 = 0$.
+8. Escreva a equação geral da reta que passa por $(-1,\ 4)$ e tem vetor normal
+   $(3,\ -2)$.
+
+### 4. Variação
+
+9. Encontre o ponto onde se cruzam as retas $r: (0,\ 1) + t(1,\ 2)$ e
+   $s: (4,\ 0) + u(-1,\ 1)$.
+10. As retas $r: (1,\ 1) + t(2,\ -1)$ e $s: (0,\ 4) + u(-4,\ 2)$ se cruzam?
+    Se não se cruzam, qual a distância entre elas?
+11. Dois robôs de armazém andam em linha reta. O robô C parte de $(2,\ 0)$ com
+    deslocamento $(1,\ 1)$ por segundo. a) O robô D parte de $(8,\ 0)$ com
+    deslocamento $(-2,\ 2)$ por segundo. As rotas se cruzam? Os robôs batem?
+    b) Refaça o item a) com o robô D andando $(-1,\ 1)$ por segundo.
+
+<details>
+<summary>Dica para o 10</summary>
+
+Compare primeiro os diretores: um é múltiplo do outro? Se for, as retas são
+paralelas ou são a mesma. Para decidir, veja se o ponto $(0,\ 4)$ está na reta
+$r$. Para a distância entre duas paralelas, escolha um ponto de uma delas e
+calcule a distância até a outra.
+
+</details>
+
+<details>
+<summary>Dica para o 11</summary>
+
+São duas perguntas diferentes. Para o cruzamento das rotas, use $t$ para o
+robô C e $s$ para o robô D. Para a batida, use a mesma letra nas duas posições
+e veja se as duas coordenadas pedem o mesmo instante.
+
+</details>
+
+### 5. Problema misto
+
+12. Volte aos drones A e B do problema motivador. a) Escreva o vetor que vai
+    do drone A até o drone B no instante $t$. b) Mostre que o quadrado da
+    distância entre eles no instante $t$ é $10t^2 - 50t + 65$. c) Em que
+    instante eles ficam mais próximos, e a que distância? Use o que você
+    aprendeu sobre o vértice da
+    [função quadrática](../funcoes/funcao-quadratica).
+13. Um terreno triangular tem vértices $A(0,\ 0)$, $B(6,\ 2)$ e $C(1,\ 5)$, em
+    metros. Calcule a área usando como base o lado $AB$ e como altura a
+    distância de $C$ até a reta $AB$.
+
+<details>
+<summary>Dica para o 12</summary>
+
+No item a), a seta de A até B é a posição de B menos a posição de A, com o
+mesmo $t$ nas duas. No item c), a distância é mínima quando o seu quadrado é
+mínimo, porque a raiz quadrada cresce junto com o número de dentro.
+
+</details>
+
+<details>
+<summary>Dica para o 13</summary>
+
+A reta $AB$ tem diretor $(6,\ 2)$, ou o múltiplo mais simples $(3,\ 1)$. Um
+normal é $(1,\ -3)$. Monte a equação geral pela seção 8.6 e use a fórmula da
+distância.
+
+</details>
+
+### 6. Justificativa
+
+14. Mostre que, para qualquer reta $ax + by + c = 0$, o vetor $(-b,\ a)$ é um
+    diretor: os pontos $A + t(-b,\ a)$, com $A$ na reta, satisfazem a equação
+    para todo $t$.
+15. Explique por que a fórmula da distância dá zero **somente** para os
+    pontos da reta.
+16. A fórmula da distância foi deduzida com o normal $(a,\ b)$. Se você
+    multiplicar a equação inteira por 2, o normal vira $(2a,\ 2b)$. Mostre que
+    a distância calculada não muda.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) sim: $(3,\ 3)$ é o ponto $t = 1$ da reta original, e o diretor é o
+   mesmo &nbsp; b) sim: mesmo ponto, e $(-4,\ -2) = -2 \times (2,\ 1)$ &nbsp;
+   c) não: $(1,\ 2)$ não é múltiplo de $(2,\ 1)$ &nbsp; d) sim: $(5,\ 4)$ é o
+   ponto $t = 2$, e $(6,\ 3) = 3 \times (2,\ 1)$ &nbsp; e) não: o diretor
+   serve, mas $(0,\ 2)$ não está na reta original. A primeira coordenada pede
+   $1 + 2t = 0$, ou $t = -\frac{1}{2}$, e com esse $t$ a segunda dá
+   $2 - \frac{1}{2} = 1{,}5$, e não 2. Se você marcou e), conferiu só o
+   diretor; os dois testes são necessários.
+2. a) normal $(3,\ 1)$, diretor $(-1,\ 3)$ &nbsp; b) normal $(1,\ -4)$,
+   diretor $(4,\ 1)$ &nbsp; c) $x = 5$ é $1x + 0y - 5 = 0$: normal
+   $(1,\ 0)$, diretor $(0,\ 1)$ &nbsp; d) $y = 2x - 1$ é $2x - y - 1 = 0$:
+   normal $(2,\ -1)$, diretor $(1,\ 2)$. Qualquer múltiplo não nulo também
+   está certo. Se no item d) você escreveu normal $(2,\ 1)$, esqueceu de
+   passar o $y$ para o lado esquerdo com o sinal trocado.
+3. $P(-2) = (1 - 4,\ 2 - 2) = (-3,\ 0)$. É onde o drone estaria dois segundos
+   antes do instante zero, se já viesse voando na mesma rota e no mesmo ritmo.
+   Na reta, é um ponto do lado oposto ao sentido do diretor.
+4. O vetor $(2,\ 3)$ é perpendicular à reta, não paralelo a ela: os pontos da
+   reta dão todos o mesmo valor para $2x + 3y$, e andar na direção $(2,\ 3)$
+   muda esse valor. Uma direção correta é $(-3,\ 2)$, ou $(3,\ -2)$.
+5. Porque cada rota pode passar pelo ponto de cruzamento num instante
+   diferente. Com a mesma letra, a conta exige que os dois parâmetros sejam
+   iguais, e procura um instante comum em vez de um ponto comum. Se os
+   instantes forem diferentes, essa conta não acha nada, mesmo que as rotas se
+   cruzem.
+6. Diretor $\overrightarrow{AB} = (3,\ 4)$. Vetorial:
+   $P = (2,\ -1) + t(3,\ 4)$. Paramétricas: $x = 2 + 3t$, $y = -1 + 4t$.
+   Reduzida: $m = \frac{4}{3}$ e $y = \frac{4}{3}x - \frac{11}{3}$ (com
+   $x = 2$, $\frac{8}{3} - \frac{11}{3} = -1$). Geral: multiplicando por 3,
+   $4x - 3y - 11 = 0$; confira com $B$: $20 - 9 - 11 = 0$. Se você achou
+   $m = \frac{3}{4}$, inverteu a razão: a inclinação é a segunda coordenada do
+   diretor dividida pela primeira.
+7. $\dfrac{\lvert 5 \times 3 - 12 \times (-2) + 4 \rvert}{\sqrt{25 + 144}} =
+   \dfrac{\lvert 15 + 24 + 4 \rvert}{13} = \dfrac{43}{13} \approx 3{,}31$. Se
+   você encontrou $\frac{-5}{13}$ no numerador, errou o sinal de
+   $-12 \times (-2)$, que é $+24$.
+8. $3(x + 1) - 2(y - 4) = 0$, ou $3x - 2y + 11 = 0$. Conferência:
+   $3 \times (-1) - 2 \times 4 + 11 = -3 - 8 + 11 = 0$.
+9. Uma letra para cada reta: $t = 4 - u$ e $1 + 2t = u$. Trocando o $u$ da
+   primeira pela expressão da segunda, $t = 4 - 1 - 2t$, então $3t = 3$ e
+   $t = 1$; daí $u = 3$. O ponto é $(0 + 1,\ 1 + 2) = (1,\ 3)$, e pela outra
+   reta $(4 - 3,\ 0 + 3) = (1,\ 3)$. Confere.
+10. $(-4,\ 2) = -2 \times (2,\ -1)$: os diretores são paralelos. O ponto
+    $(0,\ 4)$ não está em $r$: a primeira coordenada pede $1 + 2t = 0$, ou
+    $t = -\frac{1}{2}$, e então a segunda dá $1 + \frac{1}{2} = 1{,}5 \neq 4$.
+    As retas são paralelas e distintas, e não se cruzam. Para a distância: um
+    normal de $r$ é $(1,\ 2)$, e pela seção 8.6 com o ponto $(1,\ 1)$,
+    $r: x + 2y - 3 = 0$. A distância de $(0,\ 4)$ até $r$ é
+    $\frac{\lvert 0 + 8 - 3 \rvert}{\sqrt{5}} = \frac{5}{\sqrt{5}} = \sqrt{5}
+    \approx 2{,}24$.
+11. a) Rotas: $2 + t = 8 - 2s$ e $t = 2s$. Trocando o $t$, $2 + 2s = 8 - 2s$,
+    então $s = 1{,}5$ e $t = 3$: as rotas se cruzam em $(5,\ 3)$. Batida:
+    com a mesma letra, a primeira coordenada pede $2 + t = 8 - 2t$, ou
+    $t = 2$, e a segunda pede $t = 2t$, ou $t = 0$. Instantes diferentes: não
+    batem. C passa pelo cruzamento no instante 3, e D no instante 1,5.
+    b) Agora as posições são $(2 + t,\ t)$ e $(8 - t,\ t)$. A segunda
+    coordenada é igual em qualquer instante, e a primeira pede $2 + t = 8 - t$,
+    ou $t = 3$. Os dois robôs estão em $(5,\ 3)$ no instante 3: **batem**. Se
+    no item a) você concluiu que as rotas não se cruzam, usou a mesma letra
+    para as duas rotas.
+12. a) $Q(t) - P(t) = (9 - t - 1 - 2t,\ 1 + 2t - 2 - t) = (8 - 3t,\ t - 1)$.
+    b) O quadrado da distância é $(8 - 3t)^2 + (t - 1)^2 = 64 - 48t + 9t^2 +
+    t^2 - 2t + 1 = 10t^2 - 50t + 65$. c) É uma parábola de concavidade para
+    cima, e o mínimo está no vértice: $t = -\frac{-50}{2 \times 10} = 2{,}5$
+    s. Nesse instante, $10 \times 6{,}25 - 125 + 65 = 2{,}5$, e a distância é
+    $\sqrt{2{,}5} \approx 1{,}58$ m. Os drones passam a menos de 1,6 m um do
+    outro, entre os instantes em que cada um cruza o ponto $(7,\ 5)$. É uma
+    informação útil para o engenheiro: não há batida, mas há uma passagem
+    próxima.
+13. Base: $\lVert \overrightarrow{AB} \rVert = \sqrt{36 + 4} = \sqrt{40}$.
+    Reta $AB$: normal $(1,\ -3)$ e ponto $(0,\ 0)$, então $x - 3y = 0$.
+    Altura: distância de $C(1,\ 5)$ até ela,
+    $\frac{\lvert 1 - 15 \rvert}{\sqrt{10}} = \frac{14}{\sqrt{10}}$. Área:
+    $\frac{1}{2} \times \sqrt{40} \times \frac{14}{\sqrt{10}} = \frac{1}{2}
+    \times 2 \times 14 = 14$ m², porque $\frac{\sqrt{40}}{\sqrt{10}} =
+    \sqrt{4} = 2$.
+14. O ponto $A + t(-b,\ a)$ tem coordenadas $(x_A - bt,\ y_A + at)$.
+    Colocando na equação:
+    $a(x_A - bt) + b(y_A + at) + c = a x_A + b y_A + c - abt + abt$. Os dois últimos termos se cancelam, e $a x_A + b y_A + c = 0$
+    porque $A$ está na reta. Sobra zero, para todo $t$.
+15. A distância é uma fração com denominador $\sqrt{a^2 + b^2}$, que não é
+    zero (o normal não é nulo). Uma fração só dá zero quando o numerador é
+    zero. O numerador é $\lvert a x_0 + b y_0 + c \rvert$, e ele é zero
+    exatamente quando o ponto satisfaz a equação da reta, ou seja, quando o
+    ponto está na reta.
+16. Com a equação multiplicada por 2, o numerador vira
+    $\lvert 2a x_0 + 2b y_0 + 2c \rvert = 2 \lvert a x_0 + b y_0 + c \rvert$, e
+    o denominador vira $\sqrt{4a^2 + 4b^2} = 2\sqrt{a^2 + b^2}$. O fator 2 de
+    cima e o de baixo se cancelam. Faz sentido: as duas equações descrevem a
+    mesma reta, e a distância de um ponto a uma reta não pode depender de como
+    a equação foi escrita.
+
+**Se sua resposta não bateu:**
+
+Quase todo erro desta lista vem de um destes pontos. Confira se você usou
+letras diferentes ao procurar um cruzamento e a mesma letra ao procurar um
+encontro. Confira se não trocou o normal pelo diretor: os coeficientes de $x$
+e $y$ na forma geral são o **normal**. E, na fórmula da distância, confira o
+$c$, a raiz do denominador e o valor absoluto.
+
+</details>
+
+## 15. Revisão curta
+
+- A **equação vetorial** $P = A + t\vec{d}$ descreve a reta como uma
+  caminhada: parte de $A$ e anda $t$ vezes o **vetor diretor** $\vec{d}$, que
+  não pode ser nulo. Todo ponto da reta corresponde a algum $t$.
+- As **paramétricas** $x = x_0 + at$, $y = y_0 + bt$ são a equação vetorial
+  coordenada a coordenada. Eliminar o $t$ dá a forma reduzida, com
+  $m = \frac{b}{a}$; a forma vetorial também descreve verticais.
+- Quando $t$ é o tempo, a equação vetorial guarda o que a reduzida perde:
+  **quando** cada ponto é visitado. Para achar onde duas rotas se cruzam, use
+  uma letra para cada uma; para saber se dois objetos se encontram, use a
+  mesma.
+- Na forma geral $ax + by + c = 0$, o vetor $(a,\ b)$ é **normal** à reta, e
+  $(-b,\ a)$ é diretor. Por isso a forma geral inclui as verticais.
+- A **distância** de $(x_0,\ y_0)$ à reta é
+  $\dfrac{\lvert a x_0 + b y_0 + c \rvert}{\sqrt{a^2 + b^2}}$: a parte da seta
+  $\overrightarrow{AP}$ na direção do normal, sem o sinal.
+- Para achar o ponto mais perto, e não só a distância, use a condição de
+  produto escalar zero com o diretor.
+
+Até aqui, todos os vetores viveram no plano, com duas coordenadas. A próxima
+lição, [Vetores no espaço](./vetores-no-espaco), acrescenta uma terceira
+coordenada, a altura, e mostra que as contas deste módulo continuam valendo
+sem mudar nenhuma definição.

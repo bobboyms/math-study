@@ -35,6 +35,8 @@ Estude os capítulos nesta ordem:
    seguintes de cálculo entram no mesmo capítulo, depois dele.
 10. [Análise combinatória](./analise-combinatoria/) — contar maneiras de
     escolher e ordenar, construindo a base de contagem para probabilidade.
+11. [Álgebra linear](./algebra-linear/) — vetores com qualquer número de
+    coordenadas, matrizes e as transformações que elas descrevem.
 
 A ordem segue a dependência entre as ideias, e cada capítulo abre dizendo o que
 herda do anterior. Aritmética sustenta a álgebra; a fatoração da álgebra é o que
@@ -52,6 +54,11 @@ O capítulo de análise combinatória abre outra linha de estudo: a preparação
 para probabilidade. Você pode estudá-lo depois de álgebra, sem precisar
 terminar os capítulos de geometria ou cálculo. Ele retoma operações, frações
 e potências para contar possibilidades.
+
+O capítulo de álgebra linear abre uma terceira linha: a matemática de base do
+aprendizado de máquina. Ele começa no módulo 8 da geometria, de vetores, e não
+depende de cálculo. Depois do capítulo 7, você pode estudá-lo antes ou depois
+do Cálculo 1.
 
 ## Como estudar cada página
 

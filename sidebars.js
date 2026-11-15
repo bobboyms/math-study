@@ -549,6 +549,47 @@ const sidebars = {
             },
           ],
         },
+        {
+          type: 'category',
+          label: 'Módulo 8 — Vetores',
+          items: [
+            {
+              type: 'doc',
+              id: 'geometria/vetores',
+              label: '7.28 Vetores',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/soma-de-vetores',
+              label: '7.29 Soma e multiplicação por número',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/modulo-direcao-e-componentes',
+              label: '7.30 Módulo, direção e componentes',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/produto-escalar',
+              label: '7.31 Produto escalar',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/projecao-ortogonal',
+              label: '7.32 Projeção ortogonal',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/retas-com-vetores',
+              label: '7.33 Retas com vetores',
+            },
+            {
+              type: 'doc',
+              id: 'geometria/vetores-no-espaco',
+              label: '7.34 Vetores no espaço',
+            },
+          ],
+        },
       ],
     },
     {
@@ -764,6 +805,81 @@ const sidebars = {
           type: 'doc',
           id: 'analise-combinatoria/da-contagem-a-probabilidade',
           label: '10.10 Da contagem à probabilidade',
+        },
+      ],
+    },
+    {
+      type: 'category',
+      label: '11. Álgebra linear',
+      link: {
+        type: 'doc',
+        id: 'algebra-linear/index',
+      },
+      items: [
+        {
+          type: 'doc',
+          id: 'algebra-linear/index',
+          label: '11.1 Roteiro do capítulo',
+        },
+        {
+          type: 'doc',
+          id: 'algebra-linear/vetores-com-muitas-coordenadas',
+          label: '11.2 Vetores com muitas coordenadas',
+        },
+        {
+          type: 'doc',
+          id: 'algebra-linear/matrizes',
+          label: '11.3 Matrizes',
+        },
+        {
+          type: 'doc',
+          id: 'algebra-linear/sistemas-lineares-e-escalonamento',
+          label: '11.4 Sistemas lineares e escalonamento',
+        },
+        {
+          type: 'doc',
+          id: 'algebra-linear/combinacao-linear-e-independencia',
+          label: '11.5 Combinação linear e independência',
+        },
+        {
+          type: 'doc',
+          id: 'algebra-linear/transformacoes-lineares',
+          label: '11.6 Transformações lineares',
+        },
+        {
+          type: 'doc',
+          id: 'algebra-linear/produto-de-matrizes',
+          label: '11.7 Produto de matrizes',
+        },
+        {
+          type: 'doc',
+          id: 'algebra-linear/matriz-inversa',
+          label: '11.8 Matriz inversa',
+        },
+        {
+          type: 'doc',
+          id: 'algebra-linear/determinante',
+          label: '11.9 Determinante',
+        },
+        {
+          type: 'doc',
+          id: 'algebra-linear/base-dimensao-e-posto',
+          label: '11.10 Base, dimensão e posto',
+        },
+        {
+          type: 'doc',
+          id: 'algebra-linear/autovalores-e-autovetores',
+          label: '11.11 Autovalores e autovetores',
+        },
+        {
+          type: 'doc',
+          id: 'algebra-linear/minimos-quadrados',
+          label: '11.12 Mínimos quadrados',
+        },
+        {
+          type: 'doc',
+          id: 'algebra-linear/decomposicao-em-valores-singulares',
+          label: '11.13 Valores singulares',
         },
       ],
     },

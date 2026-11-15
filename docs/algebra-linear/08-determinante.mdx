@@ -1,0 +1,1235 @@
+---
+title: Determinante
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+import LinearMap from '@site/src/components/LinearMap';
+import Space3D from '@site/src/components/Space3D';
+
+# Determinante: o número que mede quanto uma matriz estica as áreas
+
+## 1. Problema motivador: o loteamento redesenhado
+
+Um loteador desenha num programa a planta de um loteamento. A planta usa uma
+malha de quadrados, e cada quadrado de 1 hm de lado é um lote. Como
+$1\ \text{hm} = 100\ \text{m}$, cada lote tem $100 \times 100 = 10\,000$ m²,
+ou seja, **1 hectare**. O terreno inteiro é um retângulo de 4 lotes por 3
+lotes: 12 hectares.
+
+O terreno real, porém, não é retangular. Para encaixar o desenho nele, o
+programa aplica a toda a planta uma transformação linear, com a matriz
+
+$$
+A = \begin{bmatrix} 3 & 1 \\ 1 & 2 \end{bmatrix}.
+$$
+
+Cada lote quadrado vira um paralelogramo.
+
+<LinearMap
+  matrix={[[3, 1], [1, 2]]}
+  window={[-1, 5, -1, 4]}
+  caption="Antes, um lote quadrado de 1 hectare, com lados e₁ e e₂. Depois de aplicar a matriz A, o lote virou o paralelogramo verde-claro, de lados (3, 1) e (1, 2). Todos os outros quadradinhos da malha viraram paralelogramos iguais a ele."
+/>
+
+O loteador precisa registrar a área de cada lote na prefeitura.
+
+> 1. Quantos hectares tem cada lote depois da transformação? E o terreno
+>    inteiro, que tinha 12 hectares?
+> 2. Um colega configurou o programa com outra matriz,
+>    $B = \begin{bmatrix} 2 & -2 \\ 1 & -1 \end{bmatrix}$. O programa mostrou
+>    **todos** os lotes com área zero. O que aconteceu com o desenho? Dá para
+>    desfazer o estrago aplicando outra matriz?
+
+As duas perguntas têm a mesma resposta: um único número, calculado com os
+quatro números da matriz. Esse número se chama **determinante**. A seção 9
+responde às duas perguntas.
+
+## 2. Mapa das ideias
+
+- **fator de área**: o número pelo qual uma transformação linear multiplica
+  todas as áreas do plano;
+- **determinante** de uma matriz $2 \times 2$:
+  $\det A = ad - bc$, que é a área do paralelogramo formado pelas colunas,
+  com um sinal;
+- **sinal do determinante**: positivo quando a transformação conserva a
+  orientação do plano, negativo quando ela o espelha;
+- **determinante zero**: a transformação achata o plano numa reta (ou num
+  ponto), as colunas são dependentes e a matriz não tem inversa;
+- **determinante do produto**: $\det(AB) = \det A \times \det B$;
+- **determinante $3 \times 3$**: o fator de **volume**, calculado por
+  escalonamento ou, só no caso $3 \times 3$, pela regra de Sarrus.
+
+## 3. Para que serve
+
+- **Computação gráfica e mapas.** Quando um programa aplica uma matriz a um
+  desenho, o determinante diz de antemão quanto cada área vai crescer ou
+  encolher, sem medir figura nenhuma.
+- **Saber se um sistema tem solução única.** Um sistema quadrado
+  $A\vec{x} = \vec{b}$ tem exatamente uma solução quando $\det A \neq 0$. Uma
+  única conta substitui a pergunta “as colunas são independentes?” da lição
+  [Combinação linear e independência](./combinacao-linear-e-independencia).
+- **Cálculo.** Quando se trocam as variáveis de uma integral de duas ou três
+  variáveis, as áreas e os volumes mudam de tamanho, e o fator de correção é
+  um determinante. Essa conta aparece num curso de cálculo de várias
+  variáveis.
+- **Aprendizado de máquina.** Alguns modelos que geram imagens novas
+  transformam pontos aleatórios em imagens com uma sequência de
+  transformações. Para saber como a probabilidade se espalha, eles precisam
+  saber quanto cada transformação estica o espaço, e isso é um determinante.
+- **Dentro da matemática.** Na lição
+  [Autovalores e autovetores](./autovalores-e-autovetores), a pergunta “que
+  direções a matriz só estica?” vira a equação $\det(A - \lambda I) = 0$.
+
+## 4. Ideias anteriores que voltam aqui
+
+Seis peças antigas sustentam esta lição. Responda cada pergunta antes de abrir
+a resposta.
+
+**1. De [Áreas de polígonos](../geometria/areas-de-poligonos).** Um
+paralelogramo tem base 5, lado inclinado 4 e altura 3. Qual é a área? Por que
+o lado inclinado não entra na conta?
+
+<details>
+<summary>Conferir</summary>
+
+A área é base vezes altura: $5 \times 3 = 15$. Recortando o triângulo de um
+lado e encaixando-o do outro, o paralelogramo vira um retângulo de base 5 e
+altura 3, sem ganhar nem perder área. O lado inclinado, 4, mede a borda, não
+a distância entre as duas bases paralelas. Por isso ele não entra.
+
+</details>
+
+**2. De [Volumes e superfícies](../geometria/volumes-e-superficies).** Um
+sólido tem todas as fatias horizontais iguais a um paralelogramo de área 6 e
+tem altura 4. Qual é o volume?
+
+<details>
+<summary>Conferir</summary>
+
+$6 \times 4 = 24$. A lição de volumes chamou isso de princípio geral: num
+sólido em que todas as fatias horizontais são iguais, o volume é área da base
+vezes altura. O formato da base não importa. Esse princípio volta na seção
+8.7, para o determinante $3 \times 3$.
+
+</details>
+
+**3. De [Transformações lineares](./transformacoes-lineares).** A matriz
+$\begin{bmatrix} 4 & -1 \\ 2 & 3 \end{bmatrix}$ leva $\vec{e}_1$ e
+$\vec{e}_2$ para onde? E o cisalhamento
+$\begin{bmatrix} 1 & k \\ 0 & 1 \end{bmatrix}$, o que ele faz com a área do
+quadrado de lado 1?
+
+<details>
+<summary>Conferir</summary>
+
+As colunas são os destinos: $\vec{e}_1$ vai para $(4,\ 2)$ e $\vec{e}_2$ vai
+para $(-1,\ 3)$. O cisalhamento deixa o chão parado e faz $\vec{e}_2$
+escorregar para $(k,\ 1)$. O quadrado vira um paralelogramo com a mesma base
+1 e a mesma altura 1, então a área continua 1. Isso já apareceu na legenda do
+cisalhamento, e é a peça principal da seção 8.2.
+
+</details>
+
+**4. De [Produto de matrizes](./produto-de-matrizes).** A matriz $AB$ faz
+primeiro qual das duas transformações? E as matrizes $ER$ e $RE$ do problema
+do logotipo, girar $90^\circ$ e esticar 2 vezes, são iguais?
+
+<details>
+<summary>Conferir</summary>
+
+$AB$ aplica primeiro $B$ e depois $A$: $AB\vec{v} = A(B\vec{v})$. E
+$ER = \begin{bmatrix} 0 & -2 \\ 1 & 0 \end{bmatrix}$ é diferente de
+$RE = \begin{bmatrix} 0 & -1 \\ 2 & 0 \end{bmatrix}$: a ordem importa. Na
+seção 8.5 você vai ver que, mesmo sendo diferentes, as duas têm o mesmo
+determinante.
+
+</details>
+
+**5. De [Combinação linear e independência](./combinacao-linear-e-independencia).**
+Os vetores $(2,\ 1)$ e $(-2,\ -1)$ são independentes? E o que a lição
+concluiu sobre $n$ vetores em $\mathbb{R}^n$ quando alguma coluna fica sem
+pivô?
+
+<details>
+<summary>Conferir</summary>
+
+Não são: $(-2,\ -1) = -1 \times (2,\ 1)$, um é múltiplo do outro, e os dois
+estão sobre a mesma reta pela origem. Com uma matriz quadrada, se alguma
+coluna fica sem pivô, os vetores são dependentes **e** não geram tudo. Se
+toda coluna tem pivô, são independentes e geram tudo. Esta lição vai mostrar
+que o determinante separa exatamente esses dois casos.
+
+</details>
+
+**6. De [Sistemas lineares e escalonamento](./sistemas-lineares-e-escalonamento).**
+Quais são as três operações elementares? Escalone
+$\begin{bmatrix} 1 & 2 \\ 3 & 8 \end{bmatrix}$.
+
+<details>
+<summary>Conferir</summary>
+
+Trocar duas linhas ($L_1 \leftrightarrow L_2$), multiplicar uma linha por um
+número diferente de zero ($L_2 \leftarrow 3L_2$) e somar a uma linha um
+múltiplo de outra ($L_2 \leftarrow L_2 - 2L_1$). Para escalonar, faça
+$L_2 \leftarrow L_2 - 3L_1$: a segunda linha vira
+$(3 - 3,\ 8 - 6) = (0,\ 2)$, e a matriz fica
+$\begin{bmatrix} 1 & 2 \\ 0 & 2 \end{bmatrix}$. Os pivôs são 1 e 2. Na seção
+8.8, o produto dos pivôs vai dar o determinante.
+
+</details>
+
+## 5. Intuição: todos os pedaços crescem na mesma proporção
+
+Olhe de novo a figura do loteamento. A transformação levou a malha de
+quadrados numa malha de paralelogramos. E todos os paralelogramos novos são
+**iguais**: mesmo formato, mesmo tamanho. Isso acontece com toda
+transformação linear, como a lição de transformações mostrou.
+
+Agora pense numa região qualquer do desenho, como uma praça com forma
+irregular. A área dela é medida contando quadradinhos, como em toda medida de
+área. Depois da transformação, cada quadradinho virou um paralelogramo, e
+todos os paralelogramos têm a mesma área. Então:
+
+- se cada lote de 1 hectare virou um paralelogramo de 5 hectares, uma praça
+  que ocupava 3 lotes passa a ocupar 3 paralelogramos, 15 hectares;
+- uma região que ocupava meio lote passa a ocupar meio paralelogramo, 2,5
+  hectares.
+
+Para quadradinhos menores o argumento é o mesmo. Um quadradinho de lado
+$\tfrac{1}{10}$ vira um paralelogramo com lados 10 vezes menores, e portanto
+com área $10 \times 10 = 100$ vezes menor. A proporção entre o antes e o
+depois continua sendo 5.
+
+A conclusão é forte: **uma transformação linear multiplica todas as áreas
+pelo mesmo número.** Para conhecer esse número, olhe um único
+quadrado, o de lado 1 formado por $\vec{e}_1$ e $\vec{e}_2$. Ele vira o
+paralelogramo formado pelas duas colunas da matriz. A área desse
+paralelogramo é o fator procurado.
+
+Há ainda uma segunda informação escondida no desenho: a transformação pode
+**espelhar** o plano. É o que acontece com uma luva da mão direita vista no
+espelho: a imagem é uma luva da mão esquerda. Nenhum giro nem deslizamento
+dentro do plano transforma uma na outra. O determinante vai guardar essa
+informação no sinal.
+
+## 6. Modelo visual: o quadrado, o paralelogramo e o retângulo que os envolve
+
+O paralelogramo formado pelas colunas $(3,\ 1)$ e $(1,\ 2)$ não tem um lado
+deitado no chão. Por isso a fórmula “base vezes altura” não se aplica
+diretamente: não sabemos a altura. Mas dá para medir a área dele por recorte.
+
+Desenhe o retângulo que envolve o paralelogramo. Ele vai de $x = 0$ a
+$x = 3 + 1 = 4$ e de $y = 0$ a $y = 1 + 2 = 3$. A parte do retângulo que fica
+fora do paralelogramo se divide em seis peças fáceis: quatro triângulos
+retângulos e dois retângulos pequenos.
+
+<CartesianPlane
+  xMin={-1} xMax={5} yMin={-1} yMax={4}
+  xUnit={56}
+  polygons={[
+    {points: [[0, 0], [3, 1], [4, 3], [1, 2]], tone: 1},
+    {points: [[0, 0], [3, 0], [3, 1]], tone: 2},
+    {points: [[1, 2], [4, 3], [1, 3]], tone: 2},
+    {points: [[0, 0], [1, 2], [0, 2]], tone: 2},
+    {points: [[3, 1], [4, 1], [4, 3]], tone: 2},
+    {points: [[3, 0], [4, 0], [4, 1], [3, 1]], tone: 3},
+    {points: [[0, 2], [1, 2], [1, 3], [0, 3]], tone: 3},
+  ]}
+  labels={[
+    {at: [2, 1.5], math: '?', tone: 1, fontSize: 18},
+    {at: [2.25, 0.32], math: '1{,}5', fontSize: 13},
+    {at: [1.75, 2.68], math: '1{,}5', fontSize: 13},
+    {at: [0.32, 1.45], math: '1', fontSize: 13},
+    {at: [3.68, 1.55], math: '1', fontSize: 13},
+    {at: [3.5, 0.5], math: '1', fontSize: 13},
+    {at: [0.5, 2.5], math: '1', fontSize: 13},
+  ]}
+  caption="O paralelogramo das colunas (3, 1) e (1, 2), em azul, dentro do retângulo de 4 por 3 que o envolve. Sobram quatro triângulos (laranja), com áreas 1,5, 1,5, 1 e 1, e dois quadrados de lado 1 nos cantos (verde)."
+/>
+
+A conta fica assim:
+
+| Peça | Medidas | Área |
+|---|---|---|
+| retângulo que envolve tudo | $4$ por $3$ | $12$ |
+| triângulo de baixo e triângulo de cima | catetos 3 e 1 | $1{,}5$ cada, $3$ ao todo |
+| triângulo da esquerda e triângulo da direita | catetos 1 e 2 | $1$ cada, $2$ ao todo |
+| quadrados dos cantos | lado 1 | $1$ cada, $2$ ao todo |
+
+A área do paralelogramo é o que sobra do retângulo depois de tirar as seis
+peças:
+
+$$
+12 - 3 - 2 - 2 = 5.
+$$
+
+Cada lote de 1 hectare vira um paralelogramo de **5 hectares**. Repare que o
+número 5 não é nenhuma das entradas da matriz, nem o produto da diagonal,
+$3 \times 2 = 6$. Ele combina as quatro entradas de um jeito que a seção 8
+vai descobrir.
+
+## 7. Ponte para a formalização: refazer a conta com letras
+
+O recorte funcionou com números. Para ter uma fórmula que sirva para qualquer
+matriz, refazemos exatamente a mesma conta trocando os números por letras. A
+matriz passa a ser
+
+$$
+A = \begin{bmatrix} a & b \\ c & d \end{bmatrix},
+$$
+
+com colunas $(a,\ c)$ e $(b,\ d)$. No exemplo, $a = 3$, $c = 1$, $b = 1$ e
+$d = 2$. Cada medida da tabela da seção 6 tem uma versão com letras:
+
+| Peça | Com números | Com letras |
+|---|---|---|
+| retângulo que envolve tudo | $(3 + 1) \times (1 + 2) = 12$ | $(a + b)(c + d)$ |
+| os dois triângulos de catetos 3 e 1 | $2 \times \frac{3 \times 1}{2} = 3$ | $2 \times \frac{ac}{2} = ac$ |
+| os dois triângulos de catetos 1 e 2 | $2 \times \frac{1 \times 2}{2} = 2$ | $2 \times \frac{bd}{2} = bd$ |
+| os dois retângulos dos cantos | $2 \times (1 \times 1) = 2$ | $2bc$ |
+
+O que permanece igual entre as duas colunas da tabela é o **raciocínio**: as
+mesmas seis peças, tiradas do mesmo retângulo. O que muda é a escrita: o
+número 3 virou a letra $a$, e assim por diante. Por isso a conta com letras
+vale para qualquer matriz cujo desenho tenha esse mesmo formato.
+
+## 8. Formalização
+
+### 8.1 A conta com letras
+
+Tirando as seis peças do retângulo:
+
+$$
+\text{área} = (a + b)(c + d) - ac - bd - 2bc.
+$$
+
+Abra o produto pela distributiva, como em
+[Produtos notáveis](../algebra/produtos-notaveis): cada parcela do primeiro
+parêntese multiplica cada parcela do segundo.
+
+$$
+(a + b)(c + d) = ac + ad + bc + bd.
+$$
+
+Substituindo:
+
+$$
+\text{área} = ac + ad + bc + bd - ac - bd - 2bc.
+$$
+
+Agora junte as parcelas iguais. O $ac$ aparece uma vez somando e uma vez
+subtraindo: some. O mesmo acontece com $bd$. E o $bc$ aparece uma vez
+somando e duas subtraindo: sobra $-bc$. O que resta é
+
+$$
+\text{área} = ad - bc.
+$$
+
+Conferência com o loteamento: $ad - bc = 3 \times 2 - 1 \times 1 = 6 - 1 = 5$.
+É o mesmo 5 do recorte.
+
+> O **determinante** de uma matriz $2 \times 2$ é o número
+>
+> $$\det \begin{bmatrix} a & b \\ c & d \end{bmatrix} = ad - bc.$$
+>
+> Em palavras: o produto da diagonal que desce, menos o produto da diagonal
+> que sobe. O valor absoluto do determinante é o fator pelo qual a
+> transformação multiplica as áreas.
+
+**Exemplo.** $\det \begin{bmatrix} 4 & 1 \\ 2 & 3 \end{bmatrix} =
+4 \times 3 - 1 \times 2 = 10$. Essa transformação multiplica toda área por 10.
+
+**Contraexemplo.** Uma matriz que não é quadrada, como
+$\begin{bmatrix} 1 & 0 & 2 \\ 0 & 1 & 3 \end{bmatrix}$, **não tem**
+determinante. Ela leva vetores de $\mathbb{R}^3$ em vetores de
+$\mathbb{R}^2$: entra um volume, sai uma figura plana. Não existe “quantas
+vezes maior” entre um volume e uma área, porque são grandezas de tipos
+diferentes. O determinante só existe quando a matriz leva o espaço nele
+mesmo, e isso exige uma matriz quadrada.
+
+A notação deste curso é $\det A$ ou $\det(A)$. Muitos livros escrevem o
+determinante com barras verticais em volta da matriz. Aqui não usamos essa
+escrita, porque as barras parecem o valor absoluto, e o determinante pode ser
+negativo.
+
+### 8.2 E quando o desenho tem outro formato?
+
+O recorte da seção 6 usou um desenho específico: as quatro entradas
+positivas, com a coluna $(a,\ c)$ mais deitada que a coluna $(b,\ d)$. Com
+outras matrizes, os paralelogramos têm outros formatos, e as seis peças
+mudam. Precisamos de um argumento que sirva para todas.
+
+A ideia é usar o cisalhamento, que a pergunta 3 da seção 4 lembrou: ele
+escorrega um lado sem mudar a base nem a altura. Por isso **não muda a
+área**.
+
+Tome o paralelogramo das colunas $(3,\ 1)$ e $(1,\ 2)$. Mantenha o lado
+$(3,\ 1)$ fixo e faça o outro lado escorregar **na direção do primeiro**,
+até ficar em pé. Escorregar na direção de $(3,\ 1)$ é tirar do segundo lado
+um múltiplo do primeiro. Para zerar a coordenada $x$, que é 1, tiramos
+$\tfrac{1}{3}$ de $(3,\ 1)$:
+
+$$
+(1,\ 2) - \tfrac{1}{3}(3,\ 1) = \left(1 - 1,\ 2 - \tfrac{1}{3}\right) = \left(0,\ \tfrac{5}{3}\right).
+$$
+
+<CartesianPlane
+  xMin={-1} xMax={5} yMin={-1} yMax={4}
+  xUnit={52}
+  polygons={[
+    {points: [[0, 0], [3, 1], [4, 3], [1, 2]], tone: 1, fill: false},
+    {points: [[0, 0], [3, 1], [3, 2.6667], [0, 1.6667]], tone: 2},
+  ]}
+  segments={[
+    {from: [0, 0], to: [3, 1], arrow: true, tone: 1},
+    {from: [0, 0], to: [0, 1.6667], arrow: true, tone: 2},
+    {from: [1, 2], to: [0, 1.6667], arrow: true, tone: 3},
+  ]}
+  labels={[
+    {at: [3, 1], math: '(3,\\ 1)', tone: 1, dx: 34, dy: 4},
+    {at: [0, 1.6667], math: '\\left(0,\\ \\tfrac{5}{3}\\right)', tone: 2, dx: -46, dy: 0},
+    {at: [1, 2], math: '(1,\\ 2)', tone: 1, dx: -6, dy: -24},
+  ]}
+  caption="O paralelogramo original (contorno azul) e o paralelogramo depois do escorregão (laranja). O lado (1, 2) escorregou na direção do lado (3, 1), seguindo a seta verde, até ficar em pé: virou (0, 5/3). Base e altura em relação ao lado fixo não mudaram, e a área também não."
+/>
+
+O paralelogramo novo tem um lado em pé, de comprimento $\tfrac{5}{3}$. A
+distância horizontal entre esse lado e o lado oposto é 3, a coordenada $x$ do
+vetor $(3,\ 1)$. Então, com o lado em pé como base:
+
+$$
+\text{área} = 3 \times \tfrac{5}{3} = 5.
+$$
+
+O mesmo 5 de antes, por outro caminho. Com letras, o escorregão faz
+$(b,\ d) - \tfrac{b}{a}(a,\ c) = \left(0,\ d - \tfrac{bc}{a}\right)$, e a
+área é
+
+$$
+a \times \left(d - \frac{bc}{a}\right) = ad - bc.
+$$
+
+Esse argumento não usou o formato do desenho, só que $a$ não é zero. Se
+$a = 0$, o primeiro lado já está em pé e a área é lida direto. A fórmula
+$ad - bc$ vale para toda matriz $2 \times 2$. Quando o resultado sai
+negativo, o valor absoluto é a área. O sinal tem um significado próprio,
+assunto da próxima seção.
+
+### 8.3 O sinal: a transformação espelhou o plano?
+
+Troque as duas colunas da matriz do loteamento de lugar:
+
+$$
+\det \begin{bmatrix} 1 & 3 \\ 2 & 1 \end{bmatrix} = 1 \times 1 - 3 \times 2 = 1 - 6 = -5.
+$$
+
+O paralelogramo é o mesmo, com área 5. O que mudou foi a **ordem** dos
+lados: agora $\vec{e}_1$ vai para $(1,\ 2)$ e $\vec{e}_2$ vai para
+$(3,\ 1)$.
+
+<LinearMap
+  matrix={[[1, 3], [2, 1]]}
+  window={[-1, 5, -1, 4]}
+  caption="Antes, girando de e₁ (azul) até e₂ (laranja) pelo caminho mais curto, o giro é anti-horário. Depois da matriz de determinante −5, o destino de e₁ é (1, 2) e o de e₂ é (3, 1): o giro mais curto do azul até o laranja passou a ser horário. A transformação espelhou o plano."
+/>
+
+No plano original, para ir de $\vec{e}_1$ até $\vec{e}_2$ pelo caminho mais
+curto, você gira no sentido anti-horário, o sentido do ciclo
+trigonométrico. Depois dessa transformação, para ir do destino de
+$\vec{e}_1$ até o destino de $\vec{e}_2$, você gira no sentido **horário**. A
+ordem dos dois lados foi invertida, como na luva vista no espelho.
+
+> **Sinal do determinante.** Se $\det A > 0$, a transformação conserva a
+> orientação: o giro de $\vec{e}_1$ para $\vec{e}_2$ continua anti-horário.
+> Se $\det A$ é negativo, a transformação espelha o plano: o giro passa a ser
+> horário. Em qualquer caso, $\lvert \det A \rvert$ é o fator de área.
+
+**Exemplo.** A reflexão no eixo $y$,
+$\begin{bmatrix} -1 & 0 \\ 0 & 1 \end{bmatrix}$, tem determinante
+$(-1) \times 1 - 0 \times 0 = -1$. Ela não muda nenhuma área, porque
+$\lvert -1 \rvert = 1$, mas espelha tudo.
+
+**Contraexemplo.** A rotação de $90^\circ$,
+$\begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix}$, leva $\vec{e}_1$ para
+uma posição vertical, e isso pode parecer uma inversão. Mas o determinante é
+$0 \times 0 - (-1) \times 1 = 1$, positivo. Girar não é espelhar: depois do
+giro, o caminho de $(0,\ 1)$ até $(-1,\ 0)$ continua anti-horário.
+
+### 8.4 Determinante zero: o plano achatado
+
+Quando $\det A = 0$, o quadrado de lado 1 vira uma figura de área zero. Um
+paralelogramo de área zero é um paralelogramo achatado: os dois lados estão
+sobre a mesma reta. Então:
+
+> $\det A = 0$ exatamente quando as duas colunas estão sobre a mesma reta
+> pela origem, isto é, quando uma é múltipla da outra. Nesse caso, a
+> transformação achata o plano inteiro numa reta (ou num ponto).
+
+**A conta confirma o desenho.** Se a segunda coluna é $t$ vezes a primeira,
+$(b,\ d) = (ta,\ tc)$, então
+
+$$
+ad - bc = a(tc) - (ta)c = tac - tac = 0.
+$$
+
+**Exemplo.** $\det \begin{bmatrix} 2 & 6 \\ 1 & 3 \end{bmatrix} =
+2 \times 3 - 6 \times 1 = 0$. De fato, a coluna $(6,\ 3)$ é 3 vezes a coluna
+$(2,\ 1)$.
+
+**Contraexemplo.** A matriz $\begin{bmatrix} 2 & 6 \\ 1 & 4 \end{bmatrix}$
+difere da anterior em uma única entrada, e o determinante é
+$8 - 6 = 2$. As colunas $(2,\ 1)$ e $(6,\ 4)$ não estão na mesma reta, e a
+transformação não achata nada.
+
+Daqui saem as duas pontes que a lição prometeu.
+
+**Ponte com a independência.** Colunas na mesma reta são colunas
+**dependentes**, no sentido da lição
+[Combinação linear e independência](./combinacao-linear-e-independencia).
+Aquela lição anunciou o determinante como “uma conta que dá zero exatamente
+quando há dependência”. Para matrizes $2 \times 2$, a promessa está cumprida.
+A seção 8.8 cumpre para matrizes maiores.
+
+**Ponte com a inversa.** Uma transformação que achata o plano leva pontos
+diferentes ao mesmo lugar, e por isso não pode ser desfeita: não há como
+saber de qual ponto veio cada imagem. Na lição
+[Matriz inversa](./matriz-inversa), a fórmula da inversa $2 \times 2$ tem
+$ad - bc$ no denominador. Agora esse denominador tem nome e significado. A
+fórmula falha exatamente quando a área vira zero.
+
+### 8.5 O determinante do produto
+
+Aplique primeiro $B$ e depois $A$, ou seja, a matriz $AB$. A transformação
+$B$ multiplica todas as áreas por $\lvert \det B \rvert$. Em seguida, $A$
+multiplica as áreas que recebeu por $\lvert \det A \rvert$. O efeito total é
+multiplicar por $\lvert \det A \rvert \times \lvert \det B \rvert$.
+
+Com os sinais acontece a mesma coisa. Espelhar duas vezes devolve a
+orientação original, e o produto de dois números negativos é positivo.
+Espelhar uma vez só deixa o plano espelhado, e o produto de um positivo por
+um negativo é negativo. Juntando as duas observações:
+
+> $$\det(AB) = \det A \times \det B.$$
+
+**Exemplo.** No problema do logotipo de [Produto de matrizes](./produto-de-matrizes),
+$E = \begin{bmatrix} 2 & 0 \\ 0 & 1 \end{bmatrix}$ estica 2 vezes na
+horizontal, com $\det E = 2$, e
+$R = \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix}$ gira $90^\circ$, com
+$\det R = 1$. A regra prevê $\det(ER) = 2 \times 1 = 2$. Conferindo com as
+matrizes calculadas naquela lição:
+
+$$
+\det(ER) = \det \begin{bmatrix} 0 & -2 \\ 1 & 0 \end{bmatrix} = 0 \times 0 - (-2) \times 1 = 2,
+\qquad
+\det(RE) = \det \begin{bmatrix} 0 & -1 \\ 2 & 0 \end{bmatrix} = 0 \times 0 - (-1) \times 2 = 2.
+$$
+
+As matrizes $ER$ e $RE$ são diferentes, mas os determinantes são iguais. A
+ordem muda o formato final do logotipo, mas não muda quanto a área cresceu:
+nas duas ordens, ela dobrou.
+
+**Contraexemplo: a soma não tem regra parecida.** Veja o Erro 1 da seção 11.
+
+**Consequência para a inversa.** Se $A$ tem inversa, então
+$AA^{-1} = I$. A identidade não muda nada, então $\det I = 1$. Pela regra do
+produto, $\det A \times \det(A^{-1}) = 1$, ou seja,
+
+$$
+\det(A^{-1}) = \frac{1}{\det A}.
+$$
+
+Faz sentido: se $A$ multiplica as áreas por 5, desfazer $A$ precisa dividir
+as áreas por 5.
+
+### 8.6 Matrizes 3 por 3: o fator de volume
+
+No espaço, a história é a mesma com uma dimensão a mais. Uma matriz
+$3 \times 3$ leva o cubo de aresta 1, formado por $\vec{e}_1$, $\vec{e}_2$ e
+$\vec{e}_3$, num **paralelepípedo**: uma caixa inclinada cujas arestas são as
+três colunas da matriz. Todos os cubinhos do espaço viram caixas inclinadas
+iguais, e por isso a transformação multiplica todos os volumes pelo mesmo
+número.
+
+> O **determinante** de uma matriz $3 \times 3$ é o volume do paralelepípedo
+> formado pelas três colunas, com um sinal que diz se a transformação
+> espelhou o espaço.
+
+Falta uma fórmula. O caminho mais curto começa por um tipo especial de
+matriz.
+
+### 8.7 A conta mais curta: a matriz triangular
+
+Uma matriz é **triangular superior** quando tudo abaixo da diagonal é zero,
+como as formas escalonadas de
+[Sistemas lineares e escalonamento](./sistemas-lineares-e-escalonamento).
+Veja a matriz
+
+$$
+T = \begin{bmatrix} 2 & 1 & 1 \\ 0 & 2 & 1 \\ 0 & 0 & 2 \end{bmatrix}.
+$$
+
+As colunas são $(2,\ 0,\ 0)$, $(1,\ 2,\ 0)$ e $(1,\ 1,\ 2)$. As duas primeiras
+têm terceira coordenada zero: estão deitadas no chão. Elas formam no chão um
+paralelogramo com área
+
+$$
+\det \begin{bmatrix} 2 & 1 \\ 0 & 2 \end{bmatrix} = 2 \times 2 - 1 \times 0 = 4.
+$$
+
+A terceira coluna, $(1,\ 1,\ 2)$, sobe até a altura 2. A caixa inclinada tem
+todas as fatias horizontais iguais ao paralelogramo do chão: cada fatia é o
+paralelogramo do chão escorregado para o lado. Pela pergunta 2 da seção 4,
+o volume é área da base vezes altura:
+
+$$
+4 \times 2 = 8.
+$$
+
+<Space3D
+  max={[3, 3, 3]}
+  ticks={false}
+  vectors={[
+    {to: [2, 0, 0], tone: 1, label: '(2,\\ 0,\\ 0)'},
+    {to: [1, 2, 0], tone: 1, label: '(1,\\ 2,\\ 0)'},
+    {to: [1, 1, 2], tone: 2, label: '(1,\\ 1,\\ 2)', dx: -40, dy: -8},
+  ]}
+  segments={[
+    {from: [2, 0, 0], to: [3, 2, 0], tone: 1, dashed: true},
+    {from: [1, 2, 0], to: [3, 2, 0], tone: 1, dashed: true},
+    {from: [1, 1, 2], to: [3, 1, 2], tone: 3},
+    {from: [1, 1, 2], to: [2, 3, 2], tone: 3},
+    {from: [3, 1, 2], to: [4, 3, 2], tone: 3},
+    {from: [2, 3, 2], to: [4, 3, 2], tone: 3},
+    {from: [2, 0, 0], to: [3, 1, 2], tone: 3, dashed: true},
+    {from: [1, 2, 0], to: [2, 3, 2], tone: 3, dashed: true},
+    {from: [3, 2, 0], to: [4, 3, 2], tone: 3, dashed: true},
+  ]}
+  caption="A caixa inclinada formada pelas colunas de T. As duas colunas azuis estão no chão e formam um paralelogramo de área 4. A coluna laranja sobe até a altura 2. O teto (verde) é o chão escorregado para o lado, e todas as fatias horizontais são iguais ao chão. Volume: 4 × 2 = 8."
+/>
+
+O resultado, 8, é exatamente o produto dos números da diagonal:
+$2 \times 2 \times 2$. Isso não é coincidência. Numa triangular superior
+qualquer, com diagonal $t_{11}$, $t_{22}$ e $t_{33}$, o chão tem área
+$t_{11} \times t_{22}$ (a matriz $2 \times 2$ do chão também é triangular,
+então o $bc$ da fórmula é zero) e a altura é $t_{33}$.
+
+> O determinante de uma matriz **triangular** é o produto dos números da
+> diagonal.
+
+**Contraexemplo.** Para a matriz
+$\begin{bmatrix} 3 & 1 \\ 1 & 2 \end{bmatrix}$ do loteamento, que **não** é
+triangular, o produto da diagonal dá $3 \times 2 = 6$, e o determinante é 5.
+A regra da diagonal só vale quando há zeros embaixo dela.
+
+### 8.8 O caso geral: escalonar e acompanhar o determinante
+
+Qualquer matriz quadrada pode ser escalonada até ficar triangular. Se
+soubermos o que cada operação elementar faz com o determinante, podemos
+calcular o determinante de qualquer matriz assim: escalonar, multiplicar a
+diagonal e corrigir pelo efeito das operações.
+
+**Esta é a passagem mais difícil da lição.** Se não fechar na primeira
+leitura, siga para os exemplos e volte depois.
+
+**Cada operação elementar é uma multiplicação por matriz.** Fazer
+$L_2 \leftarrow L_2 - 2L_1$ numa matriz $M$ dá o mesmo resultado que
+multiplicar $M$, pela esquerda, pela matriz
+
+$$
+E = \begin{bmatrix} 1 & 0 & 0 \\ -2 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}.
+$$
+
+Confira pela regra linha por coluna: a segunda linha de $E$ é
+$(-2,\ 1,\ 0)$, então a segunda linha de $EM$ é $-2$ vezes a primeira linha
+de $M$ mais 1 vez a segunda. É exatamente $L_2 - 2L_1$. As outras linhas de
+$E$ são as da identidade, e copiam as linhas de $M$ sem mudança.
+
+Pela regra do produto, $\det(EM) = \det E \times \det M$. Então o efeito de
+cada operação sobre o determinante é multiplicá-lo por $\det E$. Falta
+descobrir esse número para os três tipos de operação.
+
+**Somar a uma linha um múltiplo de outra: o determinante não muda.** A
+matriz $E$ acima move cada ponto do espaço só na direção $y$, e move tanto
+mais quanto maior é o $x$ do ponto. É um cisalhamento. Pense numa resma de
+papel em pé, com as folhas paralelas ao plano $x = $ constante. O
+cisalhamento faz cada folha escorregar inteira, sem esticar nem dobrar. A
+resma fica torta, mas cada folha continua com a mesma área, e o volume da
+resma não muda. Então $\det E = 1$.
+
+**Trocar duas linhas: o determinante troca de sinal.** Trocar as linhas 1 e
+2 é multiplicar pela matriz que troca as coordenadas $x$ e $y$ de cada ponto.
+Ela é um espelho: o volume não muda, mas o espaço fica espelhado. Então o
+determinante dela é $-1$. (No plano, a mesma troca é
+$\begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}$, com determinante
+$0 - 1 = -1$.)
+
+**Multiplicar uma linha por $k$: o determinante fica multiplicado por $k$.**
+Multiplicar a linha 2 por $k$ é multiplicar pela matriz que estica a direção
+$y$ por $k$ e deixa as outras como estão. Todo volume fica multiplicado por
+$k$.
+
+| Operação | Efeito no determinante |
+|---|---|
+| $L_i \leftarrow L_i + kL_j$ | nenhum |
+| $L_i \leftrightarrow L_j$ | troca o sinal |
+| $L_i \leftarrow kL_i$ | multiplica por $k$ |
+
+Na eliminação de Gauss, quase todo o trabalho é feito com a primeira
+operação, que não mexe no determinante. Por isso a receita fica curta:
+
+> **Receita do determinante por escalonamento.** Escalone a matriz até a
+> forma triangular usando só somas de múltiplos de linhas e trocas. Multiplique
+> os números da diagonal. Troque o sinal uma vez para cada troca de linhas
+> feita.
+
+**Exemplo.** Calcule o determinante de
+$M = \begin{bmatrix} 1 & 2 & 3 \\ 2 & 5 & 7 \\ 1 & 3 & 5 \end{bmatrix}$.
+
+$$
+\begin{bmatrix} 1 & 2 & 3 \\ 2 & 5 & 7 \\ 1 & 3 & 5 \end{bmatrix}
+\xrightarrow{L_2 \leftarrow L_2 - 2L_1}
+\begin{bmatrix} 1 & 2 & 3 \\ 0 & 1 & 1 \\ 1 & 3 & 5 \end{bmatrix}
+\xrightarrow{L_3 \leftarrow L_3 - L_1}
+\begin{bmatrix} 1 & 2 & 3 \\ 0 & 1 & 1 \\ 0 & 1 & 2 \end{bmatrix}
+\xrightarrow{L_3 \leftarrow L_3 - L_2}
+\begin{bmatrix} 1 & 2 & 3 \\ 0 & 1 & 1 \\ 0 & 0 & 1 \end{bmatrix}
+$$
+
+Nenhuma troca de linhas, e a diagonal final é 1, 1 e 1. Então
+$\det M = 1 \times 1 \times 1 = 1$. A caixa formada pelas colunas de $M$ tem
+o mesmo volume do cubo de aresta 1, mesmo sendo bem torta.
+
+**O determinante zero, agora em qualquer tamanho.** Escalonando, a diagonal
+final é feita dos pivôs. Se alguma coluna fica sem pivô, aparece um zero na
+diagonal, e o produto dá zero. Se toda coluna tem pivô, todos os números da
+diagonal são diferentes de zero, e o produto também. Então, para matrizes
+quadradas de qualquer tamanho:
+
+> $\det A = 0$ exatamente quando alguma coluna fica sem pivô, ou seja,
+> quando as colunas de $A$ são dependentes. Esta é a promessa da lição de
+> independência, cumprida em qualquer tamanho.
+
+### 8.9 Um atalho só para 3 por 3: a regra de Sarrus
+
+Para matrizes $3 \times 3$ existe uma fórmula pronta, como $ad - bc$ para as
+$2 \times 2$. Ela sai de fazer o escalonamento da seção 8.8 com letras. Com a
+matriz
+
+$$
+\begin{bmatrix} a & b & c \\ d & e & f \\ g & h & i \end{bmatrix},
+$$
+
+supondo $a \neq 0$, os dois primeiros passos são
+$L_2 \leftarrow L_2 - \frac{d}{a}L_1$ e $L_3 \leftarrow L_3 - \frac{g}{a}L_1$.
+Eles zeram a primeira coluna abaixo do $a$ e não mudam o determinante. O
+escalonamento que falta só mexe nas linhas 2 e 3, e o que ele faz ali é
+escalonar o bloco $2 \times 2$ que sobrou embaixo e à direita. Por isso o
+determinante é $a$ vezes o determinante desse bloco. Abrir esse bloco com a fórmula $ad - bc$ e
+simplificar é uma conta longa, que não precisa ser refeita para usar o
+resultado. O resultado é:
+
+$$
+\det = aei + bfg + cdh - ceg - afh - bdi.
+$$
+
+São seis produtos de três números. Cada produto usa um número de cada linha
+e de cada coluna. Para não esquecer nenhum, copie as duas primeiras colunas
+à direita da matriz:
+
+$$
+\begin{array}{ccc|cc}
+a & b & c & a & b \\
+d & e & f & d & e \\
+g & h & i & g & h
+\end{array}
+$$
+
+As três diagonais que descem da esquerda para a direita dão os produtos
+somados: $aei$, $bfg$ e $cdh$. As três diagonais que sobem dão os produtos
+subtraídos: $ceg$, $afh$ e $bdi$. Esse esquema é a **regra de Sarrus**.
+
+**Conferência com a matriz $M$ da seção 8.8.** Com $a = 1$, $b = 2$, $c = 3$,
+$d = 2$, $e = 5$, $f = 7$, $g = 1$, $h = 3$ e $i = 5$:
+
+$$
+\underbrace{1 \times 5 \times 5}_{25} + \underbrace{2 \times 7 \times 1}_{14} + \underbrace{3 \times 2 \times 3}_{18} - \underbrace{3 \times 5 \times 1}_{15} - \underbrace{1 \times 7 \times 3}_{21} - \underbrace{2 \times 2 \times 5}_{20} = 57 - 56 = 1.
+$$
+
+O mesmo 1 do escalonamento.
+
+> **A regra de Sarrus vale só para matrizes $3 \times 3$.** Para matrizes
+> maiores, o esquema das diagonais dá um número errado (Erro 3 da seção 11).
+> O escalonamento funciona em qualquer tamanho.
+
+### 8.10 O que o determinante resume
+
+Para uma matriz quadrada $A$, as frases abaixo dizem a mesma coisa, de
+pontos de vista diferentes:
+
+| Ponto de vista | Frase |
+|---|---|
+| determinante | $\det A \neq 0$ |
+| desenho | a transformação não achata o espaço |
+| colunas | as colunas são independentes |
+| escalonamento | toda coluna tem pivô |
+| inversa | $A$ tem inversa |
+| sistemas | $A\vec{x} = \vec{b}$ tem exatamente uma solução, para todo $\vec{b}$ |
+
+Se uma delas é falsa, todas são falsas. Esta tabela liga as últimas quatro
+lições do capítulo.
+
+## 9. Resolvendo o problema do loteamento
+
+**Pergunta 1: as áreas.** O determinante da matriz do loteamento é
+
+$$
+\det A = \det \begin{bmatrix} 3 & 1 \\ 1 & 2 \end{bmatrix} = 3 \times 2 - 1 \times 1 = 5.
+$$
+
+Ele é positivo, então a planta não foi espelhada. E a transformação
+multiplica **todas** as áreas por 5. Cada lote de 1 hectare passa a ter
+**5 hectares**. O terreno inteiro, que tinha 12 lotes, passa a ter
+$12 \times 5 = 60$ hectares. O loteador não precisou medir nenhum
+paralelogramo: um único número resolveu a planta inteira.
+
+**Pergunta 2: a matriz do colega.**
+
+$$
+\det B = \det \begin{bmatrix} 2 & -2 \\ 1 & -1 \end{bmatrix} = 2 \times (-1) - (-2) \times 1 = -2 + 2 = 0.
+$$
+
+O determinante é zero. As colunas $(2,\ 1)$ e $(-2,\ -1)$ estão sobre a mesma
+reta: a segunda é $-1$ vez a primeira. A transformação achatou a planta
+inteira sobre a reta que passa pela origem na direção $(2,\ 1)$. Todos os
+lotes viraram segmentos, com área zero. É exatamente o que o programa
+mostrou.
+
+<LinearMap
+  matrix={[[2, -2], [1, -1]]}
+  window={[-4, 4, -2, 2]}
+  caption="A matriz do colega, de determinante zero. Depois dela, e₁ foi para (2, 1) e e₂ foi para (−2, −1), na mesma reta. O quadrado de lado 1 virou um segmento, e o plano inteiro foi achatado sobre essa reta."
+/>
+
+**Dá para desfazer?** Não. Veja dois pontos diferentes da planta original,
+$(2,\ 0)$ e $(3,\ 1)$:
+
+$$
+B\begin{bmatrix} 2 \\ 0 \end{bmatrix} = \begin{bmatrix} 4 \\ 2 \end{bmatrix},
+\qquad
+B\begin{bmatrix} 3 \\ 1 \end{bmatrix} = \begin{bmatrix} 2 \times 3 - 2 \times 1 \\ 1 \times 3 - 1 \times 1 \end{bmatrix} = \begin{bmatrix} 4 \\ 2 \end{bmatrix}.
+$$
+
+Os dois foram parar no mesmo lugar, $(4,\ 2)$. Olhando só o desenho
+achatado, não há como saber se $(4,\ 2)$ veio de $(2,\ 0)$, de $(3,\ 1)$ ou de
+infinitos outros pontos. Nenhuma matriz consegue desfazer isso, porque desfazer
+exigiria devolver uma única resposta. É a tabela da seção 8.10: determinante
+zero, sem inversa. O colega precisa voltar ao arquivo original.
+
+## 10. Exemplos resolvidos
+
+### Exemplo 1: fator de área de uma figura qualquer
+
+Uma transformação tem matriz $\begin{bmatrix} 4 & 1 \\ 2 & 3 \end{bmatrix}$.
+Um triângulo de área 3 passa por ela. Qual é a área do triângulo novo?
+
+**Solução.** $\det = 4 \times 3 - 1 \times 2 = 10$. Toda área é multiplicada
+por 10, inclusive a de um triângulo: ele é feito de pedaços de quadradinhos,
+e cada pedaço cresce 10 vezes. A área nova é $3 \times 10 = 30$.
+
+### Exemplo 2: o sinal
+
+Pause e tente: qual é o determinante de
+$\begin{bmatrix} 1 & 2 \\ 2 & 2 \end{bmatrix}$? O que ele diz sobre áreas e
+sobre orientação?
+
+**Solução.** $1 \times 2 - 2 \times 2 = 2 - 4 = -2$. As áreas dobram, porque
+$\lvert -2 \rvert = 2$. E o sinal negativo diz que a transformação espelha o
+plano. Conferência pelo desenho: $\vec{e}_1$ vai para $(1,\ 2)$ e
+$\vec{e}_2$ vai para $(2,\ 2)$. O vetor $(1,\ 2)$ está mais inclinado que
+$(2,\ 2)$, então, para ir do primeiro ao segundo pelo caminho mais curto, é
+preciso girar no sentido horário.
+
+### Exemplo 3: quando a matriz não tem inversa
+
+Pause e tente: para que valores de $k$ a matriz
+$\begin{bmatrix} k & 2 \\ 3 & k - 1 \end{bmatrix}$ não tem inversa?
+
+**Solução.** Ela não tem inversa exatamente quando o determinante é zero:
+
+$$
+k(k - 1) - 2 \times 3 = 0 \quad\Longleftrightarrow\quad k^2 - k - 6 = 0.
+$$
+
+É uma equação do 2º grau. Pela [fórmula de Bhaskara](../equacoes/formula-de-bhaskara),
+com $\Delta = 1 + 24 = 25$, as raízes são $k = \frac{1 + 5}{2} = 3$ e
+$k = \frac{1 - 5}{2} = -2$.
+
+Conferência. Com $k = 3$, a matriz é
+$\begin{bmatrix} 3 & 2 \\ 3 & 2 \end{bmatrix}$, e as colunas $(3,\ 3)$ e
+$(2,\ 2)$ estão na mesma reta. Com $k = -2$, a matriz é
+$\begin{bmatrix} -2 & 2 \\ 3 & -3 \end{bmatrix}$, e a segunda coluna é $-1$
+vez a primeira. Para qualquer outro $k$, a inversa existe.
+
+### Exemplo 4: escalonamento com troca de linhas
+
+Pause e tente: calcule o determinante de
+$\begin{bmatrix} 0 & 2 & 1 \\ 1 & 1 & 2 \\ 2 & 4 & 1 \end{bmatrix}$.
+
+**Solução.** O primeiro número da primeira linha é zero, e ele não serve de
+pivô. Trocamos as duas primeiras linhas, e **anotamos uma troca de sinal**:
+
+$$
+\begin{bmatrix} 0 & 2 & 1 \\ 1 & 1 & 2 \\ 2 & 4 & 1 \end{bmatrix}
+\xrightarrow{L_1 \leftrightarrow L_2}
+\begin{bmatrix} 1 & 1 & 2 \\ 0 & 2 & 1 \\ 2 & 4 & 1 \end{bmatrix}
+\xrightarrow{L_3 \leftarrow L_3 - 2L_1}
+\begin{bmatrix} 1 & 1 & 2 \\ 0 & 2 & 1 \\ 0 & 2 & -3 \end{bmatrix}
+\xrightarrow{L_3 \leftarrow L_3 - L_2}
+\begin{bmatrix} 1 & 1 & 2 \\ 0 & 2 & 1 \\ 0 & 0 & -4 \end{bmatrix}
+$$
+
+A diagonal dá $1 \times 2 \times (-4) = -8$. Houve uma troca, então o
+determinante é $-(-8) = 8$.
+
+Conferência por Sarrus, com $a = 0$, $b = 2$, $c = 1$, $d = 1$, $e = 1$,
+$f = 2$, $g = 2$, $h = 4$ e $i = 1$:
+
+$$
+0 + 2 \times 2 \times 2 + 1 \times 1 \times 4 - 1 \times 1 \times 2 - 0 - 2 \times 1 \times 1 = 8 + 4 - 2 - 2 = 8.
+$$
+
+### Exemplo 5: as bases da loja de tintas
+
+Na lição [Combinação linear e independência](./combinacao-linear-e-independencia),
+as bases da loja eram $\vec{p} = (2,\ 1,\ 0)$, $\vec{q} = (0,\ 1,\ 2)$ e
+$\vec{r} = (2,\ 3,\ 4)$, e a base $\vec{r}$ acabou trocada por
+$\vec{s} = (1,\ 0,\ 1)$. Pause e tente: confirme pelo determinante que
+$\vec{p}$, $\vec{q}$ e $\vec{r}$ são dependentes e que $\vec{p}$, $\vec{q}$ e
+$\vec{s}$ não são.
+
+**Solução.** Com os vetores como colunas, por Sarrus:
+
+$$
+\det \begin{bmatrix} 2 & 0 & 2 \\ 1 & 1 & 3 \\ 0 & 2 & 4 \end{bmatrix} = 8 + 0 + 4 - 0 - 12 - 0 = 0,
+$$
+
+$$
+\det \begin{bmatrix} 2 & 0 & 1 \\ 1 & 1 & 0 \\ 0 & 2 & 1 \end{bmatrix} = 2 + 0 + 2 - 0 - 0 - 0 = 4.
+$$
+
+Na primeira conta, os seis produtos são $2 \times 1 \times 4 = 8$,
+$0 \times 3 \times 0 = 0$, $2 \times 1 \times 2 = 4$,
+$2 \times 1 \times 0 = 0$, $2 \times 3 \times 2 = 12$ e
+$0 \times 1 \times 4 = 0$. O determinante zero confirma a dependência que a
+lição encontrou, $\vec{r} = \vec{p} + 2\vec{q}$: as três bases estão num
+mesmo plano, e a caixa formada por elas é achatada. Na segunda, o
+determinante é 4, diferente de zero, e as bases são independentes.
+
+### Exemplo 6: o determinante de um produto sem multiplicar
+
+Pause e tente: sem calcular o produto, encontre $\det(AB)$ para
+$A = \begin{bmatrix} 2 & 1 \\ 1 & 3 \end{bmatrix}$ e
+$B = \begin{bmatrix} 1 & -1 \\ 2 & 4 \end{bmatrix}$. Depois confira
+multiplicando.
+
+**Solução.** $\det A = 6 - 1 = 5$ e $\det B = 4 - (-2) = 6$. Pela regra do
+produto, $\det(AB) = 5 \times 6 = 30$.
+
+Conferência. Pela regra linha por coluna,
+
+$$
+AB = \begin{bmatrix} 2 \times 1 + 1 \times 2 & 2 \times (-1) + 1 \times 4 \\ 1 \times 1 + 3 \times 2 & 1 \times (-1) + 3 \times 4 \end{bmatrix} = \begin{bmatrix} 4 & 2 \\ 7 & 11 \end{bmatrix},
+$$
+
+e $\det(AB) = 4 \times 11 - 2 \times 7 = 44 - 14 = 30$.
+
+### Exemplo 7: a foto do drone
+
+Um drone fotografa uma fazenda com a câmera inclinada. Cada ponto do chão,
+com coordenadas em hectômetros, aparece na foto no ponto obtido pela matriz
+$F = \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix}$, em centímetros da foto.
+Um pasto aparece na foto com 36 cm². Qual é a área real do pasto?
+
+**Solução.** $\det F = 4 - 1 = 3$. A foto multiplica as áreas por 3: cada
+hectare do chão ocupa 3 cm² da foto. Para voltar da foto para o chão, é
+preciso desfazer $F$, e a inversa divide as áreas por 3, como mostrou a seção
+8.5. O pasto tem $36 \div 3 = 12$ hectares.
+
+## 11. Erros comuns
+
+> **Erro 1: achar que o determinante da soma é a soma dos determinantes.**
+> Teste com $A = B = I$, a identidade $2 \times 2$. Cada uma tem determinante
+> 1, e a soma dos determinantes é 2. Mas
+> $I + I = \begin{bmatrix} 2 & 0 \\ 0 & 2 \end{bmatrix}$, que estica as duas
+> direções 2 vezes e tem determinante $2 \times 2 = 4$. O determinante combina
+> bem com o produto de matrizes, porque produto é fazer uma transformação
+> depois da outra. A soma de matrizes não tem esse significado, e não existe
+> regra parecida para ela.
+
+> **Erro 2: achar que $\det(kA) = k \det A$.** Multiplicar a matriz inteira
+> por $k$ multiplica **todas** as linhas por $k$. Pela tabela da seção 8.8,
+> cada linha multiplica o determinante por $k$. Uma matriz $2 \times 2$ tem
+> duas linhas, então $\det(kA) = k^2 \det A$. Teste com $A = I$ e $k = 2$:
+> $\det(2I) = 4$, e não 2. No desenho: dobrar as duas direções multiplica a
+> área por 4, como ampliar uma foto 2 vezes em cada lado. Numa matriz
+> $3 \times 3$, $\det(kA) = k^3 \det A$.
+
+> **Erro 3: usar o esquema de Sarrus numa matriz 4 por 4.** O esquema das
+> diagonais dá 8 produtos numa matriz $4 \times 4$, mas o determinante
+> verdadeiro tem 24 produtos. Teste com a matriz que troca as linhas 1 e 2 e
+> também as linhas 3 e 4. Ela faz duas trocas, então o determinante é
+> $(-1) \times (-1) = 1$. No esquema, nenhuma diagonal que desce passa só
+> por números 1, e exatamente uma diagonal que sobe passa. O esquema daria
+> $0 - 1 = -1$, com o sinal errado. Para matrizes maiores que $3 \times 3$,
+> escalone.
+
+> **Erro 4: esquecer o sinal da troca de linhas.** No Exemplo 4, quem
+> multiplica a diagonal $1 \times 2 \times (-4)$ e para aí responde $-8$. A
+> troca $L_1 \leftrightarrow L_2$ espelhou o espaço, e esse espelhamento
+> precisa ser desfeito na resposta: o determinante é 8. Anote cada troca no
+> momento em que ela acontece.
+
+> **Erro 5: dividir uma linha e não compensar.** Para simplificar, é tentador
+> fazer $L_1 \leftarrow \frac{1}{2}L_1$. Isso multiplica o determinante por
+> $\frac{1}{2}$. Quem faz isso precisa multiplicar o resultado final por 2.
+> Para evitar o problema, use só as somas de múltiplos e as trocas, como na
+> receita da seção 8.8.
+
+> **Erro 6: confundir determinante negativo com área negativa.** Área nunca é
+> negativa. O determinante $-5$ quer dizer área multiplicada por 5 e plano
+> espelhado. O valor absoluto vai para a área, o sinal vai para a orientação.
+
+## 12. Perguntas de verificação
+
+1. Por que o que acontece com o quadrado de lado 1 já é suficiente para saber
+   quanto **qualquer** região cresce?
+2. Por que o determinante de um cisalhamento é 1, mesmo que ele deforme o
+   quadrado?
+3. Por que trocar as duas colunas de uma matriz troca o sinal do
+   determinante, mas não muda a área?
+4. Por que uma matriz com determinante zero não pode ter inversa?
+5. Por que $\det(AB) = \det(BA)$, mesmo quando $AB \neq BA$?
+6. Por que a regra “produto da diagonal” vale para matrizes triangulares e
+   não para as outras?
+7. Por que a operação $L_i \leftarrow L_i + kL_j$ não muda o determinante?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque a transformação leva a malha de quadrados numa malha de
+   paralelogramos **iguais**. Qualquer região é feita de quadradinhos, e cada
+   um vira um paralelogramo com a mesma proporção de área. Então a região
+   inteira cresce na mesma proporção que o quadrado de lado 1.
+2. Porque o cisalhamento só escorrega o quadrado de lado, sem mudar a base
+   nem a altura. Base e altura iguais dão área igual. Pela fórmula,
+   $\det \begin{bmatrix} 1 & k \\ 0 & 1 \end{bmatrix} = 1 - 0 = 1$.
+3. Porque o paralelogramo é o mesmo, então a área é a mesma. Mas os lados
+   chegam em ordem trocada: o giro do primeiro lado para o segundo, que era
+   anti-horário, passa a ser horário. Na fórmula: trocar as colunas troca
+   $ad - bc$ por $bc - ad$, que é o mesmo número com o sinal oposto.
+4. Porque determinante zero quer dizer que o espaço foi achatado, e então
+   pontos diferentes vão para o mesmo lugar. Uma inversa teria de devolver um
+   único ponto de origem para cada imagem, e há infinitos candidatos. Pela
+   regra do produto, uma inversa também exigiria
+   $\det A \times \det(A^{-1}) = 1$, o que é impossível com $\det A = 0$.
+5. Porque, pela regra do produto, os dois são $\det A \times \det B$, e a
+   multiplicação de números é comutativa. As duas ordens deformam a figura de
+   jeitos diferentes, mas o fator total de área é o mesmo produto dos dois
+   fatores.
+6. Porque numa triangular as primeiras colunas ficam “deitadas” nos primeiros
+   eixos. Assim, o volume se calcula em camadas: a área do chão vezes a
+   altura, e cada fator é um número da diagonal. Sem os zeros abaixo da
+   diagonal, os lados não ficam deitados, e o volume depende também das
+   outras entradas. No loteamento, o produto da diagonal dá 6, e a área é 5.
+7. Porque ela é a multiplicação por uma matriz de cisalhamento, que escorrega
+   o espaço em fatias sem mudar o volume: o determinante dessa matriz é 1.
+   Pela regra do produto, multiplicar por 1 não muda o determinante.
+
+</details>
+
+## 13. Exercícios
+
+### 1. Reconhecimento
+
+1. Calcule o determinante de cada matriz e diga se a transformação conserva
+   as áreas, muda as áreas, espelha o plano ou achata o plano: a)
+   $\begin{bmatrix} 2 & 0 \\ 0 & 3 \end{bmatrix}$ &nbsp; b)
+   $\begin{bmatrix} 1 & 4 \\ 0 & 1 \end{bmatrix}$ &nbsp; c)
+   $\begin{bmatrix} 2 & 6 \\ 1 & 3 \end{bmatrix}$ &nbsp; d)
+   $\begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}$.
+2. Quais destas matrizes têm determinante? a) $2 \times 2$ &nbsp; b)
+   $2 \times 3$ &nbsp; c) $3 \times 3$ &nbsp; d) $4 \times 1$.
+
+### 2. Explicação
+
+3. Explique, sem fazer contas, por que um cisalhamento não muda a área de
+   nenhuma figura.
+4. Explique por que, se as colunas de uma matriz quadrada são dependentes, o
+   determinante é zero.
+5. Um colega diz: “o determinante de $\begin{bmatrix} 3 & 1 \\ 1 & 2 \end{bmatrix}$
+   é 6, o produto da diagonal”. Explique o erro dele com o desenho do
+   loteamento.
+
+### 3. Aplicação direta
+
+6. Calcule $\det \begin{bmatrix} 5 & 2 \\ 3 & 4 \end{bmatrix}$. Um triângulo
+   de área 2,5 passa por essa transformação. Qual é a área nova?
+7. Calcule o determinante da matriz triangular
+   $\begin{bmatrix} 2 & 7 & -1 \\ 0 & 3 & 5 \\ 0 & 0 & 4 \end{bmatrix}$.
+8. Calcule o determinante de
+   $\begin{bmatrix} 1 & 2 & 3 \\ 2 & 5 & 7 \\ 1 & 3 & 5 \end{bmatrix}$ por
+   Sarrus e confira com o resultado da seção 8.8.
+
+### 4. Variação
+
+9. Para que valores de $k$ a matriz
+   $\begin{bmatrix} 2 & k \\ k & 8 \end{bmatrix}$ não tem inversa?
+10. Uma matriz $2 \times 2$ tem determinante 5. Quanto vale o determinante
+    de $3A$? E se $A$ fosse $3 \times 3$, com o mesmo determinante 5?
+11. Uma transformação tem determinante $-2$. Uma figura de área 6 passa por
+    ela. Qual é a área nova? O que mais você sabe sobre a figura nova?
+
+<details>
+<summary>Dica para o 10</summary>
+
+Multiplicar a matriz inteira por 3 é multiplicar cada linha por 3. Use a
+tabela da seção 8.8 uma vez para cada linha.
+
+</details>
+
+### 5. Problema misto
+
+12. Um bloco retangular de $2 \times 3 \times 2$ passa por uma transformação
+    que o deixa inclinado: as arestas viram as colunas de
+    $\begin{bmatrix} 2 & 0 & 1 \\ 0 & 3 & 1 \\ 0 & 0 & 2 \end{bmatrix}$. Qual
+    é o volume da caixa inclinada? Compare com o volume do bloco, que você
+    calcula pela lição [Volumes e superfícies](../geometria/volumes-e-superficies).
+13. Mostre que a rotação de qualquer ângulo $\theta$,
+    $\begin{bmatrix} \cos\theta & -\sen\theta \\ \sen\theta & \cos\theta \end{bmatrix}$,
+    tem determinante 1. Que relação de
+    [Relações fundamentais](../geometria/relacoes-fundamentais) você usou?
+    O que isso diz sobre as áreas de uma figura girada?
+14. Uma câmera transforma o chão na foto com uma matriz de determinante 4.
+    Um lago aparece na foto com 20 cm². Qual é a área do lago no chão, nas
+    unidades em que a matriz foi escrita? Qual é o determinante da matriz
+    que desfaz a foto?
+
+<details>
+<summary>Dica para o 13</summary>
+
+Aplique $ad - bc$ com $a = \cos\theta$, $b = -\sen\theta$, $c = \sen\theta$
+e $d = \cos\theta$. Cuidado com o sinal de $-bc$.
+
+</details>
+
+### 6. Justificativa
+
+15. Mostre, com letras, que $\det(kA) = k^2 \det A$ para toda matriz
+    $2 \times 2$.
+16. Mostre, com letras, que trocar as duas colunas de uma matriz
+    $2 \times 2$ troca o sinal do determinante.
+17. Use a regra do produto para mostrar que, se $A$ tem inversa, então
+    $\det(A^{-1}) = \dfrac{1}{\det A}$. Por que isso obriga
+    $\det A \neq 0$?
+18. Uma matriz $3 \times 3$ tem duas colunas iguais. Explique por que o
+    determinante dela é zero, sem fazer conta.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) $6$: as áreas ficam 6 vezes maiores, sem espelhar &nbsp; b) $1$: um
+   cisalhamento, as áreas se conservam &nbsp; c) $0$: achata o plano numa
+   reta, porque a coluna $(6,\ 3)$ é 3 vezes $(2,\ 1)$ &nbsp; d) $-1$: as
+   áreas se conservam, mas o plano é espelhado (é a reflexão na reta
+   $y = x$). Se você deu 1 no item d, provavelmente fez $0 \times 0 + 1 \times 1$:
+   a fórmula **subtrai** o produto da diagonal que sobe.
+2. Só as quadradas: a) e c). As matrizes b) e d) levam vetores de um espaço
+   para outro de tamanho diferente, e não há “quantas vezes maior” entre
+   grandezas de tipos diferentes.
+3. O cisalhamento escorrega cada fatia da figura para o lado, sem esticar
+   nem encolher a fatia. A figura fica torta, mas é feita das mesmas fatias,
+   com as mesmas medidas. No quadrado: mesma base, mesma altura, mesma área.
+4. No plano, colunas dependentes estão na mesma reta, e o paralelogramo que
+   elas formam é achatado, de área zero. Em qualquer tamanho, ao escalonar,
+   alguma coluna fica sem pivô, aparece um zero na diagonal, e o produto da
+   diagonal dá zero.
+5. O produto da diagonal só dá o determinante quando a matriz é triangular.
+   No loteamento, o recorte da seção 6 mostrou que o paralelogramo tem área
+   5: o retângulo de 4 por 3 menos as seis peças. A fórmula
+   $ad - bc = 6 - 1 = 5$ desconta o produto $bc$, que o colega esqueceu.
+6. $\det = 5 \times 4 - 2 \times 3 = 20 - 6 = 14$. A área nova é
+   $2{,}5 \times 14 = 35$.
+7. A matriz é triangular, então o determinante é o produto da diagonal:
+   $2 \times 3 \times 4 = 24$. As entradas acima da diagonal não entram.
+8. Os seis produtos são $1 \times 5 \times 5 = 25$,
+   $2 \times 7 \times 1 = 14$, $3 \times 2 \times 3 = 18$,
+   $3 \times 5 \times 1 = 15$, $1 \times 7 \times 3 = 21$ e
+   $2 \times 2 \times 5 = 20$. O determinante é $25 + 14 + 18 - 15 - 21 - 20 = 1$,
+   igual ao do escalonamento.
+9. $\det = 2 \times 8 - k \times k = 16 - k^2$. Ele é zero quando
+   $k^2 = 16$, ou seja, $k = 4$ ou $k = -4$. Conferência com $k = 4$: as
+   colunas são $(2,\ 4)$ e $(4,\ 8)$, e a segunda é o dobro da primeira. Se
+   você encontrou só $k = 4$, esqueceu a raiz negativa: $(-4)^2$ também é 16.
+10. Para $2 \times 2$: $\det(3A) = 3^2 \times 5 = 45$. Para $3 \times 3$:
+    $\det(3A) = 3^3 \times 5 = 135$. Se você respondeu 15, caiu no Erro 2:
+    o 3 multiplica cada linha, e cada linha multiplica o determinante por 3.
+11. A área nova é $6 \times \lvert -2 \rvert = 12$. Além disso, a figura nova
+    é espelhada em relação à antiga. Se você respondeu $-12$, reveja o Erro
+    6: o sinal vai para a orientação, não para a área.
+12. A matriz é triangular, então o determinante é
+    $2 \times 3 \times 2 = 12$. O bloco original tem volume
+    $2 \times 3 \times 2 = 12$, área da base vezes altura. Os dois volumes
+    são iguais: a transformação só escorregou o teto do bloco para o lado,
+    como um cisalhamento. As fatias horizontais continuam retângulos de
+    $2 \times 3$, e a altura continua 2.
+13. $\det = \cos\theta \times \cos\theta - (-\sen\theta) \times \sen\theta =
+    \cos^2\theta + \sen^2\theta = 1$, pela relação fundamental
+    $\sen^2\theta + \cos^2\theta = 1$. Determinante 1 quer dizer que girar não
+    muda nenhuma área e não espelha. Se você encontrou
+    $\cos^2\theta - \sen^2\theta$, errou o sinal: é menos vezes menos.
+14. A foto multiplica as áreas por 4. Então a área no chão é
+    $20 \div 4 = 5$, nas unidades da matriz. A matriz que desfaz a foto é a
+    inversa, com determinante $\frac{1}{4}$. Se você respondeu 80,
+    multiplicou em vez de dividir: a foto é que tem a área aumentada.
+15. Se $A = \begin{bmatrix} a & b \\ c & d \end{bmatrix}$, então
+    $kA = \begin{bmatrix} ka & kb \\ kc & kd \end{bmatrix}$. O determinante é
+    $(ka)(kd) - (kb)(kc) = k^2 ad - k^2 bc = k^2(ad - bc) = k^2 \det A$. O
+    $k$ aparece duas vezes em cada produto, uma vez para cada linha.
+16. A matriz com as colunas trocadas é
+    $\begin{bmatrix} b & a \\ d & c \end{bmatrix}$. O determinante dela é
+    $bc - ad$, que é $-(ad - bc)$: o mesmo número com o sinal trocado.
+17. A inversa cumpre $AA^{-1} = I$. Aplicando o determinante dos dois lados,
+    pela regra do produto: $\det A \times \det(A^{-1}) = \det I = 1$. Dividindo
+    por $\det A$: $\det(A^{-1}) = \frac{1}{\det A}$. Se $\det A$ fosse zero, o
+    lado esquerdo seria $0 \times \det(A^{-1}) = 0$, que não pode ser igual
+    a 1. Por isso uma matriz com inversa precisa ter determinante diferente de
+    zero.
+18. Duas colunas iguais são dependentes: uma é 1 vez a outra. Como duas das
+    três arestas coincidem, as três arestas ficam num mesmo plano, e a caixa
+    formada por elas é achatada. O volume é zero. Pelo escalonamento, alguma
+    coluna fica sem pivô, e a diagonal tem um zero.
+
+</details>
+
+## 14. Revisão curta
+
+- O **determinante** de uma matriz quadrada mede quanto a transformação
+  estica o espaço. Para $2 \times 2$,
+  $\det \begin{bmatrix} a & b \\ c & d \end{bmatrix} = ad - bc$, que é a área
+  do paralelogramo formado pelas colunas. Para $3 \times 3$, é o volume da
+  caixa formada pelas colunas.
+- A transformação multiplica **todas** as áreas (ou volumes) por
+  $\lvert \det A \rvert$. O sinal diz se ela espelha o espaço.
+- $\det A = 0$ quando a transformação achata o espaço. As colunas são
+  dependentes, e a matriz não tem inversa.
+- $\det(AB) = \det A \times \det B$, e por isso
+  $\det(A^{-1}) = \frac{1}{\det A}$. Para a soma não existe regra parecida.
+- Para calcular: em $2 \times 2$, use $ad - bc$. Em qualquer tamanho,
+  escalone até a forma triangular, multiplique a diagonal e troque o sinal a
+  cada troca de linhas. A regra de Sarrus é um atalho que só vale em
+  $3 \times 3$.
+
+A próxima lição, [Base, dimensão e posto](./base-dimensao-e-posto), conta
+quantas colunas de uma matriz carregam informação de verdade. Quando o
+determinante é zero, a resposta é “menos que todas”, e essa lição diz
+quantas.

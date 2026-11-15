@@ -1,0 +1,1137 @@
+---
+title: Matrizes e o produto de matriz por vetor
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Matrizes e o produto de matriz por vetor
+
+## 1. Problema motivador: três lojas, quatro produtos
+
+Uma pequena rede tem três lojas: Centro, Bairro e Shopping. Toda segunda-feira,
+cada loja faz o pedido ao mesmo fornecedor, que vende quatro produtos: café,
+queijo, pão e leite. A planilha de pedidos desta semana, em unidades, é esta:
+
+| Loja | Café | Queijo | Pão | Leite |
+|---|---|---|---|---|
+| Centro | 3 | 2 | 5 | 4 |
+| Bairro | 10 | 0 | 20 | 6 |
+| Shopping | 1 | 5 | 2 | 3 |
+
+Os preços do fornecedor, por unidade, são R\$ 4 o café, R\$ 10 o queijo,
+R\$ 2 o pão e R\$ 5 o leite.
+
+A primeira linha deve parecer familiar. As três primeiras quantidades do
+Centro, $(3,\ 2,\ 5)$, com os preços $(4,\ 10,\ 2)$, são a nota de compra da
+lição de [produto escalar](../geometria/produto-escalar), que deu R\$ 42. Agora
+há uma coluna a mais, o leite, e duas lojas a mais.
+
+O gerente financeiro faz duas perguntas:
+
+> 1. Quanto cada loja vai pagar nesta semana?
+> 2. O fornecedor avisou que o queijo vai subir R\$ 1. Quanto muda a conta de
+>    cada loja? Dá para saber sem refazer as três contas inteiras?
+
+A primeira pergunta pede três contas parecidas, uma por loja. A segunda pede
+para olhar a planilha de outro jeito: por coluna, e não por linha. Esta lição
+monta um único objeto para a planilha inteira, a **matriz**, e uma única
+operação que responde às duas perguntas, o **produto de matriz por vetor**. As
+respostas estão na seção 9.
+
+## 2. Mapa das ideias
+
+- **matriz**: uma tabela retangular de números, organizada em linhas e
+  colunas;
+- **dimensão** $m \times n$: a matriz tem $m$ linhas e $n$ colunas, nessa
+  ordem;
+- **entrada** $a_{ij}$: o número que está na linha $i$ e na coluna $j$;
+- **vetor coluna**: um vetor escrito em pé, como uma matriz de uma coluna só;
+- **produto de matriz por vetor** $A\vec{x}$: um vetor novo, com uma
+  coordenada para cada linha da matriz. Ele pode ser lido de dois jeitos que
+  dão o mesmo resultado:
+  - **por linhas**: cada coordenada é o produto escalar de uma linha da matriz
+    com $\vec{x}$;
+  - **por colunas**: o resultado é uma combinação linear das colunas, com os
+    pesos que estão em $\vec{x}$;
+- **dimensões compatíveis**: só se multiplica $A$ por $\vec{x}$ quando o número
+  de colunas de $A$ é igual ao número de coordenadas de $\vec{x}$;
+- **soma de matrizes** e **número vezes matriz**: feitas entrada por entrada;
+- **transposta** $A^{\mathsf{T}}$: a matriz com as linhas e as colunas trocadas
+  de papel.
+
+## 3. Para que serve
+
+- **Planilhas.** Quase toda planilha de números é uma matriz. Lojas por
+  produtos, clientes por gêneros de filme, meses por despesas. As perguntas
+  “quanto cada linha soma, com estes pesos?” e “o que acontece se um peso
+  mudar?” são produtos de matriz por vetor.
+- **Sistemas de equações.** Um sistema linear inteiro cabe numa linha:
+  $A\vec{x} = \vec{b}$. A matriz guarda os coeficientes, $\vec{x}$ guarda as
+  incógnitas e $\vec{b}$ guarda os resultados. É o assunto da próxima lição.
+- **Computação gráfica.** Girar, esticar ou inclinar uma imagem é multiplicar
+  as coordenadas de cada pixel por uma matriz pequena. É o assunto de
+  [Transformações lineares](./transformacoes-lineares).
+- **Imagens.** Uma foto em preto e branco é uma matriz: cada entrada é o brilho
+  de um pixel.
+- **Redes neurais.** Uma camada de uma rede neural recebe um vetor de números e
+  devolve outro, pela conta $\vec{y} = W\vec{x} + \vec{b}$. A letra $W$ é uma
+  matriz. A seção 10 faz essa conta com números pequenos.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. Do [produto escalar](../geometria/produto-escalar).** Quanto vale
+$(3,\ 2,\ 5) \cdot (4,\ 10,\ 2)$? O resultado é um número ou um vetor?
+
+<details>
+<summary>Conferir</summary>
+
+Multiplique as coordenadas correspondentes e some:
+$3 \times 4 + 2 \times 10 + 5 \times 2 = 12 + 20 + 10 = 42$. O resultado é
+**um número**: o total da nota de compra. O ponto entre os dois vetores não é a
+multiplicação de números; é a operação “multiplica cada par e soma”.
+
+</details>
+
+**2. Da [combinação linear](../geometria/soma-de-vetores).** Com
+$\vec{u} = (2,\ 1)$ e $\vec{v} = (1,\ 3)$, quanto vale $3\vec{u} + 1\vec{v}$?
+
+<details>
+<summary>Conferir</summary>
+
+Primeiro multiplique cada vetor pelo seu número: $3\vec{u} = (6,\ 3)$ e
+$1\vec{v} = (1,\ 3)$. Depois some coordenada a coordenada:
+$(6 + 1,\ 3 + 3) = (7,\ 6)$. Foi a “receita” do robô de armazém: 3 voltas do
+primeiro motor e 1 do segundo levam o robô até a prateleira em $(7,\ 6)$.
+
+</details>
+
+**3. De [vetores com muitas coordenadas](./vetores-com-muitas-coordenadas).**
+O produto escalar $(1,\ 2,\ 3) \cdot (4,\ 5)$ está definido?
+
+<details>
+<summary>Conferir</summary>
+
+Não está. A primeira lista tem três coordenadas e a segunda tem duas. A
+terceira coordenada, o 3, ficaria sem par para ser multiplicada. Produto
+escalar só existe entre vetores com o mesmo número de coordenadas. Essa
+exigência vai voltar nesta lição, como a regra das dimensões compatíveis.
+
+</details>
+
+**4. Dos [sistemas de duas equações](../equacoes/sistemas-de-duas-equacoes).**
+No sistema abaixo, quais números multiplicam as incógnitas $a$ e $b$?
+
+$$
+\begin{cases}
+2a + b = 7 \\
+a + 3b = 6
+\end{cases}
+$$
+
+<details>
+<summary>Conferir</summary>
+
+Na primeira equação, o $a$ é multiplicado por 2 e o $b$ por 1. Na segunda, o
+$a$ é multiplicado por 1 e o $b$ por 3. Esses números são os **coeficientes**
+do sistema. Guarde os quatro, nesta disposição:
+
+$$
+\begin{matrix} 2 & 1 \\ 1 & 3 \end{matrix}
+$$
+
+Eles vão formar uma matriz na seção 8. E repare: é o mesmo sistema que achou a
+receita do robô na pergunta 2, com solução $a = 3$ e $b = 1$.
+
+</details>
+
+Se alguma dessas respostas não veio, releia a página indicada antes de
+seguir. O resto desta lição usa as quatro ideias sem explicá-las de novo.
+
+## 5. Intuição: uma planilha que multiplica
+
+Volte à planilha das lojas e pense em como você calcularia a conta do Centro
+à mão. Você percorre a linha do Centro da esquerda para a direita. Em cada
+coluna, multiplica a quantidade pelo preço daquele produto. No fim, soma os
+quatro resultados.
+
+Para o Bairro, você faz a mesma coisa com a linha do Bairro, **usando os
+mesmos preços**. Para o Shopping, a mesma coisa de novo.
+
+Três observações sobre esse trabalho:
+
+- os **preços são os mesmos** para as três lojas. Eles formam uma lista só, que
+  é usada três vezes;
+- cada conta de loja é um **produto escalar**: a linha da loja com a lista de
+  preços;
+- o resultado final são **três números**, um por loja. Três números em ordem
+  formam um vetor.
+
+Então a planilha e a lista de preços produzem, juntas, um vetor de totais. A
+planilha funciona como uma máquina: entra uma lista de preços, sai uma lista
+de totais, com uma linha da planilha responsável por cada total.
+
+Agora a segunda pergunta, a do queijo. Se o queijo sobe R\$ 1, cada loja paga
+R\$ 1 a mais **por queijo que pediu**. O Centro pediu 2 queijos, o Bairro 0 e o
+Shopping 5. Os aumentos são esses números, e eles estão todos numa coluna só:
+a coluna do queijo. Para responder, você não precisou olhar o café, o pão nem
+o leite.
+
+Por isso a mesma planilha pode ser lida de dois jeitos. Pelas linhas, ela diz
+quanto cada loja paga. Pelas colunas, ela diz quanto cada produto pesa na conta
+de cada loja.
+
+## 6. Modelo visual: a planilha conta por conta
+
+Faça as doze multiplicações “quantidade vezes preço” de uma vez e escreva cada
+resultado na casa da planilha de onde ele saiu. Os preços estão no cabeçalho.
+
+| Loja | Café (R\$ 4) | Queijo (R\$ 10) | Pão (R\$ 2) | Leite (R\$ 5) | **Soma da linha** |
+|---|---|---|---|---|---|
+| Centro | $3 \times 4 = 12$ | $2 \times 10 = 20$ | $5 \times 2 = 10$ | $4 \times 5 = 20$ | **62** |
+| Bairro | $10 \times 4 = 40$ | $0 \times 10 = 0$ | $20 \times 2 = 40$ | $6 \times 5 = 30$ | **110** |
+| Shopping | $1 \times 4 = 4$ | $5 \times 10 = 50$ | $2 \times 2 = 4$ | $3 \times 5 = 15$ | **73** |
+
+Essa tabela de produtos contém as duas leituras da seção anterior:
+
+- **Somando cada linha**, da esquerda para a direita, saem os totais das
+  lojas: 62, 110 e 73 reais. É a leitura por linhas.
+- **Olhando cada coluna em pé**, você vê a parte da conta de cada loja que vem
+  de um produto. A coluna do queijo, $(20,\ 0,\ 50)$, é a contribuição do
+  queijo para as três contas. Ela é a coluna de quantidades $(2,\ 0,\ 5)$
+  multiplicada pelo preço 10. Somar as quatro colunas, como vetores, dá de
+  novo $(62,\ 110,\ 73)$. É a leitura por colunas.
+
+As duas leituras somam **os mesmos doze números**. Só agrupam de jeitos
+diferentes: a primeira soma linha por linha, a segunda soma coluna com coluna.
+Somar vetores-coluna é somar coordenada a coordenada, isto é, somar ao longo
+de cada linha. Por isso o resultado tem que ser o mesmo. A seção 8 escreve
+isso com letras.
+
+## 7. Ponte para a formalização: por que vale criar uma operação nova
+
+Você poderia continuar fazendo três produtos escalares separados. Por que dar
+nome a uma operação nova?
+
+Por três motivos, todos já visíveis no problema das lojas:
+
+1. **A planilha é um objeto só.** As três linhas usam os mesmos preços e
+   respondem a mesma pergunta. Tratar a planilha como um bloco, com um nome
+   ($A$), permite escrever a conta inteira como $A\vec{p}$, em vez de três
+   contas soltas.
+2. **O resultado é um vetor.** Os três totais formam o vetor $(62,\ 110,\ 73)$,
+   e ele pode entrar em contas novas: ser somado ao vetor da semana seguinte,
+   ser comparado com um orçamento.
+3. **A segunda leitura só aparece quando a planilha é um objeto.** A pergunta do
+   queijo não é sobre uma linha; é sobre uma coluna inteira. Ela só faz sentido
+   quando a planilha é vista como um bloco, com colunas que são vetores.
+
+O que fazemos daqui em diante é tirar os nomes das lojas e dos produtos da
+planilha. Ficam só os números, na mesma posição. A posição carrega o
+significado, como nas coordenadas de um vetor: a primeira linha é o Centro, a
+segunda coluna é o queijo. Trocar uma linha de lugar mudaria a planilha.
+
+## 8. Formalização
+
+### 8.1 Matriz, dimensão e entradas
+
+> Uma **matriz** $m \times n$ (lê-se “$m$ por $n$”) é uma tabela retangular de
+> números com $m$ linhas e $n$ colunas. O número na linha $i$ e na coluna $j$
+> se chama **entrada** $(i,\ j)$ da matriz e se escreve $a_{ij}$.
+
+Matrizes são escritas entre colchetes e nomeadas com letra maiúscula. A
+planilha das lojas é a matriz
+
+$$
+A = \begin{bmatrix}
+3 & 2 & 5 & 4 \\
+10 & 0 & 20 & 6 \\
+1 & 5 & 2 & 3
+\end{bmatrix}.
+$$
+
+Ela tem 3 linhas (as lojas) e 4 colunas (os produtos). Por isso é uma matriz
+$3 \times 4$. Na dimensão, **as linhas vêm primeiro**, sempre.
+
+No índice de uma entrada, também **a linha vem primeiro**. A entrada $a_{23}$
+está na linha 2 e na coluna 3: é o pão do Bairro, $a_{23} = 20$. Já a entrada
+$a_{32}$ está na linha 3 e na coluna 2: é o queijo do Shopping, $a_{32} = 5$.
+Trocar a ordem do índice muda a casa.
+
+**Exemplo.** A matriz
+
+$$
+B = \begin{bmatrix} 2 & 1 \\ 1 & 3 \end{bmatrix}
+$$
+
+é $2 \times 2$. Ela guarda os coeficientes do sistema do robô, da pergunta 4
+da seção 4: a primeira linha é a primeira equação, a segunda linha é a segunda
+equação. Suas entradas são $b_{11} = 2$, $b_{12} = 1$, $b_{21} = 1$ e
+$b_{22} = 3$.
+
+**Contraexemplo.** Uma “tabela” em que a primeira linha tem três números e a
+segunda tem dois **não é** uma matriz. Na matriz, toda linha tem o mesmo
+número de entradas. Numa planilha, isso corresponde a não deixar casa sem
+valor: se o Bairro não pediu queijo, a casa leva 0, e não fica vazia. O zero
+afirma “pediu zero”; a casa vazia não afirma nada.
+
+Uma matriz $3 \times 4$ e uma matriz $4 \times 3$ também não são do mesmo tipo,
+mesmo com doze entradas cada uma. Uma tem 3 linhas, a outra tem 4.
+
+### 8.2 Vetor coluna
+
+Até aqui, vetores foram escritos deitados: $(3,\ 4)$. Para multiplicar por
+matrizes, é mais prático escrevê-los **em pé**:
+
+$$
+(3,\ 4) \quad \text{e} \quad \begin{bmatrix} 3 \\ 4 \end{bmatrix}
+\quad \text{são o mesmo vetor.}
+$$
+
+> Um **vetor coluna** é um vetor escrito em pé. Ele tem as mesmas coordenadas,
+> na mesma ordem, de cima para baixo. Visto como matriz, um vetor coluna de $n$
+> coordenadas é uma matriz $n \times 1$.
+
+Nada muda no vetor: a primeira coordenada continua sendo a horizontal, a
+segunda continua sendo a vertical. Muda só a forma de escrever no papel. O
+motivo prático aparece na próxima seção: o vetor em pé fica alinhado com as
+colunas da matriz que o multiplica.
+
+Os preços do fornecedor formam o vetor coluna
+
+$$
+\vec{p} = \begin{bmatrix} 4 \\ 10 \\ 2 \\ 5 \end{bmatrix},
+$$
+
+na mesma ordem das colunas da planilha: café, queijo, pão, leite.
+
+### 8.3 Matriz vezes vetor, lida por linhas
+
+> Seja $A$ uma matriz $m \times n$ e $\vec{x}$ um vetor com $n$ coordenadas. O
+> produto $A\vec{x}$ é o vetor com $m$ coordenadas em que **a coordenada $i$ é
+> o produto escalar da linha $i$ de $A$ com $\vec{x}$**:
+>
+> $$(A\vec{x})_i = a_{i1}x_1 + a_{i2}x_2 + \cdots + a_{in}x_n.$$
+
+A notação $(A\vec{x})_i$ quer dizer “a coordenada $i$ do vetor $A\vec{x}$”.
+
+Para fazer a conta à mão, percorra a linha $i$ da matriz da esquerda para a
+direita e, ao mesmo tempo, o vetor de cima para baixo. Multiplique os pares
+que se encontram e some.
+
+**Exemplo.** Com a matriz $B$ do robô e o vetor $\vec{x} = (3,\ 1)$:
+
+$$
+B\vec{x} =
+\begin{bmatrix} 2 & 1 \\ 1 & 3 \end{bmatrix}
+\begin{bmatrix} 3 \\ 1 \end{bmatrix}
+=
+\begin{bmatrix} 2 \times 3 + 1 \times 1 \\ 1 \times 3 + 3 \times 1 \end{bmatrix}
+=
+\begin{bmatrix} 7 \\ 6 \end{bmatrix}.
+$$
+
+A primeira coordenada veio da primeira linha, $(2,\ 1)$, com o vetor
+$(3,\ 1)$: $6 + 1 = 7$. A segunda veio da segunda linha, $(1,\ 3)$, com o
+mesmo vetor: $3 + 3 = 6$. Repare que são as duas equações do sistema do robô,
+$2a + b = 7$ e $a + 3b = 6$, com $a = 3$ e $b = 1$. O sistema inteiro pode
+ser escrito como
+
+$$
+\begin{bmatrix} 2 & 1 \\ 1 & 3 \end{bmatrix}
+\begin{bmatrix} a \\ b \end{bmatrix}
+=
+\begin{bmatrix} 7 \\ 6 \end{bmatrix}.
+$$
+
+**Contraexemplo.** Multiplicar “linha por linha”, deitando o vetor ao lado da
+primeira linha e fazendo $(2 \times 3,\ 1 \times 1) = (6,\ 1)$, **não é** o
+produto $B\vec{x}$. Essa conta usa só a primeira linha da matriz, e não soma
+nada. Cada coordenada de $B\vec{x}$ é uma **soma** de produtos, e há uma
+coordenada para cada linha da matriz.
+
+### 8.4 A mesma conta, lida por colunas
+
+Escreva as colunas de $A$ como vetores: $\vec{a}_1$ é a primeira coluna,
+$\vec{a}_2$ a segunda, e assim por diante.
+
+> **Leitura por colunas.** $A\vec{x}$ é a combinação linear das colunas de
+> $A$ com os pesos que estão em $\vec{x}$:
+>
+> $$A\vec{x} = x_1\vec{a}_1 + x_2\vec{a}_2 + \cdots + x_n\vec{a}_n.$$
+
+Por que essa conta dá o mesmo resultado que a leitura por linhas? Olhe para a
+coordenada $i$ do lado direito. O vetor $x_1\vec{a}_1$ tem, na posição $i$, o
+número $x_1 a_{i1}$: o peso $x_1$ vezes a entrada da linha $i$ na primeira
+coluna. O vetor $x_2\vec{a}_2$ tem, na posição $i$, o número $x_2 a_{i2}$. E
+assim por diante. Somar vetores é somar coordenada a coordenada, então a
+coordenada $i$ da soma é
+
+$$
+x_1 a_{i1} + x_2 a_{i2} + \cdots + x_n a_{in}.
+$$
+
+Agora compare com a fórmula da leitura por linhas,
+$a_{i1}x_1 + a_{i2}x_2 + \cdots + a_{in}x_n$. As parcelas são as mesmas. Só a
+ordem dos fatores dentro de cada parcela mudou, e a multiplicação de números é
+comutativa: $x_1 a_{i1} = a_{i1} x_1$. Então as duas leituras dão o mesmo
+número em cada coordenada. Elas são a mesma soma de produtos, agrupada de dois
+jeitos, exatamente como na tabela de doze produtos da seção 6.
+
+**Exemplo.** O robô de novo. As colunas de $B$ são $\vec{b}_1 = (2,\ 1)$ e
+$\vec{b}_2 = (1,\ 3)$: os dois motores da lição de soma de vetores. Pela
+leitura por colunas,
+
+$$
+B\begin{bmatrix} 3 \\ 1 \end{bmatrix}
+= 3\begin{bmatrix} 2 \\ 1 \end{bmatrix} + 1\begin{bmatrix} 1 \\ 3 \end{bmatrix}
+= \begin{bmatrix} 6 \\ 3 \end{bmatrix} + \begin{bmatrix} 1 \\ 3 \end{bmatrix}
+= \begin{bmatrix} 7 \\ 6 \end{bmatrix}.
+$$
+
+É a receita do robô: 3 voltas do primeiro motor e 1 do segundo. O mesmo
+$(7,\ 6)$ que a leitura por linhas deu.
+
+<CartesianPlane
+  xMin={-1} xMax={8} yMin={-1} yMax={7}
+  xUnit={38}
+  segments={[
+    {from: [0, 0], to: [2, 1], arrow: true, tone: 1},
+    {from: [2, 1], to: [4, 2], arrow: true, tone: 1},
+    {from: [4, 2], to: [6, 3], arrow: true, tone: 1, label: '3\\vec{b}_1', dx: 6, dy: 20},
+    {from: [6, 3], to: [7, 6], arrow: true, tone: 2, label: '1\\vec{b}_2', dx: 26, dy: 4},
+    {from: [0, 0], to: [7, 6], arrow: true, tone: 3, label: 'B\\vec{x}', dx: -26, dy: -12},
+  ]}
+  labels={[{at: [7, 6], math: '(7,\\ 6)', tone: 3, dy: -20}]}
+  axisLabels={['x', 'y']}
+  caption="A leitura por colunas de Bx, com x = (3, 1). A primeira coluna de B, (2, 1), é usada três vezes; a segunda, (1, 3), uma vez. Encadeadas ponta com cauda, elas chegam a (7, 6), o mesmo resultado da leitura por linhas."
+/>
+
+As duas leituras servem a perguntas diferentes:
+
+| Leitura | O que cada parte calcula | Quando ajuda |
+|---|---|---|
+| por linhas | cada coordenada do resultado, separadamente, como um produto escalar | fazer a conta à mão; responder “quanto dá a linha $i$?” |
+| por colunas | o resultado inteiro, como mistura das colunas | entender o que muda quando um peso muda; ver $A\vec{x}$ como um ponto que as colunas alcançam |
+
+Uma consequência da leitura por colunas que vai ser usada muitas vezes no
+capítulo: multiplicar $A$ pelo vetor $\vec{e}_1 = (1,\ 0,\ \ldots,\ 0)$ dá a
+**primeira coluna** de $A$. Pela combinação, $A\vec{e}_1 = 1\vec{a}_1 +
+0\vec{a}_2 + \cdots + 0\vec{a}_n = \vec{a}_1$. Do mesmo jeito, $A\vec{e}_j$ é a
+coluna $j$.
+
+### 8.5 Dimensões compatíveis
+
+Na leitura por linhas, cada linha de $A$ faz um produto escalar com $\vec{x}$.
+O produto escalar exige o mesmo número de coordenadas dos dois lados. Uma linha
+de $A$ tem $n$ entradas, uma por coluna. Então $\vec{x}$ precisa ter $n$
+coordenadas.
+
+> $A\vec{x}$ só existe quando **o número de colunas de $A$ é igual ao número de
+> coordenadas de $\vec{x}$**. Se $A$ é $m \times n$ e $\vec{x}$ tem $n$
+> coordenadas, o resultado tem $m$ coordenadas, uma por linha de $A$.
+
+Uma forma de lembrar, escrevendo o vetor como matriz $n \times 1$:
+
+$$
+\underbrace{A}_{m \times n}\ \underbrace{\vec{x}}_{n \times 1}
+= \underbrace{A\vec{x}}_{m \times 1}.
+$$
+
+Os dois números de dentro, $n$ e $n$, precisam ser iguais. Os dois de fora, $m$
+e $1$, dão a forma do resultado.
+
+**Exemplo.** Na planilha, $A$ é $3 \times 4$ e $\vec{p}$ tem 4 coordenadas, uma
+por produto. O produto existe e tem 3 coordenadas, uma por loja.
+
+**Contraexemplo.** A matriz
+
+$$
+C = \begin{bmatrix} 1 & 0 & 2 \\ 3 & 1 & 1 \end{bmatrix}
+$$
+
+é $2 \times 3$. O produto de $C$ pelo vetor $(4,\ 5)$ **não existe**. Cada
+linha de $C$ tem três entradas, e o vetor tem só duas coordenadas: a terceira
+entrada de cada linha ficaria sem par. Na planilha, seria como ter preços para
+dois produtos e quantidades de três. A resposta certa é “a conta não está
+definida”, e não “completo com zero”.
+
+### 8.6 Soma de matrizes e número vezes matriz
+
+Matrizes de mesma dimensão se somam como vetores: entrada por entrada.
+
+> Se $A$ e $B$ são $m \times n$, a **soma** $A + B$ é a matriz $m \times n$ com
+> entradas $a_{ij} + b_{ij}$. Se $k$ é um número, a matriz $kA$ tem entradas
+> $k\,a_{ij}$.
+
+**Exemplo.** Os pedidos de duas semanas somados dão o pedido do período, loja
+por loja e produto por produto. Se uma loja dobra todos os pedidos, a planilha
+dela vira o dobro, entrada por entrada. Com matrizes pequenas:
+
+$$
+\begin{bmatrix} 1 & 4 \\ 0 & -2 \end{bmatrix} +
+\begin{bmatrix} 3 & 1 \\ 5 & 2 \end{bmatrix} =
+\begin{bmatrix} 4 & 5 \\ 5 & 0 \end{bmatrix},
+\qquad
+3\begin{bmatrix} 1 & 4 \\ 0 & -2 \end{bmatrix} =
+\begin{bmatrix} 3 & 12 \\ 0 & -6 \end{bmatrix}.
+$$
+
+**Contraexemplo.** Uma matriz $2 \times 2$ e uma $2 \times 3$ não se somam. A
+terceira coluna da segunda não tem com quem ser somada. Somar planilhas exige
+as mesmas linhas e as mesmas colunas, na mesma ordem.
+
+### 8.7 Transposta: a mesma planilha vista de lado
+
+A planilha das lojas também poderia ter sido montada com os produtos nas
+linhas e as lojas nas colunas. Os números seriam os mesmos; só a disposição
+mudaria.
+
+> A **transposta** de uma matriz $A$, escrita $A^{\mathsf{T}}$, é a matriz cuja
+> linha $i$ é a coluna $i$ de $A$. Se $A$ é $m \times n$, então $A^{\mathsf{T}}$
+> é $n \times m$, e a entrada $(i,\ j)$ de $A^{\mathsf{T}}$ é $a_{ji}$.
+
+**Exemplo.**
+
+$$
+A^{\mathsf{T}} =
+\begin{bmatrix}
+3 & 10 & 1 \\
+2 & 0 & 5 \\
+5 & 20 & 2 \\
+4 & 6 & 3
+\end{bmatrix}.
+$$
+
+A primeira linha de $A^{\mathsf{T}}$ é a coluna do café em $A$: o café pedido
+pelo Centro, pelo Bairro e pelo Shopping. A matriz é $4 \times 3$: quatro
+produtos, três lojas.
+
+Transpor duas vezes volta ao começo, $(A^{\mathsf{T}})^{\mathsf{T}} = A$:
+trocar linhas por colunas e depois trocar de novo devolve a disposição
+original.
+
+**Contraexemplo.** Transpor **não é** girar a tabela. Gire a matriz
+$\begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}$ um quarto de volta no sentido
+horário, como se gira uma folha de papel: a coluna da esquerda, lida de baixo
+para cima, vira a linha de cima, e sai
+$\begin{bmatrix} 3 & 1 \\ 4 & 2 \end{bmatrix}$. A transposta é outra:
+$\begin{bmatrix} 1 & 3 \\ 2 & 4 \end{bmatrix}$. Na transposta, a diagonal que
+vai do canto de cima à esquerda até o canto de baixo à direita fica parada, e
+cada entrada troca de lugar com a entrada simétrica em relação a essa
+diagonal. É um reflexo nessa diagonal, e não um giro.
+
+## 9. Resolvendo o problema das lojas
+
+**Primeira pergunta: quanto cada loja paga?** É o produto da planilha pelo
+vetor de preços, lido por linhas:
+
+$$
+A\vec{p} =
+\begin{bmatrix}
+3 & 2 & 5 & 4 \\
+10 & 0 & 20 & 6 \\
+1 & 5 & 2 & 3
+\end{bmatrix}
+\begin{bmatrix} 4 \\ 10 \\ 2 \\ 5 \end{bmatrix}
+=
+\begin{bmatrix}
+3 \times 4 + 2 \times 10 + 5 \times 2 + 4 \times 5 \\
+10 \times 4 + 0 \times 10 + 20 \times 2 + 6 \times 5 \\
+1 \times 4 + 5 \times 10 + 2 \times 2 + 3 \times 5
+\end{bmatrix}
+=
+\begin{bmatrix} 62 \\ 110 \\ 73 \end{bmatrix}.
+$$
+
+O Centro paga R\$ 62, o Bairro R\$ 110 e o Shopping R\$ 73. A conta do Centro
+é a nota de R\$ 42 da lição de produto escalar mais os 4 leites a R\$ 5, que
+somam R\$ 20.
+
+A mesma conta, lida por colunas, mostra a parte de cada produto:
+
+$$
+A\vec{p} =
+4\begin{bmatrix} 3 \\ 10 \\ 1 \end{bmatrix} +
+10\begin{bmatrix} 2 \\ 0 \\ 5 \end{bmatrix} +
+2\begin{bmatrix} 5 \\ 20 \\ 2 \end{bmatrix} +
+5\begin{bmatrix} 4 \\ 6 \\ 3 \end{bmatrix}
+=
+\begin{bmatrix} 12 \\ 40 \\ 4 \end{bmatrix} +
+\begin{bmatrix} 20 \\ 0 \\ 50 \end{bmatrix} +
+\begin{bmatrix} 10 \\ 40 \\ 4 \end{bmatrix} +
+\begin{bmatrix} 20 \\ 30 \\ 15 \end{bmatrix}
+=
+\begin{bmatrix} 62 \\ 110 \\ 73 \end{bmatrix}.
+$$
+
+Cada vetor da soma é “o que aquele produto custa a cada loja”. No Shopping, o
+queijo sozinho responde por R\$ 50 dos R\$ 73.
+
+**Segunda pergunta: o queijo sobe R\$ 1.** O vetor de preços novo é
+$(4,\ 11,\ 2,\ 5)$. Na leitura por colunas, só o peso da segunda coluna mudou:
+de 10 para 11. Todas as outras parcelas ficam iguais. Então o resultado novo é
+o antigo mais **uma vez a coluna do queijo**:
+
+$$
+\begin{bmatrix} 62 \\ 110 \\ 73 \end{bmatrix} +
+1\begin{bmatrix} 2 \\ 0 \\ 5 \end{bmatrix} =
+\begin{bmatrix} 64 \\ 110 \\ 78 \end{bmatrix}.
+$$
+
+O Centro passa a pagar R\$ 2 a mais, o Bairro nada a mais (não pediu queijo) e
+o Shopping R\$ 5 a mais. Não foi preciso refazer nenhuma das três contas
+inteiras.
+
+Conferência pela leitura por linhas, com o preço novo: Centro,
+$12 + 22 + 10 + 20 = 64$; Bairro, $40 + 0 + 40 + 30 = 110$; Shopping,
+$4 + 55 + 4 + 15 = 78$. Os mesmos números.
+
+Esse é o ganho da leitura por colunas. Quando um peso muda, o resultado muda
+na direção da coluna daquele peso, e só nela.
+
+## 10. Uma camada de rede neural
+
+A conta $A\vec{x}$ é a operação central das redes neurais. Vale ver uma com
+números pequenos, para reconhecê-la depois.
+
+Uma **camada** de rede neural recebe um vetor de entrada $\vec{x}$ e devolve
+um vetor de saída $\vec{y}$, pela regra
+
+$$
+\vec{y} = W\vec{x} + \vec{b}.
+$$
+
+A matriz $W$ guarda os **pesos** da camada, e o vetor $\vec{b}$ guarda os
+**viéses**, números que são somados no fim. Cada linha de $W$, junto com uma
+coordenada de $\vec{b}$, é o que se chama de um **neurônio** artificial: ele
+faz um produto escalar da sua linha com a entrada e soma o seu viés.
+
+Uma camada com 3 entradas e 2 saídas tem $W$ de dimensão $2 \times 3$. Por
+exemplo:
+
+$$
+W = \begin{bmatrix} 1 & 0 & 2 \\ -1 & 3 & 1 \end{bmatrix},
+\qquad
+\vec{b} = \begin{bmatrix} 1 \\ -2 \end{bmatrix},
+\qquad
+\vec{x} = \begin{bmatrix} 2 \\ 1 \\ 3 \end{bmatrix}.
+$$
+
+Faça a conta em duas etapas. Primeiro o produto, lido por linhas:
+
+$$
+W\vec{x} =
+\begin{bmatrix} 1 \times 2 + 0 \times 1 + 2 \times 3 \\
+(-1) \times 2 + 3 \times 1 + 1 \times 3 \end{bmatrix}
+=
+\begin{bmatrix} 2 + 0 + 6 \\ -2 + 3 + 3 \end{bmatrix}
+=
+\begin{bmatrix} 8 \\ 4 \end{bmatrix}.
+$$
+
+Depois some o viés, coordenada a coordenada:
+
+$$
+\vec{y} = \begin{bmatrix} 8 \\ 4 \end{bmatrix} + \begin{bmatrix} 1 \\ -2
+\end{bmatrix} = \begin{bmatrix} 9 \\ 2 \end{bmatrix}.
+$$
+
+As dimensões conferem: $W$ é $2 \times 3$, $\vec{x}$ tem 3 coordenadas, e
+$\vec{y}$ tem 2, uma por neurônio.
+
+Leia o peso como na pergunta do queijo. A entrada $w_{13} = 2$ diz que, se a
+terceira coordenada da entrada aumentar 1, a primeira saída aumenta 2. É a
+leitura por colunas: a terceira coluna de $W$, $(2,\ 1)$, é o quanto cada
+saída muda por unidade da terceira entrada.
+
+Duas observações honestas sobre o que este curso não cobre. Os números de $W$
+e de $\vec{b}$ não são escolhidos à mão: eles são ajustados automaticamente,
+num processo chamado **treinamento**, que usa cálculo de várias variáveis. E
+uma rede de verdade aplica uma função não linear depois de cada camada. A
+lição de [produto de matrizes](./produto-de-matrizes) mostra por que essa
+função é necessária.
+
+## 11. Exemplos resolvidos
+
+### Exemplo 1: ler uma matriz
+
+Considere
+
+$$
+M = \begin{bmatrix} 7 & -1 & 0 \\ 2 & 5 & 8 \end{bmatrix}.
+$$
+
+Qual é a dimensão de $M$? Quanto valem $m_{12}$ e $m_{21}$? Qual é a terceira
+coluna, como vetor?
+
+**Solução.** São 2 linhas e 3 colunas: $M$ é $2 \times 3$. A entrada $m_{12}$
+está na linha 1, coluna 2: vale $-1$. A entrada $m_{21}$ está na linha 2,
+coluna 1: vale 2. A terceira coluna é $(0,\ 8)$.
+
+Repare que $m_{12}$ e $m_{21}$ são números diferentes. A ordem do índice
+importa: linha primeiro.
+
+### Exemplo 2: um produto pelas duas leituras
+
+Pause e tente antes de ler: calcule $C\vec{x}$ para
+
+$$
+C = \begin{bmatrix} 1 & 0 & 2 \\ 3 & -1 & 1 \end{bmatrix},
+\qquad
+\vec{x} = \begin{bmatrix} 2 \\ 5 \\ 1 \end{bmatrix}.
+$$
+
+**Solução.** As dimensões conferem: $C$ é $2 \times 3$ e $\vec{x}$ tem 3
+coordenadas. O resultado terá 2 coordenadas.
+
+Por linhas:
+
+$$
+C\vec{x} =
+\begin{bmatrix} 1 \times 2 + 0 \times 5 + 2 \times 1 \\
+3 \times 2 + (-1) \times 5 + 1 \times 1 \end{bmatrix}
+=
+\begin{bmatrix} 2 + 0 + 2 \\ 6 - 5 + 1 \end{bmatrix}
+=
+\begin{bmatrix} 4 \\ 2 \end{bmatrix}.
+$$
+
+Por colunas:
+
+$$
+C\vec{x} =
+2\begin{bmatrix} 1 \\ 3 \end{bmatrix} +
+5\begin{bmatrix} 0 \\ -1 \end{bmatrix} +
+1\begin{bmatrix} 2 \\ 1 \end{bmatrix}
+=
+\begin{bmatrix} 2 \\ 6 \end{bmatrix} +
+\begin{bmatrix} 0 \\ -5 \end{bmatrix} +
+\begin{bmatrix} 2 \\ 1 \end{bmatrix}
+=
+\begin{bmatrix} 4 \\ 2 \end{bmatrix}.
+$$
+
+As duas leituras dão $(4,\ 2)$. Quando elas discordam numa conta sua, há um
+erro em uma delas: é uma conferência embutida.
+
+### Exemplo 3: a matriz que escolhe uma coluna
+
+Pause e tente: com $B = \begin{bmatrix} 2 & 1 \\ 1 & 3 \end{bmatrix}$, calcule
+$B\vec{e}_1$ e $B\vec{e}_2$, em que $\vec{e}_1 = (1,\ 0)$ e
+$\vec{e}_2 = (0,\ 1)$.
+
+**Solução.** Por linhas, $B\vec{e}_1 = (2 \times 1 + 1 \times 0,\
+1 \times 1 + 3 \times 0) = (2,\ 1)$, que é a primeira coluna de $B$. E
+$B\vec{e}_2 = (2 \times 0 + 1 \times 1,\ 1 \times 0 + 3 \times 1) = (1,\ 3)$,
+a segunda coluna.
+
+Pela leitura por colunas, isso era esperado: o vetor $\vec{e}_1$ tem peso 1 na
+primeira coluna e peso 0 na segunda. A receita pega a primeira coluna inteira
+e nada da segunda.
+
+<CartesianPlane
+  xMin={-1} xMax={5} yMin={-1} yMax={4}
+  xUnit={44}
+  segments={[
+    {from: [0, 0], to: [1, 0], arrow: true, tone: 1, label: '\\vec{e}_1', dx: -6, dy: 20},
+    {from: [0, 0], to: [0, 1], arrow: true, tone: 2, label: '\\vec{e}_2', dx: -20, dy: 0},
+    {from: [0, 0], to: [2, 1], arrow: true, tone: 1},
+    {from: [0, 0], to: [1, 3], arrow: true, tone: 2},
+  ]}
+  labels={[
+    {at: [2, 1], math: 'B\\vec{e}_1 = (2,\\ 1)', tone: 1, anchor: 'start', dx: 10, dy: -4},
+    {at: [1, 3], math: 'B\\vec{e}_2 = (1,\\ 3)', tone: 2, anchor: 'start', dx: 10, dy: -2},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Multiplicar B por e1 = (1, 0) devolve a primeira coluna de B, (2, 1). Multiplicar por e2 = (0, 1) devolve a segunda coluna, (1, 3). Cada seta curta e a seta longa da mesma cor formam um par."
+/>
+
+Esse fato vai ser a chave da lição de
+[transformações lineares](./transformacoes-lineares): as colunas de uma matriz
+dizem para onde ela leva $\vec{e}_1$ e $\vec{e}_2$.
+
+### Exemplo 4: o que a transposta calcula
+
+Pause e tente: na planilha das lojas, calcule $A^{\mathsf{T}}\vec{u}$ com
+$\vec{u} = (1,\ 1,\ 1)$. O que o resultado significa?
+
+**Solução.** $A^{\mathsf{T}}$ é $4 \times 3$ e $\vec{u}$ tem 3 coordenadas: a
+conta existe e dá 4 coordenadas. Cada linha de $A^{\mathsf{T}}$ é um produto,
+com as quantidades das três lojas. Multiplicar por 1 não muda nenhuma
+quantidade, então cada coordenada do resultado é a soma das três quantidades
+daquela linha:
+
+$$
+A^{\mathsf{T}}\vec{u} =
+\begin{bmatrix}
+3 & 10 & 1 \\
+2 & 0 & 5 \\
+5 & 20 & 2 \\
+4 & 6 & 3
+\end{bmatrix}
+\begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix}
+=
+\begin{bmatrix} 3 + 10 + 1 \\ 2 + 0 + 5 \\ 5 + 20 + 2 \\ 4 + 6 + 3 \end{bmatrix}
+=
+\begin{bmatrix} 14 \\ 7 \\ 27 \\ 13 \end{bmatrix}.
+$$
+
+São as quantidades totais que o fornecedor precisa separar: 14 cafés, 7
+queijos, 27 pães e 13 leites. A matriz $A$ responde perguntas sobre as lojas.
+A transposta, sobre os produtos.
+
+E por que não multiplicar $A\vec{u}$? Porque $A$ é $3 \times 4$ e $\vec{u}$
+tem 3 coordenadas: as dimensões não conferem.
+
+### Exemplo 5: a camada de rede neural com outra entrada
+
+Pause e tente: na camada da seção 10, troque a entrada por
+$\vec{x} = (0,\ 1,\ 0)$. Quanto vale $\vec{y}$?
+
+**Solução.** O vetor $(0,\ 1,\ 0)$ escolhe a segunda coluna de $W$, como no
+Exemplo 3: $W\vec{x} = (0,\ 3)$. Somando o viés,
+$\vec{y} = (0 + 1,\ 3 - 2) = (1,\ 1)$.
+
+Conferência por linhas: primeira saída,
+$1 \times 0 + 0 \times 1 + 2 \times 0 + 1 = 1$; segunda, $(-1) \times 0 + 3 \times 1 + 1 \times 0 - 2 = 1$. Bate.
+
+## 12. Erros comuns
+
+> **Erro 1: multiplicar a linha pela linha.** Escrever o vetor deitado ao lado
+> da matriz e multiplicar a primeira linha da matriz pelas coordenadas, uma a
+> uma, sem somar. Com $B = \begin{bmatrix} 2 & 1 \\ 1 & 3 \end{bmatrix}$ e
+> $\vec{x} = (3,\ 1)$, essa conta dá $(6,\ 1)$, e o certo é $(7,\ 6)$. Cada
+> coordenada do resultado é uma **soma** de produtos, e vem de **uma linha
+> inteira** da matriz com **o vetor inteiro**.
+
+> **Erro 2: trocar $m \times n$ por $n \times m$.** A planilha das lojas é
+> $3 \times 4$: 3 linhas, 4 colunas. Dizer $4 \times 3$ é descrever a
+> transposta. O teste é contar as linhas primeiro, de cima para baixo.
+
+> **Erro 3: ler $a_{ij}$ como coluna $i$, linha $j$.** Em $A$, $a_{23} = 20$
+> (linha 2, coluna 3: o pão do Bairro) e $a_{32} = 5$ (linha 3, coluna 2: o
+> queijo do Shopping). Ler o índice ao contrário troca uma entrada por outra,
+> e a conta sai errada sem nenhum aviso.
+
+> **Erro 4: dar ao resultado o tamanho errado.** O resultado de $A\vec{x}$ tem
+> uma coordenada **por linha** de $A$, e não uma por coluna. Na planilha, há
+> um total por loja (3), e não um total por produto (4). Quem escreve um
+> resultado com 4 coordenadas confundiu as leituras.
+
+> **Erro 5: multiplicar com dimensões que não conferem.** Uma matriz
+> $2 \times 3$ vezes um vetor de 2 coordenadas não existe. Completar o vetor
+> com zero para a conta “caber” inventa um dado: o zero afirma alguma coisa
+> que ninguém mediu.
+
+> **Erro 6: transpor girando a tabela.** Girar
+> $\begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}$ um quarto de volta dá
+> $\begin{bmatrix} 3 & 1 \\ 4 & 2 \end{bmatrix}$, que não é a transposta. A
+> transposta,
+> $\begin{bmatrix} 1 & 3 \\ 2 & 4 \end{bmatrix}$, mantém a diagonal principal
+> parada. Uma forma segura: escreva a primeira coluna como primeira linha, a
+> segunda coluna como segunda linha, e assim por diante.
+
+## 13. Perguntas de verificação
+
+1. Por que o vetor de preços tem que ter tantas coordenadas quantas são as
+   colunas da planilha, e não tantas quantas são as linhas?
+2. Por que as duas leituras de $A\vec{x}$, por linhas e por colunas, dão o
+   mesmo resultado?
+3. Na pergunta do queijo, por que o aumento de R\$ 1 mudou o resultado
+   exatamente pela coluna do queijo?
+4. Uma matriz $1 \times n$ vezes um vetor de $n$ coordenadas dá um resultado
+   com quantas coordenadas? Que operação já conhecida é essa?
+5. Por que $A\vec{e}_2$ é a segunda coluna de $A$?
+6. A matriz $A$ é $3 \times 4$. Que tamanho de vetor $A^{\mathsf{T}}$ aceita, e
+   de que tamanho é o resultado?
+7. Por que uma tabela com linhas de tamanhos diferentes não pode ser uma
+   matriz?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Porque cada coluna é um produto, e cada preço é de um produto. Na leitura
+   por linhas, a linha de uma loja percorre os produtos, e cada quantidade
+   precisa de um preço para formar par. As linhas são lojas, e o número de
+   lojas não tem nada a ver com quantos preços existem.
+2. Porque as duas somam os mesmos produtos $a_{ij}x_j$. A leitura por linhas
+   soma, em cada linha, os produtos daquela linha. A leitura por colunas monta
+   um vetor por coluna e soma os vetores, e somar vetores é somar coordenada a
+   coordenada, isto é, ao longo de cada linha. As parcelas e os grupos são os
+   mesmos; só a ordem de escrever muda.
+3. Porque, pela leitura por colunas, o resultado é uma soma em que cada coluna
+   aparece multiplicada pelo seu preço. Só o preço do queijo mudou, então só a
+   parcela da coluna do queijo mudou: ela passou de 10 vezes a coluna para 11
+   vezes a coluna. A diferença é uma vez a coluna do queijo.
+4. Uma coordenada só, porque a matriz tem uma linha só. A conta é a linha da
+   matriz vezes o vetor, multiplicando par a par e somando: é o produto
+   escalar. O produto de matriz por vetor é uma pilha de produtos escalares,
+   um por linha.
+5. Porque $\vec{e}_2$ tem 1 na segunda posição e 0 nas outras. Pela leitura
+   por colunas, $A\vec{e}_2 = 0\vec{a}_1 + 1\vec{a}_2 + 0\vec{a}_3 + \cdots =
+   \vec{a}_2$: a receita pega a segunda coluna inteira e nada das outras.
+6. $A^{\mathsf{T}}$ é $4 \times 3$. Ela aceita vetores de 3 coordenadas, uma
+   por coluna, e devolve vetores de 4 coordenadas, uma por linha. Na planilha:
+   entra um número por loja, sai um número por produto.
+7. Porque a regra do produto usa cada linha inteira contra o vetor inteiro. Se
+   uma linha tivesse menos entradas, alguma coordenada do vetor ficaria sem
+   par naquela linha. Além disso, “a coluna $j$” deixaria de existir em
+   algumas linhas, e $a_{ij}$ não estaria definido para todo $i$ e $j$.
+
+</details>
+
+## 14. Exercícios
+
+### 1. Reconhecimento
+
+1. Considere
+   $M = \begin{bmatrix} 2 & 0 & -1 & 5 \\ 7 & 3 & 4 & -2 \end{bmatrix}$.
+   a) Qual é a dimensão de $M$? &nbsp; b) Quanto valem $m_{13}$, $m_{21}$ e
+   $m_{24}$? &nbsp; c) Escreva a segunda coluna de $M$ como vetor.
+2. Diga se o produto está definido e, se estiver, quantas coordenadas tem o
+   resultado: a) matriz $3 \times 2$ vezes vetor de 2 coordenadas &nbsp; b)
+   matriz $2 \times 3$ vezes vetor de 2 coordenadas &nbsp; c) matriz
+   $4 \times 1$ vezes vetor de 1 coordenada &nbsp; d) matriz $1 \times 4$
+   vezes vetor de 4 coordenadas.
+3. Escreva a transposta de
+   $\begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \end{bmatrix}$ e diga sua dimensão.
+
+### 2. Explicação
+
+4. Explique, sem fazer conta, por que o produto de uma matriz $1 \times n$ por
+   um vetor de $n$ coordenadas é a mesma coisa que um produto escalar.
+5. Em $A\vec{x}$, a segunda coordenada de $\vec{x}$ aumenta 1 e as outras
+   ficam iguais. Explique o que acontece com o resultado, usando a leitura por
+   colunas.
+6. Uma colega diz que transpor uma matriz é girar a tabela. Explique o erro
+   com a matriz $\begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}$.
+
+### 3. Aplicação direta
+
+7. Calcule pelas duas leituras e confira que dão o mesmo resultado:
+   a) $\begin{bmatrix} 2 & 1 \\ 1 & 3 \end{bmatrix}
+   \begin{bmatrix} 4 \\ -1 \end{bmatrix}$ &nbsp;
+   b) $\begin{bmatrix} 1 & 0 & 2 \\ 3 & -1 & 1 \end{bmatrix}
+   \begin{bmatrix} 2 \\ 5 \\ 1 \end{bmatrix}$ &nbsp;
+   c) $\begin{bmatrix} 0 & 1 \\ 1 & 0 \\ 2 & 2 \end{bmatrix}
+   \begin{bmatrix} 3 \\ 7 \end{bmatrix}$.
+8. Com $A = \begin{bmatrix} 1 & 4 \\ 0 & -2 \end{bmatrix}$ e
+   $B = \begin{bmatrix} 3 & 1 \\ 5 & 2 \end{bmatrix}$, calcule $A + B$, $3A$ e
+   $A^{\mathsf{T}}$.
+
+### 4. Variação
+
+9. Com $M = \begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}$: a) calcule
+   $M\vec{e}_1$ e $M\vec{e}_2$. &nbsp; b) Usando só os resultados de a), e sem
+   fazer a conta por linhas, calcule $M\begin{bmatrix} 5 \\ -2 \end{bmatrix}$.
+   &nbsp; c) Confira o item b) pela leitura por linhas.
+10. Ache o número $k$ para que
+    $\begin{bmatrix} 2 & k \\ 1 & 3 \end{bmatrix}
+    \begin{bmatrix} 1 \\ 2 \end{bmatrix} =
+    \begin{bmatrix} 8 \\ 7 \end{bmatrix}$. Confira as duas coordenadas.
+11. Uma matriz $A$ multiplica um vetor de 3 coordenadas e o resultado tem 5
+    coordenadas. a) Qual é a dimensão de $A$? &nbsp; b) Qual é a dimensão de
+    $A^{\mathsf{T}}$, e quantas coordenadas tem um vetor que ela aceita?
+
+<details>
+<summary>Dica para o 9</summary>
+
+Escreva $(5,\ -2)$ como combinação de $\vec{e}_1$ e $\vec{e}_2$:
+$(5,\ -2) = 5\vec{e}_1 - 2\vec{e}_2$. A leitura por colunas diz que os mesmos
+pesos, 5 e $-2$, multiplicam as colunas de $M$.
+
+</details>
+
+<details>
+<summary>Dica para o 10</summary>
+
+Faça a leitura por linhas deixando o $k$ como letra. A primeira coordenada vira
+uma equação do 1º grau em $k$. A segunda coordenada não tem $k$ e serve para
+conferir se o problema é coerente.
+
+</details>
+
+### 5. Problema misto
+
+12. Uma padaria faz três produtos: pão, bolo e biscoito. A tabela diz quanto
+    de cada ingrediente vai em **um lote** de cada produto.
+
+    | Ingrediente | Pão | Bolo | Biscoito |
+    |---|---|---|---|
+    | Farinha (kg) | 5 | 1 | 2 |
+    | Açúcar (kg) | 0 | 1 | 1 |
+    | Ovos (unidades) | 2 | 6 | 4 |
+
+    Chame essa matriz de $R$. Nesta semana, a padaria vai produzir 3 lotes de
+    pão, 2 de bolo e 4 de biscoito: $\vec{x} = (3,\ 2,\ 4)$. Os preços dos
+    ingredientes são R\$ 4 o quilo de farinha, R\$ 5 o quilo de açúcar e
+    R\$ 1 o ovo: $\vec{c} = (4,\ 5,\ 1)$.
+
+    a) Calcule $R\vec{x}$ e diga o que cada coordenada significa.
+    &nbsp; b) Quanto a padaria gasta em ingredientes na semana?
+    &nbsp; c) Calcule $R^{\mathsf{T}}\vec{c}$ e diga o que cada coordenada
+    significa. &nbsp; d) Calcule $\vec{x} \cdot (R^{\mathsf{T}}\vec{c})$ e
+    compare com o item b). Por que o resultado tinha que ser o mesmo?
+13. Uma camada de rede neural tem
+    $W = \begin{bmatrix} 2 & -1 & 0 \\ 1 & 1 & 1 \end{bmatrix}$ e
+    $\vec{b} = (0,\ -5)$. a) Quantas entradas e quantas saídas ela tem?
+    &nbsp; b) Calcule $\vec{y} = W\vec{x} + \vec{b}$ para
+    $\vec{x} = (3,\ 4,\ 1)$. &nbsp; c) Se você pudesse aumentar em 1 uma das
+    três entradas, qual aumentaria mais a primeira saída? E qual a diminuiria?
+
+<details>
+<summary>Dica para o 12</summary>
+
+No item a), as linhas de $R$ são ingredientes e as colunas são produtos. Então
+$R\vec{x}$ tem um número por ingrediente. No item c), a transposta tem os
+produtos nas linhas: cada linha de $R^{\mathsf{T}}$ é a receita de um lote, e
+o produto escalar dela com os preços dá o custo de um lote.
+
+</details>
+
+### 6. Justificativa
+
+14. Para uma matriz $A$ de dimensão $2 \times 2$ e vetores $\vec{x}$ e
+    $\vec{y}$ de 2 coordenadas, mostre que $A(\vec{x} + \vec{y}) = A\vec{x} +
+    A\vec{y}$. Use a leitura por colunas.
+15. Mostre que $A(k\vec{x}) = k(A\vec{x})$ para qualquer número $k$, com $A$
+    de dimensão $2 \times 2$.
+16. Explique por que, se $A$ é $3 \times 4$, a transposta é $4 \times 3$, e por
+    que $(A^{\mathsf{T}})^{\mathsf{T}} = A$.
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) $2 \times 4$: duas linhas, quatro colunas. &nbsp; b) $m_{13} = -1$
+   (linha 1, coluna 3), $m_{21} = 7$ (linha 2, coluna 1), $m_{24} = -2$
+   (linha 2, coluna 4). &nbsp; c) $(0,\ 3)$. Se você respondeu $m_{21} = 0$,
+   leu linha e coluna ao contrário: 0 é $m_{12}$.
+2. a) Definido; 3 coordenadas. &nbsp; b) Não definido: as linhas têm 3
+   entradas e o vetor tem 2 coordenadas. &nbsp; c) Definido; 4 coordenadas.
+   Cada linha tem uma entrada só, que multiplica o único número do vetor.
+   &nbsp; d) Definido; 1 coordenada. É um produto escalar.
+3. $\begin{bmatrix} 1 & 4 \\ 2 & 5 \\ 3 & 6 \end{bmatrix}$, de dimensão
+   $3 \times 2$. A primeira coluna da original, $(1,\ 4)$, virou a primeira
+   linha.
+4. A matriz tem uma linha só. Pela regra por linhas, o resultado tem uma
+   coordenada, que é essa linha multiplicada pelo vetor, par a par, com os
+   produtos somados. É exatamente a definição do produto escalar.
+5. Pela leitura por colunas, $A\vec{x} = x_1\vec{a}_1 + x_2\vec{a}_2 + \cdots$.
+   Se $x_2$ aumenta 1, a parcela $x_2\vec{a}_2$ vira $(x_2 + 1)\vec{a}_2 =
+   x_2\vec{a}_2 + \vec{a}_2$, pela distributiva. As outras parcelas não mudam.
+   Então o resultado aumenta exatamente a segunda coluna, $\vec{a}_2$. Foi o
+   que aconteceu com o queijo.
+6. Girar um quarto de volta no sentido horário dá
+   $\begin{bmatrix} 3 & 1 \\ 4 & 2 \end{bmatrix}$. A transposta é
+   $\begin{bmatrix} 1 & 3 \\ 2 & 4 \end{bmatrix}$: a primeira coluna,
+   $(1,\ 3)$, vira a primeira linha. Na transposta, o 1 e o 4 da diagonal
+   ficam onde estavam, e só o 2 e o 3 trocam de lugar. No giro, todas as
+   entradas mudam de casa.
+7. a) Por linhas: $(2 \times 4 + 1 \times (-1),\ 1 \times 4 + 3 \times (-1))
+   = (7,\ 1)$. Por colunas: $4(2,\ 1) - 1(1,\ 3) = (8,\ 4) - (1,\ 3) =
+   (7,\ 1)$. &nbsp; b) $(4,\ 2)$, como no Exemplo 2. &nbsp; c) Por linhas:
+   $(0 \times 3 + 1 \times 7,\ 1 \times 3 + 0 \times 7,\ 2 \times 3 + 2 \times
+   7) = (7,\ 3,\ 20)$. Por colunas: $3(0,\ 1,\ 2) + 7(1,\ 0,\ 2) =
+   (0,\ 3,\ 6) + (7,\ 0,\ 14) = (7,\ 3,\ 20)$. O resultado tem 3 coordenadas
+   porque a matriz tem 3 linhas. Se você encontrou 2 coordenadas, deu ao
+   resultado o tamanho do vetor, e não o número de linhas.
+8. $A + B = \begin{bmatrix} 4 & 5 \\ 5 & 0 \end{bmatrix}$;
+   $3A = \begin{bmatrix} 3 & 12 \\ 0 & -6 \end{bmatrix}$;
+   $A^{\mathsf{T}} = \begin{bmatrix} 1 & 0 \\ 4 & -2 \end{bmatrix}$. Na
+   transposta, o 4 e o 0 trocaram de lugar; a diagonal, 1 e $-2$, ficou.
+9. a) $M\vec{e}_1 = (1,\ 3)$ e $M\vec{e}_2 = (2,\ 4)$: as duas colunas.
+   &nbsp; b) $M(5,\ -2) = 5(1,\ 3) - 2(2,\ 4) = (5,\ 15) - (4,\ 8) =
+   (1,\ 7)$. &nbsp; c) Por linhas:
+   $(1 \times 5 + 2 \times (-2),\ 3 \times 5 + 4 \times (-2)) =
+   (5 - 4,\ 15 - 8) = (1,\ 7)$. Bate.
+10. Primeira coordenada: $2 \times 1 + k \times 2 = 8$, ou seja, $2 + 2k = 8$,
+    $2k = 6$ e $k = 3$. Segunda coordenada: $1 \times 1 + 3 \times 2 = 7$, que
+    confere com o 7 pedido. Se você encontrou $k = 6$, esqueceu que o $k$
+    multiplica a segunda coordenada do vetor, que é 2.
+11. a) $5 \times 3$: 5 linhas, porque o resultado tem 5 coordenadas, e 3
+    colunas, porque o vetor tem 3 coordenadas. &nbsp; b) $A^{\mathsf{T}}$ é
+    $3 \times 5$ e aceita vetores de 5 coordenadas, devolvendo vetores de 3.
+12. a) $R\vec{x} = (5 \times 3 + 1 \times 2 + 2 \times 4,\ 0 \times 3 + 1
+    \times 2 + 1 \times 4,\ 2 \times 3 + 6 \times 2 + 4 \times 4) =
+    (25,\ 6,\ 34)$. A padaria precisa de 25 kg de farinha, 6 kg de açúcar e
+    34 ovos. &nbsp; b)
+    $\vec{c} \cdot (25,\ 6,\ 34) = 4 \times 25 + 5 \times 6 + 1 \times 34 =
+    100 + 30 + 34 = 164$ reais. &nbsp; c)
+    $R^{\mathsf{T}} = \begin{bmatrix} 5 & 0 & 2 \\ 1 & 1 & 6 \\ 2 & 1 & 4
+    \end{bmatrix}$ e
+    $R^{\mathsf{T}}\vec{c} = (20 + 0 + 2,\ 4 + 5 + 6,\ 8 + 5 + 4) =
+    (22,\ 15,\ 17)$. É o custo de ingredientes de **um lote** de cada
+    produto: R\$ 22 o pão, R\$ 15 o bolo e R\$ 17 o biscoito. &nbsp; d)
+    $3 \times 22 + 2 \times 15 + 4 \times 17 = 66 + 30 + 68 = 164$ reais, o
+    mesmo do item b). Tinha que ser igual, porque as duas contas somam o custo
+    de cada ingrediente de cada lote produzido. O item b) agrupa por
+    ingrediente (quanto de farinha ao todo, vezes o preço da farinha); o item
+    d) agrupa por produto (quanto custa um lote de pão, vezes os lotes de
+    pão). São as mesmas parcelas em grupos diferentes, como as duas leituras
+    da seção 6.
+13. a) 3 entradas (as colunas de $W$) e 2 saídas (as linhas). &nbsp; b)
+    $W\vec{x} = (2 \times 3 - 1 \times 4 + 0 \times 1,\ 3 + 4 + 1) =
+    (2,\ 8)$ e $\vec{y} = (2 + 0,\ 8 - 5) = (2,\ 3)$. &nbsp; c) A primeira
+    saída usa a primeira linha, $(2,\ -1,\ 0)$. Aumentar a primeira entrada
+    em 1 aumenta essa saída em 2; aumentar a segunda a diminui em 1; a
+    terceira não a afeta, porque o peso é 0. Se você respondeu com a primeira
+    **coluna**, $(2,\ 1)$, essa coluna diz como a primeira **entrada** afeta
+    as duas saídas, e não como as três entradas afetam a primeira saída.
+14. Chame as colunas de $A$ de $\vec{a}_1$ e $\vec{a}_2$. Pela leitura por
+    colunas, $A(\vec{x} + \vec{y}) = (x_1 + y_1)\vec{a}_1 + (x_2 +
+    y_2)\vec{a}_2$. Pela distributiva da multiplicação de número por vetor,
+    isso é $x_1\vec{a}_1 + y_1\vec{a}_1 + x_2\vec{a}_2 + y_2\vec{a}_2$.
+    Reagrupando pela comutativa e pela associativa da soma de vetores, fica
+    $(x_1\vec{a}_1 + x_2\vec{a}_2) + (y_1\vec{a}_1 + y_2\vec{a}_2) =
+    A\vec{x} + A\vec{y}$.
+15. Pela leitura por colunas, $A(k\vec{x}) = (kx_1)\vec{a}_1 +
+    (kx_2)\vec{a}_2$. Cada parcela é $k(x_1\vec{a}_1)$ e $k(x_2\vec{a}_2)$,
+    porque multiplicar por $kx_1$ é multiplicar por $x_1$ e depois por $k$. A
+    distributiva tira o $k$ comum: $k(x_1\vec{a}_1 + x_2\vec{a}_2) =
+    k(A\vec{x})$. Teste com $B = \begin{bmatrix} 2 & 1 \\ 1 & 3
+    \end{bmatrix}$, $\vec{x} = (3,\ 1)$ e $k = 2$: $B(6,\ 2) = (14,\ 12)$ e
+    $2 \times (7,\ 6) = (14,\ 12)$.
+16. A transposta transforma cada coluna de $A$ numa linha. $A$ tem 4
+    colunas, então $A^{\mathsf{T}}$ tem 4 linhas; cada coluna de $A$ tem 3
+    entradas (uma por linha), então cada linha de $A^{\mathsf{T}}$ tem 3
+    entradas. Logo $A^{\mathsf{T}}$ é $4 \times 3$. Transpor de novo
+    transforma cada coluna de $A^{\mathsf{T}}$ numa linha. As colunas de
+    $A^{\mathsf{T}}$ são as linhas de $A$, então as linhas do resultado são as
+    linhas de $A$, na mesma ordem: o resultado é $A$.
+
+**Se sua resposta não bateu:**
+
+Quase todo erro desta lista vem de um destes três pontos. Confira o índice:
+linha primeiro, coluna depois. Confira se cada coordenada do resultado é uma
+soma de produtos de uma linha inteira com o vetor inteiro. E confira as
+dimensões antes de começar: o número de colunas da matriz tem que ser igual
+ao número de coordenadas do vetor.
+
+</details>
+
+## 15. Revisão curta
+
+- Uma **matriz** $m \times n$ é uma tabela de números com $m$ linhas e $n$
+  colunas. A entrada $a_{ij}$ está na linha $i$ e na coluna $j$. Linha
+  primeiro, sempre.
+- Um **vetor coluna** é o mesmo vetor escrito em pé.
+- O produto $A\vec{x}$ só existe quando $A$ tem tantas colunas quanto $\vec{x}$
+  tem coordenadas. O resultado tem uma coordenada por linha de $A$.
+- **Leitura por linhas:** cada coordenada de $A\vec{x}$ é o produto escalar de
+  uma linha de $A$ com $\vec{x}$. É o jeito de fazer a conta.
+- **Leitura por colunas:** $A\vec{x}$ é a combinação linear das colunas de $A$
+  com os pesos de $\vec{x}$. É o jeito de entender o que muda quando um peso
+  muda. Em particular, $A\vec{e}_j$ é a coluna $j$.
+- As duas leituras somam os mesmos produtos, agrupados de dois jeitos. Por
+  isso dão o mesmo resultado.
+- Matrizes de mesma dimensão se somam entrada por entrada, e $kA$ multiplica
+  cada entrada por $k$. A **transposta** troca linhas por colunas.
+- Uma camada de rede neural é $\vec{y} = W\vec{x} + \vec{b}$: cada linha de $W$
+  é um neurônio que faz um produto escalar com a entrada.
+
+Esta lição partiu da planilha e do vetor e calculou o resultado. A próxima,
+[Sistemas lineares e escalonamento](./sistemas-lineares-e-escalonamento), faz
+a pergunta ao contrário. Uma nutricionista conhece a matriz (quanto de cada
+nutriente há em cada alimento) e o resultado que quer atingir (as metas do
+dia). Quanto de cada alimento ela deve usar? É descobrir $\vec{x}$ em
+$A\vec{x} = \vec{b}$.

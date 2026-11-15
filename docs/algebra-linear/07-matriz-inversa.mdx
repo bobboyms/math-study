@@ -1,0 +1,1431 @@
+---
+title: Matriz inversa
+---
+
+import LinearMap from '@site/src/components/LinearMap';
+
+# Matriz inversa
+
+## 1. Problema motivador: decodificar a mensagem da filial
+
+Uma rede de lojas usa um código simples para mandar à matriz o status de cada
+venda grande. A palavra de status vira números, uma letra de cada vez, pela
+posição no alfabeto: A vale 1, B vale 2, e assim por diante, até Z, que vale
+26. Os números são agrupados em pares. Cada par $(x,\ y)$ é multiplicado pela
+matriz
+
+$$
+A = \begin{bmatrix} 2 & 1 \\ 1 & 1 \end{bmatrix},
+$$
+
+e o que viaja pela rede são os pares que saem dessa multiplicação. Quem
+intercepta a mensagem vê números que não lembram letras.
+
+Hoje chegou esta sequência:
+
+$$
+49,\quad 27,\quad 32,\quad 18,\quad 31,\quad 26.
+$$
+
+A matriz sabe que a filial usou $A$. A pergunta é:
+
+> 1. Qual foi a palavra enviada?
+> 2. Uma colega sugere trocar $A$ pela matriz
+>    $B = \begin{bmatrix} 2 & 4 \\ 1 & 2 \end{bmatrix}$, “porque os números
+>    ficam mais embaralhados”. É uma boa ideia?
+
+Codificar já sabemos: é multiplicar matriz por vetor, como na lição de
+[matrizes](./matrizes). O problema é o caminho de volta. Para cada par
+recebido, precisamos descobrir **qual par entrou** na multiplicação. Esta lição
+constrói a ferramenta que faz esse caminho de volta de uma vez para todos os
+pares: a **matriz inversa**. As duas perguntas são respondidas na seção 9.
+
+## 2. Mapa das ideias
+
+- **desfazer uma transformação**: levar cada vetor de volta ao lugar de onde
+  ele saiu;
+- **matriz identidade** $I$: a matriz que deixa todo vetor onde está;
+- **matriz inversa** $A^{-1}$: a matriz que desfaz $A$. Vale
+  $A^{-1}A = I$ e $AA^{-1} = I$;
+- **matriz inversível**: uma matriz quadrada que tem inversa. A que não tem se
+  chama **não inversível** (ou **singular**);
+- **o número $ad - bc$**: decide se uma matriz $2 \times 2$ tem inversa. Se ele
+  for zero, não tem;
+- **método de Gauss-Jordan**: escalonar $[A \mid I]$ até chegar a
+  $[I \mid A^{-1}]$, para matrizes de qualquer tamanho;
+- **inversa de um produto**: $(AB)^{-1} = B^{-1}A^{-1}$, com a ordem trocada;
+- **resolver $A\vec{x} = \vec{b}$ pela inversa**: $\vec{x} = A^{-1}\vec{b}$.
+
+## 3. Para que serve
+
+- **Desfazer.** Um editor de imagens que girou uma foto $30^\circ$ precisa saber
+  girar de volta. Um programa de desenho que aplicou uma transformação a um
+  objeto precisa do botão “desfazer”. Cada transformação linear inversível tem
+  uma matriz que a desfaz.
+- **Muitos sistemas com a mesma matriz.** Na lição de
+  [sistemas lineares](./sistemas-lineares-e-escalonamento), a nutricionista
+  resolveu um plano de lanches. Se ela tiver cinquenta planos diferentes com os
+  mesmos três alimentos, a matriz dos coeficientes é sempre a mesma; só muda o
+  vetor de metas. A inversa resolve todos de uma vez.
+- **Criptografia.** O código do problema motivador é uma versão pequena da
+  **cifra de Hill**, publicada pelo matemático Lester Hill em 1929. Ela foi uma
+  das primeiras cifras construídas com matrizes.
+- **Computação gráfica.** Um jogo calcula onde cada ponto do mundo aparece na
+  tela com uma matriz. Para saber em que objeto o jogador clicou, é preciso o
+  caminho contrário: da tela para o mundo. É a inversa.
+- **Estatística e aprendizado de máquina.** O método dos mínimos quadrados,
+  que ajusta uma reta a dados com erro, chega a uma fórmula com a inversa de
+  uma matriz. Ele aparece mais adiante neste capítulo.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. Da [função inversa](../funcoes/funcao-inversa).** A função
+$f(x) = 2x + 1$ tem inversa? E a função $g(x) = x^2$, com domínio em todos os
+números reais?
+
+<details>
+<summary>Conferir</summary>
+
+A função $f$ tem inversa: $f^{-1}(x) = \frac{x - 1}{2}$. Ela desfaz o que $f$
+faz. Por exemplo, $f(3) = 7$ e $f^{-1}(7) = \frac{7 - 1}{2} = 3$.
+
+A função $g$ não tem inversa. Ela leva $3$ e $-3$ ao mesmo número, $9$.
+Partindo do 9, a volta não sabe se deve devolver 3 ou $-3$. Uma função só tem
+inversa quando **entradas diferentes dão saídas diferentes**. Essa exigência
+volta nesta lição, para matrizes.
+
+Aquela lição também avisava: o $-1$ de $f^{-1}$ **não** é expoente. O inverso
+de $f$ não é $\frac{1}{f}$. O mesmo aviso vale para $A^{-1}$.
+
+</details>
+
+**2. Do [produto de matriz por vetor](./matrizes).** Quanto vale
+$\begin{bmatrix} 2 & 1 \\ 1 & 1 \end{bmatrix}\begin{bmatrix} 22 \\ 5 \end{bmatrix}$?
+
+<details>
+<summary>Conferir</summary>
+
+Leia por linhas. A primeira linha faz o produto escalar com o vetor:
+$2 \times 22 + 1 \times 5 = 49$. A segunda:
+$1 \times 22 + 1 \times 5 = 27$. O resultado é $(49,\ 27)$. Repare: são os
+dois primeiros números da mensagem que chegou.
+
+</details>
+
+**3. Do [escalonamento](./sistemas-lineares-e-escalonamento).** Resolva o
+sistema $2x + y = 49$, $x + y = 27$ pela matriz aumentada.
+
+<details>
+<summary>Conferir</summary>
+
+A matriz aumentada é
+$\left[\begin{array}{cc|c} 2 & 1 & 49 \\ 1 & 1 & 27 \end{array}\right]$.
+Troque as linhas, $L_1 \leftrightarrow L_2$, para ter pivô 1:
+$\left[\begin{array}{cc|c} 1 & 1 & 27 \\ 2 & 1 & 49 \end{array}\right]$.
+Depois zere o 2 com $L_2 \leftarrow L_2 - 2L_1$: a segunda linha vira
+$[\,0 \;\; -1 \mid -5\,]$, porque $2 - 2 = 0$, $1 - 2 = -1$ e
+$49 - 54 = -5$. De baixo para cima: $-y = -5$ dá $y = 5$, e $x + 5 = 27$ dá
+$x = 22$.
+
+Você acabou de decodificar o primeiro par: $(22,\ 5)$.
+
+</details>
+
+**4. Da [independência linear](./combinacao-linear-e-independencia).** Os
+vetores $(2,\ 1)$ e $(4,\ 2)$ são linearmente dependentes ou independentes?
+
+<details>
+<summary>Conferir</summary>
+
+Dependentes: $(4,\ 2) = 2(2,\ 1)$. Um é múltiplo do outro, então as duas setas
+estão na mesma reta. Eles geram só essa reta, e não o plano inteiro. São as
+colunas da matriz $B$ que a colega sugeriu.
+
+</details>
+
+**5. Das [transformações lineares](./transformacoes-lineares).** Por que a
+projeção sobre o eixo $x$, de matriz
+$\begin{bmatrix} 1 & 0 \\ 0 & 0 \end{bmatrix}$, não pode ser desfeita?
+
+<details>
+<summary>Conferir</summary>
+
+Porque ela leva pontos diferentes ao mesmo lugar. Os pontos $(2,\ 3)$ e
+$(2,\ -5)$ têm a mesma sombra, $(2,\ 0)$. Olhando só a sombra, ninguém sabe de
+qual ponto ela veio. É o mesmo defeito da função $g(x) = x^2$ da pergunta 1.
+
+</details>
+
+**6. Do [produto de matrizes](./produto-de-matrizes).** O que a matriz
+identidade $I = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}$ faz com um
+vetor? E como se calcula a primeira coluna do produto $AX$?
+
+<details>
+<summary>Conferir</summary>
+
+A identidade deixa todo vetor como está:
+$I\begin{bmatrix} x \\ y \end{bmatrix} = \begin{bmatrix} 1x + 0y \\ 0x + 1y \end{bmatrix} = \begin{bmatrix} x \\ y \end{bmatrix}$.
+Ela leva $\vec{e}_1$ em $\vec{e}_1$ e $\vec{e}_2$ em $\vec{e}_2$, então suas
+colunas são $\vec{e}_1$ e $\vec{e}_2$. Por isso $AI = IA = A$ para toda matriz
+quadrada $A$ do mesmo tamanho.
+
+A primeira coluna de $AX$ é $A$ vezes a primeira coluna de $X$. Em geral, a
+coluna $j$ de $AX$ é $A$ vezes a coluna $j$ de $X$. Foi assim que a regra do
+produto foi deduzida: aplicando $A$ a cada coluna de $X$, uma de cada vez.
+
+</details>
+
+Se alguma resposta não veio, releia a página indicada antes de seguir. A lição
+usa as seis ideias sem explicá-las de novo.
+
+## 5. Intuição: toda ida que não perde informação tem volta
+
+Pense nas transformações do plano que você já conhece e em como desfazer cada
+uma:
+
+| Transformação | Como desfazer |
+|---|---|
+| girar $30^\circ$ no sentido anti-horário | girar $30^\circ$ no sentido horário |
+| esticar 2 vezes na horizontal | encolher pela metade na horizontal |
+| cisalhar: cada andar escorrega $k$ para a direita | escorregar cada andar $k$ para a esquerda |
+| projetar sobre o eixo $x$ | **não dá** |
+
+Nas três primeiras linhas, a volta existe e é outra transformação do mesmo
+tipo. Na última, não existe. A diferença é a que a pergunta 5 da seção 4
+apontou: a projeção **apaga informação**. Ela leva pontos diferentes ao mesmo
+lugar, e depois disso não há como saber de onde cada ponto veio.
+
+O código da filial precisa estar no primeiro grupo. Se dois pares de letras
+diferentes virassem o mesmo par de números, a matriz receberia uma mensagem
+ambígua. Então a pergunta “dá para decodificar?” é a mesma pergunta “a
+transformação apaga informação?”.
+
+E quando a volta existe, ela também é uma matriz. Desfazer uma transformação
+linear ainda respeita soma e multiplicação por número, porque a ida respeita.
+Por isso a volta também é linear, e toda transformação linear do plano é uma
+matriz. Essa matriz de volta é a **inversa**.
+
+## 6. Modelo visual: a malha vai e volta
+
+O primeiro desenho mostra a matriz $A$ do código. O quadrado de lado 1 vira um
+paralelogramo. O vetor $(1,\ 2)$, que seria o par de letras “AB”, vai para
+$(4,\ 3)$.
+
+<LinearMap
+  matrix={[[2, 1], [1, 1]]}
+  vectors={[{v: [1, 2], label: '(1,\\ 2)', imageLabel: '(4,\\ 3)'}]}
+  basisLabels={{after: ['(2,\\ 1)', '(1,\\ 1)', [14, 16], [-34, -8]]}}
+  window={[-1, 6, -1, 4]}
+  caption="A matriz A do código. As colunas (2, 1) e (1, 1) são os destinos de e₁ e e₂. O par (1, 2) vai para (4, 3)."
+/>
+
+O segundo desenho mostra a matriz que desfaz $A$. Ela vai ser calculada na
+seção 8; por enquanto, confira no desenho o que ela faz. Ela leva $(4,\ 3)$ de
+volta a $(1,\ 2)$.
+
+<LinearMap
+  matrix={[[1, -1], [-1, 2]]}
+  vectors={[{v: [4, 3], label: '(4,\\ 3)', imageLabel: '(1,\\ 2)'}]}
+  window={[-2, 6, -2, 4]}
+  caption="A matriz que desfaz A tem colunas (1, −1) e (−1, 2). O par codificado (4, 3) volta para (1, 2), o par de onde saiu."
+/>
+
+Compare os dois desenhos. O primeiro deforma a malha num sentido; o segundo
+deforma no sentido contrário, na medida exata para desfazer o primeiro. Aplicar
+um e depois o outro é o mesmo que não fazer nada.
+
+O terceiro desenho mostra a matriz $B$ da colega. As duas colunas, $(2,\ 1)$ e
+$(4,\ 2)$, estão na mesma reta. O plano inteiro é achatado sobre essa reta, e o
+quadrado vira um segmento. Os vetores $(1,\ -1)$ e $(-3,\ 1)$, que são
+diferentes, vão parar **no mesmo ponto**, $(-2,\ -1)$.
+
+<LinearMap
+  matrix={[[2, 4], [1, 2]]}
+  vectors={[
+    {v: [1, -1], label: '(1,\\ -1)', imageLabel: '(-2,\\ -1)'},
+    {v: [-3, 1], label: '(-3,\\ 1)', imageLabel: ''},
+  ]}
+  basisLabels={{after: ['(2,\\ 1)', '(4,\\ 2)', [12, 16], [-30, -12]]}}
+  window={[-5, 7, -2, 3]}
+  caption="A matriz B achata o plano numa reta. As colunas (2, 1) e (4, 2) estão na mesma reta, e o quadrado vira um segmento. Os vetores (1, −1) e (−3, 1) são diferentes, mas os dois vão para (−2, −1): as setas verdes do painel da direita caem uma em cima da outra."
+/>
+
+Olhando só o ponto $(-2,\ -1)$ do painel da direita, ninguém sabe se ele veio
+de $(1,\ -1)$ ou de $(-3,\ 1)$. A matriz $B$ apaga informação, como a
+projeção. Ela não tem volta.
+
+## 7. Ponte para a formalização: decodificar é resolver um sistema
+
+Volte ao primeiro par recebido, $(49,\ 27)$. Decodificar é achar o par
+$(x,\ y)$ tal que $A\begin{bmatrix} x \\ y \end{bmatrix} = \begin{bmatrix} 49 \\ 27 \end{bmatrix}$.
+Escrito equação por equação, isso é o sistema da pergunta 3 da seção 4:
+
+$$
+\begin{cases}
+2x + y = 49 \\
+x + y = 27
+\end{cases}
+$$
+
+Para os outros dois pares, os sistemas têm o **mesmo lado esquerdo**. Só muda o
+lado direito: $(32,\ 18)$ e depois $(31,\ 26)$. Resolver três sistemas
+separados repete três vezes as mesmas operações com as mesmas linhas.
+
+Para não repetir, resolva o sistema uma vez só, com letras no lado direito.
+Chame o par recebido de $(p,\ q)$:
+
+$$
+\begin{cases}
+2x + y = p \\
+x + y = q
+\end{cases}
+$$
+
+Subtraia a segunda equação da primeira. O $y$ desaparece, porque
+$y - y = 0$: sobra $x = p - q$. Agora troque esse $x$ na segunda equação:
+$(p - q) + y = q$, e então $y = -p + 2q$.
+
+Os dois resultados, $x = p - q$ e $y = -p + 2q$, são uma matriz vezes o vetor
+$(p,\ q)$. Leia por linhas: a primeira linha tem os coeficientes $1$ e $-1$; a
+segunda, $-1$ e $2$:
+
+$$
+\begin{bmatrix} x \\ y \end{bmatrix}
+=
+\begin{bmatrix} 1 & -1 \\ -1 & 2 \end{bmatrix}
+\begin{bmatrix} p \\ q \end{bmatrix}.
+$$
+
+Essa é a matriz do segundo desenho. Ela é a resolução do sistema já feita, para
+**qualquer** lado direito. Para decodificar um par, não precisamos mais
+escalonar nada: multiplicamos o par por essa matriz.
+
+Confira com o primeiro par: $p = 49$, $q = 27$ dá $x = 49 - 27 = 22$ e
+$y = -49 + 54 = 5$. É o $(22,\ 5)$ que o escalonamento achou.
+
+A seção 8 transforma essa ideia em definição. Depois mostra como achar a matriz
+de volta para qualquer $A$, e quando ela não existe.
+
+## 8. Formalização
+
+### 8.1 A matriz identidade
+
+> A **matriz identidade** $n \times n$, escrita $I$, tem 1 em cada posição da
+> diagonal (de cima à esquerda até embaixo à direita) e 0 em todas as outras.
+> Ela deixa todo vetor como está: $I\vec{v} = \vec{v}$.
+
+Em $2 \times 2$ e em $3 \times 3$:
+
+$$
+I = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix},
+\qquad
+I = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}.
+$$
+
+As colunas de $I$ são $\vec{e}_1$, $\vec{e}_2$ (e $\vec{e}_3$). A identidade
+faz com as matrizes o papel que o número 1 faz com os números: multiplicar por
+ela não muda nada, $AI = IA = A$.
+
+**Contraexemplo.** A matriz $\begin{bmatrix} 1 & 1 \\ 1 & 1 \end{bmatrix}$,
+cheia de uns, **não** é a identidade. Ela leva $(1,\ 0)$ em $(1,\ 1)$, e não
+deixa o vetor onde estava.
+
+### 8.2 Matriz inversa
+
+> Uma matriz quadrada $A$ é **inversível** quando existe uma matriz $A^{-1}$,
+> do mesmo tamanho, tal que
+>
+> $$A^{-1}A = I \qquad \text{e} \qquad AA^{-1} = I.$$
+>
+> A matriz $A^{-1}$ se chama **inversa** de $A$. Lê-se “$A$ inversa”.
+
+As duas igualdades têm leituras concretas no código da filial:
+
+- $A^{-1}A = I$: **codificar e depois decodificar** devolve o par original.
+  Para todo $\vec{v}$, $A^{-1}(A\vec{v}) = I\vec{v} = \vec{v}$.
+- $AA^{-1} = I$: **decodificar e depois codificar** devolve o par recebido.
+  Todo par que chega veio de algum par de letras.
+
+Para matrizes quadradas, vale um fato que não vamos demonstrar: se uma das
+duas igualdades vale, a outra também vale. Na prática, conferimos uma delas.
+Mas a definição pede as duas, porque são as duas que dizem “ida e volta”.
+
+**Exemplo.** A matriz $\begin{bmatrix} 1 & -1 \\ -1 & 2 \end{bmatrix}$ é a
+inversa de $A = \begin{bmatrix} 2 & 1 \\ 1 & 1 \end{bmatrix}$. Confira o
+produto $AA^{-1}$ entrada por entrada, cada uma como linha de $A$ vezes coluna
+de $A^{-1}$:
+
+$$
+\begin{bmatrix} 2 & 1 \\ 1 & 1 \end{bmatrix}
+\begin{bmatrix} 1 & -1 \\ -1 & 2 \end{bmatrix}
+=
+\begin{bmatrix}
+2 \times 1 + 1 \times (-1) & 2 \times (-1) + 1 \times 2 \\
+1 \times 1 + 1 \times (-1) & 1 \times (-1) + 1 \times 2
+\end{bmatrix}
+=
+\begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}.
+$$
+
+Na outra ordem:
+
+$$
+\begin{bmatrix} 1 & -1 \\ -1 & 2 \end{bmatrix}
+\begin{bmatrix} 2 & 1 \\ 1 & 1 \end{bmatrix}
+=
+\begin{bmatrix}
+1 \times 2 + (-1) \times 1 & 1 \times 1 + (-1) \times 1 \\
+(-1) \times 2 + 2 \times 1 & (-1) \times 1 + 2 \times 1
+\end{bmatrix}
+=
+\begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}.
+$$
+
+Os dois produtos dão $I$.
+
+**Contraexemplo.** A matriz $B = \begin{bmatrix} 2 & 4 \\ 1 & 2 \end{bmatrix}$
+**não** é inversível. Nenhuma matriz $X$ satisfaz $XB = I$. Se existisse,
+aplicando $X$ aos dois lados de $B(1,\ -1) = B(-3,\ 1)$ teríamos
+$(1,\ -1) = (-3,\ 1)$, o que é falso. Uma matriz que leva dois vetores
+diferentes ao mesmo lugar não tem inversa.
+
+**Atenção à notação.** Como em $f^{-1}$, o $-1$ de $A^{-1}$ não é uma
+potência de número. **Não existe divisão por matriz**, e $A^{-1}$ não é
+“$\frac{1}{A}$”. É o nome da matriz que desfaz $A$. A seção 11 mostra o
+erro que nasce de tratar $A^{-1}$ como “um sobre cada entrada”.
+
+### 8.3 A inversa de uma matriz $2 \times 2$
+
+Na seção 7, a inversa de $A$ saiu de resolver o sistema com letras no lado
+direito. Faça o mesmo com uma matriz $2 \times 2$ qualquer,
+$\begin{bmatrix} a & b \\ c & d \end{bmatrix}$. O sistema é:
+
+$$
+\begin{cases}
+ax + by = p \\
+cx + dy = q
+\end{cases}
+$$
+
+Este é o trecho mais algébrico da lição. Siga com lápis, e confira cada passo
+com os números de $A$: $a = 2$, $b = 1$, $c = 1$, $d = 1$.
+
+**Passo 1: eliminar o $y$.** Multiplique a primeira equação por $d$ e a segunda
+por $b$. Os dois termos com $y$ ficam iguais a $bdy$:
+
+$$
+adx + bdy = dp, \qquad bcx + bdy = bq.
+$$
+
+Subtraia a segunda da primeira. O $bdy$ some, e sobra:
+
+$$
+(ad - bc)\,x = dp - bq.
+$$
+
+**Passo 2: eliminar o $x$.** Agora multiplique a primeira equação por $c$ e a
+segunda por $a$. Os termos com $x$ ficam iguais a $acx$:
+
+$$
+acx + bcy = cp, \qquad acx + ady = aq.
+$$
+
+Subtraia a primeira da segunda. O $acx$ some, e sobra:
+
+$$
+(ad - bc)\,y = aq - cp.
+$$
+
+**Passo 3: dividir.** Se o número $ad - bc$ não for zero, divida os dois lados
+por ele:
+
+$$
+x = \frac{dp - bq}{ad - bc}, \qquad y = \frac{-cp + aq}{ad - bc}.
+$$
+
+Escrito como matriz vezes vetor, com o fator $\frac{1}{ad - bc}$ na frente:
+
+$$
+\begin{bmatrix} x \\ y \end{bmatrix}
+= \frac{1}{ad - bc}
+\begin{bmatrix} d & -b \\ -c & a \end{bmatrix}
+\begin{bmatrix} p \\ q \end{bmatrix}.
+$$
+
+Com os números de $A$: $ad - bc = 2 \times 1 - 1 \times 1 = 1$, e a matriz
+fica $\begin{bmatrix} 1 & -1 \\ -1 & 2 \end{bmatrix}$. É a inversa da seção 7.
+
+**Passo 4: conferir.** Os passos 1 e 2 mostraram o que $x$ e $y$ **precisam**
+valer, se o sistema tiver solução. Falta conferir que a matriz encontrada
+funciona mesmo. Multiplique sem o fator da frente:
+
+$$
+\begin{bmatrix} a & b \\ c & d \end{bmatrix}
+\begin{bmatrix} d & -b \\ -c & a \end{bmatrix}
+=
+\begin{bmatrix} ad - bc & -ab + ba \\ cd - dc & -cb + da \end{bmatrix}
+=
+\begin{bmatrix} ad - bc & 0 \\ 0 & ad - bc \end{bmatrix}.
+$$
+
+Fora da diagonal, os termos se cancelam: $-ab + ba = 0$ e $cd - dc = 0$. Na
+diagonal fica $ad - bc$ duas vezes. Então, dividindo tudo por $ad - bc$, sai a
+identidade. Na outra ordem a conta é parecida e também dá
+$(ad - bc)\,I$.
+
+> **Inversa de uma matriz $2 \times 2$.** Se $ad - bc \neq 0$,
+>
+> $$\begin{bmatrix} a & b \\ c & d \end{bmatrix}^{-1} = \frac{1}{ad - bc}\begin{bmatrix} d & -b \\ -c & a \end{bmatrix}.$$
+>
+> Em palavras: **troque de lugar** as duas entradas da diagonal ($a$ e $d$),
+> **troque o sinal** das outras duas ($b$ e $c$) e **divida** tudo por
+> $ad - bc$.
+
+O número $ad - bc$ vai ganhar nome e significado na próxima lição,
+[Determinante](./determinante). Lá você vai ver que ele mede quanto a matriz
+estica as áreas.
+
+**Exemplo.** Para $\begin{bmatrix} 3 & 5 \\ 1 & 2 \end{bmatrix}$:
+$ad - bc = 3 \times 2 - 5 \times 1 = 1$. Trocando $3$ e $2$ de lugar e o
+sinal de $5$ e $1$: a inversa é
+$\begin{bmatrix} 2 & -5 \\ -1 & 3 \end{bmatrix}$.
+
+**Contraexemplo.** Para $B = \begin{bmatrix} 2 & 4 \\ 1 & 2 \end{bmatrix}$:
+$ad - bc = 2 \times 2 - 4 \times 1 = 0$. A fórmula mandaria dividir por zero.
+A seção 8.5 mostra que isso não é um defeito da fórmula: a inversa de $B$
+realmente não existe.
+
+### 8.4 O método de Gauss-Jordan, para qualquer tamanho
+
+A fórmula da seção 8.3 vale só para $2 \times 2$. Para uma matriz $3 \times 3$
+ou maior, usamos o escalonamento. A ideia vem da pergunta 6 da seção 4.
+
+Queremos uma matriz $X$ com $AX = I$. A coluna $j$ do produto $AX$ é $A$ vezes
+a coluna $j$ de $X$. Então a igualdade $AX = I$ é, coluna por coluna:
+
+$$
+A\,(\text{coluna 1 de } X) = \vec{e}_1, \qquad
+A\,(\text{coluna 2 de } X) = \vec{e}_2, \qquad \ldots
+$$
+
+Cada coluna de $X$ é a solução de um sistema. Os sistemas têm todos a mesma
+matriz $A$; só muda o lado direito, que é uma coluna de $I$. É a situação da
+seção 7: mesmo lado esquerdo, lados direitos diferentes.
+
+As operações do escalonamento são escolhidas olhando **só para a parte de
+$A$**. O lado direito só sofre as mesmas operações. Então podemos resolver
+todos os sistemas ao mesmo tempo: escrevemos todos os lados direitos lado a
+lado, depois da barra. Isso dá a matriz $[A \mid I]$.
+
+E vamos além da forma escalonada. Em vez de parar na escada e fazer
+substituição de trás para a frente, continuamos com operações elementares até
+que a parte da esquerda vire a identidade:
+
+- cada pivô vira 1 (multiplicando a linha por um número);
+- zeramos os números **abaixo e também acima** de cada pivô.
+
+Quando a esquerda é $I$, cada linha diz diretamente o valor de uma incógnita, e
+a parte da direita é a resposta dos sistemas todos: a matriz $X = A^{-1}$.
+
+> **Método de Gauss-Jordan.** Escreva $[A \mid I]$ e aplique operações
+> elementares até que a parte esquerda vire $I$. A parte direita é, então,
+> $A^{-1}$:
+>
+> $$[A \mid I] \;\longrightarrow\; [I \mid A^{-1}].$$
+>
+> Se em algum momento a parte esquerda ganhar uma linha toda de zeros, $A$
+> não tem inversa.
+
+O nome lembra Carl Friedrich Gauss, do escalonamento, e Wilhelm Jordan, um
+geodesista alemão que popularizou o passo de zerar também acima dos pivôs.
+
+**Exemplo com a matriz do código.** Comece de $[A \mid I]$:
+
+$$
+\left[\begin{array}{cc|cc}
+2 & 1 & 1 & 0 \\
+1 & 1 & 0 & 1
+\end{array}\right]
+$$
+
+Troque as linhas, para ter pivô 1 na primeira coluna:
+
+$$
+\left[\begin{array}{cc|cc}
+1 & 1 & 0 & 1 \\
+2 & 1 & 1 & 0
+\end{array}\right]
+\qquad
+L_1 \leftrightarrow L_2
+$$
+
+Zere o 2 abaixo do pivô. Coluna por coluna: $2 - 2 \times 1 = 0$,
+$1 - 2 \times 1 = -1$, $1 - 2 \times 0 = 1$ e $0 - 2 \times 1 = -2$.
+
+$$
+\left[\begin{array}{cc|cc}
+1 & 1 & 0 & 1 \\
+0 & -1 & 1 & -2
+\end{array}\right]
+\qquad
+\begin{array}{l}
+\phantom{L_1} \\
+L_2 \leftarrow L_2 - 2L_1
+\end{array}
+$$
+
+Até aqui foi a eliminação de Gauss. Agora o passo de Jordan. Primeiro, o pivô
+da segunda linha vira 1, multiplicando a linha por $-1$:
+
+$$
+\left[\begin{array}{cc|cc}
+1 & 1 & 0 & 1 \\
+0 & 1 & -1 & 2
+\end{array}\right]
+\qquad
+\begin{array}{l}
+\phantom{L_1} \\
+L_2 \leftarrow -L_2
+\end{array}
+$$
+
+Depois zere o 1 **acima** desse pivô. Coluna por coluna: $1 - 0 = 1$,
+$1 - 1 = 0$, $0 - (-1) = 1$ e $1 - 2 = -1$.
+
+$$
+\left[\begin{array}{cc|cc}
+1 & 0 & 1 & -1 \\
+0 & 1 & -1 & 2
+\end{array}\right]
+\qquad
+\begin{array}{l}
+L_1 \leftarrow L_1 - L_2 \\
+\phantom{L_2}
+\end{array}
+$$
+
+A esquerda virou $I$. A direita é
+$\begin{bmatrix} 1 & -1 \\ -1 & 2 \end{bmatrix}$, a mesma inversa da fórmula.
+
+**Por que funciona, num caso concreto.** Olhe só a terceira coluna, a que
+começou como $\vec{e}_1 = (1,\ 0)$. Ela terminou como $(1,\ -1)$. Isso quer
+dizer que o sistema $A\vec{x} = \vec{e}_1$ tem solução $\vec{x} = (1,\ -1)$.
+Confira: $A(1,\ -1) = (2 - 1,\ 1 - 1) = (1,\ 0)$. Confere. A quarta coluna, do
+mesmo jeito, resolveu $A\vec{x} = \vec{e}_2$.
+
+**Contraexemplo de procedimento.** Fazer operações só na parte esquerda e
+esquecer a direita não funciona. A esquerda vira $I$, mas a direita continua
+sendo $I$, e $I$ não é a inversa de $A$: $AI = A$, que não é $I$. As operações
+precisam valer para a linha inteira, porque cada linha é um conjunto de
+equações.
+
+### 8.5 Quando a inversa não existe
+
+Para uma matriz $2 \times 2$, as afirmações abaixo dizem a mesma coisa. Cada
+uma se liga a uma lição anterior.
+
+> Para $A = \begin{bmatrix} a & b \\ c & d \end{bmatrix}$, são equivalentes:
+>
+> 1. $A$ **não** tem inversa;
+> 2. $ad - bc = 0$;
+> 3. as colunas de $A$ são linearmente dependentes (paralelas, ou uma delas é
+>    nula);
+> 4. $A$ achata o plano numa reta (ou num ponto só);
+> 5. existem dois vetores diferentes com a mesma imagem.
+
+A ligação entre o número $ad - bc$ e o desenho merece uma conta. Suponha
+$ad - bc = 0$. Então os dois vetores $(d,\ -c)$ e $(-b,\ a)$ vão para o vetor
+nulo:
+
+$$
+A\begin{bmatrix} d \\ -c \end{bmatrix} = \begin{bmatrix} ad - bc \\ cd - dc \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix},
+\qquad
+A\begin{bmatrix} -b \\ a \end{bmatrix} = \begin{bmatrix} -ab + ba \\ -cb + da \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix}.
+$$
+
+Se $A$ não é toda de zeros, pelo menos um desses dois vetores não é o vetor
+nulo, porque as coordenadas deles são as próprias entradas de $A$. Esse vetor
+e o vetor $\vec{0}$ são diferentes e vão para o mesmo lugar, $\vec{0}$. Então
+a transformação apaga informação, e não tem volta.
+
+Com $B$: $(d,\ -c) = (2,\ -1)$, e $B(2,\ -1) = (4 - 4,\ 2 - 2) = (0,\ 0)$. O
+par $(2,\ -1)$ some. E é por isso que $(1,\ -1)$ e $(-3,\ 1)$, da seção 6, têm
+a mesma imagem: a diferença entre eles é
+$(1,\ -1) - (-3,\ 1) = (4,\ -2) = 2(2,\ -1)$, justamente um múltiplo do vetor
+que some.
+
+Em matrizes maiores vale a mesma ideia, com a forma escalonada no lugar do
+número $ad - bc$: uma matriz quadrada é inversível exatamente quando o
+escalonamento produz um pivô em cada coluna. Uma coluna sem pivô quer dizer
+colunas dependentes, como na lição de
+[independência](./combinacao-linear-e-independencia), e uma linha de zeros
+aparece na parte esquerda do Gauss-Jordan.
+
+### 8.6 A inversa de um produto: meia e sapato
+
+De manhã você calça a meia e depois o sapato. À noite, para desfazer, a ordem
+se inverte: primeiro tira o sapato, depois a meia. Quem tentar tirar a meia
+primeiro vai encontrar o sapato no caminho.
+
+Com matrizes é igual. O produto $AB$ aplica primeiro $B$ (a meia) e depois $A$
+(o sapato). Para desfazer, primeiro desfazemos $A$, depois $B$:
+
+> $$(AB)^{-1} = B^{-1}A^{-1}.$$
+
+**Por que vale.** Multiplique $AB$ pelo candidato. A associatividade do
+[produto de matrizes](./produto-de-matrizes) permite mudar os parênteses de
+lugar sem mudar a ordem das matrizes:
+
+$$
+(AB)(B^{-1}A^{-1}) = A\,(BB^{-1})\,A^{-1} = A\,I\,A^{-1} = AA^{-1} = I.
+$$
+
+No meio, $BB^{-1}$ vira $I$ (a meia foi tirada logo depois de ser calçada),
+e $I$ não muda nada. Sobra $AA^{-1}$, que também é $I$.
+
+**Conferência numérica.** Tome a matriz do código,
+$A = \begin{bmatrix} 2 & 1 \\ 1 & 1 \end{bmatrix}$, e o cisalhamento
+$S = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}$. Primeiro, o produto:
+
+$$
+AS = \begin{bmatrix} 2 & 1 \\ 1 & 1 \end{bmatrix}\begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix} = \begin{bmatrix} 2 & 3 \\ 1 & 2 \end{bmatrix}.
+$$
+
+Pela fórmula 2 por 2: $ad - bc = 4 - 3 = 1$, então
+$(AS)^{-1} = \begin{bmatrix} 2 & -3 \\ -1 & 2 \end{bmatrix}$.
+
+Agora o candidato. As inversas separadas são
+$S^{-1} = \begin{bmatrix} 1 & -1 \\ 0 & 1 \end{bmatrix}$ (escorregar de
+volta) e $A^{-1} = \begin{bmatrix} 1 & -1 \\ -1 & 2 \end{bmatrix}$. Na ordem
+trocada:
+
+$$
+S^{-1}A^{-1} = \begin{bmatrix} 1 & -1 \\ 0 & 1 \end{bmatrix}\begin{bmatrix} 1 & -1 \\ -1 & 2 \end{bmatrix} = \begin{bmatrix} 2 & -3 \\ -1 & 2 \end{bmatrix}.
+$$
+
+Igual a $(AS)^{-1}$. Na ordem errada, o resultado é outro:
+
+$$
+A^{-1}S^{-1} = \begin{bmatrix} 1 & -1 \\ -1 & 2 \end{bmatrix}\begin{bmatrix} 1 & -1 \\ 0 & 1 \end{bmatrix} = \begin{bmatrix} 1 & -2 \\ -1 & 3 \end{bmatrix}.
+$$
+
+### 8.7 Resolver $A\vec{x} = \vec{b}$ com a inversa
+
+Se $A$ tem inversa, o sistema $A\vec{x} = \vec{b}$ se resolve multiplicando os
+dois lados **pela esquerda** por $A^{-1}$:
+
+$$
+A^{-1}(A\vec{x}) = A^{-1}\vec{b}.
+$$
+
+Do lado esquerdo, a associatividade junta $A^{-1}A$, que é $I$, e $I\vec{x}$ é
+$\vec{x}$. Então:
+
+> Se $A$ é inversível, o sistema $A\vec{x} = \vec{b}$ tem **uma única
+> solução**, para qualquer $\vec{b}$:
+>
+> $$\vec{x} = A^{-1}\vec{b}.$$
+
+É o que a seção 7 fez com o código: $\vec{x} = A^{-1}(p,\ q)$.
+
+“Pela esquerda” é parte da regra. O produto de matrizes depende da ordem, então
+multiplicar um lado pela esquerda e o outro pela direita não preserva a
+igualdade. Escrever $\vec{b}A^{-1}$ nem faz sentido: um vetor coluna com 2
+linhas não multiplica uma matriz $2 \times 2$ pela esquerda.
+
+**Então por que escalonar, se existe a inversa?** Para um sistema só, calcular
+a inversa dá **mais trabalho** que escalonar. O Gauss-Jordan carrega $n$
+colunas do lado direito, enquanto o escalonamento de um sistema carrega uma.
+Para matrizes grandes, achar a inversa custa cerca de três vezes mais contas
+que resolver um sistema. E, no computador, cada conta com números decimais
+traz um pequeno arredondamento: mais contas, mais erro acumulado. Por isso os
+programas de computação científica resolvem $A\vec{x} = \vec{b}$ escalonando, e
+quase nunca calculam $A^{-1}$ para isso.
+
+A inversa compensa em duas situações: quando há **muitos sistemas com a mesma
+matriz**, como os pares do código, e quando precisamos da transformação de
+volta como um objeto, como o “desfazer” de um editor.
+
+## 9. Resolvendo o problema da filial
+
+**Pergunta 1: qual foi a palavra?** A inversa de $A$ já foi calculada três vezes
+nesta lição, pela seção 7, pela fórmula e pelo Gauss-Jordan:
+
+$$
+A^{-1} = \begin{bmatrix} 1 & -1 \\ -1 & 2 \end{bmatrix}.
+$$
+
+Em palavras: a primeira letra do par é “primeiro número menos o segundo”; a
+segunda letra é “duas vezes o segundo menos o primeiro”. Os pares recebidos
+são $(49,\ 27)$, $(32,\ 18)$ e $(31,\ 26)$:
+
+| Par recebido $(p,\ q)$ | $p - q$ | $-p + 2q$ | Letras |
+|---|---|---|---|
+| $(49,\ 27)$ | $22$ | $-49 + 54 = 5$ | V, E |
+| $(32,\ 18)$ | $14$ | $-32 + 36 = 4$ | N, D |
+| $(31,\ 26)$ | $5$ | $-31 + 52 = 21$ | E, U |
+
+A palavra é **VENDEU**.
+
+**Conferência: codificar de novo.** Se a decodificação está certa, aplicar $A$
+aos pares encontrados devolve a mensagem recebida. A matriz $A$ leva
+$(x,\ y)$ em $(2x + y,\ x + y)$:
+
+- $(22,\ 5) \mapsto (44 + 5,\ 22 + 5) = (49,\ 27)$;
+- $(14,\ 4) \mapsto (28 + 4,\ 14 + 4) = (32,\ 18)$;
+- $(5,\ 21) \mapsto (10 + 21,\ 5 + 21) = (31,\ 26)$.
+
+Os três pares conferem. É a igualdade $AA^{-1} = I$ funcionando nos números.
+
+**Pergunta 2: a matriz da colega.** Para
+$B = \begin{bmatrix} 2 & 4 \\ 1 & 2 \end{bmatrix}$, temos
+$ad - bc = 2 \times 2 - 4 \times 1 = 0$. Então $B$ não tem inversa, e nenhuma
+matriz decodifica as mensagens dela.
+
+O problema não está na fórmula: a mensagem fica ambígua de verdade. A
+matriz $B$ leva $(x,\ y)$ em $(2x + 4y,\ x + 2y)$, e os dois números dependem
+só de $x + 2y$. Os pares “AB” $= (1,\ 2)$ e “CA” $= (3,\ 1)$ têm o mesmo
+$x + 2y = 5$:
+
+$$
+B\begin{bmatrix} 1 \\ 2 \end{bmatrix} = \begin{bmatrix} 2 + 8 \\ 1 + 4 \end{bmatrix} = \begin{bmatrix} 10 \\ 5 \end{bmatrix},
+\qquad
+B\begin{bmatrix} 3 \\ 1 \end{bmatrix} = \begin{bmatrix} 6 + 4 \\ 3 + 2 \end{bmatrix} = \begin{bmatrix} 10 \\ 5 \end{bmatrix}.
+$$
+
+Quem recebe $(10,\ 5)$ não tem como saber se a filial mandou “AB” ou “CA”. Os
+números de $B$ parecem mais embaralhados, mas é o contrário: $B$ **joga fora**
+metade da informação, porque achata o plano numa reta, como no terceiro
+desenho da seção 6. A sugestão é ruim. A primeira coisa a exigir de uma matriz
+de código é que ela tenha inversa.
+
+## 10. Exemplos resolvidos
+
+### Exemplo 1: inversa pela fórmula
+
+Calcule a inversa de $\begin{bmatrix} 3 & 5 \\ 1 & 2 \end{bmatrix}$ e confira.
+
+**Solução.** Primeiro o número que decide: $ad - bc = 3 \times 2 - 5 \times 1
+= 1$. Não é zero, então a inversa existe. Troque $3$ e $2$ de lugar, troque o
+sinal de $5$ e de $1$, e divida por 1:
+
+$$
+\begin{bmatrix} 3 & 5 \\ 1 & 2 \end{bmatrix}^{-1} = \begin{bmatrix} 2 & -5 \\ -1 & 3 \end{bmatrix}.
+$$
+
+Conferência:
+$\begin{bmatrix} 3 & 5 \\ 1 & 2 \end{bmatrix}\begin{bmatrix} 2 & -5 \\ -1 & 3 \end{bmatrix}
+= \begin{bmatrix} 6 - 5 & -15 + 15 \\ 2 - 2 & -5 + 6 \end{bmatrix}
+= \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}$.
+
+### Exemplo 2: quando a inversa tem frações
+
+Pause e tente antes de ler: calcule a inversa de
+$M = \begin{bmatrix} 4 & 2 \\ 3 & 2 \end{bmatrix}$.
+
+**Solução.** $ad - bc = 4 \times 2 - 2 \times 3 = 8 - 6 = 2$. Agora o fator
+$\frac{1}{2}$ não some:
+
+$$
+M^{-1} = \frac{1}{2}\begin{bmatrix} 2 & -2 \\ -3 & 4 \end{bmatrix} = \begin{bmatrix} 1 & -1 \\ -\tfrac{3}{2} & 2 \end{bmatrix}.
+$$
+
+Para multiplicar a matriz por $\frac{1}{2}$, cada entrada foi dividida por 2,
+como em “número vezes matriz” da lição de [matrizes](./matrizes). Conferência:
+
+$$
+\begin{bmatrix} 4 & 2 \\ 3 & 2 \end{bmatrix}\begin{bmatrix} 1 & -1 \\ -\tfrac{3}{2} & 2 \end{bmatrix}
+= \begin{bmatrix} 4 - 3 & -4 + 4 \\ 3 - 3 & -3 + 4 \end{bmatrix}
+= \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}.
+$$
+
+Uma matriz de números inteiros pode ter inversa com frações. Os inteiros só se
+mantêm quando $ad - bc$ é $1$ ou $-1$. Por isso o código da filial usa uma
+matriz com $ad - bc = 1$: a decodificação devolve letras inteiras.
+
+### Exemplo 3: Gauss-Jordan em $3 \times 3$
+
+Pause e tente antes de ler: calcule a inversa de
+
+$$
+C = \begin{bmatrix} 1 & 1 & 0 \\ 1 & 2 & 1 \\ 0 & 1 & 2 \end{bmatrix}.
+$$
+
+**Solução.** Escreva $[C \mid I]$:
+
+$$
+\left[\begin{array}{ccc|ccc}
+1 & 1 & 0 & 1 & 0 & 0 \\
+1 & 2 & 1 & 0 & 1 & 0 \\
+0 & 1 & 2 & 0 & 0 & 1
+\end{array}\right]
+$$
+
+**Primeira coluna.** O pivô é o 1 do topo. Só a segunda linha tem número
+abaixo dele para zerar. Coluna por coluna, $L_2 - L_1$ dá
+$1 - 1 = 0$, $2 - 1 = 1$, $1 - 0 = 1$, $0 - 1 = -1$, $1 - 0 = 1$ e
+$0 - 0 = 0$:
+
+$$
+\left[\begin{array}{ccc|ccc}
+1 & 1 & 0 & 1 & 0 & 0 \\
+0 & 1 & 1 & -1 & 1 & 0 \\
+0 & 1 & 2 & 0 & 0 & 1
+\end{array}\right]
+\qquad
+\begin{array}{l}
+\phantom{L_1} \\
+L_2 \leftarrow L_2 - L_1 \\
+\phantom{L_3}
+\end{array}
+$$
+
+**Segunda coluna.** O pivô é o 1 da segunda linha. No Gauss-Jordan, zeramos
+o número de cima **e** o de baixo. A primeira linha perde a segunda:
+$1 - 0 = 1$, $1 - 1 = 0$, $0 - 1 = -1$, $1 - (-1) = 2$, $0 - 1 = -1$ e
+$0 - 0 = 0$. A terceira linha também perde a segunda: $0$, $0$,
+$2 - 1 = 1$, $0 - (-1) = 1$, $0 - 1 = -1$ e $1 - 0 = 1$:
+
+$$
+\left[\begin{array}{ccc|ccc}
+1 & 0 & -1 & 2 & -1 & 0 \\
+0 & 1 & 1 & -1 & 1 & 0 \\
+0 & 0 & 1 & 1 & -1 & 1
+\end{array}\right]
+\qquad
+\begin{array}{l}
+L_1 \leftarrow L_1 - L_2 \\
+\phantom{L_2} \\
+L_3 \leftarrow L_3 - L_2
+\end{array}
+$$
+
+**Terceira coluna.** O pivô é o 1 da terceira linha. Acima dele há $-1$ na
+primeira linha e $1$ na segunda. A primeira linha ganha a terceira:
+$-1 + 1 = 0$, $2 + 1 = 3$, $-1 + (-1) = -2$ e $0 + 1 = 1$. A segunda perde a
+terceira: $1 - 1 = 0$, $-1 - 1 = -2$, $1 - (-1) = 2$ e $0 - 1 = -1$:
+
+$$
+\left[\begin{array}{ccc|ccc}
+1 & 0 & 0 & 3 & -2 & 1 \\
+0 & 1 & 0 & -2 & 2 & -1 \\
+0 & 0 & 1 & 1 & -1 & 1
+\end{array}\right]
+\qquad
+\begin{array}{l}
+L_1 \leftarrow L_1 + L_3 \\
+L_2 \leftarrow L_2 - L_3 \\
+\phantom{L_3}
+\end{array}
+$$
+
+A esquerda é $I$. Então:
+
+$$
+C^{-1} = \begin{bmatrix} 3 & -2 & 1 \\ -2 & 2 & -1 \\ 1 & -1 & 1 \end{bmatrix}.
+$$
+
+**Conferência de uma coluna.** A primeira coluna de $CC^{-1}$ é $C$ vezes
+$(3,\ -2,\ 1)$. Por linhas: $3 - 2 + 0 = 1$, $3 - 4 + 1 = 0$ e
+$0 - 2 + 2 = 0$. Saiu $(1,\ 0,\ 0)$, que é $\vec{e}_1$. As outras duas
+colunas se conferem do mesmo jeito e dão $\vec{e}_2$ e $\vec{e}_3$.
+
+### Exemplo 4: o Gauss-Jordan avisa que não há inversa
+
+Pause e tente antes de ler: a matriz
+$D = \begin{bmatrix} 1 & 2 & 1 \\ 2 & 4 & 3 \\ 1 & 2 & 0 \end{bmatrix}$ tem
+inversa?
+
+**Solução.** Comece o Gauss-Jordan. O pivô da primeira coluna é o 1 do topo.
+Zere os números abaixo dele:
+
+$$
+\left[\begin{array}{ccc|ccc}
+1 & 2 & 1 & 1 & 0 & 0 \\
+0 & 0 & 1 & -2 & 1 & 0 \\
+0 & 0 & -1 & -1 & 0 & 1
+\end{array}\right]
+\qquad
+\begin{array}{l}
+\phantom{L_1} \\
+L_2 \leftarrow L_2 - 2L_1 \\
+L_3 \leftarrow L_3 - L_1
+\end{array}
+$$
+
+Na segunda coluna, abaixo da primeira linha, só há zeros. Não há pivô nessa
+coluna, e nenhuma troca de linhas cria um. Isso já decide a resposta,
+mas continue um passo para ver a linha de zeros aparecer. O pivô da terceira
+coluna é o 1 da segunda linha; zere o $-1$ abaixo dele:
+
+$$
+\left[\begin{array}{ccc|ccc}
+1 & 2 & 1 & 1 & 0 & 0 \\
+0 & 0 & 1 & -2 & 1 & 0 \\
+0 & 0 & 0 & -3 & 1 & 1
+\end{array}\right]
+\qquad
+\begin{array}{l}
+\phantom{L_1} \\
+\phantom{L_2} \\
+L_3 \leftarrow L_3 + L_2
+\end{array}
+$$
+
+A parte esquerda tem uma linha de zeros. A terceira equação de cada sistema
+$D\vec{x} = \vec{e}_j$ ficou com o lado esquerdo zero e o lado direito
+diferente de zero ($-3$, $1$ ou $1$): é a linha impossível da lição de
+[sistemas lineares](./sistemas-lineares-e-escalonamento). Nenhum dos três
+sistemas tem solução, e $D$ **não tem inversa**.
+
+A causa estava à vista: a segunda coluna de $D$ é o dobro da primeira,
+$(2,\ 4,\ 2) = 2(1,\ 2,\ 1)$. As colunas são dependentes, e por isso falta um
+pivô.
+
+### Exemplo 5: dois sistemas com a mesma matriz
+
+Pause e tente antes de ler: use $C^{-1}$, do Exemplo 3, para resolver os dois
+sistemas $C\vec{x} = (4,\ 9,\ 8)$ e $C\vec{x} = (2,\ 5,\ 7)$.
+
+**Solução.** Pela seção 8.7, $\vec{x} = C^{-1}\vec{b}$. Para o primeiro lado
+direito, linha por linha de $C^{-1}$:
+
+$$
+\begin{bmatrix} 3 & -2 & 1 \\ -2 & 2 & -1 \\ 1 & -1 & 1 \end{bmatrix}\begin{bmatrix} 4 \\ 9 \\ 8 \end{bmatrix}
+= \begin{bmatrix} 12 - 18 + 8 \\ -8 + 18 - 8 \\ 4 - 9 + 8 \end{bmatrix}
+= \begin{bmatrix} 2 \\ 2 \\ 3 \end{bmatrix}.
+$$
+
+Para o segundo:
+
+$$
+\begin{bmatrix} 3 & -2 & 1 \\ -2 & 2 & -1 \\ 1 & -1 & 1 \end{bmatrix}\begin{bmatrix} 2 \\ 5 \\ 7 \end{bmatrix}
+= \begin{bmatrix} 6 - 10 + 7 \\ -4 + 10 - 7 \\ 2 - 5 + 7 \end{bmatrix}
+= \begin{bmatrix} 3 \\ -1 \\ 4 \end{bmatrix}.
+$$
+
+Conferência do primeiro: $C(2,\ 2,\ 3) = (2 + 2,\ 2 + 4 + 3,\ 2 + 6) =
+(4,\ 9,\ 8)$. Confere. Do segundo: $C(3,\ -1,\ 4) = (3 - 1,\ 3 - 2 + 4,\
+-1 + 8) = (2,\ 5,\ 7)$. Confere.
+
+Depois que $C^{-1}$ está calculada, cada sistema novo custa uma multiplicação de
+matriz por vetor, sem escalonamento.
+
+### Exemplo 6: a inversa de uma rotação
+
+Pause e tente antes de ler: a rotação de $\theta$, da lição de
+[transformações lineares](./transformacoes-lineares), é
+$R_\theta = \begin{bmatrix} \cos\theta & -\sen\theta \\ \sen\theta & \cos\theta \end{bmatrix}$.
+Calcule a inversa pela fórmula e interprete.
+
+**Solução.** O número que decide é
+
+$$
+ad - bc = \cos\theta \times \cos\theta - (-\sen\theta) \times \sen\theta = \cos^2\theta + \sen^2\theta = 1,
+$$
+
+pela relação fundamental de [Relações fundamentais](../geometria/relacoes-fundamentais).
+Então toda rotação tem inversa. Trocando as entradas da diagonal (que são
+iguais) e o sinal das outras duas:
+
+$$
+R_\theta^{-1} = \begin{bmatrix} \cos\theta & \sen\theta \\ -\sen\theta & \cos\theta \end{bmatrix}.
+$$
+
+Interpretação: é a rotação de $-\theta$. Como $\cos(-\theta) = \cos\theta$ e
+$\sen(-\theta) = -\sen\theta$, a matriz $R_{-\theta}$ tem exatamente essas
+entradas. Desfazer um giro de $\theta$ no sentido anti-horário é girar
+$\theta$ no sentido horário, como dizia a tabela da seção 5.
+
+Caso concreto, com $\theta = 90^\circ$: $R_{90^\circ} = \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix}$
+leva $(1,\ 0)$ em $(0,\ 1)$. A inversa,
+$\begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix}$, leva $(0,\ 1)$ em
+$(0 \times 0 + 1 \times 1,\ -1 \times 0 + 0 \times 1) = (1,\ 0)$, de volta.
+
+## 11. Erros comuns
+
+**Erro 1: inverter entrada por entrada.** A tentação é pensar que, se o inverso
+de 2 é $\frac{1}{2}$, a inversa de uma matriz é “um sobre cada entrada”. Teste
+com a matriz do código:
+
+$$
+\begin{bmatrix} 2 & 1 \\ 1 & 1 \end{bmatrix}\begin{bmatrix} \tfrac{1}{2} & 1 \\ 1 & 1 \end{bmatrix}
+= \begin{bmatrix} 1 + 1 & 2 + 1 \\ \tfrac{1}{2} + 1 & 1 + 1 \end{bmatrix}
+= \begin{bmatrix} 2 & 3 \\ \tfrac{3}{2} & 2 \end{bmatrix}.
+$$
+
+Não deu $I$. O produto de matrizes mistura linhas com colunas, então desfazer
+a matriz também precisa misturar. A inversa verdadeira,
+$\begin{bmatrix} 1 & -1 \\ -1 & 2 \end{bmatrix}$, tem até números negativos,
+que nenhum “um sobre” produziria.
+
+**Erro 2: dividir por uma matriz.** Escrever
+“$\vec{x} = \frac{\vec{b}}{A}$” parece natural, porque $3x = 12$ se resolve
+dividindo. Mas não existe divisão por matriz. Existe a multiplicação pela
+inversa, e ela precisa dizer **de que lado** acontece: $A^{-1}\vec{b}$. Com
+matrizes, $A^{-1}X$ e $XA^{-1}$ costumam ser diferentes. A fração esconde
+essa escolha.
+
+**Erro 3: manter a ordem na inversa do produto.** $(AB)^{-1}$ **não** é
+$A^{-1}B^{-1}$. A seção 8.6 mostrou com números:
+$(AS)^{-1} = \begin{bmatrix} 2 & -3 \\ -1 & 2 \end{bmatrix}$, mas
+$A^{-1}S^{-1} = \begin{bmatrix} 1 & -2 \\ -1 & 3 \end{bmatrix}$. Lembre da
+meia e do sapato: desfaz-se primeiro o que foi feito por último.
+
+**Erro 4: trocar as entradas erradas na fórmula $2 \times 2$.** A fórmula troca
+de lugar as entradas da **diagonal**, $a$ e $d$, e muda o sinal das outras
+duas, $b$ e $c$, que ficam onde estão. Trocar $b$ com $c$ é outra coisa. Com
+$A$: trocar $b$ com $c$ e mudar seus sinais daria
+$\begin{bmatrix} 1 & -1 \\ -1 & 2 \end{bmatrix}$ por coincidência, porque
+$b = c = 1$. Mas com $\begin{bmatrix} 3 & 5 \\ 1 & 2 \end{bmatrix}$ daria
+$\begin{bmatrix} 2 & -1 \\ -5 & 3 \end{bmatrix}$, e o produto com a matriz
+original tem $3 \times 2 + 5 \times (-5) = -19$ no canto de cima, e não 1.
+
+**Erro 5: esquecer de dividir por $ad - bc$.** Quando $ad - bc = 1$, como em
+$A$, esquecer não faz diferença, e o erro passa despercebido. No Exemplo 2,
+com $ad - bc = 2$, esquecer dá
+$\begin{bmatrix} 2 & -2 \\ -3 & 4 \end{bmatrix}$, e o produto com $M$ dá
+$2I$ em vez de $I$. Se a sua conferência deu “o dobro da identidade”, foi
+isso.
+
+**Erro 6: achar que só a matriz com zeros não tem inversa.** A matriz $B$ da
+colega não tem nenhuma entrada zero, e mesmo assim não tem inversa. O que
+decide é a **dependência entre as colunas**, que aparece no número
+$ad - bc$, e não a presença de zeros. No sentido contrário, a matriz
+$\begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}$ tem dois zeros e tem inversa:
+ela mesma.
+
+## 12. Perguntas de verificação
+
+**1.** Na linguagem do código da filial, o que diz $A^{-1}A = I$? E o que diz
+$AA^{-1} = I$?
+
+<details>
+<summary>Resposta</summary>
+
+$A^{-1}A = I$ diz que codificar e depois decodificar devolve o par original de
+letras. $AA^{-1} = I$ diz que decodificar e depois codificar devolve o par que
+chegou. A primeira garante que nenhuma palavra se perde; a segunda, que todo
+par recebido corresponde a algum par de letras.
+
+</details>
+
+**2.** A matriz $B$ da colega não tem zeros e não tem inversa. O que, então,
+decide se uma matriz $2 \times 2$ tem inversa?
+
+<details>
+<summary>Resposta</summary>
+
+O número $ad - bc$. Se ele é zero, as colunas são paralelas (dependentes), a
+matriz achata o plano numa reta e dois vetores diferentes vão para o mesmo
+lugar. Nesse caso não existe volta. Se $ad - bc \neq 0$, a fórmula da seção 8.3
+fornece a inversa.
+
+</details>
+
+**3.** No Gauss-Jordan, por que dá para resolver $A\vec{x} = \vec{e}_1$ e
+$A\vec{x} = \vec{e}_2$ ao mesmo tempo, na mesma tabela?
+
+<details>
+<summary>Resposta</summary>
+
+Porque as operações elementares são escolhidas olhando só para a parte de $A$,
+que é a mesma nos dois sistemas. Os lados direitos só sofrem as mesmas
+operações. Então escrever os dois lados direitos lado a lado, depois da barra,
+faz as duas resoluções de uma vez, sem que uma interfira na outra.
+
+</details>
+
+**4.** De onde vem a divisão por $ad - bc$ na fórmula da inversa $2 \times 2$?
+Por que ela é um aviso, e não só uma conta?
+
+<details>
+<summary>Resposta</summary>
+
+Vem de eliminar uma das incógnitas do sistema $A\vec{x} = (p,\ q)$: depois da
+eliminação sobra $(ad - bc)\,x = dp - bq$, e para isolar o $x$ é preciso
+dividir por $ad - bc$. Quando esse número é zero, a divisão é impossível, e
+isso corresponde a um fato da transformação: ela achata o plano e não pode ser
+desfeita.
+
+</details>
+
+**5.** Se $A$ tem inversa, quantas soluções tem o sistema $A\vec{x} = \vec{b}$?
+Por quê?
+
+<details>
+<summary>Resposta</summary>
+
+Exatamente uma, para qualquer $\vec{b}$. Existe pelo menos uma, porque
+$\vec{x} = A^{-1}\vec{b}$ funciona: $A(A^{-1}\vec{b}) = I\vec{b} = \vec{b}$. E
+não existe outra, porque qualquer solução, multiplicada pela esquerda por
+$A^{-1}$, dá $\vec{x} = A^{-1}\vec{b}$. É o desfecho “uma única solução” da
+lição de sistemas lineares.
+
+</details>
+
+**6.** Explique, sem fazer conta, por que $(AB)^{-1}$ é $B^{-1}A^{-1}$ e não
+$A^{-1}B^{-1}$.
+
+<details>
+<summary>Resposta</summary>
+
+O produto $AB$ aplica primeiro $B$ e depois $A$. Para voltar ao começo, é
+preciso desfazer primeiro a última coisa feita, que é $A$, e só depois $B$.
+Desfazer $A$ primeiro e depois $B$ é aplicar $A^{-1}$ primeiro, e no produto o
+que se aplica primeiro fica à direita: $B^{-1}A^{-1}$. É a meia e o sapato.
+
+</details>
+
+**7.** Sem fazer contas, qual é a inversa da reflexão no eixo $y$,
+$\begin{bmatrix} -1 & 0 \\ 0 & 1 \end{bmatrix}$?
+
+<details>
+<summary>Resposta</summary>
+
+Ela mesma. Espelhar duas vezes no mesmo espelho devolve cada ponto ao lugar
+original: $(x,\ y) \mapsto (-x,\ y) \mapsto (x,\ y)$. Pela fórmula, conferindo:
+$ad - bc = -1$, e
+$\frac{1}{-1}\begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix} = \begin{bmatrix} -1 & 0 \\ 0 & 1 \end{bmatrix}$.
+
+</details>
+
+## 13. Exercícios
+
+### 1. Reconhecimento
+
+1. Quais destas matrizes têm inversa?
+   (a) $\begin{bmatrix} 2 & 6 \\ 1 & 3 \end{bmatrix}$
+   (b) $\begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}$
+   (c) $\begin{bmatrix} 5 & 0 \\ 0 & 0 \end{bmatrix}$
+   (d) $\begin{bmatrix} 1 & 4 \\ 2 & 7 \end{bmatrix}$
+2. Sem usar a fórmula, decida se $\begin{bmatrix} 1 & -2 \\ 0 & 1 \end{bmatrix}$
+   é a inversa de $\begin{bmatrix} 1 & 2 \\ 0 & 1 \end{bmatrix}$.
+
+### 2. Explicação
+
+3. Explique com suas palavras por que decodificar um par do código da filial é
+   o mesmo que resolver um sistema de duas equações, e por que a inversa
+   resolve todos esses sistemas de uma vez.
+4. Uma matriz $2 \times 2$ tem a segunda linha toda de zeros. Explique, sem
+   calcular nada, por que ela não tem inversa.
+
+### 3. Aplicação direta
+
+5. Calcule a inversa de $\begin{bmatrix} 5 & 3 \\ 3 & 2 \end{bmatrix}$ e
+   confira multiplicando.
+6. Calcule a inversa de $\begin{bmatrix} 2 & 0 \\ 0 & 4 \end{bmatrix}$ e diga
+   que transformação ela desfaz.
+7. Calcule a inversa de $\begin{bmatrix} 1 & 2 \\ 3 & 7 \end{bmatrix}$ pelo
+   método de Gauss-Jordan, mostrando cada operação.
+
+### 4. Variação
+
+8. Calcule a inversa de $\begin{bmatrix} 2 & 3 \\ 4 & 5 \end{bmatrix}$.
+9. Para que valor de $k$ a matriz $\begin{bmatrix} k & 2 \\ 3 & 6 \end{bmatrix}$
+   **não** tem inversa? Para esse $k$, mostre que as colunas são paralelas.
+10. Calcule, por Gauss-Jordan, a inversa de
+    $\begin{bmatrix} 1 & 2 & 0 \\ 0 & 1 & 3 \\ 0 & 0 & 1 \end{bmatrix}$.
+
+### 5. Problema misto
+
+11. Outra filial usa a matriz $\begin{bmatrix} 3 & 1 \\ 2 & 1 \end{bmatrix}$ e
+    o mesmo alfabeto (A vale 1, …, Z vale 26). Chegou a mensagem
+    $44,\ 31,\ 61,\ 41$. Qual é a palavra? Confira codificando de novo.
+12. Na lição de sistemas de duas equações, dois recibos da papelaria deram o
+    sistema $3c + 2p = 58$ e $5c + 4p = 102$, com $c$ o preço do caderno e $p$
+    o da caneta. (a) Resolva pela inversa. (b) Na semana seguinte, com os
+    mesmos produtos, as compras $3c + 2p$ e $5c + 4p$ custaram R\$ 50 e
+    R\$ 90. Quais os preços novos? Use a mesma inversa.
+13. Um editor de imagens aplicou a uma foto primeiro uma rotação $R$ e depois
+    uma escala $E$. A transformação total é $ER$. Diga, em palavras e em
+    símbolos, em que ordem as transformações de volta precisam ser aplicadas.
+
+### 6. Justificativa
+
+14. Mostre que $(A^{-1})^{-1} = A$: a inversa da inversa é a matriz original.
+15. Mostre que, se $A$ tem inversa, a única solução de $A\vec{x} = \vec{0}$ é
+    $\vec{x} = \vec{0}$. Conclua que as colunas de $A$ são linearmente
+    independentes.
+16. Uma matriz $2 \times 3$ leva vetores de $\mathbb{R}^3$ em vetores de
+    $\mathbb{R}^2$. Explique por que nenhuma transformação assim pode ser
+    desfeita.
+
+<details>
+<summary>Dica para o exercício 9</summary>
+
+Escreva o número $ad - bc$ com o $k$ no lugar do $a$ e descubra quando ele vale
+zero.
+
+</details>
+
+<details>
+<summary>Dica para o exercício 13</summary>
+
+O produto $ER$ aplica primeiro $R$. Pense na meia e no sapato: o que foi feito
+por último é desfeito primeiro.
+
+</details>
+
+<details>
+<summary>Dica para o exercício 15</summary>
+
+Multiplique os dois lados de $A\vec{x} = \vec{0}$ pela esquerda por $A^{-1}$. O
+que vale $A^{-1}\vec{0}$? Depois lembre a definição de independência: a única
+receita que dá $\vec{0}$ é a trivial.
+
+</details>
+
+<details>
+<summary>Dica para o exercício 16</summary>
+
+As três colunas da matriz são vetores de $\mathbb{R}^2$. Na lição de
+independência, quantos vetores de $\mathbb{R}^2$ podem ser independentes?
+
+</details>
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. Calcule $ad - bc$ de cada uma.
+   (a) $2 \times 3 - 6 \times 1 = 0$: **não** tem inversa. A segunda coluna é
+   o triplo da primeira.
+   (b) $0 \times 0 - 1 \times 1 = -1$: tem inversa. É a troca de coordenadas,
+   $(x,\ y) \mapsto (y,\ x)$, e ela é a própria inversa.
+   (c) $5 \times 0 - 0 \times 0 = 0$: **não** tem. Ela achata o plano no eixo
+   $x$, como uma projeção esticada.
+   (d) $1 \times 7 - 4 \times 2 = -1$: tem inversa.
+   Se você marcou (c) como inversível porque “não é toda zero”, reveja o erro
+   6: o que conta é a dependência das colunas.
+
+2. Sim. O produto
+   $\begin{bmatrix} 1 & 2 \\ 0 & 1 \end{bmatrix}\begin{bmatrix} 1 & -2 \\ 0 & 1 \end{bmatrix}
+   = \begin{bmatrix} 1 & -2 + 2 \\ 0 & 1 \end{bmatrix} = I$. Faz sentido no
+   desenho: a primeira é um cisalhamento que escorrega cada andar 2 para a
+   direita; a segunda escorrega 2 para a esquerda.
+
+3. Decodificar o par $(p,\ q)$ é achar o par $(x,\ y)$ com
+   $A(x,\ y) = (p,\ q)$, e isso é um sistema de duas equações. Todos os pares
+   dão sistemas com a mesma matriz $A$; só muda o lado direito. A inversa é a
+   resolução desse sistema feita com letras no lado direito, então serve para
+   todos os pares: $(x,\ y) = A^{-1}(p,\ q)$.
+
+4. Para qualquer vetor $\vec{v}$, a segunda coordenada de $A\vec{v}$ é a
+   segunda linha de $A$ vezes $\vec{v}$, que dá zero. Então todas as imagens
+   ficam no eixo $x$, e um vetor como $(0,\ 1)$ nunca é alcançado. Mas
+   $AA^{-1} = I$ exigiria alcançar $\vec{e}_2 = (0,\ 1)$ (é a segunda coluna
+   de $I$). Logo não há inversa. Também se vê no número: com $c = d = 0$,
+   $ad - bc = 0$.
+
+5. $ad - bc = 10 - 9 = 1$. A inversa é
+   $\begin{bmatrix} 2 & -3 \\ -3 & 5 \end{bmatrix}$. Conferência:
+   $\begin{bmatrix} 5 & 3 \\ 3 & 2 \end{bmatrix}\begin{bmatrix} 2 & -3 \\ -3 & 5 \end{bmatrix}
+   = \begin{bmatrix} 10 - 9 & -15 + 15 \\ 6 - 6 & -9 + 10 \end{bmatrix} = I$.
+
+6. $ad - bc = 8$, e a fórmula dá
+   $\frac{1}{8}\begin{bmatrix} 4 & 0 \\ 0 & 2 \end{bmatrix} = \begin{bmatrix} \tfrac{1}{2} & 0 \\ 0 & \tfrac{1}{4} \end{bmatrix}$.
+   A matriz original estica 2 vezes na horizontal e 4 vezes na vertical; a
+   inversa encolhe pela metade na horizontal e a um quarto na vertical. Repare:
+   aqui “um sobre cada entrada da diagonal” funcionou, porque a matriz é
+   diagonal e os zeros continuam zeros. Fora desse caso, o erro 1 mostra que
+   isso falha.
+
+7. Comece de
+   $\left[\begin{array}{cc|cc} 1 & 2 & 1 & 0 \\ 3 & 7 & 0 & 1 \end{array}\right]$.
+   Com $L_2 \leftarrow L_2 - 3L_1$: a segunda linha vira
+   $[\,0 \;\; 1 \mid -3 \;\; 1\,]$. Com $L_1 \leftarrow L_1 - 2L_2$: a
+   primeira vira $[\,1 \;\; 0 \mid 7 \;\; -2\,]$, porque $2 - 2 = 0$,
+   $1 - 2 \times (-3) = 7$ e $0 - 2 \times 1 = -2$. A inversa é
+   $\begin{bmatrix} 7 & -2 \\ -3 & 1 \end{bmatrix}$. Pela fórmula, com
+   $ad - bc = 7 - 6 = 1$, sai a mesma.
+
+8. $ad - bc = 10 - 12 = -2$. A inversa é
+   $\frac{1}{-2}\begin{bmatrix} 5 & -3 \\ -4 & 2 \end{bmatrix} = \begin{bmatrix} -\tfrac{5}{2} & \tfrac{3}{2} \\ 2 & -1 \end{bmatrix}$.
+   Conferência da primeira coluna do produto:
+   $2 \times (-\tfrac{5}{2}) + 3 \times 2 = -5 + 6 = 1$ e
+   $4 \times (-\tfrac{5}{2}) + 5 \times 2 = -10 + 10 = 0$. Se você achou sinais
+   trocados em todas as entradas, esqueceu que o fator $\frac{1}{-2}$ é
+   negativo.
+
+9. $ad - bc = 6k - 2 \times 3 = 6k - 6$, que vale zero quando $k = 1$. Com
+   $k = 1$, as colunas são $(1,\ 3)$ e $(2,\ 6)$, e $(2,\ 6) = 2(1,\ 3)$:
+   paralelas.
+
+10. A matriz já está na forma escalonada, com pivôs 1; falta zerar acima dos
+    pivôs. Primeiro a terceira coluna: $L_2 \leftarrow L_2 - 3L_3$ deixa a
+    segunda linha como $[\,0 \;\; 1 \;\; 0 \mid 0 \;\; 1 \;\; -3\,]$. Depois a
+    segunda coluna: $L_1 \leftarrow L_1 - 2L_2$ deixa a primeira como
+    $[\,1 \;\; 0 \;\; 0 \mid 1 \;\; -2 \;\; 6\,]$. A inversa é
+    $\begin{bmatrix} 1 & -2 & 6 \\ 0 & 1 & -3 \\ 0 & 0 & 1 \end{bmatrix}$. Se
+    a primeira linha da sua resposta saiu $(1,\ -2,\ 0)$, você fez
+    $L_1 \leftarrow L_1 - 2L_2$ com a segunda linha ainda com o 3 e parou: a
+    primeira linha ficou com $-6$ na terceira coluna, e a esquerda ainda não
+    era $I$. Falta $L_1 \leftarrow L_1 + 6L_3$.
+
+11. $ad - bc = 3 - 2 = 1$, e a inversa é
+    $\begin{bmatrix} 1 & -1 \\ -2 & 3 \end{bmatrix}$: primeira letra
+    $p - q$, segunda letra $-2p + 3q$. O par $(44,\ 31)$ dá $13$ e
+    $-88 + 93 = 5$, ou seja, M e E. O par $(61,\ 41)$ dá $20$ e
+    $-122 + 123 = 1$, ou seja, T e A. A palavra é **META**. Conferência:
+    $(13,\ 5) \mapsto (39 + 5,\ 26 + 5) = (44,\ 31)$ e
+    $(20,\ 1) \mapsto (60 + 1,\ 40 + 1) = (61,\ 41)$.
+
+12. A matriz é $P = \begin{bmatrix} 3 & 2 \\ 5 & 4 \end{bmatrix}$, com
+    $ad - bc = 12 - 10 = 2$, então
+    $P^{-1} = \frac{1}{2}\begin{bmatrix} 4 & -2 \\ -5 & 3 \end{bmatrix}$.
+    (a) $P^{-1}(58,\ 102) = \frac{1}{2}(232 - 204,\ -290 + 306) = \frac{1}{2}(28,\ 16) = (14,\ 8)$:
+    caderno a R\$ 14 e caneta a R\$ 8, como naquela lição.
+    (b) $P^{-1}(50,\ 90) = \frac{1}{2}(200 - 180,\ -250 + 270) = \frac{1}{2}(20,\ 20) = (10,\ 10)$:
+    os dois a R\$ 10. Conferência: $3 \times 10 + 2 \times 10 = 50$ e
+    $5 \times 10 + 4 \times 10 = 90$.
+
+13. A foto sofreu primeiro $R$ e depois $E$. Para voltar, desfaz-se primeiro a
+    escala e depois a rotação: $(ER)^{-1} = R^{-1}E^{-1}$. No produto, $E^{-1}$
+    está à direita, então é aplicada primeiro. Se você escreveu
+    $E^{-1}R^{-1}$, desfez a rotação antes da escala, que é tirar a meia antes
+    do sapato.
+
+14. A definição de inversa de $A^{-1}$ pede uma matriz $X$ com
+    $XA^{-1} = I$ e $A^{-1}X = I$. A própria $A$ serve: $AA^{-1} = I$ e
+    $A^{-1}A = I$ são exatamente as duas igualdades da definição de $A^{-1}$,
+    lidas ao contrário. Então $(A^{-1})^{-1} = A$. Em palavras: o que desfaz
+    o “desfazer” é fazer de novo.
+
+15. Multiplicando $A\vec{x} = \vec{0}$ pela esquerda por $A^{-1}$:
+    $A^{-1}A\vec{x} = A^{-1}\vec{0}$, ou seja, $\vec{x} = \vec{0}$, porque
+    qualquer matriz vezes o vetor nulo dá o vetor nulo. Pela leitura por
+    colunas, $A\vec{x}$ é a combinação das colunas de $A$ com os pesos de
+    $\vec{x}$. Então a única receita que dá $\vec{0}$ é a de pesos todos zero:
+    as colunas são independentes.
+
+16. As três colunas da matriz são vetores de $\mathbb{R}^2$, e em
+    $\mathbb{R}^2$ mais de dois vetores são sempre dependentes. Então existe
+    uma receita não trivial $\vec{x} \neq \vec{0}$ com $A\vec{x} = \vec{0}$.
+    O vetor $\vec{x}$ e o vetor $\vec{0}$ são diferentes e vão para o mesmo
+    lugar. A transformação apaga informação, e não há volta. Em palavras: três
+    números não cabem em dois sem que algo se perca.
+
+</details>
+
+## 14. Revisão curta
+
+- A **inversa** $A^{-1}$ desfaz $A$: $A^{-1}A = I$ e $AA^{-1} = I$. Só matrizes
+  quadradas podem ter inversa, e nem todas têm.
+- Uma matriz tem inversa quando **não apaga informação**: vetores diferentes
+  vão para lugares diferentes. Em $2 \times 2$, isso é o mesmo que
+  $ad - bc \neq 0$, e o mesmo que colunas independentes.
+- Fórmula $2 \times 2$: troque $a$ e $d$ de lugar, troque o sinal de $b$ e
+  $c$, divida por $ad - bc$. Ela saiu de resolver o sistema com letras no lado
+  direito.
+- Para qualquer tamanho: **Gauss-Jordan**, $[A \mid I] \to [I \mid A^{-1}]$.
+  Uma linha de zeros na esquerda quer dizer que não há inversa.
+- $(AB)^{-1} = B^{-1}A^{-1}$: desfaz-se primeiro o que foi feito por último.
+- Com inversa, $A\vec{x} = \vec{b}$ tem uma única solução,
+  $\vec{x} = A^{-1}\vec{b}$. Para um sistema só, escalonar dá menos trabalho;
+  a inversa compensa com muitos sistemas de mesma matriz.
+
+A próxima lição, [Determinante](./determinante), dá nome e significado ao número
+$ad - bc$. Ele mede quanto a matriz estica as áreas: o quadrado de lado 1 vira
+um paralelogramo de área $\lvert ad - bc \rvert$. Quando essa área é zero, o
+quadrado foi achatado num segmento, e é por isso que a inversa deixa de
+existir.

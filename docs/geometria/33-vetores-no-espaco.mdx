@@ -1,0 +1,1234 @@
+---
+title: Vetores no espaço
+---
+
+import Space3D from '@site/src/components/Space3D';
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Vetores no espaço: a terceira coordenada
+
+## 1. Problema motivador: o drone do depósito
+
+Um depósito usa um drone para conferir o estoque das prateleiras altas. O drone
+fica guardado num canto do galpão, no chão. A partir desse canto, as medidas
+são feitas assim:
+
+- ao longo de uma das paredes, que vamos chamar de direção $x$;
+- ao longo da outra parede, que forma um canto reto com a primeira, a direção
+  $y$;
+- para cima, a direção $z$.
+
+A caixa que o drone precisa fotografar está a **3 metros** na direção $x$, a
+**4 metros** na direção $y$ e a **12 metros de altura**.
+
+<Space3D
+  max={[3, 4, 12]}
+  unit={22}
+  ticks={false}
+  points={[
+    {at: [0, 0, 0], label: 'O', dx: -14, dy: 4, tone: 0},
+    {at: [3, 4, 12], label: 'P(3,\\ 4,\\ 12)', tone: 2},
+  ]}
+  boxes={[[3, 4, 12]]}
+  vectors={[{to: [3, 4, 12], tone: 1}]}
+  labels={[
+    {at: [1.5, 4, 0], math: '3', dx: 14, dy: 6, tone: 3},
+    {at: [3, 2, 0], math: '4', dy: 14, tone: 3},
+    {at: [3, 4, 6], math: '12', dx: 18, tone: 3},
+  ]}
+  caption="O drone sai do canto O, no chão, e voa em linha reta até a caixa P. As linhas tracejadas mostram os três deslocamentos: 3 m ao longo de x, 4 m ao longo de y e 12 m para cima."
+/>
+
+O operador quer responder duas perguntas antes de programar o voo:
+
+> Qual é o comprimento do voo em linha reta, do canto até a caixa? E quão
+> íngreme é esse voo: que ângulo ele faz com o chão?
+
+Até aqui, todos os vetores do módulo viveram num plano, com duas coordenadas. O
+voo do drone não cabe num plano desenhado no chão, porque ele sobe. Esta lição
+acrescenta a terceira coordenada e mostra que **nada do que você aprendeu
+precisa ser jogado fora**: as contas continuam as mesmas, com uma parcela a
+mais. As duas respostas estão na seção 9.
+
+## 2. Mapa das ideias
+
+- **espaço (em três dimensões)**: o lugar onde cada ponto precisa de três
+  números para ser localizado;
+- **eixo $z$**: o terceiro eixo, perpendicular aos eixos $x$ e $y$, que mede a
+  altura;
+- **terna ordenada** $(x,\ y,\ z)$: o endereço de um ponto no espaço; a ordem
+  dos três números importa;
+- **plano $xy$**: o “chão”, formado pelos pontos de altura zero, $(x,\ y,\ 0)$;
+- **sombra de um ponto no chão**: o ponto $(x,\ y,\ 0)$ que fica exatamente
+  embaixo de $(x,\ y,\ z)$;
+- **caixa de um ponto**: o bloco cujas arestas são os três deslocamentos que
+  levam da origem até o ponto;
+- **distância no espaço**: $\sqrt{(\Delta x)^2 + (\Delta y)^2 + (\Delta z)^2}$,
+  o teorema de Pitágoras aplicado duas vezes;
+- **vetor no espaço**: $\vec{v} = (a,\ b,\ c)$, um deslocamento com três
+  coordenadas;
+- **produto escalar no espaço**: $u_1 v_1 + u_2 v_2 + u_3 v_3$, com o mesmo
+  significado geométrico do plano;
+- **vetor com $n$ coordenadas**: uma lista de $n$ números tratada com as mesmas
+  contas, mesmo quando não dá mais para desenhar.
+
+## 3. Para que serve
+
+- **Drones, guindastes e robôs.** Um braço robótico numa linha de montagem
+  recebe destinos com três coordenadas: quanto para a frente, quanto para o
+  lado e quanto para cima.
+- **Impressão 3D e modelagem.** Um arquivo de impressão 3D é uma lista enorme de
+  pontos $(x,\ y,\ z)$. A impressora percorre essa lista, deslocando o bico de
+  um ponto ao próximo.
+- **Jogos e animação 3D.** A posição de cada personagem é uma terna, e a cada
+  quadro da tela soma-se a ela um vetor de deslocamento com três coordenadas.
+- **GPS e aviação.** A posição de um avião precisa de latitude, longitude **e**
+  altitude. Duas aeronaves exatamente uma acima da outra estão no mesmo ponto
+  do mapa, mas não colidem.
+- **Dentro da matemática.** Esta lição dá o último passo que ainda se desenha.
+  Depois dele, as mesmas contas valem para listas com 4, 10 ou 1000 números, que
+  é como a [álgebra linear](../algebra-linear/) trata uma linha de planilha, uma
+  imagem ou as preferências de um cliente.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. Do [teorema de Pitágoras](./teorema-de-pitagoras).** Um triângulo
+retângulo tem catetos 5 e 12. Quanto mede a hipotenusa?
+
+<details>
+<summary>Conferir</summary>
+
+A hipotenusa $h$ satisfaz $h^2 = 5^2 + 12^2 = 25 + 144 = 169$. Então
+$h = \sqrt{169} = 13$. O trio $(5,\ 12,\ 13)$ é um dos ternos pitagóricos da
+lição do teorema, ao lado do $(3,\ 4,\ 5)$. Os dois vão aparecer juntos nesta
+página.
+
+</details>
+
+**2. Do [plano cartesiano](./plano-cartesiano-e-distancia).** Qual é a
+distância entre os pontos $(1,\ 2)$ e $(4,\ 6)$?
+
+<details>
+<summary>Conferir</summary>
+
+O deslocamento horizontal é $4 - 1 = 3$, e o vertical é $6 - 2 = 4$. Esses dois
+deslocamentos são catetos, e a distância é a hipotenusa:
+$\sqrt{3^2 + 4^2} = \sqrt{25} = 5$.
+
+</details>
+
+**3. De [Vetores](./vetores) e [Soma de vetores](./soma-de-vetores).** Com
+$A = (2,\ 5)$ e $B = (6,\ 2)$, quanto vale $\overrightarrow{AB}$ e qual é o
+seu módulo? E quanto vale $2\vec{u} - \vec{v}$, com $\vec{u} = (1,\ 3)$ e
+$\vec{v} = (4,\ -1)$?
+
+<details>
+<summary>Conferir</summary>
+
+O vetor de $A$ até $B$ é “chegada menos saída”:
+$\overrightarrow{AB} = (6 - 2,\ 2 - 5) = (4,\ -3)$. Seu módulo é
+$\sqrt{4^2 + (-3)^2} = \sqrt{16 + 9} = 5$.
+
+Para a combinação, multiplique cada coordenada e depois some coordenada a
+coordenada: $2\vec{u} = (2,\ 6)$, e
+$2\vec{u} - \vec{v} = (2 - 4,\ 6 - (-1)) = (-2,\ 7)$.
+
+</details>
+
+**4. Do [Produto escalar](./produto-escalar).** Quanto vale
+$(3,\ 4) \cdot (4,\ -3)$, e o que esse resultado diz sobre os dois vetores?
+Como se acha o ângulo entre $(1,\ 0)$ e $(1,\ 1)$?
+
+<details>
+<summary>Conferir</summary>
+
+$(3,\ 4) \cdot (4,\ -3) = 3 \times 4 + 4 \times (-3) = 12 - 12 = 0$. Produto
+escalar zero, com os dois vetores não nulos, quer dizer que eles são
+perpendiculares.
+
+Para o ângulo, use $\cos\theta = \dfrac{\vec{u} \cdot \vec{v}}{\lVert \vec{u}
+\rVert \, \lVert \vec{v} \rVert}$. Aqui, o produto é $1 \times 1 + 0 \times 1 =
+1$, e os módulos são $1$ e $\sqrt{2}$. Então $\cos\theta = \frac{1}{\sqrt{2}}$,
+e $\theta = \arccos\frac{1}{\sqrt{2}} = 45^\circ$.
+
+</details>
+
+**5. De [Volumes e superfícies](./volumes-e-superficies).** Um bloco tem
+arestas de 3 m, 4 m e 12 m. Quantos cubinhos de 1 m de aresta cabem nele?
+
+<details>
+<summary>Conferir</summary>
+
+São 3 cubinhos por fileira, 4 fileiras por camada e 12 camadas:
+$3 \times 4 \times 12 = 144$ cubinhos, ou seja, $144$ m³. Guarde a imagem do
+bloco: o problema do drone mora dentro de um bloco exatamente com essas
+arestas.
+
+</details>
+
+Se alguma dessas respostas não veio, vale reler a lição indicada antes de
+seguir. Pitágoras e o produto escalar são usados em quase todas as seções
+abaixo.
+
+## 5. Intuição: rua, número e andar
+
+Para entregar uma encomenda numa casa térrea, o endereço “rua tal, número tal”
+é suficiente. São duas informações, como as duas coordenadas do plano.
+
+Num prédio, não basta mais. Duas salas podem estar exatamente no mesmo lugar do
+mapa, uma em cima da outra, e o entregador precisa saber **em que andar** subir.
+O endereço completo tem três informações: duas para achar o lugar no chão e uma
+para achar a altura.
+
+O espaço funciona assim. Para localizar um ponto, você responde três perguntas:
+
+1. quanto andar na direção $x$;
+2. quanto andar na direção $y$;
+3. quanto subir (ou descer) na direção $z$.
+
+E um **deslocamento** no espaço também precisa de três números. “Ande 3 para
+um lado, 4 para o outro e suba 12” é um vetor com três coordenadas. Ele é a
+mesma ideia de seta da lição [Vetores](./vetores), só que a seta agora pode
+apontar para cima.
+
+O ponto que mais confunde nesta lição não é a conta. É o **desenho**: o papel
+tem duas dimensões, e o espaço tem três. Por isso a próxima seção dedica um
+tempo a aprender a ler a figura.
+
+## 6. Modelo visual: os três eixos e a caixa de um ponto
+
+### Os três eixos
+
+Imagine o canto de uma sala: duas paredes e o chão se encontram num ponto.
+Esse ponto é a **origem** $O = (0,\ 0,\ 0)$. As três quinas que saem dele são
+os três eixos:
+
+- o eixo $x$ corre pelo chão, ao longo de uma parede;
+- o eixo $y$ corre pelo chão, ao longo da outra parede;
+- o eixo $z$ sobe pela quina vertical.
+
+Cada eixo forma ângulo reto com os outros dois. No papel, porém, os três não
+podem aparecer com ângulos retos entre si. A convenção de desenho deste curso
+é a dos livros de geometria analítica:
+
+- o eixo $y$ vai para a direita;
+- o eixo $z$ vai para cima;
+- o eixo $x$ sai do papel em direção a você. Como o papel não tem essa
+  direção, ele é desenhado na **diagonal, para baixo e para a esquerda**, e
+  encurtado, para dar a impressão de profundidade.
+
+Esse encurtamento é só um efeito de desenho. Uma unidade no eixo $x$ continua
+valendo uma unidade, mesmo que pareça menor no papel.
+
+### Lendo um ponto pela sua caixa
+
+<Space3D
+  max={[4, 5, 3]}
+  unit={40}
+  ticks={false}
+  points={[
+    {at: [3, 4, 2], label: 'P(3,\\ 4,\\ 2)', tone: 2},
+    {at: [3, 4, 0], label: 'Q(3,\\ 4,\\ 0)', tone: 3, dx: 30, dy: 16},
+  ]}
+  boxes={[[3, 4, 2]]}
+  labels={[
+    {at: [1.5, 4, 0], math: '3', dx: 14, dy: 8, tone: 1},
+    {at: [3, 2, 0], math: '4', dy: 16, tone: 1},
+    {at: [3, 4, 1.4], math: '2', dx: 14, tone: 1},
+  ]}
+  caption="O ponto P(3, 4, 2) e sua sombra Q(3, 4, 0) no chão. Para chegar a P saindo da origem: ande 3 na direção x, 4 na direção y e suba 2. As linhas tracejadas são as arestas da caixa do ponto."
+/>
+
+Para ler o ponto $P = (3,\ 4,\ 2)$, siga as linhas tracejadas a partir da
+origem:
+
+1. ande 3 unidades ao longo do eixo $x$ (na figura, a aresta marcada com 3
+   está paralela ao eixo $x$);
+2. de lá, ande 4 unidades na direção $y$, ainda no chão;
+3. você chegou ao ponto $Q = (3,\ 4,\ 0)$, que é a **sombra** de $P$ no chão:
+   o lugar exatamente embaixo de $P$;
+4. por fim, suba 2 unidades na vertical. Você está em $P$.
+
+Essas linhas tracejadas formam parte de um bloco com arestas 3, 4 e 2 — a
+**caixa** do ponto. A origem fica num canto da caixa e $P$ fica no canto
+oposto.
+
+### Por que a caixa é necessária
+
+Um desenho em perspectiva pode enganar. Sem as linhas tracejadas, o ponto $P$
+da figura poderia ser lido como “um ponto alto e perto” ou “um ponto mais baixo
+e mais longe”: os dois cairiam no mesmo lugar do papel. É a mesma coisa que
+acontece numa fotografia, em que um avião distante pode parecer pousado no
+telhado de uma casa próxima.
+
+A caixa desfaz a ambiguidade, porque mostra os três deslocamentos separados.
+Por isso, sempre que esta lição desenhar um ponto importante, ela desenhará
+também a caixa dele.
+
+### Pontos nos eixos e no chão
+
+Algumas coordenadas iguais a zero dizem onde o ponto está:
+
+| Ponto | Onde está | Por quê |
+|---|---|---|
+| $(0,\ 0,\ 5)$ | no eixo $z$ | não anda em $x$ nem em $y$; só sobe |
+| $(2,\ 0,\ 0)$ | no eixo $x$ | só anda em $x$ |
+| $(3,\ 4,\ 0)$ | no chão (plano $xy$) | altura zero |
+| $(0,\ 3,\ 4)$ | na parede formada pelos eixos $y$ e $z$ | não anda em $x$ |
+
+Um ponto com **duas** coordenadas iguais a zero está num eixo. Um ponto com
+**uma** coordenada igual a zero está numa das três “paredes” que passam pela
+origem: o chão $xy$, a parede $xz$ ou a parede $yz$.
+
+## 7. Ponte para a formalização: Pitágoras duas vezes
+
+Voltemos ao drone. Ele vai do canto $O = (0,\ 0,\ 0)$ até $P = (3,\ 4,\ 12)$.
+Queremos o comprimento do segmento $OP$, que atravessa a caixa de um canto ao
+canto oposto, pelo ar.
+
+O teorema de Pitágoras fala de triângulos retângulos. O segmento $OP$ não é
+lado de nenhum triângulo desenhado no chão. A ideia é **fabricar** um
+triângulo retângulo que tenha $OP$ como hipotenusa. Isso acontece em dois
+passos.
+
+### Primeiro passo: no chão
+
+A sombra de $P$ é $S = (3,\ 4,\ 0)$. Olhe o chão de cima, como numa planta
+baixa. Nessa vista, o chão é um plano cartesiano comum, com os eixos $x$ e $y$,
+e o segmento $OS$ é a diagonal de um retângulo de lados 3 e 4.
+
+<CartesianPlane
+  xMin={-1} xMax={5} yMin={-1} yMax={5}
+  xUnit={40}
+  segments={[
+    {from: [0, 0], to: [3, 0], tone: 3, dashed: true, label: '3', dy: 14},
+    {from: [3, 0], to: [3, 4], tone: 3, dashed: true, label: '4', dx: 14, dy: 0},
+    {from: [0, 0], to: [3, 4], tone: 2, label: '5', dx: -14, dy: -6},
+  ]}
+  points={[
+    {at: [0, 0], label: 'O', dx: -14, dy: -14, tone: 0},
+    {at: [3, 4], label: 'S(3,\\ 4)', tone: 2, dx: 26, dy: -12},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="O chão visto de cima. A sombra S do ponto P fica a 3 na direção x e 4 na direção y. A distância de O até S é a hipotenusa de catetos 3 e 4."
+/>
+
+No chão, os eixos $x$ e $y$ formam ângulo reto. Então o triângulo de catetos 3
+e 4 é retângulo, e
+
+$$
+OS = \sqrt{3^2 + 4^2} = \sqrt{9 + 16} = \sqrt{25} = 5.
+$$
+
+Até aqui, nada de novo: é a fórmula da distância no plano, aplicada ao chão.
+
+### Segundo passo: em pé
+
+Agora olhe o triângulo $O$, $S$, $P$. Ele está “em pé”, como uma folha de papel
+apoiada no chão pela aresta $OS$:
+
+- o lado $OS$ está no chão e mede 5 (primeiro passo);
+- o lado $SP$ é vertical e mede 12, a altura da caixa;
+- o lado $OP$ é o voo do drone.
+
+<Space3D
+  max={[3, 4, 12]}
+  unit={22}
+  ticks={false}
+  points={[
+    {at: [0, 0, 0], label: 'O', dx: -14, dy: 4, tone: 0},
+    {at: [3, 4, 0], label: 'S', dx: 0, dy: 16, tone: 2},
+    {at: [3, 4, 12], label: 'P', dx: 14, dy: -8, tone: 1},
+  ]}
+  segments={[
+    {from: [0, 0, 0], to: [3, 4, 0], tone: 2},
+    {from: [3, 4, 0], to: [3, 4, 12], tone: 3},
+  ]}
+  vectors={[{to: [3, 4, 12], tone: 1}]}
+  labels={[
+    {at: [1.5, 2, 0], math: '5', dy: 14, tone: 2},
+    {at: [3, 4, 6], math: '12', dx: 16, tone: 3},
+    {at: [2.4, 3.2, 9.6], math: '13', dx: -20, tone: 1},
+  ]}
+  caption="O triângulo O, S, P fica em pé, apoiado no chão pelo lado OS. O lado SP é vertical. O ângulo reto está em S."
+/>
+
+Por que o ângulo em $S$ é reto? O lado $SP$ é **vertical**, e o lado $OS$ está
+no **chão**, que é horizontal. Uma linha vertical forma ângulo reto com
+**qualquer** linha do chão que passe pelo seu pé. Pense num poste bem aprumado:
+um esquadro de pedreiro encaixa no pé dele em qualquer direção, para a frente,
+para o lado ou na diagonal. A diagonal $OS$ é uma dessas direções do chão.
+
+Então $OSP$ é um triângulo retângulo com catetos 5 e 12, e Pitágoras vale de
+novo:
+
+$$
+OP = \sqrt{5^2 + 12^2} = \sqrt{25 + 144} = \sqrt{169} = 13.
+$$
+
+O voo tem **13 metros**. Essa é a resposta à primeira pergunta do operador.
+
+### Juntando os dois passos numa conta só
+
+Repare no que aconteceu com o $5$. Ele entrou na segunda conta **ao quadrado**,
+e $5^2 = 25$ era exatamente o $3^2 + 4^2$ da primeira conta. Então dá para
+pular a raiz do meio:
+
+$$
+OP = \sqrt{5^2 + 12^2} = \sqrt{(3^2 + 4^2) + 12^2} = \sqrt{3^2 + 4^2 + 12^2}.
+$$
+
+O que mudou: a escrita passou de duas raízes para uma. O que permaneceu igual:
+o número dentro da raiz, $169$, porque trocamos $5^2$ por $3^2 + 4^2$, que vale
+os mesmos 25. A conta final pede só os três deslocamentos do drone, cada um ao
+quadrado. É essa forma que vira a fórmula geral na próxima seção.
+
+## 8. Formalização
+
+### Ponto no espaço
+
+> Um ponto do espaço é identificado por uma **terna ordenada** $(x,\ y,\ z)$:
+> $x$ é o deslocamento na direção do eixo $x$, $y$ na direção do eixo $y$ e
+> $z$ na direção do eixo $z$, todos medidos a partir da origem
+> $O = (0,\ 0,\ 0)$.
+
+- **Exemplo:** $(3,\ 4,\ 12)$ é a caixa do depósito: 3 m em $x$, 4 m em $y$ e
+  12 m de altura.
+- **Contraexemplo:** $(12,\ 4,\ 3)$ **não** é o mesmo ponto. Ele fica a 12 m
+  na direção $x$ e a só 3 m de altura. Os três números são os mesmos, mas em
+  outra ordem, e a ordem diz qual número vai em qual direção. É a mesma regra
+  do plano, em que $(4,\ 5)$ e $(5,\ 4)$ são lugares diferentes.
+
+Coordenadas negativas funcionam como no plano: $(-2,\ 1,\ 3)$ anda 2 unidades
+no sentido contrário ao do eixo $x$. E $z$ negativo quer dizer abaixo do chão,
+como um subsolo.
+
+### Distância entre dois pontos
+
+Na seção 7, o drone saiu da origem. Se ele sair de um ponto qualquer
+$A = (x_A,\ y_A,\ z_A)$ e for até $B = (x_B,\ y_B,\ z_B)$, os três
+deslocamentos são as diferenças das coordenadas:
+
+$$
+\Delta x = x_B - x_A, \qquad \Delta y = y_B - y_A, \qquad \Delta z = z_B - z_A.
+$$
+
+A caixa agora tem um canto em $A$ e o canto oposto em $B$, com arestas
+$\lvert \Delta x \rvert$, $\lvert \Delta y \rvert$ e $\lvert \Delta z \rvert$.
+O argumento das duas etapas não depende de onde a caixa está, só das arestas.
+E o sinal das diferenças some ao elevar ao quadrado, como na
+[fórmula da distância no plano](./plano-cartesiano-e-distancia):
+$(-3)^2 = 3^2$.
+
+> A **distância** entre $A = (x_A,\ y_A,\ z_A)$ e $B = (x_B,\ y_B,\ z_B)$ é
+> $$d(A,\ B) = \sqrt{(x_B - x_A)^2 + (y_B - y_A)^2 + (z_B - z_A)^2}.$$
+
+- **Exemplo:** de $A = (1,\ 2,\ 3)$ até $B = (3,\ 5,\ 9)$, as diferenças são
+  $2$, $3$ e $6$. A distância é $\sqrt{4 + 9 + 36} = \sqrt{49} = 7$.
+- **Contraexemplo:** a distância **não** é $2 + 3 + 6 = 11$. Somar as
+  diferenças dá o caminho que anda pelas arestas da caixa, uma de cada vez:
+  primeiro na direção $x$, depois $y$, depois sobe. O caminho em linha reta
+  atravessa a caixa pela diagonal e é mais curto.
+
+Compare com a fórmula do plano: ela é a mesma, com uma parcela a mais dentro da
+raiz. Se os dois pontos estiverem no chão ($z_A = z_B = 0$), a terceira parcela
+é $0^2 = 0$, e a fórmula do espaço vira exatamente a do plano. A fórmula nova
+não contradiz a antiga: ela a contém.
+
+### Vetor no espaço
+
+Tudo o que a lição [Vetores](./vetores) disse sobre setas continua valendo, com
+uma coordenada a mais.
+
+> Um **vetor no espaço** é um deslocamento $\vec{v} = (a,\ b,\ c)$: andar $a$
+> na direção $x$, $b$ na direção $y$ e $c$ na direção $z$.
+>
+> - O vetor de $A$ até $B$ é “chegada menos saída”:
+>   $\overrightarrow{AB} = B - A = (x_B - x_A,\ y_B - y_A,\ z_B - z_A)$.
+> - O **módulo** é o comprimento da seta:
+>   $\lVert \vec{v} \rVert = \sqrt{a^2 + b^2 + c^2}$.
+> - O **vetor nulo** é $\vec{0} = (0,\ 0,\ 0)$, e o **oposto** de
+>   $(a,\ b,\ c)$ é $(-a,\ -b,\ -c)$.
+
+O módulo vem da seção 7: a seta $(a,\ b,\ c)$ desenhada a partir da origem é a
+diagonal da caixa de arestas $\lvert a \rvert$, $\lvert b \rvert$ e
+$\lvert c \rvert$.
+
+- **Exemplo:** o voo do drone é o vetor $\vec{v} = (3,\ 4,\ 12)$, e
+  $\lVert \vec{v} \rVert = \sqrt{9 + 16 + 144} = 13$.
+- **Contraexemplo:** setas desenhadas em lugares diferentes podem ser o mesmo
+  vetor, como no plano. Mas $(2,\ 3,\ 6)$ e $(2,\ 3,\ -6)$ **não** são o mesmo
+  vetor: os dois têm módulo 7, mas um sobe 6 e o outro desce 6.
+
+<Space3D
+  max={[3, 6, 6]}
+  unit={32}
+  ticks={false}
+  points={[
+    {at: [1, 3, 0], label: 'A(1,\\ 3,\\ 0)', tone: 1, dx: 34, dy: 16},
+    {at: [3, 6, 6], label: 'B(3,\\ 6,\\ 6)', tone: 1, dx: 30, dy: -14},
+  ]}
+  vectors={[
+    {from: [1, 3, 0], to: [3, 6, 6], tone: 1, label: '\\overrightarrow{AB}', dx: 34, dy: 60},
+    {to: [2, 3, 6], tone: 2, label: '(2,\\ 3,\\ 6)', dx: -44, dy: -6},
+  ]}
+  caption="O vetor de A até B é B − A = (2, 3, 6). A seta azul sai de A; a seta laranja sai da origem. São o mesmo vetor, desenhado em dois lugares: mesmo módulo, mesma direção, mesmo sentido."
+/>
+
+### As operações: coordenada a coordenada, como antes
+
+A [soma de vetores](./soma-de-vetores) e a multiplicação por número continuam
+sendo feitas coordenada a coordenada:
+
+$$
+(u_1,\ u_2,\ u_3) + (v_1,\ v_2,\ v_3) = (u_1 + v_1,\ u_2 + v_2,\ u_3 + v_3),
+\qquad k(v_1,\ v_2,\ v_3) = (kv_1,\ kv_2,\ kv_3).
+$$
+
+Por que essa regra continua legítima com uma coordenada a mais? No plano, a
+soma era feita coordenada a coordenada porque andar para o leste não muda
+quanto você andou para o norte: as duas direções se acumulam separadamente. No
+espaço vale o mesmo, agora com três direções. Subir uma escada não muda quanto
+você andou ao longo das paredes. Então cada coordenada do total é a soma das
+coordenadas correspondentes, e nenhuma interfere nas outras.
+
+**Exemplo.** Um drone faz dois trechos: $\vec{u} = (2,\ 0,\ 1)$ e depois
+$\vec{v} = (1,\ 3,\ -1)$. O deslocamento total é
+$\vec{u} + \vec{v} = (3,\ 3,\ 0)$. Ele subiu 1 e depois desceu 1, então
+termina na mesma altura em que começou.
+
+Combinação linear, ponto médio, vetores paralelos (um múltiplo do outro):
+tudo continua igual. O ponto a uma fração $t$ do caminho de $A$ até $B$ ainda é
+$A + t\overrightarrow{AB}$, agora com três coordenadas. E as propriedades das
+contas (comutativa, associativa, distributiva) continuam valendo, porque cada
+coordenada é uma conta com números comuns.
+
+### Produto escalar no espaço
+
+> O **produto escalar** de $\vec{u} = (u_1,\ u_2,\ u_3)$ e
+> $\vec{v} = (v_1,\ v_2,\ v_3)$ é o número
+> $$\vec{u} \cdot \vec{v} = u_1 v_1 + u_2 v_2 + u_3 v_3.$$
+
+Como no [produto escalar](./produto-escalar) do plano: multiplique par com par
+e some. O resultado é um **número**, e o ponto entre as setas continua sendo o
+nome desta operação, não a multiplicação de números (que é $\times$).
+
+- **Exemplo:** $(1,\ 2,\ 2) \cdot (2,\ -1,\ 3) = 2 - 2 + 6 = 6$.
+- **Contraexemplo:** a lista $(2,\ -2,\ 6)$, com os três produtos separados,
+  **não** é o produto escalar. Falta somar.
+
+Uma conferência: o produto de um vetor com ele mesmo ainda dá o módulo ao
+quadrado, $\vec{v} \cdot \vec{v} = a^2 + b^2 + c^2 = \lVert \vec{v} \rVert^2$.
+Para o drone, $(3,\ 4,\ 12) \cdot (3,\ 4,\ 12) = 9 + 16 + 144 = 169 = 13^2$.
+
+### O significado geométrico continua valendo
+
+No plano, a lição do produto escalar demonstrou que
+$\vec{u} \cdot \vec{v} = \lVert \vec{u} \rVert \, \lVert \vec{v} \rVert
+\cos\theta$. Aquela demonstração escreveu cada vetor como
+$r(\cos\alpha,\ \sen\alpha)$, que é uma forma com **duas** coordenadas. No
+espaço, ela não se aplica diretamente. Precisamos de outro caminho.
+
+Esta é a passagem mais difícil da lição. Se ela não fechar na primeira
+leitura, isso é esperado: siga até os exemplos e volte a ela depois.
+
+**Primeira observação: dois vetores sempre cabem num plano.** Desenhe
+$\vec{u}$ e $\vec{v}$ saindo da origem. As três pontas — a origem, a ponta de
+$\vec{u}$ e a ponta de $\vec{v}$ — formam um triângulo. E todo triângulo é
+plano: pense numa folha de papelão apoiada em três pregos. Ela encosta nos três
+ao mesmo tempo. Dentro dessa folha, os vetores $\vec{u}$ e $\vec{v}$ são setas
+comuns de um plano, e o ângulo $\theta$ entre eles é um ângulo comum desse
+plano.
+
+<Space3D
+  max={[2, 4, 3]}
+  unit={40}
+  vectors={[
+    {to: [1, 1, 3], tone: 1, label: '\\vec{u}'},
+    {to: [1, 4, 1], tone: 2, label: '\\vec{v}'},
+  ]}
+  segments={[{from: [1, 1, 3], to: [1, 4, 1], tone: 3, dashed: true}]}
+  labels={[
+    {at: [1, 2.5, 2], math: '\\vec{u} - \\vec{v}', tone: 3, dx: 22, dy: -12},
+    {at: [0, 0.7, 0.7], math: '\\theta'},
+  ]}
+  caption="Os vetores u e v saem da origem. A origem e as duas pontas formam um triângulo, e todo triângulo fica numa folha plana. O lado tracejado vai da ponta de v até a ponta de u: é o vetor u − v."
+/>
+
+**Segunda observação: o produto escalar só depende de três comprimentos.** O
+terceiro lado do triângulo vai da ponta de $\vec{v}$ até a ponta de
+$\vec{u}$. Pela [subtração de vetores](./soma-de-vetores), esse lado é o vetor
+$\vec{u} - \vec{v}$. Agora calcule o quadrado do módulo dele, coordenada a
+coordenada. Em cada coordenada aparece um produto notável,
+$(u_1 - v_1)^2 = u_1^2 - 2u_1v_1 + v_1^2$:
+
+$$
+\begin{aligned}
+\lVert \vec{u} - \vec{v} \rVert^2
+&= (u_1 - v_1)^2 + (u_2 - v_2)^2 + (u_3 - v_3)^2 \\
+&= (u_1^2 + u_2^2 + u_3^2) + (v_1^2 + v_2^2 + v_3^2) - 2(u_1v_1 + u_2v_2 + u_3v_3) \\
+&= \lVert \vec{u} \rVert^2 + \lVert \vec{v} \rVert^2 - 2\,\vec{u} \cdot \vec{v}.
+\end{aligned}
+$$
+
+Na segunda linha, só reagrupamos as nove parcelas: os quadrados de $\vec{u}$
+juntos, os de $\vec{v}$ juntos, e os três produtos cruzados juntos. Isolando o
+produto escalar:
+
+$$
+\vec{u} \cdot \vec{v} =
+\frac{\lVert \vec{u} \rVert^2 + \lVert \vec{v} \rVert^2 - \lVert \vec{u} - \vec{v} \rVert^2}{2}.
+$$
+
+Leia o lado direito: ele só usa **os três lados do triângulo**. E essa mesma
+conta, com duas coordenadas em vez de três, vale no plano, porque o
+desenvolvimento é idêntico com uma parcela a menos.
+
+**Juntando as duas observações.** Dentro da folha de papelão, ponha um par de
+eixos e escreva $\vec{u}$ e $\vec{v}$ com duas coordenadas. Os comprimentos dos
+três lados não mudam: um comprimento é uma medida física, como a de uma régua,
+e não depende dos eixos escolhidos para descrever a folha. Então o produto
+escalar calculado com as coordenadas da folha e o produto escalar calculado com
+as três coordenadas do espaço dão o **mesmo número**, porque os dois são iguais
+à mesma fração de comprimentos. E, na folha, a lição do produto escalar já
+provou que esse número é $\lVert \vec{u} \rVert \, \lVert \vec{v} \rVert
+\cos\theta$.
+
+> **O produto escalar e o ângulo, no espaço.** Para vetores não nulos
+> $\vec{u}$ e $\vec{v}$ do espaço, com ângulo $\theta$ entre eles,
+>
+> $$
+> \vec{u} \cdot \vec{v} = \lVert \vec{u} \rVert \, \lVert \vec{v} \rVert \cos\theta,
+> \qquad \cos\theta = \frac{\vec{u} \cdot \vec{v}}{\lVert \vec{u} \rVert \, \lVert \vec{v} \rVert}.
+> $$
+
+**Conferência numérica da passagem.** Com $\vec{u} = (1,\ 2,\ 2)$ e
+$\vec{v} = (2,\ -1,\ 3)$: o produto escalar é $6$ (calculado acima). Os
+módulos ao quadrado são $1 + 4 + 4 = 9$ e $4 + 1 + 9 = 14$. E
+$\vec{u} - \vec{v} = (-1,\ 3,\ -1)$, com módulo ao quadrado $1 + 9 + 1 = 11$.
+A fração dá $\frac{9 + 14 - 11}{2} = \frac{12}{2} = 6$. Os dois caminhos
+concordam.
+
+Consequências, todas iguais às do plano:
+
+- o **ângulo** entre dois vetores do espaço é
+  $\theta = \arccos\left(\dfrac{\vec{u} \cdot \vec{v}}{\lVert \vec{u} \rVert \,
+  \lVert \vec{v} \rVert}\right)$, entre $0^\circ$ e $180^\circ$;
+- o **sinal** do produto escalar diz se o ângulo é agudo (positivo), reto
+  (zero) ou obtuso (negativo);
+- dois vetores não nulos são **perpendiculares** quando o produto escalar é
+  zero.
+
+- **Exemplo de perpendiculares:** a aresta vertical da caixa do drone,
+  $(0,\ 0,\ 12)$, e a diagonal do chão, $(3,\ 4,\ 0)$: o produto escalar é
+  $0 + 0 + 0 = 0$. A conta confirma o ângulo reto em $S$ que a seção 7 usou.
+- **Contraexemplo:** $(1,\ 1,\ 0)$ e $(0,\ 1,\ 1)$ **não** são perpendiculares,
+  embora cada um tenha um zero numa coordenada diferente. O produto é
+  $0 + 1 + 0 = 1$, que não é zero. Ter zeros em lugares diferentes não basta: o
+  que decide é a soma dos três produtos.
+
+## 9. Resolvendo o problema do drone
+
+**Primeira pergunta: o comprimento do voo.** O voo é o vetor
+$\vec{v} = \overrightarrow{OP} = (3,\ 4,\ 12)$. Pela fórmula do módulo:
+
+$$
+\lVert \vec{v} \rVert = \sqrt{3^2 + 4^2 + 12^2} = \sqrt{9 + 16 + 144} =
+\sqrt{169} = 13 \text{ m}.
+$$
+
+É o mesmo resultado que os dois passos de Pitágoras deram na seção 7, agora
+numa conta só.
+
+**Segunda pergunta: o ângulo com o chão.** O ângulo do voo com o chão é o
+ângulo entre o vetor do voo e a sua sombra no chão. A sombra do vetor
+$(3,\ 4,\ 12)$ é o vetor $\vec{s} = (3,\ 4,\ 0)$: o mesmo deslocamento, sem a
+subida.
+
+<Space3D
+  max={[3, 4, 12]}
+  unit={22}
+  ticks={false}
+  vectors={[
+    {to: [3, 4, 12], tone: 1, label: '\\vec{v}'},
+    {to: [3, 4, 0], tone: 2, label: '\\vec{s}'},
+  ]}
+  segments={[{from: [3, 4, 0], to: [3, 4, 12], tone: 3, dashed: true}]}
+  labels={[{at: [0, 1.0, 0.75], math: '\\theta'}]}
+  caption="O voo v = (3, 4, 12) e sua sombra no chão s = (3, 4, 0). O ângulo θ entre eles é a inclinação do voo em relação ao chão."
+/>
+
+Use a fórmula do ângulo:
+
+$$
+\vec{v} \cdot \vec{s} = 3 \times 3 + 4 \times 4 + 12 \times 0 = 25,
+\qquad \lVert \vec{v} \rVert = 13, \qquad \lVert \vec{s} \rVert = 5.
+$$
+
+$$
+\cos\theta = \frac{25}{13 \times 5} = \frac{25}{65} = \frac{5}{13} \approx
+0{,}385, \qquad \theta = \arccos\frac{5}{13} \approx 67{,}4^\circ.
+$$
+
+**Conferência por outro caminho.** O triângulo em pé da seção 7 tem catetos 5
+(no chão) e 12 (vertical), e hipotenusa 13. No vértice $O$, o cateto adjacente
+ao ângulo é o 5. Então $\cos\theta = \frac{5}{13}$, como a conta deu. Pela
+tangente, $\tg\theta = \frac{12}{5} = 2{,}4$, e $\arctg 2{,}4 \approx
+67{,}4^\circ$ também.
+
+**Resposta ao operador:** o voo tem 13 metros e sobe com uma inclinação de
+cerca de $67{,}4^\circ$ em relação ao chão. É um voo bem íngreme, mais próximo
+da vertical ($90^\circ$) do que da horizontal.
+
+Os dois caminhos concordam, e cada um serve num momento. O triângulo é mais
+rápido quando o ângulo é com o chão, porque o triângulo retângulo está pronto.
+A fórmula do produto escalar serve para o ângulo entre **quaisquer** dois
+vetores, mesmo quando nenhum triângulo retângulo aparece, como no Exemplo 4
+abaixo.
+
+## 10. Exemplos resolvidos
+
+### Exemplo 1: onde fica cada ponto
+
+Diga onde fica cada ponto: $A = (0,\ 0,\ -3)$, $B = (5,\ 0,\ 0)$,
+$C = (2,\ -1,\ 0)$, $D = (0,\ 3,\ 4)$.
+
+- $A$ tem $x = 0$ e $y = 0$: está no eixo $z$, 3 unidades **abaixo** da origem.
+- $B$ tem $y = 0$ e $z = 0$: está no eixo $x$.
+- $C$ tem $z = 0$: está no chão (plano $xy$), mas fora dos eixos.
+- $D$ tem $x = 0$: está na parede formada pelos eixos $y$ e $z$.
+
+### Exemplo 2: distância entre dois pontos
+
+*Pause e tente antes de ler.* Qual é a distância entre $A = (1,\ -2,\ 5)$ e
+$B = (3,\ 1,\ -1)$?
+
+As diferenças são $3 - 1 = 2$, $1 - (-2) = 3$ e $-1 - 5 = -6$. A terceira é
+negativa porque $B$ está mais baixo que $A$. Ao quadrado, o sinal some:
+
+$$
+d(A,\ B) = \sqrt{2^2 + 3^2 + (-6)^2} = \sqrt{4 + 9 + 36} = \sqrt{49} = 7.
+$$
+
+### Exemplo 3: contas com vetores
+
+*Pause e tente antes de ler.* Com $\vec{u} = (1,\ 2,\ -1)$ e
+$\vec{v} = (3,\ 0,\ 2)$, calcule $\vec{u} + \vec{v}$, $2\vec{u} - \vec{v}$ e o
+módulo de $2\vec{u} - \vec{v}$.
+
+$$
+\vec{u} + \vec{v} = (1 + 3,\ 2 + 0,\ -1 + 2) = (4,\ 2,\ 1).
+$$
+
+Para $2\vec{u} - \vec{v}$, primeiro $2\vec{u} = (2,\ 4,\ -2)$. Depois subtraia
+coordenada a coordenada:
+
+$$
+2\vec{u} - \vec{v} = (2 - 3,\ 4 - 0,\ -2 - 2) = (-1,\ 4,\ -4),
+\qquad \lVert 2\vec{u} - \vec{v} \rVert = \sqrt{1 + 16 + 16} = \sqrt{33}
+\approx 5{,}74.
+$$
+
+### Exemplo 4: ângulos dentro de um cubo
+
+*Pause e tente antes de ler.* Num cubo de aresta 1 com um canto na origem, qual
+é o ângulo entre a diagonal do cubo, $(1,\ 1,\ 1)$, e a aresta $(1,\ 0,\ 0)$?
+E entre as diagonais de duas faces vizinhas, $(1,\ 1,\ 0)$ e $(0,\ 1,\ 1)$?
+
+Diagonal do cubo e aresta: o produto é $1 + 0 + 0 = 1$; os módulos são
+$\sqrt{3}$ e $1$. Então $\cos\theta = \frac{1}{\sqrt{3}} \approx 0{,}577$, e
+$\theta \approx 54{,}7^\circ$.
+
+Diagonais de faces vizinhas: o produto é $0 + 1 + 0 = 1$; os dois módulos valem
+$\sqrt{2}$. Então $\cos\theta = \frac{1}{\sqrt{2} \times \sqrt{2}} = \frac{1}{2}$,
+e $\theta = 60^\circ$.
+
+O segundo resultado tem uma explicação geométrica. As pontas $(1,\ 1,\ 0)$ e
+$(0,\ 1,\ 1)$ e a origem formam um triângulo com os três lados iguais a
+$\sqrt{2}$: confira que a distância entre as duas pontas é
+$\sqrt{1 + 0 + 1} = \sqrt{2}$. Um triângulo equilátero tem ângulos de
+$60^\circ$. Aqui nenhum triângulo retângulo estava à vista, e a fórmula do
+produto escalar resolveu do mesmo jeito.
+
+### Exemplo 5: achar a coordenada que torna perpendicular
+
+*Pause e tente antes de ler.* Para que valor de $k$ os vetores
+$(2,\ k,\ 1)$ e $(3,\ -1,\ 4)$ são perpendiculares?
+
+Perpendicular quer dizer produto escalar zero:
+
+$$
+2 \times 3 + k \times (-1) + 1 \times 4 = 0
+\quad\Longrightarrow\quad 6 - k + 4 = 0
+\quad\Longrightarrow\quad k = 10.
+$$
+
+Conferência: $(2,\ 10,\ 1) \cdot (3,\ -1,\ 4) = 6 - 10 + 4 = 0$.
+
+### Exemplo 6: quando não dá mais para desenhar
+
+*Pause e tente antes de ler.* Uma padaria registra as compras da semana de dois
+clientes em quatro itens: pão (pacote), leite (litro), café (pacote) e fruta
+(kg).
+
+| Cliente | Pão | Leite | Café | Fruta |
+|---|---|---|---|---|
+| Ana | 2 | 1 | 3 | 0 |
+| Bruno | 1 | 2 | 0 | 4 |
+
+Os preços são R\$ 5,00, R\$ 8,00, R\$ 3,00 e R\$ 2,50, nessa ordem. Quanto
+cada cliente gastou?
+
+Cada linha da tabela é uma lista de quatro números. Chame
+$\vec{a} = (2,\ 1,\ 3,\ 0)$, $\vec{b} = (1,\ 2,\ 0,\ 4)$ e
+$\vec{p} = (5;\ 8;\ 3;\ 2{,}5)$. O ponto e vírgula separa os preços porque o
+último tem vírgula decimal.
+
+O total gasto é “quantidade vezes preço, item por item, e depois somar”. É
+exatamente um produto escalar, agora com quatro parcelas:
+
+$$
+\vec{a} \cdot \vec{p} = 2 \times 5 + 1 \times 8 + 3 \times 3 + 0 \times 2{,}5
+= 10 + 8 + 9 + 0 = 27,
+$$
+
+$$
+\vec{b} \cdot \vec{p} = 1 \times 5 + 2 \times 8 + 0 \times 3 + 4 \times 2{,}5
+= 5 + 16 + 0 + 10 = 31.
+$$
+
+Ana gastou R\$ 27,00 e Bruno, R\$ 31,00.
+
+Ninguém consegue desenhar uma seta com quatro coordenadas. Mas nenhuma conta
+desta seção precisou de desenho: a soma, a multiplicação por número e o
+produto escalar foram sempre “coordenada a coordenada”. Por isso elas
+continuam fazendo sentido com quatro números, ou com cem. A diferença entre os
+carrinhos, por exemplo, é $\vec{a} - \vec{b} = (1,\ -1,\ 3,\ -4)$: Ana levou um
+pão a mais, um leite a menos, três cafés a mais e quatro quilos de fruta a
+menos.
+
+## 11. Erros comuns
+
+**Esquecer a terceira coordenada.** Calcular a distância entre $(1,\ 2,\ 3)$ e
+$(3,\ 5,\ 9)$ como $\sqrt{2^2 + 3^2} = \sqrt{13}$ é usar a fórmula do plano. O
+resultado é a distância entre as **sombras** dos dois pontos no chão, não entre
+os pontos. Com a terceira parcela, $\sqrt{4 + 9 + 36} = 7$.
+
+**Somar as diferenças em vez de usar a raiz dos quadrados.** Para os mesmos
+pontos, $2 + 3 + 6 = 11$ é o caminho pelas arestas da caixa. Em linha reta são
+7. A soma das diferenças só acerta quando duas delas são zero, isto é, quando o
+deslocamento é ao longo de um único eixo.
+
+**Confiar na posição do ponto no papel.** Num desenho em perspectiva, dois
+pontos diferentes podem cair no mesmo lugar do papel. Quem lê a altura de um
+ponto “a olho”, pela distância até a linha do eixo $y$, mistura a altura com a
+profundidade. Leia sempre pela caixa, ou pelas coordenadas.
+
+**Achar que o vetor e a sua sombra têm o mesmo tamanho.** O voo do drone mede
+13, e a sombra dele no chão mede 5. A sombra só tem o mesmo tamanho do vetor
+quando o vetor já está no chão ($c = 0$). Nos outros casos, ela é menor, porque
+é um cateto do triângulo em que o vetor é a hipotenusa.
+
+**Trocar a ordem das coordenadas.** $(3,\ 4,\ 12)$ e $(12,\ 4,\ 3)$ têm o mesmo
+módulo, 13, mas são deslocamentos diferentes: um sobe 12, o outro sobe 3. O
+módulo igual não garante vetor igual.
+
+**Achar que dois vetores com zeros em lugares diferentes são
+perpendiculares.** No plano, $(a,\ 0)$ e $(0,\ b)$ são sempre perpendiculares, e
+é tentador generalizar. No espaço, $(1,\ 1,\ 0)$ e $(0,\ 1,\ 1)$ formam
+$60^\circ$ (Exemplo 4). O teste é sempre a soma dos três produtos.
+
+## 12. Perguntas de verificação
+
+**1.** Por que um ponto do espaço precisa de três números, e não de dois?
+
+<details>
+<summary>Resposta</summary>
+
+Porque dois números só localizam o lugar no chão. Pontos uns em cima dos
+outros, como salas de andares diferentes de um prédio, têm o mesmo lugar no
+chão e precisam de um terceiro número, a altura, para serem diferenciados.
+
+</details>
+
+**2.** Na seção 7, por que o ângulo em $S$ do triângulo $O$, $S$, $P$ é reto,
+se $OS$ não está ao longo de nenhum eixo?
+
+<details>
+<summary>Resposta</summary>
+
+Porque o lado $SP$ é vertical e o lado $OS$ está no chão. Uma linha vertical
+forma ângulo reto com qualquer linha do chão que passe pelo seu pé, em qualquer
+direção, não só ao longo dos eixos. A conta confirma:
+$(0,\ 0,\ 12) \cdot (3,\ 4,\ 0) = 0$.
+
+</details>
+
+**3.** O que acontece com a fórmula da distância no espaço quando os dois
+pontos estão no chão? Por que isso é um bom sinal?
+
+<details>
+<summary>Resposta</summary>
+
+Os dois pontos têm $z = 0$, então a terceira parcela é $(0 - 0)^2 = 0$, e a
+fórmula vira a da distância no plano. É um bom sinal porque a fórmula nova
+concorda com a antiga em todos os casos que a antiga já resolvia. Se ela desse
+outro resultado para dois pontos do chão, uma das duas estaria errada.
+
+</details>
+
+**4.** Por que a soma de vetores no espaço é feita coordenada a coordenada?
+
+<details>
+<summary>Resposta</summary>
+
+Porque os deslocamentos em cada direção se acumulam separadamente. Subir não
+muda quanto se andou ao longo de $x$ ou de $y$, e andar ao longo de $x$ não muda
+a altura. Então o total em cada direção é a soma dos deslocamentos naquela
+direção.
+
+</details>
+
+**5.** A fórmula $\vec{u} \cdot \vec{v} = \lVert \vec{u} \rVert \, \lVert
+\vec{v} \rVert \cos\theta$ foi provada no plano. Qual foi a ideia que permitiu
+usá-la no espaço?
+
+<details>
+<summary>Resposta</summary>
+
+Duas ideias juntas. Primeiro, os dois vetores, saindo da origem, formam um
+triângulo, e todo triângulo fica num plano; dentro dele, vale a lição do
+plano. Segundo, o produto escalar pode ser escrito usando só os três lados
+desse triângulo, $\frac{\lVert \vec{u} \rVert^2 + \lVert \vec{v} \rVert^2 -
+\lVert \vec{u} - \vec{v} \rVert^2}{2}$. Como os comprimentos são os mesmos,
+descritos com duas ou com três coordenadas, o produto escalar também é o mesmo.
+
+</details>
+
+**6.** Um vetor tem módulo 10. A sombra dele no chão pode ter módulo 12?
+
+<details>
+<summary>Resposta</summary>
+
+Não. A sombra é um cateto do triângulo retângulo em que o vetor é a
+hipotenusa (a altura é o outro cateto). Um cateto nunca é maior que a
+hipotenusa. A sombra mede no máximo 10, e mede exatamente 10 só quando o vetor
+está no chão.
+
+</details>
+
+**7.** No Exemplo 6, por que faz sentido chamar uma linha de tabela de vetor,
+se ela não pode ser desenhada como seta?
+
+<details>
+<summary>Resposta</summary>
+
+Porque as operações dos vetores (somar, multiplicar por número, produto escalar)
+nunca dependeram do desenho: todas são feitas coordenada a coordenada. O
+desenho ajudou a entender o significado delas no plano e no espaço. Mas as
+contas funcionam com qualquer quantidade de coordenadas, e com quatro
+coordenadas elas ainda respondem perguntas úteis, como o total gasto.
+
+</details>
+
+## 13. Exercícios
+
+### 1. Reconhecimento
+
+1. Classifique cada ponto como “no eixo $x$”, “no eixo $y$”, “no eixo $z$”,
+   “no chão (plano $xy$)” ou “fora dos eixos e do chão”: $(0,\ 0,\ 7)$,
+   $(3,\ -2,\ 0)$, $(0,\ 5,\ 0)$, $(1,\ 1,\ 1)$.
+2. Os pontos são $A = (1,\ 0,\ 2)$, $B = (3,\ 1,\ 5)$, $C = (0,\ 0,\ 0)$ e
+   $D = (2,\ 1,\ 3)$. Os vetores $\overrightarrow{AB}$ e
+   $\overrightarrow{CD}$ são iguais?
+
+### 2. Explicação
+
+3. Explique, com as suas palavras, por que a fórmula da distância no espaço tem
+   três quadrados dentro da raiz. Use a ideia de “Pitágoras duas vezes”.
+4. Um colega diz: “dá para achar o ângulo entre dois vetores do plano, porque
+   eu consigo desenhar; no espaço, não dá, porque eu não consigo desenhar o
+   ângulo direito”. O que você responderia?
+5. Por que o desenho de um ponto em perspectiva pode enganar, e o que a caixa
+   do ponto resolve?
+
+### 3. Aplicação direta
+
+6. Calcule a distância entre $A = (2,\ -1,\ 3)$ e $B = (5,\ 3,\ 3)$.
+7. Calcule o módulo de $\vec{v} = (2,\ -3,\ 6)$.
+8. Com $\vec{u} = (1,\ 0,\ 2)$ e $\vec{v} = (-1,\ 3,\ 1)$, calcule
+   $\vec{u} + \vec{v}$, $3\vec{u} - 2\vec{v}$ e $\vec{u} \cdot \vec{v}$. O
+   ângulo entre $\vec{u}$ e $\vec{v}$ é agudo, reto ou obtuso?
+9. Qual é o ângulo entre $(1,\ 2,\ 2)$ e o eixo $z$, isto é, o vetor
+   $(0,\ 0,\ 1)$?
+
+### 4. Variação
+
+10. Para que valores de $k$ o vetor $(k,\ 2,\ 6)$ tem módulo 7?
+11. Para que valor de $c$ os vetores $(1,\ c,\ 2)$ e $(3,\ 1,\ -2)$ são
+    perpendiculares?
+12. Um cabo vai de $A = (0,\ 0,\ 0)$ até $B = (6,\ -3,\ 9)$. Onde fica o
+    ponto que está a um terço do caminho, a partir de $A$?
+
+### 5. Problema misto
+
+13. Uma sala tem 4 m de largura, 3 m de comprimento e 2,5 m de altura. Qual é
+    a maior vara reta que cabe dentro dela? Qual é o volume da sala? (O
+    volume vem da lição de [Volumes e superfícies](./volumes-e-superficies).)
+14. Um drone faz três trechos: $(2,\ 0,\ 1)$, depois $(1,\ 3,\ -1)$, depois
+    $(-1,\ 1,\ 3)$, em metros. A que distância ele termina do ponto de partida?
+    Quantos metros ele voou ao todo? Por que os dois números são diferentes?
+15. Numa loja, três clientes compraram as quantidades $(2,\ 0,\ 1,\ 3)$,
+    $(1,\ 1,\ 1,\ 1)$ e $(0,\ 4,\ 0,\ 2)$ de quatro produtos, cujos preços são
+    $(10,\ 6,\ 20,\ 5)$ reais. Quanto cada cliente gastou? Quem gastou mais?
+
+### 6. Justificativa
+
+16. Mostre, desenvolvendo coordenada a coordenada, que no espaço
+    $\lVert \vec{u} + \vec{v} \rVert^2 = \lVert \vec{u} \rVert^2 +
+    \lVert \vec{v} \rVert^2 + 2\,\vec{u} \cdot \vec{v}$. O que essa igualdade
+    diz quando $\vec{u}$ e $\vec{v}$ são perpendiculares?
+17. Mostre que a diagonal de um cubo de aresta $a$ mede $a\sqrt{3}$. Explique
+    por que não é $3a$.
+18. Um vetor $\vec{v} = (a,\ b,\ c)$ tem sombra no chão $\vec{s} = (a,\ b,\ 0)$.
+    Mostre que $\vec{v} - \vec{s}$ é perpendicular a $\vec{s}$ e use isso para
+    explicar, com Pitágoras, por que $\lVert \vec{s} \rVert \le \lVert \vec{v}
+    \rVert$.
+
+<details>
+<summary>Dica para o exercício 10</summary>
+
+Escreva o módulo ao quadrado e iguale a $7^2 = 49$. A equação que sobra é do
+tipo $k^2 = \ldots$. Quantos números têm o mesmo quadrado?
+
+</details>
+
+<details>
+<summary>Dica para o exercício 14</summary>
+
+A distância até a partida vem do deslocamento total, que é a soma dos três
+trechos. O total voado é a soma dos módulos de cada trecho. Compare com o que a
+lição de [soma de vetores](./soma-de-vetores) diz sobre o módulo da soma.
+
+</details>
+
+<details>
+<summary>Dica para o exercício 16</summary>
+
+Faça igual à seção “O significado geométrico continua valendo”, trocando o sinal
+de menos por mais: $(u_1 + v_1)^2 = u_1^2 + 2u_1v_1 + v_1^2$, e o mesmo nas
+outras duas coordenadas. Depois reagrupe as nove parcelas.
+
+</details>
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. $(0,\ 0,\ 7)$: no eixo $z$. $(3,\ -2,\ 0)$: no chão, fora dos eixos.
+   $(0,\ 5,\ 0)$: no eixo $y$. $(1,\ 1,\ 1)$: fora dos eixos e do chão.
+2. Sim. $\overrightarrow{AB} = (3 - 1,\ 1 - 0,\ 5 - 2) = (2,\ 1,\ 3)$ e
+   $\overrightarrow{CD} = (2,\ 1,\ 3)$. São o mesmo deslocamento, desenhado em
+   lugares diferentes. Se você achou vetores diferentes, confira se fez
+   “chegada menos saída” nos dois.
+3. O primeiro passo usa Pitágoras no chão: a diagonal do chão tem quadrado
+   $(\Delta x)^2 + (\Delta y)^2$. O segundo passo usa Pitágoras no triângulo
+   em pé, cujos catetos são essa diagonal e a altura $\lvert \Delta z \rvert$.
+   O quadrado da diagonal entra inteiro na segunda conta, e ficam três
+   quadrados dentro de uma raiz só.
+4. Dá, sim. Dois vetores saindo do mesmo ponto sempre ficam num plano (o
+   triângulo que eles formam com a origem é plano), e o ângulo é um ângulo
+   comum desse plano. Para calculá-lo, não é preciso desenhá-lo: a fórmula
+   $\cos\theta = \frac{\vec{u} \cdot \vec{v}}{\lVert \vec{u} \rVert \, \lVert
+   \vec{v} \rVert}$ usa só as coordenadas.
+5. O papel tem duas dimensões e o espaço tem três. Por isso, pontos
+   diferentes do espaço podem cair no mesmo lugar do desenho: um ponto alto e
+   perto pode parecer igual a um baixo e longe. A caixa mostra os três
+   deslocamentos separados, e cada aresta tracejada é lida num eixo.
+6. As diferenças são $3$, $4$ e $0$. A distância é
+   $\sqrt{9 + 16 + 0} = 5$. Os dois pontos estão na mesma altura, e a conta
+   recai na do plano.
+7. $\sqrt{4 + 9 + 36} = \sqrt{49} = 7$. Se você encontrou $\sqrt{13}$, $\sqrt{40}$
+   ou $\sqrt{45}$, esqueceu uma das coordenadas; se encontrou $\sqrt{31}$,
+   provavelmente fez $(-3)^2 = -9$.
+8. $\vec{u} + \vec{v} = (0,\ 3,\ 3)$. $3\vec{u} = (3,\ 0,\ 6)$ e
+   $2\vec{v} = (-2,\ 6,\ 2)$, então $3\vec{u} - 2\vec{v} = (5,\ -6,\ 4)$.
+   $\vec{u} \cdot \vec{v} = -1 + 0 + 2 = 1$. Como o produto é positivo, o
+   ângulo é agudo (ele vale cerca de $82{,}3^\circ$, perto do reto, mas abaixo
+   dele).
+9. O produto é $0 + 0 + 2 = 2$; os módulos são $\sqrt{1 + 4 + 4} = 3$ e $1$.
+   Então $\cos\theta = \frac{2}{3}$, e $\theta = \arccos\frac{2}{3} \approx
+   48{,}2^\circ$.
+10. $k^2 + 4 + 36 = 49$, então $k^2 = 9$, e $k = 3$ ou $k = -3$. Os dois
+    servem: os vetores $(3,\ 2,\ 6)$ e $(-3,\ 2,\ 6)$ têm módulo 7. Se você
+    encontrou só $k = 3$, esqueceu a raiz negativa.
+11. $3 + c - 4 = 0$, então $c = 1$. Conferência:
+    $(1,\ 1,\ 2) \cdot (3,\ 1,\ -2) = 3 + 1 - 4 = 0$.
+12. $A + \frac{1}{3}\overrightarrow{AB} = (0,\ 0,\ 0) + \frac{1}{3}(6,\ -3,\ 9)
+    = (2,\ -1,\ 3)$.
+13. A maior vara vai de um canto do chão ao canto oposto do teto: é a diagonal
+    da sala, $\sqrt{4^2 + 3^2 + 2{,}5^2} = \sqrt{16 + 9 + 6{,}25} =
+    \sqrt{31{,}25} \approx 5{,}59$ m. Se você encontrou 5 m, mediu só a
+    diagonal do chão. O volume é $4 \times 3 \times 2{,}5 = 30$ m³.
+14. O deslocamento total é $(2 + 1 - 1,\ 0 + 3 + 1,\ 1 - 1 + 3) = (2,\ 4,\ 3)$,
+    e a distância até a partida é $\sqrt{4 + 16 + 9} = \sqrt{29} \approx 5{,}39$
+    m. Os trechos medem $\sqrt{5} \approx 2{,}24$, $\sqrt{11} \approx 3{,}32$ e
+    $\sqrt{11} \approx 3{,}32$, e o total voado é cerca de $8{,}87$ m. Os
+    números são diferentes porque o módulo da soma não é a soma dos módulos:
+    os trechos não apontam todos para o mesmo lado, e parte de um desfaz parte
+    do outro (o segundo desce 1 e o terceiro sobe 3, por exemplo).
+15. Cada total é um produto escalar com o vetor de preços $(10,\ 6,\ 20,\ 5)$.
+    Primeiro cliente: $20 + 0 + 20 + 15 = 55$, isto é, R\$ 55,00. Segundo:
+    $10 + 6 + 20 + 5 = 41$, R\$ 41,00. Terceiro: $0 + 24 + 0 + 10 = 34$,
+    R\$ 34,00. O primeiro gastou mais.
+16. $\lVert \vec{u} + \vec{v} \rVert^2 = (u_1 + v_1)^2 + (u_2 + v_2)^2 +
+    (u_3 + v_3)^2$. Desenvolvendo cada quadrado e reagrupando:
+    $(u_1^2 + u_2^2 + u_3^2) + (v_1^2 + v_2^2 + v_3^2) + 2(u_1v_1 + u_2v_2 +
+    u_3v_3) = \lVert \vec{u} \rVert^2 + \lVert \vec{v} \rVert^2 + 2\,\vec{u}
+    \cdot \vec{v}$. Quando os vetores são perpendiculares, o produto escalar é
+    zero, e sobra
+    $\lVert \vec{u} + \vec{v} \rVert^2 = \lVert \vec{u} \rVert^2 + \lVert \vec{v} \rVert^2$:
+    é o teorema de Pitágoras, no triângulo de
+    catetos $\vec{u}$ e $\vec{v}$ e hipotenusa $\vec{u} + \vec{v}$.
+17. A diagonal é o vetor $(a,\ a,\ a)$, de módulo
+    $\sqrt{a^2 + a^2 + a^2} = \sqrt{3a^2} = a\sqrt{3}$. Para $a = 2$, por
+    exemplo, dá $2\sqrt{3} \approx 3{,}46$. Não é $3a$ (que daria 6) porque
+    $3a$ é o caminho pelas três arestas, uma de cada vez; a diagonal corta
+    caminho por dentro do cubo.
+18. $\vec{v} - \vec{s} = (0,\ 0,\ c)$, e
+    $(0,\ 0,\ c) \cdot (a,\ b,\ 0) = 0 + 0 + 0 = 0$. Então
+    $\vec{v} - \vec{s}$ e $\vec{s}$ são perpendiculares (quando nenhum dos dois
+    é nulo). Como $\vec{v} = \vec{s} + (\vec{v} - \vec{s})$, o exercício 16
+    dá $\lVert \vec{v} \rVert^2 = \lVert \vec{s} \rVert^2 + c^2$. Como $c^2$
+    nunca é negativo, $\lVert \vec{s} \rVert^2 \le \lVert \vec{v} \rVert^2$, e
+    portanto $\lVert \vec{s} \rVert \le \lVert \vec{v} \rVert$. A igualdade
+    acontece só quando $c = 0$, isto é, quando o vetor já está no chão.
+
+</details>
+
+## 14. Revisão curta
+
+- Um ponto do espaço precisa de **três** coordenadas: $(x,\ y,\ z)$. A ordem
+  importa, e $z$ é a altura.
+- O desenho em perspectiva pode enganar. A **caixa** do ponto mostra os três
+  deslocamentos separados e desfaz a ambiguidade.
+- **Distância no espaço:** Pitágoras duas vezes, primeiro no chão e depois no
+  triângulo em pé, resumido em
+  $\sqrt{(\Delta x)^2 + (\Delta y)^2 + (\Delta z)^2}$. No chão, vira a fórmula
+  do plano.
+- **Vetores no espaço** têm três coordenadas, e todas as contas do módulo
+  continuam coordenada a coordenada: $\overrightarrow{AB} = B - A$, módulo,
+  soma, número vezes vetor, combinação linear.
+- **Produto escalar:** $u_1 v_1 + u_2 v_2 + u_3 v_3$. Ele continua igual a
+  $\lVert \vec{u} \rVert \, \lVert \vec{v} \rVert \cos\theta$, porque dois
+  vetores sempre cabem num plano e o produto escalar só depende dos três lados
+  do triângulo que eles formam.
+- Ângulo, perpendicularidade e sinal do produto escalar funcionam como no
+  plano.
+- Nenhuma conta precisou do desenho. Por isso elas continuam valendo para
+  listas de 4, 10 ou 1000 números, como uma linha de planilha.
+
+Esse último ponto é a porta para o próximo capítulo. Na
+[álgebra linear](../algebra-linear/), um vetor passa a ser qualquer lista de
+números, e as tabelas de números ganham um nome próprio: **matrizes**. As
+ideias deste módulo — combinação linear, produto escalar, ângulo, projeção —
+voltam lá para responder perguntas sobre dados: quais clientes têm gostos
+parecidos, que reta melhor descreve um conjunto de medidas, como uma imagem
+pode ser guardada com menos números.
+
+## Revisão do módulo 8 {#revisao-do-modulo-8}
+
+O módulo transformou deslocamentos e forças em listas de números e mostrou que
+o ângulo, a perpendicularidade e a distância podem ser lidos por contas com
+essas listas. As questões abaixo misturam o módulo com ferramentas dos
+módulos anteriores, sem dizer qual fórmula usar.
+
+**Resolva antes de abrir as respostas.** Para cada item, escreva primeiro
+**qual pergunta geométrica** está sendo feita (um comprimento? um ângulo? uma
+perpendicularidade? uma componente?) e só depois escolha a conta. Quando
+puder, confira o resultado por um segundo caminho.
+
+1. Uma pipa está presa a uma linha esticada de 10 m, que sai da mão de uma
+   pessoa fazendo $120^\circ$ com o semieixo $x$ positivo. Quais são as
+   coordenadas do vetor que vai da mão até a pipa? Explique o sinal de cada
+   coordenada.
+2. Os pontos $A = (1,\ 1)$, $B = (5,\ 3)$ e $C = (0,\ 3)$ formam um triângulo.
+   Ele tem um ângulo reto? Em que vértice? Qual é a área do triângulo?
+3. Uma caixa de peso 200 N está numa rampa de $30^\circ$. Quanto do peso puxa
+   a caixa rampa abaixo, e quanto aperta a caixa contra a rampa? Dê os valores
+   exatos.
+4. Um robô parte de $(2,\ 1)$ e anda em linha reta com velocidade $(3,\ 4)$
+   metros por minuto. Em que instante ele está a 10 m do ponto de partida, e
+   onde? Escreva também a equação reduzida da reta que ele percorre.
+5. Uma circunferência tem centro $(4,\ 5)$ e raio 1. A reta
+   $3x - 4y + 2 = 0$ corta essa circunferência, toca nela num ponto só, ou
+   passa longe?
+6. Mostre que $\vec{u} = (1,\ 2,\ 2)$ e $\vec{v} = (2,\ -2,\ 1)$ são
+   perpendiculares. Depois calcule $\lVert \vec{u} + \vec{v} \rVert$ de dois
+   jeitos: pelas coordenadas de $\vec{u} + \vec{v}$ e pelo teorema de
+   Pitágoras.
+
+<details>
+<summary>Dica para o item 3</summary>
+
+O peso aponta para baixo. Decomponha-o em duas direções perpendiculares: ao
+longo da rampa e perpendicular a ela. O ângulo entre o peso e a perpendicular à
+rampa é igual à inclinação da rampa.
+
+</details>
+
+<details>
+<summary>Dica para o item 5</summary>
+
+A pergunta é sobre a distância do centro até a reta. Compare essa distância com
+o raio: menor que o raio, a reta corta; igual, toca; maior, passa longe.
+
+</details>
+
+<details>
+<summary>Respostas da revisão do módulo 8</summary>
+
+1. A forma de tamanho e ângulo dá
+   $10(\cos 120^\circ,\ \sen 120^\circ)$. Pela redução ao primeiro quadrante,
+   $\cos 120^\circ = -\cos 60^\circ = -\frac{1}{2}$ e
+   $\sen 120^\circ = \sen 60^\circ = \frac{\sqrt{3}}{2}$. O vetor é
+   $(-5,\ 5\sqrt{3}) \approx (-5;\ 8{,}66)$. A primeira coordenada é negativa
+   porque $120^\circ$ está no segundo quadrante, à esquerda; a segunda é
+   positiva porque a pipa está acima da mão. Conferência:
+   $\sqrt{25 + 75} = 10$.
+2. $\overrightarrow{AB} = (4,\ 2)$ e $\overrightarrow{AC} = (-1,\ 2)$. O
+   produto escalar é $-4 + 4 = 0$: o ângulo em $A$ é reto. Os catetos medem
+   $\sqrt{20}$ e $\sqrt{5}$, e a área é
+   $\frac{1}{2} \times \sqrt{20} \times \sqrt{5} = \frac{1}{2} \times
+   \sqrt{100} = 5$. Conferência por Pitágoras: $BC = \sqrt{25 + 0} = 5$, e
+   $20 + 5 = 25 = 5^2$.
+3. Ao longo da rampa: $200 \sen 30^\circ = 200 \times \frac{1}{2} = 100$ N.
+   Contra a rampa: $200 \cos 30^\circ = 200 \times \frac{\sqrt{3}}{2} =
+   100\sqrt{3} \approx 173{,}2$ N. Conferência: $100^2 + (100\sqrt{3})^2 =
+   10\,000 + 30\,000 = 40\,000 = 200^2$. Se você trocou seno e cosseno, refaça
+   o desenho: com a rampa quase plana, quase todo o peso aperta a caixa contra
+   ela, e o cosseno é que fica perto de 1.
+4. A posição é $P(t) = (2,\ 1) + t(3,\ 4)$, e a distância até a partida é
+   $\lVert t(3,\ 4) \rVert = 5t$. Então $5t = 10$ e $t = 2$ minutos, na posição
+   $(2 + 6,\ 1 + 8) = (8,\ 9)$. A reta tem inclinação $\frac{4}{3}$ e passa
+   por $(2,\ 1)$: $y = \frac{4}{3}x - \frac{5}{3}$. Conferência: em $x = 8$,
+   $y = \frac{32}{3} - \frac{5}{3} = 9$.
+5. A distância do centro à reta é
+   $\frac{\lvert 3 \times 4 - 4 \times 5 + 2 \rvert}{\sqrt{9 + 16}} =
+   \frac{\lvert -6 \rvert}{5} = 1{,}2$. Como $1{,}2$ é maior que o raio 1, a
+   reta passa longe da circunferência.
+6. $\vec{u} \cdot \vec{v} = 2 - 4 + 2 = 0$: são perpendiculares. Pelas
+   coordenadas, $\vec{u} + \vec{v} = (3,\ 0,\ 3)$, de módulo
+   $\sqrt{9 + 0 + 9} = \sqrt{18} = 3\sqrt{2} \approx 4{,}24$. Por Pitágoras,
+   com $\lVert \vec{u} \rVert = \lVert \vec{v} \rVert = 3$:
+   $\sqrt{3^2 + 3^2} = \sqrt{18}$. Os dois caminhos concordam, como o
+   exercício 16 da lição garante.
+
+</details>
+
+**Antes de seguir:** explique por que o item 6 pôde usar Pitágoras, e por que
+o item 5 não precisou achar o ponto da reta mais perto do centro. Se a
+decomposição do item 3 ficou incerta, retome
+[Módulo, direção e componentes](./modulo-direcao-e-componentes) e
+[Projeção ortogonal](./projecao-ortogonal). Se a distância do item 5 ficou
+incerta, retome [Retas com vetores](./retas-com-vetores). O próximo passo do
+estudo de vetores é o capítulo de [álgebra linear](../algebra-linear/).

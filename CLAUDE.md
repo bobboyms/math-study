@@ -38,8 +38,12 @@ só de acentuação sem o usuário pedir.
 
 - Conteúdo de estudo em `docs/`, organizado por capítulo (`historia/`,
   `numeros-e-operacoes/`, `algebra/`, `equacoes/`, `funcoes/`,
-  `exponenciais-e-logaritmos/`, `geometria/`, `calculo/`), mais
-  `docs/revisao-geral.md` entre a geometria e o cálculo.
+  `exponenciais-e-logaritmos/`, `geometria/`, `calculo/`,
+  `analise-combinatoria/`, `algebra-linear/`), mais `docs/revisao-geral.md`
+  entre a geometria e o cálculo. Os vetores no plano e no espaço são o Módulo 8
+  de `geometria/` (7.28 a 7.34) e a porta de entrada de `algebra-linear/`
+  (capítulo 11); o plano dos dois blocos está em
+  `planos/vetores-e-algebra-linear.md`.
 - O capítulo de cálculo é dividido em cursos, um por pasta:
   `docs/calculo/calculo-1/` hoje, e `calculo-2/`, `calculo-3/` quando vierem.
   Na barra lateral, “9. Cálculo” contém a categoria “Cálculo 1”, como os
@@ -168,6 +172,11 @@ $$
 - **Em arquivos `.mdx`**, `{` e `<` no texto corrido são sintaxe JSX e quebram a
   compilação — escreva `\{` e `\<`. Dentro de `$...$` e `$$...$$` não há
   problema: `\frac{-b}{2a}` funciona normalmente.
+- **Em `.mdx`, não quebre a linha do arquivo logo antes de um `-` ou `+`
+  dentro de uma fórmula inline.** Uma linha que começa com “- ” ou “+ ” vira
+  item de lista antes de o `$...$` ser lido, e a compilação falha com um erro
+  do `acorn` que não aponta para a fórmula. Quebre a linha antes de outra
+  palavra.
 - **Nunca use `<` ou `>` num título (`##`), nem dentro de fórmula.** Aqui a
   exceção acima não vale: o Docusaurus copia o texto do título para o índice
   lateral **sem passar pelo KaTeX**, e o `<` cru chega ao minificador de HTML,
@@ -192,6 +201,18 @@ símbolos diferentes significam a mesma coisa:
   `f''(x)`;
 - integral: `\int_a^b f(x)\,dx`, com o `\,` antes de `dx`;
 - variação: `\Delta x` (introduzido em `funcoes/taxa-media-de-variacao`);
+- vetor: `\vec{v}`; vetor entre pontos `\overrightarrow{AB}`; base
+  `\vec{e}_1`, `\vec{e}_2`; coordenadas `(3,\ 4)`, e com decimal
+  `(0{,}6;\ 0{,}8)` — ponto e vírgula quando alguma coordenada tem vírgula;
+- módulo (norma) de vetor: `\lVert \vec{v} \rVert`, nunca barras simples —
+  elas são do valor absoluto de número;
+- produto escalar: `\vec{u} \cdot \vec{v}`. É a **única** exceção ao `\times`:
+  o ponto aqui é outra operação (vetor com vetor dá número), e a lição
+  `geometria/produto-escalar` diz isso ao aluno. Número vezes vetor e matriz
+  vezes vetor vão por justaposição: `3\vec{v}`, `A\vec{v}`, `AB`;
+- matrizes: `\begin{bmatrix} ... \end{bmatrix}`, entradas `a_{ij}`;
+  transposta `A^{\mathsf{T}}`; identidade `I`; inversa `A^{-1}`; determinante
+  `\det A`, nunca entre barras; espaços `\mathbb{R}^n`; autovalor `\lambda`;
 - valor absoluto: `\lvert x \rvert`, **nunca** `|x|`. Com a barra crua o KaTeX
   não sabe que ela abre um delimitador e trata o sinal seguinte como operador
   binário: `$|-5|$` sai como “∣ − 5∣”, com um vão visível depois da barra.

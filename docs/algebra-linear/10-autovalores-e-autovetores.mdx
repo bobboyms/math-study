@@ -1,0 +1,1196 @@
+---
+title: Autovalores e autovetores
+---
+
+import LinearMap from '@site/src/components/LinearMap';
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Autovalores e autovetores: as direções que a matriz só estica
+
+## 1. Problema motivador: para onde vai a população?
+
+Uma região tem uma cidade e uma zona rural, o campo. Um levantamento de vários
+anos mostrou um padrão estável de mudanças:
+
+- a cada ano, **10%** dos moradores da cidade se mudam para o campo, e os
+  outros 90% ficam;
+- a cada ano, **20%** dos moradores do campo se mudam para a cidade, e os
+  outros 80% ficam.
+
+Ninguém entra na região nem sai dela. Hoje há **300 mil** pessoas na cidade e
+**600 mil** no campo. A prefeitura quer planejar escolas e hospitais para as
+próximas décadas, e por isso faz a conta ano a ano.
+
+No primeiro ano, a cidade fica com 90% dos seus 300 mil, que são 270 mil, e
+recebe 20% dos 600 mil do campo, que são 120 mil. São 390 mil. O campo fica
+com 80% dos seus 600 mil, que são 480 mil, e recebe 10% dos 300 mil da
+cidade, que são 30 mil. São 510 mil. Repetindo a mesma conta:
+
+| Ano | Cidade (mil) | Campo (mil) |
+|---|---|---|
+| 0 | 300 | 600 |
+| 1 | 390 | 510 |
+| 2 | 453 | 447 |
+| 3 | 497,1 | 402,9 |
+| 4 | 527,97 | 372,03 |
+
+A cidade cresce, mas cada vez mais devagar: ganhou 90 mil no primeiro ano, 63
+mil no segundo, 44,1 mil no terceiro. O total continua 900 mil em todas as
+linhas.
+
+> 1. Depois de muitos anos, a cidade continua crescendo para sempre? Se não,
+>    em que número ela para?
+> 2. É possível escrever a população do ano 30 sem calcular os 29 anos
+>    anteriores, um de cada vez?
+
+A ferramenta que responde às duas perguntas são os **autovetores** e
+**autovalores** da matriz que faz a mudança de um ano. A seção 9 resolve o
+problema por completo.
+
+## 2. Mapa das ideias
+
+- **aplicar a mesma matriz muitas vezes**: calcular $A\vec{x}$, depois
+  $A(A\vec{x}) = A^2\vec{x}$, depois $A^3\vec{x}$, e assim por diante;
+- **autovetor** de $A$: um vetor $\vec{v}$, diferente de $\vec{0}$, que a
+  matriz leva para a **mesma reta** em que ele já estava. Ele só é esticado,
+  encolhido ou invertido;
+- **autovalor**: o número $\lambda$ (a letra grega “lambda”) que diz quanto o
+  autovetor é esticado. Os dois juntos obedecem a $A\vec{v} = \lambda\vec{v}$;
+- **equação característica**: a equação $\det(A - \lambda I) = 0$, cujas
+  soluções são os autovalores. Para uma matriz $2 \times 2$, é uma equação do
+  2º grau;
+- **diagonalização**: escrever $A = PDP^{-1}$, com os autovetores nas colunas
+  de $P$ e os autovalores na diagonal de $D$. Com ela, calcular $A^k$ vira
+  elevar os autovalores à potência $k$.
+
+## 3. Para que serve
+
+- **Previsões de longo prazo.** Migração entre regiões, clientes que trocam
+  de operadora, assinantes que cancelam e voltam. Sempre que a mesma regra se
+  repete período após período, os autovalores dizem o que acontece no longo
+  prazo, sem simular cada período.
+- **Busca na internet.** O PageRank, o método com que o Google ordenava as
+  páginas da web, é o autovetor de autovalor 1 de uma matriz gigante de
+  “cliques entre páginas”. É a mesma conta da cidade e do campo, com bilhões
+  de lugares em vez de dois.
+- **Análise de dados.** A análise de componentes principais (PCA, na sigla em
+  inglês) procura as direções em que uma nuvem de dados mais se espalha. Essas
+  direções são autovetores de uma matriz montada com os dados.
+- **Engenharia.** As frequências em que uma ponte ou um prédio vibram são
+  autovalores. Projetar uma estrutura é, em parte, manter esses números longe
+  das frequências do vento e dos passos.
+- **Dentro da álgebra linear.** A próxima lição, [Mínimos
+  quadrados](./minimos-quadrados), e a de [Valores
+  singulares](./decomposicao-em-valores-singulares) usam autovetores como
+  peça central.
+
+## 4. Ideias anteriores que voltam aqui
+
+Cinco peças antigas sustentam esta lição. Tente cada pergunta antes de abrir a
+resposta.
+
+**1. De [Produto de matrizes](./produto-de-matrizes).** O que significa
+$A^3\vec{x}$? Quem age primeiro?
+
+<details>
+<summary>Conferir</summary>
+
+$A^3$ é $AAA$. Aplicado a $\vec{x}$, quer dizer aplicar $A$ três vezes
+seguidas: primeiro $A\vec{x}$, depois $A$ no resultado, depois $A$ de novo.
+Como as três matrizes são iguais, a ordem não cria dúvida. Pela
+associatividade, tanto faz calcular $A^3$ primeiro e multiplicar por
+$\vec{x}$, ou aplicar $A$ três vezes ao vetor. Foi o que o cisalhamento
+repetido mostrou no Exemplo 5 daquela lição.
+
+</details>
+
+**2. De [Combinação linear e independência](./combinacao-linear-e-independencia).**
+Um sistema homogêneo $M\vec{x} = \vec{0}$ sempre tem a solução
+$\vec{x} = \vec{0}$. Quando ele tem **outra** solução, além dessa?
+
+<details>
+<summary>Conferir</summary>
+
+Quando as colunas de $M$ são dependentes: alguma coluna sobra, porque já se
+obtém das outras. No escalonamento, isso aparece como uma coluna sem pivô, que
+gera uma variável livre. Com as colunas independentes, a única solução é a
+trivial, $\vec{x} = \vec{0}$.
+
+</details>
+
+**3. De [Determinante](./determinante).** Quanto vale o determinante de
+$\begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}$? O que esse número diz sobre as
+colunas?
+
+<details>
+<summary>Conferir</summary>
+
+$\det = 1 \times 4 - 2 \times 2 = 0$. Determinante zero quer dizer que a
+matriz achata o quadrado de lado 1 num segmento, com área zero. Isso acontece
+porque as colunas são paralelas: $(2,\ 4) = 2 \times (1,\ 2)$. Por isso o
+sistema homogêneo dessa matriz tem soluções além de $\vec{0}$, como
+$(2,\ -1)$, e a matriz não tem inversa.
+
+</details>
+
+**4. De [Fórmula de Bhaskara](../equacoes/formula-de-bhaskara).** Resolva
+$x^2 - 5x + 6 = 0$. E o que acontece com $x^2 + 1 = 0$?
+
+<details>
+<summary>Conferir</summary>
+
+Na primeira, $\Delta = (-5)^2 - 4 \times 1 \times 6 = 25 - 24 = 1$, e as
+raízes são $\frac{5 \pm 1}{2}$, ou seja, $3$ e $2$. Na segunda,
+$\Delta = 0^2 - 4 \times 1 \times 1 = -4$. O discriminante é negativo, e não
+há raiz real. As raízes existem entre os
+[números complexos](../equacoes/numeros-complexos): são $i$ e $-i$.
+
+</details>
+
+**5. De [Base, dimensão e posto](./base-dimensao-e-posto).** Na base formada
+por $\vec{v}_1 = (1,\ 1)$ e $\vec{v}_2 = (1,\ -1)$, um vetor tem coordenadas
+$3$ e $1$. Que vetor é esse?
+
+<details>
+<summary>Conferir</summary>
+
+Coordenadas numa base são os pesos da receita: o vetor é
+$3\vec{v}_1 + 1\vec{v}_2 = (3,\ 3) + (1,\ -1) = (4,\ 2)$. Nesta lição, a base
+dos autovetores vai ser a base em que as contas ficam mais simples.
+
+</details>
+
+## 5. Intuição: as direções que não entortam
+
+Uma matriz $2 \times 2$ move o plano inteiro. A lição
+[Transformações lineares](./transformacoes-lineares) mostrou que ela leva a
+malha quadriculada numa malha de paralelogramos. Agora acompanhe setas
+isoladas, saindo da origem. Quase toda seta muda de **direção**: ela sai de
+uma reta e cai em outra.
+
+Mas algumas matrizes têm direções especiais. Uma seta que aponta numa dessas
+direções continua na mesma reta depois da transformação. Ela pode ficar mais
+comprida, mais curta ou virar para o lado oposto, mas não gira. Para essa seta,
+a matriz inteira, com seus quatro números, age como uma conta só: multiplicar
+por um número.
+
+Pense numa massa de pão sendo aberta com o rolo, sempre na mesma direção. Um
+risco feito na massa ao longo do movimento do rolo continua na mesma direção e
+só fica mais comprido. Um risco na direção perpendicular também não gira: ele
+nem muda de tamanho. Já um risco inclinado entorta, porque uma parte dele é
+esticada e a outra não. Na analogia, os riscos que não giram são os
+autovetores, e o quanto cada um estica é o autovalor. A analogia vale só para
+transformações que esticam em direções fixas: na rotação, que veremos na
+seção 8.5, nenhum risco escapa de girar.
+
+Por que isso interessa? Porque aplicar a matriz muitas vezes a uma seta
+especial pede uma conta só por aplicação. Se ela é esticada 3 vezes a cada aplicação, depois de 10
+aplicações foi esticada $3^{10}$ vezes, e continua na mesma reta. A ideia da
+lição é esta: **escrever qualquer vetor como combinação das setas especiais**,
+e acompanhar cada uma separadamente.
+
+## 6. Modelo visual: duas setas que não giram e uma que gira
+
+A matriz
+
+$$
+S = \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix}
+$$
+
+tem duas direções especiais. A figura mostra três setas antes e depois de
+aplicar $S$:
+
+- $\vec{v}_1 = (1,\ 1)$ vai para $(2 + 1,\ 1 + 2) = (3,\ 3)$, que é
+  $3\vec{v}_1$: mesma reta, três vezes mais comprida;
+- $\vec{v}_2 = (1,\ -1)$ vai para $(2 - 1,\ 1 - 2) = (1,\ -1)$, que é o próprio
+  $\vec{v}_2$: mesma reta, mesmo tamanho;
+- $\vec{w} = (1,\ 0)$ vai para $(2,\ 1)$. Ela estava deitada no eixo $x$ e
+  terminou inclinada: mudou de reta.
+
+<LinearMap
+  matrix={[[2, 1], [1, 2]]}
+  showBasis={false}
+  showSquare={false}
+  vectors={[
+    {v: [1, 1], tone: 1, label: '\\vec{v}_1', imageLabel: '3\\vec{v}_1'},
+    {v: [1, -1], tone: 2, label: '\\vec{v}_2', imageLabel: '\\vec{v}_2'},
+    {v: [1, 0], tone: 3, label: '\\vec{w}', imageLabel: 'S\\vec{w}'},
+  ]}
+  window={[-2, 4, -2, 4]}
+  caption="Antes e depois da matriz S. A seta v₁ = (1, 1) continua na diagonal e fica 3 vezes maior. A seta v₂ = (1, −1) não muda. A seta w = (1, 0) sai do eixo x e vai para (2, 1): ela não é especial."
+/>
+
+No painel do depois, a malha de paralelogramos foi esticada ao longo da
+diagonal $y = x$ e ficou parada ao longo da diagonal $y = -x$. As duas
+diagonais são as direções especiais de $S$. Os números 3 e 1 dizem quanto
+cada uma estica.
+
+## 7. Ponte para a formalização: de “mesma reta” para uma equação
+
+“A seta continua na mesma reta” é uma frase sobre o desenho. Para calcular,
+precisamos dela em símbolos. A lição [Soma de vetores e multiplicação por
+número](../geometria/soma-de-vetores) já ensinou a tradução: dois vetores
+estão na mesma reta pela origem quando um é múltiplo do outro. Então
+“$A\vec{v}$ está na reta de $\vec{v}$” quer dizer: existe um número $\lambda$
+com
+
+$$
+A\vec{v} = \lambda\vec{v}.
+$$
+
+Do lado esquerdo há uma matriz agindo no vetor. Do lado direito, um número
+multiplicando o mesmo vetor. A igualdade diz que, **para este vetor**, as duas
+contas dão o mesmo resultado.
+
+Conferindo com o modelo visual: $S\vec{v}_1 = (3,\ 3) = 3\vec{v}_1$, então
+$\lambda = 3$. E $S\vec{v}_2 = (1,\ -1) = 1\vec{v}_2$, então $\lambda = 1$.
+Para $\vec{w}$, a equação pediria $(2,\ 1) = \lambda(1,\ 0) = (\lambda,\ 0)$.
+A segunda coordenada exige $1 = 0$, o que é impossível. Nenhum $\lambda$
+serve, e $\vec{w}$ não é especial.
+
+Falta resolver o problema de verdade: dada uma matriz, **encontrar** as
+direções especiais sem chutar. A seção 8.2 faz isso.
+
+## 8. Formalização
+
+### 8.1 Autovetor e autovalor
+
+> **Definição.** Seja $A$ uma matriz quadrada. Um vetor $\vec{v}$
+> **diferente de $\vec{0}$** é um **autovetor** de $A$ quando existe um número
+> $\lambda$ com
+>
+> $$A\vec{v} = \lambda\vec{v}.$$
+>
+> Esse número $\lambda$ é o **autovalor** associado a $\vec{v}$.
+
+O prefixo “auto” vem do alemão *eigen*, “próprio”: são os vetores próprios da
+matriz, e o livro em inglês os chama de *eigenvectors*.
+
+**Exemplo.** Com $A = \begin{bmatrix} 4 & 1 \\ 2 & 3 \end{bmatrix}$ e
+$\vec{v} = (1,\ 1)$, a leitura por linhas dá
+$A\vec{v} = (4 + 1,\ 2 + 3) = (5,\ 5) = 5\vec{v}$. Então $(1,\ 1)$ é
+autovetor de $A$, com autovalor 5.
+
+**Contraexemplo.** Com a mesma $A$ e $\vec{u} = (1,\ 0)$, sai
+$A\vec{u} = (4,\ 2)$. Para ser $\lambda(1,\ 0) = (\lambda,\ 0)$, a segunda
+coordenada teria que ser 0, e ela é 2. Então $(1,\ 0)$ **não** é autovetor de
+$A$.
+
+Três observações delimitam a definição:
+
+- **Por que excluir $\vec{0}$.** Para o vetor nulo, $A\vec{0} = \vec{0}$ e
+  $\lambda\vec{0} = \vec{0}$ para **qualquer** número $\lambda$. Se $\vec{0}$
+  valesse, todo número seria autovalor de toda matriz, e a palavra deixaria de
+  dizer alguma coisa. Além disso, o vetor nulo não aponta em direção nenhuma.
+- **Um autovetor arrasta a reta inteira.** Se $\vec{v}$ é autovetor com
+  autovalor $\lambda$, então $2\vec{v}$, $-\vec{v}$ e qualquer múltiplo
+  $c\vec{v}$, com $c$ diferente de 0, também são, com o mesmo $\lambda$:
+  $A(c\vec{v}) = c\,A\vec{v} = c\lambda\vec{v} = \lambda(c\vec{v})$. O que
+  importa é a **direção**, e escolhemos o representante com os números mais
+  simples.
+- **O autovalor pode ser 0, negativo ou fracionário.** Quem não pode ser zero é
+  o autovetor. Autovalor $-1$ quer dizer que a seta vira para o lado oposto,
+  com o mesmo tamanho. Autovalor $0{,}7$ quer dizer que ela encolhe para 70%.
+  Autovalor 0 quer dizer que ela é achatada até a origem.
+
+### 8.2 Da equação ao determinante
+
+Esta é a passagem mais difícil da lição. Se ela não fechar na primeira
+leitura, isso é esperado: siga até o Exemplo 2, que faz a mesma coisa com
+números, e volte aqui depois.
+
+**O que queremos.** Achar os números $\lambda$ para os quais a equação
+$A\vec{v} = \lambda\vec{v}$ tem uma solução $\vec{v}$ diferente de $\vec{0}$.
+
+**Por que a forma atual não serve.** A equação tem $\vec{v}$ dos dois lados,
+e de lados diferentes da igualdade. Não é um sistema no formato que o
+[escalonamento](./sistemas-lineares-e-escalonamento) resolve, “matriz vezes
+incógnita igual a vetor conhecido”.
+
+**Passo 1: trazer tudo para o lado esquerdo.** Subtraia $\lambda\vec{v}$ dos
+dois lados, como se faz numa equação de números:
+
+$$
+A\vec{v} - \lambda\vec{v} = \vec{0}.
+$$
+
+**Passo 2: pôr $\vec{v}$ em evidência.** Aqui há uma armadilha. Não dá para
+escrever $(A - \lambda)\vec{v}$, porque $A$ é uma matriz e $\lambda$ é um
+número, e matriz menos número não está definido. O conserto usa a
+[matriz identidade](./produto-de-matrizes) $I$, que não muda nada:
+$\lambda\vec{v} = \lambda I\vec{v}$. Os dois lados são o mesmo vetor, porque
+$I\vec{v} = \vec{v}$. Agora os dois termos são “matriz vezes $\vec{v}$”, e
+eles se juntam:
+
+$$
+A\vec{v} - \lambda I\vec{v} = (A - \lambda I)\vec{v} = \vec{0}.
+$$
+
+O que mudou foi só a escrita. A matriz $\lambda I$ tem $\lambda$ na diagonal e
+0 fora dela, e $A - \lambda I$ é a matriz $A$ com $\lambda$ subtraído de cada
+entrada da diagonal:
+
+$$
+A - \lambda I = \begin{bmatrix} a & b \\ c & d \end{bmatrix} - \begin{bmatrix} \lambda & 0 \\ 0 & \lambda \end{bmatrix} = \begin{bmatrix} a - \lambda & b \\ c & d - \lambda \end{bmatrix}.
+$$
+
+**Passo 3: ler como sistema homogêneo.** A equação
+$(A - \lambda I)\vec{v} = \vec{0}$ é um sistema homogêneo, com matriz
+$A - \lambda I$. Ele sempre tem a solução $\vec{v} = \vec{0}$, mas essa não
+serve como autovetor. Queremos **outra** solução. Pela pergunta 2 da seção 4,
+isso acontece exatamente quando as colunas de $A - \lambda I$ são
+dependentes.
+
+**Passo 4: trocar “colunas dependentes” por uma conta.** A lição
+[Determinante](./determinante) mostrou que colunas dependentes e determinante
+zero são a mesma condição. Então:
+
+> $\lambda$ é autovalor de $A$ exatamente quando
+>
+> $$\det(A - \lambda I) = 0.$$
+
+Essa é a **equação característica** de $A$. A incógnita dela é só o número
+$\lambda$: o vetor $\vec{v}$ saiu da conta. Primeiro achamos os autovalores
+por essa equação. Depois, para cada um, achamos os autovetores resolvendo o
+sistema $(A - \lambda I)\vec{v} = \vec{0}$.
+
+**Conferindo com $S$.** Para $\lambda = 3$:
+$S - 3I = \begin{bmatrix} -1 & 1 \\ 1 & -1 \end{bmatrix}$. As colunas são
+opostas, e o determinante é $(-1)(-1) - 1 \times 1 = 0$. Para $\lambda = 2$,
+que não é autovalor: $S - 2I = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}$,
+com determinante $0 - 1 = -1$, diferente de zero.
+
+### 8.3 A equação característica de uma matriz 2 × 2
+
+Para $A = \begin{bmatrix} a & b \\ c & d \end{bmatrix}$, o determinante de
+$A - \lambda I$ é “diagonal principal menos diagonal secundária”:
+
+$$
+\det(A - \lambda I) = (a - \lambda)(d - \lambda) - bc.
+$$
+
+Aplique a distributiva no primeiro produto:
+$(a - \lambda)(d - \lambda) = ad - a\lambda - d\lambda + \lambda^2$. Organize
+pelas potências de $\lambda$:
+
+$$
+\det(A - \lambda I) = \lambda^2 - (a + d)\lambda + (ad - bc).
+$$
+
+É um polinômio do 2º grau em $\lambda$. Os dois números que aparecem nele têm
+nome:
+
+- $a + d$, a soma da diagonal, se chama **traço** de $A$;
+- $ad - bc$ é o próprio determinante de $A$.
+
+Então a equação característica de qualquer matriz $2 \times 2$ é
+
+$$
+\lambda^2 - (\text{traço})\,\lambda + \det A = 0,
+$$
+
+e ela se resolve com a [fórmula de Bhaskara](../equacoes/formula-de-bhaskara).
+O sinal do discriminante decide o número de autovalores reais: dois
+diferentes, um repetido, ou nenhum.
+
+**Exemplo.** Para $S$, o traço é $2 + 2 = 4$ e o determinante é
+$4 - 1 = 3$. A equação é $\lambda^2 - 4\lambda + 3 = 0$, com
+$\Delta = 16 - 12 = 4$ e raízes $\frac{4 \pm 2}{2}$: $3$ e $1$. São os dois
+números do modelo visual.
+
+**Um caso em que a diagonal dá a resposta.** Se $c = 0$, a matriz é **triangular**
+(zero abaixo da diagonal), e a equação vira $(a - \lambda)(d - \lambda) = 0$.
+Os autovalores são as entradas da diagonal, $a$ e $d$. Fora desse caso, ler
+os autovalores na diagonal dá resposta errada; é o Erro 2 da seção 11.
+
+### 8.4 Os autovetores de cada autovalor
+
+Com um autovalor $\lambda$ em mãos, os autovetores são as soluções não nulas
+de $(A - \lambda I)\vec{v} = \vec{0}$. Como o determinante é zero, o
+escalonamento sempre produz uma linha de zeros e uma variável livre. Por isso
+a resposta é uma reta inteira, como a seção 8.1 previu.
+
+**Exemplo com $S$ e $\lambda = 3$.** A matriz aumentada é
+
+$$
+\left[\begin{array}{cc|c} -1 & 1 & 0 \\ 1 & -1 & 0 \end{array}\right]
+\xrightarrow{\;L_2 \leftarrow L_2 + L_1\;}
+\left[\begin{array}{cc|c} -1 & 1 & 0 \\ 0 & 0 & 0 \end{array}\right].
+$$
+
+Sobra a equação $-x + y = 0$, ou seja, $y = x$. A variável $y$ é livre; com
+$y = t$, os autovetores são $(t,\ t) = t(1,\ 1)$, com $t$ diferente de 0. O
+representante mais simples é $(1,\ 1)$.
+
+**Com $\lambda = 1$.** $S - I = \begin{bmatrix} 1 & 1 \\ 1 & 1 \end{bmatrix}$.
+O escalonamento $L_2 \leftarrow L_2 - L_1$ zera a segunda linha, e sobra
+$x + y = 0$, ou seja, $x = -y$. Com $y = t$: $(-t,\ t)$. O representante
+$t = -1$ dá $(1,\ -1)$.
+
+**Confira sempre.** A conta de volta é curta e pega quase todo erro:
+$S(1,\ 1) = (3,\ 3)$ e $S(1,\ -1) = (1,\ -1)$.
+
+Um fato que será usado adiante: **autovetores de autovalores diferentes não
+são paralelos.** Se $\vec{v}_2$ fosse múltiplo de $\vec{v}_1$, estaria na reta
+de $\vec{v}_1$, e a seção 8.1 mostrou que toda seta dessa reta é esticada pelo
+mesmo $\lambda_1$. Mas $\vec{v}_2$ é esticado por $\lambda_2$, que é outro
+número. Então $\vec{v}_2$ está fora da reta de $\vec{v}_1$. Pela lição
+[Combinação linear e independência](./combinacao-linear-e-independencia), dois
+vetores não paralelos do plano formam uma base.
+
+### 8.5 Quando não há direção que só estica
+
+**Contraexemplo importante.** A rotação de $90^\circ$,
+
+$$
+R = \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix},
+$$
+
+gira **toda** seta. Pelo desenho, nenhuma seta pode continuar na mesma reta,
+porque uma reta girada $90^\circ$ vira a perpendicular a ela. A equação
+característica confirma: o traço é 0 e o determinante é
+$0 \times 0 - (-1) \times 1 = 1$, então
+
+$$
+\lambda^2 + 1 = 0, \qquad \Delta = 0^2 - 4 \times 1 \times 1 = -4.
+$$
+
+O discriminante é negativo, e não há autovalor real. As raízes existem entre
+os [números complexos](../equacoes/numeros-complexos), $\lambda = i$ e
+$\lambda = -i$. Isso não é um acaso: multiplicar por $i$ é, no plano dos
+complexos, girar $90^\circ$. Esta lição não segue por esse caminho. Fica o
+aviso de que **nem toda matriz real tem autovetor real**.
+
+<LinearMap
+  matrix={[[0, -1], [1, 0]]}
+  showBasis={false}
+  showSquare={false}
+  vectors={[
+    {v: [2, 1], tone: 1, label: '\\vec{a}', imageLabel: 'R\\vec{a}'},
+    {v: [1, -2], tone: 2, label: '\\vec{b}', imageLabel: 'R\\vec{b}'},
+  ]}
+  window={[-3, 3, -3, 3]}
+  caption="Antes e depois da rotação de 90°. A seta a = (2, 1) vai para (−1, 2) e a seta b = (1, −2) vai para (2, 1). Toda seta muda de reta; nenhuma direção é especial."
+/>
+
+### 8.6 Aplicar muitas vezes: a conta pelos autovetores
+
+Agora a recompensa. Suponha que $A$ tenha dois autovetores não paralelos,
+$\vec{v}_1$ e $\vec{v}_2$, com autovalores $\lambda_1$ e $\lambda_2$. Eles
+formam uma base. Então qualquer vetor $\vec{x}$ se escreve como
+
+$$
+\vec{x} = a\vec{v}_1 + b\vec{v}_2.
+$$
+
+Aplique $A$. A lição [Transformações lineares](./transformacoes-lineares)
+garante que a matriz respeita somas e múltiplos:
+
+$$
+A\vec{x} = a\,A\vec{v}_1 + b\,A\vec{v}_2 = a\lambda_1\vec{v}_1 + b\lambda_2\vec{v}_2.
+$$
+
+Cada parte foi multiplicada pelo seu autovalor, e nada se misturou. Aplicando
+$A$ de novo, cada parte é multiplicada outra vez pelo mesmo número. Depois de
+$k$ aplicações:
+
+$$
+A^k\vec{x} = a\lambda_1^{\,k}\,\vec{v}_1 + b\lambda_2^{\,k}\,\vec{v}_2.
+$$
+
+Uma conta que pedia $k$ produtos de matriz virou duas potências de números.
+E a fórmula mostra o comportamento no longo prazo:
+
+- uma parte cujo autovalor está entre $-1$ e $1$ **some**, porque as
+  potências encolhem: $0{,}7^{10} \approx 0{,}028$;
+- uma parte com autovalor exatamente 1 **fica** igual para sempre;
+- uma parte com autovalor maior que 1 **cresce** sem parar.
+
+### 8.7 Diagonalização: a mesma conta em forma de matriz
+
+A conta da seção 8.6 tem três etapas: achar as coordenadas $a$ e $b$ de
+$\vec{x}$ na base dos autovetores, multiplicar cada coordenada pela potência do
+seu autovalor, e montar o vetor de volta. Cada etapa é uma matriz.
+
+Ponha os autovetores como colunas de uma matriz $P$, e os autovalores na
+diagonal de uma matriz $D$:
+
+$$
+P = \begin{bmatrix} | & | \\ \vec{v}_1 & \vec{v}_2 \\ | & | \end{bmatrix},
+\qquad
+D = \begin{bmatrix} \lambda_1 & 0 \\ 0 & \lambda_2 \end{bmatrix}.
+$$
+
+- **Montar de volta é multiplicar por $P$.** Pela leitura por colunas de
+  [Matrizes](./matrizes), $P\begin{bmatrix} a \\ b \end{bmatrix} = a\vec{v}_1 + b\vec{v}_2$.
+- **Achar as coordenadas é multiplicar por $P^{-1}$.** Ela desfaz a etapa
+  anterior: leva $a\vec{v}_1 + b\vec{v}_2$ de volta a $(a,\ b)$. A inversa
+  existe porque as colunas de $P$ não são paralelas
+  ([Matriz inversa](./matriz-inversa)).
+- **Esticar cada coordenada é multiplicar por $D$.** $D$ multiplica a primeira
+  coordenada por $\lambda_1$ e a segunda por $\lambda_2$.
+
+As três etapas, na ordem “primeiro $P^{-1}$, depois $D$, depois $P$”, fazem o
+mesmo que $A$. Como a primeira a agir fica à direita:
+
+> $$A = PDP^{-1}.$$
+
+Escrever $A$ assim se chama **diagonalizar** $A$.
+
+**Por que isso facilita as potências.** Multiplique $A$ por ela mesma:
+
+$$
+A^2 = (PDP^{-1})(PDP^{-1}) = PD(P^{-1}P)DP^{-1} = PDIDP^{-1} = PD^2P^{-1}.
+$$
+
+A associatividade do [produto de matrizes](./produto-de-matrizes) permitiu
+mudar os parênteses de lugar e juntar o $P^{-1}$ de uma cópia com o $P$ da
+outra. Os dois se cancelam em $I$, e $I$ não muda nada. Com três cópias,
+cancelam-se dois pares; com $k$ cópias, $k - 1$ pares. Sobra
+
+$$
+A^k = PD^kP^{-1}.
+$$
+
+E $D^k$ sai sem nenhum produto de matrizes, porque uma matriz diagonal só
+estica cada eixo:
+$D^k = \begin{bmatrix} \lambda_1^{\,k} & 0 \\ 0 & \lambda_2^{\,k} \end{bmatrix}$.
+Confira com $k = 2$: o produto linha por coluna de $D$ por $D$ dá
+$\lambda_1 \times \lambda_1$ e $\lambda_2 \times \lambda_2$ na diagonal, e
+$\lambda_1 \times 0 + 0 \times \lambda_2 = 0$ fora dela.
+
+### 8.8 Quando faltam autovetores
+
+A diagonalização precisa de **dois** autovetores não paralelos. Nem toda
+matriz $2 \times 2$ tem. A rotação da seção 8.5 não tem nenhum real. E o
+cisalhamento
+
+$$
+C = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}
+$$
+
+tem só uma direção: ele é triangular, o autovalor 1 aparece duas vezes, e
+$(C - I)\vec{v} = \vec{0}$ dá a equação $y = 0$. Só as setas do eixo $x$ ficam
+na mesma reta. Uma direção só não forma base, e $C$ não é diagonalizável. Foi
+por isso que as potências de $C$, no Exemplo 5 de
+[Produto de matrizes](./produto-de-matrizes), cresceram de um jeito diferente:
+$\begin{bmatrix} 1 & k \\ 0 & 1 \end{bmatrix}$, com o $k$ somando, sem
+nenhuma potência.
+
+Um caso que sempre funciona: **dois autovalores reais diferentes** garantem
+dois autovetores não paralelos (seção 8.4), e então a matriz é
+diagonalizável.
+
+## 9. Resolvendo o problema da cidade e do campo
+
+**A matriz de um ano.** Escreva a população como vetor
+$\vec{x} = (\text{cidade},\ \text{campo})$, em milhares. A cidade do ano
+seguinte é $0{,}9 \times \text{cidade} + 0{,}2 \times \text{campo}$, e o campo
+é $0{,}1 \times \text{cidade} + 0{,}8 \times \text{campo}$. Pela leitura por
+linhas, isso é $A\vec{x}$ com
+
+$$
+A = \begin{bmatrix} 0{,}9 & 0{,}2 \\ 0{,}1 & 0{,}8 \end{bmatrix}.
+$$
+
+A primeira coluna diz o que acontece com quem mora na cidade: 90% ficam, 10%
+vão para o campo. A segunda, com quem mora no campo. Cada coluna soma 1,
+porque ninguém some e ninguém aparece. O ano $k$ é
+$\vec{x}_k = A^k\vec{x}_0$, com $\vec{x}_0 = (300,\ 600)$.
+
+**Os autovalores.** O traço é $0{,}9 + 0{,}8 = 1{,}7$ e o determinante é
+$0{,}9 \times 0{,}8 - 0{,}2 \times 0{,}1 = 0{,}72 - 0{,}02 = 0{,}7$. A equação
+característica:
+
+$$
+\lambda^2 - 1{,}7\lambda + 0{,}7 = 0, \qquad \Delta = 1{,}7^2 - 4 \times 0{,}7 = 2{,}89 - 2{,}8 = 0{,}09.
+$$
+
+As raízes são $\frac{1{,}7 \pm 0{,}3}{2}$: $\lambda_1 = 1$ e
+$\lambda_2 = 0{,}7$.
+
+**Os autovetores.** Para $\lambda_1 = 1$:
+$A - I = \begin{bmatrix} -0{,}1 & 0{,}2 \\ 0{,}1 & -0{,}2 \end{bmatrix}$. A
+segunda linha é a primeira com o sinal trocado, e o escalonamento
+$L_2 \leftarrow L_2 + L_1$ a zera. Sobra $-0{,}1x + 0{,}2y = 0$, ou seja,
+$x = 2y$. Um representante: $\vec{v}_1 = (2,\ 1)$. Conferindo:
+$A\vec{v}_1 = (1{,}8 + 0{,}2;\ 0{,}2 + 0{,}8) = (2,\ 1)$.
+
+Para $\lambda_2 = 0{,}7$:
+$A - 0{,}7I = \begin{bmatrix} 0{,}2 & 0{,}2 \\ 0{,}1 & 0{,}1 \end{bmatrix}$.
+As duas linhas dizem $x + y = 0$. Um representante: $\vec{v}_2 = (1,\ -1)$.
+Conferindo: $A\vec{v}_2 = (0{,}9 - 0{,}2;\ 0{,}1 - 0{,}8) = (0{,}7;\ -0{,}7) = 0{,}7\vec{v}_2$.
+
+**As coordenadas da população inicial.** Queremos
+$(300,\ 600) = a(2,\ 1) + b(1,\ -1)$, ou seja, o sistema
+
+$$
+\begin{cases} 2a + b = 300 \\ a - b = 600 \end{cases}
+$$
+
+Somando as duas equações, $b$ some: $3a = 900$, então $a = 300$. Da segunda,
+$b = a - 600 = -300$. Conferindo: $300(2,\ 1) - 300(1,\ -1) = (600 - 300,\ 300 + 300) = (300,\ 600)$.
+
+**A fórmula de qualquer ano.** Pela seção 8.6:
+
+$$
+\vec{x}_k = 300 \times 1^k\,(2,\ 1) - 300 \times 0{,}7^k\,(1,\ -1) = \bigl(600 - 300 \times 0{,}7^k;\ \ 300 + 300 \times 0{,}7^k\bigr).
+$$
+
+Teste com a tabela do começo: no ano 1, $600 - 300 \times 0{,}7 = 390$ e
+$300 + 210 = 510$. No ano 2, $0{,}7^2 = 0{,}49$, e sai
+$600 - 147 = 453$ e $300 + 147 = 447$. A fórmula bate com a conta ano a ano.
+
+**Resposta à pergunta 1.** A parte com autovalor $0{,}7$ encolhe 30% por ano
+e some. A parte com autovalor 1 fica. Depois de muitos anos, a população se
+aproxima de $300 \times (2,\ 1) = (600,\ 300)$: **600 mil na cidade e 300 mil
+no campo**, ou seja, $\frac{2}{3}$ do total na cidade. A cidade não cresce
+para sempre. Ela se aproxima de 600 mil sem nunca passar, porque o termo
+$300 \times 0{,}7^k$ é sempre positivo.
+
+Esse ponto é um **equilíbrio**: aplicar $A$ a $(600,\ 300)$ dá
+$(540 + 60,\ 60 + 240) = (600,\ 300)$. Os 60 mil que saem da cidade são
+exatamente os 60 mil que chegam do campo. É por isso que um autovetor de
+autovalor 1 é o retrato do longo prazo: ele é o estado que a regra não muda.
+
+**Resposta à pergunta 2.** O ano 30 sai direto da fórmula:
+$0{,}7^{30} \approx 0{,}0000225$, e a cidade tem
+$600 - 300 \times 0{,}0000225 \approx 599{,}993$ mil. Nenhum dos 29 anos
+anteriores precisou ser calculado.
+
+<CartesianPlane
+  xMin={0} xMax={10} yMin={0} yMax={700}
+  xUnit={40} yUnit={0.42}
+  yStep={100}
+  lines={[
+    {m: 0, n: 600, dashed: true, tone: 1},
+    {m: 0, n: 300, dashed: true, tone: 2},
+  ]}
+  points={[
+    {at: [0, 300], tone: 1}, {at: [1, 390], tone: 1}, {at: [2, 453], tone: 1},
+    {at: [3, 497.1], tone: 1}, {at: [4, 527.97], tone: 1}, {at: [5, 549.579], tone: 1},
+    {at: [6, 564.7053], tone: 1}, {at: [7, 575.29371], tone: 1}, {at: [8, 582.705597], tone: 1},
+    {at: [9, 587.8939179], tone: 1}, {at: [10, 591.52574253], tone: 1},
+    {at: [0, 600], tone: 2}, {at: [1, 510], tone: 2}, {at: [2, 447], tone: 2},
+    {at: [3, 402.9], tone: 2}, {at: [4, 372.03], tone: 2}, {at: [5, 350.421], tone: 2},
+    {at: [6, 335.2947], tone: 2}, {at: [7, 324.70629], tone: 2}, {at: [8, 317.294403], tone: 2},
+    {at: [9, 312.1060821], tone: 2}, {at: [10, 308.47425747], tone: 2},
+  ]}
+  labels={[
+    {at: [7.5, 640], math: '\\text{cidade}', tone: 1},
+    {at: [7.5, 255], math: '\\text{campo}', tone: 2},
+    {at: [10, 40], math: '\\text{ano}', anchor: 'end', dx: -4},
+  ]}
+  caption="População, em milhares, nos 10 primeiros anos. Os pontos azuis são a cidade e os laranja, o campo. As linhas tracejadas marcam o equilíbrio: 600 mil na cidade e 300 mil no campo. A cada ano, a distância até a linha tracejada encolhe para 70% do que era. No ano 2 os dois pontos quase coincidem: 453 mil e 447 mil."
+/>
+
+**Como ler o problema no plano.** Desenhe cada ano como um ponto
+$(\text{cidade},\ \text{campo})$, em centenas de milhares. Todos os pontos
+ficam na reta em que cidade mais campo dá 9, porque o total não muda. A
+diferença entre um ano e o equilíbrio é sempre um múltiplo de
+$\vec{v}_2 = (1,\ -1)$: no ano 0 ela é $(3,\ 6) - (6,\ 3) = (-3,\ 3) = -3\vec{v}_2$.
+Cada ano multiplica essa diferença por $0{,}7$. O equilíbrio, por sua vez,
+está na reta de $\vec{v}_1 = (2,\ 1)$.
+
+<CartesianPlane
+  xMin={-1} xMax={8} yMin={-1} yMax={8}
+  xUnit={38}
+  lines={[
+    {through: [[0, 9], [9, 0]], muted: true, dashed: true},
+    {through: [[0, 0], [2, 1]], tone: 1, dashed: true},
+  ]}
+  points={[
+    {at: [3, 6], tone: 2, label: '\\text{ano } 0', dx: -34, dy: -4},
+    {at: [3.9, 5.1], tone: 2, label: '\\text{ano } 1', dx: -34, dy: -2},
+    {at: [4.53, 4.47], tone: 2, label: '\\text{ano } 2', dx: -34, dy: -2},
+    {at: [4.971, 4.029], tone: 2},
+    {at: [5.2797, 3.7203], tone: 2},
+    {at: [5.49579, 3.50421], tone: 2},
+    {at: [6, 3], tone: 1, label: '(6,\\ 3)', dx: 24, dy: 16},
+  ]}
+  labels={[
+    {at: [2, 1], math: '\\text{reta de } \\vec{v}_1 = (2,\\ 1)', tone: 1, anchor: 'start', dx: 8, dy: 18},
+    {at: [8, 0], math: '\\text{cidade}', anchor: 'end', dx: -2, dy: -14},
+    {at: [0, 8], math: '\\text{campo}', anchor: 'start', dx: 12, dy: 2},
+  ]}
+  caption="Cada ano como um ponto (cidade, campo), em centenas de milhares. Os pontos laranja andam pela reta cinza, em que o total é 9, sempre na direção de v₂ = (1, −1). Eles se aproximam do equilíbrio (6, 3), que está na reta azul de v₁ = (2, 1). A cada ano, a distância até o equilíbrio encolhe para 70%."
+/>
+
+**A mesma resposta pela diagonalização.** Com
+$P = \begin{bmatrix} 2 & 1 \\ 1 & -1 \end{bmatrix}$ e
+$D = \begin{bmatrix} 1 & 0 \\ 0 & 0{,}7 \end{bmatrix}$, o número $ad - bc$ de
+$P$ é $2 \times (-1) - 1 \times 1 = -3$, e a fórmula da
+[matriz inversa](./matriz-inversa) dá
+
+$$
+P^{-1} = \frac{1}{-3}\begin{bmatrix} -1 & -1 \\ -1 & 2 \end{bmatrix} = \begin{bmatrix} \frac{1}{3} & \frac{1}{3} \\ \frac{1}{3} & -\frac{2}{3} \end{bmatrix}.
+$$
+
+$P^{-1}\vec{x}_0 = \left(\frac{300 + 600}{3},\ \frac{300 - 1200}{3}\right) = (300,\ -300)$:
+são as coordenadas $a$ e $b$ que o sistema deu. Quando $k$ cresce, $D^k$ se
+aproxima de $\begin{bmatrix} 1 & 0 \\ 0 & 0 \end{bmatrix}$, e $A^k$ se
+aproxima de
+
+$$
+P\begin{bmatrix} 1 & 0 \\ 0 & 0 \end{bmatrix}P^{-1} = \begin{bmatrix} \frac{2}{3} & \frac{2}{3} \\ \frac{1}{3} & \frac{1}{3} \end{bmatrix}.
+$$
+
+Essa matriz diz algo mais forte que a resposta da pergunta 1. Aplicada a
+**qualquer** população inicial, com total $N$, ela dá
+$\left(\frac{2}{3}N,\ \frac{1}{3}N\right)$. O ponto de chegada não depende de
+como a população começou: só do total.
+
+## 10. Exemplos resolvidos
+
+### Exemplo 1: testar candidatos
+
+Com $B = \begin{bmatrix} 4 & 1 \\ 2 & 3 \end{bmatrix}$, quais destes vetores
+são autovetores: $(1,\ -2)$, $(2,\ 1)$, $(3,\ 3)$?
+
+<details>
+<summary>Solução</summary>
+
+Multiplique e compare com o vetor original.
+
+- $B(1,\ -2) = (4 - 2,\ 2 - 6) = (2,\ -4) = 2 \times (1,\ -2)$. É autovetor,
+  com autovalor 2.
+- $B(2,\ 1) = (8 + 1,\ 4 + 3) = (9,\ 7)$. Para ser múltiplo de $(2,\ 1)$, a
+  razão entre as coordenadas teria que se manter: $9 \div 2 = 4{,}5$, mas
+  $7 \div 1 = 7$. Não é autovetor.
+- $B(3,\ 3) = (12 + 3,\ 6 + 9) = (15,\ 15) = 5 \times (3,\ 3)$. É autovetor,
+  com autovalor 5. Ele está na mesma reta que $(1,\ 1)$, o autovetor da seção
+  8.1.
+
+</details>
+
+### Exemplo 2: o processo completo
+
+Pause e tente. Ache os autovalores e os autovetores de
+$B = \begin{bmatrix} 4 & 1 \\ 2 & 3 \end{bmatrix}$ sem usar o Exemplo 1.
+
+<details>
+<summary>Solução</summary>
+
+**Equação característica.** Traço $4 + 3 = 7$; determinante
+$4 \times 3 - 1 \times 2 = 10$. Então $\lambda^2 - 7\lambda + 10 = 0$, com
+$\Delta = 49 - 40 = 9$ e raízes $\frac{7 \pm 3}{2}$: $\lambda = 5$ e
+$\lambda = 2$.
+
+**$\lambda = 5$.** $B - 5I = \begin{bmatrix} -1 & 1 \\ 2 & -2 \end{bmatrix}$.
+O escalonamento $L_2 \leftarrow L_2 + 2L_1$ zera a segunda linha. Sobra
+$-x + y = 0$, ou seja, $y = x$: autovetor $(1,\ 1)$.
+
+**$\lambda = 2$.** $B - 2I = \begin{bmatrix} 2 & 1 \\ 2 & 1 \end{bmatrix}$.
+As duas linhas são iguais e dizem $2x + y = 0$, ou seja, $y = -2x$: autovetor
+$(1,\ -2)$.
+
+**Conferência.** $B(1,\ 1) = (5,\ 5)$ e $B(1,\ -2) = (2,\ -4)$, como no
+Exemplo 1.
+
+</details>
+
+### Exemplo 3: a diagonal engana
+
+Pause e tente. Uma pessoa olhou para
+$E = \begin{bmatrix} 1 & 2 \\ 3 & 2 \end{bmatrix}$ e disse que os autovalores
+são 1 e 2, os números da diagonal. Confira.
+
+<details>
+<summary>Solução</summary>
+
+Teste o candidato $\lambda = 1$: $E - I = \begin{bmatrix} 0 & 2 \\ 3 & 1 \end{bmatrix}$,
+com determinante $0 \times 1 - 2 \times 3 = -6$. Não é zero, então 1 **não** é
+autovalor.
+
+A conta certa: traço $1 + 2 = 3$ e determinante $2 - 6 = -4$. A equação é
+$\lambda^2 - 3\lambda - 4 = 0$, com $\Delta = 9 + 16 = 25$ e raízes
+$\frac{3 \pm 5}{2}$: $\lambda = 4$ e $\lambda = -1$.
+
+Os autovetores: para $\lambda = 4$, $E - 4I = \begin{bmatrix} -3 & 2 \\ 3 & -2 \end{bmatrix}$
+dá $3x = 2y$, autovetor $(2,\ 3)$; conferindo, $E(2,\ 3) = (8,\ 12) = 4(2,\ 3)$.
+Para $\lambda = -1$, $E + I = \begin{bmatrix} 2 & 2 \\ 3 & 3 \end{bmatrix}$
+dá $x = -y$, autovetor $(1,\ -1)$; conferindo, $E(1,\ -1) = (-1,\ 1)$, o
+vetor invertido. A diagonal só dá os autovalores quando a matriz é
+triangular, e $E$ não é: tem o 3 abaixo da diagonal.
+
+</details>
+
+### Exemplo 4: uma potência alta sem multiplicar
+
+Pause e tente. Calcule $B^3$, com $B$ do Exemplo 2, pela diagonalização, e
+confira multiplicando.
+
+<details>
+<summary>Solução</summary>
+
+Os autovetores do Exemplo 2 formam
+$P = \begin{bmatrix} 1 & 1 \\ 1 & -2 \end{bmatrix}$, com
+$D = \begin{bmatrix} 5 & 0 \\ 0 & 2 \end{bmatrix}$ na mesma ordem. O número
+$ad - bc$ de $P$ é $-2 - 1 = -3$, e
+
+$$
+P^{-1} = \frac{1}{-3}\begin{bmatrix} -2 & -1 \\ -1 & 1 \end{bmatrix} = \begin{bmatrix} \frac{2}{3} & \frac{1}{3} \\ \frac{1}{3} & -\frac{1}{3} \end{bmatrix}.
+$$
+
+$D^3 = \begin{bmatrix} 125 & 0 \\ 0 & 8 \end{bmatrix}$. Primeiro
+$PD^3 = \begin{bmatrix} 125 & 8 \\ 125 & -16 \end{bmatrix}$: cada coluna de
+$P$ multiplicada pelo seu autovalor ao cubo. Depois
+
+$$
+B^3 = \begin{bmatrix} 125 & 8 \\ 125 & -16 \end{bmatrix}\begin{bmatrix} \frac{2}{3} & \frac{1}{3} \\ \frac{1}{3} & -\frac{1}{3} \end{bmatrix} = \begin{bmatrix} \frac{250 + 8}{3} & \frac{125 - 8}{3} \\ \frac{250 - 16}{3} & \frac{125 + 16}{3} \end{bmatrix} = \begin{bmatrix} 86 & 39 \\ 78 & 47 \end{bmatrix}.
+$$
+
+**Conferência direta.** $B^2 = \begin{bmatrix} 16 + 2 & 4 + 3 \\ 8 + 6 & 2 + 9 \end{bmatrix} = \begin{bmatrix} 18 & 7 \\ 14 & 11 \end{bmatrix}$,
+e $B^3 = B^2B = \begin{bmatrix} 72 + 14 & 18 + 21 \\ 56 + 22 & 14 + 33 \end{bmatrix} = \begin{bmatrix} 86 & 39 \\ 78 & 47 \end{bmatrix}$.
+
+Para $k = 3$ os dois caminhos custam parecido. Para $k = 50$, o caminho direto
+pede 49 produtos de matriz, e a diagonalização continua pedindo dois números
+elevados a 50.
+
+</details>
+
+### Exemplo 5: autovalor zero
+
+Pause e tente. A projeção sobre o eixo $x$ é
+$Q = \begin{bmatrix} 1 & 0 \\ 0 & 0 \end{bmatrix}$. Quais são as direções
+especiais, pelo desenho e pela conta?
+
+<details>
+<summary>Solução</summary>
+
+**Pelo desenho.** A projeção leva cada ponto ao ponto do eixo $x$ logo abaixo
+ou acima dele. Uma seta deitada no eixo $x$ não muda: autovalor 1. Uma seta em
+pé no eixo $y$ é achatada até a origem: $Q(0,\ 1) = (0,\ 0) = 0 \times (0,\ 1)$,
+autovalor 0. Qualquer outra seta muda de reta.
+
+**Pela conta.** $Q$ é triangular, e os autovalores são os da diagonal, 1 e 0.
+Para $\lambda = 0$, o sistema $(Q - 0I)\vec{v} = \vec{0}$ é o próprio
+$Q\vec{v} = \vec{0}$: os autovetores de autovalor 0 são as soluções não nulas
+do sistema homogêneo de $Q$.
+
+Um autovalor 0 quer dizer que alguma seta não nula vai para a origem. Por isso
+$Q$ não tem inversa e $\det Q = 0$. É a mesma condição vista de um ângulo
+novo.
+
+</details>
+
+## 11. Erros comuns
+
+> **Erro 1: aceitar $\vec{0}$ como autovetor.** Ao resolver
+> $(A - \lambda I)\vec{v} = \vec{0}$, a solução $(0,\ 0)$ sempre aparece, e é
+> tentador anotá-la. Mas ela satisfaz a equação para **qualquer** $\lambda$:
+> com $S$ da seção 6 e $\lambda = 2$, que não é autovalor,
+> $S\vec{0} = \vec{0} = 2 \times \vec{0}$. Se o único vetor que você encontrou
+> foi o nulo, o $\lambda$ testado não é autovalor.
+
+> **Erro 2: ler os autovalores na diagonal.** Funciona para matrizes
+> triangulares e diagonais, e por isso parece uma regra. Em
+> $E = \begin{bmatrix} 1 & 2 \\ 3 & 2 \end{bmatrix}$ ela daria 1 e 2, mas os
+> autovalores são 4 e $-1$ (Exemplo 3). Teste rápido: a soma dos autovalores
+> tem que dar o traço, e o produto tem que dar o determinante. Aqui,
+> $4 + (-1) = 3$ e $4 \times (-1) = -4$, como deve ser; com 1 e 2, o produto
+> daria 2, e não $-4$.
+
+> **Erro 3: escrever $A - \lambda$ em vez de $A - \lambda I$.** Subtrair
+> $\lambda$ de **todas** as entradas da matriz é outra conta, com outro
+> resultado. Com $S$ e $\lambda = 3$, a matriz certa é
+> $\begin{bmatrix} -1 & 1 \\ 1 & -1 \end{bmatrix}$, de determinante 0. A errada
+> seria $\begin{bmatrix} -1 & -2 \\ -2 & -1 \end{bmatrix}$, de determinante
+> $1 - 4 = -3$, e você concluiria que 3 não é autovalor. O $\lambda$ só sai da
+> diagonal, porque só a diagonal de $\lambda I$ tem $\lambda$.
+
+> **Erro 4: achar que o autovetor é único.** Se você encontrou $(2,\ 1)$ e o
+> gabarito diz $(4,\ 2)$ ou $(-2,\ -1)$, as respostas são a mesma: todos
+> estão na mesma reta, e todo múltiplo não nulo de um autovetor é autovetor
+> (seção 8.1). Confira pela conta $A\vec{v} = \lambda\vec{v}$, não pela
+> aparência dos números.
+
+> **Erro 5: trocar a ordem em $PDP^{-1}$.** A $k$-ésima coluna de $P$ e a
+> $k$-ésima entrada da diagonal de $D$ têm que ser o par “autovetor e seu
+> autovalor”. Com $P = \begin{bmatrix} 1 & 1 \\ 1 & -2 \end{bmatrix}$ e a
+> diagonal trocada para $(2,\ 5)$, o produto $PDP^{-1}$ não volta a ser $B$:
+> a primeira coluna de $PD$ seria $2(1,\ 1)$, mas $B(1,\ 1) = 5(1,\ 1)$.
+
+## 12. Perguntas de verificação
+
+**1.** Por que o vetor nulo nunca conta como autovetor?
+
+<details>
+<summary>Resposta</summary>
+
+Porque $A\vec{0} = \lambda\vec{0}$ vale para todo número $\lambda$. Se ele
+contasse, todo número seria autovalor de toda matriz, e a definição não
+distinguiria nada. Além disso, o vetor nulo não tem direção, e a ideia de
+autovetor é justamente uma direção que a matriz preserva.
+
+</details>
+
+**2.** Por que a condição para $\lambda$ ser autovalor é
+$\det(A - \lambda I) = 0$, e não “$\det(A - \lambda I)$ diferente de zero”?
+
+<details>
+<summary>Resposta</summary>
+
+Queremos uma solução não nula de $(A - \lambda I)\vec{v} = \vec{0}$. Se o
+determinante for diferente de zero, as colunas de $A - \lambda I$ são
+independentes, e o sistema homogêneo só tem a solução $\vec{0}$, que não
+serve. Só com determinante zero aparece uma variável livre e, com ela, uma reta
+inteira de soluções.
+
+</details>
+
+**3.** No problema da cidade, o que o autovalor $0{,}7$ diz em palavras?
+
+<details>
+<summary>Resposta</summary>
+
+A diferença entre a população de um ano e o equilíbrio aponta na direção de
+$(1,\ -1)$, e a cada ano ela é multiplicada por $0{,}7$. Em palavras: a
+distância até o equilíbrio encolhe 30% por ano. Por isso a cidade ganhou 90
+mil, depois 63 mil, depois 44,1 mil: cada ganho é 70% do anterior.
+
+</details>
+
+**4.** Uma matriz tem autovalores 2 e 0,5. Aplicada muitas vezes a um vetor
+que tem as duas partes, o que acontece?
+
+<details>
+<summary>Resposta</summary>
+
+A parte do autovalor 2 dobra a cada aplicação e cresce sem limite. A parte do
+autovalor 0,5 cai pela metade e some. Depois de muitas aplicações, o vetor
+aponta quase exatamente na direção do autovetor de autovalor 2, e o tamanho
+dele dobra a cada passo.
+
+</details>
+
+**5.** Por que a rotação de $90^\circ$ não tem autovetor, enquanto a reflexão
+na reta $y = x$ tem dois?
+
+<details>
+<summary>Resposta</summary>
+
+A rotação tira toda seta da sua reta: girar $90^\circ$ leva qualquer reta pela
+origem à perpendicular a ela. Na equação, isso aparece como discriminante
+negativo. A reflexão na reta $y = x$ deixa parada a própria reta $y = x$
+(autovalor 1) e inverte as setas da reta $y = -x$, perpendicular ao espelho
+(autovalor $-1$). Essas duas retas continuam no lugar.
+
+</details>
+
+**6.** Por que, em $A^k = PD^kP^{-1}$, sobra só um $P$ e um $P^{-1}$, e não $k$
+de cada?
+
+<details>
+<summary>Resposta</summary>
+
+Ao escrever $k$ cópias de $PDP^{-1}$ lado a lado, cada $P^{-1}$ fica
+encostado no $P$ da cópia seguinte. A associatividade permite agrupar esses
+pares, e cada par $P^{-1}P$ dá $I$, que some do produto. Sobram o $P$ da
+primeira cópia, os $k$ fatores $D$ juntos e o $P^{-1}$ da última.
+
+</details>
+
+## 13. Exercícios
+
+### 1. Reconhecimento
+
+1. Com $B = \begin{bmatrix} 4 & 1 \\ 2 & 3 \end{bmatrix}$, diga quais destes
+   são autovetores e, para cada um, o autovalor: $(2,\ 2)$, $(-1,\ 2)$,
+   $(1,\ 0)$, $(0,\ 0)$.
+2. Sem fazer contas, diga os autovalores de
+   $\begin{bmatrix} 3 & 0 \\ 0 & -1 \end{bmatrix}$ e de
+   $\begin{bmatrix} 2 & 5 \\ 0 & 3 \end{bmatrix}$. O que as duas matrizes têm
+   em comum que permite isso?
+
+### 2. Explicação
+
+3. Explique com suas palavras por que todo múltiplo não nulo de um autovetor
+   também é autovetor, com o mesmo autovalor.
+4. Explique, sem contas, o que um autovalor negativo, como $-1$, faz com a
+   seta.
+
+### 3. Aplicação direta
+
+5. Ache os autovalores e um autovetor de cada autovalor de
+   $\begin{bmatrix} 2 & 5 \\ 0 & 3 \end{bmatrix}$. Confira cada autovetor.
+6. Ache os autovalores e os autovetores de
+   $\begin{bmatrix} 5 & 2 \\ 2 & 2 \end{bmatrix}$.
+
+### 4. Variação
+
+7. A reflexão na reta $y = x$ é $F = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}$.
+   Diga os autovetores pelo desenho, antes de calcular, e depois confirme com
+   a equação característica.
+8. Mostre que o cisalhamento $C = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}$
+   tem um único autovalor e uma única direção de autovetores. Por que isso
+   impede a diagonalização?
+9. A rotação de $180^\circ$ é $\begin{bmatrix} -1 & 0 \\ 0 & -1 \end{bmatrix}$.
+   Quais vetores são autovetores dela? Compare com a rotação de $90^\circ$.
+
+### 5. Problema misto
+
+10. Um serviço de streaming observou que, a cada mês, 5% dos assinantes
+    cancelam, e 15% de quem não assina passa a assinar. O público total é de
+    40 mil pessoas, e hoje 10 mil assinam.
+    1. Escreva a matriz do mês, com o vetor (assinantes, não assinantes), e
+       calcule a situação depois de 1 mês.
+    2. Ache os autovalores e os autovetores da matriz.
+    3. Quantos assinantes haverá no longo prazo? E depois de 12 meses?
+11. Calcule $\begin{bmatrix} 5 & 2 \\ 2 & 2 \end{bmatrix}^4$ pela
+    diagonalização, usando o Exercício 6, e confira pelo produto direto.
+
+### 6. Justificativa
+
+12. Mostre que, se $\vec{v}$ é autovetor de $A$ com autovalor $\lambda$,
+    então $\vec{v}$ é autovetor de $A^2$ com autovalor $\lambda^2$.
+13. Numa matriz $2 \times 2$ em que cada coluna soma 1, como a da cidade e do
+    campo, mostre que $\lambda = 1$ é sempre autovalor.
+14. Mostre que, se $A$ tem autovalor 0, então $A$ não tem inversa.
+
+<details>
+<summary>Dica para o Exercício 10</summary>
+
+A primeira coluna da matriz diz o que acontece com quem assina: 95% continuam
+assinando e 5% passam a não assinar. A segunda coluna, com quem não assina.
+Um dos autovalores é 1, pelo mesmo motivo do problema da cidade.
+
+</details>
+
+<details>
+<summary>Dica para o Exercício 13</summary>
+
+Escreva a matriz como $\begin{bmatrix} a & b \\ 1 - a & 1 - b \end{bmatrix}$
+e calcule $\det(A - I)$ com essas letras.
+
+</details>
+
+<details>
+<summary>Dica para o Exercício 14</summary>
+
+Autovalor 0 quer dizer que existe $\vec{v}$, diferente de $\vec{0}$, com
+$A\vec{v} = \vec{0}$. Para onde $A$ leva $\vec{0}$? O que isso diz sobre
+desfazer $A$?
+
+</details>
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. $B(2,\ 2) = (10,\ 10) = 5(2,\ 2)$: autovetor, autovalor 5.
+   $B(-1,\ 2) = (-4 + 2,\ -2 + 6) = (-2,\ 4) = 2(-1,\ 2)$: autovetor,
+   autovalor 2. $B(1,\ 0) = (4,\ 2)$, que não é múltiplo de $(1,\ 0)$: não é.
+   $(0,\ 0)$ não é autovetor por definição. Se você incluiu $(0,\ 0)$, reveja
+   o Erro 1.
+2. A primeira tem autovalores 3 e $-1$; a segunda, 2 e 3. As duas são
+   triangulares (zero abaixo da diagonal), e aí a equação característica vira
+   $(a - \lambda)(d - \lambda) = 0$, com raízes na diagonal.
+3. Se $A\vec{v} = \lambda\vec{v}$ e $c$ é um número diferente de zero, então
+   $A(c\vec{v}) = c\,A\vec{v} = c\lambda\vec{v} = \lambda(c\vec{v})$, porque a
+   matriz respeita múltiplos. A seta $c\vec{v}$ está na mesma reta e é
+   esticada pelo mesmo fator. O $c$ não pode ser zero porque $\vec{0}$ não
+   conta.
+4. A seta continua na mesma reta, com o mesmo tamanho, mas passa a apontar
+   para o lado oposto. Autovalor $-2$ faria o mesmo e ainda dobraria o
+   tamanho.
+5. Triangular: autovalores 2 e 3. Para $\lambda = 2$:
+   $\begin{bmatrix} 0 & 5 \\ 0 & 1 \end{bmatrix}\vec{v} = \vec{0}$ dá $y = 0$,
+   autovetor $(1,\ 0)$; conferindo, $(2,\ 0) = 2(1,\ 0)$. Para $\lambda = 3$:
+   $\begin{bmatrix} -1 & 5 \\ 0 & 0 \end{bmatrix}$ dá $x = 5y$, autovetor
+   $(5,\ 1)$; conferindo, $(10 + 5,\ 3) = (15,\ 3) = 3(5,\ 1)$. Se você
+   encontrou $(1,\ 5)$, trocou $x$ com $y$ ao ler $-x + 5y = 0$.
+6. Traço 7, determinante $10 - 4 = 6$:
+   $\lambda^2 - 7\lambda + 6 = 0$, $\Delta = 49 - 24 = 25$, raízes 6 e 1. Para
+   $\lambda = 6$: $\begin{bmatrix} -1 & 2 \\ 2 & -4 \end{bmatrix}$ dá $x = 2y$,
+   autovetor $(2,\ 1)$; conferindo, $(10 + 2,\ 4 + 2) = (12,\ 6)$. Para
+   $\lambda = 1$: $\begin{bmatrix} 4 & 2 \\ 2 & 1 \end{bmatrix}$ dá
+   $y = -2x$, autovetor $(1,\ -2)$; conferindo, $(5 - 4,\ 2 - 4) = (1,\ -2)$.
+7. Pelo desenho: as setas sobre o espelho, na reta $y = x$, não mudam
+   (autovetor $(1,\ 1)$, autovalor 1); as perpendiculares ao espelho, na reta
+   $y = -x$, viram para o lado oposto (autovetor $(1,\ -1)$, autovalor
+   $-1$). Pela conta: traço 0, determinante $0 - 1 = -1$, equação
+   $\lambda^2 - 1 = 0$, raízes 1 e $-1$. Conferindo,
+   $F(1,\ 1) = (1,\ 1)$ e $F(1,\ -1) = (-1,\ 1)$.
+8. Traço 2, determinante 1: $\lambda^2 - 2\lambda + 1 = (\lambda - 1)^2 = 0$,
+   só $\lambda = 1$. Então $C - I = \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}$
+   dá $y = 0$: só as setas do eixo $x$. Para diagonalizar, $P$ precisaria de
+   duas colunas não paralelas que sejam autovetores, e só existe uma direção.
+9. A matriz leva todo vetor $\vec{v}$ a $-\vec{v}$. Então **todo** vetor não
+   nulo é autovetor, com autovalor $-1$: girar $180^\circ$ põe cada seta na
+   mesma reta, virada. A equação dá $(\lambda + 1)^2 = 0$. Já a de $90^\circ$
+   tira toda seta da sua reta e não tem nenhum.
+10. 
+    1. $M = \begin{bmatrix} 0{,}95 & 0{,}15 \\ 0{,}05 & 0{,}85 \end{bmatrix}$.
+       Com $\vec{x}_0 = (10,\ 30)$, em milhares:
+       $M\vec{x}_0 = (9{,}5 + 4{,}5;\ 0{,}5 + 25{,}5) = (14,\ 26)$.
+    2. Traço $1{,}8$; determinante
+       $0{,}95 \times 0{,}85 - 0{,}15 \times 0{,}05 = 0{,}8075 - 0{,}0075 = 0{,}8$.
+       Equação $\lambda^2 - 1{,}8\lambda + 0{,}8 = 0$, com
+       $\Delta = 3{,}24 - 3{,}2 = 0{,}04$ e raízes $\frac{1{,}8 \pm 0{,}2}{2}$:
+       1 e $0{,}8$. Para $\lambda = 1$, a primeira linha de $M - I$ dá
+       $-0{,}05x + 0{,}15y = 0$, ou seja, $x = 3y$: autovetor $(3,\ 1)$. Para
+       $\lambda = 0{,}8$: $0{,}15x + 0{,}15y = 0$, autovetor $(1,\ -1)$.
+    3. $(10,\ 30) = a(3,\ 1) + b(1,\ -1)$ dá $3a + b = 10$ e $a - b = 30$;
+       somando, $4a = 40$, $a = 10$ e $b = -20$. Então
+       $\vec{x}_k = (30 - 20 \times 0{,}8^k;\ 10 + 20 \times 0{,}8^k)$. No longo
+       prazo, **30 mil assinantes** (três quartos do público). Em 12 meses,
+       $0{,}8^{12} \approx 0{,}0687$, e há cerca de
+       $30 - 1{,}37 = 28{,}6$ mil assinantes. Conferindo o mês 1:
+       $30 - 16 = 14$, como no item 1. Se você encontrou o equilíbrio
+       $(1,\ 3)$, trocou a ordem das coordenadas ao ler $x = 3y$.
+11. Pelo Exercício 6, $P = \begin{bmatrix} 2 & 1 \\ 1 & -2 \end{bmatrix}$ e
+    $D = \begin{bmatrix} 6 & 0 \\ 0 & 1 \end{bmatrix}$. O número $ad - bc$ de
+    $P$ é $-4 - 1 = -5$, e
+    $P^{-1} = \frac{1}{-5}\begin{bmatrix} -2 & -1 \\ -1 & 2 \end{bmatrix} = \begin{bmatrix} \frac{2}{5} & \frac{1}{5} \\ \frac{1}{5} & -\frac{2}{5} \end{bmatrix}$.
+    Com $6^4 = 1296$:
+    $PD^4 = \begin{bmatrix} 2592 & 1 \\ 1296 & -2 \end{bmatrix}$, e
+    $PD^4P^{-1} = \begin{bmatrix} \frac{5184 + 1}{5} & \frac{2592 - 2}{5} \\ \frac{2592 - 2}{5} & \frac{1296 + 4}{5} \end{bmatrix} = \begin{bmatrix} 1037 & 518 \\ 518 & 260 \end{bmatrix}$.
+    Pelo produto direto: o quadrado é
+    $\begin{bmatrix} 29 & 14 \\ 14 & 8 \end{bmatrix}$, e o quadrado dele dá
+    $\begin{bmatrix} 841 + 196 & 406 + 112 \\ 406 + 112 & 196 + 64 \end{bmatrix} = \begin{bmatrix} 1037 & 518 \\ 518 & 260 \end{bmatrix}$.
+12. $A^2\vec{v} = A(A\vec{v}) = A(\lambda\vec{v}) = \lambda A\vec{v} = \lambda\lambda\vec{v} = \lambda^2\vec{v}$.
+    O passo do meio usa que a matriz respeita múltiplos. Em palavras: se uma
+    aplicação estica a seta $\lambda$ vezes, duas aplicações esticam
+    $\lambda$ vezes duas vezes.
+13. Com $A = \begin{bmatrix} a & b \\ 1 - a & 1 - b \end{bmatrix}$,
+    $A - I = \begin{bmatrix} a - 1 & b \\ 1 - a & -b \end{bmatrix}$, e
+    $\det(A - I) = (a - 1)(-b) - b(1 - a) = -ab + b - b + ab = 0$. Em palavras:
+    a segunda linha de $A - I$ é a primeira com o sinal trocado, e as linhas
+    são dependentes. Determinante zero quer dizer que 1 é autovalor.
+14. Se $A\vec{v} = 0\vec{v} = \vec{0}$ com $\vec{v}$ diferente de $\vec{0}$,
+    então $A$ leva dois vetores diferentes, $\vec{v}$ e $\vec{0}$, ao mesmo
+    lugar, a origem. Uma inversa teria que levar a origem de volta aos dois ao
+    mesmo tempo, o que é impossível. Pela outra via: autovalor 0 quer dizer
+    $\det(A - 0I) = \det A = 0$, e determinante zero é falta de inversa.
+
+**Se sua resposta não bateu:** confira três coisas, nesta ordem. A equação
+característica, com o $\lambda$ subtraído só da diagonal (Erro 3). A soma e o
+produto dos autovalores, que têm que dar o traço e o determinante (Erro 2).
+E cada autovetor, multiplicando de volta: $A\vec{v}$ tem que dar
+$\lambda\vec{v}$.
+
+</details>
+
+## 14. Revisão curta
+
+- Um **autovetor** de $A$ é um vetor $\vec{v}$, diferente de $\vec{0}$, que a
+  matriz deixa na mesma reta: $A\vec{v} = \lambda\vec{v}$. O **autovalor**
+  $\lambda$ diz quanto ele é esticado, encolhido ou invertido.
+- Os autovalores são as raízes de $\det(A - \lambda I) = 0$. Para uma matriz
+  $2 \times 2$, é $\lambda^2 - (\text{traço})\,\lambda + \det A = 0$, resolvida
+  por Bhaskara. A diagonal só dá os autovalores em matriz triangular.
+- Os autovetores de cada $\lambda$ são as soluções não nulas de
+  $(A - \lambda I)\vec{v} = \vec{0}$, achadas por escalonamento.
+- Com dois autovetores não paralelos, $A = PDP^{-1}$ e $A^k = PD^kP^{-1}$.
+  Aplicar $A$ muitas vezes vira elevar os autovalores a uma potência.
+- No longo prazo, partes com autovalor entre $-1$ e $1$ somem, partes com
+  autovalor 1 ficam, e partes com autovalor maior que 1 crescem. O autovetor
+  de autovalor 1 é o equilíbrio.
+- Nem toda matriz tem autovetores suficientes: a rotação de $90^\circ$ não tem
+  nenhum real, e o cisalhamento tem só uma direção.
+
+Esta lição procurou as direções em que uma matriz quadrada age como um número.
+A próxima, [Mínimos quadrados](./minimos-quadrados), enfrenta outro problema:
+um sistema com mais equações que incógnitas, sem solução exata. A pergunta
+deixa de ser “qual é a solução” e passa a ser “qual é a solução que erra
+menos”. E a ferramenta volta a ser a projeção do módulo de vetores.

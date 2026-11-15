@@ -41,7 +41,7 @@ peça está antes de começar:
 
 ## Como percorrer o capítulo
 
-A leitura completa segue os sete módulos abaixo. A barra lateral usa os mesmos
+A leitura completa segue os oito módulos abaixo. A barra lateral usa os mesmos
 agrupamentos. No fim de cada módulo há seis questões que misturam ideias novas
 e anteriores, sem anunciar qual fórmula usar.
 
@@ -60,6 +60,10 @@ indicada no final da revisão. Depois, tente novamente sem olhar o gabarito.
 5. Estude os módulos 6 e 7: gráficos, parâmetros, inversas, identidades e
    equações. A senoide básica, os radianos e as identidades serão retomados
    diretamente nas derivadas e integrais trigonométricas.
+
+O módulo 8, de vetores, não é pré-requisito do Cálculo 1. Ele é a porta de
+entrada do capítulo de [Álgebra linear](../algebra-linear/), e pode ser
+estudado antes ou depois do cálculo.
 
 Esse percurso muda o momento de algumas aplicações. Ele não exige ler uma
 lição sem os pré-requisitos que ela declara. A revisão do módulo 2 continua
@@ -158,6 +162,25 @@ Antes de seguir, faça a [revisão do módulo 6](./funcoes-trigonometricas-inver
 
 Antes de seguir, faça a [revisão do módulo 7](./equacoes-trigonometricas#revisao-do-modulo-7).
 
+**Módulo 8 — Vetores.** Deslocamento e força viram números.
+
+27. [Vetores](./vetores) — a seta que guarda tamanho e direção, e a diferença
+    entre onde você está e quanto você se moveu.
+28. [Soma de vetores e multiplicação por número](./soma-de-vetores) —
+    encadear deslocamentos, esticar uma seta e combinar duas.
+29. [Módulo, direção e componentes](./modulo-direcao-e-componentes) — passar de
+    “tamanho e ângulo” para coordenadas, e de volta.
+30. [Produto escalar](./produto-escalar) — a conta “multiplica cada par e
+    soma”, e o que ela diz sobre o ângulo entre duas setas.
+31. [Projeção ortogonal](./projecao-ortogonal) — quanto de um vetor aponta na
+    direção de outro, e o ponto mais perto numa reta.
+32. [Retas com vetores](./retas-com-vetores) — a reta como trajetória, e o
+    vetor perpendicular escondido em $ax + by + c = 0$.
+33. [Vetores no espaço](./vetores-no-espaco) — a terceira coordenada, e o salto
+    para listas de qualquer tamanho.
+
+Antes de seguir, faça a [revisão do módulo 8](./vetores-no-espaco#revisao-do-modulo-8).
+
 ## Como este capítulo se sustenta
 
 Cada módulo entrega uma ferramenta que o seguinte usa como material bruto:
@@ -171,7 +194,10 @@ Cada módulo entrega uma ferramenta que o seguinte usa como material bruto:
   retângulo, onde só cabem ângulos entre 0° e 90°;
 - os radianos ligam a entrada da função ao comprimento de arco no ciclo de
   raio 1. Também preparam a aproximação do seno perto de zero que será usada
-  no cálculo. Os gráficos podem ser desenhados em graus ou em radianos.
+  no cálculo. Os gráficos podem ser desenhados em graus ou em radianos;
+- os vetores reúnem o capítulo inteiro: a distância vira o módulo, seno e
+  cosseno viram as componentes, e a fórmula de $\cos(a - b)$ explica o que o
+  produto escalar mede.
 
 ## Para onde isso leva
 
@@ -179,3 +205,8 @@ Funções periódicas descrevem tudo o que se repete: corrente alternada, som,
 maré, sazonalidade de vendas, movimento circular. E, no cálculo, o seno e o
 cosseno são o primeiro par de funções cuja derivada é a outra — o exemplo que
 torna a ideia de derivada visual antes de ser algébrica.
+
+Os vetores levam a outro lugar: à [álgebra linear](../algebra-linear/), onde
+uma lista de qualquer tamanho — uma linha de planilha, os pixels de uma
+imagem — é tratada com as mesmas contas de uma seta no plano. É a matemática
+de base dos computadores gráficos e do aprendizado de máquina.

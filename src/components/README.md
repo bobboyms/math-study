@@ -59,6 +59,9 @@ import AreaModel from '@site/src/components/AreaModel';
 | volume do cilindro e do cone, efeito do $r^2$ contra o da altura | `CylinderConeExplorer` (interativo) |
 | secante girando na direção da tangente, derivada como limite | `TangentExplorer` (interativo) |
 | área sob a curva por retângulos, soma de Riemann, integral | `RiemannSum` |
+| vetor como seta no plano, soma de vetores, decomposição | `CartesianPlane` com `segments` de `arrow: true` |
+| matriz 2×2 como transformação: malha antes e depois, colunas = imagens de $\vec{e}_1$ e $\vec{e}_2$ | `LinearMap` |
+| ponto e vetor no espaço, eixos $x$, $y$, $z$, a “caixa” das coordenadas | `Space3D` |
 | tabela de padrão (entrada → saída, ciclos, crescimento) | tabela markdown |
 | passos alinhados de uma manipulação | `\begin{array}` em KaTeX |
 
@@ -575,6 +578,8 @@ O plano com eixos numerados e malha. É o irmão do `GeoFigure` para quando a
 | `lines` | `[{m, n}]`, `[{through: [p, q]}]` ou `[{x: 3}]` para vertical; aceita `dashed` |
 | `circles` | `[{center, r, tone, dashed}]` |
 | `points`, `segments`, `polygons`, `labels` | como no `GeoFigure`, mas em coordenadas do plano |
+| `lines[].muted`, `segments[].muted` | `true` desenha em cinza médio, que recua nos dois temas — para malhas auxiliares e prolongamentos. Prefira a `tone: 0`, que no tema escuro sai quase branco e compete com as setas |
+| `segments[].arrow` | `true` põe ponta de seta no fim (`to`) — é assim que se desenha um **vetor**. Só a ponta final; não existe `'both'` aqui. O rótulo do segmento (`label`) sai no meio, deslocável com `dx`/`dy` |
 
 **Atenção a uma diferença em relação ao `GeoFigure`:** aqui o rótulo de um ponto
 **não** aceita `place`. Passar `place` não dá erro — ele é simplesmente ignorado,
@@ -786,3 +791,62 @@ As leituras numéricas são aproximadas a três casas decimais.
 Os dois exploradores e a sequência estática reutilizam `GeoFigure`,
 `UnitCircle` e `CartesianPlane`. A disposição em colunas vira uma coluna no
 celular; a paleta e o KaTeX seguem os mesmos tokens e macros do curso.
+
+## LinearMap
+
+O plano antes e depois de uma matriz $2 \times 2$. Ensina que a matriz leva a
+malha quadriculada inteira numa malha de paralelogramos, e que as **colunas**
+da matriz são os destinos de $\vec{e}_1 = (1, 0)$ e $\vec{e}_2 = (0, 1)$.
+
+```mdx
+<LinearMap
+  matrix={[[2, 1], [0, 1]]}
+  vectors={[{v: [1, 2], label: '\\vec{v}', imageLabel: 'A\\vec{v}'}]}
+  caption="..."
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `matrix` | `[[a, b], [c, d]]`, **por linhas**, como se escreve no papel. A imagem de $\vec{e}_1$ é a coluna $(a, c)$ |
+| `layout` | `'side'` (padrão): dois painéis, antes e depois; `'overlay'`: só o painel do depois, com a malha original clara ao fundo |
+| `vectors` | `[{v, tone, label, imageLabel, offset, imageOffset}]` — seta para `v` no painel do antes e para a imagem no do depois. Tom padrão 3 |
+| `showBasis` | desenha $\vec{e}_1$ (tom 1) e $\vec{e}_2$ (tom 2) e suas imagens. Padrão `true` |
+| `showSquare` | pinta o quadrado unitário e o paralelogramo em que ele se transforma (tom 3, claro). Padrão `true` |
+| `basisLabels` | `{before: [l1, l2], after: [l1, l2]}`; o padrão do depois são as coordenadas das colunas, como $(2,\ 0)$ |
+| `window` | `[xMin, xMax, yMin, yMax]` — sem ela, a janela cabe o quadrado, os vetores e as imagens com uma unidade de folga. **Aumente** quando o rótulo de uma seta encostar na borda |
+| `extent` | até onde a malha transformada é desenhada (padrão 4) |
+| `unit`, `titles`, `caption` | pixels por unidade (padrão 34); títulos dos dois painéis |
+
+O rótulo de cada seta vai, sem deslocamento informado, um pouco além da ponta,
+na direção da seta, ancorado pela borda quando a seta aponta para o lado.
+
+## Space3D
+
+Eixos $x$, $y$ e $z$ em perspectiva cavaleira: $y$ para a direita, $z$ para
+cima e $x$ saindo do papel, desenhado na diagonal para baixo e para a
+esquerda e encurtado.
+
+```mdx
+<Space3D
+  max={[3, 4, 3]}
+  points={[{at: [2, 3, 2], label: 'P(2,\\,3,\\,2)'}]}
+  boxes={[[2, 3, 2]]}
+  vectors={[{to: [2, 3, 2], tone: 1, label: '\\vec{v}'}]}
+  caption="..."
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `max`, `min` | até onde vai cada eixo; os traços numerados vão de 1 até `max` |
+| `points` | `[{at: [x, y, z], label, tone, dx, dy}]` |
+| `vectors` | `[{from, to, tone, label, dx, dy}]` — `from` padrão é a origem |
+| `boxes` | `[[x, y, z]]` — a “caixa” do ponto: tracejado do ponto até a sombra $(x, y, 0)$ no chão, da sombra até os dois eixos, e a diagonal do chão pontilhada. É o desenho de Pitágoras duas vezes |
+| `segments`, `labels` | segmentos (`dashed`) e rótulos soltos, em coordenadas do espaço |
+| `unit`, `ticks`, `axisLabels`, `padding` | escala (padrão 40), traços numerados, nomes dos eixos, margem |
+
+Cuidado próprio da perspectiva: dois pontos diferentes do espaço podem cair no
+mesmo lugar do papel. Sempre desenhe a caixa (`boxes`) do ponto que o texto
+discute, e confira na imagem se a linha vertical tracejada não passa em cima de
+um número do eixo.
