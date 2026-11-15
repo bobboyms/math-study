@@ -88,6 +88,10 @@ Essa segunda pergunta é o que dá origem ao logaritmo.
 7. [Equações exponenciais e
    logarítmicas](./equacoes-exponenciais-e-logaritmicas) — resolver, e verificar
    por que algumas soluções precisam ser descartadas.
+8. [Função logística e funções
+   hiperbólicas](./funcao-logistica-e-funcoes-hiperbolicas) — o crescimento
+   que freia num teto, a sigmoide das redes neurais, e as funções feitas de
+   $e^x$ e $e^{-x}$.
 
 ## O que vem depois
 

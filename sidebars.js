@@ -362,6 +362,11 @@ const sidebars = {
           id: 'exponenciais-e-logaritmos/equacoes-exponenciais-e-logaritmicas',
           label: '6.8 Equações exponenciais e logarítmicas',
         },
+        {
+          type: 'doc',
+          id: 'exponenciais-e-logaritmos/funcao-logistica-e-funcoes-hiperbolicas',
+          label: '6.9 Função logística e funções hiperbólicas',
+        },
       ],
     },
     {

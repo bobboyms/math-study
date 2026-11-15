@@ -431,6 +431,83 @@ O peso de exatamente **5 kg** cai em duas faixas: “até 5” inclui o 5, e “
 O conserto é escrever as faixas como intervalos que se encaixam: $\,]0, 5]$,
 $\,]5, 12]$ e $\,]12, +\infty[$. Agora cada peso cai em exatamente uma.
 
+### Exemplo 6: a ReLU, a função por partes das redes neurais
+
+*Pause e tente.* Um programa recebe um número $x$. Quando $x$ é negativo, ele
+devolve 0. Quando $x$ é zero ou positivo, ele devolve o próprio $x$. Escreva
+essa regra como função por partes, calcule a saída para $-3$, $0$ e $2{,}5$, e
+diga se o gráfico tem salto ou bico.
+
+A regra tem dois trechos, separados pelo zero:
+
+$$
+\operatorname{ReLU}(x) = \begin{cases}
+0, & \text{se } x < 0 \\[4pt]
+x, & \text{se } x \ge 0
+\end{cases}
+$$
+
+O nome vem do inglês *rectified linear unit*, “unidade linear retificada”.
+Retificar, aqui, quer dizer cortar a parte negativa. A mesma regra se escreve
+também com o símbolo $\max$. O número $\max(a,\ b)$ é o **maior** dos dois
+números $a$ e $b$: por exemplo, $\max(0,\ 2{,}5) = 2{,}5$ e $\max(0,\ -3) = 0$.
+Comparar $x$ com 0 e ficar com o maior é exatamente o que a regra faz. Por
+isso,
+
+$$
+\operatorname{ReLU}(x) = \max(0,\ x).
+$$
+
+Agora as três saídas. Em cada uma, decida primeiro a linha:
+
+- $\operatorname{ReLU}(-3)$: como $-3 < 0$, vale a primeira linha, e a saída é
+  0;
+- $\operatorname{ReLU}(0)$: como $0 \ge 0$, vale a segunda linha, e a saída é o
+  próprio 0;
+- $\operatorname{ReLU}(2{,}5)$: como $2{,}5 \ge 0$, vale a segunda linha, e a
+  saída é $2{,}5$.
+
+<CartesianPlane
+  xMin={-4} xMax={4} yMin={-1} yMax={4}
+  xUnit={40}
+  functions={[{f: (x) => Math.max(0, x), tone: 1}]}
+  points={[
+    {at: [-3, 0], label: '(-3,\\ 0)', tone: 2, dy: -22},
+    {at: [2.5, 2.5], label: '(2{,}5;\\ 2{,}5)', tone: 2, dx: -52, dy: -4},
+  ]}
+  labels={[{at: [1.6, 3.4], math: '\\max(0,\\ x)', tone: 1}]}
+  axisLabels={['x', 'y']}
+  caption="O gráfico da ReLU: a semirreta horizontal y = 0 à esquerda da origem e a semirreta y = x à direita. As duas se encontram na origem, onde a direção muda de repente."
+/>
+
+**Salto ou bico?** Calcule a fronteira $x = 0$ pelas duas fórmulas. A primeira
+linha, $0$, dá 0. A segunda, $x$, também dá 0 em $x = 0$. As duas partes chegam
+à mesma altura, então o traço não se rompe: a ReLU é **contínua**. Mas a
+direção muda na origem. À esquerda, o gráfico é horizontal; à direita, ele sobe
+uma unidade para cada unidade andada. Por isso o gráfico tem um **bico** em
+$(0,\ 0)$, como o V de $\lvert x \rvert$.
+
+**A ligação com o módulo.** A ReLU se escreve com o valor absoluto:
+
+$$
+\operatorname{ReLU}(x) = \frac{x + \lvert x \rvert}{2}.
+$$
+
+Para ver por que vale, separe os dois casos da definição de $\lvert x \rvert$.
+Se $x \ge 0$, então $\lvert x \rvert = x$, e a fração vale
+$\frac{x + x}{2} = x$. Se $x < 0$, então $\lvert x \rvert = -x$, e a fração
+vale $\frac{x - x}{2} = 0$. Nos dois casos, a fração dá o mesmo que a ReLU.
+**Conferindo com números:** em $x = -3$, $\frac{-3 + 3}{2} = 0$; em $x = 2{,}5$,
+$\frac{2{,}5 + 2{,}5}{2} = 2{,}5$. Confere.
+
+**Onde ela aparece.** A ReLU é a função mais usada entre as camadas de uma rede
+neural. Cada camada faz contas de multiplicar e somar, e a ReLU, aplicada no
+meio, zera os resultados negativos. A lição de [produto de
+matrizes](../algebra-linear/produto-de-matrizes), no capítulo de álgebra
+linear, mostra por que essa dobra é indispensável: sem ela, várias camadas
+equivaleriam a uma só. E o bico na origem volta no cálculo, na lição [Quando a
+derivada não existe](../calculo/calculo-1/quando-a-derivada-nao-existe).
+
 ## 10. Erros comuns
 
 > **Erro 1: usar a linha errada.** Antes de calcular, verifique **qual
@@ -594,6 +671,9 @@ ali. Calcule o que cada fórmula dá em $x = 2$ e compare.
     um negativo, e explique por que os dois gráficos coincidem.
 15. Explique por que $\lvert x - a \rvert$ tem sempre o bico em $a$, qualquer
     que seja $a$, usando a leitura de distância.
+16. A função $g(x) = \max(0,\ x - 2)$ é a ReLU com uma mudança no que entra.
+    a) Escreva $g$ como função por partes. b) Calcule $g(1)$, $g(2)$ e $g(5)$.
+    c) Onde fica o bico, e por quê? Use a lição de transformações.
 
 <details>
 <summary>Respostas para conferência</summary>
@@ -648,6 +728,14 @@ ali. Calcule o que cada fórmula dá em $x = 2$ e compare.
     forma de a distância valer zero é $x$ coincidir com $a$. Como o módulo nunca
     é negativo, esse zero é o menor valor possível, e o ponto mais baixo do
     gráfico — o bico — fica exatamente em $x = a$.
+16. a) O maior entre 0 e $x - 2$ é 0 quando $x - 2 < 0$, isto é, quando
+    $x < 2$; e é $x - 2$ quando $x \ge 2$. Então $g(x) = 0$ se $x < 2$, e
+    $g(x) = x - 2$ se $x \ge 2$. &nbsp; b) $g(1) = 0$, porque $1 < 2$;
+    $g(2) = 2 - 2 = 0$; $g(5) = 5 - 2 = 3$. &nbsp; c) O bico fica em $(2,\ 0)$.
+    Trocar $x$ por $x - 2$ dentro da função é a transformação $f(x - 2)$, que
+    move o gráfico 2 unidades para a **direita**. O bico da ReLU, que estava na
+    origem, vai junto para $x = 2$. Se você pôs o bico em $x = -2$, reveja o
+    sentido do deslocamento: o sinal de menos dentro move para a direita.
 
 </details>
 

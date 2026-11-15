@@ -578,6 +578,56 @@ A leitura econômica é a mesma do motivador: a taxa marginal de imposto muda
 bruscamente na fronteira da faixa. Abaixo dela, um real a mais não custa nada;
 acima, custa 15 centavos. Não existe “a taxa em R\$ 2.000”.
 
+### Exemplo 6: a ReLU das redes neurais
+
+*Pause e tente.* A lição de [função modular e por
+partes](../../funcoes/funcao-modular-e-por-partes) apresentou a **ReLU**, a
+função que zera os números negativos e deixa os outros como estão:
+
+$$
+\operatorname{ReLU}(x) = \max(0,\ x) = \begin{cases}
+0, & \text{se } x < 0 \\[4pt]
+x, & \text{se } x \ge 0
+\end{cases}
+$$
+
+Onde ela é derivável, e quanto vale a derivada em cada ponto?
+
+**Fora da origem**, cada parte é uma reta. À esquerda de 0, a função é a
+constante 0, e a derivada é 0. À direita, a função é $y = x$, uma reta de
+inclinação 1, e a derivada é 1.
+
+**Na origem**, calcule as derivadas laterais pelo quociente. Como
+$\operatorname{ReLU}(0) = 0$, o quociente é
+$\frac{\operatorname{ReLU}(h)}{h}$. Para $h > 0$, ele vale
+$\frac{h}{h} = 1$. Para $h < 0$, vale $\frac{0}{h} = 0$. As derivadas laterais
+são 1 e 0: existem, mas são diferentes. É um bico, e
+$\operatorname{ReLU}'(0)$ **não existe**. Conferindo com $h = \pm 0{,}001$: à
+direita, $\frac{0{,}001}{0{,}001} = 1$; à esquerda, $\frac{0}{-0{,}001} = 0$.
+
+Juntando os três trechos:
+
+$$
+\operatorname{ReLU}'(x) = \begin{cases}
+0, & \text{se } x < 0 \\[4pt]
+1, & \text{se } x > 0
+\end{cases}
+\qquad \text{e não existe em } x = 0.
+$$
+
+Repare que esta é a mesma situação do imposto do exemplo 5. O imposto é
+$I(r) = 0{,}15 \times \operatorname{ReLU}(r - 2000)$: uma ReLU movida para
+$r = 2000$ e multiplicada por $0{,}15$. Por isso ele tem o bico em 2000, com
+derivadas laterais 0 e $0{,}15$.
+
+**O que os programas fazem com o bico.** Treinar uma rede neural exige a
+derivada de cada função da rede, e a ReLU não tem derivada em 0. Os programas
+de aprendizado de máquina resolvem isso por convenção: escolhem um valor para
+esse único ponto, quase sempre 0, e seguem a conta. Isso não contradiz esta
+lição. A derivada continua não existindo em 0; o programa só decide o que
+fazer quando a entrada cai exatamente ali. E, com números decimais quaisquer,
+cair exatamente em 0 é raro.
+
 ## 11. Erros comuns
 
 > **Erro 1: “contínua, logo derivável”.** A implicação anda só num sentido.

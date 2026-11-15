@@ -666,6 +666,69 @@ resposta se o crescimento fosse por acréscimo fixo. O crescimento é
 multiplicativo, e 23,1% por hora, compostos continuamente por 3 horas, dão
 $e^{3 \times 0{,}2310} = e^{\ln 2} = 2$: o dobro, como o enunciado pede.
 
+### Exemplo 7: a derivada da sigmoide
+
+*Pause e tente.* A lição de [função logística e funções
+hiperbólicas](../../exponenciais-e-logaritmos/funcao-logistica-e-funcoes-hiperbolicas)
+apresentou a **sigmoide**,
+
+$$
+\sigma(x) = \frac{1}{1 + e^{-x}},
+$$
+
+a curva em forma de S que sobe de 0 a 1. Calcule $\sigma'(x)$ e mostre que ela
+pode ser escrita usando só o próprio valor $\sigma(x)$.
+
+**A derivada.** A sigmoide é um quociente: em cima está a constante 1, e
+embaixo está $1 + e^{-x}$. A derivada de cima é 0. A derivada de baixo é
+$-e^{-x}$, porque o 1 some e $(e^{-x})' = -e^{-x}$ pela fórmula
+$(e^{kx})' = k\,e^{kx}$ com $k = -1$. Pela [regra do
+quociente](./regras-do-produto-e-do-quociente),
+
+$$
+\sigma'(x)
+= \frac{0 \times (1 + e^{-x}) - 1 \times (-e^{-x})}{(1 + e^{-x})^2}
+= \frac{e^{-x}}{(1 + e^{-x})^2}.
+$$
+
+**Escrever com o próprio $\sigma$.** O denominador ao quadrado é um produto de
+dois fatores iguais. Separe a fração em duas, uma para cada fator:
+
+$$
+\sigma'(x) = \frac{1}{1 + e^{-x}} \times \frac{e^{-x}}{1 + e^{-x}}.
+$$
+
+A primeira fração é $\sigma(x)$. A segunda é $1 - \sigma(x)$, como a lição da
+sigmoide mostrou ao estudar a simetria:
+$1 - \frac{1}{1 + e^{-x}} = \frac{1 + e^{-x} - 1}{1 + e^{-x}} = \frac{e^{-x}}{1 + e^{-x}}$.
+Então:
+
+> $$
+> \sigma'(x) = \sigma(x)\,\bigl(1 - \sigma(x)\bigr).
+> $$
+
+**Conferindo em $x = 0$.** $\sigma(0) = \frac{1}{1 + 1} = \frac{1}{2}$, e a
+fórmula dá $\sigma'(0) = \frac{1}{2} \times \frac{1}{2} = \frac{1}{4}$. O
+quociente centrado com $h = 0{,}001$ dá $0{,}2500$. Confere.
+
+**O que a fórmula diz.** Ela tem duas leituras.
+
+- **A inclinação depende só da altura.** Quem já sabe quanto vale $\sigma(x)$
+  calcula a inclinação com uma multiplicação, sem nenhuma exponencial nova. É
+  por isso que essa fórmula aparece no treinamento de redes neurais: a rede já
+  calculou $\sigma(x)$ ao processar a entrada, e a derivada custa só mais uma
+  subtração e uma multiplicação.
+- **A curva é plana nas pontas.** O produto $\sigma(1 - \sigma)$ é grande
+  quando $\sigma$ está perto de $\frac{1}{2}$, e pequeno quando $\sigma$ está
+  perto de 0 ou de 1. Em $x = 5$, $\sigma(5) \approx 0{,}9933$, e a inclinação
+  é $0{,}9933 \times 0{,}0067 \approx 0{,}0066$: quase horizontal. Nas redes
+  neurais, isso tem nome: a sigmoide **satura**. Quando a entrada é grande, a
+  derivada fica tão pequena que o treinamento quase não consegue mais ajustar
+  aquele trecho da rede.
+
+A maior inclinação é a de $x = 0$, onde vale $\frac{1}{4}$. Esse valor
+reaparece no exercício 26.
+
 ## 15. Erros comuns
 
 > **Erro 1: derivar $e^x$ pela regra da potência.** $(e^x)'$ **não** é
@@ -847,6 +910,17 @@ $e^{3 \times 0{,}2310} = e^{\ln 2} = 2$: o dobro, como o enunciado pede.
     Sugestão: escreva $\ln g = x \ln x$, derive os dois lados com a regra do
     produto, e isole $g'$. Confira o resultado em $x = 2$ com o quociente
     centrado.
+26. A lição de [função logística e funções
+    hiperbólicas](../../exponenciais-e-logaritmos/funcao-logistica-e-funcoes-hiperbolicas)
+    definiu $\cosh x = \frac{e^x + e^{-x}}{2}$,
+    $\senh x = \frac{e^x - e^{-x}}{2}$ e
+    $\tgh x = \frac{\senh x}{\cosh x}$. a) Derive $\senh x$ e $\cosh x$.
+    b) Use a regra do quociente e a identidade
+    $\cosh^2 x - \senh^2 x = 1$ para mostrar que
+    $(\tgh x)' = 1 - \tgh^2 x$. c) Calcule $(\tgh)'(0)$ e compare com
+    $\sigma'(0) = \frac{1}{4}$, do exemplo 7. d) Compare com
+    $(\sen x)' = \cos x$ e $(\cos x)' = -\sen x$: em que as derivadas das
+    hiperbólicas diferem das trigonométricas?
 
 <details>
 <summary>Dica para o exercício 18b</summary>
@@ -954,6 +1028,23 @@ por $x^x$.
 25. $\ln g = x \ln x$. Derivando: $\frac{g'}{g} = \ln x + x \times \frac{1}{x} = \ln x + 1$. Logo $g' = x^x(\ln x + 1)$. Em $x = 2$: $4(\ln 2 + 1) \approx 4 \times 1{,}6931 \approx 6{,}773$; o quociente centrado de $x^x$
     em 2 dá $6{,}7726$. Nem a regra da potência (que daria $x \times x^{x-1} = x^x$, ou seja, 4) nem a da exponencial (que daria $x^x \ln x \approx 2{,}77$) resolvem sozinhas, porque a variável está na base **e** no
     expoente.
+26. a) $(e^x)' = e^x$ e $(e^{-x})' = -e^{-x}$. Então
+    $(\senh x)' = \frac{e^x - (-e^{-x})}{2} = \frac{e^x + e^{-x}}{2} = \cosh x$,
+    e $(\cosh x)' = \frac{e^x + (-e^{-x})}{2} = \frac{e^x - e^{-x}}{2} = \senh x$.
+    &nbsp; b) Pela regra do quociente,
+    $(\tgh x)' = \frac{\cosh x \times \cosh x - \senh x \times \senh x}{\cosh^2 x} = \frac{\cosh^2 x - \senh^2 x}{\cosh^2 x}$.
+    Separando a fração em duas,
+    $\frac{\cosh^2 x}{\cosh^2 x} - \frac{\senh^2 x}{\cosh^2 x} = 1 - \tgh^2 x$.
+    (Usando a identidade no numerador, o mesmo resultado também se escreve
+    $\frac{1}{\cosh^2 x}$.) &nbsp; c) $\tgh 0 = 0$, então
+    $(\tgh)'(0) = 1 - 0 = 1$: quatro vezes a inclinação máxima da sigmoide.
+    Faz sentido, porque $\tgh x = 2\sigma(2x) - 1$. O fator 2 de fora dobra a
+    inclinação, e o $2x$ de dentro, pela regra da cadeia, dobra de novo:
+    $2 \times 2 \times \frac{1}{4} = 1$. &nbsp; d) Nas trigonométricas,
+    derivar o cosseno traz um sinal de menos: $(\cos x)' = -\sen x$. Nas
+    hiperbólicas, não há sinal nenhum: $(\cosh x)' = \senh x$. Se você
+    escreveu $(\cosh x)' = -\senh x$, copiou o padrão do cosseno; derive pela
+    definição com $e^x$ para conferir.
 
 </details>
 

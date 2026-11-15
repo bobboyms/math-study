@@ -232,6 +232,8 @@ site, em `src/katexMacros.js`, acrescentam os equivalentes em português:
 | `\cossec` | cossec | |
 | `\arcsen` | arcsen | |
 | `\arctg` | arctg | |
+| `\senh` | senh | `\cosh` |
+| `\tgh` | tgh | |
 
 O arquivo é lido em **dois lugares** — `docusaurus.config.js`, para as fórmulas
 do corpo do texto, e `mathviz/SvgMath.jsx`, para os rótulos dentro dos desenhos.

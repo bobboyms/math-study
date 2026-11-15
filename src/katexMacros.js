@@ -18,4 +18,8 @@ module.exports = {
   '\\cossec': '\\operatorname{cossec}',
   '\\arcsen': '\\operatorname{arcsen}',
   '\\arctg': '\\operatorname{arctg}',
+  // Hiperbólicas: o KaTeX traz \sinh, \cosh e \tanh. O cosh já tem o nome
+  // usado em português; seno e tangente hiperbólicos ganham a forma da casa.
+  '\\senh': '\\operatorname{senh}',
+  '\\tgh': '\\operatorname{tgh}',
 };

@@ -1,0 +1,1135 @@
+---
+title: Função logística e funções hiperbólicas
+---
+
+import CartesianPlane from '@site/src/components/CartesianPlane';
+
+# Função logística e funções hiperbólicas
+
+## 1. Problema motivador: o aplicativo que não cabe na cidade
+
+Um aplicativo de caronas é lançado numa cidade de **100 mil habitantes**. Na
+primeira semana, mil pessoas o instalam. Depois, quem usa conta para os amigos,
+e nas primeiras semanas o número de usuários quase dobra de uma semana para a
+outra:
+
+| Semana | Usuários |
+|---:|---:|
+| 0 | 1.000 |
+| 1 | 1.980 |
+| 2 | 3.883 |
+| 3 | 7.477 |
+| 4 | 13.913 |
+
+A [função exponencial](./funcao-exponencial) parece o modelo certo: dobrar a
+cada semana é $1000 \times 2^t$. Só que essa fórmula prevê
+$1000 \times 2^7 = 128\,000$ usuários na semana 7. É mais gente do que mora na
+cidade.
+
+Então a exponencial não pode continuar valendo. Ela descreve bem o começo, mas
+em algum momento o crescimento precisa frear, porque o número de usuários tem
+um teto: os 100 mil habitantes. A empresa quer responder três perguntas:
+
+1. Que fórmula descreve um crescimento que começa como exponencial e depois
+   para no teto?
+2. Em que semana o aplicativo chega à **metade** da cidade?
+3. Em que semana chega a **90%** da cidade?
+
+A fórmula que responde a primeira pergunta se chama **função logística**. Ela
+também é a função mais famosa das redes neurais, com o nome de **sigmoide**. E
+o caminho até ela vai revelar uma família inteira de funções feitas de $e^x$ e
+$e^{-x}$: as **funções hiperbólicas**.
+
+## 2. Mapa das ideias
+
+- a **chance** de um evento é a razão entre os casos a favor e os casos
+  contra: usuários dividido por não usuários;
+- a **função logística** descreve um crescimento em que a chance, e não a
+  quantidade, cresce de forma exponencial;
+- a **sigmoide** $\sigma(x) = \frac{1}{1 + e^{-x}}$ é a logística padrão: uma
+  curva em forma de S que sobe de 0 a 1;
+- o **logit** é a inversa da sigmoide: devolve o número cuja sigmoide é $p$;
+- o **cosseno hiperbólico** e o **seno hiperbólico** são a parte par e a
+  parte ímpar de $e^x$;
+- a **tangente hiperbólica** $\tgh x$ é a sigmoide esticada para ir de $-1$ a
+  1;
+- a identidade $\cosh^2 x - \senh^2 x = 1$ é o que dá o nome “hiperbólicas”.
+
+## 3. Para que serve
+
+- **crescimento com teto:** adoção de produtos e tecnologias, espalhamento de
+  uma notícia ou de uma epidemia, população de peixes num lago, venda de um
+  lançamento;
+- **probabilidade:** a sigmoide transforma qualquer número real num número
+  entre 0 e 1. Por isso ela é usada para dar a probabilidade de um e-mail ser
+  spam, de um cliente cancelar um contrato, de um paciente ter uma doença. Esse
+  método se chama **regressão logística**;
+- **redes neurais:** a sigmoide e a tangente hiperbólica são **funções de
+  ativação**, as funções aplicadas entre as camadas de uma rede. Na saída de
+  uma rede que decide entre duas classes, a sigmoide dá a probabilidade da
+  resposta;
+- **engenharia:** um fio, um cabo ou uma corrente pendurados pelas duas pontas
+  formam uma curva chamada **catenária**, que é um cosseno hiperbólico. O
+  arquiteto Antoni Gaudí desenhava arcos pendurando correntes e virando o
+  desenho de cabeça para baixo;
+- **dentro da matemática:** as funções hiperbólicas são as parentes das
+  funções trigonométricas que se constroem com exponenciais, e o cálculo as usa
+  para resolver integrais e equações.
+
+## 4. Ideias anteriores que voltam aqui
+
+**1. De [função exponencial](./funcao-exponencial) e de [decaimento e o número
+$e$](./decaimento-e-o-numero-e): o que acontece com $e^{-x}$ quando $x$
+cresce?** Ela diminui e se aproxima de 0, sem nunca chegar a 0. Por exemplo,
+$e^{-5} \approx 0{,}0067$. E quando $x$ fica muito negativo, $e^{-x}$ fica
+enorme: $e^{-(-5)} = e^5 \approx 148$. A curva de $e^{-x}$ é a de $e^x$
+refletida no eixo vertical.
+
+**2. De [funções racionais](../funcoes/funcoes-racionais): o que é uma
+assíntota horizontal?** Uma altura da qual a curva se aproxima cada vez mais,
+sem alcançá-la. A função $\frac{1}{x}$ tem assíntota horizontal $y = 0$, e o
+decaimento $e^{-x}$ também.
+
+**3. De [equações exponenciais e
+logarítmicas](./equacoes-exponenciais-e-logaritmicas): como se resolve
+$2^t = 99$?** Aplicando logaritmo natural aos dois lados:
+$t \ln 2 = \ln 99$, e $t = \frac{\ln 99}{\ln 2} \approx 6{,}63$. É assim que a
+seção 10 vai responder à pergunta da metade da cidade.
+
+**4. De [crescimento, sinal e simetria](../funcoes/crescimento-sinal-e-simetria):
+quando uma função é par, e quando é ímpar?** É **par** quando
+$f(-x) = f(x)$ para todo $x$: o gráfico é simétrico em relação ao eixo
+vertical, como o de $x^2$. É **ímpar** quando $f(-x) = -f(x)$: o gráfico é
+simétrico em relação à origem, como o de $x^3$.
+
+**5. De [produtos notáveis](../algebra/produtos-notaveis): quanto dá
+$(a + b)(a - b)$?** Dá $a^2 - b^2$, a diferença de quadrados. Com $a = 5$ e
+$b = 3$: $8 \times 2 = 16$, e $25 - 9 = 16$. Confere. Esse produto vai provar a
+identidade das funções hiperbólicas.
+
+Se alguma dessas respostas não voltou com facilidade, vale reler a página
+correspondente antes de seguir. A lição usa as cinco.
+
+## 5. Intuição: o que falta conta tanto quanto o que já existe
+
+Por que a exponencial funcionou nas primeiras semanas? O aplicativo cresce
+porque quem já usa convida quem ainda não usa. No começo, quase toda a cidade
+ainda não usa. Então cada usuário encontra amigos para convidar sem esforço, e
+o número de novos usuários é proporcional ao número de usuários. É a regra da
+exponencial.
+
+Mais tarde, a situação muda. Quando metade da cidade já usa, metade dos amigos
+de cada usuário já está no aplicativo, e convidar essas pessoas não acrescenta
+ninguém. Quando 99% da cidade já usa, quase não sobra quem convidar. O
+crescimento freia, e o freio é a falta de gente nova.
+
+Então o crescimento depende de duas quantidades ao mesmo tempo:
+
+- **quantos já usam**, porque são eles que convidam;
+- **quantos ainda não usam**, porque são eles que podem entrar.
+
+Existe uma conta que junta as duas numa só: dividir uma pela outra. Essa
+divisão tem nome.
+
+> A **chance** de um evento é a razão entre os casos a favor e os casos
+> contra. Para o aplicativo,
+> $$
+> \text{chance} = \frac{\text{usuários}}{\text{não usuários}}.
+> $$
+
+**Exemplo.** Na semana 0, há 1.000 usuários e 99.000 não usuários. A chance é
+$\frac{1000}{99000} = \frac{1}{99}$: para cada pessoa que usa, 99 não usam.
+
+**Contraexemplo, para delimitar.** A chance **não** é a fração da cidade que
+usa. A fração na semana 0 é $\frac{1000}{100000} = \frac{1}{100}$: o total vai
+no denominador. Na chance, o denominador é só a parte contra. As duas são
+quase iguais no começo, $\frac{1}{99}$ contra $\frac{1}{100}$, mas se separam
+depois. Com metade da cidade usando, a fração é $\frac{1}{2}$ e a chance é
+$\frac{50000}{50000} = 1$.
+
+A palavra vem das apostas: “a chance é de 1 para 99”. Em inglês, a chance se
+chama *odds*.
+
+Um aviso sobre a palavra, porque ela confunde. No dia a dia, “chance” costuma
+ser usada no lugar de probabilidade, como em “30% de chance de chuva”. Nesta
+lição, e em estatística, “chance” tem só o sentido do quadro acima: a parte a
+favor dividida pela parte contra. Uma probabilidade de 30% corresponde a uma
+chance de $\frac{30}{70} \approx 0{,}43$.
+
+## 6. Modelo visual: a chance dobra, a quantidade não
+
+Calcule a chance em cada semana da tabela do problema. Para a semana 1, são
+1.980 usuários e $100000 - 1980 = 98\,020$ não usuários, e a chance é
+$\frac{1980}{98020} \approx 0{,}0202$.
+
+| Semana | Usuários | Não usuários | Chance |
+|---:|---:|---:|---:|
+| 0 | 1.000 | 99.000 | 0,0101 |
+| 1 | 1.980 | 98.020 | 0,0202 |
+| 2 | 3.883 | 96.117 | 0,0404 |
+| 3 | 7.477 | 92.523 | 0,0808 |
+| 4 | 13.913 | 86.087 | 0,1616 |
+
+A coluna da chance **dobra exatamente** de uma semana para a outra:
+$0{,}0101$, $0{,}0202$, $0{,}0404$, $0{,}0808$, $0{,}1616$. A coluna dos
+usuários quase dobra, mas cada vez menos: de 1.000 para 1.980 é vezes 1,98, e
+de 7.477 para 13.913 é só vezes 1,86.
+
+Essa é a descoberta. **O que cresce de forma exponencial é a chance, e não o
+número de usuários.** No começo, os dois andam juntos, porque o número de não
+usuários quase não muda e a chance fica quase igual à fração. Depois eles se
+separam: a chance pode crescer sem limite, mas o número de usuários não.
+
+Veja como as duas previsões se afastam depois da semana 4:
+
+| Semana | Exponencial $1000 \times 2^t$ | Chance dobrando |
+|---:|---:|---:|
+| 5 | 32.000 | 24.427 |
+| 6 | 64.000 | 39.264 |
+| 7 | 128.000 | 56.388 |
+| 8 | 256.000 | 72.113 |
+| 10 | 1.024.000 | 91.184 |
+| 14 | 16.384.000 | 99.399 |
+
+A coluna da direita sai da fórmula que a seção 7 vai deduzir. Ela nunca passa
+de 100 mil.
+
+<CartesianPlane
+  xMin={-1}
+  xMax={15}
+  yMin={-10}
+  yMax={130}
+  xUnit={34}
+  yUnit={2.2}
+  xStep={1}
+  yStep={10}
+  xTicks={[2, 4, 6, 8, 10, 12, 14].map((t) => ({at: t, label: String(t)}))}
+  yTicks={[{at: 25, label: '25'}, {at: 50, label: '50'}, {at: 75, label: '75'}]}
+  lines={[{m: 0, n: 100, dashed: true, muted: true}]}
+  functions={[
+    {f: (t) => 1 * Math.pow(2, t), domain: [0, 7.1], tone: 2, dashed: true},
+    {f: (t) => 100 / (1 + 99 * Math.pow(2, -t)), domain: [0, 14.8], tone: 1},
+  ]}
+  labels={[
+    {at: [4.7, 112], math: '1 \\times 2^t', tone: 2},
+    {at: [11.5, 88], math: '\\text{logística}', tone: 1},
+    {at: [2.3, 106], math: '100\\ \\text{mil}', tone: 0},
+  ]}
+  axisLabels={['t', 'N']}
+  caption="Usuários do aplicativo, em milhares, semana a semana. A exponencial (tracejada) dispara e passa da população da cidade na semana 7. A logística acompanha a exponencial no começo, faz uma curva em S e se aproxima da linha dos 100 mil sem atravessá-la."
+/>
+
+O gráfico tem três fases. No começo, a curva logística quase coincide com a
+exponencial. No meio, perto da semana 6 ou 7, ela sobe mais depressa que em
+qualquer outro trecho. No fim, ela se deita e se aproxima da linha dos 100 mil
+como de uma assíntota horizontal.
+
+## 7. Ponte para a formalização: da chance de volta aos usuários
+
+A tabela da seção 6 sugere uma regra: a chance começa em $\frac{1}{99}$ e
+dobra a cada semana. Pela lição de [função exponencial](./funcao-exponencial),
+isso se escreve
+
+$$
+\frac{N}{100000 - N} = \frac{1}{99} \times 2^t,
+$$
+
+em que $N$ é o número de usuários na semana $t$.
+
+Essa equação ainda não é uma fórmula para $N$, porque o $N$ aparece dos dois
+lados da fração. Para responder às perguntas da empresa, precisamos de $N$
+sozinho de um lado. Vamos isolá-lo, um passo de cada vez. Para encurtar a
+escrita, chame o lado direito de $c$, de chance: $c = \frac{1}{99} \times 2^t$.
+
+**Passo 1: tirar o denominador.** Multiplique os dois lados por
+$100000 - N$. Multiplicar os dois lados de uma igualdade pelo mesmo número
+mantém a igualdade:
+
+$$
+N = c\,(100000 - N) = 100000\,c - c\,N.
+$$
+
+**Passo 2: juntar os termos com $N$.** Some $c\,N$ aos dois lados:
+
+$$
+N + c\,N = 100000\,c.
+$$
+
+**Passo 3: colocar $N$ em evidência e dividir.** O lado esquerdo é
+$N(1 + c)$. Dividindo os dois lados por $1 + c$, que é positivo:
+
+$$
+N = \frac{100000\,c}{1 + c}.
+$$
+
+**Passo 4: deixar a fórmula na forma mais limpa.** Divida o numerador e o
+denominador por $c$. Dividir os dois pelo mesmo número não muda o valor da
+fração:
+
+$$
+N = \frac{100000}{\frac{1}{c} + 1}.
+$$
+
+Como $c = \frac{1}{99} \times 2^t$, o inverso é
+$\frac{1}{c} = 99 \times 2^{-t}$. Então:
+
+$$
+N(t) = \frac{100000}{1 + 99 \times 2^{-t}}.
+$$
+
+**Conferindo na semana 0.** $2^{0} = 1$, e
+$N(0) = \frac{100000}{1 + 99} = \frac{100000}{100} = 1000$. São os mil
+usuários iniciais. Na semana 1, $2^{-1} = 0{,}5$, e
+$N(1) = \frac{100000}{1 + 49{,}5} = \frac{100000}{50{,}5} \approx 1980$.
+Confere com a tabela.
+
+A fórmula mostra, sem precisar de gráfico, por que $N$ nunca passa de 100 mil.
+O denominador é $1$ mais um número positivo, então é sempre maior que 1. E
+dividir 100 mil por um número maior que 1 dá menos que 100 mil. Quando $t$
+cresce, $2^{-t}$ se aproxima de 0, o denominador se aproxima de 1, e $N$ se
+aproxima de 100 mil. O teto é uma assíntota horizontal.
+
+## 8. Formalização: a função logística e a sigmoide
+
+A fórmula do aplicativo é um caso de uma família.
+
+> Uma **função logística** é uma função da forma
+> $$
+> N(t) = \frac{L}{1 + A \times b^{-t}},
+> $$
+> com $L > 0$, $A > 0$ e $b > 1$. O número $L$ é o **teto**, ou capacidade:
+> a assíntota horizontal de cima. Em $t = 0$, o valor é $\frac{L}{1 + A}$.
+
+**Exemplo.** No aplicativo, $L = 100\,000$, $A = 99$ e $b = 2$. O valor
+inicial é $\frac{100000}{1 + 99} = 1000$.
+
+**Contraexemplo, para delimitar.** A função $f(t) = 1 - e^{-t}$, para
+$t \ge 0$, também tem teto: ela começa em 0 e se aproxima de 1 sem alcançar.
+Mas ela **não** é logística. Ela sobe mais depressa logo no começo e freia o
+tempo todo: de $t = 0$ a $t = 1$ ela ganha $0{,}632$, de $t = 1$ a $t = 2$ ganha
+só $0{,}233$. Não há fase de arrancada. É o formato de uma curva de
+aprendizado ou do enchimento de um capacitor, não o de uma adoção boca a boca.
+A logística começa devagar, acelera e só depois freia. É esse S que a define.
+
+### A logística padrão: a sigmoide
+
+A logística mais simples tem teto 1, $A = 1$ e base $e$.
+
+> A **sigmoide** é a função
+> $$
+> \sigma(x) = \frac{1}{1 + e^{-x}}.
+> $$
+> A letra $\sigma$ é o “sigma” grego, e o nome vem do formato de S da curva.
+
+Leia a fórmula como uma máquina com três passos: troque o sinal de $x$, calcule
+$e$ elevado ao resultado, some 1 e inverta. Veja os valores:
+
+| $x$ | $e^{-x}$ | $1 + e^{-x}$ | $\sigma(x)$ |
+|---:|---:|---:|---:|
+| $-4$ | 54,598 | 55,598 | 0,0180 |
+| $-2$ | 7,389 | 8,389 | 0,1192 |
+| $-1$ | 2,718 | 3,718 | 0,2689 |
+| $0$ | 1 | 2 | 0,5 |
+| $1$ | 0,368 | 1,368 | 0,7311 |
+| $2$ | 0,135 | 1,135 | 0,8808 |
+| $4$ | 0,018 | 1,018 | 0,9820 |
+
+<CartesianPlane
+  xMin={-6}
+  xMax={6}
+  yMin={-0.3}
+  yMax={1.4}
+  xUnit={40}
+  yUnit={150}
+  xStep={1}
+  yStep={0.5}
+  yTicks={[{at: 0.5, label: '0{,}5'}]}
+  lines={[{m: 0, n: 1, dashed: true, muted: true}]}
+  functions={[{f: (x) => 1 / (1 + Math.exp(-x)), tone: 1}]}
+  points={[{at: [0, 0.5], label: '(0;\\ 0{,}5)', tone: 2, dx: 46, dy: 10}]}
+  labels={[
+    {at: [3.6, 0.78], math: '\\sigma(x)', tone: 1},
+    {at: [-4.6, 1.12], math: 'y = 1', tone: 0},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A sigmoide. À esquerda ela se aproxima de 0, à direita se aproxima de 1, e passa pela altura 0,5 em x = 0. As duas retas horizontais, y = 0 e y = 1, são assíntotas."
+/>
+
+A tabela e o gráfico mostram quatro propriedades.
+
+- **Os valores ficam sempre entre 0 e 1.** O denominador $1 + e^{-x}$ é sempre
+  maior que 1, porque $e^{-x}$ é positivo. Então a fração $\frac{1}{1 + e^{-x}}$
+  é positiva e menor que 1.
+- **A sigmoide é crescente.** Quando $x$ aumenta, $e^{-x}$ diminui, o
+  denominador diminui, e 1 dividido por um número menor dá um resultado maior.
+- **Ela tem duas assíntotas horizontais.** Para $x$ grande, $e^{-x}$ fica
+  perto de 0 e $\sigma(x)$ fica perto de $\frac{1}{1} = 1$. Para $x$ muito
+  negativo, $e^{-x}$ fica enorme e $\sigma(x)$ fica perto de 0.
+- **No meio, ela vale $\frac{1}{2}$.** Em $x = 0$, $e^{0} = 1$ e
+  $\sigma(0) = \frac{1}{2}$.
+
+### A simetria da sigmoide
+
+Olhe de novo a tabela: $\sigma(2) = 0{,}8808$ e $\sigma(-2) = 0{,}1192$. Somando,
+$0{,}8808 + 0{,}1192 = 1$. O mesmo acontece com $1$ e $-1$:
+$0{,}7311 + 0{,}2689 = 1$. Isso não é coincidência.
+
+> Para todo $x$, $\sigma(-x) = 1 - \sigma(x)$.
+
+**Por que vale.** Calcule cada lado e compare.
+
+O lado direito é uma subtração de frações. Escreva o 1 com o mesmo denominador
+da fração, $1 = \frac{1 + e^{-x}}{1 + e^{-x}}$, e subtraia os numeradores:
+
+$$
+1 - \sigma(x) = \frac{1 + e^{-x}}{1 + e^{-x}} - \frac{1}{1 + e^{-x}}
+= \frac{e^{-x}}{1 + e^{-x}}.
+$$
+
+O lado esquerdo é a sigmoide com $-x$ no lugar de $x$. O sinal de $-x$ troca
+de novo, e $e^{-(-x)} = e^{x}$:
+
+$$
+\sigma(-x) = \frac{1}{1 + e^{x}}.
+$$
+
+As duas frações ainda não têm a mesma cara. Multiplique o numerador e o
+denominador da primeira por $e^{x}$. Isso é multiplicar a fração por
+$\frac{e^x}{e^x} = 1$, então o valor não muda. Como $e^{-x} \times e^{x} = e^0 = 1$:
+
+$$
+\frac{e^{-x}}{1 + e^{-x}} = \frac{e^{-x} \times e^{x}}{(1 + e^{-x}) \times e^{x}}
+= \frac{1}{e^{x} + 1}.
+$$
+
+É a mesma fração de $\sigma(-x)$. Então os dois lados são iguais.
+
+No gráfico, essa igualdade diz que a curva é simétrica em relação ao ponto
+$(0;\ 0{,}5)$: girar o desenho meia volta em torno desse ponto leva a curva
+nela mesma. O que a sigmoide sobe à direita do meio é exatamente o que falta à
+esquerda.
+
+### Toda logística é uma sigmoide transformada
+
+A fórmula do aplicativo tem base 2, e a sigmoide tem base $e$. Mesmo assim, as
+duas são a mesma curva, só esticada e deslocada. Para ver isso, escreva a
+potência de 2 com base $e$. Como $2 = e^{\ln 2}$, temos
+$2^{-t} = e^{-t\ln 2}$. E como $99 = e^{\ln 99}$:
+
+$$
+99 \times 2^{-t} = e^{\ln 99} \times e^{-t \ln 2} = e^{-(t \ln 2 - \ln 99)}.
+$$
+
+A propriedade usada é a das potências de mesma base: multiplicar é somar os
+expoentes. Então
+
+$$
+N(t) = \frac{100000}{1 + e^{-(t \ln 2 - \ln 99)}} = 100000 \times \sigma(t \ln 2 - \ln 99).
+$$
+
+Pela lição de [transformações de gráficos](../funcoes/transformacoes-de-graficos),
+o fator 100000 de fora estica a curva na vertical, de teto 1 para teto 100 mil.
+O que está dentro muda a escala do tempo e desloca o meio da curva. Isso vale
+para toda função logística: ela é sempre $L \times \sigma(k(t - t_0))$ para algum
+$k$ e algum $t_0$. Por isso, estudar a sigmoide é suficiente: as propriedades dela valem,
+transformadas, para todas as outras.
+
+## 9. A inversa da sigmoide: o logit
+
+A sigmoide recebe qualquer número real e devolve um número entre 0 e 1. A
+pergunta inversa é: dado um $p$ entre 0 e 1, qual $x$ tem $\sigma(x) = p$?
+Como a sigmoide é crescente, cada $p$ vem de um só $x$, e a lição de [função
+inversa](../funcoes/funcao-inversa) garante que a inversa existe.
+
+Para encontrá-la, isole o $x$ em $\frac{1}{1 + e^{-x}} = p$:
+
+1. Inverta os dois lados: $1 + e^{-x} = \frac{1}{p}$.
+2. Subtraia 1: $e^{-x} = \frac{1}{p} - 1 = \frac{1 - p}{p}$.
+3. Inverta de novo os dois lados, o que troca $-x$ por $x$ no expoente:
+   $e^{x} = \frac{p}{1 - p}$.
+4. Aplique o logaritmo natural, que desfaz a exponencial de base $e$:
+   $x = \ln \frac{p}{1 - p}$.
+
+> O **logit** de um número $p$ entre 0 e 1 é
+> $$
+> \operatorname{logit}(p) = \ln \frac{p}{1 - p}.
+> $$
+> Ele é a inversa da sigmoide: $\sigma(\operatorname{logit}(p)) = p$ e
+> $\operatorname{logit}(\sigma(x)) = x$.
+
+Repare no que está dentro do logaritmo: $\frac{p}{1 - p}$ é a **chance** da
+seção 5. Se $p$ é a fração da cidade que usa o aplicativo, $1 - p$ é a fração
+que não usa, e a razão entre as duas é a chance. Então o logit é o logaritmo da
+chance. A seção 6 descobriu que a chance cresce de forma exponencial; o
+logaritmo dela, portanto, cresce como uma reta.
+
+**Exemplo.** $\operatorname{logit}(0{,}8) = \ln \frac{0{,}8}{0{,}2} = \ln 4 \approx 1{,}386$.
+Conferindo: $\sigma(1{,}386) = \frac{1}{1 + e^{-1{,}386}} = \frac{1}{1 + 0{,}25} = 0{,}8$.
+
+**Contraexemplo, para delimitar.** $\operatorname{logit}(1)$ **não** existe:
+seria $\ln \frac{1}{0}$, uma divisão por zero. E $\operatorname{logit}(0)$
+seria $\ln 0$, que também não existe. O domínio do logit é só o intervalo
+aberto $\,]0, 1[$. Isso combina com a sigmoide: ela nunca chega a 0 nem a 1, e
+a inversa não pode receber valores que a sigmoide nunca produz.
+
+Nas redes neurais, o número que entra na sigmoide também se chama logit. Uma
+rede que decide se uma foto tem ou não um gato calcula um número real, o logit,
+e a sigmoide transforma esse número na probabilidade de haver um gato. Um logit
+0 corresponde a 50%; um logit 2, a 88%; um logit $-2$, a 12%.
+
+## 10. Resolvendo o problema do aplicativo
+
+A primeira pergunta já está respondida: a fórmula é
+$N(t) = \frac{100000}{1 + 99 \times 2^{-t}}$. Faltam as outras duas.
+
+**Quando o aplicativo chega à metade da cidade?** Metade são 50 mil usuários e
+50 mil não usuários, ou seja, chance 1. Pela regra da seção 7, a chance na
+semana $t$ é $\frac{1}{99} \times 2^t$. Então:
+
+$$
+\frac{1}{99} \times 2^t = 1 \quad\Longrightarrow\quad 2^t = 99
+\quad\Longrightarrow\quad t = \frac{\ln 99}{\ln 2} \approx 6{,}63.
+$$
+
+A metade da cidade é atingida entre a semana 6 e a semana 7, mais perto da 7.
+**Conferindo:** a tabela da seção 6 dá 39.264 usuários na semana 6 e 56.388 na
+semana 7. Os 50 mil estão entre os dois.
+
+**Quando chega a 90%?** São 90 mil usuários e 10 mil não usuários, chance
+$\frac{90000}{10000} = 9$:
+
+$$
+\frac{1}{99} \times 2^t = 9 \quad\Longrightarrow\quad 2^t = 891
+\quad\Longrightarrow\quad t = \frac{\ln 891}{\ln 2} \approx 9{,}80.
+$$
+
+Quase na semana 10. **Conferindo:** na semana 10 a tabela dá 91.184 usuários,
+um pouco mais de 90%.
+
+Repare que nenhuma das duas contas usou a fórmula de $N$ diretamente. As duas
+passaram pela chance, porque a chance é a quantidade que cresce de forma
+simples.
+
+**A simetria em ação.** Quando o aplicativo chega a 10% da cidade? A chance é
+$\frac{10000}{90000} = \frac{1}{9}$, e $2^t = \frac{99}{9} = 11$, o que dá
+$t = \frac{\ln 11}{\ln 2} \approx 3{,}46$. Da marca de 10% até a metade se
+passam $6{,}63 - 3{,}46 = 3{,}17$ semanas. Da metade até 90% se passam
+$9{,}80 - 6{,}63 = 3{,}17$ semanas. É a simetria da seção 8: a curva sobe de
+10% a 50% no mesmo tempo em que sobe de 50% a 90%.
+
+## 11. A tangente hiperbólica: a sigmoide centrada
+
+A sigmoide vai de 0 a 1 e passa por $\frac{1}{2}$ no meio. Em muitos usos é
+melhor uma curva com o mesmo S que vá de $-1$ a 1 e passe pela origem. Nas
+redes neurais, por exemplo, uma saída centrada em zero costuma tornar o
+treinamento mais estável.
+
+Para construir essa curva, use as transformações de gráficos. Multiplicar a
+sigmoide por 2 muda a faixa de 0 a 1 para 0 a 2. Subtrair 1 desce a faixa
+para $-1$ a 1. Então $2\sigma(x) - 1$ tem a faixa desejada. Por um motivo que
+vai aparecer em seguida, é mais conveniente usar também $2x$ no lugar de $x$:
+
+$$
+2\sigma(2x) - 1 = \frac{2}{1 + e^{-2x}} - 1.
+$$
+
+Faça a subtração com o mesmo denominador, como na seção 8:
+
+$$
+\frac{2}{1 + e^{-2x}} - \frac{1 + e^{-2x}}{1 + e^{-2x}} = \frac{1 - e^{-2x}}{1 + e^{-2x}}.
+$$
+
+Agora multiplique o numerador e o denominador por $e^{x}$, o que não muda o
+valor da fração. Como $e^{-2x} \times e^{x} = e^{-x}$:
+
+$$
+\frac{(1 - e^{-2x}) \times e^{x}}{(1 + e^{-2x}) \times e^{x}}
+= \frac{e^{x} - e^{-x}}{e^{x} + e^{-x}}.
+$$
+
+O motivo do $2x$ está aqui. Com ele, a fração final tem $e^x$ e $e^{-x}$ em
+cima e embaixo, cada um com o mesmo peso. Sem ele, apareceriam expoentes como
+$\frac{x}{2}$.
+
+> A **tangente hiperbólica** é a função
+> $$
+> \tgh x = \frac{e^{x} - e^{-x}}{e^{x} + e^{-x}} = 2\sigma(2x) - 1.
+> $$
+
+**Sobre o nome.** Neste curso a tangente hiperbólica se escreve $\tgh$, como a
+tangente se escreve $\tg$. Em inglês, nas calculadoras e nas bibliotecas de
+programação, ela se chama **tanh** — por exemplo, `torch.tanh` e `np.tanh`.
+É a mesma função.
+
+**Exemplo.** $\tgh 0 = \frac{1 - 1}{1 + 1} = 0$. E
+$\tgh 1 = \frac{2{,}7183 - 0{,}3679}{2{,}7183 + 0{,}3679} = \frac{2{,}3504}{3{,}0862} \approx 0{,}7616$.
+Pela outra fórmula: $2\sigma(2) - 1 = 2 \times 0{,}8808 - 1 = 0{,}7616$. As duas
+dão o mesmo número.
+
+**Contraexemplo, para delimitar.** $\tgh x$ **não** é $\tg x$. A tangente
+trigonométrica $\tg x$, que o capítulo de geometria vai estudar, cresce sem
+limite e se repete em ciclos. A tangente hiperbólica nunca passa de 1 e não se
+repete. As duas só dividem o nome por um parentesco que a seção 12 explica.
+
+<CartesianPlane
+  xMin={-5}
+  xMax={5}
+  yMin={-1.4}
+  yMax={1.4}
+  xUnit={44}
+  yUnit={110}
+  xStep={1}
+  yStep={0.5}
+  yTicks={[{at: 1, label: '1'}, {at: 0.5, label: '0{,}5'}, {at: -1, label: '-1'}]}
+  lines={[
+    {m: 0, n: 1, dashed: true, muted: true},
+    {m: 0, n: -1, dashed: true, muted: true},
+  ]}
+  functions={[
+    {f: (x) => 1 / (1 + Math.exp(-x)), tone: 2, dashed: true},
+    {f: (x) => Math.tanh(x), tone: 1},
+  ]}
+  labels={[
+    {at: [3.3, 0.72], math: '\\tgh x', tone: 1},
+    {at: [-3.1, 0.3], math: '\\sigma(x)', tone: 2},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A tangente hiperbólica (linha cheia) e a sigmoide (tracejada). As duas têm o mesmo formato de S. A tangente hiperbólica vai de −1 a 1 e passa pela origem; a sigmoide vai de 0 a 1 e passa por 0,5."
+/>
+
+O gráfico mostra que $\tgh$ é **ímpar**: o desenho é simétrico em relação à
+origem. A conta confirma. Trocar $x$ por $-x$ na fórmula troca $e^{x}$ com
+$e^{-x}$:
+
+$$
+\tgh(-x) = \frac{e^{-x} - e^{x}}{e^{-x} + e^{x}} = -\frac{e^{x} - e^{-x}}{e^{x} + e^{-x}} = -\tgh x.
+$$
+
+O numerador trocou de sinal, e o denominador ficou igual.
+
+## 12. Seno e cosseno hiperbólicos
+
+A fórmula da tangente hiperbólica é uma fração. O numerador é $e^x - e^{-x}$,
+e o denominador é $e^x + e^{-x}$. Dividindo cada um por 2, as duas partes
+ganham nome próprio.
+
+> O **cosseno hiperbólico** e o **seno hiperbólico** são
+> $$
+> \cosh x = \frac{e^{x} + e^{-x}}{2}, \qquad \senh x = \frac{e^{x} - e^{-x}}{2}.
+> $$
+> A tangente hiperbólica é o quociente dos dois: $\tgh x = \frac{\senh x}{\cosh x}$.
+> Os 2 se cancelam na divisão.
+
+Em inglês e nas bibliotecas de programação, os nomes são **cosh** e **sinh**.
+
+**Exemplo.** Em $x = 0$: $\cosh 0 = \frac{1 + 1}{2} = 1$ e
+$\senh 0 = \frac{1 - 1}{2} = 0$. Em $x = \ln 2$, os valores são exatos, porque
+$e^{\ln 2} = 2$ e $e^{-\ln 2} = \frac{1}{2}$:
+
+$$
+\cosh(\ln 2) = \frac{2 + \frac{1}{2}}{2} = \frac{5}{4}, \qquad
+\senh(\ln 2) = \frac{2 - \frac{1}{2}}{2} = \frac{3}{4}.
+$$
+
+**Contraexemplo, para delimitar.** O cosseno hiperbólico **nunca** é zero, nem
+negativo: ele é a média de dois números positivos, $e^x$ e $e^{-x}$. O menor
+valor dele é 1, em $x = 0$. Por isso a divisão $\frac{\senh x}{\cosh x}$ está
+sempre definida, e a tangente hiperbólica existe para todo $x$. Com o cosseno
+trigonométrico é diferente: ele vale zero em alguns pontos, e ali a tangente
+não existe.
+
+### A parte par e a parte ímpar de $e^x$
+
+Troque $x$ por $-x$ nas duas definições. No cosseno hiperbólico, as duas
+parcelas trocam de lugar, e a soma não muda: $\cosh(-x) = \cosh x$. Ele é
+**par**. No seno hiperbólico, as duas parcelas trocam de lugar numa subtração,
+e o sinal troca: $\senh(-x) = -\senh x$. Ele é **ímpar**.
+
+Agora some os dois:
+
+$$
+\cosh x + \senh x = \frac{e^{x} + e^{-x}}{2} + \frac{e^{x} - e^{-x}}{2} = \frac{2e^{x}}{2} = e^{x}.
+$$
+
+O $e^{-x}$ entra com sinal de mais numa fração e com sinal de menos na outra, e
+desaparece. Então a exponencial é a soma de uma função par com uma função
+ímpar. O cosseno hiperbólico é a **parte par** de $e^x$, e o seno hiperbólico é
+a **parte ímpar**. Do mesmo modo, subtraindo, $\cosh x - \senh x = e^{-x}$.
+
+**Conferindo em $x = \ln 2$:** $\frac{5}{4} + \frac{3}{4} = 2 = e^{\ln 2}$, e
+$\frac{5}{4} - \frac{3}{4} = \frac{1}{2} = e^{-\ln 2}$. Confere.
+
+### A identidade que dá o nome
+
+Os números de $x = \ln 2$ escondem uma relação. Eleve os dois ao quadrado e
+subtraia:
+
+$$
+\left(\frac{5}{4}\right)^2 - \left(\frac{3}{4}\right)^2 = \frac{25}{16} - \frac{9}{16} = \frac{16}{16} = 1.
+$$
+
+Isso vale para todo $x$.
+
+> Para todo número real $x$,
+> $$
+> \cosh^2 x - \senh^2 x = 1.
+> $$
+
+**Por que vale.** O lado esquerdo é uma diferença de quadrados, e a lição de
+produtos notáveis ensinou que $a^2 - b^2 = (a + b)(a - b)$. Com $a = \cosh x$ e
+$b = \senh x$:
+
+$$
+\cosh^2 x - \senh^2 x = (\cosh x + \senh x)(\cosh x - \senh x).
+$$
+
+Os dois fatores acabaram de aparecer: a soma é $e^x$, e a diferença é $e^{-x}$.
+Então o produto é $e^{x} \times e^{-x} = e^{0} = 1$.
+
+Agora o nome. Escreva $X = \cosh t$ e $Y = \senh t$. A identidade diz que o
+ponto $(X,\ Y)$ satisfaz $X^2 - Y^2 = 1$ para todo $t$. A curva de equação
+$X^2 - Y^2 = 1$ se chama **hipérbole**. Então, quando $t$ varia, o ponto
+$(\cosh t,\ \senh t)$ anda sobre uma hipérbole. Daí “funções hiperbólicas”.
+
+<CartesianPlane
+  xMin={-2.5}
+  xMax={3.5}
+  yMin={-2.5}
+  yMax={2.5}
+  xUnit={60}
+  xStep={0.5}
+  yStep={0.5}
+  xTicks={[{at: -2, label: '-2'}, {at: 2, label: '2'}, {at: 3, label: '3'}]}
+  yTicks={[{at: -2, label: '-2'}, {at: -1, label: '-1'}, {at: 1, label: '1'}, {at: 2, label: '2'}]}
+  circles={[{center: [0, 0], r: 1, tone: 2, dashed: true}]}
+  functions={[
+    {f: (x) => Math.sqrt(Math.max(0, x * x - 1)), domain: [1, 3.4], tone: 1},
+    {f: (x) => -Math.sqrt(Math.max(0, x * x - 1)), domain: [1, 3.4], tone: 1},
+  ]}
+  points={[{at: [1.5431, 1.1752], label: '(\\cosh 1,\\ \\senh 1)', tone: 1, dx: 78, dy: 4}]}
+  labels={[
+    {at: [2.9, -1.9], math: 'X^2 - Y^2 = 1', tone: 1},
+    {at: [-1.55, 1.35], math: 'X^2 + Y^2 = 1', tone: 2},
+  ]}
+  axisLabels={['X', 'Y']}
+  caption="Um ramo da hipérbole X² − Y² = 1 (linha cheia) e a circunferência X² + Y² = 1 (tracejada). O ponto (cosh 1, senh 1), aproximadamente (1,54; 1,18), está sobre a hipérbole."
+/>
+
+**O parentesco com a trigonometria.** O capítulo de [geometria e
+trigonometria](../geometria/), que vem a seguir, vai definir o cosseno e o seno
+de um ângulo $t$ como as coordenadas de um ponto que anda sobre a
+**circunferência** $X^2 + Y^2 = 1$. A lição de [relações
+fundamentais](../geometria/relacoes-fundamentais) vai provar que
+$\cos^2 t + \sen^2 t = 1$. As funções hiperbólicas fazem o mesmo papel na
+hipérbole, com um sinal de menos no lugar do sinal de mais. Quando você chegar
+lá, compare as duas identidades lado a lado.
+
+A semelhança tem limite, e vale registrar onde ele está. O cosseno e o seno se
+repetem em ciclos e ficam entre $-1$ e 1. O cosseno e o seno hiperbólicos não
+se repetem, e crescem sem limite como a exponencial.
+
+### A catenária
+
+Pendure uma corrente pelas duas pontas, na mesma altura. A curva que ela forma
+parece uma parábola, e Galileu chegou a pensar que fosse. Não é. Em 1691,
+Leibniz, Huygens e Johann Bernoulli encontraram a fórmula: a corrente forma a
+curva $y = a \cosh \frac{x}{a}$, em que $a$ depende do peso da corrente e da
+força nas pontas. Essa curva se chama **catenária**, do latim *catena*,
+corrente.
+
+<CartesianPlane
+  xMin={-3}
+  xMax={3}
+  yMin={-0.5}
+  yMax={6.5}
+  xUnit={60}
+  yUnit={40}
+  xStep={1}
+  yStep={1}
+  yTicks={[{at: 2, label: '2'}, {at: 4, label: '4'}, {at: 6, label: '6'}]}
+  functions={[
+    {f: (x) => 1 + (x * x) / 2, domain: [-2.95, 2.95], tone: 2, dashed: true},
+    {f: (x) => Math.cosh(x), domain: [-2.6, 2.6], tone: 1},
+  ]}
+  labels={[
+    {at: [1.15, 4.6], math: '\\cosh x', tone: 1},
+    {at: [2.25, 2.1], math: '1 + \\frac{x^2}{2}', tone: 2},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="A catenária y = cosh x (linha cheia) e a parábola y = 1 + x²/2 (tracejada). Perto do ponto mais baixo, (0, 1), as duas quase coincidem. Mais longe, a catenária sobe muito mais depressa, porque cresce como a exponencial."
+/>
+
+O gráfico mostra por que a confusão era tentadora. Perto do ponto mais baixo,
+a catenária $\cosh x$ e a parábola $1 + \frac{x^2}{2}$ quase coincidem: em
+$x = 0{,}5$, valem $1{,}128$ e $1{,}125$. Mais longe, se separam: em $x = 2$,
+valem $3{,}76$ e $3$; em $x = 3$, $10{,}07$ e $5{,}5$. A parábola cresce como
+$x^2$, e a catenária cresce como $\frac{e^x}{2}$. A lição de [função
+exponencial](./funcao-exponencial) mostrou que a exponencial acaba vencendo
+qualquer polinômio.
+
+## 13. Exemplos resolvidos
+
+### Exemplo 1: calcular a sigmoide
+
+Calcule $\sigma(3)$ e $\sigma(-3)$, usando $e^{-3} \approx 0{,}0498$.
+
+$$
+\sigma(3) = \frac{1}{1 + 0{,}0498} = \frac{1}{1{,}0498} \approx 0{,}9526.
+$$
+
+Para $\sigma(-3)$, use a simetria da seção 8 em vez de outra exponencial:
+$\sigma(-3) = 1 - \sigma(3) = 1 - 0{,}9526 = 0{,}0474$.
+
+**Conferindo pela fórmula:** $e^{3} \approx 20{,}09$, e
+$\sigma(-3) = \frac{1}{1 + 20{,}09} = \frac{1}{21{,}09} \approx 0{,}0474$. Os
+dois caminhos dão o mesmo número.
+
+### Exemplo 2: o logit de uma probabilidade
+
+*Pause e tente antes de ler.* Um modelo de classificação de e-mails dá 95% de
+probabilidade de uma mensagem ser spam. Que número entrou na sigmoide?
+
+O número que entra é o logit de 0,95:
+
+$$
+\operatorname{logit}(0{,}95) = \ln \frac{0{,}95}{0{,}05} = \ln 19 \approx 2{,}944.
+$$
+
+**Conferindo:** $e^{-2{,}944} \approx 0{,}0526$, e
+$\sigma(2{,}944) = \frac{1}{1{,}0526} \approx 0{,}950$. Confere.
+
+Repare na chance dentro do logaritmo: 95% contra 5% é uma chance de 19 para 1.
+
+### Exemplo 3: uma notícia que se espalha
+
+*Pause e tente.* Numa empresa de 5.000 funcionários, 100 ficam sabendo de uma
+notícia no dia 0. A cada dia, a chance (quem sabe dividido por quem não sabe)
+triplica. Escreva a fórmula do número $N$ de pessoas que sabem, e calcule em
+que dia metade da empresa sabe.
+
+A chance no dia 0 é $\frac{100}{4900} = \frac{1}{49}$. Triplicando a cada dia,
+a chance no dia $t$ é $\frac{1}{49} \times 3^t$. Pelos mesmos passos da seção
+7, com o teto 5000 no lugar de 100000 e $49 \times 3^{-t}$ no lugar de
+$99 \times 2^{-t}$:
+
+$$
+N(t) = \frac{5000}{1 + 49 \times 3^{-t}}.
+$$
+
+**Conferindo no dia 0:** $\frac{5000}{1 + 49} = 100$. Confere.
+
+Metade da empresa é chance 1:
+$\frac{1}{49} \times 3^t = 1$, então $3^t = 49$ e
+$t = \frac{\ln 49}{\ln 3} \approx 3{,}54$ dias. No meio do quarto dia, metade
+da empresa já sabe.
+
+### Exemplo 4: as hiperbólicas num ponto exato
+
+*Pause e tente.* Calcule $\cosh(\ln 3)$, $\senh(\ln 3)$ e $\tgh(\ln 3)$, e
+confira a identidade $\cosh^2 - \senh^2 = 1$.
+
+Como $e^{\ln 3} = 3$ e $e^{-\ln 3} = \frac{1}{3}$:
+
+$$
+\cosh(\ln 3) = \frac{3 + \frac{1}{3}}{2} = \frac{\frac{10}{3}}{2} = \frac{5}{3},
+\qquad
+\senh(\ln 3) = \frac{3 - \frac{1}{3}}{2} = \frac{\frac{8}{3}}{2} = \frac{4}{3}.
+$$
+
+A tangente hiperbólica é o quociente: $\tgh(\ln 3) = \frac{4/3}{5/3} = \frac{4}{5}$.
+
+**A identidade:** $\left(\frac{5}{3}\right)^2 - \left(\frac{4}{3}\right)^2 = \frac{25}{9} - \frac{16}{9} = \frac{9}{9} = 1$. Confere.
+
+**Uma segunda conferência,** pela sigmoide:
+$\tgh(\ln 3) = 2\sigma(2\ln 3) - 1$. Como $e^{-2\ln 3} = 3^{-2} = \frac{1}{9}$,
+$\sigma(2 \ln 3) = \frac{1}{1 + \frac{1}{9}} = \frac{9}{10}$, e
+$2 \times \frac{9}{10} - 1 = \frac{4}{5}$. Confere.
+
+### Exemplo 5: a probabilidade de uma rede
+
+*Pause e tente.* A última camada de uma rede calcula o número
+$z = 2x_1 - x_2 + 0{,}5$ para uma foto com $x_1 = 1$ e $x_2 = 1$, e aplica a
+sigmoide. Qual é a probabilidade que a rede dá? Que valor de $z$ seria preciso
+para a rede dar 50%?
+
+Primeiro, $z = 2 \times 1 - 1 + 0{,}5 = 1{,}5$. Depois,
+$e^{-1{,}5} \approx 0{,}2231$, e
+
+$$
+\sigma(1{,}5) = \frac{1}{1 + 0{,}2231} = \frac{1}{1{,}2231} \approx 0{,}818.
+$$
+
+A rede dá cerca de **82%**. Para dar 50%, o número $z$ teria que ser
+$\operatorname{logit}(0{,}5) = \ln \frac{0{,}5}{0{,}5} = \ln 1 = 0$. O zero
+do logit é a fronteira da decisão: $z$ positivo dá mais de 50%, $z$ negativo
+dá menos.
+
+## 14. Erros comuns
+
+> **Erro 1: achar que a sigmoide chega a 1.** Em $x = 10$, $\sigma(10) \approx 0{,}99995$.
+> Por maior que seja $x$, o denominador $1 + e^{-x}$ continua maior que 1, e a
+> fração continua menor que 1. A reta $y = 1$ é assíntota, não um valor
+> atingido.
+
+> **Erro 2: inverter a fração parcela por parcela.** $\frac{1}{1 + e^{-x}}$
+> **não** é $1 + e^{x}$. Teste com $x = 0$: a fração dá $\frac{1}{2}$, e a
+> conta errada dá $1 + 1 = 2$. O inverso de uma soma não é a soma dos inversos.
+
+> **Erro 3: confundir chance com fração.** Com 30 mil usuários numa cidade de
+> 100 mil, a fração é $0{,}3$, mas a chance é $\frac{30000}{70000} \approx 0{,}43$.
+> O denominador da chance é só a parte contra, não o total.
+
+> **Erro 4: usar a exponencial além do começo.** A logística e a exponencial
+> só coincidem enquanto o número de não usuários quase não muda. No problema
+> do aplicativo, a exponencial erra por 1% na semana 1, por 3% na semana 2,
+> e passa da população inteira na semana 7.
+
+> **Erro 5: trocar o sinal da identidade.** É $\cosh^2 x - \senh^2 x = 1$, com
+> **menos**. Teste com $x = \ln 2$: $\frac{25}{16} + \frac{9}{16} = \frac{34}{16}$,
+> que não é 1. O sinal de mais é o da identidade trigonométrica.
+
+> **Erro 6: confundir $\tgh$ com $\tg$.** A tangente hiperbólica é limitada
+> entre $-1$ e 1. A tangente trigonométrica não é limitada e se repete. Na
+> calculadora, elas são teclas diferentes.
+
+## 15. Perguntas de verificação
+
+1. Por que o número de usuários do aplicativo não pode seguir uma exponencial
+   para sempre, mas a chance pode?
+2. Por que, nas primeiras semanas, a logística e a exponencial quase coincidem?
+3. Por que a sigmoide nunca chega a 0 nem a 1?
+4. Por que estudar a sigmoide é suficiente para conhecer todas as funções
+   logísticas?
+5. O que a igualdade $\sigma(-x) = 1 - \sigma(x)$ diz sobre o gráfico?
+6. Por que o domínio do logit é $\,]0, 1[$?
+7. Por que $\cosh x$ nunca é zero?
+8. De onde vem o nome “funções hiperbólicas”?
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. O número de usuários tem um teto, os 100 mil habitantes, e uma exponencial
+   passa de qualquer teto. A chance não tem teto: quando os não usuários vão
+   acabando, o denominador da chance se aproxima de zero e a chance cresce sem
+   limite. Por isso ela pode dobrar para sempre, e o número de usuários, não.
+2. Porque no começo quase toda a cidade ainda não usa o aplicativo. O número
+   de não usuários fica perto de 100 mil, e a chance fica quase igual à
+   fração de usuários. Se a chance dobra, a fração quase dobra junto. A
+   diferença só aparece quando os não usuários começam a diminuir de verdade.
+3. O denominador $1 + e^{-x}$ é sempre maior que 1, porque $e^{-x}$ é
+   positivo. Então a fração $\frac{1}{1 + e^{-x}}$ é positiva e menor que 1.
+   Ela se aproxima de 0 quando $e^{-x}$ fica enorme, e de 1 quando $e^{-x}$
+   fica perto de zero, sem chegar a nenhum dos dois.
+4. Porque toda logística se escreve $L \times \sigma(k(t - t_0))$, como a seção 8
+   mostrou para o aplicativo. Ela é a sigmoide esticada na vertical por $L$,
+   com a escala do tempo mudada por $k$ e o meio deslocado para $t_0$. As
+   transformações mudam a escala e a posição, mas mantêm o formato de S, as
+   assíntotas e a simetria.
+5. Que o gráfico é simétrico em relação ao ponto $(0;\ 0{,}5)$. O quanto a
+   curva está acima de $0{,}5$ num ponto $x$ é o quanto ela está abaixo de
+   $0{,}5$ no ponto $-x$. No aplicativo, isso fez a subida de 10% a 50% durar
+   o mesmo que a subida de 50% a 90%.
+6. Porque a fórmula tem $\frac{p}{1 - p}$ dentro de um logaritmo. Com $p = 1$
+   há divisão por zero; com $p = 0$ o logaritmando é 0, e $\ln 0$ não existe;
+   fora do intervalo, a fração é negativa. E faz sentido: o logit é a inversa
+   da sigmoide, e a sigmoide só produz valores estritamente entre 0 e 1.
+7. Porque $\cosh x$ é a média de $e^x$ e $e^{-x}$, e os dois são positivos para
+   todo $x$. A média de dois números positivos é positiva. O menor valor é 1,
+   em $x = 0$.
+8. Da identidade $\cosh^2 t - \senh^2 t = 1$. Ela diz que o ponto
+   $(\cosh t,\ \senh t)$ está sempre sobre a hipérbole $X^2 - Y^2 = 1$, como o
+   ponto $(\cos t,\ \sen t)$ está sempre sobre a circunferência $X^2 + Y^2 = 1$.
+
+</details>
+
+## 16. Exercícios
+
+### 1. Reconhecimento
+
+1. Diga quais funções têm formato de S com duas assíntotas horizontais, e dê a
+   assíntota de cima de cada uma delas: a) $\frac{1}{1 + e^{-x}}$ &nbsp;
+   b) $e^{-x}$ &nbsp; c) $\frac{5}{1 + 4e^{-2x}}$ &nbsp; d) $1 - e^{-x}$, para
+   $x \ge 0$.
+2. Em cada caso, calcule a chance: a) 20 pessoas a favor e 80 contra
+   &nbsp; b) 75% de probabilidade &nbsp; c) metade a favor e metade contra.
+3. Classifique cada função como par ou ímpar: a) $\cosh x$ &nbsp;
+   b) $\senh x$ &nbsp; c) $\tgh x$.
+
+### 2. Explicação
+
+4. Explique, sem fórmulas, por que um produto que se espalha por indicação
+   começa crescendo como uma exponencial e depois freia.
+5. Explique por que $\sigma(0) = \frac{1}{2}$ e o que isso significa para uma
+   rede que dá probabilidades.
+6. Um colega escreveu $\frac{1}{1 + e^{-x}} = 1 + e^{x}$. Mostre, com um
+   número, que está errado, e explique o erro.
+
+### 3. Aplicação direta
+
+7. Use $e^{-2} \approx 0{,}1353$ para calcular $\sigma(2)$. Depois calcule
+   $\sigma(-2)$ sem nenhuma exponencial nova.
+8. Calcule $\operatorname{logit}(0{,}75)$ e $\operatorname{logit}(0{,}25)$.
+   Que relação há entre os dois resultados?
+9. Calcule $\cosh(\ln 2)$, $\senh(\ln 2)$ e $\tgh(\ln 2)$.
+
+### 4. Variação
+
+10. Um lago comporta no máximo 2.000 peixes. Hoje há 200, e a chance
+    (peixes dividido por vagas que faltam) dobra a cada ano. a) Qual é a chance
+    hoje? b) Escreva a fórmula da população $P(t)$. c) Em quantos anos o lago
+    chega a 1.000 peixes?
+11. Mostre que $\tgh(-x) = -\tgh x$ usando $\tgh x = 2\sigma(2x) - 1$ e a
+    simetria da sigmoide, sem usar a fórmula com $e^x$.
+12. Mostre que $\cosh x - \senh x = e^{-x}$ e confira com $x = 1$, usando
+    $\cosh 1 \approx 1{,}5431$, $\senh 1 \approx 1{,}1752$ e
+    $e^{-1} \approx 0{,}3679$.
+
+<details>
+<summary>Dica para o 10</summary>
+
+Faça como a seção 7: a chance no ano $t$ é a chance de hoje vezes $2^t$.
+Iguale a chance de 1.000 peixes (1.000 contra 1.000 vagas) e resolva com
+logaritmo.
+
+</details>
+
+### 5. Problema misto
+
+13. Um aplicativo tem 500 usuários numa cidade de 50 mil pessoas, e a chance
+    cresce 50% por semana (fica multiplicada por 1,5). a) Escreva $N(t)$.
+    b) Em que semana metade da cidade usa o aplicativo? c) Quantas semanas o
+    aplicativo leva de 10% a 90% da cidade?
+14. Um classificador médico calcula $z = 0{,}8 \times (\text{idade} - 50) \div 10 - 0{,}4$
+    e dá a probabilidade $\sigma(z)$ de uma doença. a) Que probabilidade ele
+    dá para um paciente de 60 anos? Use $e^{-0{,}4} \approx 0{,}6703$.
+    b) Que idade corresponde exatamente a 50%?
+
+### 6. Justificativa
+
+15. Mostre que $\operatorname{logit}(\sigma(x)) = x$ para todo $x$, calculando
+    $\frac{\sigma(x)}{1 - \sigma(x)}$ primeiro.
+16. Explique por que o cosseno hiperbólico tem um mínimo em $x = 0$, usando
+    a ideia de média: compare $\frac{e^x + e^{-x}}{2}$ com 1 quando $x = 1$,
+    $x = 2$ e $x = -1$. Para a prova geral, escreva
+    $\cosh x - 1 = \frac{(e^{x/2} - e^{-x/2})^2}{2}$ e diga por que isso nunca
+    é negativo.
+
+<details>
+<summary>Dica para o 16</summary>
+
+Desenvolva $(e^{x/2} - e^{-x/2})^2$ com o quadrado da diferença. Os quadrados
+dão $e^{x}$ e $e^{-x}$, e o dobro do produto dá $2 \times e^{x/2} \times e^{-x/2} = 2$.
+
+</details>
+
+<details>
+<summary>Respostas para conferência</summary>
+
+1. a) Sim, assíntotas $y = 0$ e $y = 1$; a de cima é $y = 1$. &nbsp; b) Não: é
+   um decaimento, com uma só assíntota, $y = 0$. &nbsp; c) Sim, é uma logística
+   com teto 5: a de cima é $y = 5$. &nbsp; d) Não: ela tem teto 1, mas não tem
+   formato de S, porque sobe mais depressa logo no começo e freia o tempo todo.
+2. a) $\frac{20}{80} = \frac{1}{4} = 0{,}25$ &nbsp; b) $\frac{0{,}75}{0{,}25} = 3$
+   &nbsp; c) 1. Se em (a) você achou $0{,}2$, dividiu pelo total, e isso é a
+   fração, não a chance.
+3. a) Par. &nbsp; b) Ímpar. &nbsp; c) Ímpar: é o quociente de uma ímpar por uma
+   par, e trocar $x$ por $-x$ troca o sinal do numerador e mantém o do
+   denominador.
+4. Cada pessoa que já usa indica o produto a quem ainda não usa. No começo,
+   quase todo mundo ainda não usa, então cada usuário encontra gente para
+   convidar, e o número de novos usuários é proporcional ao de usuários: é a
+   regra da exponencial. Com o tempo, os conhecidos de cada usuário já usam, e
+   sobra pouca gente para convidar. O crescimento freia por falta de gente
+   nova.
+5. Em $x = 0$, $e^{-0} = 1$, e $\sigma(0) = \frac{1}{1 + 1} = \frac{1}{2}$. Para
+   a rede, um logit 0 é a fronteira da decisão: ela dá 50%, sem preferência por
+   nenhum dos dois lados.
+6. Com $x = 0$: o lado esquerdo dá $\frac{1}{2}$, e o direito dá 2. O erro foi
+   inverter cada parcela do denominador separadamente. Inverter uma soma não é
+   somar os inversos: $\frac{1}{1 + 1} = \frac{1}{2}$, mas
+   $\frac{1}{1} + \frac{1}{1} = 2$.
+7. $\sigma(2) = \frac{1}{1{,}1353} \approx 0{,}8808$. Pela simetria,
+   $\sigma(-2) = 1 - 0{,}8808 = 0{,}1192$.
+8. $\operatorname{logit}(0{,}75) = \ln \frac{0{,}75}{0{,}25} = \ln 3 \approx 1{,}099$.
+   $\operatorname{logit}(0{,}25) = \ln \frac{0{,}25}{0{,}75} = \ln \frac{1}{3} \approx -1{,}099$.
+   São opostos. É a simetria da sigmoide lida pela inversa: se $\sigma(x) = p$,
+   então $\sigma(-x) = 1 - p$, e por isso
+   $\operatorname{logit}(1 - p) = -\operatorname{logit}(p)$.
+9. $\cosh(\ln 2) = \frac{5}{4}$, $\senh(\ln 2) = \frac{3}{4}$ e
+   $\tgh(\ln 2) = \frac{3/4}{5/4} = \frac{3}{5} = 0{,}6$.
+10. a) $\frac{200}{1800} = \frac{1}{9}$. &nbsp; b) A chance no ano $t$ é
+    $\frac{1}{9} \times 2^t$, e pelos passos da seção 7,
+    $P(t) = \frac{2000}{1 + 9 \times 2^{-t}}$. Conferindo: $P(0) = \frac{2000}{10} = 200$.
+    &nbsp; c) Mil peixes são chance 1: $2^t = 9$, e
+    $t = \frac{\ln 9}{\ln 2} \approx 3{,}17$ anos.
+11. $\tgh(-x) = 2\sigma(-2x) - 1$. Pela simetria, $\sigma(-2x) = 1 - \sigma(2x)$.
+    Então $\tgh(-x) = 2(1 - \sigma(2x)) - 1 = 1 - 2\sigma(2x) = -(2\sigma(2x) - 1) = -\tgh x$.
+12. $\cosh x - \senh x = \frac{e^x + e^{-x}}{2} - \frac{e^x - e^{-x}}{2} = \frac{2e^{-x}}{2} = e^{-x}$:
+    o $e^x$ entra com mais e sai com menos. Com $x = 1$:
+    $1{,}5431 - 1{,}1752 = 0{,}3679$, que é $e^{-1}$. Confere.
+13. a) A chance inicial é $\frac{500}{49500} = \frac{1}{99}$, então
+    $N(t) = \frac{50000}{1 + 99 \times 1{,}5^{-t}}$. &nbsp; b) Chance 1:
+    $1{,}5^t = 99$, e $t = \frac{\ln 99}{\ln 1{,}5} \approx 11{,}33$ semanas.
+    &nbsp; c) 10% é chance $\frac{1}{9}$, e dá $1{,}5^t = 11$; 90% é chance 9, e dá
+    $1{,}5^t = 891$. A diferença é
+    $\frac{\ln 891 - \ln 11}{\ln 1{,}5} = \frac{\ln 81}{\ln 1{,}5} \approx 10{,}84$
+    semanas.
+14. a) $z = 0{,}8 \times 10 \div 10 - 0{,}4 = 0{,}4$, e
+    $\sigma(0{,}4) = \frac{1}{1 + 0{,}6703} \approx 0{,}599$, cerca de 60%.
+    &nbsp; b) 50% exige $z = 0$:
+    $0{,}8 \times (\text{idade} - 50) \div 10 = 0{,}4$, então
+    $\text{idade} - 50 = 5$, e a idade é 55 anos.
+15. A seção 8 mostrou que $1 - \sigma(x) = \frac{e^{-x}}{1 + e^{-x}}$. Dividindo
+    $\sigma(x) = \frac{1}{1 + e^{-x}}$ por essa fração, os denominadores
+    $1 + e^{-x}$ se cancelam e sobra $\frac{1}{e^{-x}} = e^{x}$. Então
+    $\operatorname{logit}(\sigma(x)) = \ln e^{x} = x$.
+16. Com $x = 1$: $\frac{2{,}718 + 0{,}368}{2} \approx 1{,}543$; com $x = 2$:
+    $\frac{7{,}389 + 0{,}135}{2} \approx 3{,}762$; com $x = -1$: de novo
+    $1{,}543$, porque a função é par. Todos maiores que 1. Pela dica,
+    $(e^{x/2} - e^{-x/2})^2 = e^{x} - 2 + e^{-x}$, e dividindo por 2 dá
+    $\frac{e^{x} + e^{-x}}{2} - 1 = \cosh x - 1$. Um quadrado nunca é negativo,
+    então $\cosh x - 1 \ge 0$, ou seja, $\cosh x \ge 1$. A igualdade só
+    acontece quando $e^{x/2} = e^{-x/2}$, isto é, em $x = 0$.
+
+</details>
+
+## 17. Revisão curta
+
+- A **chance** é casos a favor divididos por casos contra. Ela é diferente da
+  fração, que divide pelo total.
+- Num crescimento com teto, como a adoção por indicação, o que cresce de forma
+  exponencial é a **chance**. Isolando a quantidade, sai a **função
+  logística** $N(t) = \frac{L}{1 + A \times b^{-t}}$.
+- A logística começa como uma exponencial, acelera, e depois freia até o teto
+  $L$, que é uma assíntota horizontal. O gráfico é um S.
+- A **sigmoide** $\sigma(x) = \frac{1}{1 + e^{-x}}$ é a logística padrão: vai
+  de 0 a 1, vale $\frac{1}{2}$ em $x = 0$, e é simétrica:
+  $\sigma(-x) = 1 - \sigma(x)$.
+- Toda logística é uma sigmoide transformada, $L \times \sigma(k(t - t_0))$.
+- O **logit**, $\ln \frac{p}{1 - p}$, é a inversa da sigmoide e o logaritmo da
+  chance. Seu domínio é $\,]0, 1[$.
+- $\cosh x = \frac{e^x + e^{-x}}{2}$ é a parte par de $e^x$, e
+  $\senh x = \frac{e^x - e^{-x}}{2}$ é a parte ímpar. Somadas, dão $e^x$.
+- $\tgh x = \frac{\senh x}{\cosh x} = 2\sigma(2x) - 1$: a sigmoide centrada na
+  origem, de $-1$ a 1. Nas bibliotecas, tanh.
+- $\cosh^2 x - \senh^2 x = 1$: o ponto $(\cosh t,\ \senh t)$ anda sobre uma
+  hipérbole. Daí o nome.
+- A **catenária**, curva de uma corrente pendurada, é um cosseno hiperbólico.
+
+Antes de avançar, verifique se você consegue fazer duas coisas sem consultar a
+página: deduzir a fórmula da logística a partir de “a chance dobra a cada
+semana”, e provar $\cosh^2 x - \senh^2 x = 1$ pela diferença de quadrados.
+
+**Para onde isso leva.** No cálculo, a lição de [derivadas de exponencial e
+logaritmo](../calculo/calculo-1/derivadas-de-exponencial-e-logaritmo) vai
+calcular a inclinação da sigmoide e chegar a uma fórmula curta,
+$\sigma'(x) = \sigma(x)\,(1 - \sigma(x))$, que é usada no treinamento de
+redes neurais. No capítulo de álgebra linear, a lição de [produto de
+matrizes](../algebra-linear/produto-de-matrizes) mostra por que as redes
+precisam de uma função como a sigmoide, a tangente hiperbólica ou a ReLU entre
+as camadas.
+
+Com esta página fecha-se o capítulo. O seguinte, [Geometria e
+trigonometria](../geometria/), muda de assunto: passa a medir forma, posição e
+ângulo. Mas o seno e o cosseno de lá vão lembrar o seno e o cosseno
+hiperbólicos daqui.
