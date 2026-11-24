@@ -5,12 +5,14 @@
 // e daria margem a escrever "sen" em itálico por engano num lugar e reto em
 // outro. Com as macros, $\sen x$ sai igual em toda página.
 //
-// Este arquivo é lido em dois lugares e por isso usa CommonJS:
-// - docusaurus.config.js, para as fórmulas do corpo do texto (rehype-katex);
-// - mathviz/SvgMath.jsx, para os rótulos dentro dos desenhos.
+// Este arquivo é lido em vários lugares e por isso usa CommonJS:
+// - components/Tex e rehype/formulas-como-texto.js, para as fórmulas do corpo
+//   do texto;
+// - mathviz/SvgMath.jsx e mathviz/Formula.jsx, para as fórmulas dos desenhos.
 //
-// Se as duas listas divergirem, um rótulo de figura quebra sem que nenhuma
-// fórmula do texto quebre — erro difícil de achar. Por isso, uma lista só.
+// Se cada um tivesse a sua lista, um rótulo de figura poderia quebrar sem que
+// nenhuma fórmula do texto quebrasse, um erro difícil de achar. Por isso, uma
+// lista só.
 module.exports = {
   '\\sen': '\\operatorname{sen}',
   '\\tg': '\\operatorname{tg}',

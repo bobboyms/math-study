@@ -115,11 +115,32 @@ O formato é relativo e sem o prefixo numérico:
 ### Comandos
 
 ```bash
-npm run start   # servidor local em http://localhost:3000
-npm run build   # validação de verdade: links, MDX, sidebar
-npm run clear   # limpa cache quando o start fica com conteúdo velho
+npm run build   # validação de verdade: links, MDX, sidebar (uns 15 s)
+npm run ver     # build + site pronto em http://localhost:3300/math-study (e no celular, pela rede)
+npm run clear   # limpa o cache quando o site sai com conteúdo velho
 npm run quadro  # quadro branco do aluno em http://localhost:4123
+npm run start   # servidor de desenvolvimento: evite (ver abaixo)
 ```
+
+O build leva uns 15 segundos e usa no máximo uns 3 GB de memória, sem
+`NODE_OPTIONS`. Duas coisas garantem isso; não desfaça nenhuma sem medir:
+
+- **Rspack** no lugar do webpack (`future.faster` em `docusaurus.config.js`,
+  pacote `@docusaurus/faster`);
+- **fórmulas guardadas como texto** (seção Fórmulas e notação). Com o
+  `rehype-katex`, cada fórmula entrava desenhada no código da página: 5 MB de
+  lições viravam 113 MB de código, e o build chegava a 14 a 18 GB de memória
+  num computador de 18 GB.
+
+**Para mostrar ou conferir páginas, use `npm run ver`, não `npm run start`.**
+O usuário escolheu assim: o site pronto, servido por um servidor de arquivos de
+uns **120 MB**, em vez do servidor de desenvolvimento, que mantém o curso
+compilado na memória (chegou a 17 GB; hoje fica perto de 1,6 GB). Depois de
+cada edição, rode `npm run ver` de novo. Duas regras:
+
+- nunca deixe um servidor rodando ao terminar a tarefa; pare-o assim que o
+  usuário tiver visto a página;
+- antes de subir outro, confira se já não há um no ar (`pgrep -fl docusaurus`).
 
 ## Caderno do aluno
 
@@ -133,7 +154,17 @@ do caderno — são o registro do aluno.
 
 ## Fórmulas e notação
 
-Fórmulas usam LaTeX renderizado por KaTeX (`remark-math` + `rehype-katex`).
+Fórmulas usam LaTeX desenhado pelo KaTeX. O `remark-math` lê os `$...$` e
+`$$...$$`; o plugin `src/rehype/formulas-como-texto.js` troca cada um por
+`<Tex math="..." />`, e o componente `src/components/Tex` chama o KaTeX na hora
+de gerar o HTML e no navegador. O código da página carrega só o texto da
+fórmula, e é isso que mantém o build leve (seção Comandos).
+
+**Uma fórmula que o KaTeX não consegue ler derruba o build**, como um link
+quebrado: o erro `[formulas-como-texto]` lista o arquivo e a linha de cada
+uma. Como o deploy roda o build, a produção não é atualizada enquanto a
+fórmula não for corrigida. Antes, ela ia para o site em vermelho e o build
+passava calado.
 
 ```md
 Inline: $f(x) = x^2$
@@ -183,10 +214,11 @@ site, em `src/katexMacros.js`, acrescentam os equivalentes em português:
 | `\arcsen` | arcsen | |
 | `\arctg` | arctg | |
 
-O arquivo é lido em **dois lugares** — `docusaurus.config.js`, para as fórmulas
-do corpo do texto, e `mathviz/SvgMath.jsx`, para os rótulos dentro dos desenhos.
-Se as listas divergirem, um rótulo de figura quebra sem que nenhuma fórmula do
-texto quebre — erro difícil de achar. Por isso, uma lista só.
+O arquivo é a lista única das macros: o `components/Tex` e o plugin
+`formulas-como-texto` o usam para as fórmulas do corpo do texto, e o
+`mathviz/SvgMath.jsx` e o `mathviz/Formula.jsx`, para as fórmulas dentro dos
+desenhos. Se cada um tivesse a sua lista, um rótulo de figura poderia quebrar
+sem que nenhuma fórmula do texto quebrasse, um erro difícil de achar.
 
 Ao acrescentar uma macro, basta editar `src/katexMacros.js`.
 
@@ -220,9 +252,9 @@ vários desses defeitos em produção.
 
 Como fazer:
 
-1. Suba o site: `NODE_OPTIONS=--max-old-space-size=10240 npm run start -- --port 3300 --no-open`
-   (recarrega a cada edição; sem o `NODE_OPTIONS` ele cai por falta de memória).
-   Ou `npm run build` seguido de `npm run serve -- --port 3210` e `BASE=http://localhost:3210/math-study`.
+1. Suba o site pronto: `npm run ver` (em segundo plano). Depois de corrigir
+   uma figura, pare o servidor e rode `npm run ver` de novo. Não use
+   `npm run start`: ele ocupa mais de 12 GB (seção Comandos).
 2. Instale o Playwright sem tocar no `package.json` — `npm i --no-save playwright`
    — e capture as figuras, uma imagem por figura:
    `node scripts/capturar-figuras.js <pasta-fora-do-repo> geometria/angulos geometria/triangulos`.
@@ -255,7 +287,8 @@ Toda entrega passa por esta lista:
 - [ ] `npm run build` passa sem erro;
 - [ ] página nova está em `sidebars.js`, com o id **sem** prefixo numérico;
 - [ ] links relativos resolvem, e a numeração `2.x` está coerente;
-- [ ] fórmulas renderizam (confira no `npm run start`, não só no código-fonte);
+- [ ] fórmulas renderizam (confira no `npm run ver`, não só no código-fonte);
+- [ ] nenhum servidor do site ficou rodando (`pgrep -fl docusaurus` vazio);
 - [ ] cada figura das páginas tocadas foi capturada com
       `scripts/capturar-figuras.js` e conferida com os olhos (seção acima);
 - [ ] valores em reais escritos como `R\$`;

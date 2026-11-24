@@ -1,14 +1,29 @@
 // @ts-check
 
 const remarkMath = require('remark-math').default;
-const rehypeKatex = require('rehype-katex').default;
-const katexMacros = require('./src/katexMacros');
+const formulasComoTexto = require('./src/rehype/formulas-como-texto');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Math Study',
   tagline: 'Estudo de matematica com explicacoes, exercicios e graficos interativos.',
   favicon: 'img/favicon.svg',
+
+  // Rspack e SWC no lugar de webpack e Babel: o build usa bem menos memória
+  // e termina mais rápido (pacote @docusaurus/faster).
+  future: {
+    faster: {
+      swcJsLoader: true,
+      swcJsMinimizer: true,
+      swcHtmlMinimizer: true,
+      lightningCssMinimizer: true,
+      rspackBundler: true,
+      rspackPersistentCache: true,
+      mdxCrossCompilerCache: true,
+      // Várias threads de renderização somariam memória: fica desligado.
+      ssgWorkerThreads: false,
+    },
+  },
 
   url: 'https://bobboyms.github.io',
   baseUrl: '/math-study/',
@@ -37,7 +52,9 @@ const config = {
           sidebarPath: require.resolve('./sidebars.js'),
           routeBasePath: '/',
           remarkPlugins: [remarkMath],
-          rehypePlugins: [[rehypeKatex, {macros: katexMacros}]],
+          // As fórmulas vão para o código da página como texto e são desenhadas
+          // pelo componente Tex: ver src/rehype/formulas-como-texto.js.
+          rehypePlugins: [formulasComoTexto],
         },
         blog: false,
         theme: {

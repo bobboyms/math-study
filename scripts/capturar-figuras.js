@@ -3,13 +3,13 @@
 //
 // Pré-requisitos (não entram no package.json):
 //   npm i --no-save playwright        # usa o Google Chrome já instalado
-//   npm run start -- --port 3300      # ou: npm run build && npm run serve -- --port 3210
+//   npm run ver                       # build + site pronto na porta 3300
 //
 // Uso:
 //   node scripts/capturar-figuras.js <pasta-de-saida> geometria/angulos [funcoes/funcao-afim ...]
 //
 // Variáveis opcionais:
-//   BASE=http://localhost:3300/math-study   (padrão; troque a porta se usar o serve)
+//   BASE=http://localhost:3300/math-study   (padrão, a porta do npm run ver)
 //   THEME=dark                              tema escuro
 //   WIDTH=390                               largura de celular (padrão 900)
 //   MOTION=play                             deixa as animações rodarem e captura
