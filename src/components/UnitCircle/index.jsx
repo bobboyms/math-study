@@ -48,8 +48,9 @@ export default function UnitCircle({
 }) {
   const xExtent = showTangent ? 1.9 : 1.32;
   // Com o eixo das tangentes, a altura acompanha o tangentClamp: o segmento e o
-  // rótulo "eixo das tangentes" precisam caber no desenho.
-  const yExtent = showTangent ? Math.max(1.32, tangentClamp + 0.15) : 1.32;
+  // rótulo "eixo das tangentes" precisam caber no desenho. O rótulo fica
+  // acima do fim da reta, para não encostar no segmento quando T é cortado.
+  const yExtent = showTangent ? Math.max(1.32, tangentClamp + 0.32) : 1.32;
 
   const viewW = padding * 2 + 2 * xExtent * scale;
   const viewH = padding * 2 + 2 * yExtent * scale;
@@ -161,7 +162,7 @@ export default function UnitCircle({
             />
             <SvgMath
               x={X(1) + 26}
-              y={Y(tangentClamp) - 6}
+              y={Y(tangentClamp) - 20}
               math="\text{eixo das tangentes}"
               fontSize={12}
               anchor="middle"
@@ -214,13 +215,24 @@ export default function UnitCircle({
 
               {item.showTangentSegment && (
                 <>
-                  <line
-                    className={styles.helper}
-                    x1={X(0)}
-                    y1={Y(0)}
-                    x2={X(1)}
-                    y2={Y(Math.max(-tangentClamp, Math.min(tangentClamp, Math.tan(a))))}
-                  />
+                  {/* A reta do raio prolongada. Quando T passa do limite do
+                      desenho, ela para na borda, mas continua na direção
+                      certa: ligar o centro ao ponto cortado entortaria a reta. */}
+                  {(() => {
+                    const tg = Math.tan(a);
+                    const clipped = Math.abs(tg) > tangentClamp;
+                    const ey = clipped ? Math.sign(tg) * tangentClamp : tg;
+                    const ex = clipped ? ey / tg : 1;
+                    return (
+                      <line
+                        className={styles.helper}
+                        x1={X(0)}
+                        y1={Y(0)}
+                        x2={X(ex)}
+                        y2={Y(ey)}
+                      />
+                    );
+                  })()}
                   <line
                     className={styles.tangentSeg}
                     x1={X(1)}

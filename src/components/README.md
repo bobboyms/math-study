@@ -71,6 +71,12 @@ import AreaModel from '@site/src/components/AreaModel';
 | roda rolando: distância → ângulo e voltas, $\theta = s/r$ | `RollingWheel` (interativo e animado) |
 | a reta numérica enrolada no círculo de raio 1 | `WrapLine` (interativo e animado) |
 | seno e cosseno como coordenadas, quadrantes, arcos | `UnitCircle` |
+| arrastar o giro e ver cosseno e seno acompanharem o ponto; voltas inteiras e giros negativos | `CycleExplorer` (interativo e animado) |
+| roda-gigante: o giro vira altura, $h = 22 + 20\sen\theta$ | `FerrisWheel` (interativo e animado) |
+| ângulo de referência: cada ponto do ciclo é o espelho de um ponto do 1º quadrante | `ReferenceAngle` (interativo e animado) |
+| a tangente lida na reta $x = 1$: T sobe sem fim perto de 90° e some em 90° | `TangentAxisExplorer` (interativo e animado) |
+| setor circular: ângulo e raio → arco, área e borda; setor de coroa (limpador) | `SectorExplorer` (interativo e animado) |
+| o setor que vira triângulo de base $s$ e altura $r$: $A = \frac12 rs$ | `SectorUnroll` (animado) |
 | o mesmo triângulo como razões, ponto do ciclo e ponto do gráfico | `TrigBridge` |
 | variar o giro e acompanhar uma coordenada no gráfico | `CycleGraphExplorer` (interativo) |
 | comparar amplitude, período, fase e deslocamento vertical | `TrigParametersExplorer` (interativo) |
@@ -650,6 +656,101 @@ como **segmentos coloridos**, não como linhas auxiliares: eles *são* o seno e 
 cosseno. O arco é amostrado ponto a ponto, então ângulo negativo sai no sentido
 horário e ângulo maior que 360° sai como espiral — que é o desenho que explica
 por que 390° e 30° caem no mesmo lugar.
+
+## CycleExplorer
+
+O `UnitCircle` com o ângulo vivo. O aluno arrasta o giro e vê o cosseno
+(segmento verde no eixo horizontal) e o seno (laranja, no vertical)
+acompanharem o ponto, trocando de sinal quando ele passa para a esquerda ou
+para baixo. Ao aparecer na tela, o ponto gira de `from` até `initial`.
+
+```mdx
+<CycleExplorer initial={140} from={0} presets={[0, 90, 140, 180, 270]} />
+<CycleExplorer initial={390} min={-360} max={720} showTurns presets={[30, 390, 750, -330]} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial`, `from`, `duration` | giro final e inicial da animação, em graus, e a duração em segundos |
+| `min`, `max`, `step` | faixa do deslizante (padrão 0 a 360, de 5 em 5) |
+| `presets` | botões de giro pronto |
+| `showTurns` | acrescenta ao painel a redução à primeira volta (“750° são 2 voltas e mais 30°”) |
+| `caption` | **texto simples** |
+
+O rótulo $\theta$ some depois de uma volta: o meio da espiral cai longe do
+ponto, e o rótulo ali confundiria.
+
+## FerrisWheel
+
+A roda-gigante da lição do ciclo trigonométrico, em escala: 20 m de raio,
+centro a 22 m do chão. A régua à direita acompanha a altura da cadeirinha.
+
+```mdx
+<FerrisWheel initial={150} />            {/* motivador: a altura é a pergunta */}
+<FerrisWheel initial={210} showHeight /> {/* resolução: 22 + 20 sen θ */}
+```
+
+Sem `showHeight`, a régua sai inteira e o painel pergunta a altura. Com ele, a
+régua se divide: os 22 m do chão ao centro (neutro, com colchete) e o trecho
+laranja, quanto a cadeirinha está acima ou abaixo do centro, que é
+$20\sen\theta$. `presets` (padrão 30°, 150°, 210°, 540°) e `max` (padrão 540)
+controlam os botões e o deslizante.
+
+## ReferenceAngle
+
+O ponto $P$ do giro (tom 1) e o ponto do primeiro quadrante com a mesma
+abertura até o eixo horizontal (tom 2), com os dois arcos $\alpha$ do mesmo
+tamanho. O tracejado entre os pontos é o espelho: horizontal no II, vertical
+no IV, pelo centro no III. Ao aparecer, e no botão “Ver o espelho”, um ponto
+viaja do primeiro quadrante até $P$ por esse tracejado. O painel mostra o
+quadrante, a conta de $\alpha$ e $\sen\theta = \pm\sen\alpha$,
+$\cos\theta = \pm\cos\alpha$.
+
+```mdx
+<ReferenceAngle initial={150} presets={[30, 150, 210, 330]} />
+```
+
+## TangentAxisExplorer
+
+O `UnitCircle` com `showTangent` e um deslizante para o giro. A reta do raio,
+prolongada para a frente ou para trás pelo centro, corta $x = 1$ no ponto
+$T$, cuja altura é $\tg\theta$. Acima de 1,8 o ponto sai do desenho e o
+painel continua dando o valor; em 90° e 270° o painel diz que $T$ não existe.
+
+```mdx
+<TangentAxisExplorer initial={55} from={0} presets={[45, 80, 85, 89, 90, 135, 225]} />
+```
+
+Quando $T$ é cortado, o `UnitCircle` termina a reta do raio na borda do
+desenho, na direção certa, em vez de ligá-la ao ponto cortado.
+
+## SectorExplorer
+
+Setor aberto em torno da vertical, como o jato de um aspersor, com
+deslizantes de ângulo (5° a 180°) e de raio. O arco sai grosso no tom 2; a
+meia circunferência tracejada fica para comparação. Ao aparecer, o setor
+abre de 0 até o ângulo inicial.
+
+```mdx
+<SectorExplorer initialDeg={120} initialR={8} showFormulas={false} />  {/* motivador */}
+<SectorExplorer initialDeg={120} initialR={8} />                       {/* contas */}
+<SectorExplorer initialDeg={110} initialR={60} rMax={60} inner={15} unit="cm" />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initialDeg`, `initialR`, `rMax` | ângulo e raio iniciais; raio máximo do deslizante (ocupa 200 px) |
+| `showFormulas` | `false` mostra só a fração da volta e a pergunta; `true` mostra θ em rad, $s$, $A$ e a borda $2r + s$ |
+| `inner` | raio interno: vira setor de coroa, e o painel faz $\frac12\theta(R^2 - r^2)$ |
+| `unit` | unidade dos comprimentos (padrão `m`) |
+
+## SectorUnroll
+
+Sem props. Um setor de 100° cortado em fatias finas, todas com a ponta no
+centro. A animação estica o arco sobre a reta que toca o topo do círculo,
+mantendo o comprimento de cada pedacinho, e as fatias viram um triângulo de
+base $s$ e altura $r$. O segmento $r$, do centro ao topo, vale nos dois
+quadros; o setor original fica tracejado no quadro final.
 
 ## SolidFigure
 

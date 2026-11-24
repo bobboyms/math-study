@@ -3,103 +3,98 @@ title: O ciclo trigonométrico
 ---
 
 import UnitCircle from '@site/src/components/UnitCircle';
-import GeoFigure from '@site/src/components/GeoFigure';
 import TrigBridge from '@site/src/components/TrigBridge';
+import FerrisWheel from '@site/src/components/FerrisWheel';
+import CycleExplorer from '@site/src/components/CycleExplorer';
 
 # O ciclo trigonométrico: seno e cosseno como coordenadas
 
 ## Problema motivador: a altura da cadeirinha na roda-gigante
 
 Uma roda-gigante tem **20 m de raio**, e o centro dela está a **22 m do chão**.
-Uma cadeirinha embarca à direita, na altura do centro, e a roda começa a girar
-no sentido anti-horário.
+Uma cadeirinha embarca à direita, na altura do centro, e a roda gira no sentido
+anti-horário.
 
-<GeoFigure
-  unit={26}
-  padding={50}
-  arcs={[{at: [0, 0], r: 2, from: 0, to: 360, tone: 1}]}
-  segments={[
-    {from: [-3, -2.2], to: [3, -2.2], tone: 0},
-    {from: [0, -2.2], to: [0, 0], tone: 0, dashed: true},
-    {from: [0, 0], to: [1.53, 1.29], tone: 2},
-  ]}
-  points={[
-    {at: [1.53, 1.29], label: '\\text{cadeirinha}', tone: 2, place: 'above-right', distance: 40, fontSize: 11},
-    {at: [0, 0], tone: 1},
-  ]}
-  labels={[
-    {at: [-0.42, -1.1], math: '22', fontSize: 12},
-    {at: [0.85, 0.35], math: '20', tone: 2, fontSize: 12},
-  ]}
-  caption="A cadeirinha percorre a circunferência. Sua altura em relação ao chão varia entre 2 m e 42 m."
-/>
+Arraste o controle e acompanhe a régua da direita. Ela mostra a altura da
+cadeirinha: sobe até o topo, desce, passa abaixo do centro e volta.
+
+<FerrisWheel initial={150} />
 
 > Qual é a altura da cadeirinha depois de a roda girar 30°? E 150°? E 210°? E
-> depois de uma volta e meia?
+> depois de uma volta e meia (540°)?
 
-O primeiro caso, 30°, cabe num triângulo retângulo e você já sabe resolver. Os
-outros, não: **não existe triângulo retângulo com um ângulo de 150°**, muito
-menos de 210° ou de 540°.
+O primeiro caso, 30°, cabe num triângulo retângulo, e você já sabe resolver.
+Os outros, não: **não existe triângulo retângulo com um ângulo de 150°**, e
+muito menos de 210° ou de 540°.
 
-E, no entanto, a cadeirinha continua tendo uma altura bem definida em cada um
-desses giros. A trigonometria precisa acompanhar o movimento — e para isso ela
-precisa de uma definição que não dependa de triângulo nenhum.
+Mesmo assim, a régua da figura mostra que a cadeirinha tem uma altura bem
+definida em cada um desses giros. A trigonometria do triângulo não consegue
+calcular essa altura. Por isso, precisamos de uma definição de seno e cosseno
+que não dependa de triângulo nenhum.
 
-É o que esta página constrói.
+É o que esta página constrói. No fim, a altura da cadeirinha sai de uma única
+fórmula, para qualquer giro.
 
-## Mapa das ideias
+## Roteiro da lição
 
-- **ciclo trigonométrico** — a circunferência de raio 1 centrada na origem, com
-  os ângulos medidos a partir do ponto $(1,0)$;
-- **sentido positivo** — anti-horário; o horário é negativo;
-- **imagem de um ângulo** — o ponto $P$ do ciclo onde o lado do ângulo o
-  encontra. Atenção: aqui “imagem” tem outro sentido, o de “retrato do ângulo no
-  ciclo”. Não é a imagem de uma função, o conjunto das saídas, estudada em
-  [Domínio e imagem](../funcoes/dominio-e-imagem);
-- **cosseno** — a **abscissa** (coordenada horizontal) de $P$;
-- **seno** — a **ordenada** (coordenada vertical) de $P$;
-- **arcos côngruos** — ângulos com a mesma imagem, diferindo por voltas
-  inteiras.
-
-Exemplo: o ângulo $90^\circ$ tem imagem $(0,1)$, logo $\cos 90^\circ = 0$ e
-$\sen 90^\circ = 1$. Contraexemplo: $\sen 90^\circ$ **não** é indefinido por
-“não existir triângulo com dois ângulos retos” — a nova definição não usa
-triângulo, e responde tranquilamente.
+1. Seno e cosseno passam a ser as coordenadas de um ponto que gira num círculo
+   de raio 1.
+2. Entre 0° e 90°, a definição nova dá os mesmos valores que a do triângulo.
+3. Nos quatro pontos cardeais (direita, topo, esquerda, embaixo), os valores
+   se leem direto no desenho. Por isso, seno e cosseno nunca passam de 1 nem
+   ficam abaixo de $-1$.
+4. O sinal do seno e do cosseno é o sinal das coordenadas do ponto.
+5. Giros que diferem por voltas inteiras param no mesmo ponto.
+6. Girar no sentido contrário espelha o ponto no eixo horizontal: o cosseno
+   fica igual e o seno troca de sinal.
+7. Pitágoras no círculo de raio 1: $\cos^2\theta + \sen^2\theta = 1$.
 
 ## Para que isso serve?
 
-- descrever qualquer movimento circular ou oscilatório: rodas, motores,
-  pêndulos, molas;
-- corrente alternada, som, luz, ondas de rádio e sinais em geral;
-- animação e computação gráfica: rotações, órbitas, movimento cíclico;
-- modelos com sazonalidade: maré, temperatura ao longo do ano, vendas;
-- e, dentro da matemática, é a definição que permite transformar seno e cosseno
-  em **funções de variável real**, com domínio em todos os números — o objeto do
+Sempre que algo **gira** e você quer saber **onde ele está**, a resposta é
+“raio vezes cosseno na horizontal, raio vezes seno na vertical”. A definição
+desta página faz isso valer para qualquer giro, inclusive além de 90°.
+
+- **Braço de robô.** A ponta de um braço de 0,5 m, girado 120° a partir da
+  horizontal, fica em $(0{,}5\cos 120^\circ;\ 0{,}5\sen 120^\circ) \approx
+  (-0{,}25;\ 0{,}43)$. A coordenada negativa diz que a ponta passou para trás
+  da base: 25 cm para a esquerda e 43 cm para cima.
+- **Jogos e computação gráfica.** Um personagem anda 10 unidades na direção de
+  210°. Ele se desloca $(10\cos 210^\circ;\ 10\sen 210^\circ) \approx
+  (-8{,}66;\ -5)$: 8,66 para a esquerda e 5 para baixo. O programa faz essa
+  conta a cada quadro da tela.
+- **Corrente alternada.** A tensão da tomada sobe e desce como a altura da
+  cadeirinha. Com pico de 180 V, no ponto do ciclo que corresponde a 210° a
+  tensão vale $180 \times \sen 210^\circ = -90$ V. O sinal negativo quer dizer
+  que a corrente está correndo no sentido contrário.
+- **Dentro da matemática.** Com esta definição, $\sen 5$ (5 radianos, quase
+  287°) passa a ter valor: $\approx -0{,}96$. É a definição pelo ciclo que transforma seno e
+  cosseno em funções de qualquer número real, o assunto do
   [módulo seguinte](./graficos-seno-e-cosseno).
 
 ## Ideias anteriores que voltam aqui
 
 **1. Coordenadas** (de
 [Plano cartesiano](./plano-cartesiano-e-distancia)). Como se lê o ponto
-$(-0{,}5,\ 0{,}87)$?
+$(-0{,}5;\ 0{,}87)$?
 
 <details>
 <summary>Conferir</summary>
 
-Meia unidade à **esquerda** e 0,87 para **cima** — segundo quadrante. Os sinais
-das coordenadas vão determinar os sinais do seno e do cosseno.
+Meia unidade para a **esquerda** e 0,87 para **cima**: segundo quadrante. Os
+sinais das coordenadas vão decidir os sinais do seno e do cosseno.
 
 </details>
 
 **2. Radianos e a reta enrolada** (de [Radianos](./radianos)). O que representa
-o número 2 quando enrolado na circunferência de raio 1?
+o número 2 quando a reta é enrolada na circunferência de raio 1?
 
 <details>
 <summary>Conferir</summary>
 
-Um ponto a 2 unidades de arco do ponto de partida $(1,0)$, no sentido
-anti-horário. Como $\frac{\pi}{2} \approx 1{,}57$ e $\pi \approx 3{,}14$, esse
-ponto está no segundo quadrante.
+Um ponto a 2 unidades de arco do ponto de partida $(1,\ 0)$, no sentido
+anti-horário. Como 2 fica entre $\frac{\pi}{2} \approx 1{,}57$ e
+$\pi \approx 3{,}14$, esse ponto está no segundo quadrante.
 
 </details>
 
@@ -112,8 +107,8 @@ $\theta$?
 <summary>Conferir</summary>
 
 Oposto $= 1 \times \sen\theta = \sen\theta$; adjacente $= \cos\theta$. Com
-hipotenusa 1, os catetos **são** o seno e o cosseno. Guarde: é a ponte entre a
-definição antiga e a nova.
+hipotenusa 1, os catetos **são** o seno e o cosseno. Guarde esse fato: ele é a
+ponte entre a definição antiga e a nova.
 
 </details>
 
@@ -129,60 +124,92 @@ nome.
 
 </details>
 
-## Intuição: transformar giro em posição
+## Seno e cosseno são as coordenadas do ponto que gira
 
-O triângulo retângulo tem um limite estrutural: seus ângulos agudos ficam entre
-0° e 90°. Isso basta para medir uma torre, e não basta para descrever uma roda
-girando.
-
-A saída é mudar o objeto de referência. Em vez de perguntar *“que razão entre
-lados esse ângulo produz?”*, passamos a perguntar:
+Os ângulos agudos de um triângulo retângulo ficam entre 0° e 90°. Isso serve
+para medir uma torre, mas não serve para descrever uma roda girando. Por isso,
+mudamos a pergunta. Em vez de *“que razão entre lados esse ângulo produz?”*,
+perguntamos:
 
 > *“Se eu girar esse tanto a partir da direita, **onde eu chego**?”*
 
-E, para que a resposta seja um par de números limpos, usamos a circunferência de
-raio 1 — porque nela, como visto na página anterior, o ângulo em radianos é o
-próprio comprimento do arco percorrido.
+A resposta é um ponto. O procedimento, passo a passo:
 
-## Definição
+1. Desenhe a circunferência de raio 1 com centro na origem. Ela se chama
+   **ciclo trigonométrico**.
+2. Ponha um ponto em $(1,\ 0)$, na extremidade direita.
+3. Gire esse ponto, sobre a circunferência, no sentido **anti-horário**, até
+   completar o ângulo $\theta$.
+4. Chame de $P$ o lugar onde ele parou.
+5. Leia as duas coordenadas de $P$: a horizontal é o **cosseno** de $\theta$,
+   e a vertical é o **seno** de $\theta$.
 
-<UnitCircle
-  scale={112}
-  padding={110}
-  angles={[{
-    deg: 55,
-    label: '\\theta',
-    showProjections: true,
-    pointLabel: 'P(\\cos\\theta,\\ \\sen\\theta)',
-    pointDy: -22,
-  }]}
-  caption="O cosseno é a posição horizontal do ponto; o seno é a altura. Os segmentos coloridos sobre os eixos são o cosseno (verde) e o seno (laranja)."
-/>
+A figura faz esse giro. Depois, arraste o controle e veja o segmento verde (o
+cosseno) e o laranja (o seno) acompanharem o ponto.
 
-> Dado um número real $\theta$, marque no ciclo trigonométrico o ponto $P$
-> obtido girando $\theta$ (em radianos, no sentido anti-horário) a partir de
-> $(1,0)$. Então
+<CycleExplorer initial={140} from={0} duration={3.5} presets={[0, 55, 90, 140, 180, 270]} />
+
+> Dado um ângulo $\theta$, marque no ciclo trigonométrico o ponto $P$ obtido
+> girando $\theta$ no sentido anti-horário a partir de $(1,\ 0)$. Então
 > $$\cos\theta = \text{abscissa de } P, \qquad \sen\theta = \text{ordenada de } P.$$
 > Em símbolos: $P = (\cos\theta,\ \sen\theta)$.
 
-Três coisas mudaram em relação à definição do triângulo, e vale nomear cada
-uma:
+Três objetos aparecem juntos e são fáceis de misturar. O **ângulo** $\theta$ é
+o giro. O ponto $P$ é o lugar onde o giro termina. O seno e o cosseno são dois
+**números** lidos de $P$. O ponto $P$ também se chama **imagem** do ângulo no
+ciclo. Aqui “imagem” quer dizer o ponto aonde o giro leva; não é a imagem de
+uma função, estudada em [Domínio e imagem](../funcoes/dominio-e-imagem).
 
-- **Não há mais divisão.** Antes, seno era uma razão entre dois lados. Agora é
-  uma coordenada — um número lido diretamente do eixo.
-- **Não há mais restrição de ângulo.** Qualquer número real serve, porque sempre
-  dá para girar aquele tanto.
-- **Aparecem valores negativos.** Coordenadas podem ser negativas, e é isso que
+Exemplo: girando 90°, o ponto para no topo, em $(0,\ 1)$. Então
+$\cos 90^\circ = 0$ e $\sen 90^\circ = 1$. Compare: pela definição do
+triângulo, $\sen 90^\circ$ nem fazia sentido, porque um triângulo retângulo
+não pode ter dois ângulos retos. A definição nova não usa triângulo, e por
+isso responde sem dificuldade.
+
+Três coisas mudaram em relação à definição do triângulo:
+
+- **Não há mais divisão.** Antes, o seno era uma razão entre dois lados. Agora
+  ele é uma coordenada, lida direto no eixo.
+- **Não há mais limite para o ângulo.** Qualquer ângulo serve, como 150°, 540°
+  ou $-40^\circ$, porque sempre dá para girar o ponto esse número de graus.
+- **Aparecem valores negativos.** Coordenadas podem ser negativas. É isso que
   vai descrever a cadeirinha abaixo do centro da roda.
 
-### Por que a nova definição não contradiz a antiga
+<details>
+<summary>Confira: girando 180°, onde o ponto para? Quanto valem cos 180° e sen 180°?</summary>
 
-Uma definição nova que mudasse os valores conhecidos seria inaceitável — ela
-faria $\sen 30^\circ$ deixar de valer $\frac{1}{2}$. Vamos verificar que isso
-não acontece.
+Meia volta leva o ponto de $(1,\ 0)$ até a extremidade esquerda, $(-1,\ 0)$.
+Então $\cos 180^\circ = -1$ e $\sen 180^\circ = 0$. Use o botão “180°” da
+figura para ver.
 
-Tome $\theta$ entre 0° e 90° e baixe a perpendicular de $P$ até o eixo
-horizontal. Forma-se um triângulo retângulo com:
+</details>
+
+## Entre 0° e 90°, a definição nova dá os mesmos valores
+
+Uma definição nova que mudasse os valores conhecidos não serviria: ela faria
+$\sen 30^\circ$ deixar de valer $\frac{1}{2}$, e todas as contas de triângulo
+feitas até aqui ficariam erradas. Vamos conferir que isso não acontece.
+
+Comece pelo triângulo de [Seno, cosseno e
+tangente](./razoes-trigonometricas#o-triangulo-da-semelhanca-ganha-nomes), de
+catetos 4 e 3 e hipotenusa 5. Lá, para o ângulo $\alpha$ entre a hipotenusa e
+o cateto 4, ele deu $\cos\alpha=\frac45$ e $\sen\alpha=\frac35$.
+
+Divida **cada lado por 5**. A hipotenusa passa a medir 1, o cateto horizontal
+passa a medir $\frac45$, e o vertical, $\frac35$. O ângulo $\alpha$ não muda,
+porque os três lados foram divididos pelo mesmo número (é a
+[semelhança](./semelhanca)).
+
+<TrigBridge stage="unit" />
+
+Agora coloque o vértice do ângulo $\alpha$ na origem, com o cateto horizontal
+sobre o eixo $x$. A ponta da hipotenusa está a 1 unidade da origem. Então ela
+está sobre o ciclo, e é o ponto $P$ do giro $\alpha$. As coordenadas dela são
+$P=(\frac45,\ \frac35)$: na horizontal, o cosseno do triângulo; na vertical, o
+seno do triângulo.
+
+O mesmo vale para qualquer ângulo entre 0° e 90°. Baixe uma perpendicular de
+$P$ até o eixo horizontal. Forma-se um triângulo retângulo com:
 
 - **hipotenusa** = o raio = 1;
 - **cateto adjacente** a $\theta$ = a abscissa de $P$;
@@ -193,84 +220,88 @@ Pela definição antiga:
 $$
 \cos\theta = \frac{\text{adjacente}}{\text{hipotenusa}}
 = \frac{\text{abscissa}}{1} = \text{abscissa},
-$$
-
-$$
+\qquad
 \sen\theta = \frac{\text{oposto}}{\text{hipotenusa}}
 = \frac{\text{ordenada}}{1} = \text{ordenada}.
 $$
 
-As duas definições coincidem exatamente no intervalo em que ambas fazem
-sentido. A nova é uma **extensão** da antiga, não uma substituta — todos os
-valores de [ângulos notáveis](./angulos-notaveis) continuam valendo.
+As duas definições dão o mesmo número onde ambas fazem sentido. A nova
+**estende** a antiga: todos os valores de
+[ângulos notáveis](./angulos-notaveis) continuam valendo.
 
-Repare no papel do raio 1: ele é o que faz a divisão desaparecer. Num círculo de
-raio 3, a abscissa de $P$ seria $3\cos\theta$, e a fórmula ficaria com o fator
-sobrando.
-
-### O mesmo triângulo, agora com hipotenusa 1
-
-Em [Seno, cosseno e tangente](./razoes-trigonometricas#o-triangulo-da-semelhanca-ganha-nomes),
-o triângulo de catetos 4 e 3 e hipotenusa 5 deu
-$\cos\alpha=\frac45$ e $\sen\alpha=\frac35$.
-
-Divida **cada lado por 5**. A hipotenusa passa a medir 1, o cateto horizontal
-passa a medir $\frac45$ e o vertical passa a medir $\frac35$.
-Essa redução preserva o ângulo $\alpha$ porque os três lados recebem o mesmo fator.
-
-<TrigBridge stage="unit" />
-
-Coloque o vértice do ângulo $\alpha$ na origem, com o cateto horizontal sobre
-o eixo positivo de $x$. A extremidade da hipotenusa está a uma unidade da
-origem, portanto pertence ao ciclo. Seu endereço é
-$P=(\frac45,\frac35)$: cosseno na horizontal e seno na vertical.
-
-**Pause e explique:** por que dividir os lados por 5 não mudou o seno?
+Repare no papel do raio 1: é ele que faz a divisão desaparecer, porque dividir
+por 1 não muda nada. Num círculo de raio 3, a abscissa de $P$ seria
+$3\cos\theta$, e seria preciso dividir por 3 para recuperar o cosseno.
 
 <details>
-<summary>Conferir a ponte entre as duas definições</summary>
+<summary>Confira: por que dividir os lados do triângulo por 5 não mudou o seno?</summary>
 
-Antes da redução, o seno era $\frac35$. Depois, é
-$\frac{3/5}{1}=\frac35$. O tamanho do triângulo mudou; a razão e o ângulo
-permaneceram iguais. Como a hipotenusa mede 1, o valor do seno coincide com
-a coordenada vertical da extremidade.
+Antes da divisão, o seno era $\frac35$. Depois, é $\frac{3/5}{1}=\frac35$. O
+tamanho do triângulo mudou. Mas a razão entre os lados ficou igual, e o ângulo
+também.
+Como agora a hipotenusa mede 1, esse seno coincide com a coordenada vertical
+da ponta.
 
 </details>
 
-## Os valores nos quatro pontos cardeais
+## Nos pontos cardeais, os valores se leem no desenho
 
-Antes de qualquer conta, quatro ângulos podem ser lidos direto do desenho, sem
-tabela e sem calculadora. Basta perguntar: *onde o ponto está?*
+Quatro giros param exatamente sobre os eixos. Para eles, não é preciso tabela
+nem calculadora. A pergunta é uma só: onde o ponto parou?
 
-| $\theta$ | Posição de $P$ | $\cos\theta$ | $\sen\theta$ |
-|---|---|:---:|:---:|
-| $0$ (0°) | $(1, 0)$ — à direita | 1 | 0 |
-| $\frac{\pi}{2}$ (90°) | $(0, 1)$ — no topo | 0 | 1 |
-| $\pi$ (180°) | $(-1, 0)$ — à esquerda | $-1$ | 0 |
-| $\frac{3\pi}{2}$ (270°) | $(0, -1)$ — embaixo | 0 | $-1$ |
-| $2\pi$ (360°) | $(1, 0)$ — de volta | 1 | 0 |
+<UnitCircle
+  scale={112}
+  padding={60}
+  showUnitTicks={false}
+  axisLabels={['', '']}
+  marks={[
+    {deg: 0, label: '(1,\\ 0)', tone: 1, labelRadius: 1.42},
+    {deg: 90, label: '(0,\\ 1)', tone: 1, labelRadius: 1.2},
+    {deg: 180, label: '(-1,\\ 0)', tone: 1, labelRadius: 1.47},
+    {deg: 270, label: '(0,\\ -1)', tone: 1, labelRadius: 1.2},
+  ]}
+  caption="Os quatro pontos cardeais do ciclo. A primeira coordenada é o cosseno do giro; a segunda é o seno."
+/>
 
-Esses cinco valores não precisam ser memorizados: são **lidos** da figura. Se
-você esquecer se $\cos 180^\circ$ é $-1$ ou $0$, desenhe o ciclo e pergunte para
-onde o ponto foi — para a esquerda, então a abscissa é $-1$.
+| $\theta$ | Onde $P$ está | $P$ | $\cos\theta$ | $\sen\theta$ |
+|---|---|---|:---:|:---:|
+| $0$ (0°) | à direita | $(1,\ 0)$ | 1 | 0 |
+| $\frac{\pi}{2}$ (90°) | no topo | $(0,\ 1)$ | 0 | 1 |
+| $\pi$ (180°) | à esquerda | $(-1,\ 0)$ | $-1$ | 0 |
+| $\frac{3\pi}{2}$ (270°) | embaixo | $(0,\ -1)$ | 0 | $-1$ |
+| $2\pi$ (360°) | de volta à direita | $(1,\ 0)$ | 1 | 0 |
 
-E daqui já sai um limite importante:
+Esses valores não precisam ser decorados. Se você esquecer se
+$\cos 180^\circ$ é $-1$ ou $0$, desenhe o ciclo e pergunte para onde o ponto
+foi. Meia volta leva o ponto para a esquerda; então a abscissa é $-1$.
 
-> Como $P$ está sempre sobre a circunferência de raio 1, suas coordenadas nunca
-> passam de 1 em valor absoluto:
+O desenho também mostra até onde o seno e o cosseno podem ir. O ponto mais alto do ciclo está na altura 1,
+e o mais baixo, na altura $-1$. O mais à direita está em $x = 1$, e o mais à
+esquerda, em $x = -1$. Como $P$ está sempre sobre o ciclo:
+
 > $$-1 \le \sen\theta \le 1, \qquad -1 \le \cos\theta \le 1.$$
 
-Isso generaliza o limite visto no triângulo — lá seno e cosseno ficavam entre 0
-e 1; agora ficam entre $-1$ e 1, porque coordenadas podem ser negativas.
+No triângulo, seno e cosseno ficavam entre 0 e 1. Agora ficam entre $-1$ e 1,
+porque as coordenadas podem ser negativas.
 
-> **Erro comum:** obter $\sen\theta = 1{,}3$ e não estranhar. Continua sendo
-> impossível, agora por um motivo mais visual: não há ponto da circunferência de
-> raio 1 com altura 1,3.
+> **Erro comum:** obter $\sen\theta = 1{,}3$ numa conta e não estranhar. Esse
+> valor é impossível: nenhum ponto da circunferência de raio 1 está na altura
+> 1,3. Se ele apareceu, há um erro na conta.
 
-## Sinais em cada quadrante
+<details>
+<summary>Confira: sem calculadora, quanto valem cos 270° e sen 270°?</summary>
 
-O sinal do seno e do cosseno é simplesmente o sinal das coordenadas — a mesma
-regra do [plano cartesiano](./plano-cartesiano-e-distancia).
+Três quartos de volta levam o ponto para baixo, em $(0,\ -1)$. Então
+$\cos 270^\circ = 0$ e $\sen 270^\circ = -1$.
+
+</details>
+
+## O sinal do seno e do cosseno é o sinal das coordenadas
+
+O seno e o cosseno **são** as coordenadas de $P$. Então o sinal deles é o sinal
+das coordenadas, com a mesma regra do
+[plano cartesiano](./plano-cartesiano-e-distancia): à direita, $x$ positivo;
+acima, $y$ positivo.
 
 <UnitCircle
   scale={112}
@@ -291,36 +322,51 @@ regra do [plano cartesiano](./plano-cartesiano-e-distancia).
 | III | 180° a 270° | $-$ | $-$ | $+$ |
 | IV | 270° a 360° | $+$ | $-$ | $-$ |
 
-A coluna da tangente sai de $\tg\theta = \frac{\sen\theta}{\cos\theta}$: ela é
-positiva quando seno e cosseno têm o **mesmo** sinal, e negativa quando têm
-sinais opostos.
+A coluna da tangente sai de $\tg\theta = \frac{\sen\theta}{\cos\theta}$. Uma
+divisão entre dois números de mesmo sinal dá resultado positivo, e entre dois
+números de sinais opostos dá resultado negativo. Por isso a tangente é positiva
+no I e no III, onde seno e cosseno têm o mesmo sinal.
 
 Não vale a pena decorar essa tabela. O que vale é o hábito: **desenhe o ciclo,
 localize o ponto, leia os sinais das coordenadas**. Leva cinco segundos e não
-falha.
-
-Se ainda assim quiser um apoio de memória, o mais usado no Brasil percorre os
-quadrantes na ordem e guarda **quem é positivo** em cada um:
+depende de memória. Se ainda assim quiser um apoio para a memória, esta tabela
+mostra **quais são positivos** em cada quadrante:
 
 | Quadrante | I | II | III | IV |
 |---|---|---|---|---|
 | positivos | todos | só $\sen$ | só $\tg$ | só $\cos$ |
 
-## Ângulos além da volta, e ângulos negativos
+<details>
+<summary>Confira: quais são os sinais do seno e do cosseno de 300°?</summary>
 
-Aqui a nova definição mostra sua força.
+300° está entre 270° e 360°: quarto quadrante. Ali o ponto está à direita
+(cosseno positivo) e abaixo (seno negativo). No explorador do começo da
+página, 300° fica à direita e embaixo, como esperado.
 
-### Mais de uma volta
+</details>
+
+## Giros que diferem por voltas inteiras param no mesmo ponto
 
 Girar 390° é girar uma volta completa (360°) e mais 30°. Depois da volta
-completa, o ponto está exatamente onde começou — então $P$ acaba no mesmo lugar
-que o de 30°:
+completa, o ponto está exatamente onde começou. Então os 30° restantes o levam
+ao mesmo lugar que um giro de 30°.
 
-<UnitCircle
-  scale={112}
-  angles={[{deg: 390, label: '390^\\circ', tone: 1, arcRadius: 0.22, labelRadius: 0.55, pointLabel: 'P', pointDx: 30, pointDy: -20}]}
-  caption="O arco de 390° dá uma volta inteira e continua mais 30°. O ponto final é o mesmo de 30° — e a espiral do desenho mostra o caminho percorrido."
+Na figura, o ponto gira 390°, e a espiral mostra o caminho percorrido. Depois,
+experimente os botões 750° e $-330$°: os três param no mesmo ponto do giro de
+30°.
+
+<CycleExplorer
+  initial={390}
+  from={0}
+  min={-360}
+  max={720}
+  duration={4}
+  showTurns
+  presets={[30, 390, 750, -330]}
+  caption="O arco em espiral é o caminho do giro. Giros que diferem por voltas inteiras param no mesmo ponto do ciclo."
 />
+
+Mesmo ponto, mesmas coordenadas. Então:
 
 $$
 \sen 390^\circ = \sen 30^\circ = \frac{1}{2},
@@ -335,24 +381,42 @@ $$
 > \qquad k \in \mathbb{Z}.
 > $$
 
-Em graus: $\theta + k \times 360^\circ$.
+O $k$ conta as voltas, e $\mathbb{Z}$ é o conjunto dos números inteiros:
+$k = 2$ são duas voltas a mais, $k = -1$ é uma volta a menos. Em graus, a
+mesma ideia se escreve $\theta + k \times 360^\circ$.
 
-Essa propriedade tem nome — **periodicidade** — e é a razão de a trigonometria
-descrever fenômenos que se repetem. Ela será o assunto central dos
-[gráficos](./graficos-seno-e-cosseno).
+Exemplo: 30° e 390° são côngruos. Contraexemplo: 30° e 150° têm o mesmo seno
+($\frac12$), mas **não** são côngruos. Eles diferem por 120°, que não é uma
+volta inteira, e param em pontos diferentes (um à direita, outro à esquerda).
+Ter o mesmo seno não basta; côngruos são os que param no mesmo ponto.
 
-**Como reduzir um ângulo grande:** divida por 360° (ou por $2\pi$) e fique com o
-resto.
+Essa repetição a cada volta se chama **periodicidade**. É o motivo de a
+trigonometria descrever bem as coisas que se repetem, e será o assunto central
+dos [gráficos](./graficos-seno-e-cosseno).
+
+**Como tirar as voltas de um ângulo grande.** Divida por 360° e fique com o
+resto. O quociente conta as voltas inteiras, que não mudam o ponto:
 
 $$
-1\,000^\circ \div 360^\circ = 2 \text{ voltas}, \text{ resto } 280^\circ.
+1\,000^\circ = 2 \times 360^\circ + 280^\circ.
 $$
 
-Então $\sen 1\,000^\circ = \sen 280^\circ$.
+Então $\sen 1\,000^\circ = \sen 280^\circ$. Para um ângulo negativo, some 360°
+quantas vezes for preciso, até o resultado ficar entre 0° e 360°. Assim, $-330^\circ + 360^\circ
+= 30^\circ$.
 
-### Ângulos negativos
+<details>
+<summary>Confira: 800° para no mesmo ponto de qual ângulo da primeira volta?</summary>
 
-Girar $-40^\circ$ significa girar 40° no sentido **horário**.
+$800 = 2 \times 360 + 80$. São duas voltas completas e mais 80°, então 800°
+para no mesmo ponto de 80°: $\sen 800^\circ = \sen 80^\circ$.
+
+</details>
+
+## Girar no sentido contrário espelha o ponto no eixo horizontal
+
+Girar $-40^\circ$ significa girar 40° no sentido **horário**. Compare com o
+giro de $+40^\circ$:
 
 <UnitCircle
   scale={112}
@@ -360,11 +424,13 @@ Girar $-40^\circ$ significa girar 40° no sentido **horário**.
     {deg: 40, label: '40^\\circ', tone: 1, labelRadius: 0.7, pointLabel: 'P', pointDx: 26, pointDy: -20},
     {deg: -40, label: '-40^\\circ', tone: 2, labelRadius: 0.7, pointLabel: 'Q', pointDx: 26, pointDy: 20},
   ]}
-  caption="Os pontos de 40° e −40° são simétricos em relação ao eixo horizontal: mesma abscissa, ordenadas opostas."
+  caption="Os pontos de 40° e de −40° são espelhos um do outro no eixo horizontal: mesma abscissa, ordenadas opostas."
 />
 
-Os dois pontos ficam à mesma altura em módulo, um acima e outro abaixo do eixo
-horizontal, e à mesma distância à direita. Logo:
+Os dois giros têm o mesmo tamanho e sentidos contrários. Por isso os pontos
+$P$ e $Q$ são espelhos um do outro no eixo horizontal. Um espelho horizontal
+não muda a posição para a esquerda ou para a direita, então $P$ e $Q$ têm a
+mesma abscissa. Mas ele troca cima por baixo, então as ordenadas são opostas:
 
 $$
 \cos(-\theta) = \cos\theta
@@ -372,59 +438,103 @@ $$
 \sen(-\theta) = -\sen\theta.
 $$
 
-Em palavras: **o cosseno não muda de sinal ao inverter o giro; o seno muda**.
-Isso reflete a simetria da figura — refletir em torno do eixo horizontal
-preserva $x$ e troca o sinal de $y$.
+Em palavras: **ao inverter o sentido do giro, o cosseno não muda e o seno troca
+de sinal**.
 
-(Na linguagem da lição de [crescimento, sinal e
+Na linguagem da lição de [crescimento, sinal e
 simetria](../funcoes/crescimento-sinal-e-simetria), o cosseno é uma função
-**par** — entradas opostas dão a mesma saída — e o seno é **ímpar** — entradas
-opostas dão saídas opostas.)
+**par** (entradas opostas dão a mesma saída), e o seno é uma função **ímpar**
+(entradas opostas dão saídas opostas).
 
-## A relação que sai de Pitágoras no ciclo
+<details>
+<summary>Confira: quanto valem cos(−60°) e sen(−60°)?</summary>
 
-O ponto $P = (\cos\theta,\ \sen\theta)$ está sobre a circunferência de raio 1,
-cuja equação é $x^2+y^2 = 1$. Substituindo:
+O cosseno não muda: $\cos(-60^\circ) = \cos 60^\circ = \frac12$. O seno troca
+de sinal: $\sen(-60^\circ) = -\sen 60^\circ = -\frac{\sqrt3}{2}$. O ponto está
+à direita e abaixo do eixo, no quarto quadrante.
+
+</details>
+
+## Pitágoras no ciclo: cos² θ + sen² θ = 1
+
+Pegue o ponto $P$ de um giro qualquer, por exemplo 140°, e baixe a
+perpendicular até o eixo horizontal. Forma-se um triângulo retângulo:
+
+<UnitCircle
+  scale={112}
+  angles={[{deg: 140, label: '\\theta', showProjections: true, pointLabel: 'P', labelRadius: 0.5}]}
+  caption="Giro θ = 140°. O raio até P mede 1. Os catetos do triângulo têm o tamanho do cosseno (verde) e do seno (laranja), sem o sinal."
+/>
+
+- a hipotenusa é o raio, e mede 1;
+- um cateto vai da origem até o pé da perpendicular: o tamanho dele é o do
+  cosseno, sem o sinal;
+- o outro cateto vai do pé da perpendicular até $P$: o tamanho dele é o do
+  seno, sem o sinal.
+
+Pelo [teorema de Pitágoras](./teorema-de-pitagoras), a soma dos quadrados dos
+catetos é o quadrado da hipotenusa. O sinal não atrapalha, porque o quadrado
+de um número negativo é igual ao quadrado do positivo: $(-0{,}5)^2 = 0{,}5^2 =
+0{,}25$. Então:
 
 > $$\cos^2\theta + \sen^2\theta = 1.$$
 
-Essa é a identidade mais usada de toda a trigonometria, e aqui ela não custou
-nada: é a equação da circunferência com outras letras. (Notação: $\sen^2\theta$
-significa $(\sen\theta)^2$.)
+Essa igualdade se chama **relação fundamental** da trigonometria. A notação $\sen^2\theta$ significa $(\sen\theta)^2$: primeiro o seno, depois o
+quadrado.
 
-Ela será desenvolvida em [Relações fundamentais](./relacoes-fundamentais). Por
-ora, guarde a leitura geométrica: **é o teorema de Pitágoras no triângulo de
-hipotenusa 1**.
+A mesma igualdade sai da equação do ciclo. O ponto
+$P = (\cos\theta,\ \sen\theta)$ está sobre a circunferência $x^2+y^2 = 1$.
+Trocando $x$ por $\cos\theta$ e $y$ por $\sen\theta$, ela vira
+$\cos^2\theta + \sen^2\theta = 1$. Não é uma fórmula nova: é a equação da
+circunferência de raio 1 escrita com outros nomes.
 
-Confira com $\theta = 30^\circ$:
+Confira com 120°, que tem $P = \left(-\frac12,\ \frac{\sqrt3}{2}\right)$:
 
 $$
-\left(\frac{\sqrt{3}}{2}\right)^2 + \left(\frac{1}{2}\right)^2
-= \frac{3}{4} + \frac{1}{4} = 1. \quad ✓
+\left(-\frac{1}{2}\right)^2 + \left(\frac{\sqrt{3}}{2}\right)^2
+= \frac{1}{4} + \frac{3}{4} = 1. \quad ✓
 $$
+
+Ela vale para todo $\theta$ (por isso se chama **identidade**) e é a mais usada
+da trigonometria. Ela será desenvolvida em
+[Relações fundamentais](./relacoes-fundamentais).
+
+<details>
+<summary>Confira: existe um ângulo com seno 0,8 e cosseno 0,8 ao mesmo tempo?</summary>
+
+Não. $0{,}8^2 + 0{,}8^2 = 0{,}64 + 0{,}64 = 1{,}28$, e a soma precisaria dar 1.
+O ponto $(0{,}8;\ 0{,}8)$ está fora do ciclo: a distância dele até a origem é
+$\sqrt{1{,}28} \approx 1{,}13$, maior que o raio.
+
+</details>
 
 ## Resolvendo o problema da roda-gigante
 
-A cadeirinha está sempre a 20 m do centro. Sua posição, medida a partir do
+A cadeirinha está sempre a 20 m do centro. O ciclo dá as coordenadas para o
+raio 1. A roda é o ciclo ampliado 20 vezes (de novo a
+[semelhança](./semelhanca)). Então a posição da cadeirinha, medida a partir do
 centro da roda, é
 
 $$
-(20\cos\theta,\ 20\sen\theta),
+(20\cos\theta,\ 20\sen\theta).
 $$
 
-porque o ciclo de raio 1 dá as coordenadas para raio 1, e multiplicar por 20
-amplia tudo por 20 — de novo a [semelhança](./semelhanca).
-
-Como o centro está a 22 m do chão, a **altura** da cadeirinha é
+A altura em relação ao chão é a altura do centro, 22 m, mais o quanto a
+cadeirinha está acima do centro:
 
 $$
 h(\theta) = 22 + 20\sen\theta.
 $$
 
-Falta saber o seno de cada giro. Alguns já são conhecidos: $\sen 30^\circ$ vem
-dos [ângulos notáveis](./angulos-notaveis), e 90°, 180° e 270° são pontos
-cardeais, lidos na seção acima. Os giros de 150° e 210° são novos. Eles saem do
-ponto de 30°, olhando onde cada um cai no ciclo:
+Quando a cadeirinha está abaixo do centro, o seno é negativo, e a parcela
+$20\sen\theta$ **diminui** a altura. A fórmula cobre os dois casos sem
+precisar de duas regras.
+
+Falta saber o seno de cada giro. O de 30° vem dos
+[ângulos notáveis](./angulos-notaveis). Os de 90° e 270° são pontos cardeais.
+O de 540° sai tirando uma volta: $540 - 360 = 180$, outro ponto cardeal. Os de
+150° e 210° são novos. Eles saem do ponto de 30°, olhando onde cada um cai no
+ciclo:
 
 <UnitCircle
   scale={108}
@@ -436,10 +546,10 @@ ponto de 30°, olhando onde cada um cai no ciclo:
   caption="150° é o espelho de 30° no eixo vertical: mesma altura. 210° é o ponto do lado oposto a 30°, do outro lado do centro: mesma distância do eixo horizontal, mas embaixo."
 />
 
-- **150° é o espelho de 30°.** O giro de 150° para a 30° antes de completar
-  meia volta, porque $180 - 150 = 30$. Então o ponto de 150° faz, com a metade
+- **150° é o espelho de 30°.** O giro de 150° termina 30° antes de completar meia
+  volta, porque $180 - 150 = 30$. Então o ponto de 150° faz, com a metade
   esquerda do eixo horizontal, o mesmo ângulo de 30° que o ponto de 30° faz com
-  a metade direita. Os dois pontos são reflexos um do outro no eixo vertical.
+  a metade direita. Os dois pontos são espelhos um do outro no eixo vertical.
   Um espelho vertical troca esquerda com direita, mas não muda a altura. Por
   isso, $\sen 150^\circ = \sen 30^\circ = 0{,}5$.
 - **210° é o ponto oposto a 30°.** O giro de 210° é o giro de 30° mais meia
@@ -451,28 +561,36 @@ ponto de 30°, olhando onde cada um cai no ciclo:
 
 A lição seguinte, [Redução ao primeiro quadrante](./reducao-ao-primeiro-quadrante),
 transforma esses dois raciocínios num método que vale para qualquer ângulo.
-Com eles, a tabela fica completa:
 
-| Giro | $\sen\theta$ | Altura |
+Antes da tabela, uma previsão. Em 150° a cadeirinha está tão alta quanto em
+30°, só que do outro lado. Em 210° ela está abaixo do centro, então a altura
+tem de ficar abaixo de 22 m. Agora as contas:
+
+| Giro | $\sen\theta$ | Altura $22 + 20\sen\theta$ |
 |---|:---:|---:|
-| 30° | $\frac{1}{2} = 0{,}5$ | $22 + 10 = 32$ m |
+| 30° | $0{,}5$ | $22 + 10 = 32$ m |
 | 90° | $1$ | $22 + 20 = 42$ m |
-| 150° | $0{,}5$ | 32 m |
+| 150° | $0{,}5$ | $22 + 10 = 32$ m |
 | 210° | $-0{,}5$ | $22 - 10 = 12$ m |
 | 270° | $-1$ | $22 - 20 = 2$ m |
-| 540° (volta e meia) | $\sen 180^\circ = 0$ | 22 m |
+| 540° (volta e meia) | $\sen 180^\circ = 0$ | $22 + 0 = 22$ m |
+
+Confira na roda: escolha cada giro e compare com a régua.
+
+<FerrisWheel initial={210} showHeight />
 
 Três observações que só a nova definição permite:
 
-- Em **150°** a altura é a mesma de 30°. Faz sentido: os dois pontos estão à
-  mesma altura, um à direita e outro à esquerda do topo.
+- Em **150°** a altura é a mesma de 30°: os dois pontos estão à mesma altura,
+  um de cada lado do topo.
 - Em **210°** o seno é **negativo**, e a cadeirinha está **abaixo** do centro.
   Nenhum triângulo retângulo produziria esse resultado.
-- Em **540°** o giro passou de uma volta; reduzindo, $540 - 360 = 180^\circ$, e
-  a cadeirinha voltou à altura do centro.
+- Em **540°** o giro passou de uma volta. Tirando a volta, sobram 180°, e a
+  cadeirinha está de novo na altura do centro, agora do lado esquerdo.
 
-E os extremos batem com a física do brinquedo: máximo de 42 m no topo, mínimo de
-2 m embaixo — coerente com uma roda de 20 m de raio cujo centro está a 22 m ✓.
+Os extremos conferem com o brinquedo: no máximo 42 m, no topo, e no mínimo 2 m,
+embaixo. É o que se espera de uma roda de 20 m de raio com o centro a 22 m do
+chão ✓.
 
 ## Exemplos resolvidos
 
@@ -483,35 +601,43 @@ Determine o sinal de $\sen 200^\circ$ e de $\cos 200^\circ$.
 200° está entre 180° e 270°: terceiro quadrante. Ali o ponto está à esquerda e
 abaixo, então **os dois são negativos**.
 
-### Exemplo 2: reduzir à primeira volta
+### Exemplo 2: tirar as voltas
 
 *Pause e tente antes de ler.* Calcule $\cos 780^\circ$ e $\sen(-315^\circ)$.
+
+Previsão: 780° é pouco mais que duas voltas (720°), então sobra um ângulo
+pequeno da primeira volta. E $-315^\circ$ é um giro horário quase completo: ele
+termina 45° antes de completar a volta, no primeiro quadrante.
 
 $780 = 2 \times 360 + 60$, então $\cos 780^\circ = \cos 60^\circ =
 \frac{1}{2}$.
 
-Para $-315^\circ$, some uma volta para cair na faixa usual:
-$-315 + 360 = 45^\circ$. Logo $\sen(-315^\circ) = \sen 45^\circ =
-\frac{\sqrt{2}}{2}$.
+Para $-315^\circ$, some uma volta: $-315 + 360 = 45$. Logo
+$\sen(-315^\circ) = \sen 45^\circ = \frac{\sqrt{2}}{2}$.
 
-Sanidade: $-315^\circ$ é um giro horário quase completo, que termina no primeiro
-quadrante — onde o seno é positivo ✓.
+O resultado bate com a previsão: o ponto de 45° fica no primeiro quadrante,
+onde o seno é positivo ✓.
 
 ### Exemplo 3: encontrar o ponto
 
 *Pause e tente antes de ler.* Quais são as coordenadas do ponto do ciclo
 correspondente a $\frac{2\pi}{3}$?
 
-$\frac{2\pi}{3} = 120^\circ$, no segundo quadrante. Ali o cosseno é negativo e o
-seno positivo. Por simetria com 60° (que fica à mesma altura, do outro lado do
-eixo vertical):
+Previsão: $\frac{2\pi}{3} = 120^\circ$, no segundo quadrante. Ali o cosseno é
+negativo e o seno positivo, então o ponto deve ser da forma
+$(\text{negativo},\ \text{positivo})$.
+
+O ponto de 120° termina 60° antes de completar meia volta, porque
+$180 - 120 = 60$. Então ele é o espelho do ponto de 60° no eixo vertical:
+mesma altura, lado contrário. O ponto de 60° é
+$\left(\frac12,\ \frac{\sqrt3}{2}\right)$; trocando o sinal da abscissa,
 
 $$
 P = \left(-\frac{1}{2},\ \frac{\sqrt{3}}{2}\right).
 $$
 
 Confira com a relação fundamental:
-$\frac{1}{4} + \frac{3}{4} = 1$ ✓. (O mecanismo dessa simetria é o assunto da
+$\frac{1}{4} + \frac{3}{4} = 1$ ✓. (Esse espelhamento vira método na
 [próxima página](./reducao-ao-primeiro-quadrante).)
 
 ### Exemplo 4: descobrir o quadrante
@@ -520,59 +646,63 @@ $\frac{1}{4} + \frac{3}{4} = 1$ ✓. (O mecanismo dessa simetria é o assunto da
 $\cos\theta > 0$. Em que quadrante ele está?
 
 Seno negativo significa ponto **abaixo** do eixo horizontal: terceiro ou quarto
-quadrante. Cosseno positivo significa ponto **à direita**: primeiro ou quarto.
+quadrante. Cosseno positivo significa ponto **à direita** do eixo vertical:
+primeiro ou quarto.
 
-A interseção é o **quarto quadrante** (entre 270° e 360°).
+O único quadrante que está nas duas listas é o **quarto** (entre 270° e 360°).
 
 ### Exemplo 5: um valor a partir do outro
 
 *Pause e tente antes de ler.* Sabendo que $\sen\theta = 0{,}6$ e que $\theta$
 está no segundo quadrante, calcule $\cos\theta$.
 
-Pela relação fundamental:
+Previsão: no segundo quadrante o cosseno é negativo, então a resposta tem de
+ser um número negativo.
+
+Pela relação fundamental, tirando $\sen^2\theta$ dos dois lados:
 
 $$
 \cos^2\theta = 1 - \sen^2\theta = 1 - 0{,}36 = 0{,}64
 \Longrightarrow
-\cos\theta = \pm 0{,}8.
+\cos\theta = 0{,}8 \ \text{ ou } \ \cos\theta = -0{,}8.
 $$
 
-A equação sozinha não decide o sinal — quem decide é o quadrante. No segundo, o
-cosseno é **negativo**:
+A equação sozinha não decide o sinal, porque $0{,}8^2$ e $(-0{,}8)^2$ dão,
+ambos, $0{,}64$. Quem decide é o quadrante. No segundo, o cosseno é
+**negativo**:
 
 $$
 \cos\theta = -0{,}8.
 $$
 
 > **Erro comum aqui:** parar em $\pm 0{,}8$ ou escolher o positivo por hábito.
-> A relação fundamental entrega o **módulo**; o quadrante entrega o **sinal**.
-> São duas informações, e as duas são necessárias.
+> A relação fundamental dá o **tamanho** do cosseno; o quadrante dá o
+> **sinal**. São duas informações, e as duas são necessárias.
 
 ## Erros comuns
 
 > **Erro 1: trocar seno com cosseno nas coordenadas.** O ponto é
 > $(\cos\theta,\ \sen\theta)$, nessa ordem. Apoio: no par ordenado, a primeira
-> coordenada é $x$; e **c** de cosseno vem antes de **s** de seno, como $x$ vem
-> antes de $y$.
+> coordenada é $x$; e **c** de cosseno vem antes de **s** de seno no alfabeto,
+> como $x$ vem antes de $y$.
 
-> **Erro 2: supor que seno e cosseno são positivos.** Fora do primeiro
+> **Erro 2: supor que seno e cosseno são sempre positivos.** Fora do primeiro
 > quadrante, um deles ou os dois são negativos.
 
-> **Erro 3: esquecer de reduzir à primeira volta.** Para 1 200°, procure o resto
-> da divisão por 360.
+> **Erro 3: esquecer de tirar as voltas.** Para 1 200°, procure o resto da
+> divisão por 360: $1\,200 = 3 \times 360 + 120$, então use 120°.
 
 > **Erro 4: usar $\pm$ sem decidir o sinal.** Sempre que a relação fundamental
-> for usada para achar um valor a partir do outro, o quadrante precisa entrar na
-> conversa.
+> for usada para achar um valor a partir do outro, o quadrante decide o sinal.
 
-> **Erro 5: girar no sentido errado.** Positivo é **anti-horário**. É uma
-> convenção, mas é universal.
+> **Erro 5: girar no sentido errado.** O sentido positivo é o **anti-horário**.
+> É uma convenção, mas o mundo inteiro usa a mesma.
 
 ## Perguntas de verificação
 
 1. Por que a definição pelo ciclo não contradiz a definição pelo triângulo?
 2. Por que o ciclo tem raio 1? O que mudaria com raio 3?
-3. Por que $\sen\theta$ nunca passa de 1, agora argumentando pela figura?
+3. Por que $\sen\theta$ nunca passa de 1? Responda olhando para a figura.
 4. Por que $\cos(-\theta) = \cos\theta$, mas $\sen(-\theta) = -\sen\theta$?
 5. Por que $\cos^2\theta + \sen^2\theta = 1$ não é uma fórmula nova a decorar?
 6. Dois ângulos côngruos têm o mesmo seno. Eles são o mesmo ângulo?
@@ -589,18 +719,18 @@ $$
    $(3\cos\theta,\ 3\sen\theta)$, e seria preciso dividir por 3 para recuperar
    seno e cosseno.
 3. Porque $\sen\theta$ é a altura de um ponto que está **sobre** a
-   circunferência de raio 1. O ponto mais alto dessa circunferência está a
-   altura 1; não há como um ponto dela estar a 1,3.
-4. Porque girar $-\theta$ leva ao ponto simétrico em relação ao eixo horizontal.
-   Essa reflexão preserva a coordenada $x$ (o cosseno) e inverte o sinal da
-   coordenada $y$ (o seno).
+   circunferência de raio 1. O ponto mais alto dessa circunferência está na
+   altura 1; nenhum ponto dela está na altura 1,3.
+4. Porque girar $-\theta$ leva ao espelho, no eixo horizontal, do ponto de
+   $\theta$. Esse espelho mantém a coordenada $x$ (o cosseno) e troca o sinal
+   da coordenada $y$ (o seno).
 5. Porque é a equação da circunferência de raio 1, $x^2+y^2=1$, com $x$ e $y$
-   substituídos por cosseno e seno — que é justamente o que eles são. Ou,
-   equivalentemente, é o teorema de Pitágoras no triângulo de hipotenusa 1.
+   trocados por cosseno e seno, que são as coordenadas de $P$. Também é o
+   teorema de Pitágoras no triângulo de hipotenusa 1.
 6. Não. Eles têm a mesma **imagem** no ciclo, mas descrevem giros diferentes:
    30° e 390° levam ao mesmo ponto, embora o segundo tenha dado uma volta a
-   mais. Para seno e cosseno isso é indiferente; para descrever o movimento
-   (quantas voltas a roda deu), não.
+   mais. Para o seno e o cosseno isso não faz diferença. Para descrever o
+   movimento (quantas voltas a roda deu), faz.
 
 </details>
 
@@ -617,14 +747,15 @@ $$
 ### 2. Explicação
 
 4. Explique por que não existe ângulo com $\cos\theta = 2$.
-5. Explique, usando a figura, por que $\sen 150^\circ = \sen 30^\circ$.
+5. Explique, usando a figura dos pontos de 30°, 150° e 210° da roda-gigante,
+   por que $\sen 150^\circ = \sen 30^\circ$.
 6. Um colega afirma que $\sen(-60^\circ) = \sen 60^\circ$. Corrija-o e explique
-   com a simetria do ciclo.
+   com o espelho no eixo horizontal.
 
 ### 3. Aplicação direta
 
-7. Reduza à primeira volta: (a) 420°; (b) 750°; (c) $-90^\circ$;
-   (d) $-500^\circ$.
+7. Tire as voltas e escreva o ângulo côngruo entre 0° e 360°: (a) 420°;
+   (b) 750°; (c) $-90^\circ$; (d) $-500^\circ$.
 8. Calcule: (a) $\sen 405^\circ$; (b) $\cos(-30^\circ)$; (c) $\sen 690^\circ$.
 9. Sabendo que $\cos\theta = -\frac{3}{5}$ e que $\theta$ está no terceiro
    quadrante, calcule $\sen\theta$.
@@ -632,11 +763,11 @@ $$
 <details>
 <summary>Dica para o 8(c)</summary>
 
-Primeiro tire as voltas inteiras: $690 - 360 = 330^\circ$. O ponto de 330° é o
+Primeiro tire as voltas inteiras: $690 - 360 = 330$. O ponto de 330° é o
 espelho do ponto de 30° no eixo **horizontal**, porque $360 - 330 = 30$: ele
-para 30° antes de completar a volta. Um espelho horizontal mantém a distância
-até o eixo, mas passa o ponto para baixo. É o mesmo raciocínio que deu
-$\sen 150^\circ$ e $\sen 210^\circ$ na roda-gigante — e a próxima lição,
+termina 30° antes de completar a volta. É o espelho da seção “Girar no sentido
+contrário”: 330° para no mesmo ponto que $-30^\circ$, então
+$\sen 330^\circ = -\sen 30^\circ$. A próxima lição,
 [Redução ao primeiro quadrante](./reducao-ao-primeiro-quadrante), faz dele um
 método.
 
@@ -664,18 +795,18 @@ corta a circunferência. Um deles você já conhece dos ângulos notáveis. O ou
 13. Na roda-gigante da página (raio 20 m, centro a 22 m), determine a altura da
     cadeirinha para giros de 45°, 135°, 225° e 315°. Explique a simetria que
     você observa nos resultados.
-14. Um ponto percorre o ciclo trigonométrico a partir de $(1,0)$ e para em
-    $\theta = 5$ radianos. Determine em que quadrante ele está, e estime os
+14. Um ponto percorre o ciclo trigonométrico a partir de $(1,\ 0)$ e para em
+    $\theta = 5$ radianos. Determine em que quadrante ele está, e diga os
     sinais de $\sen 5$ e $\cos 5$ sem calculadora.
 
 <details>
 <summary>Dica para o 13</summary>
 
 Marque 45°, 135°, 225° e 315° no ciclo. Cada um faz 45° com o eixo horizontal:
-135° para 45° antes da meia volta; 225° passa 45° da meia volta; 315° para 45°
-antes da volta inteira. Então os quatro pontos estão à mesma distância do eixo
+135° termina 45° antes da meia volta; 225° passa 45° da meia volta; 315° termina
+45° antes da volta inteira. Então os quatro pontos estão à mesma distância do eixo
 horizontal que o ponto de 45°. Falta decidir, para cada um, se ele fica acima
-ou abaixo do eixo — como foi feito com 150° e 210° na roda-gigante.
+ou abaixo do eixo, como foi feito com 150° e 210° na roda-gigante.
 
 </details>
 
@@ -691,81 +822,88 @@ ou abaixo do eixo — como foi feito com 150° e 210° na roda-gigante.
 <summary>Respostas para conferência</summary>
 
 1. (a) II; (b) III; (c) IV; (d) $\frac{5\pi}{4} = 225^\circ$, III.
-2. (a) $\sen 0 = 0$, $\cos 0 = 1$; (b) $\sen = 1$, $\cos = 0$;
-   (c) $\sen = 0$, $\cos = -1$; (d) $\sen = -1$, $\cos = 0$.
+2. (a) $\sen 0^\circ = 0$, $\cos 0^\circ = 1$; (b) $\sen 90^\circ = 1$,
+   $\cos 90^\circ = 0$; (c) $\sen 180^\circ = 0$, $\cos 180^\circ = -1$;
+   (d) $\sen 270^\circ = -1$, $\cos 270^\circ = 0$.
 3. I: todos positivos. II: só $\sen$ positivo. III: só $\tg$ positiva (seno e
-   cosseno negativos, cujo quociente é positivo). IV: só $\cos$ positivo.
+   cosseno negativos, e a divisão de dois negativos é positiva). IV: só $\cos$
+   positivo.
 4. Porque o cosseno é a abscissa de um ponto da circunferência de raio 1, e
-   nenhum ponto dessa curva tem $x$ maior que 1 — o ponto mais à direita é
-   $(1,0)$.
-5. Os pontos de 30° e 150° são simétricos em relação ao eixo **vertical**: estão
+   nenhum ponto dessa curva tem $x$ maior que 1: o ponto mais à direita é
+   $(1,\ 0)$.
+5. Os pontos de 30° e 150° são espelhos um do outro no eixo **vertical**: estão
    à mesma altura, um à direita e outro à esquerda. Como o seno é a altura, os
-   dois valores coincidem. (Os cossenos, esses, são opostos.)
+   dois valores coincidem. (Os cossenos são opostos.)
 6. $\sen(-60^\circ) = -\sen 60^\circ = -\frac{\sqrt{3}}{2}$. Girar no sentido
-   horário leva ao ponto simétrico em relação ao eixo horizontal, e a reflexão
-   troca o sinal da altura. Quem não muda é o cosseno.
-7. (a) $420-360 = 60^\circ$; (b) $750 - 720 = 30^\circ$; (c)
-   $-90+360 = 270^\circ$; (d) $-500 + 720 = 220^\circ$.
-8. (a) $\sen 45^\circ = \frac{\sqrt{2}}{2}$; (b)
-   $\cos 30^\circ = \frac{\sqrt{3}}{2}$; (c) $690 - 360 = 330^\circ$, que está
-   no quarto quadrante e tem $\sen = -\frac{1}{2}$.
-9. $\sen^2\theta = 1 - \frac{9}{25} = \frac{16}{25}$, logo
-   $\sen\theta = \pm\frac{4}{5}$. No terceiro quadrante o seno é negativo:
+   horário leva ao espelho do ponto no eixo horizontal, e esse espelho troca o
+   sinal da altura. Quem não muda é o cosseno. Se você respondeu
+   $\frac{\sqrt3}{2}$, aplicou ao seno a regra do cosseno, que não muda com o
+   giro contrário.
+7. (a) $420-360 = 60^\circ$; (b) $750 - 720 = 30^\circ$;
+   (c) $-90+360 = 270^\circ$; (d) $-500 + 720 = 220^\circ$. No (d), uma volta
+   só não basta: $-500 + 360 = -140$ ainda é negativo, e é preciso somar a
+   segunda volta.
+8. (a) $405 - 360 = 45$, então $\sen 405^\circ = \sen 45^\circ =
+   \frac{\sqrt{2}}{2}$; (b) $\cos(-30^\circ) = \cos 30^\circ =
+   \frac{\sqrt{3}}{2}$; (c) $690 - 360 = 330^\circ$, que está no quarto
+   quadrante e tem $\sen 330^\circ = -\frac{1}{2}$.
+9. $\sen^2\theta = 1 - \frac{9}{25} = \frac{16}{25}$, então $\sen\theta$ é
+   $\frac{4}{5}$ ou $-\frac{4}{5}$. No terceiro quadrante o seno é negativo:
    $\sen\theta = -\frac{4}{5}$.
 10. $\cos^2\theta = 1 - \frac{25}{169} = \frac{144}{169}$, e no quarto quadrante
     o cosseno é positivo: $\cos\theta = \frac{12}{13}$. Então
     $\tg\theta = \frac{-5/13}{12/13} = -\frac{5}{12}$.
 11. 30° e 150°. A reta horizontal na altura $\frac{1}{2}$ corta a circunferência
-    em dois pontos, um em cada lado do eixo vertical.
+    em dois pontos, um de cada lado do eixo vertical.
 12. $45^\circ + k \times 360^\circ$, ou $\frac{\pi}{4} + 2k\pi$, com $k$ inteiro.
 13. $\sen 45^\circ = \frac{\sqrt{2}}{2} \approx 0{,}707$, então a altura é
     $22 + 14{,}14 \approx 36{,}14$ m. Em 135°, o seno é o mesmo, e a altura
     também: 36,14 m. Em 225° e 315°, o seno vale $-0{,}707$, e a altura é
-    $22 - 14{,}14 \approx 7{,}86$ m nos dois casos. A simetria: ângulos
-    simétricos em relação ao eixo vertical têm o mesmo seno (mesma altura), e
-    ângulos simétricos em relação ao eixo horizontal têm senos opostos (alturas
-    equidistantes do centro).
-14. $\pi \approx 3{,}14$ e $\frac{3\pi}{2} \approx 4{,}71$, e
-    $2\pi \approx 6{,}28$. Como $4{,}71 < 5 < 6{,}28$, o ponto está no
-    **quarto quadrante**: $\cos 5 > 0$ e $\sen 5 < 0$.
-15. Por definição, o ponto $P$ associado a $\theta$ pertence à circunferência de
-    raio 1 centrada na origem — isso vale seja qual for $\theta$, porque o
-    ponto é obtido **percorrendo** essa circunferência. Como todo ponto dela
-    satisfaz $x^2+y^2 = 1$, e as coordenadas de $P$ são $\cos\theta$ e
-    $\sen\theta$, a igualdade vale sempre.
-16. Porque somar $2\pi$ ao ângulo é percorrer exatamente uma volta completa a
-    mais. Uma volta completa termina no ponto de partida, então o ponto final é
-    **o mesmo**. Tendo o mesmo ponto, as coordenadas são as mesmas — e elas são
-    o cosseno e o seno.
+    $22 - 14{,}14 \approx 7{,}86$ m nos dois casos. A simetria: pontos que são
+    espelhos no eixo vertical têm o mesmo seno (mesma altura), e pontos que são
+    espelhos no eixo horizontal têm senos opostos (um tanto acima do centro, o
+    outro o mesmo tanto abaixo).
+14. $\frac{3\pi}{2} \approx 4{,}71$ e $2\pi \approx 6{,}28$. Como
+    $4{,}71 < 5 < 6{,}28$, o ponto está no **quarto quadrante**: $\cos 5 > 0$
+    e $\sen 5 < 0$.
+15. Pela definição, o ponto $P$ de qualquer giro $\theta$ está sobre a
+    circunferência de raio 1 centrada na origem. Isso vale seja qual for
+    $\theta$, porque o ponto é obtido **andando sobre** essa circunferência.
+    As coordenadas de todo ponto dela, postas em $x^2+y^2$, dão 1, e as
+    coordenadas de $P$ são $\cos\theta$ e $\sen\theta$. Então a igualdade vale sempre.
+16. Somar $2\pi$ ao ângulo é dar exatamente uma volta completa a mais. Uma
+    volta completa termina no ponto de partida, então o ponto final é **o
+    mesmo**. Com o mesmo ponto, as coordenadas são as mesmas, e elas são o
+    cosseno e o seno.
 
 **Se sua resposta não bateu:**
 
 Se acertou o tamanho do valor, mas errou o sinal, marque o ponto no ciclo:
-cosseno acompanha a coordenada horizontal e seno acompanha a vertical.
-Se confundiu giros com pontos, compare o ângulo percorrido com a posição
-final: voltas completas mudam o primeiro sem mudar a segunda.
+o cosseno acompanha a coordenada horizontal e o seno acompanha a vertical.
+Se confundiu giros com pontos, compare o giro com o lugar onde ele termina:
+voltas completas mudam o giro sem mudar o ponto.
 
 </details>
 
 ## Revisão curta
 
 - No **ciclo trigonométrico** (circunferência de raio 1, centro na origem), o
-  ângulo $\theta$ determina um ponto
-  $P = (\cos\theta,\ \sen\theta)$: cosseno é a abscissa, seno é a ordenada.
-- A definição vale para **qualquer** número real, e coincide com a do triângulo
-  retângulo quando $0^\circ < \theta < 90^\circ$.
-- Sentido positivo é **anti-horário**.
-- $-1 \le \sen\theta \le 1$ e $-1 \le \cos\theta \le 1$, porque são coordenadas
-  de um ponto de raio 1.
-- **Sinais:** iguais aos das coordenadas. Desenhe o ciclo em vez de decorar.
-- **Côngruos:** $\theta$ e $\theta + 2k\pi$ têm a mesma imagem, logo o mesmo
-  seno e cosseno — é a periodicidade.
-- **Simetrias:** $\cos(-\theta) = \cos\theta$ e $\sen(-\theta) = -\sen\theta$.
-- $\cos^2\theta + \sen^2\theta = 1$, que é a equação da circunferência de raio 1
-  — ou Pitágoras com hipotenusa 1.
-- A relação fundamental dá o **módulo**; o quadrante dá o **sinal**.
+  giro $\theta$ leva ao ponto $P = (\cos\theta,\ \sen\theta)$: o cosseno é a
+  abscissa, e o seno é a ordenada.
+- A definição vale para **qualquer** giro, e dá os mesmos valores da do
+  triângulo retângulo entre 0° e 90°.
+- O sentido positivo é o **anti-horário**.
+- $-1 \le \sen\theta \le 1$ e $-1 \le \cos\theta \le 1$, porque são
+  coordenadas de um ponto da circunferência de raio 1.
+- **Sinais:** os mesmos das coordenadas. Desenhe o ciclo em vez de decorar.
+- **Côngruos:** $\theta$ e $\theta + 2k\pi$ param no mesmo ponto, e por isso
+  têm o mesmo seno e o mesmo cosseno. Essa repetição é a periodicidade.
+- **Giro contrário:** $\cos(-\theta) = \cos\theta$ e
+  $\sen(-\theta) = -\sen\theta$.
+- $\cos^2\theta + \sen^2\theta = 1$: a equação da circunferência de raio 1, ou
+  Pitágoras com hipotenusa 1. Ela dá o tamanho; o quadrante dá o sinal.
 
-O ciclo resolve ângulos de qualquer tamanho, mas ainda é preciso saber os
-**valores**. O truque é que todos eles são valores do primeiro quadrante, com
-sinal ajustado — e é isso que a
+O ciclo aceita giros de qualquer tamanho, mas ainda falta saber os **valores**
+de ângulos como 150° ou 330°. Todos eles são valores do primeiro quadrante com
+o sinal ajustado, e é isso que a
 [redução ao primeiro quadrante](./reducao-ao-primeiro-quadrante) organiza.
