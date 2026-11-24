@@ -25,7 +25,11 @@ funcionamento técnico do repositório.
   "Múltiplos", "Exercícios", "Revisão", "função", "razão", "não".
 - **Nomes de arquivo e ids** são ASCII, minúsculos, com hífen e sem acento:
   `05-decimais-e-porcentagem.md`, `expressoes-algebricas`.
-- Aspas tipográficas (`“ ”`) e travessão (`—`) são bem-vindos no texto.
+- Aspas tipográficas (`“ ”`) são bem-vindas no texto.
+- **Nada de travessão (`—`) nem meia-risca (`–`) no texto para o aluno**:
+  lição, legenda, enunciado, gabarito e conversa. O aluno confunde o traço com
+  o sinal de menos. Use dois-pontos, vírgula, parênteses ou um ponto final.
+  Detalhes na seção Linguagem da skill `tutor-matematica`.
 
 Dívida técnica conhecida: as lições `01`, `02`, `04` a `14` ainda estão em ASCII
 sem acento, herdadas do início do projeto. Ao revisar qualquer uma delas por
@@ -278,7 +282,10 @@ Como fazer:
 2. Instale o Playwright sem tocar no `package.json` — `npm i --no-save playwright`
    — e capture as figuras, uma imagem por figura:
    `node scripts/capturar-figuras.js <pasta-fora-do-repo> geometria/angulos geometria/triangulos`.
-   O `index.txt` da pasta liga cada imagem à legenda.
+   O `index.txt` da pasta liga cada imagem à legenda. Componente interativo
+   (`data-explorer`) sai inteiro, com o painel de números. Animações saem no
+   quadro final (o script pede “menos movimento” ao navegador); para ver
+   quadros do meio, rode de novo com `MOTION=play WAIT=600` e com outro `WAIT`.
 3. Abra **cada** imagem e confira:
    - rótulo junto do elemento a que se refere, sem cobrir linha nem outro rótulo,
      sem corte na borda;
@@ -287,7 +294,9 @@ Como fazer:
      confira as coordenadas com `python3` (ângulos com `atan2`), não a olho;
    - arco do ângulo do lado certo;
    - tema escuro (`THEME=dark`) quando a figura usa cor, e celular (`WIDTH=390`)
-     quando ela é larga.
+     quando ela é larga;
+   - numa animação, o quadro final é a figura que ensina, e nenhum quadro do
+     meio pode ter rótulo atravessando o desenho.
 4. Corrija nas props da figura (`labelRadius`, `offset`, `anchor`, `padding`,
    coordenadas), capture de novo e olhe outra vez.
 

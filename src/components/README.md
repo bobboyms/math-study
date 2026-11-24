@@ -6,9 +6,18 @@ quase o mesmo que um bloco ` ```text ` e ficam com a mesma cara do resto da
 página, porque os rótulos são KaTeX — o mesmo motor das fórmulas do corpo do
 texto.
 
-Componente interativo (com controle deslizante) é outra coisa: veja
-`DistributiveArea` e `FunctionGraph`, e o critério na skill `tutor-matematica`
-— só quando **mexer no parâmetro é a ideia** sendo ensinada.
+Além deles há dois tipos de figura com movimento, e o critério de escolha está
+na seção "Recursos visuais" da skill `tutor-matematica`:
+
+- **interativo** (controle deslizante) — quando a ideia é uma **relação**
+  entre quantidades que variam juntas;
+- **animado** — quando a ideia é um **processo**: algo gira, enrola, se
+  remonta. Toda animação usa o hook `useAnimation` (abaixo), que começa quando
+  a figura entra na tela, oferece “ver de novo” e mostra direto o quadro final
+  para quem pediu menos movimento ao sistema.
+
+As lições-modelo com os dois tipos são `geometria/radianos`, uma ideia que se
+move, e `algebra/fator-comum-em-evidencia`, uma ideia simbólica.
 
 ## Como usar numa lição
 
@@ -35,6 +44,10 @@ import AreaModel from '@site/src/components/AreaModel';
 |---|---|
 | produto como área, distributiva, produtos notáveis, fatoração | `AreaModel` |
 | fatorar como montar um retângulo: peças de $x^2$, $x$ e $1$ | `TileModel` |
+| fator comum em evidência: retângulos de mesma altura que se juntam (fatorar) ou se separam (distribuir) | `CommonFactorArea` (animado; interativo com `slider`) |
+| parte numérica do fator comum: em quantos montes iguais as peças se dividem (MDC) | `EqualGroups` (interativo) |
+| parcela × fator, fator comum, o 1 que sobra: cada parcela como fila de cartões de fatores | `FactorCards` (animado) |
+| trocar a letra por um número: conferir equivalência, flagrar o erro que coincide num valor, achar onde zera | `SubstituteExplorer` (interativo) |
 | produto como volume, cubo da soma, $(a+b)^3$ | `CubeModel` |
 | adição e subtração como deslocamento, múltiplos, intervalos, sinal | `NumberLine` |
 | frações, equivalência, denominador comum | `FractionBar` |
@@ -51,6 +64,12 @@ import AreaModel from '@site/src/components/AreaModel';
 | figura composta: soma × diferença, área × perímetro de um entalhe | `CompositeAreaExplorer` (interativo) |
 | conferir ângulo reto pela trena, recíproca de Pitágoras | `RightAngleExplorer` (interativo) |
 | ponto, reta, circunferência e gráfico de função no plano | `CartesianPlane` |
+| girar um tambor e ver o cabo enrolar: giro → comprimento | `WinchExplorer` (interativo e animado) |
+| a definição de 1 radiano: o raio colado na borda | `RadianString` (animado) |
+| quantos raios cabem em ¼, ½ e 1 volta; os mesmos pedaços numa régua | `RadianCount` (animado) |
+| o mesmo ângulo em graus e em radianos, conversão por fração de 180° | `DegreeRadianDial` (interativo) |
+| roda rolando: distância → ângulo e voltas, $\theta = s/r$ | `RollingWheel` (interativo e animado) |
+| a reta numérica enrolada no círculo de raio 1 | `WrapLine` (interativo e animado) |
 | seno e cosseno como coordenadas, quadrantes, arcos | `UnitCircle` |
 | o mesmo triângulo como razões, ponto do ciclo e ponto do gráfico | `TrigBridge` |
 | variar o giro e acompanhar uma coordenada no gráfico | `CycleGraphExplorer` (interativo) |
@@ -850,3 +869,203 @@ Cuidado próprio da perspectiva: dois pontos diferentes do espaço podem cair no
 mesmo lugar do papel. Sempre desenhe a caixa (`boxes`) do ponto que o texto
 discute, e confira na imagem se a linha vertical tracejada não passa em cima de
 um número do eixo.
+
+## useAnimation
+
+Hook de `src/components/mathviz/useAnimation.js`, a base de toda figura
+animada. Devolve o tempo `t` (em segundos, de 0 até `duration`) e a função
+`play`; o componente desenha cada quadro em função de `t`.
+
+```jsx
+import useAnimation, {stage, arcPath, onCircle} from '../mathviz/useAnimation';
+
+const {ref, t, play, playing} = useAnimation({duration: 4});
+const lift = stage(t, 0, 1.2); // progresso suavizado (0 → 1) da etapa de 0 s a 1,2 s
+return (
+  <figure ref={ref}> ... </figure>  // a animação começa quando esta figura aparece
+  <button onClick={() => play()}>Ver de novo</button>
+);
+```
+
+| Opção | O que faz |
+|---|---|
+| `duration` | duração em segundos — de 2 a 5 na maioria das figuras |
+| `autoplay` | `false` para só animar quando o aluno apertar o botão (padrão `true`) |
+| `onFrame(t, total)` | chamada a cada quadro — útil para soltar o controle manual durante a animação |
+
+`play({duration})` troca a duração naquela vez (como na `RadianCount`, em que
+meia volta demora menos que a volta inteira).
+
+Regras que o hook já garante, e que um componente novo não deve desfazer:
+
+- **no build e para quem pediu menos movimento, `t` começa no fim** — o HTML
+  estático e a captura de tela mostram o quadro final completo, então o
+  quadro final precisa ser o que ensina;
+- a animação automática acontece uma vez, quando a figura entra na tela; as
+  outras vêm do botão.
+
+Ferramentas no mesmo arquivo: `ease`, `stage(t, a, b)`, `onCircle(cx, cy, r, ângulo)`,
+`arcPath(cx, cy, r, de, até)` (ângulos em radianos, anti-horário), `fmt`
+(vírgula decimal), `piFraction(graus)` e `fractionOf180(graus)` (frações em
+LaTeX).
+
+Para conferir uma animação, `scripts/capturar-figuras.js` captura o quadro
+final por padrão; com `MOTION=play WAIT=600` (e outro `WAIT`) ele captura
+quadros do meio.
+
+## WinchExplorer
+
+Guincho em escala: o tambor (raio 25 cm) gira, o cabo enrola e a carga sobe. O
+arco laranja da borda e a barra laranja da subida têm o mesmo comprimento no
+desenho. Anima de 0 até `initial` quando aparece; depois o deslizante controla.
+
+```mdx
+<WinchExplorer initial={80} />
+<WinchExplorer initial={80} showRadians />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | giro inicial em graus (padrão 80) |
+| `max` | giro máximo do deslizante (padrão 180 — acima disso a carga encostaria no tambor) |
+| `showRadians` | acrescenta ao painel a conversão e a conta $s = r\theta$; deixe desligado antes de o radiano ser ensinado |
+| `caption` | legenda |
+
+## RadianString
+
+A definição de 1 radiano acontecendo: uma cópia do raio fica em pé na borda,
+enrola-se nela sem esticar (a parte solta segue pela tangente) e então surgem
+as duas linhas do centro, o “1 rad” e o “≈ 57,3°”. Sem props além de `caption`.
+
+## RadianCount
+
+Barbantes do tamanho do raio colados na borda, alternando dois tons para dar
+para contar, e os mesmos pedaços esticados numa régua na mesma escala. Botões
+para um quarto de volta, meia volta e volta inteira. `initial`: `'quarto'`,
+`'meia'` (padrão) ou `'volta'`.
+
+## DegreeRadianDial
+
+Mostrador de duas escalas — graus por fora, radianos por dentro —, de 15° em
+15°. O painel converte pelo raciocínio “que pedaço de 180° é esse?” antes de
+mostrar o resultado. `initial` em graus (padrão 135).
+
+## RollingWheel
+
+Roda de raio 0,30 m rolando até 3 m sem escorregar. Pinta no mesmo tom o
+trecho do chão percorrido e o arco da borda que já encostou nele, e mostra
+$\theta = s/r$ e as voltas. Anima ao aparecer; o deslizante controla depois.
+
+## WrapLine
+
+A reta numérica, de 0 a $2\pi$, enrolando-se no círculo de raio 1 a partir de
+$(1,\ 0)$. Inteiros do lado de fora da curva, múltiplos de $\frac{\pi}{2}$ do
+lado de dentro; o raio e o ângulo até o último ponto enrolado no terceiro tom.
+Anima ao aparecer; o deslizante controla depois.
+
+## CommonFactorArea
+
+Retângulos de **mesma altura** lado a lado. Ao aparecer na tela, eles
+deslizam até encostar e a segunda anotação da altura some: é o fator comum
+saindo em evidência. Os botões “Juntar (fatorar)” e “Separar (distribuir)”
+repetem o movimento nos dois sentidos. O quadro final é o retângulo juntado,
+com a largura somada embaixo.
+
+```mdx
+<CommonFactorArea
+  factor="3"
+  grid
+  parts={[
+    {size: 2, label: '2', area: '6'},
+    {size: 5, label: '5', area: '15'},
+  ]}
+  sumLabel="2 + 5 = 7"
+  splitFormula="3 \times 2 + 3 \times 5 = 21"
+  mergedFormula="3 \times (2 + 5) = 21"
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `factor` | rótulo da altura comum, em LaTeX |
+| `parts` | `{size, label, area, value?, tone?}` por retângulo: largura em unidades, rótulo da largura, rótulo da área; `value` é o número usado no painel do `slider` |
+| `sumLabel` | rótulo da largura somada, que aparece quando os retângulos encostam |
+| `splitFormula`, `mergedFormula` | fórmula mostrada embaixo, separado e juntado |
+| `grid` | malha de quadradinhos, para a área ser contada (medidas inteiras) |
+| `slider` | `{label, min, max, step, initial, digits}`: a altura comum vira um deslizante, e o painel mostra a conta separada e a juntada |
+| `start="split"` + `buttons={false}` | figura parada com os retângulos separados — para o problema motivador, antes de a lição ensinar a juntar |
+| `heightSize`, `unit` | altura em unidades (padrão 3) e pixels por unidade (padrão 30) |
+
+## EqualGroups
+
+As peças de uma expressão como $12x + 18$ (tiras de $x$ e quadradinhos de 1,
+nas cores do `TileModel`) distribuídas como cartas em $k$ montes. Se todos os
+montes ficam iguais, $k$ é fator comum e cada monte é o que vai dentro do
+parêntese; se não, o painel diz qual tipo de peça não se dividiu. O painel
+guarda os números de montes que deram certo — o maior é o MDC. As peças
+deslizam até o monte novo (sem movimento para quem pediu menos movimento).
+
+```mdx
+<EqualGroups bars={12} units={18} initial={1} max={9} />
+```
+
+Props: `bars`, `units`, `letter` (padrão `'x'`), `min`, `max`, `initial`,
+`caption`.
+
+## FactorCards
+
+Cada parcela como uma fila de cartões, um cartão por fator. Na animação, os
+cartões presentes em **todas** as filas se acendem e formam a coluna do fator
+comum; o resto é a sobra de cada fila. Fila que fica vazia ganha o cartão 1.
+Os cartões comuns são encontrados sozinhos (interseção das listas).
+
+```mdx
+<FactorCards
+  terms={[
+    {tex: '8x^3', factors: ['2', '2', '2', 'x', 'x', 'x']},
+    {tex: '12x^2', factors: ['2', '2', '3', 'x', 'x']},
+  ]}
+  common="4x^2"
+  rests={['2x', '3']}
+  result="8x^3 + 12x^2 = 4x^2(2x + 3)"
+/>
+<FactorCards still terms={[...]} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `terms` | `{tex, factors, sign?}` por parcela; `sign: '-'` para subtração |
+| `common` | rótulo do fator comum, em LaTeX |
+| `rests` | o que sobra de cada parcela, em LaTeX (mostrado com seta no fim da fila) |
+| `result` | fórmula final, embaixo |
+| `still` | só as filas, com o sinal de vezes entre os cartões — para apresentar parcela e fator |
+
+## SubstituteExplorer
+
+Tabela com deslizante: o aluno escolhe o valor da letra e vê quanto cada
+expressão vale. As funções vêm da lição, em JavaScript.
+
+```mdx
+<SubstituteExplorer
+  compare
+  initial={1}
+  rows={[
+    {tex: '6x + 9', f: (x) => 6 * x + 9},
+    {tex: '3(2x + 3)', f: (x) => 3 * (2 * x + 3)},
+    {tex: 'x(6 + 9)', f: (x) => x * (6 + 9)},
+  ]}
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `rows` | `{tex, f, compareTo?}` por linha; `compareTo` é o índice (a partir de 0) da linha com que esta é comparada |
+| `compare` | compara todas as linhas com a primeira |
+| `zero` | acende as linhas que valem zero |
+| `letter`, `min`, `max`, `step`, `initial` | a letra e o deslizante |
+| `caption` | legenda: diga o que comparar |
+
+Divisão por zero aparece como “não existe”. Para mostrar que uma escrita
+errada coincide por acaso, comece o deslizante no valor da coincidência
+(`initial`) e peça ao aluno que arraste.
+

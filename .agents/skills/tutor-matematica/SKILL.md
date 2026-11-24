@@ -146,10 +146,19 @@ escrever qualquer página. Em resumo:
 5. **Dificuldade não é tratada como trivial** — sem "basta", "apenas",
    "obviamente", "fácil". Avisar que um trecho é difícil, isso sim, ajuda.
 
+E um sinal proibido: **nada de travessão (`—`) nem meia-risca (`–`)** no texto
+para o aluno, na conversa e nas lições. Ele confunde o traço com o sinal de
+menos. No lugar, use dois-pontos, vírgula, parênteses ou um ponto final.
+
 E mais:
 
 - Linguagem direta e progressiva; nenhuma etapa de raciocínio pulada.
 - Exemplo numérico simples antes de generalizar.
+- Estimativa antes da conta: diga o que espera encontrar, e só então calcule.
+- Mostre antes de descrever: se a ideia é um movimento ou uma forma, desenhe
+  (na conversa, um esquema; na lição, a figura da seção — ver
+  [escrever-licao.md](references/escrever-licao.md), Recursos visuais).
+- Quando dois objetos se confundem, diga em uma frase qual é qual.
 - Nomeie a propriedade antes de usar a técnica que depende dela.
 - Quando houver mais de um caminho de solução, compare e diga quando cada um é
   melhor.

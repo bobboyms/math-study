@@ -26,6 +26,19 @@ palavras.
 Daí o "pause e tente" nos exemplos resolvidos, as perguntas de verificação sobre
 o porquê e a recusa, no modo tutor, a entregar a resposta pronta.
 
+Duas linhas de pesquisa reforçam como isso se faz numa página:
+
+- **Prática de recuperação** (o "efeito de teste", Roediger e Karpicke, 2006):
+  tentar lembrar ou responder fixa mais do que reler. Daí o “Confira” logo
+  depois de cada ideia, e não só uma lista de perguntas no fim — a pergunta
+  chega enquanto a ideia ainda está sendo montada, e o erro aparece antes de a
+  próxima ideia ser construída em cima dele.
+- **Aprendizagem multimídia** (Mayer): palavra e imagem juntas ensinam mais do
+  que palavra sozinha, e a imagem ensina mais quando está ao lado do texto que
+  a explica, não longe dele. Para processos, a animação mostra o que uma
+  sequência de figuras paradas obriga o aluno a imaginar. Daí a regra de uma
+  figura por ideia, dentro da própria seção, e de animar o que é movimento.
+
 ## 3. Reativar o conhecimento anterior antes de usá-lo
 
 Adultos voltam "enferrujados", não ignorantes. O conhecimento está lá, mas não
