@@ -158,10 +158,13 @@ export default function LaserWall({
               strokeWidth={1.75}
             />
           )}
-          {shown >= 14 && (
+          {/* Em giro pequeno o vão entre o feixe e o eixo é estreito: o rótulo
+              se afasta do vértice até caber (11 px de cada lado do centro), e
+              abaixo de 24° ele não cabe antes da parede e some. */}
+          {shown >= 24 && (
             <SvgMath
-              x={LX + 46 * Math.cos(a / 2)}
-              y={LY - 46 * Math.sin(a / 2)}
+              x={LX + Math.max(46, 11 / Math.sin(a / 2)) * Math.cos(a / 2)}
+              y={LY - Math.max(46, 11 / Math.sin(a / 2)) * Math.sin(a / 2)}
               math="\theta"
               tone={1}
               fontSize={14}
