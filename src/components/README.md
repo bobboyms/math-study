@@ -75,11 +75,27 @@ import AreaModel from '@site/src/components/AreaModel';
 | roda-gigante: o giro vira altura, $h = 22 + 20\sen\theta$ | `FerrisWheel` (interativo e animado) |
 | ângulo de referência: cada ponto do ciclo é o espelho de um ponto do 1º quadrante | `ReferenceAngle` (interativo e animado) |
 | a tangente lida na reta $x = 1$: T sobe sem fim perto de 90° e some em 90° | `TangentAxisExplorer` (interativo e animado) |
+| laser a 1 m da parede: giros iguais, subidas cada vez maiores; o feixe paralelo em 90° e o prolongamento para trás depois | `LaserWall` (interativo e animado) |
+| o gráfico da tangente nascendo da altura de T, na mesma escala; período π com o giro oposto (`pair`) | `TangentGraphTracer` (interativo e animado) |
+| chegar perto de π/2 pelos dois lados: a distância cai 10 vezes, a tangente cresce 10 vezes, a escala acompanha | `TangentAsymptoteZoom` (interativo, com zoom animado) |
+| a reta y = c corta cada ramo da tangente uma vez, para qualquer c; contraste com o seno | `TangentLevelLine` (interativo) |
 | setor circular: ângulo e raio → arco, área e borda; setor de coroa (limpador) | `SectorExplorer` (interativo e animado) |
 | o setor que vira triângulo de base $s$ e altura $r$: $A = \frac12 rs$ | `SectorUnroll` (animado) |
 | o mesmo triângulo como razões, ponto do ciclo e ponto do gráfico | `TrigBridge` |
-| variar o giro e acompanhar uma coordenada no gráfico | `CycleGraphExplorer` (interativo) |
-| comparar amplitude, período, fase e deslocamento vertical | `TrigParametersExplorer` (interativo) |
+| o ciclo desenrolado: o ponto gira e a altura (ou a abscissa) é levada até o gráfico, que vai sendo traçado; roda-gigante com os giros anotados | `WaveTracer` (interativo e animado) |
+| período como cópia: o trecho de uma volta copiado 2π para cada lado | `WavePeriodCopies` (animado) |
+| reta horizontal y = c sobre o gráfico: quantas soluções tem sen x = c numa janela | `WaveLevelCounter` (interativo) |
+| giro θ e giro −θ no círculo e no gráfico: seno ímpar, cosseno par | `WaveSymmetry` (interativo) |
+| o seno deslizado h para a esquerda cai sobre o cosseno em h = π/2 | `WaveShift` (interativo e animado) |
+| em radianos, arco percorrido e altura na mesma régua: $\sen x \approx x$ perto de zero | `ArcHeightCompare` (interativo) |
+| variar o giro e acompanhar uma coordenada no gráfico (hoje sem uso nas lições; a 7.21 usa o `WaveTracer`) | `CycleGraphExplorer` (interativo) |
+| um parâmetro de $a\sen(bx+c)+d$ por vez: $d$ sobe, $a$ estica, $b$ muda o ritmo (ondas em $2\pi$), $c$ desliza; o erro de ler a fase sem dividir por $b$ | `WaveParameterExplorer` (interativo e animado) |
+| os quatro ajustes da maré, um de cada vez, do seno básico até a curva da tábua | `TideFit` (animado, com botões por ajuste) |
+| comparar amplitude, período, fase e deslocamento vertical, os quatro juntos | `TrigParametersExplorer` (interativo) |
+| braço robótico: a calculadora recebe só a altura (arcsen) ou y/x (atan) e erra o lado; atan2 acerta | `RobotArmInverse` (interativo e animado) |
+| teste da reta horizontal no seno; trechos candidatos para inverter; nome de cada solução (α, π − α, voltas) | `HorizontalLineSine` (interativo) |
+| onde cada inversa procura a resposta no ciclo: metade direita (arcsen, arctg) ou de cima (arccos) | `InverseCycle` (interativo e animado) |
+| o gráfico da inversa como o trecho guardado dobrado sobre y = x (arcsen, arccos, arctg) | `InverseReflect` (animado) |
 | cilindro, cone, esfera, bloco — volume e superfície | `SolidFigure` |
 | volume do cilindro e do cone, efeito do $r^2$ contra o da altura | `CylinderConeExplorer` (interativo) |
 | secante girando na direção da tangente, derivada como limite | `TangentExplorer` (interativo) |
@@ -724,6 +740,113 @@ painel continua dando o valor; em 90° e 270° o painel diz que $T$ não existe.
 Quando $T$ é cortado, o `UnitCircle` termina a reta do raio na borda do
 desenho, na direção certa, em vez de ligá-la ao ponto cortado.
 
+## LaserWall
+
+O laser do motivador da lição do gráfico da tangente, em escala: 1 m de
+distância até a parede, o mesmo número de pixels por metro na horizontal e na
+vertical (o ângulo desenhado é o de verdade). Ao aparecer, o feixe gira de 0
+até `initial` com **velocidade constante**, sem suavizar, e deixa uma marca
+laranja na parede a cada 10°: giros iguais, marcas cada vez mais afastadas.
+Depois, o deslizante vai de 0° a 180°. Em 90° o painel diz que o feixe é
+paralelo à parede; depois de 90°, o feixe se afasta e só o prolongamento para
+trás (tracejado, com bolinha vazada) cruza a parede, abaixo do laser. O painel
+mostra $h = \tg\theta$ e quanto o ponto sobe com mais 1° de giro.
+
+```mdx
+<LaserWall initial={80} />
+<LaserWall initial={135} presets={[60, 89, 90, 91, 120, 135, 180]} caption="..." />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | giro inicial em graus (padrão 80) |
+| `max` | giro máximo do deslizante (padrão 180) |
+| `presets` | botões de giro pronto |
+| `caption` | **texto simples** |
+
+A velocidade constante é o argumento da figura; não troque por `ease`.
+
+## TangentGraphTracer
+
+O ciclo de raio 1 com a reta $x = 1$ à esquerda e o gráfico da tangente à
+direita, com a **mesma escala vertical**. A reta do raio, prolongada pelo
+centro quando preciso, corta $x = 1$ em $T$; um tracejado horizontal leva a
+altura de $T$ até o ponto $(\theta,\ \tg\theta)$ do gráfico. Ao aparecer, o
+giro anda de `from` até `initial` com velocidade constante e o traço vai
+sendo desenhado atrás do ponto (some em $\frac{\pi}{2}$ e reaparece embaixo).
+Depois, o deslizante controla o giro de 0° a 360°. Acima de 3 (em módulo), $T$
+e o ponto do gráfico saem do desenho e o painel continua dando o valor.
+
+Com `pair`, o gráfico aparece inteiro e mais claro, o deslizante vai de 0° a
+179°, e a figura mostra também o giro oposto $\theta + 180^\circ$ (tom 3): a
+mesma reta, o mesmo $T$, e dois pontos do gráfico na mesma altura, ligados por
+um segmento marcado $\pi$. É a figura do período.
+
+```mdx
+<TangentGraphTracer initial={300} />
+<TangentGraphTracer pair initial={60} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial`, `from`, `duration` | giro final e inicial da animação (graus) e duração em segundos (padrão 300, 0 e 6) |
+| `pair` | modo período, descrito acima |
+| `presets` | botões; o padrão muda com `pair` |
+| `caption` | **texto simples**; o padrão muda com `pair` |
+
+Tons: 1 é o giro (raio e $P$), 2 é a tangente ($T$, o tracejado e a curva), 3 é
+o giro oposto no modo `pair`.
+
+## TangentAsymptoteZoom
+
+O gráfico da tangente perto de $\frac{\pi}{2}$, com os dois pontos a uma
+distância $d$ antes e depois de 90° (10°, 1°, 0,1° e 0,01°, um botão cada).
+A janela vertical se ajusta para caber os dois pontos (1,25 vez o valor), e o
+passo da malha acompanha (2, 20, 200, 2000). A troca de botão é animada: $d$ e
+a escala mudam juntos, em escala logarítmica, então o aluno vê o ponto
+escorregar para a assíntota enquanto a câmera se afasta. O painel traz a
+tabela das quatro distâncias, com a linha atual em negrito: dividir $d$ por
+10 multiplica a tangente por cerca de 10.
+
+```mdx
+<TangentAsymptoteZoom />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | índice do botão inicial, de 0 (10°, padrão) a 3 (0,01°) |
+| `caption` | **texto simples** |
+
+A curva é passada ao `CartesianPlane` cortada logo acima da janela
+(`yMax + 1,9`), e não crua: com a amostragem de 1 pixel, a amostra mais perto
+da assíntota daria só algumas centenas, e na janela de 0,01° a curva pararia
+no meio do desenho. O corte também mantém o salto entre $+$ e $-$ maior que a
+altura da janela, para o `CartesianPlane` não ligar os dois ramos.
+
+## TangentLevelLine
+
+Três ramos inteiros da tangente, de $-\frac{\pi}{2}$ a $\frac{5\pi}{2}$, com as
+assíntotas tracejadas, e a reta horizontal $y = c$ (tom 2) controlada por um
+deslizante de $-4$ a 4. Os cortes aparecem marcados, um em cada ramo, e o
+painel lista os três valores de $x$ (cada um é o anterior mais $\pi$). Botões
+levam $c$ a valores fora do desenho (10, 1000): a reta sai, e o painel diz
+que os cortes continuam existindo, colados nas assíntotas. “Comparar com o
+seno” acrescenta o seno tracejado (tom 3) e os cortes dele: nenhum quando
+$\lvert c \rvert > 1$.
+
+```mdx
+<TangentLevelLine initial={1} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | altura inicial da reta (padrão 1) |
+| `presets` | botões de altura (padrão −2, 0, 1, 3, 10, 1000) |
+| `caption` | **texto simples** |
+
+O painel dá os cortes sem nomear o arco tangente, que só é ensinado na lição
+das funções inversas.
+
 ## SectorExplorer
 
 Setor aberto em torno da vertical, como o jato de um aspersor, com
@@ -890,27 +1013,268 @@ Antes do componente, peça uma previsão. Depois, proponha comparar uma volta
 completa, um giro negativo ou a escolha da outra coordenada. O componente
 oferece também botões para os quartos de volta e controles acessíveis por teclado.
 
+## WaveTracer
+
+O ciclo desenrolado. O círculo à esquerda e o gráfico à direita têm a **mesma
+escala vertical**, então a linha que leva a coordenada de $P$ até o gráfico é
+horizontal de verdade. Modo seno: o segmento laranja (altura de $P$) é levado
+direto. Modo cosseno: o segmento verde (abscissa) primeiro fica em pé, girando
+um quarto de volta em torno do centro (arco pontilhado), e só então é levado.
+A curva é traçada até o giro atual. Ao aparecer, o giro anda de 0 até
+`initial`; depois o deslizante controla.
+
+```mdx
+<WaveTracer ghost initial={300} />                 {/* seno */}
+<WaveTracer fn="cos" ghost initial={300} />        {/* cosseno */}
+<WaveTracer
+  wheel amp={20} mid={22} rpx={80} gu={32} turns={2} xAxis="deg"
+  yTicks={[2, 22, 42]} yLabel="h\ (\text{m})" unit="m"
+  dots={[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360]}
+  showCurve={false} initial={360}
+/>                                                  {/* roda-gigante: só os pontos anotados */}
+```
+
+| Prop | O que faz |
+|---|---|
+| `fn` | `'sin'` (padrão) ou `'cos'` |
+| `amp`, `mid` | raio e altura do centro, nas unidades do gráfico (padrão 1 e 0). A curva é `mid + amp·sen θ` |
+| `rpx`, `gu` | pixels do raio e pixels por radiano no eixo horizontal (padrão: `gu = rpx`, a mesma escala nos dois eixos) |
+| `turns` | voltas no eixo horizontal (padrão 1); o deslizante vai até `360·turns` graus |
+| `initial`, `duration`, `step`, `presets` | giro final da animação, duração, passo do deslizante, botões |
+| `xAxis` | `'rad'` (padrão, múltiplos de π/2) ou `'deg'` |
+| `yTicks`, `yLabel` | alturas marcadas no eixo e rótulo do eixo vertical (LaTeX) |
+| `dots` | giros, em graus, marcados como pontos no gráfico; cada um aparece quando o giro passa por ele |
+| `showCurve` | `false` não traça a curva: só os pontos (a pergunta do motivador) |
+| `ghost` | desenha a curva inteira tracejada em cinza, para o quadro final mostrar a forma toda mesmo com $P$ parado antes do fim |
+| `wheel` | desenha roda-gigante: chão, suporte, raios, cadeirinha, linha do centro |
+| `showFormula`, `unit` | no modo `wheel`, o painel mostra a conta `h = mid + amp × sen θ`; `unit` é a unidade |
+| `caption` | texto simples |
+
+Deixe `initial` num giro em que a coordenada não é zero (300°, por exemplo):
+em 360° o segmento do seno some e o do cosseno coincide com o raio vertical,
+e o quadro final deixa de mostrar o transporte.
+
+## WavePeriodCopies
+
+Sem props além de `fn` e `caption`. O trecho de 0 a $2\pi$ (com fundo) é
+copiado e arrastado $2\pi$ para a direita e depois $2\pi$ para a esquerda,
+sobre a curva verdadeira tracejada em cinza. O quadro final tem as três
+voltas com o colchete “2π”.
+
+## WaveLevelCounter
+
+```mdx
+<WaveLevelCounter initialC={0.4} initialTurns={2} />
+```
+
+Reta $y = c$ (deslizante de $-1{,}5$ a $1{,}5$, de 0,05 em 0,05) sobre o
+gráfico, numa janela de 1, 2 ou 3 voltas (botões). Os pontos de encontro saem
+da fórmula ($\arcsen c$ e $\pi - \arcsen c$ mais voltas; no cosseno,
+$\pm\arccos c$), não de amostragem, e o painel conta e lista os $x$. Fora de
+$[-1,\ 1]$, diz que não há solução. `fn="cos"` usa o cosseno.
+
+## WaveSymmetry
+
+```mdx
+<WaveSymmetry fn="sin" initial={50} />
+<WaveSymmetry fn="cos" initial={50} />
+```
+
+Círculo e gráfico de $-2\pi$ a $2\pi$, na mesma escala vertical. O giro
+$\theta$ (cheio) e o giro $-\theta$ (tracejado, ponto vazado). No seno, os dois
+pontos do gráfico ficam em lados opostos da origem, ligados por um segmento
+que passa por ela; no cosseno, à mesma altura, espelhados no eixo vertical.
+
+## WaveShift
+
+```mdx
+<WaveShift initial={6} />
+```
+
+Cinza: $\sen x$ parado. Verde tracejado: $\cos x$. Laranja:
+$\sen(x + h)$, com $h$ de 15° em 15° (`initial` conta passos de $\frac{\pi}{12}$;
+6 é $\frac{\pi}{2}$). A seta liga um pico do seno ao lugar para onde ele foi. O
+painel avisa quando a curva cai sobre o cosseno ($h = \frac{\pi}{2}$), sobre
+$-\sen x$ ($h = \pi$, o erro do “de cabeça para baixo”), sobre $-\cos x$ e
+sobre o próprio seno. Ao aparecer, $h$ anda de 0 até `initial`.
+
+## ArcHeightCompare
+
+```mdx
+<ArcHeightCompare initial={50} />
+```
+
+Um quarto do círculo de raio 1, ampliado: o arco percorrido $x$ (azul) e a
+altura $\sen x$ (laranja), e os dois esticados como barras sobre o mesmo chão,
+com a linha de 1 raio. `initial` é $x$ em centésimos de radiano. O painel dá a
+altura como porcentagem do arco e o mesmo giro em graus, para mostrar que o
+número em graus não é um comprimento.
+
+## WaveParameterExplorer
+
+Um parâmetro de $a\sen(bx + c) + d$ por vez. Só o deslizante de `param` fica
+ativo; os outros ficam travados em `base`. A curva tracejada (tom 1) é a mesma
+função com o parâmetro estudado no valor neutro; a contínua (tom 2) usa o
+deslizante. O tom 3 marca o que ler: a linha central $y = d$ (`d`), a seta da
+altura em $\frac{\pi}{2}$ e os zeros que não se mexem (`a`), uma onda inteira
+a partir de zero e a reta $x = 2\pi$ (`b`), o caminho do máximo (`c`). Ao
+aparecer, o parâmetro desliza do valor neutro até `initial`.
+
+```mdx
+<WaveParameterExplorer param="d" initial={2} caption="..." />
+<WaveParameterExplorer param="a" initial={2} caption="..." />
+<WaveParameterExplorer param="b" initial={2} caption="..." />
+<WaveParameterExplorer param="c" initial={2} caption="..." />                       {/* c = π/2 */}
+<WaveParameterExplorer param="c" base={{b: 2}} initial={2} showWrongShift caption="..." />
+```
+
+| Prop | O que faz |
+|---|---|
+| `param` | `'d'` (−1 a 3), `'a'` (−3 a 3), `'b'` (0,5 a 4), todos de 0,5 em 0,5; ou `'c'` |
+| `initial` | valor inicial do deslizante. **Em `param="c"` é o número de quartos de π**: `initial={2}` é $c = \frac{\pi}{2}$ (faixa de −4 a 4, isto é, de $-\pi$ a $\pi$) |
+| `base` | valores travados dos outros parâmetros (padrão $a = 1$, $b = 1$, $c = 0$, $d = 0$). Em `param="c"`, use `b` inteiro (1 ou 2): o painel escreve o deslocamento como fração de π |
+| `showWrongShift` | só com `param="c"` e $b \neq 1$: círculo vazio onde a leitura apressada “$c$ inteiro para a esquerda” poria o máximo |
+| `presets`, `duration`, `caption` | botões prontos (mesma unidade de `initial`), duração da animação, legenda em texto simples |
+
+O painel escreve o resultado exato (imagem, amplitude, período como fração de
+π, deslocamento $-\frac{c}{b}$) e uma frase com o que mudou e o que não mudou.
+Em `param="b"`, quando a onda é mais longa que a janela ($b = 0{,}5$), a seta
+diz que ela continua além. Fora do caso `c`, a janela começa colada no eixo
+vertical, para a curva não passar por cima dos números do eixo $y$; no caso
+`c` o eixo $y$ fica sem números, porque o máximo cai muitas vezes em cima dele.
+
+## TideFit
+
+A maré do porto da lição de parâmetros: máximo de 4,2 m às 5 h, mínimo de
+0,8 m, ciclo de 12 h. As marcas da tábua (tom 3) ficam fixas; a curva (tom 1)
+é $d + a\sen(bt + c)$.
+
+```mdx
+<TideFit mode="question" />   {/* motivador: só sen t e as marcas da tábua */}
+<TideFit />                   {/* resolução: os quatro ajustes animados */}
+```
+
+No modo padrão, ao aparecer, a curva recebe os ajustes um de cada vez, na
+ordem $d$, $a$, $b$, $c$, e termina em
+$2{,}5 + 1{,}7\sen\left(\frac{\pi}{6}t - \frac{\pi}{3}\right)$. Os botões
+repetem um ajuste isolado; o ponto cheio é o primeiro máximo da curva, que se
+move até as 5 h. Sem props além de `mode` e `caption`; os números são os da
+lição `geometria/parametros-das-funcoes-trigonometricas`, que os cita no
+texto. Se mudar um número aqui, mude lá também.
+
 ## TrigParametersExplorer
 
 ```mdx
-import TrigParametersExplorer from '@site/src/components/TrigParametersExplorer';
-
 <TrigParametersExplorer />
 ```
 
-Sem props. Quatro controles ajustam `a sen(bx+c)+d`, começando no seno básico.
-A curva ajustada é contínua e a referência é tracejada. Os eixos mantêm as
-mesmas escalas em todos os ajustes, para não ocultar as mudanças de amplitude
-ou período. A linha central tem o terceiro tom.
+Sem props. Quatro controles ajustam $a\sen(bx+c)+d$, começando no seno básico
+($a$, $b$ e $d$ de 0,5 em 0,5; $c$ de $\frac{\pi}{4}$ em $\frac{\pi}{4}$). A
+fórmula sai escrita como no papel ($\sen\left(2x + \frac{\pi}{2}\right) + 1$,
+sem parênteses em volta de cada número). A curva ajustada é contínua e a
+referência é tracejada; a linha central tem o terceiro tom. Os eixos mantêm
+as mesmas escalas em todos os ajustes, para não esconder as mudanças de
+amplitude ou período.
 
-Permite fatores negativos e zero. Quando `a=0` ou `b=0`, mostra uma constante,
-com amplitude zero e sem menor período positivo. Nos outros casos, calcula
-amplitude, período, imagem e deslocamento `−c/b` dos parâmetros atuais.
-As leituras numéricas são aproximadas a três casas decimais.
+Permite fatores negativos e zero. Quando $a = 0$ ou $b = 0$, mostra uma
+constante, com amplitude zero e sem menor período positivo. Nos outros casos,
+o painel dá amplitude, período (fração de π e decimal), imagem, linha central
+e o deslocamento $-\frac{c}{b}$ como fração de π, com o sentido.
 
-Os dois exploradores e a sequência estática reutilizam `GeoFigure`,
+Os exploradores e a sequência estática reutilizam `GeoFigure`,
 `UnitCircle` e `CartesianPlane`. A disposição em colunas vira uma coluna no
 celular; a paleta e o KaTeX seguem os mesmos tokens e macros do curso.
+
+## RobotArmInverse
+
+O braço de 1 m da lição de funções trigonométricas inversas. O braço real sai
+no tom 1; a resposta da calculadora, um braço fantasma tracejado no tom 2, só
+aparece quando ela erra. Ao aparecer, o braço gira de `from` até `initial`.
+
+```mdx
+<RobotArmInverse initial={150} from={30} caption="..." />          {/* o problema */}
+<RobotArmInverse mode="tg" initial={150} from={0} caption="..." /> {/* a solução */}
+```
+
+| Prop | O que faz |
+|---|---|
+| `mode` | `'sen'` (padrão): giro de 0° a 180° acima da mesa, régua da altura h = sen θ (tom 3), fantasma em arcsen h. `'tg'`: volta inteira, projeções da garra nos eixos (tom 3), fantasma em atan(y/x); o painel compara com atan2(y, x) |
+| `initial`, `from` | giro final e inicial da animação, em graus (padrão 150; `from` 30 em `'sen'`, 0 em `'tg'`) |
+| `presets` | botões de giro (padrão 30°, 60°, 120°, 150° ou 45°, 150°, 210°, 270°, 330°) |
+| `caption` | **texto simples** |
+
+Com $x = 0$ (90° e 270° no modo `'tg'`) não há fantasma: o painel diz que a
+divisão não existe e dá o atan2.
+
+## HorizontalLineSine
+
+O gráfico do seno de $-2\pi$ a $2\pi$ e a reta $y = k$ (tom 2, deslizante de
+$-1{,}3$ a $1{,}3$). Os cortes são calculados ($\arcsen k + 2n\pi$ e
+$\pi - \arcsen k + 2n\pi$), não desenhados à mão, e o painel os conta.
+
+```mdx
+<HorizontalLineSine initial={0.5} caption="..." />
+<HorizontalLineSine initial={-0.5} pieces={['principal', 'meiaVolta', 'quarto', 'outro']} />
+<HorizontalLineSine initial={0.5} labelCuts />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | altura inicial da reta (padrão 0,5) |
+| `pieces` | botões de trechos candidatos: `'tudo'`, `'principal'` ($[-\frac{\pi}{2}, \frac{\pi}{2}]$), `'meiaVolta'` ($[0, \pi]$), `'quarto'` ($[0, \frac{\pi}{2}]$), `'outro'` ($[\frac{\pi}{2}, \frac{3\pi}{2}]$). O resto do gráfico fica tracejado, só contam os cortes no trecho, e o painel diz se ele serve para inverter e por quê |
+| `initialPiece` | trecho inicial (padrão: o primeiro de `pieces`) |
+| `labelCuts` | escreve em cada corte o nome dele em função de $\alpha$: $\alpha$, $\pi - \alpha$, $\alpha - 2\pi$, $-\pi - \alpha$… |
+| `caption` | **texto simples** |
+
+## InverseCycle
+
+O ciclo trigonométrico com a metade em que a inversa procura destacada (arco
+grosso translúcido, tom 1). Um deslizante dá o valor $v$; a reta que ele define
+(tom 2, tracejada) corta o ciclo em dois pontos. O ponto devolvido sai cheio,
+no tom 1, com o arco do giro; o outro sai vazio, no tom 2. O painel mostra o
+valor da inversa (graus e radianos) e a conta do outro giro. Ao aparecer, $v$
+corre do mínimo até `initial` e o ponto percorre a metade destacada.
+
+```mdx
+<InverseCycle fn="sen" initial={0.5} caption="..." />
+<InverseCycle fn="cos" initial={0.5} caption="..." />
+<InverseCycle fn="tg" initial={1} caption="..." />
+```
+
+| Prop | O que faz |
+|---|---|
+| `fn` | `'sen'`: reta horizontal $y = v$, metade direita, outro giro $180^\circ - \alpha$. `'cos'`: reta vertical $x = v$, metade de cima, outro giro $-\alpha$. `'tg'`: ponto $T$ na reta $x = 1$ e a reta do raio por ele; metade direita com as pontas abertas; outro giro $\alpha + 180^\circ$; deslizante de $-4$ a 4 |
+| `initial` | valor inicial (padrão 0,5; 1 em `'tg'`) |
+| `caption` | **texto simples** |
+
+Na tangente, acima de 1,3 o ponto $T$ sai do desenho e o painel avisa; os
+rótulos dos giros saem girados 13° para não cair sobre a reta tracejada.
+
+## InverseReflect
+
+O trecho guardado da função (tracejado, neutro) e a reta $y = x$ (cinza). Na
+animação, cada ponto $(x, y)$ do trecho anda em linha reta até $(y, x)$: o
+caminho cruza $y = x$ em ângulo reto, e a curva azul que sobra no quadro final
+é o gráfico da inversa. Um ponto marcado (tom 2) mostra as coordenadas
+trocando. Na tangente, as assíntotas verticais $x = \pm\frac{\pi}{2}$ giram até
+virar as horizontais $y = \pm\frac{\pi}{2}$ (tom 1).
+
+```mdx
+<InverseReflect fn="sen" choices={['sen', 'cos', 'tg']} caption="..." />
+```
+
+| Prop | O que faz |
+|---|---|
+| `fn` | `'sen'` (trecho $[-\frac{\pi}{2}, \frac{\pi}{2}]$, ponto $(\frac{\pi}{2}, 1)$), `'cos'` ($[0, \pi]$, ponto $(\frac{\pi}{3}; 0{,}5)$) ou `'tg'` ($\lvert\tg x\rvert \le 7$, ponto $(\frac{\pi}{3}, \sqrt3)$) |
+| `choices` | botões para trocar de função; cada troca repete a animação |
+| `caption` | **texto simples** |
+
+Construído sobre o `CartesianPlane`. A curva em movimento não é gráfico de
+função no meio da dobra (no cosseno, deixa de ser), por isso vai como
+`polygons` com `fill: false`, percorrida até o fim e de volta: o polígono sempre
+se fecha, e a volta pelo mesmo caminho faz ele parecer uma linha aberta. O
+ponto marcado foi escolhido longe da reta $y = x$; um ponto perto dela (como
+$(\frac{\pi}{6}; 0{,}5)$) fica escondido pela própria imagem.
 
 ## LinearMap
 

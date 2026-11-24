@@ -2,83 +2,82 @@
 title: Funções trigonométricas inversas
 ---
 
-import CartesianPlane from '@site/src/components/CartesianPlane';
+import RobotArmInverse from '@site/src/components/RobotArmInverse';
+import HorizontalLineSine from '@site/src/components/HorizontalLineSine';
+import InverseCycle from '@site/src/components/InverseCycle';
+import InverseReflect from '@site/src/components/InverseReflect';
+import FunctionMachine from '@site/src/components/FunctionMachine';
 
 # Funções inversas: $\arcsen$, $\arccos$ e $\arctg$
 
 ## Problema motivador: o braço robótico que aponta para o lado errado
 
-Você programa um braço robótico. A partir de um sensor, o sistema sabe que a
-altura relativa da garra corresponde a
+Você programa um braço robótico de **1 m**. O giro $\theta$ do braço é medido
+como no ciclo: a partir da direita, no sentido anti-horário. Um sensor mede só
+uma coisa, a **altura da garra** acima do ombro do robô. Como o braço mede 1 m,
+essa altura é o próprio seno do giro:
 
 $$
-\sen\theta = 0{,}5,
+h = 1 \times \sen\theta = \sen\theta.
 $$
 
-e precisa descobrir $\theta$ para acionar o motor. O código chama a função
-inversa e recebe:
+O sensor marca $h = 0{,}5$ m. Para acionar o motor, o código precisa do giro,
+e chama a função inversa do seno. Ela responde: $\theta = 30^\circ$.
 
-$$
-\theta = 30^\circ.
-$$
+Só que o braço está, de fato, em **150°**, apontando para cima e para a
+esquerda. Arraste o controle e compare o braço (azul) com a resposta da
+calculadora (tracejado laranja), que só recebe a altura.
 
-Só que o braço, na configuração atual, está a **150°** — apontando para o
-outro lado, para cima e para a esquerda. E $\sen 150^\circ$ também vale 0,5.
+<RobotArmInverse initial={150} from={30} caption="O braço de 1 m (azul) e a resposta da calculadora (tracejado laranja), que só recebe a altura h da garra (régua verde)." />
 
-<CartesianPlane
-  xMin={-0.4} xMax={6.8} yMin={-1.5} yMax={1.5}
-  xUnit={46} yUnit={44}
-  xStep={1.5707963} yStep={0.5}
-  xTicks={[
-    {at: 1.5707963, label: '\\frac{\\pi}{2}'},
-    {at: 3.1415927, label: '\\pi'},
-    {at: 4.712389, label: '\\frac{3\\pi}{2}'},
-    {at: 6.2831853, label: '2\\pi'},
-  ]}
-  yTicks={[{at: 0.5, label: '0{,}5'}, {at: 1, label: '1'}, {at: -1, label: '-1'}]}
-  functions={[{f: (x) => Math.sin(x), tone: 1}]}
-  lines={[{m: 0, n: 0.5, tone: 2, dashed: true}]}
-  points={[
-    {at: [0.5235988, 0.5], label: '30^\\circ', tone: 3, dx: -6, dy: -18},
-    {at: [2.6179939, 0.5], label: '150^\\circ', tone: 3, dx: 10, dy: -18},
-  ]}
-  caption="A reta y = 0,5 corta a senoide em dois pontos por volta. A função inversa é obrigada a escolher um."
-/>
+> Por que a função inversa devolve 30° e não 150°? E como o programa pode
+> recuperar a posição certa?
 
-> Por que a função inversa devolve 30° e não 150°? E como recuperar a resposta
-> certa?
+A pergunta parece um detalhe de programação. Ela vai mais fundo: toca a
+questão de **quando uma função pode ser desfeita**. A resposta explica de onde
+vêm os intervalos das funções $\arcsen$, $\arccos$ e $\arctg$. À primeira
+vista, eles parecem escolhidos ao acaso. No fim da página, o braço volta ao lugar certo.
 
-A pergunta parece um detalhe de programação. Não é: ela toca uma questão
-estrutural sobre **quando uma função tem inversa** — e a resposta explica a
-definição, aparentemente arbitrária, dos intervalos de $\arcsen$, $\arccos$ e
-$\arctg$.
+## Roteiro da lição
 
-## Mapa das ideias
-
-- **função inversa** — a que desfaz a operação: se $f(a) = b$, então
-  $f^{-1}(b) = a$ (de [Função inversa](../funcoes/funcao-inversa));
-- **função injetora** — aquela em que entradas diferentes produzem saídas
-  diferentes; só funções injetoras têm inversa (também de lá);
-- **restrição de domínio** — recortar um pedaço do domínio para tornar a função
-  injetora, como foi feito com $x^2$ para chegar à raiz quadrada;
-- **valor principal** — o único valor que a função inversa devolve, dentro do
-  intervalo escolhido.
-
-Exemplo: $\arcsen 0{,}5 = 30^\circ$, o valor principal. Contraexemplo:
-$\arcsen 0{,}5$ **não** é “30° e 150°” — uma função devolve **um** valor. Os
-150° são solução da equação $\sen x = 0{,}5$, e encontrá-los é trabalho de quem
-usa a função, não dela.
+1. O seno repete valores: cada altura vem de infinitos giros. Por isso o seno
+   inteiro não pode ser desfeito.
+2. Para desfazer, guardamos só um trecho do seno, de $-\frac{\pi}{2}$ a
+   $\frac{\pi}{2}$, que não repete nenhuma altura e alcança todas, de $-1$ a 1.
+3. O $\arcsen$ devolve o giro desse trecho. No ciclo, é a metade direita.
+4. O $\arccos$ guarda outra metade, a de cima, porque na metade direita o
+   cosseno se repete.
+5. O $\arctg$ aceita qualquer número e devolve um giro da metade direita, sem
+   as duas pontas.
+6. O gráfico de cada inversa é o trecho guardado refletido na reta $y = x$.
+7. O $-1$ de $\sen^{-1}$ quer dizer “inversa”, não “1 dividido por”.
+8. A função devolve um ângulo só. Os outros saem do espelho e das voltas.
+9. Com as duas coordenadas do ponto, o quadrante volta: é o `atan2`.
 
 ## Para que isso serve?
 
-- em qualquer problema em que se conhece a razão e se procura o ângulo:
-  topografia, navegação, robótica, visão computacional;
-- em programação, `asin`, `acos`, `atan` e sobretudo `atan2`, usada para
-  converter coordenadas em ângulo;
-- em física, para obter ângulos de incidência, reflexão e de forças;
-- e, dentro da matemática, as inversas trigonométricas são funções cuja
-  derivada é **algébrica** (aparece uma raiz, não outra trigonométrica) — o que
-  as torna peças centrais no cálculo de integrais.
+Sempre que você conhece uma razão (uma altura, uma inclinação, uma posição) e
+procura o **ângulo** que a produziu, a ferramenta é uma inversa
+trigonométrica.
+
+- **Obras e acessibilidade.** Uma rampa sobe 1,2 m ao longo de 9 m na
+  horizontal. O ângulo com o chão é $\arctg\frac{1{,}2}{9} \approx 7{,}6^\circ$.
+- **Navegação.** Um barco anda 3 km para o leste e 4 km para o norte. A
+  direção em que ele foi, medida a partir do leste, é
+  $\arctg\frac{4}{3} \approx 53{,}1^\circ$.
+- **Jogos e programação.** Um personagem precisa virar para o cursor do mouse,
+  que está 3 unidades à esquerda e 4 acima dele. A conta é
+  `atan2(4, -3)`, que dá $\approx 126{,}9^\circ$. A versão ingênua,
+  $\arctg\frac{4}{-3} \approx -53{,}1^\circ$, faria o personagem olhar para o
+  lado oposto. Esse é o erro do braço robótico, e a página mostra como evitá-lo.
+- **Deep learning.** A “similaridade de cosseno” entre dois vetores de
+  palavras é o cosseno do ângulo entre eles. Se ela vale 0,8, o ângulo é
+  $\arccos 0{,}8 \approx 36{,}9^\circ$. O produto escalar, que calcula esse
+  cosseno, vem em [Produto escalar](./produto-escalar).
+- **Dentro da matemática.** No cálculo, a área sob a curva
+  $y = \frac{1}{1+x^2}$, de $x = 0$ até $x = 1$, vale exatamente
+  $\arctg 1 = \frac{\pi}{4} \approx 0{,}785$. As inversas aparecem como
+  resposta de contas que, por fora, nem falam de ângulo.
 
 ## Ideias anteriores que voltam aqui
 
@@ -102,11 +101,11 @@ curso resolveu isso? E como ficam os gráficos de uma função e da sua inversa?
 
 Porque $x^2$ repete saídas: $3^2 = 9$ e $(-3)^2 = 9$. Pedindo a volta a partir
 do 9, não há como saber qual entrada devolver. No gráfico, a reta horizontal
-$y = 9$ corta a parábola em dois pontos — é o **teste da reta horizontal**. O
+$y = 9$ corta a parábola em dois pontos: é o **teste da reta horizontal**. O
 conserto foi **restringir o domínio**: aceitando só $x \ge 0$, cada saída vem
-de uma entrada só, e a inversa existe — é a raiz quadrada. Por isso
+de uma entrada só, e a inversa existe. Ela é a raiz quadrada. Por isso
 $\sqrt{9} = 3$, e não $\pm 3$. Os gráficos de uma função e da sua inversa são
-espelhos na reta $y = x$. Esta página faz exatamente o mesmo com o seno.
+espelhos na reta $y = x$. Esta página faz o mesmo com o seno.
 
 </details>
 
@@ -118,295 +117,529 @@ triângulo retângulo tem cateto oposto 3 e hipotenusa 6. Como se acha o ângulo
 <summary>Conferir</summary>
 
 $\sen\alpha = \frac{3}{6} = 0{,}5$, e a tecla $\sen^{-1}$ da calculadora
-devolve $\alpha = \sen^{-1}(0{,}5) = 30^\circ$. Naquela lição, o ângulo de um
-triângulo retângulo estava sempre entre 0° e 90°, e a resposta da tecla era a
-única possível. Agora os ângulos podem ter qualquer tamanho, e ela deixa de ser
-a única — é o problema do braço robótico.
+devolve $\alpha = 30^\circ$. Naquela lição, o ângulo de um triângulo retângulo
+estava sempre entre 0° e 90°, e a resposta da tecla era a única possível.
+Agora os ângulos podem ter qualquer tamanho, e ela deixa de ser a única. É o
+problema do braço robótico.
 
 </details>
 
-**4. Gráficos** (de
-[Gráficos do seno e do cosseno](./graficos-seno-e-cosseno)). Qual é a imagem de
-$\sen x$?
+**4. A imagem do seno** (de
+[Gráficos do seno e do cosseno](./graficos-seno-e-cosseno)). Entre que valores
+fica $\sen x$?
 
 <details>
 <summary>Conferir</summary>
 
-$[-1, 1]$. Esse intervalo será o **domínio** da função inversa — os papéis se
-trocam.
+Entre $-1$ e 1: a imagem é $[-1,\ 1]$. Esse intervalo vai ser a lista de
+**entradas** da função inversa. Os papéis se trocam: o que era saída do seno
+vira entrada do $\arcsen$.
 
 </details>
 
-**5. Simetrias** (de
+**5. O espelho do ângulo de referência** (de
 [Redução ao primeiro quadrante](./reducao-ao-primeiro-quadrante)). Se
-$\sen\alpha = k$ com $\alpha$ no primeiro quadrante, qual é a outra solução na
-primeira volta?
+$\sen\alpha = k$, com $\alpha$ no primeiro quadrante, qual é o outro giro da
+primeira volta com o mesmo seno?
 
 <details>
 <summary>Conferir</summary>
 
-$180^\circ - \alpha$. Guarde: é assim que se recupera a solução que a
-calculadora não deu.
+$180^\circ - \alpha$, o espelho de $\alpha$ no segundo quadrante, à mesma
+altura. Guarde esse giro: é ele que a calculadora não devolve.
 
 </details>
 
-## Intuição: por que o seno não tem inversa
+## Cada altura vem de infinitos giros: o seno inteiro não se desfaz
 
-Como visto em [Função inversa](../funcoes/funcao-inversa), uma função só pode
-ser desfeita se for possível, a partir da saída, **saber com certeza** qual era
-a entrada. A parábola $x^2$ falhava porque cada saída positiva vinha de **duas**
-entradas, $3$ e $-3$.
+Desfazer uma função é andar para trás: receber a saída e devolver a entrada.
+Em [Função inversa](../funcoes/funcao-inversa), isso só deu certo quando,
+olhando a saída, era possível **saber com certeza** qual tinha sido a entrada.
+A parábola $x^2$ falhou porque a saída 9 vinha de duas entradas, 3 e $-3$.
 
-O seno tem o mesmo problema, só que pior. Saída 0,5? Entrada 30°… ou 150°, ou
-390°, ou 510°, ou $-210^\circ$. **Infinitas** entradas produzem a mesma saída.
+O seno falha do mesmo jeito, e pior. Conte os giros que deixam a garra do
+braço na altura 0,5: 30° e 150° na primeira volta. Uma volta a mais, e eles
+viram 390° e 510°. Uma volta para trás, $-330^\circ$ e $-210^\circ$. A lista
+não acaba.
 
-O teste da reta horizontal, daquela lição, mostra isso no gráfico: a reta
-$y = 0{,}5$ da figura acima corta a senoide em dois pontos a cada volta. E não é
-só ela — *toda* reta horizontal entre $-1$ e 1 corta a senoide infinitas vezes.
-Por isso, o seno inteiro não tem inversa.
+O teste da reta horizontal mostra isso no gráfico. Arraste a reta e conte os
+cortes.
 
-## A saída: restringir o domínio
+<HorizontalLineSine initial={0.5} caption="A reta horizontal y = k corta o gráfico do seno. Cada corte é um ângulo diferente com o mesmo seno k." />
 
-O conserto é o mesmo que transformou $x^2$ em raiz quadrada: **olhar só um
-pedaço da função** — um pedaço em que ela não repita nada.
+Qualquer altura entre $-1$ e 1 é cortada várias vezes na parte desenhada. Como
+o gráfico continua para os dois lados, uma onda a cada $2\pi$, os cortes são
+**infinitos**. E fora de $[-1,\ 1]$ a reta não corta nada.
 
-Para a parábola, a escolha de $x \ge 0$ foi quase automática. Para o seno há
-infinitos pedaços candidatos, e por isso vale escrever as duas exigências:
+> Uma função só pode ser desfeita quando **não repete saídas**: entradas
+> diferentes dão sempre saídas diferentes. Essas funções se chamam
+> **injetoras** (de [Função inversa](../funcoes/funcao-inversa)).
 
-1. **não repetir valores** (ser injetora ali);
-2. **cobrir toda a imagem**, de $-1$ a 1 — senão a inversa ficaria sem
-   responder a alguns valores.
+Exemplo: $f(x) = 2x + 1$ é injetora. Duas entradas diferentes dão saídas
+diferentes, e da saída 7 dá para voltar com certeza à entrada 3.
+Contraexemplo: o seno não é injetor. A saída 0,5 vem de 30°, de 150°, de 390°
+e de infinitos outros giros. Por isso, o seno inteiro **não tem inversa**.
 
-Para o seno, o trecho de $-\frac{\pi}{2}$ a $\frac{\pi}{2}$ atende às duas: ali
-a curva sobe continuamente de $-1$ até 1, sem repetir nada e sem deixar valor de
-fora.
+<details>
+<summary>Confira: na parte desenhada, quantas vezes a reta y = 1 corta o gráfico? E a reta y = 1,2?</summary>
 
-<CartesianPlane
-  xMin={-3.6} xMax={3.6} yMin={-1.5} yMax={1.5}
-  xUnit={44} yUnit={44}
-  xStep={1.5707963} yStep={0.5}
-  xTicks={[
-    {at: -1.5707963, label: '-\\frac{\\pi}{2}'},
-    {at: 1.5707963, label: '\\frac{\\pi}{2}'},
-    {at: 3.1415927, label: '\\pi'},
-    {at: -3.1415927, label: '-\\pi'},
-  ]}
-  yTicks={[{at: 1, label: '1'}, {at: -1, label: '-1'}]}
-  functions={[
-    {f: (x) => Math.sin(x), tone: 0, dashed: true},
-    {f: (x) => Math.sin(x), tone: 1, domain: [-1.5707963, 1.5707963]},
-  ]}
-  caption="Do seno inteiro (tracejado), guarda-se apenas o trecho destacado, de −π/2 a π/2. Ali ele é crescente e cobre toda a imagem."
+A reta $y = 1$ só encosta nos topos das ondas: na figura, em
+$x = \frac{\pi}{2}$ e em $x = -\frac{3\pi}{2}$, dois pontos. Continuando o
+gráfico, um topo a cada $2\pi$: ainda são infinitos. A reta $y = 1{,}2$ não
+corta nada, porque nenhum ângulo tem seno maior que 1.
+
+</details>
+
+## Para desfazer, guardamos um trecho que não repete e alcança todas as alturas
+
+O conserto é o mesmo que transformou $x^2$ na raiz quadrada: **guardar só um
+pedaço da função**, um pedaço em que ela não repita nada. Para a parábola, o
+pedaço $x \ge 0$ apareceu quase sozinho. Para o seno há muitos pedaços
+candidatos, e por isso vale escrever as duas exigências:
+
+1. **não repetir altura** (ser injetor no trecho);
+2. **alcançar todas as alturas** de $-1$ a 1. Se faltar alguma, a inversa
+   fica sem resposta para ela.
+
+Teste os candidatos. Escolha um trecho, arraste a reta e conte os cortes que
+caem **dentro** dele. Um trecho serve quando toda altura entre $-1$ e 1 dá
+exatamente um corte.
+
+<HorizontalLineSine
+  initial={-0.5}
+  pieces={['principal', 'meiaVolta', 'quarto', 'outro']}
+  caption="Só o trecho escolhido conta (linha cheia); o resto do gráfico fica tracejado. O trecho serve se toda altura de −1 a 1 dá exatamente um corte dentro dele."
 />
 
-Essa escolha é **convencional** — outros trechos também serviriam, como
-$\left[\frac{\pi}{2}, \frac{3\pi}{2}\right]$. Adotou-se este por conter o zero,
-ser simétrico e cobrir os ângulos “pequenos”, que são os mais frequentes na
-prática. Calculadoras, linguagens de programação e livros usam todos a mesma
-convenção.
+O trecho de 0 a $\pi$ falha a primeira exigência: a altura 0,5 aparece duas
+vezes, em $\frac{\pi}{6}$ e em $\frac{5\pi}{6}$. O trecho de 0 a
+$\frac{\pi}{2}$ passa na primeira e falha a segunda: a altura $-0{,}5$ não
+aparece. Já o trecho de $-\frac{\pi}{2}$ a $\frac{\pi}{2}$ passa nas duas. Ali
+a curva **só sobe**, de $-1$ até 1, sem voltar e sem pular nenhuma altura.
 
-## As três inversas
+> O seno **restrito** a $\left[-\frac{\pi}{2},\ \frac{\pi}{2}\right]$ é
+> injetor e alcança toda a imagem $[-1,\ 1]$. É esse trecho que se inverte.
 
-> $$\arcsen: [-1,\ 1] \to \left[-\tfrac{\pi}{2},\ \tfrac{\pi}{2}\right]$$
-> $$\arccos: [-1,\ 1] \to [0,\ \pi]$$
-> $$\arctg: \mathbb{R} \to \left(-\tfrac{\pi}{2},\ \tfrac{\pi}{2}\right)$$
+O trecho de $\frac{\pi}{2}$ a $\frac{3\pi}{2}$ também serve: ali o seno só
+desce. Então a escolha é uma **convenção**, como a escolha de $x \ge 0$ para a
+raiz quadrada. O trecho de $-\frac{\pi}{2}$ a $\frac{\pi}{2}$ venceu porque
+contém o zero, é simétrico e cobre os ângulos agudos de triângulo, que são os
+mais usados. Calculadoras, linguagens de programação e livros usam todos a
+mesma convenção.
 
-| Função | Domínio | Imagem | Em graus |
-|---|---|---|---|
-| $\arcsen x$ | $[-1, 1]$ | $\left[-\frac{\pi}{2}, \frac{\pi}{2}\right]$ | $-90^\circ$ a $90^\circ$ |
-| $\arccos x$ | $[-1, 1]$ | $[0, \pi]$ | $0^\circ$ a $180^\circ$ |
-| $\arctg x$ | $\mathbb{R}$ | $\left(-\frac{\pi}{2}, \frac{\pi}{2}\right)$ | $-90^\circ$ a $90^\circ$ (sem incluir) |
+<details>
+<summary>Confira: o trecho de 0 a π/2 não repete nenhuma altura. Por que ele não serve?</summary>
 
-Três observações sobre a tabela, e cada uma tem uma razão:
+Porque ali o seno só vai de 0 a 1. As alturas negativas não aparecem, e uma
+inversa construída nesse trecho não saberia responder a “que ângulo tem seno
+$-0{,}5$?”. Ele cumpre a primeira exigência e falha a segunda.
 
-**O domínio de $\arcsen$ e $\arccos$ é $[-1,1]$** porque essa é a imagem do
-seno e do cosseno. Pedir $\arcsen 2$ é perguntar “que ângulo tem seno 2?” — e
-nenhum tem. A função não está definida ali.
+</details>
 
-**O domínio de $\arctg$ é todo $\mathbb{R}$** porque a tangente
-[assume todos os valores reais](./grafico-da-tangente). Qualquer número é
-tangente de algum ângulo.
+## O $\arcsen$ devolve o giro da metade direita do ciclo
 
-**A imagem de $\arccos$ é $[0,\pi]$, e não simétrica em torno de zero.** O
-motivo: o cosseno **não** é injetor em $\left[-\frac{\pi}{2},
-\frac{\pi}{2}\right]$ — ali ele sobe e desce, repetindo valores
-($\cos\frac{\pi}{3} = \cos\left(-\frac{\pi}{3}\right)$). O trecho em que ele
-percorre $[-1,1]$ sem repetir é de 0 a $\pi$, onde decresce continuamente de 1
-a $-1$.
+Leve o trecho guardado para o ciclo trigonométrico. Os giros de $-90^\circ$ a
+$90^\circ$ (de $-\frac{\pi}{2}$ a $\frac{\pi}{2}$) são os que terminam na
+**metade direita** do círculo, a de cosseno positivo ou zero. Então “achar o
+giro do trecho guardado com seno $v$” vira um procedimento de desenho:
 
-## Os gráficos
+1. Trace a reta horizontal na altura $v$.
+2. Ela corta o ciclo em dois pontos, um de cada lado do eixo vertical. (Nas
+   alturas 1 e $-1$, ela só encosta num ponto.)
+3. Fique com o ponto da metade direita.
+4. Leia o giro desse ponto. Esse giro é o $\arcsen v$.
 
-Como em [Função inversa](../funcoes/funcao-inversa), o gráfico de uma inversa
-é o da função original **refletido na reta $y = x$**. Trocar a pergunta “qual a
-saída?” por “qual a entrada?” é trocar os eixos: o ponto $(a, b)$ do seno vira o
-ponto $(b, a)$ do arco-seno.
+Na figura, o arco grosso azul é a metade direita. Ao aparecer, a reta sobe da
+altura $-1$ até 0,5. Enquanto isso, o ponto azul percorre a metade direita de
+baixo para cima, sem passar duas vezes pelo mesmo lugar. Depois, arraste o
+valor.
 
-<CartesianPlane
-  xMin={-1.8} xMax={1.8} yMin={-1.8} yMax={1.8}
-  xUnit={80} yUnit={80}
-  xStep={0.5} yStep={0.5}
-  functions={[
-    {f: (x) => Math.sin(x), tone: 0, dashed: true, domain: [-1.5707963, 1.5707963]},
-    {f: (x) => Math.asin(Math.max(-1, Math.min(1, x))), tone: 1, domain: [-1, 1]},
-  ]}
-  lines={[{m: 1, n: 0, tone: 2, dashed: true}]}
-  caption="arcsen x (cheio) é o reflexo do seno restrito (tracejado cinza) na reta y = x (tracejada laranja)."
+<InverseCycle fn="sen" initial={0.5} caption="A reta y = v corta o ciclo em dois pontos. O arcsen devolve o da metade direita (azul); o outro, na metade esquerda (laranja), também tem seno v, mas não é devolvido." />
+
+> O **arco seno** de um número $v$ entre $-1$ e 1 é o ângulo
+> $\alpha$ entre $-\frac{\pi}{2}$ e $\frac{\pi}{2}$ cujo seno é $v$:
+> $$\arcsen v = \alpha \quad\text{quando}\quad \sen\alpha = v \ \text{ e } \ -\tfrac{\pi}{2} \le \alpha \le \tfrac{\pi}{2}.$$
+> Leia $\arcsen v$ como “o arco cujo seno é $v$”.
+
+Dois objetos se confundem aqui: o **$v$ é uma altura** (um número entre $-1$ e
+1); o **$\arcsen v$ é um giro** (um ângulo).
+
+Exemplo: $\arcsen 0{,}5 = 30^\circ = \frac{\pi}{6}$. E
+$\arcsen(-0{,}5) = -30^\circ$: a reta na altura $-0{,}5$ corta a metade
+direita embaixo do eixo, no giro negativo. A resposta **não** é 210° nem 330°,
+que também têm seno $-0{,}5$, mas ficam fora do intervalo. Contraexemplo:
+$\arcsen 1{,}5$ não existe. A reta na altura 1,5 passa por cima do ciclo e não
+corta ponto nenhum.
+
+<details>
+<summary>Confira: quanto vale arcsen(−1)? E arcsen 0?</summary>
+
+A reta na altura $-1$ só encosta no ponto de baixo do ciclo, o giro
+$-90^\circ$. Então $\arcsen(-1) = -\frac{\pi}{2}$. A reta na altura 0 é o
+eixo horizontal: na metade direita, ela passa pelo ponto de partida, giro 0.
+Então $\arcsen 0 = 0$ (e não $\pi$, que fica na metade esquerda).
+
+</details>
+
+## O $\arccos$ guarda a metade de cima, porque na metade direita o cosseno se repete
+
+Para o cosseno, a reta muda de direção. O cosseno é a **posição horizontal**
+do ponto do ciclo, então “que giro tem cosseno $v$?” vira uma reta **vertical**
+na posição $v$.
+
+A metade direita não serve para o cosseno. A reta vertical $x = 0{,}5$ corta a
+metade direita **duas vezes**, em 60° e em $-60^\circ$: o cosseno se repete
+ali. A metade que funciona é a **de cima**, de 0° a 180°: andando por ela, o
+ponto vai da direita ($x = 1$) até a esquerda ($x = -1$), passando uma vez só
+por cada posição horizontal.
+
+<InverseCycle fn="cos" initial={0.5} caption="A reta x = v corta o ciclo em dois pontos. O arccos devolve o da metade de cima (azul); o outro, na metade de baixo (laranja), tem o mesmo cosseno, mas não é devolvido." />
+
+> O **arco cosseno** de um número $v$ entre $-1$ e 1 é o ângulo $\alpha$ entre
+> $0$ e $\pi$ cujo cosseno é $v$:
+> $$\arccos v = \alpha \quad\text{quando}\quad \cos\alpha = v \ \text{ e } \ 0 \le \alpha \le \pi.$$
+
+Exemplo: $\arccos(-0{,}5) = 120^\circ = \frac{2\pi}{3}$. A reta $x = -0{,}5$
+corta a metade de cima no segundo quadrante. Contraexemplo: $-120^\circ$
+também tem cosseno $-0{,}5$, mas está na metade de baixo, e o $\arccos$ não o
+devolve. E $-60^\circ$ não serve de jeito nenhum: o cosseno dele é $+0{,}5$.
+
+<details>
+<summary>Confira: quanto valem arccos 1, arccos 0 e arccos(−1)?</summary>
+
+A reta $x = 1$ encosta no ciclo só no ponto de partida: $\arccos 1 = 0$. A
+reta $x = 0$ é o eixo vertical; na metade de cima, ela passa pelo topo:
+$\arccos 0 = \frac{\pi}{2}$. A reta $x = -1$ encosta só no ponto da esquerda:
+$\arccos(-1) = \pi$. Repare que, ao contrário do $\arcsen$, o $\arccos$ nunca
+devolve ângulo negativo.
+
+</details>
+
+## O $\arctg$ aceita qualquer número e devolve um giro entre $-90^\circ$ e $90^\circ$
+
+Em [Redução ao primeiro quadrante](./reducao-ao-primeiro-quadrante), a
+tangente apareceu como uma **altura**: prolongue a reta do raio até ela cortar
+a reta vertical $x = 1$, no ponto $T$. A altura de $T$ é a tangente do giro.
+Ir para trás é o caminho oposto:
+
+1. Marque na reta $x = 1$ o ponto $T$ na altura $v$.
+2. Ligue $T$ ao centro e prolongue a reta para os dois lados.
+3. Ela corta o ciclo em dois pontos opostos.
+4. Fique com o ponto da metade direita. O giro dele é o $\arctg v$.
+
+Duas diferenças em relação ao seno aparecem no desenho. Qualquer altura $v$
+serve, porque a reta $x = 1$ não tem fim: por isso o $\arctg$ aceita **todo
+número real**. E os giros $\pm 90^\circ$ ficam de fora, porque ali a reta do
+raio fica em pé, paralela a $x = 1$, e nunca a corta.
+
+<InverseCycle fn="tg" initial={1} caption="A reta que liga o centro ao ponto T, na altura v da reta x = 1, corta o ciclo em dois pontos opostos. O arctg devolve o da metade direita (azul), sem as pontas de cima e de baixo, que ficam abertas." />
+
+> O **arco tangente** de qualquer número real $v$ é o ângulo $\alpha$ entre
+> $-\frac{\pi}{2}$ e $\frac{\pi}{2}$, sem incluir as pontas, cuja tangente é
+> $v$:
+> $$\arctg v = \alpha \quad\text{quando}\quad \tg\alpha = v \ \text{ e } \ -\tfrac{\pi}{2} \lt \alpha \lt \tfrac{\pi}{2}.$$
+
+Exemplo: $\arctg 1 = 45^\circ$ e $\arctg(-1) = -45^\circ$. Para um número
+grande, o giro chega perto de 90° sem alcançar: $\arctg 1\,000 \approx
+89{,}94^\circ$. Contraexemplo: 225° também tem tangente 1, mas é o ponto oposto,
+na metade esquerda. E 90° nunca é resposta do $\arctg$, porque $\tg 90^\circ$
+não existe.
+
+<details>
+<summary>Confira: por que existe arctg 50, mas não existe arcsen 50?</summary>
+
+Porque a tangente alcança qualquer altura: o ponto $T$ pode subir até a altura
+50 na reta $x = 1$, e a reta do raio correspondente corta o ciclo num giro
+perto de 89°. Já o seno é uma altura **dentro** do círculo de raio 1, e
+nunca passa de 1. Nenhum giro tem seno 50.
+
+</details>
+
+### As três inversas lado a lado
+
+Cada inversa recebe o que a função direta devolve e devolve um giro da metade
+que ela guardou:
+
+| Função | Recebe (domínio) | Devolve (imagem) | Em graus | Metade do ciclo |
+|---|---|---|---|---|
+| $\arcsen v$ | $[-1,\ 1]$ | $\left[-\frac{\pi}{2},\ \frac{\pi}{2}\right]$ | de $-90^\circ$ a $90^\circ$ | direita |
+| $\arccos v$ | $[-1,\ 1]$ | $[0,\ \pi]$ | de $0^\circ$ a $180^\circ$ | de cima |
+| $\arctg v$ | $\mathbb{R}$ | $\left(-\frac{\pi}{2},\ \frac{\pi}{2}\right)$ | entre $-90^\circ$ e $90^\circ$, sem as pontas | direita, sem as pontas |
+
+O domínio de cada inversa é a imagem da função direta. O seno e o cosseno só
+devolvem números de $-1$ a 1, então só esses números podem entrar no $\arcsen$
+e no $\arccos$. A tangente devolve qualquer número real (ver
+[Gráfico da tangente](./grafico-da-tangente)), e por isso qualquer número entra
+no $\arctg$.
+
+## O gráfico da inversa é o trecho guardado refletido na reta $y = x$
+
+A inversa troca a pergunta “qual é a saída?” por “qual era a entrada?”. No
+gráfico, isso é trocar as coordenadas de lugar: se o ponto $(a,\ b)$ está no
+gráfico do seno restrito, porque $\sen a = b$, então o ponto $(b,\ a)$ está no
+gráfico do $\arcsen$, porque $\arcsen b = a$. Trocar as coordenadas de todos os
+pontos é refletir o gráfico na reta $y = x$, como em
+[Função inversa](../funcoes/funcao-inversa) e em
+[Função logarítmica](../exponenciais-e-logaritmos/funcao-logaritmica).
+
+Na animação, cada ponto do trecho guardado viaja em linha reta até o lado
+oposto da reta $y = x$. O trecho original fica tracejado no lugar. Use os
+botões para ver as três inversas.
+
+<InverseReflect fn="sen" choices={['sen', 'cos', 'tg']} caption="Cada ponto do trecho guardado (tracejado) atravessa a reta y = x e chega ao ponto com as coordenadas trocadas. A curva azul que se forma é o gráfico da inversa." />
+
+Três coisas para ler no quadro final:
+
+- **$\arcsen$** sobe de $\left(-1,\ -\frac{\pi}{2}\right)$ até
+  $\left(1,\ \frac{\pi}{2}\right)$. Fora de $-1 \le x \le 1$ não há gráfico,
+  porque ali não há entrada possível.
+- **$\arccos$** desce de $(-1,\ \pi)$ até $(1,\ 0)$. Ele nunca fica abaixo
+  do eixo horizontal: nunca devolve ângulo negativo.
+- **$\arctg$** está definido em todo o eixo horizontal e fica preso entre as
+  retas $y = -\frac{\pi}{2}$ e $y = \frac{\pi}{2}$, sem tocá-las. São as
+  **assíntotas horizontais**: as assíntotas verticais da tangente, refletidas.
+  A reflexão troca vertical por horizontal.
+
+<details>
+<summary>Confira: o ponto (1, π/4) está no gráfico do arctg. Que ponto do gráfico da tangente corresponde a ele?</summary>
+
+O ponto com as coordenadas trocadas, $\left(\frac{\pi}{4},\ 1\right)$. Ele
+está no gráfico da tangente porque $\tg\frac{\pi}{4} = 1$. É o mesmo fato lido
+nos dois sentidos: $\arctg 1 = \frac{\pi}{4}$.
+
+</details>
+
+## O $-1$ de $\sen^{-1}$ quer dizer “inversa”, não “1 dividido por”
+
+As teclas $\sen^{-1}$, $\cos^{-1}$ e $\tg^{-1}$ da calculadora calculam
+exatamente $\arcsen$, $\arccos$ e $\arctg$, com as imagens da tabela acima. É
+por isso que a tecla respondeu 30° no braço robótico, e não 150°.
+
+Essa notação é padrão, e é também uma armadilha. Pense no seno como uma
+máquina que recebe um ângulo e devolve um número. A inversa é a **seta de
+volta**: recebe o número e devolve o ângulo.
+
+<FunctionMachine
+  input="30^\circ"
+  steps={[{op: '\\sen', value: '0{,}5'}]}
+  back="\arcsen = \sen^{-1}"
+  caption="A inversa anda para trás na mesma máquina: o seno leva 30° a 0,5, e o arcsen leva 0,5 de volta a 30°."
 />
 
-<CartesianPlane
-  xMin={-6} xMax={6} yMin={-1.9} yMax={1.9}
-  xUnit={34} yUnit={44}
-  xStep={1} yStep={0.5}
-  yTicks={[{at: 1.5707963, label: '\\frac{\\pi}{2}'}, {at: -1.5707963, label: '-\\frac{\\pi}{2}'}]}
-  functions={[{f: (x) => Math.atan(x), tone: 1}]}
-  lines={[
-    {m: 0, n: 1.5707963, tone: 2, dashed: true},
-    {m: 0, n: -1.5707963, tone: 2, dashed: true},
-  ]}
-  caption="arctg x. Definida para todo x, ela se aproxima de ±π/2 sem nunca alcançar — as assíntotas horizontais são o reflexo das assíntotas verticais da tangente."
+Já “1 dividido pelo seno” é uma **segunda máquina para a frente**, que recebe o
+0,5 e devolve outro número:
+
+<FunctionMachine
+  input="30^\circ"
+  steps={[{op: '\\sen', value: '0{,}5'}, {op: '1 \\div', value: '2'}]}
+  caption="1 dividido pelo seno é mais um passo para a frente. Ele devolve um número (2), e não o ângulo de partida."
 />
-
-Repare na simetria conceitual: a tangente tinha **assíntotas verticais** em
-$\pm\frac{\pi}{2}$; sua inversa tem **assíntotas horizontais** nos mesmos
-valores. A reflexão na reta $y=x$ troca vertical por horizontal.
-
-## Sobre a notação $\sen^{-1}$
-
-As teclas $\sen^{-1}$, $\cos^{-1}$ e $\tg^{-1}$ da calculadora já apareceram
-em [Resolvendo triângulos retângulos](./resolvendo-triangulos-retangulos), onde
-devolviam o ângulo agudo de um triângulo. Elas calculam exatamente as funções
-$\arcsen$, $\arccos$ e $\arctg$ desta página — com as imagens da tabela acima.
-É por isso que a tecla respondeu 30° no braço robótico, e não 150°. O aviso
-daquela lição continua valendo, porque essa notação é padrão e é também uma
-armadilha:
 
 $$
 \sen^{-1}(0{,}5) = 30^\circ
 \qquad\text{mas}\qquad
-\frac{1}{\sen 30^\circ} = 2.
+\frac{1}{\sen 30^\circ} = \frac{1}{0{,}5} = 2.
 $$
 
-São coisas diferentes. O expoente $-1$ aplicado a uma **função** indica a
-inversa; aplicado a um **número**, indica o inverso multiplicativo.
+O expoente $-1$ aplicado a um **número** é o inverso multiplicativo:
+$5^{-1} = \frac{1}{5}$. Aplicado a uma **função**, é a função inversa. E a
+confusão piora porque $\sen^2 x$ quer dizer $(\sen x)^2$: na mesma posição, o
+expoente 2 é potência e o expoente $-1$ não é.
 
-Confusão maior ainda: $\sen^2 x$ **significa** $(\sen x)^2$. Ou seja, o expoente
-2 é potência e o expoente $-1$ é inversa — a mesma notação com dois
-significados.
+> Por isso este curso escreve $\arcsen$, $\arccos$ e $\arctg$: não há
+> ambiguidade. Quando quiser $\frac{1}{\sen x}$, o nome próprio é
+> **cossecante**, tratada em [Relações fundamentais](./relacoes-fundamentais).
 
-> Por isso este curso prefere $\arcsen$, $\arccos$ e $\arctg$: não há
-> ambiguidade. Leia como “**arco cujo seno é**”. E, quando quiser
-> $\frac{1}{\sen x}$, o nome próprio é **cossecante**, tratado em
-> [Relações fundamentais](./relacoes-fundamentais).
+<details>
+<summary>Confira: um colega digitou 1 ÷ sen(0,5) esperando o ângulo cujo seno é 0,5. O que ele calculou?</summary>
+
+Ele calculou o seno do **ângulo** 0,5 (meio radiano, se a calculadora estiver
+em radianos: $\sen 0{,}5 \approx 0{,}479$) e depois dividiu 1 por esse número,
+obtendo $\approx 2{,}09$. Fez dois passos para a frente. O que ele queria era
+um passo para trás: $\arcsen 0{,}5 = 30^\circ$.
+
+</details>
+
+## A função devolve um ângulo só; os outros saem do espelho e das voltas
+
+O $\arcsen$ não erra quando devolve 30°: ele cumpre a definição. A equação
+$\sen x = 0{,}5$, porém, tem infinitas soluções, e quem precisa delas é quem
+resolve o problema. Elas saem de $\alpha = \arcsen v$ por dois movimentos já
+conhecidos:
+
+1. **o espelho** do ângulo de referência: $\pi - \alpha$ tem a mesma altura
+   que $\alpha$ (de [Redução ao primeiro quadrante](./reducao-ao-primeiro-quadrante));
+2. **as voltas inteiras**: somar ou tirar $2\pi$ leva o ponto ao mesmo lugar
+   do ciclo (de [O ciclo trigonométrico](./ciclo-trigonometrico)).
+
+Na figura, cada corte da reta com o gráfico ganha o seu nome em função de
+$\alpha$. Arraste a reta e veja que os nomes não mudam: só o valor de $\alpha$
+muda.
+
+<HorizontalLineSine initial={0.5} labelCuts caption="Cada corte é α ou π − α, mais um número inteiro de voltas. O α é o único corte entre −π/2 e π/2." />
+
+O mesmo raciocínio vale para o cosseno e para a tangente, cada um com o seu
+espelho:
+
+| Equação | Valor da função | Todas as soluções ($k$ inteiro) | Por quê |
+|---|---|---|---|
+| $\sen x = v$ | $\alpha = \arcsen v$ | $x = \alpha + 2k\pi$ ou $x = \pi - \alpha + 2k\pi$ | espelho no eixo vertical: mesma altura |
+| $\cos x = v$ | $\alpha = \arccos v$ | $x = \alpha + 2k\pi$ ou $x = -\alpha + 2k\pi$ | espelho no eixo horizontal: mesma posição horizontal |
+| $\tg x = v$ | $\alpha = \arctg v$ | $x = \alpha + k\pi$ | o ponto oposto tem a mesma tangente; a tangente se repete a cada meia volta |
+
+Para seno e cosseno, o valor $v$ precisa estar entre $-1$ e 1; para a
+tangente, qualquer $v$ serve.
+
+Exemplo: $\sen x = -0{,}5$ entre 0 e $2\pi$. O valor devolvido é
+$\alpha = \arcsen(-0{,}5) = -\frac{\pi}{6}$, que nem está no intervalo pedido.
+Ele é o começo, não a resposta. O espelho dá
+$\pi - \left(-\frac{\pi}{6}\right) = \frac{7\pi}{6}$, e uma volta somada ao
+$\alpha$ dá $-\frac{\pi}{6} + 2\pi = \frac{11\pi}{6}$. As soluções são
+$\frac{7\pi}{6}$ e $\frac{11\pi}{6}$ (210° e 330°), as duas embaixo do eixo,
+como pede um seno negativo.
+
+<details>
+<summary>Confira: dê todas as soluções de cos x = 0,5 entre 0 e 2π.</summary>
+
+$\alpha = \arccos 0{,}5 = \frac{\pi}{3}$. O espelho é $-\frac{\pi}{3}$, que
+fica fora do intervalo; somando uma volta, vira
+$-\frac{\pi}{3} + 2\pi = \frac{5\pi}{3}$. Soluções: $\frac{\pi}{3}$ e
+$\frac{5\pi}{3}$ (60° e 300°).
+
+</details>
+
+## Com as duas coordenadas do ponto, o quadrante volta
+
+O sensor do braço só media a altura. A altura sozinha **não distingue** 30° de
+150°: a informação não está no número 0,5. Para separar os dois giros, é
+preciso um segundo dado, e o dado natural é a **posição horizontal** da garra.
+
+Com as duas coordenadas $(x,\ y)$ da garra, a primeira ideia é dividir:
+$\frac{y}{x}$ é a tangente do giro, e o $\arctg$ devolve o giro. O problema é
+que o $\arctg$ só procura na metade direita. Na divisão, os sinais se
+misturam: $(-0{,}87;\ 0{,}5)$ e $(0{,}87;\ -0{,}5)$ dão o mesmo quociente,
+cerca de $-0{,}57$, e o $\arctg$ não tem como saber de qual dos dois pontos ele veio.
+
+Gire o braço pela volta inteira. O tracejado laranja é o que `atan(y/x)`
+devolve; o painel compara com `atan2(y, x)`.
+
+<RobotArmInverse mode="tg" initial={150} from={0} caption="O sistema conhece as duas coordenadas da garra (tracejado verde). atan(y/x) só aponta para a direita (laranja) e erra por 180° quando a garra está à esquerda do eixo vertical." />
+
+A regra que a figura mostra:
+
+- garra à direita do eixo vertical ($x > 0$): $\arctg\frac{y}{x}$ já é o giro;
+- garra à esquerda ($x \lt 0$): o giro é $\arctg\frac{y}{x} + 180^\circ$, o ponto
+  oposto;
+- garra sobre o eixo vertical ($x = 0$): a divisão não existe; o giro é 90°
+  (garra acima) ou $-90^\circ$ (garra abaixo).
+
+Linguagens de programação trazem essa regra pronta na função `atan2(y, x)`.
+Ela recebe as **duas** coordenadas separadas, olha os sinais e devolve o giro
+entre $-180^\circ$ e $180^\circ$, já no quadrante certo.
+
+<details>
+<summary>Confira: um ponto está em (−1, −1). Quanto dá arctg(y/x)? E qual é o giro do ponto?</summary>
+
+$\frac{-1}{-1} = 1$, e $\arctg 1 = 45^\circ$: um ponto no primeiro quadrante.
+Mas $(-1,\ -1)$ está no terceiro. Como $x \lt 0$, some 180°: o giro é
+$225^\circ$ (que `atan2(-1, -1)` escreve como $-135^\circ$, o mesmo lugar).
+
+</details>
 
 ## Resolvendo o problema do braço robótico
 
-A função inversa devolveu 30° porque **é isso que ela faz**: entrega o valor
-principal, o único no intervalo $\left[-90^\circ, 90^\circ\right]$. Ela não
-errou; ela cumpriu a definição.
+Agora as duas perguntas da abertura têm resposta.
 
-Recuperar a outra solução é trabalho de quem chama a função, e usa as simetrias
-do ciclo:
+**Por que 30°?** Porque o $\arcsen$ devolve o giro da metade direita do ciclo,
+entre $-90^\circ$ e $90^\circ$. Entre os giros com seno 0,5, o único nesse
+intervalo é 30°. A função não errou: ela cumpriu a definição.
 
-$$
-\sen x = 0{,}5
-\quad\Longrightarrow\quad
-x = 30^\circ + k\times 360^\circ
-\quad\text{ou}\quad
-x = 150^\circ + k\times 360^\circ.
-$$
+**Como recuperar 150°?** Pelo espelho. Os giros da primeira volta com seno 0,5
+são $\alpha = 30^\circ$ e $180^\circ - 30^\circ = 150^\circ$. Com o sensor de
+altura sozinho, não há como escolher entre os dois. O programa precisa de um
+segundo dado:
 
-O braço está em 150°: a segunda família.
+- **o sinal da posição horizontal.** Em 30°, a garra está à direita do ombro
+  ($\cos 30^\circ \approx 0{,}87 > 0$); em 150°, à esquerda
+  ($\cos 150^\circ \approx -0{,}87$). Se um segundo sensor disser que a garra
+  está à esquerda, o giro é 150°;
+- **ou as duas coordenadas**, entregues ao `atan2`. Com a garra em
+  $(-0{,}87;\ 0{,}5)$, `atan2(0.5, -0.87)` devolve $\approx 150^\circ$
+  diretamente.
 
-### Como escolher entre as duas
+Repare no caminho do número. O sensor calculou $\sen 150^\circ = 0{,}5$, e
+a calculadora calculou $\arcsen 0{,}5 = 30^\circ$. Em uma linha só,
+$\arcsen(\sen 150^\circ) = 30^\circ$: aplicar o seno e depois o $\arcsen$
+não devolveu o ângulo de partida. O $\arcsen$ só devolve o ângulo de partida
+quando ele já está na metade direita, entre $-90^\circ$ e $90^\circ$.
 
-O seno sozinho **não distingue** 30° de 150° — a informação não está lá. É
-preciso um segundo dado, e há dois caminhos usuais:
-
-**Caminho 1 — usar também o cosseno.** Em 30° o cosseno é positivo; em 150°, é
-negativo. Se o sensor informar a componente horizontal, a ambiguidade some.
-
-**Caminho 2 — usar `atan2`.** Em programação, a função `atan2(y, x)` recebe as
-**duas** coordenadas e devolve o ângulo no intervalo completo de $-180^\circ$ a
-$180^\circ$, já com o quadrante certo. É a ferramenta correta para converter
-posição em ângulo, e existe justamente porque `atan(y/x)` sozinha perde a
-informação do quadrante — a divisão $\frac{y}{x}$ dá o mesmo resultado para
-$(1,1)$ e para $(-1,-1)$.
-
-> **A lição geral:** funções inversas trigonométricas devolvem **um** ângulo. Se
-> o problema admite mais de um, cabe a você gerar os demais pelas simetrias — e
-> escolher entre eles com informação adicional sobre o quadrante.
-
-## Como obter todas as soluções
-
-Fixado o valor principal $\alpha$, as demais saem das simetrias já conhecidas:
-
-| Equação | Todas as soluções |
-|---|---|
-| $\sen x = v$ | $x = \alpha + 2k\pi$ ou $x = \pi - \alpha + 2k\pi$ |
-| $\cos x = v$ | $x = \pm\alpha + 2k\pi$ |
-| $\tg x = v$ | $x = \alpha + k\pi$ |
-
-Aqui $v$ é o valor conhecido da função e $k$ é um inteiro qualquer.
-Para seno e cosseno, precisamos de $v\in[-1,1]$; para tangente, qualquer
-$v$ real é permitido.
-
-(Nas duas primeiras linhas, $\alpha$ é o valor principal correspondente; na
-terceira, o período $\pi$ da tangente faz as soluções se espaçarem de $\pi$, e
-não de $2\pi$.)
-
-Repare que o cosseno gera $+\alpha$ e $-\alpha$ porque é uma função **par**
-(simétrica no eixo vertical), enquanto o seno gera $\alpha$ e $\pi - \alpha$
-pela simetria no eixo vertical do **ciclo**.
+> **A lição geral:** uma função inversa trigonométrica devolve **um** ângulo,
+> o da metade que ela guardou. Se o problema admite outros, você os gera pelo
+> espelho e pelas voltas, e escolhe entre eles com uma informação a mais sobre
+> o quadrante.
 
 ## Exemplos resolvidos
 
-### Exemplo 1: valores principais
+### Exemplo 1: valores da função
 
 Calcule $\arcsen\frac{\sqrt{2}}{2}$, $\arccos\left(-\frac{1}{2}\right)$ e
 $\arctg(-1)$.
 
-$\arcsen\frac{\sqrt{2}}{2} = 45^\circ = \frac{\pi}{4}$ — está no intervalo
-$\left[-90^\circ, 90^\circ\right]$ ✓.
+Previsão: o primeiro é positivo e o terceiro é negativo, porque os dois
+procuram na metade direita (seno ou tangente positiva em cima, negativa
+embaixo). O segundo procura na metade de cima, e um cosseno negativo fica à
+esquerda: espere um ângulo entre 90° e 180°.
 
-$\arccos\left(-\frac{1}{2}\right) = 120^\circ = \frac{2\pi}{3}$ — está em
-$[0^\circ, 180^\circ]$ ✓. (Não é $-60^\circ$: esse valor está fora da imagem do
-arco cosseno.)
+$\arcsen\frac{\sqrt{2}}{2} = 45^\circ = \frac{\pi}{4}$, que está entre
+$-90^\circ$ e $90^\circ$ ✓.
 
-$\arctg(-1) = -45^\circ = -\frac{\pi}{4}$ — está em
-$\left(-90^\circ, 90^\circ\right)$ ✓.
+$\arccos\left(-\frac{1}{2}\right) = 120^\circ = \frac{2\pi}{3}$, que está
+entre $0^\circ$ e $180^\circ$ ✓. Não é $-120^\circ$ nem $240^\circ$: esses
+ficam na metade de baixo.
+
+$\arctg(-1) = -45^\circ = -\frac{\pi}{4}$, que está entre $-90^\circ$ e
+$90^\circ$ ✓. Não é $135^\circ$: esse é o ponto oposto, na metade esquerda.
 
 ### Exemplo 2: um valor fora do domínio
 
 *Pause e tente antes de ler.* Existe $\arcsen 1{,}5$?
 
-Não. O domínio de $\arcsen$ é $[-1,1]$, porque nenhum ângulo tem seno 1,5 — a
-imagem do seno é $[-1,1]$. Uma calculadora responde erro.
+Previsão: a reta na altura 1,5 fica acima do topo do ciclo, que está na
+altura 1. Ela não deve cortar nada.
 
-Este é um bom teste de consistência: se um problema levou você a
-$\arcsen$ de algo maior que 1, houve erro antes — provavelmente uma razão
-montada de cabeça para baixo.
+Não existe. O domínio do $\arcsen$ é $[-1,\ 1]$, porque nenhum ângulo tem seno
+1,5. A calculadora responde erro. Este é um bom teste de conferência. Se um
+problema levou você a $\arcsen$ de um número maior que 1, houve erro antes.
+O mais provável é uma razão montada de cabeça para baixo: hipotenusa sobre
+cateto, em vez de cateto sobre hipotenusa.
 
 ### Exemplo 3: todas as soluções
 
 *Pause e tente antes de ler.* Resolva $\cos x = -\frac{\sqrt{3}}{2}$ para $x$
-em $[0, 2\pi]$.
+entre $0$ e $2\pi$.
 
-Valor principal: $\arccos\left(-\frac{\sqrt{3}}{2}\right) = \frac{5\pi}{6}$
+Previsão: cosseno negativo é ponto à esquerda do eixo vertical. Devem
+aparecer duas soluções, uma no segundo e outra no terceiro quadrante.
+
+Valor da função: $\arccos\left(-\frac{\sqrt{3}}{2}\right) = \frac{5\pi}{6}$
 (150°).
 
-Pela simetria do cosseno, a outra solução é $-\frac{5\pi}{6}$, que dentro de
-$[0,2\pi]$ vira $2\pi - \frac{5\pi}{6} = \frac{7\pi}{6}$.
+O espelho do cosseno é $-\frac{5\pi}{6}$. Ele está fora do intervalo pedido;
+somando uma volta, vira $-\frac{5\pi}{6} + 2\pi = \frac{7\pi}{6}$ (210°).
 
-Soluções: $\frac{5\pi}{6}$ e $\frac{7\pi}{6}$ — ou 150° e 210°, ambos com
-cosseno negativo, no segundo e no terceiro quadrantes ✓.
+Soluções: $\frac{5\pi}{6}$ e $\frac{7\pi}{6}$, no segundo e no terceiro
+quadrantes, como previsto ✓.
 
-### Exemplo 4: composição
+### Exemplo 4: desfazer e refazer
 
 *Pause e tente antes de ler.* Calcule $\sen(\arcsen 0{,}3)$ e
 $\arcsen(\sen 150^\circ)$.
 
-O primeiro é direto: aplicar a função e desfazê-la devolve o valor original,
-desde que ele esteja no domínio:
+Previsão: o primeiro desfaz e refaz, e deve voltar ao 0,3. O segundo começa
+num ângulo de fora da metade direita, e talvez não volte.
+
+No primeiro, $\arcsen 0{,}3$ é o giro da metade direita com seno 0,3. Tirar o
+seno desse giro devolve 0,3:
 
 $$
 \sen(\arcsen 0{,}3) = 0{,}3.
@@ -418,110 +651,126 @@ $$
 \arcsen(\sen 150^\circ) = \arcsen(0{,}5) = 30^\circ,
 $$
 
-**não** 150°. O motivo: 150° está **fora** da imagem do $\arcsen$. A composição
-só devolve o valor original quando ele já pertence ao intervalo principal.
+**não** 150°. O seno de 150° é 0,5, e o $\arcsen$ devolve o giro da metade
+direita com esse seno, que é 30°. A informação de que o ponto estava à
+esquerda se perdeu no primeiro passo.
 
-> Em geral: $\sen(\arcsen x) = x$ sempre (para $x$ no domínio), mas
-> $\arcsen(\sen x) = x$ **só** quando $x \in \left[-\frac{\pi}{2},
-> \frac{\pi}{2}\right]$.
+> $\sen(\arcsen x) = x$ sempre, para $x$ entre $-1$ e 1. Mas
+> $\arcsen(\sen x) = x$ **só** quando $x$ já está entre $-\frac{\pi}{2}$ e
+> $\frac{\pi}{2}$.
 
 ### Exemplo 5: o ângulo de uma rampa
 
 *Pause e tente antes de ler.* Uma rampa sobe 1,2 m ao longo de 9 m
 horizontais. Qual é o ângulo com o chão?
 
+Previsão: subir 1,2 em 9 é pouco, bem menos que subir 9 em 9 (que daria 45°).
+Espere um ângulo pequeno, menos de 10°.
+
 $$
-\tg\theta = \frac{1{,}2}{9} = 0{,}1\overline{3}
-\Longrightarrow
-\theta = \arctg(0{,}1333) \approx 7{,}6^\circ.
+\tg\theta = \frac{1{,}2}{9} \approx 0{,}133
+\quad\Longrightarrow\quad
+\theta = \arctg(0{,}133) \approx 7{,}6^\circ.
 $$
 
-Aqui não há ambiguidade: o problema garante que o ângulo é agudo e positivo, o
-que coincide com o valor principal do $\arctg$. É o caso mais comum na prática —
-e é por isso que a limitação das inversas passa despercebida na maior parte dos
-problemas de triângulo retângulo.
+Aqui não há escolha a fazer: o ângulo de uma rampa é agudo e positivo, e cai
+na metade que o $\arctg$ guarda. É o caso mais comum na prática. Por isso, na
+maior parte dos problemas de triângulo retângulo, ninguém repara que a inversa
+devolve um ângulo só.
 
-### Exemplo 6: coordenadas para ângulo
+### Exemplo 6: das coordenadas ao ângulo
 
-*Pause e tente antes de ler.* Um ponto está em $(-3, 4)$. Qual é o ângulo que o
-segmento da origem até ele forma com o eixo horizontal positivo?
+*Pause e tente antes de ler.* Um ponto está em $(-3,\ 4)$. Que giro, a partir
+do eixo horizontal positivo, leva até ele?
 
-Tentando pela tangente:
+Previsão: $x$ negativo e $y$ positivo é o segundo quadrante. A resposta tem
+que ficar entre 90° e 180°.
+
+Pela tangente:
 
 $$
 \tg\theta = \frac{4}{-3} \approx -1{,}333
-\Longrightarrow
+\quad\Longrightarrow\quad
 \arctg(-1{,}333) \approx -53{,}1^\circ.
 $$
 
-Mas $-53{,}1^\circ$ está no **quarto** quadrante, e o ponto $(-3,4)$ está no
-**segundo**. O valor principal errou o quadrante.
-
-A correção usa o período da tangente, somando 180°:
+O valor $-53{,}1^\circ$ está no **quarto** quadrante, longe da previsão. O
+$\arctg$ procurou na metade direita, e o ponto está à esquerda. Como $x \lt 0$,
+o giro certo é o ponto oposto, meia volta adiante:
 
 $$
-\theta = -53{,}1^\circ + 180^\circ = 126{,}9^\circ.
+\theta \approx -53{,}1^\circ + 180^\circ = 126{,}9^\circ.
 $$
 
-Conferindo: $\cos 126{,}9^\circ \approx -0{,}6$ e $\sen 126{,}9^\circ \approx
-0{,}8$, que correspondem a $(-3,4)$ normalizado por 5 ✓.
-
-Em código, `atan2(4, -3)` devolveria 126,9° diretamente — é exatamente para
-evitar essa correção manual que a função existe.
+Conferindo: a distância do ponto à origem é $\sqrt{9 + 16} = 5$, e
+$\cos 126{,}9^\circ \approx -0{,}6 = \frac{-3}{5}$,
+$\sen 126{,}9^\circ \approx 0{,}8 = \frac{4}{5}$ ✓. Em código, `atan2(4, -3)`
+devolveria 126,9° sem a correção.
 
 ## Erros comuns
 
-> **Erro 1: confundir $\sen^{-1}$ com $\frac{1}{\sen}$.** O primeiro devolve um
-> ângulo; o segundo, um número. Use $\arcsen$ para não errar.
+> **Erro 1: ler $\sen^{-1}$ como $\frac{1}{\sen}$.** O primeiro anda para trás
+> e devolve um ângulo; o segundo anda para a frente e devolve um número. Teste
+> com 0,5: $\sen^{-1}(0{,}5) = 30^\circ$, mas $\frac{1}{0{,}5} = 2$.
 
-> **Erro 2: esperar todas as soluções da inversa.** Ela devolve **uma**. As
-> demais saem das simetrias.
+> **Erro 2: esperar todas as soluções da inversa.** Ela devolve **uma**, a da
+> metade que guardou. Para $\sen x = 0{,}5$ entre 0° e 360°, o $\arcsen$ dá 30°,
+> e o 150° sai do espelho $180^\circ - 30^\circ$.
 
-> **Erro 3: usar $\arcsen$ fora de $[-1,1]$.** Não existe.
+> **Erro 3: tomar o valor devolvido como resposta final.** Para
+> $\sen x = -0{,}5$ entre 0 e $2\pi$, o $\arcsen$ devolve $-\frac{\pi}{6}$, que
+> nem pertence ao intervalo. As respostas são $\frac{7\pi}{6}$ e
+> $\frac{11\pi}{6}$.
 
-> **Erro 4: supor que $\arcsen(\sen x) = x$ sempre.** Só vale dentro do
-> intervalo principal.
+> **Erro 4: usar $\arcsen$ ou $\arccos$ fora de $[-1,\ 1]$.** $\arcsen 1{,}5$
+> não existe. Se apareceu na sua conta, procure o erro antes dela.
 
-> **Erro 5: esquecer o quadrante no $\arctg$.** Use `atan2` ou corrija somando
-> 180° quando o ponto estiver à esquerda do eixo vertical.
+> **Erro 5: supor que $\arcsen(\sen x) = x$ sempre.** $\arcsen(\sen 150^\circ)
+> = 30^\circ$. Só vale quando $x$ já está entre $-90^\circ$ e $90^\circ$.
 
-> **Erro 6: achar que a imagem de $\arccos$ é $\left[-\frac{\pi}{2},
-> \frac{\pi}{2}\right]$.** É $[0, \pi]$ — o cosseno não é injetor no intervalo
-> simétrico.
+> **Erro 6: esquecer o quadrante no $\arctg$.** Para o ponto $(-3,\ 4)$,
+> $\arctg\frac{4}{-3} \approx -53{,}1^\circ$ aponta para o lado oposto. Quando
+> $x \lt 0$, some 180°, ou use `atan2`.
+
+> **Erro 7: achar que o $\arccos$ devolve giros entre $-90^\circ$ e $90^\circ$.**
+> Ele devolve giros entre 0° e 180°. Na metade direita o cosseno se repete
+> (60° e $-60^\circ$ têm o mesmo cosseno), e uma função não pode devolver
+> dois valores.
 
 ## Perguntas de verificação
 
-1. Por que o seno, tal como definido, não tem função inversa?
-2. Que duas condições o intervalo escolhido para a restrição precisa satisfazer?
-3. Por que a imagem de $\arccos$ é $[0,\pi]$ e não
-   $\left[-\frac{\pi}{2},\frac{\pi}{2}\right]$?
-4. Por que $\arctg$ tem domínio $\mathbb{R}$, mas $\arcsen$ não?
-5. Por que $\arcsen(\sen 150^\circ) \neq 150^\circ$?
+1. Por que o seno, com todos os ângulos como entrada, não tem função inversa?
+2. Que duas exigências o trecho guardado precisa cumprir? Dê um trecho que
+   cumpre só uma delas.
+3. Por que o $\arccos$ guarda a metade de cima do ciclo, e não a direita, como
+   o $\arcsen$?
+4. Por que o $\arctg$ aceita qualquer número, mas o $\arcsen$ não?
+5. Por que $\arcsen(\sen 150^\circ)$ não dá 150°?
 6. Por que existe a função `atan2` em linguagens de programação?
 
 <details>
 <summary>Respostas para conferência</summary>
 
-1. Porque ela não é injetora: infinitos ângulos diferentes têm o mesmo seno.
-   A partir da saída, é impossível recuperar a entrada — a informação se perdeu.
-   Graficamente, retas horizontais cortam o gráfico em infinitos pontos.
-2. Ser **injetora** ali (não repetir valores) e **cobrir toda a imagem** da
-   função original (de $-1$ a 1, no caso do seno). A primeira condição garante
-   que a inversa esteja bem definida; a segunda, que ela responda a todos os
-   valores possíveis.
-3. Porque no intervalo simétrico o cosseno **não** é injetor: ele sobe e desce,
-   e $\cos\alpha = \cos(-\alpha)$. Já de 0 a $\pi$ ele decresce continuamente de
-   1 a $-1$, sem repetir e cobrindo toda a imagem.
-4. Porque a imagem da tangente é todo $\mathbb{R}$: qualquer número é tangente
-   de algum ângulo. A imagem do seno é apenas $[-1,1]$, e o domínio da inversa é
-   sempre a imagem da direta.
-5. Porque a imagem do $\arcsen$ é $\left[-90^\circ, 90^\circ\right]$, e 150° está
-   fora dela. A função devolve o **único** ângulo daquele intervalo com seno
-   0,5, que é 30°.
-6. Porque `atan(y/x)` recebe apenas o **quociente**, e o quociente é o mesmo
-   para $(1,1)$ e $(-1,-1)$ — a informação do quadrante se perde na divisão.
-   `atan2(y, x)` recebe as duas coordenadas separadamente e consegue devolver o
-   ângulo correto em toda a volta.
+1. Porque ele não é injetor: infinitos ângulos diferentes têm o mesmo seno.
+   Olhando a saída, não há como saber qual entrada a produziu. No gráfico,
+   qualquer reta horizontal entre $-1$ e 1 corta a senoide infinitas vezes.
+2. Não repetir altura (ser injetor no trecho) e alcançar todas as alturas de
+   $-1$ a 1. A primeira garante que a inversa devolva um valor só; a segunda,
+   que ela responda a todo valor possível. O trecho de 0 a $\frac{\pi}{2}$
+   cumpre só a primeira; o de 0 a $2\pi$ cumpre só a segunda.
+3. Porque na metade direita o cosseno se repete: $\cos 60^\circ =
+   \cos(-60^\circ) = 0{,}5$. Na metade de cima, o ponto vai de $x = 1$ até
+   $x = -1$ passando uma vez só por cada posição horizontal.
+4. Porque a tangente alcança qualquer número real (o ponto $T$ sobe sem limite
+   na reta $x = 1$), e o seno só alcança números de $-1$ a 1. O que uma
+   inversa aceita é sempre o que a função direta devolve.
+5. Porque o seno de 150° é 0,5, e o $\arcsen$ devolve o giro da metade direita
+   com seno 0,5, que é 30°. O 150° fica na metade esquerda, fora do que o
+   $\arcsen$ devolve.
+6. Porque `atan(y/x)` recebe só o quociente, e o quociente é o mesmo para
+   $(1,\ 1)$ e $(-1,\ -1)$: a divisão apaga os sinais, e com eles o quadrante.
+   `atan2(y, x)` recebe as duas coordenadas separadas e devolve o giro certo
+   na volta inteira.
 
 </details>
 
@@ -531,149 +780,187 @@ evitar essa correção manual que a função existe.
 
 1. Calcule: (a) $\arcsen 1$; (b) $\arccos 0$; (c) $\arctg 0$;
    (d) $\arcsen\left(-\frac{1}{2}\right)$.
-2. Determine domínio e imagem de $\arcsen$, $\arccos$ e $\arctg$.
+2. Escreva domínio e imagem de $\arcsen$, $\arccos$ e $\arctg$, e diga que
+   metade do ciclo cada uma guarda.
 3. Quais destas expressões existem? (a) $\arcsen 0{,}9$; (b) $\arccos 1{,}2$;
    (c) $\arctg 1\,000$.
 
 ### 2. Explicação
 
-4. Explique por que uma função que repete valores não pode ter inversa.
+4. Explique, com um exemplo numérico, por que uma função que repete valores
+   não pode ter inversa.
 5. Um colega escreveu $\sen^{-1}(0{,}5) = 2$. Que confusão ele cometeu?
-6. Explique por que a assíntota horizontal de $\arctg$ está em
-   $\pm\frac{\pi}{2}$.
+6. Explique por que o gráfico do $\arctg$ tem assíntotas horizontais em
+   $y = \pm\frac{\pi}{2}$.
 
 ### 3. Aplicação direta
 
-7. Calcule: (a) $\arccos\left(\frac{\sqrt{2}}{2}\right)$;
-   (b) $\arctg(\sqrt{3})$; (c) $\arcsen(-1)$.
-8. Resolva $\sen x = \frac{\sqrt{3}}{2}$ em $[0, 2\pi]$.
-9. Resolva $\tg x = -1$ em $[0, 2\pi]$.
+7. Calcule: (a) $\arccos\frac{\sqrt{2}}{2}$; (b) $\arctg\sqrt{3}$;
+   (c) $\arcsen(-1)$.
+8. Resolva $\sen x = \frac{\sqrt{3}}{2}$ para $x$ entre $0$ e $2\pi$.
+9. Resolva $\tg x = -1$ para $x$ entre $0$ e $2\pi$.
 
 ### 4. Variação
 
 10. Calcule $\arcsen\left(\sen\frac{5\pi}{6}\right)$ e explique o resultado.
 11. Calcule $\cos(\arcsen 0{,}6)$ sem calculadora. (Sugestão: desenhe o
     triângulo retângulo correspondente.)
-12. Determine o ângulo que o segmento da origem ao ponto $(-5, -12)$ forma com o
-    eixo horizontal positivo.
+12. Determine o giro, a partir do eixo horizontal positivo, que leva ao ponto
+    $(-5,\ -12)$.
+13. Resolva $\sen x = -\frac{\sqrt{2}}{2}$ para $x$ entre $0$ e $2\pi$.
 
 <details>
 <summary>Dica para o 11</summary>
 
 Se o seno vale 0,6, monte um triângulo retângulo com cateto oposto 6 e
-hipotenusa 10. O cosseno é o outro cateto sobre a hipotenusa — e o outro cateto
-sai por Pitágoras.
+hipotenusa 10. O cosseno é o outro cateto dividido pela hipotenusa, e o outro
+cateto sai por Pitágoras.
+
+</details>
+
+<details>
+<summary>Dica para o 13</summary>
+
+O $\arcsen$ devolve um ângulo negativo, fora do intervalo pedido. Use o
+espelho $\pi - \alpha$ e uma volta inteira somada a $\alpha$.
 
 </details>
 
 ### 5. Problema misto
 
-13. Um telhado sobe 2,4 m ao longo de 5 m horizontais. Determine sua inclinação
+14. Um telhado sobe 2,4 m ao longo de 5 m horizontais. Determine a inclinação
     em graus e em porcentagem.
-14. Um braço robótico tem a garra na posição $(x, y) = (-2,\ 2\sqrt{3})$ em
-    relação ao eixo. Determine o ângulo do braço, e explique por que
-    $\arctg\left(\frac{y}{x}\right)$ sozinha daria a resposta errada.
+15. A garra de um braço robótico está no ponto $(x,\ y) = (-2,\ 2\sqrt{3})$
+    em relação ao ombro. Determine o giro do braço, e explique por que
+    $\arctg\frac{y}{x}$ sozinho daria a resposta errada.
 
 ### 6. Justificativa
 
-15. Mostre que $\sen(\arccos x) = \sqrt{1-x^2}$ para $x$ em $[0,1]$, usando um
-    triângulo retângulo.
-16. Explique por que o gráfico de uma função inversa é o reflexo do gráfico da
+16. Mostre que $\sen(\arccos x) = \sqrt{1-x^2}$ para $x$ entre 0 e 1 (sem as
+    pontas), usando um triângulo retângulo.
+17. Explique por que o gráfico de uma função inversa é o reflexo do gráfico da
     função na reta $y = x$.
 
 <details>
 <summary>Respostas para conferência</summary>
 
 1. (a) $\frac{\pi}{2}$ (90°); (b) $\frac{\pi}{2}$ (90°); (c) 0;
-   (d) $-\frac{\pi}{6}$ ($-30^\circ$).
-2. $\arcsen$: domínio $[-1,1]$, imagem
-   $\left[-\frac{\pi}{2},\frac{\pi}{2}\right]$. $\arccos$: domínio $[-1,1]$,
-   imagem $[0,\pi]$. $\arctg$: domínio $\mathbb{R}$, imagem
-   $\left(-\frac{\pi}{2},\frac{\pi}{2}\right)$.
-3. Existem (a) e (c). Não existe (b): 1,2 está fora de $[-1,1]$.
-4. Porque, dada uma saída repetida, não há como decidir qual das entradas a
-   produziu — e a inversa precisaria devolver **uma** resposta, por ser função.
-   A informação necessária simplesmente não está na saída.
-5. Ele leu $\sen^{-1}$ como $\frac{1}{\sen}$: de fato $\frac{1}{\sen 30^\circ}
-   = 2$. Mas $\sen^{-1}$ é a função inversa, e $\sen^{-1}(0{,}5) = 30^\circ$ —
-   um ângulo, não um número puro.
-6. Porque a tangente tem assíntotas **verticais** em $\pm\frac{\pi}{2}$, e a
-   inversa é o reflexo do gráfico na reta $y=x$. Essa reflexão troca eixos, e
-   assíntotas verticais viram horizontais nos mesmos valores.
+   (d) $-\frac{\pi}{6}$ ($-30^\circ$). Se em (d) você respondeu 210° ou 330°,
+   esses ângulos têm seno $-\frac{1}{2}$, mas estão fora da metade direita.
+2. $\arcsen$: domínio $[-1,\ 1]$, imagem
+   $\left[-\frac{\pi}{2},\ \frac{\pi}{2}\right]$, metade direita. $\arccos$:
+   domínio $[-1,\ 1]$, imagem $[0,\ \pi]$, metade de cima. $\arctg$: domínio
+   $\mathbb{R}$, imagem $\left(-\frac{\pi}{2},\ \frac{\pi}{2}\right)$, metade
+   direita sem as pontas.
+3. Existem (a) e (c). Não existe (b): 1,2 está fora de $[-1,\ 1]$, e nenhum
+   ângulo tem cosseno 1,2.
+4. Exemplo: $\sen 30^\circ = \sen 150^\circ = 0{,}5$. Recebendo o 0,5, a
+   inversa precisaria devolver **uma** resposta, porque é função, e não há
+   como decidir entre 30° e 150°. A informação de qual era a entrada não está
+   na saída.
+5. Ele leu $\sen^{-1}$ como $\frac{1}{\sen}$: de fato
+   $\frac{1}{\sen 30^\circ} = 2$. Mas $\sen^{-1}$ é a função inversa, e
+   $\sen^{-1}(0{,}5) = 30^\circ$, um ângulo.
+6. A tangente tem assíntotas **verticais** em $x = \pm\frac{\pi}{2}$, e o
+   gráfico do $\arctg$ é o do trecho guardado da tangente refletido na reta
+   $y = x$. A reflexão troca as coordenadas, e uma reta vertical
+   $x = \frac{\pi}{2}$ vira a reta horizontal $y = \frac{\pi}{2}$.
 7. (a) $\frac{\pi}{4}$ (45°); (b) $\frac{\pi}{3}$ (60°);
    (c) $-\frac{\pi}{2}$ ($-90^\circ$).
-8. Valor principal $\frac{\pi}{3}$; a outra solução é
+8. Valor da função: $\arcsen\frac{\sqrt{3}}{2} = \frac{\pi}{3}$. O espelho é
    $\pi - \frac{\pi}{3} = \frac{2\pi}{3}$. Soluções: $\frac{\pi}{3}$ e
    $\frac{2\pi}{3}$.
-9. Valor principal $-\frac{\pi}{4}$; somando $\pi$ sucessivamente e ficando em
-   $[0,2\pi]$: $\frac{3\pi}{4}$ e $\frac{7\pi}{4}$.
+9. Valor da função: $\arctg(-1) = -\frac{\pi}{4}$, fora do intervalo. Somando
+   meias voltas: $-\frac{\pi}{4} + \pi = \frac{3\pi}{4}$ e
+   $-\frac{\pi}{4} + 2\pi = \frac{7\pi}{4}$. Soluções: $\frac{3\pi}{4}$ e
+   $\frac{7\pi}{4}$. Se você somou $2\pi$ em vez de $\pi$, perdeu a solução
+   $\frac{3\pi}{4}$: a tangente se repete a cada meia volta.
 10. $\sen\frac{5\pi}{6} = \frac{1}{2}$, e $\arcsen\frac{1}{2} = \frac{\pi}{6}$.
-    O resultado é $\frac{\pi}{6}$, não $\frac{5\pi}{6}$, porque este último está
-    fora da imagem do $\arcsen$.
+    O resultado é $\frac{\pi}{6}$, e não $\frac{5\pi}{6}$, porque
+    $\frac{5\pi}{6}$ fica na metade esquerda do ciclo, fora do que o $\arcsen$
+    devolve.
 11. Triângulo com cateto oposto 6 e hipotenusa 10; o outro cateto é
-    $\sqrt{100-36} = 8$. Logo $\cos = \frac{8}{10} = 0{,}8$.
-12. $\arctg\left(\frac{-12}{-5}\right) = \arctg(2{,}4) \approx 67{,}4^\circ$,
-    que está no primeiro quadrante — mas o ponto está no **terceiro**. Somando
-    180°: $\theta \approx 247{,}4^\circ$ (ou, equivalentemente,
-    $-112{,}6^\circ$).
-13. $\tg\theta = \frac{2{,}4}{5} = 0{,}48$, logo
-    $\theta = \arctg(0{,}48) \approx 25{,}6^\circ$. Em porcentagem, a
-    inclinação é a própria tangente: **48%**.
-14. O ponto $(-2,\ 2\sqrt{3})$ está no segundo quadrante, e sua distância à
-    origem é $\sqrt{4 + 12} = 4$. Então $\cos\theta = -\frac{1}{2}$ e
-    $\sen\theta = \frac{\sqrt{3}}{2}$, o que dá $\theta = 120^\circ$. Já
-    $\arctg\left(\frac{2\sqrt{3}}{-2}\right) = \arctg(-\sqrt{3}) = -60^\circ$ —
-    valor principal no quarto quadrante, errado por 180°. A divisão apagou a
-    informação de que **as duas** coordenadas tinham sinais específicos.
-15. Se $\arccos x = \theta$, então $\cos\theta = x$. Monte um triângulo
-    retângulo com hipotenusa 1 e cateto adjacente $x$; por Pitágoras, o cateto
-    oposto vale $\sqrt{1-x^2}$. Logo
+    $\sqrt{100 - 36} = 8$. Logo o cosseno é $\frac{8}{10} = 0{,}8$. Ele é
+    positivo porque $\arcsen 0{,}6$ está na metade direita do ciclo.
+12. $\arctg\frac{-12}{-5} = \arctg 2{,}4 \approx 67{,}4^\circ$, que está no
+    primeiro quadrante. Mas o ponto, com as duas coordenadas negativas, está
+    no **terceiro**. Como $x \lt 0$, some 180°: $\theta \approx 247{,}4^\circ$
+    (ou, o mesmo lugar, $-112{,}6^\circ$, que é o que `atan2` devolve). Se você
+    respondeu 67,4°, a divisão de dois negativos apagou os sinais.
+13. Valor da função: $\arcsen\left(-\frac{\sqrt{2}}{2}\right) = -\frac{\pi}{4}$,
+    fora do intervalo. O espelho é $\pi - \left(-\frac{\pi}{4}\right) =
+    \frac{5\pi}{4}$, e uma volta somada dá $-\frac{\pi}{4} + 2\pi =
+    \frac{7\pi}{4}$. Soluções: $\frac{5\pi}{4}$ e $\frac{7\pi}{4}$ (225° e
+    315°), as duas embaixo do eixo. Se você encontrou $\frac{3\pi}{4}$, fez
+    $\pi - \frac{\pi}{4}$ esquecendo o sinal de $\alpha$: esse ângulo tem seno
+    positivo.
+14. $\tg\theta = \frac{2{,}4}{5} = 0{,}48$, então
+    $\theta = \arctg 0{,}48 \approx 25{,}6^\circ$. Em porcentagem, a inclinação
+    é a própria tangente, a subida dividida pelo avanço: **48%**.
+15. O ponto $(-2,\ 2\sqrt{3})$ está no segundo quadrante, e a distância dele
+    ao ombro é $\sqrt{4 + 12} = 4$. Então $\cos\theta = \frac{-2}{4} =
+    -\frac{1}{2}$ e $\sen\theta = \frac{2\sqrt{3}}{4} = \frac{\sqrt{3}}{2}$, o
+    que dá $\theta = 120^\circ$. Já
+    $\arctg\frac{2\sqrt{3}}{-2} = \arctg(-\sqrt{3}) = -60^\circ$, um giro no
+    quarto quadrante, errado por 180°. A divisão apagou a informação de que
+    $x$ era negativo e $y$ positivo.
+16. Chame $\theta = \arccos x$. Então $\cos\theta = x$, e, como $x$ está entre
+    0 e 1 sem as pontas, $\theta$ fica entre 0° e 90°, também sem as pontas.
+    Então $\theta$ é agudo, e o triângulo existe. Nas pontas a fórmula também
+    vale, por conta direta: $\sen(\arccos 0) = \sen 90^\circ = 1 = \sqrt{1 - 0^2}$
+    e $\sen(\arccos 1) = \sen 0^\circ = 0 = \sqrt{1 - 1^2}$. Monte um triângulo retângulo com
+    hipotenusa 1 e cateto adjacente a $\theta$ igual a $x$. Por Pitágoras, o
+    cateto oposto mede $\sqrt{1 - x^2}$. Logo
     $\sen\theta = \frac{\sqrt{1-x^2}}{1} = \sqrt{1-x^2}$.
-16. Porque a inversa troca os papéis de entrada e saída: o ponto $(a,b)$ do
-    gráfico de $f$ corresponde ao ponto $(b,a)$ do gráfico de $f^{-1}$. Trocar
-    as coordenadas de um ponto é exatamente refletir esse ponto na reta $y = x$
-    — logo, o gráfico inteiro se reflete nela.
+17. A inversa troca os papéis de entrada e saída: se o ponto $(a,\ b)$ está no
+    gráfico de $f$, porque $f(a) = b$, então $(b,\ a)$ está no gráfico de
+    $f^{-1}$, porque $f^{-1}(b) = a$. Trocar as coordenadas de um ponto é
+    refletir esse ponto na reta $y = x$. Como isso vale para todos os pontos,
+    o gráfico inteiro se reflete nela.
 
-**Se sua resposta não bateu:**
-
-Se recuperou um ângulo fora do intervalo principal da inversa,
-confira qual função você aplicou por último. Se o problema pede todos os
-ângulos, o valor principal é o começo da resposta: ainda falta usar as
-simetrias e selecionar os valores do intervalo pedido.
+**Se sua resposta não bateu:** confira se você parou no valor devolvido pela
+inversa. Quando o problema pede todos os ângulos de um intervalo, esse valor é
+o começo da resposta: ainda falta usar o espelho e as voltas e ficar só com os
+ângulos do intervalo pedido.
 
 </details>
 
 ## Revisão curta
 
-- Seno, cosseno e tangente **não têm inversa** no domínio completo, porque
-  repetem valores. A saída é **restringir o domínio**.
-- $\arcsen: [-1,1] \to \left[-\frac{\pi}{2},\frac{\pi}{2}\right]$;
-  $\arccos: [-1,1] \to [0,\pi]$;
-  $\arctg: \mathbb{R} \to \left(-\frac{\pi}{2},\frac{\pi}{2}\right)$.
-- A imagem de $\arccos$ é $[0,\pi]$ porque o cosseno só é injetor ali.
-- $\sen^{-1}$ significa **inversa**, não $\frac{1}{\sen}$. Prefira $\arcsen$.
-- A inversa devolve **um** valor (o principal). As demais soluções vêm das
-  simetrias: $\pi - \alpha$ para o seno, $-\alpha$ para o cosseno, $+k\pi$ para
-  a tangente.
-- $\sen(\arcsen x) = x$ sempre; $\arcsen(\sen x) = x$ **só** dentro do intervalo
-  principal.
-- Para converter coordenadas em ângulo, use `atan2(y, x)` — `atan(y/x)` perde o
+- Seno, cosseno e tangente **repetem valores**, e por isso não têm inversa com
+  todos os ângulos como entrada. O conserto é **guardar um trecho** que não
+  repete e alcança todos os valores.
+- No ciclo, cada inversa procura numa metade: $\arcsen$ na direita
+  ($-\frac{\pi}{2}$ a $\frac{\pi}{2}$), $\arccos$ na de cima ($0$ a $\pi$),
+  $\arctg$ na direita sem as pontas.
+- $\arcsen$ e $\arccos$ só aceitam números de $-1$ a 1; $\arctg$ aceita
+  qualquer número.
+- O gráfico de cada inversa é o trecho guardado refletido na reta $y = x$. As
+  assíntotas verticais da tangente viram as horizontais do $\arctg$.
+- $\sen^{-1}$ é a **inversa** (anda para trás), não $\frac{1}{\sen}$. Prefira
+  escrever $\arcsen$.
+- A inversa devolve **um** ângulo. Os outros saem do espelho ($\pi - \alpha$
+  no seno, $-\alpha$ no cosseno, o ponto oposto na tangente) e das voltas.
+- $\sen(\arcsen x) = x$ sempre; $\arcsen(\sen x) = x$ **só** quando $x$ já
+  está entre $-\frac{\pi}{2}$ e $\frac{\pi}{2}$.
+- Para passar de coordenadas a ângulo, use `atan2(y, x)`: `atan(y/x)` perde o
   quadrante.
 
-Encerra-se o estudo das funções. O último módulo volta às igualdades: as
-[relações que valem para todo ângulo](./relacoes-fundamentais), começando pela
-que já apareceu no ciclo como consequência direta de Pitágoras.
+Aqui termina o estudo das funções trigonométricas. O próximo módulo volta às
+igualdades: as [relações que valem para todo ângulo](./relacoes-fundamentais),
+começando pela que já apareceu no ciclo como consequência de Pitágoras.
 
 ## Revisão do módulo 6 {#revisao-do-modulo-6}
 
-Um movimento repetido produz um gráfico. Às vezes você conhece a função e quer
-prever uma posição; às vezes conhece a posição e quer recuperar os instantes.
+Um movimento que se repete produz um gráfico em ondas. Às vezes você conhece a
+função e quer prever uma posição; às vezes conhece a posição e quer recuperar
+os instantes.
 
 **Tente primeiro.** Faça esboços e confira as respostas nos valores da função.
 Nesta revisão, os ângulos estão em radianos, salvo indicação diferente.
 
-1. Calcule $\arccos(-\frac12)$ e $\arcsen(-\frac12)$.
-   Diga a qual intervalo principal cada resposta precisa pertencer.
+1. Calcule $\arccos\left(-\frac12\right)$ e $\arcsen\left(-\frac12\right)$.
+   Diga a qual intervalo cada resposta precisa pertencer.
 2. O gráfico de $\cos x$ é o de $\sen x$ refletido no eixo horizontal?
    Se não for, descreva uma transformação que realmente produza o cosseno.
 3. Determine amplitude, período e imagem de $f(x)=-2\sen(3x)+1$.
@@ -682,7 +969,7 @@ Nesta revisão, os ângulos estão em radianos, salvo indicação diferente.
 5. Uma roda-gigante de raio 20 m tem centro a 22 m do chão. Ela completa uma
    volta em 40 s, partindo do ponto mais baixo. Escreva a altura em função do
    tempo e encontre os instantes da primeira volta em que a cabine está a 22 m.
-6. Uma calculadora em modo RAD devolve $\arcsen(\sen\frac{5\pi}{6})$.
+6. Uma calculadora em modo RAD calcula $\arcsen\left(\sen\frac{5\pi}{6}\right)$.
    O resultado é $\frac{5\pi}{6}$? Explique qual etapa impede essa conclusão.
 
 <details>
@@ -696,25 +983,28 @@ compare a altura procurada com a altura do centro e acompanhe uma volta no ciclo
 <details>
 <summary>Respostas da revisão do módulo 6</summary>
 
-1. $\arccos(-\frac12)=\frac{2\pi}{3}\in[0,\pi]$.
-   $\arcsen(-\frac12)=-\frac{\pi}{6}\in[-\frac\pi2,\frac\pi2]$.
-   As inversas escolhem valores principais; elas não listam todos os ângulos.
-2. Não. Em $x=0$, $-\sen0=0$, mas $\cos0=1$.
+1. $\arccos\left(-\frac12\right)=\frac{2\pi}{3}$, que está em $[0,\ \pi]$, a
+   metade de cima do ciclo.
+   $\arcsen\left(-\frac12\right)=-\frac{\pi}{6}$, que está em
+   $\left[-\frac\pi2,\ \frac\pi2\right]$, a metade direita.
+   As inversas devolvem um ângulo só; elas não listam todos os ângulos.
+2. Não. Em $x=0$, $-\sen 0=0$, mas $\cos 0=1$.
    O cosseno é o seno deslocado $\frac\pi2$ para a esquerda:
-   $\cos x=\sen(x+\frac\pi2)$.
-3. Amplitude 2; período $\frac{2\pi}{3}$; imagem $[-1,3]$.
-   O sinal negativo inverte a oscilação, e a soma de 1 desloca seu centro.
-4. $3x+\pi=3(x+\frac\pi3)$: deslocamento de $\frac\pi3$ para a esquerda.
-   Amplitude, período e imagem permanecem iguais. Se respondeu $\pi$,
-   deixou de dividir a fase pelo fator da entrada.
-5. Uma escolha é $h(t)=22-20\cos(\frac{\pi t}{20})$.
+   $\cos x=\sen\left(x+\frac\pi2\right)$.
+3. Amplitude 2; período $\frac{2\pi}{3}$; imagem $[-1,\ 3]$.
+   O sinal negativo inverte a oscilação, e a soma de 1 sobe o centro dela.
+4. $3x+\pi=3\left(x+\frac\pi3\right)$: deslocamento de $\frac\pi3$ para a
+   esquerda. Amplitude, período e imagem permanecem iguais. Se respondeu
+   $\pi$, deixou de dividir a fase pelo fator da entrada.
+5. Uma escolha é $h(t)=22-20\cos\left(\frac{\pi t}{20}\right)$.
    Ela começa em $22-20=2$ m e tem período 40 s.
-   Para $h(t)=22$, precisamos de $\cos(\frac{\pi t}{20})=0$.
-   Na primeira volta, o argumento vale $\frac\pi2$ ou $\frac{3\pi}{2}$;
-   portanto, $t=10$ s e $t=30$ s. A cabine passa pela altura do centro duas vezes.
+   Para $h(t)=22$, precisamos de $\cos\left(\frac{\pi t}{20}\right)=0$.
+   Na primeira volta, o ângulo $\frac{\pi t}{20}$ vale $\frac\pi2$ ou
+   $\frac{3\pi}{2}$; portanto, $t=10$ s e $t=30$ s. A cabine passa pela
+   altura do centro duas vezes.
 6. Não. Primeiro, $\sen\frac{5\pi}{6}=\frac12$.
-   Depois, $\arcsen\frac12=\frac\pi6$. A inversa devolve o ângulo do seu
-   intervalo principal, e $\frac{5\pi}{6}$ está fora dele.
+   Depois, $\arcsen\frac12=\frac\pi6$. A inversa devolve o ângulo da metade
+   direita do ciclo, e $\frac{5\pi}{6}$ está na metade esquerda.
 
 </details>
 
@@ -722,4 +1012,3 @@ compare a altura procurada com a altura do centro e acompanhe uma volta no ciclo
 mas a posição da cabine corresponde a dois instantes no item 5. Para recuperar
 essa distinção, retome [Funções inversas](./funcoes-trigonometricas-inversas).
 Para o item 4, retome [Os parâmetros da onda](./parametros-das-funcoes-trigonometricas).
-

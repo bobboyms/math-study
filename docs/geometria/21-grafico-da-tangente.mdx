@@ -3,62 +3,82 @@ title: Gráfico da tangente
 ---
 
 import CartesianPlane from '@site/src/components/CartesianPlane';
-import UnitCircle from '@site/src/components/UnitCircle';
+import TangentAxisExplorer from '@site/src/components/TangentAxisExplorer';
+import LaserWall from '@site/src/components/LaserWall';
+import TangentGraphTracer from '@site/src/components/TangentGraphTracer';
+import TangentAsymptoteZoom from '@site/src/components/TangentAsymptoteZoom';
+import TangentLevelLine from '@site/src/components/TangentLevelLine';
 
 # Gráfico da tangente: onde a curva dispara, e por quê
 
 ## Problema motivador: o laser que sobe na parede
 
 Um apontador laser está fixo a **1 metro** de uma parede, apontando na
-horizontal. Você começa a inclinar o feixe para cima, e o ponto luminoso sobe.
+horizontal. Você começa a inclinar o feixe para cima, sempre no mesmo ritmo, e
+o ponto luminoso sobe pela parede.
 
-Com o feixe inclinado em $\theta$, a altura do ponto na parede é
+A figura faz esse giro. A cada 10° de giro, o ponto deixa uma marca laranja na
+parede. Olhe a distância entre as marcas. Depois, arraste o controle e
+acompanhe o painel.
+
+<LaserWall initial={80} />
+
+Os giros são iguais (10° de cada vez), mas as subidas não são: as marcas ficam
+cada vez mais afastadas. A altura do ponto já tem fórmula. O laser, a parede e
+a linha do chão formam um triângulo retângulo de cateto adjacente 1 m e cateto
+oposto $h$. Pela [tangente do triângulo](./razoes-trigonometricas),
 
 $$
-h = \tg\theta,
+\tg\theta = \frac{\text{oposto}}{\text{adjacente}} = \frac{h}{1} = h.
 $$
-
-porque o triângulo formado tem cateto adjacente 1 e cateto oposto $h$.
 
 | $\theta$ | 10° | 45° | 60° | 80° | 89° | 89,9° |
 |---|---|---|---|---|---|---|
-| $h$ (m) | 0,18 | 1,00 | 1,73 | 5,67 | 57,3 | 573 |
+| $h$ (m) | 0,18 | 1,00 | 1,73 | 5,67 | 57,29 | 572,96 |
 
-> A altura cresce cada vez mais rápido. O que acontece exatamente em 90°? E
-> depois disso?
+> Por que a altura cresce cada vez mais rápido, se o giro é sempre o mesmo? O
+> que acontece exatamente em 90°? E depois de 90°?
 
-Se você já tentou calcular $\tg 90^\circ$ numa calculadora, viu a resposta dela:
-**erro**. Esta página explica por que — e mostra que essa “falha” não é um
-defeito da máquina, mas uma característica essencial da função, visível no seu
-gráfico.
+Se você já tentou calcular $\tg 90^\circ$ numa calculadora, viu a resposta
+dela: **erro**. Esta página explica por quê. Essa “falha” não é um defeito da
+máquina. Ela é uma característica da própria função, e aparece no gráfico
+dela.
 
-## Mapa das ideias
+## Roteiro da lição
 
-- **assíntota vertical** — reta vertical da qual o gráfico se aproxima
-  disparando para cima ou para baixo, sem nunca tocá-la (o termo vem de
-  [Funções racionais](../funcoes/funcoes-racionais));
-- **ramo** — cada pedaço contínuo do gráfico, entre duas assíntotas;
-- **domínio da tangente** — todos os reais **menos** os pontos em que o cosseno
-  se anula;
-- **período** — $\pi$, e não $2\pi$.
-
-Exemplo: $\tg\frac{\pi}{4} = 1$. Contraexemplo: $\tg\frac{\pi}{2}$ **não é
-infinito** — ela **não existe**. “Infinito” não é um número, e a função
-não tem valor ali; o que se diz é que ela cresce sem limite ao se aproximar
-desse ponto.
+1. O gráfico da tangente é a altura do ponto $T$ (onde a reta do raio corta
+   $x = 1$), levada do ciclo para o plano.
+2. Perto de 90°, a tangente cresce sem limite. A reta vertical
+   $x = \frac{\pi}{2}$ é uma **assíntota** do gráfico.
+3. Em 90° a tangente não existe. Logo depois de 90°, ela reaparece com valores
+   muito negativos.
+4. Os zeros da tangente vêm do seno, e as assíntotas vêm do cosseno.
+5. A tangente se repete a cada meia volta: o período é $\pi$, e não $2\pi$.
+6. Em cada pedaço do gráfico, a tangente só sobe e passa por todos os números
+   reais.
+7. A tangente de um ângulo é a inclinação da reta que forma esse ângulo com a
+   horizontal.
 
 ## Para que isso serve?
 
-- inclinações e declividades: uma rampa de 45° tem tangente 1, e quanto mais
-  vertical, maior a tangente;
-- óptica e projeção: o tamanho de uma imagem projetada cresce com a tangente do
-  ângulo de abertura;
-- em engenharia, o comportamento perto da assíntota modela situações de
-  **saturação** ou de **instabilidade** — sistemas que disparam quando um
-  parâmetro se aproxima de um limite;
-- e, dentro da matemática, é o primeiro exemplo neste curso de função com
-  **descontinuidade** e com domínio recortado, um tipo de análise que o cálculo
-  aprofunda.
+- **Rampas e estradas.** A inclinação de uma rampa, em porcentagem, é a
+  tangente do ângulo dela vezes 100. A norma brasileira de acessibilidade
+  limita rampas a 8,33%, e isso dá um ângulo de menos de 5°:
+  $\tg 4{,}76^\circ \approx 0{,}0833$. Uma rampa de 45° teria inclinação de
+  100%: sobe 1 m a cada metro andado na horizontal.
+- **Projetor e câmera.** Um projetor que abre um ângulo total de 60° projeta,
+  numa parede a 3 m, uma imagem de largura $2 \times 3 \times \tg 30^\circ
+  \approx 3{,}46$ m. Com abertura de 120°, a largura salta para
+  $2 \times 3 \times \tg 60^\circ \approx 10{,}39$ m. Perto de 180° de
+  abertura, a largura dispara, como o ponto do laser perto de 90°.
+- **Retas no plano.** O coeficiente angular de uma reta é a tangente do
+  ângulo que ela forma com a horizontal. Uma reta a 60° tem coeficiente
+  $\tg 60^\circ \approx 1{,}73$: sobe 1,73 a cada 1 que anda para a direita.
+  No cálculo, a derivada é exatamente uma inclinação desse tipo.
+- **Dentro da matemática.** A tangente é a primeira função do curso cujo
+  gráfico é feito de pedaços separados, com o domínio recortado em infinitos
+  pontos. Ler esse gráfico prepara a análise de funções com pontos fora do
+  domínio, que o cálculo aprofunda.
 
 ## Ideias anteriores que voltam aqui
 
@@ -69,8 +89,10 @@ tangente no ciclo trigonométrico?
 <details>
 <summary>Conferir</summary>
 
-Na reta vertical $x = 1$: a tangente é a altura do ponto onde o lado do ângulo,
-prolongado, cruza essa reta. Como a reta é infinita, a tangente não tem limite.
+Na reta vertical $x = 1$. Prolongue a reta do raio (para a frente ou para
+trás, pelo centro) até ela cortar a reta $x = 1$ no ponto $T$. A altura de $T$
+é a tangente. Como a reta $x = 1$ não tem fim, a tangente não fica presa entre
+dois valores.
 
 </details>
 
@@ -93,9 +115,9 @@ $\tg(x+\pi) = \tg x$?
 <details>
 <summary>Conferir</summary>
 
-Porque somar meia volta leva ao ponto diametralmente oposto, e a **reta** que
-passa pela origem e por esse ponto é a mesma. O ponto de leitura na reta $x=1$
-não muda.
+Somar meia volta leva o ponto do ciclo para o lado oposto. A **reta** que
+passa pelo centro e pelo ponto novo é a mesma de antes. Então ela corta a reta
+$x = 1$ no mesmo ponto $T$.
 
 </details>
 
@@ -107,50 +129,149 @@ $\frac{1}{0}$ não é definido?
 <summary>Conferir</summary>
 
 Porque não existe número que, multiplicado por 0, dê 1. Não é que o resultado
-seja “muito grande”: é que não existe. Essa distinção é central nesta página.
+seja “muito grande”: ele não existe. Essa diferença vai ser importante nesta
+página.
 
 </details>
 
 **5. Assíntota** (de [Funções racionais](../funcoes/funcoes-racionais)). Em
-$f(x) = \frac{1}{x}$, o que acontece com a curva perto de $x = 0$? E uma curva
-pode cruzar uma assíntota?
+$f(x) = \frac{1}{x}$, o que acontece com a curva perto de $x = 0$?
 
 <details>
 <summary>Conferir</summary>
 
 Perto de $x = 0$ a curva dispara: para cima pela direita, para baixo pela
-esquerda. Por isso, a reta $x = 0$ é uma **assíntota vertical**. A curva nunca
-a toca, porque em $x = 0$ a função não existe — é a divisão por zero da
-pergunta 4. Já uma assíntota **horizontal** pode ser cruzada: ela descreve o
-que acontece longe da origem, não uma barreira. Na tangente só aparecem
-assíntotas verticais, e pelo mesmo motivo de $\frac{1}{x}$: o denominador
-zera.
+esquerda. Por isso a reta $x = 0$ é uma **assíntota vertical**. A curva nunca
+a toca, porque em $x = 0$ a função não existe (é a divisão por zero da
+pergunta 4). A tangente vai ter assíntotas verticais pelo mesmo motivo: um
+denominador que zera.
 
 </details>
 
-## Intuição: o ponto que foge
+## O gráfico da tangente é a altura de T, levada para o plano
 
-Volte ao ciclo, com a reta $x=1$ desenhada. Acompanhe o ponto $T$ enquanto o
-ângulo cresce de 0 até perto de 90°.
+Em [Gráficos do seno e do cosseno](./graficos-seno-e-cosseno), o gráfico do
+seno nasceu de uma pergunta simples: enquanto o ponto gira, qual é a altura
+dele? A tangente também tem uma altura no ciclo. Só que é a altura de outro
+ponto: o ponto $T$, na reta $x = 1$. O gráfico da tangente é o registro dessa
+altura, giro a giro.
 
-<UnitCircle
-  scale={98}
-  showTangent
-  tangentClamp={1.6}
-  angles={[{deg: 56, label: '\\theta', showTangentSegment: true, tangentLabel: 'T', tone: 1, labelRadius: 0.4}]}
-  caption="Quanto mais o lado do ângulo se aproxima da vertical, mais alto fica o ponto T — e mais depressa ele sobe."
-/>
+Para cada giro, faça assim:
 
-- Em $\theta = 0$, o lado do ângulo é horizontal e cruza a reta em $(1, 0)$:
-  $\tg 0 = 0$.
-- Em $\theta = 45^\circ$, o lado sobe a 45° e cruza em $(1, 1)$: $\tg
-  45^\circ = 1$.
-- Em $\theta = 80^\circ$, quase vertical, cruza em $(1,\ 5{,}67)$.
-- Em $\theta = 90^\circ$, o lado é **vertical**. Duas retas verticais são
-  paralelas: **não há cruzamento**. Não existe $T$, e não existe $\tg
-  90^\circ$.
+1. Gire o ponto $P$ no ciclo até o ângulo $\theta$.
+2. Prolongue a reta do raio (pelo centro, se for preciso) até ela cortar a
+   reta vertical $x = 1$. Esse corte é o ponto $T$.
+3. Meça a altura de $T$. Ela é $\tg\theta$.
+4. Leve essa altura na horizontal, sem mudar a escala, até a coluna $\theta$
+   do gráfico.
+5. Marque ali o ponto $(\theta,\ \tg\theta)$.
 
-É a mesma conclusão pela fórmula:
+A figura repete esses passos para cada giro, de 0° até 300°. Repare no
+tracejado horizontal: ele carrega a altura de $T$ até o gráfico. Depois, use o
+controle para escolher o giro.
+
+<TangentGraphTracer initial={300} />
+
+> O **gráfico da tangente** é o conjunto dos pontos $(x,\ \tg x)$, com $x$ em
+> radianos. A altura de cada ponto do gráfico é a altura do ponto $T$ do
+> ciclo, no giro $x$.
+
+O eixo horizontal usa radianos pelo mesmo motivo do gráfico do seno: no ciclo
+de raio 1, o ângulo em radianos é o comprimento do arco percorrido.
+
+Dois pontos aparecem juntos no ciclo, e é comum confundir um com o outro. O ponto $P$ está
+**sobre o círculo**, e a altura dele é o seno. O ponto $T$ está **sobre a reta
+$x = 1$**, e a altura dele é a tangente. Em 45°, por exemplo, $P$ está a
+$\sen 45^\circ \approx 0{,}71$ de altura, mas $T$ está a $\tg 45^\circ = 1$.
+O gráfico da tangente passa por $\left(\frac{\pi}{4},\ 1\right)$, e não por
+$\left(\frac{\pi}{4};\ 0{,}71\right)$.
+
+Exemplo: em $\theta = \frac{\pi}{3}$ (60°), $T$ está a $\sqrt{3} \approx 1{,}73$
+de altura, e o gráfico passa por $\left(\frac{\pi}{3};\ 1{,}73\right)$.
+Contraexemplo: em $\theta = \frac{\pi}{2}$ (90°), não há ponto $T$, e por isso
+o gráfico não tem ponto nenhum na coluna $\frac{\pi}{2}$. Na figura, o traço
+some ali.
+
+<details>
+<summary>Confira: no giro de 135°, onde fica T? Que ponto isso marca no gráfico?</summary>
+
+Em 135° o ponto $P$ está no segundo quadrante. A reta do raio, prolongada
+para trás pelo centro, corta $x = 1$ abaixo do eixo, em $(1,\ -1)$. Então
+$\tg 135^\circ = -1$, e o gráfico passa por $\left(\frac{3\pi}{4},\ -1\right)$.
+Use o botão “135°” da figura para ver.
+
+</details>
+
+## Perto de 90°, a tangente cresce sem limite
+
+Volte ao traçado e olhe o que acontece pouco antes de $\frac{\pi}{2}$. A reta
+do raio fica quase em pé (quase vertical). Uma reta quase em pé só corta a reta $x = 1$ muito
+lá em cima. Quanto mais ela se aproxima de ficar em pé, mais alto fica o corte.
+
+A tabela do laser já mostrava isso: de 0° a 45°, a tangente sobe 1; de 45° a
+80°, sobe 4,67; de 80° a 89°, sobe 51,62. Agora vamos chegar mais perto de
+90°, pelos dois lados ao mesmo tempo. A figura marca o ponto a uma distância
+$d$ **antes** de 90° e o ponto à mesma distância **depois**. A cada botão, $d$
+fica dez vezes menor.
+
+<TangentAsymptoteZoom />
+
+Olhe a tabela do painel. Cada vez que a distância até 90° fica
+dez vezes menor, a tangente fica (quase exatamente) dez vezes maior:
+
+| distância até 90° | 10° | 1° | 0,1° | 0,01° |
+|---|---|---|---|---|
+| tangente antes de 90° | 5,67 | 57,29 | 572,96 | 5 729,58 |
+| tangente depois de 90° | $-5{,}67$ | $-57{,}29$ | $-572{,}96$ | $-5\,729{,}58$ |
+
+Repare também na escala do eixo vertical: ela cresce dez vezes a cada botão, e
+mesmo assim a curva continua saindo pelo alto do desenho, colada na reta
+tracejada.
+
+Esse comportamento tem nome. Ele é o mesmo da função $\frac{1}{x}$ perto de
+$x = 0$, que você viu em [Funções racionais](../funcoes/funcoes-racionais).
+
+> Dizer que a reta $x = \frac{\pi}{2}$ é uma **assíntota vertical** do gráfico
+> da tangente significa: escolhido **qualquer** número, por maior que seja, os
+> valores de $\tg x$ passam dele quando $x$ chega perto o bastante de
+> $\frac{\pi}{2}$ por valores menores. (E ficam abaixo do oposto desse número
+> quando $x$ chega perto por valores maiores.)
+
+Teste com um milhão. Existe um ângulo com tangente maior que um milhão?
+Existe. Chegando perto o bastante de 90°, a tangente passa de um milhão:
+
+$$
+\tg 89{,}999943^\circ \approx 1\,005\,189.
+$$
+
+Escolha um bilhão. Também existe, ainda mais perto de 90°. Não há teto.
+
+Exemplo: $x = \frac{\pi}{2}$ é assíntota, porque perto dela a tangente passa de
+qualquer número. Contraexemplo: a reta $x = \frac{\pi}{4}$ **não** é
+assíntota. Perto de $\frac{\pi}{4}$, a tangente fica perto de 1:
+$\tg 44^\circ \approx 0{,}966$ e $\tg 46^\circ \approx 1{,}036$. Ela não dispara.
+
+<details>
+<summary>Confira: a que distância de 90° a tangente passa de 50 000?</summary>
+
+Pela regra que a tabela mostrou, a 0,01° de 90° a tangente vale cerca de
+5 730. Dez vezes mais perto, a 0,001°, ela vale cerca de dez vezes mais:
+$\tg 89{,}999^\circ \approx 57\,296$, que já passa de 50 000.
+
+</details>
+
+## Em 90°, a tangente não existe; logo depois, ela reaparece lá embaixo
+
+O que acontece **em** 90°, e não perto? A reta do raio fica exatamente em pé.
+A reta $x = 1$ também é vertical. Duas retas verticais são paralelas, e retas
+paralelas não se cruzam. Por isso **não existe o ponto $T$**, e não existe
+$\tg 90^\circ$.
+
+Arraste o giro pelos botões 89°, 90° e 91° e acompanhe o ponto $T$.
+
+<TangentAxisExplorer initial={89} from={60} presets={[80, 89, 90, 91, 100, 135]} />
+
+A fórmula do quociente diz a mesma coisa em símbolos:
 
 $$
 \tg 90^\circ = \frac{\sen 90^\circ}{\cos 90^\circ} = \frac{1}{0},
@@ -158,70 +279,156 @@ $$
 
 e divisão por zero não é definida.
 
-E logo depois de 90°? O lado do ângulo entra no segundo quadrante, apontando
-para cima e para a esquerda. Prolongado **para trás**, ele cruza a reta $x=1$
-bem **abaixo** do eixo. A tangente, que estava enorme e positiva, reaparece
-enorme e **negativa**.
+E logo depois de 90°? Em 91°, o ponto $P$ já está no segundo quadrante, para
+cima e um pouco para a esquerda. A reta do raio, prolongada **para trás** pelo
+centro, corta a reta $x = 1$ muito **abaixo** do eixo:
+$\tg 91^\circ \approx -57{,}29$. A tangente, que estava enorme e positiva
+antes de 90°, reaparece enorme e **negativa** depois.
 
-> Não há uma passagem suave “por cima” de 90°. A função sobe sem limite de um
-> lado e reaparece vindo de baixo do outro. É esse salto que o gráfico vai
-> mostrar.
+Não há uma passagem suave “por cima” de 90°. O gráfico sobe sem limite de um
+lado da assíntota, e do outro lado volta vindo de baixo. Por isso o gráfico da
+tangente é feito de pedaços separados. Cada pedaço, entre duas assíntotas
+vizinhas, se chama **ramo**.
 
-## O gráfico
+> **Erro comum: dizer que $\tg 90^\circ = \infty$.** Infinito não é um
+> número, e escrever isso sugere que a função tem um valor em 90°. O correto
+> tem duas partes: a tangente **não está definida** em 90°, e ela **cresce
+> sem limite** quando o ângulo se aproxima de 90° por baixo. Compare:
+> $\tg 89{,}9^\circ \approx 572{,}96$ é um número enorme, mas existe;
+> $\tg 90^\circ$ não é número nenhum.
+
+> **Erro comum: ligar os ramos.** Desenhar uma curva sem interrupção, que
+> atravessa a assíntota, afirma que a função vale alguma coisa em
+> $\frac{\pi}{2}$. Mas ela não vale nada ali. O traço tem de **parar** antes da reta tracejada, dos dois
+> lados.
+
+<details>
+<summary>Confira: existe tg 270°? Por quê?</summary>
+
+Não existe. Em 270° o ponto $P$ está embaixo, em $(0,\ -1)$, e a reta do raio
+fica em pé de novo, paralela a $x = 1$. Pela fórmula,
+$\tg 270^\circ = \frac{-1}{0}$, outra divisão por zero. Por isso a reta
+$x = \frac{3\pi}{2}$ também é uma assíntota.
+
+</details>
+
+## Os zeros vêm do seno, e as assíntotas vêm do cosseno
+
+A fórmula $\tg x = \frac{\sen x}{\cos x}$ localiza os zeros e as assíntotas
+sem precisar girar ponto nenhum. Uma fração tem dois jeitos especiais de se
+comportar:
+
+- ela **vale zero** quando o numerador é zero (e o denominador não é);
+- ela **não existe** quando o denominador é zero.
+
+Na tangente, o numerador é o seno e o denominador é o cosseno. Então os zeros
+da tangente estão onde o seno zera, e as assíntotas estão onde o cosseno zera.
+A figura mostra as três curvas juntas.
 
 <CartesianPlane
-  xMin={-5.0} xMax={5.0} yMin={-4.2} yMax={4.2}
-  xUnit={38} yUnit={30}
+  xMin={-0.35} xMax={6.65} yMin={-3.2} yMax={3.2}
+  xUnit={56} yUnit={38}
   xStep={1.5707963} yStep={1}
   xTicks={[
-    {at: -4.712389, label: '-\\frac{3\\pi}{2}'},
-    {at: -1.5707963, label: '-\\frac{\\pi}{2}'},
     {at: 1.5707963, label: '\\frac{\\pi}{2}'},
+    {at: 3.1415927, label: '\\pi'},
     {at: 4.712389, label: '\\frac{3\\pi}{2}'},
+    {at: 6.2831853, label: '2\\pi'},
   ]}
-  functions={[{f: (x) => Math.tan(x), tone: 1}]}
+  functions={[
+    {f: (x) => Math.sin(x), tone: 2, dashed: true},
+    {f: (x) => Math.cos(x), tone: 3, dashed: true},
+    {f: (x) => Math.tan(x), tone: 1},
+  ]}
   lines={[
-    {x: -4.712389, tone: 2, dashed: true},
-    {x: -1.5707963, tone: 2, dashed: true},
-    {x: 1.5707963, tone: 2, dashed: true},
-    {x: 4.712389, tone: 2, dashed: true},
+    {x: 1.5707963, dashed: true, muted: true},
+    {x: 4.712389, dashed: true, muted: true},
   ]}
-  caption="f(x) = tg x. As retas tracejadas são assíntotas: a curva se aproxima delas sem nunca tocá-las."
+  points={[
+    {at: [0, 0], tone: 2},
+    {at: [3.1415927, 0], tone: 2},
+    {at: [6.2831853, 0], tone: 2},
+    {at: [1.5707963, 0], tone: 3, open: true},
+    {at: [4.712389, 0], tone: 3, open: true},
+  ]}
+  caption="Tangente (azul, cheia), seno (laranja, tracejado) e cosseno (verde, tracejado). Onde o seno corta o eixo (pontos laranja), a tangente também corta. Onde o cosseno corta o eixo (bolinhas verdes), a tangente tem uma assíntota."
 />
 
-Leitura completa:
+O seno zera em $0$, $\pi$, $2\pi$, e assim por diante, a cada meia volta. O
+cosseno zera em $\frac{\pi}{2}$, $\frac{3\pi}{2}$, $\frac{5\pi}{2}$, também a
+cada meia volta. Para escrever todos de uma vez, usamos uma letra $k$ que pode
+ser qualquer número inteiro ($\ldots, -2, -1, 0, 1, 2, \ldots$):
 
-| Característica | Valor |
-|---|---|
-| **domínio** | $\mathbb{R}$ exceto $x = \frac{\pi}{2} + k\pi$ |
-| **imagem** | $\mathbb{R}$ — todos os reais |
-| **período** | $\pi$ |
-| **amplitude** | não existe (a função não é limitada) |
-| **zeros** | $x = k\pi$ |
-| **assíntotas** | $x = \frac{\pi}{2} + k\pi$ |
-| **simetria** | ímpar: $\tg(-x) = -\tg x$ |
+$$
+\text{zeros: } x = k\pi, \qquad \text{assíntotas: } x = \frac{\pi}{2} + k\pi.
+$$
 
-Três diferenças marcantes em relação ao seno e ao cosseno, e cada uma tem uma
-explicação geométrica:
+Com $k = 0$, a assíntota é $\frac{\pi}{2}$; com $k = 1$, é
+$\frac{\pi}{2} + \pi = \frac{3\pi}{2}$; com $k = -1$, é
+$\frac{\pi}{2} - \pi = -\frac{\pi}{2}$.
 
-**1. A imagem é todo $\mathbb{R}$.** Seno e cosseno são coordenadas de um ponto
-preso ao ciclo, então ficam entre $-1$ e 1. A tangente é lida na reta $x=1$,
-que é infinita nos dois sentidos — qualquer altura é atingível.
+Os pontos das assíntotas são exatamente os que ficam fora do domínio:
 
-**2. O período é $\pi$, metade do dos outros dois.** Porque o ponto $T$ depende
-da **reta** do ângulo, não do sentido. Meia volta já devolve a mesma reta. No
-gráfico, isso aparece como ramos idênticos a cada $\pi$ de largura.
+> O **domínio** da tangente é o conjunto dos números reais **exceto**
+> $x = \frac{\pi}{2} + k\pi$, com $k$ inteiro.
 
-**3. O gráfico é feito de ramos separados.** Onde o cosseno zera, a tangente
-não existe — e o gráfico é interrompido. Não há uma curva só; há infinitas
-cópias do mesmo ramo.
+Exemplo: $x = 3$ está no domínio. O cosseno de 3 radianos vale cerca de
+$-0{,}99$, que não é zero, e $\tg 3 \approx -0{,}14$. Contraexemplo:
+$x = \frac{3\pi}{2} \approx 4{,}71$ está fora, porque $\cos\frac{3\pi}{2} = 0$.
 
-> **Erro comum:** ligar os ramos, desenhando uma curva contínua que atravessa a
-> assíntota. Isso afirmaria que a função vale alguma coisa em
-> $\frac{\pi}{2}$ — e ela não vale nada ali. O traço tem de **parar** antes da
-> reta tracejada, dos dois lados.
+Repare que zeros e assíntotas se alternam: entre dois zeros vizinhos há sempre
+uma assíntota, a $\frac{\pi}{2}$ de cada um.
 
-### Por dentro de um ramo
+<details>
+<summary>Confira: quais são os x de 0 a 2π (incluindo as pontas) em que tg x = 0?</summary>
+
+São os zeros do seno nesse trecho: $x = 0$, $x = \pi$ e $x = 2\pi$. Nenhum
+deles zera o cosseno ($\cos 0 = 1$, $\cos\pi = -1$, $\cos 2\pi = 1$), então a
+tangente existe e vale zero nos três.
+
+</details>
+
+## A tangente se repete a cada meia volta: o período é π
+
+O seno e o cosseno se repetem a cada volta inteira ($2\pi$). A tangente se
+repete mais cedo, a cada **meia** volta. A razão está no ponto $T$: ele
+depende só da **reta** do raio, e não do lado para onde o raio aponta.
+
+Na figura, o giro $\theta$ (azul) e o giro $\theta + 180^\circ$ (verde)
+apontam em sentidos opostos. Mas os dois ficam sobre a mesma reta, e essa reta
+corta $x = 1$ num ponto $T$ só. No gráfico, os dois pontos ficam na mesma
+altura, separados por $\pi$ na horizontal. Arraste o giro e veja que isso vale
+para qualquer $\theta$.
+
+<TangentGraphTracer pair initial={60} />
+
+> A tangente tem **período** $\pi$: $\tg(x + \pi) = \tg x$ para todo $x$ do
+> domínio.
+
+Por isso o gráfico é feito de **cópias do mesmo ramo**, uma a cada $\pi$ de
+largura. Desenhado o ramo de $-\frac{\pi}{2}$ a $\frac{\pi}{2}$, todos os outros
+são esse mesmo ramo, empurrado $\pi$, $2\pi$, $3\pi$ para a direita ou para a
+esquerda.
+
+Exemplo: $\tg 225^\circ = \tg(45^\circ + 180^\circ) = \tg 45^\circ = 1$.
+Contraexemplo: com o seno, meia volta **não** devolve o mesmo valor:
+$\sen 45^\circ \approx 0{,}71$, mas $\sen 225^\circ \approx -0{,}71$. O ponto
+$P$ foi para o lado oposto, e a altura dele trocou de sinal. Na tangente, o
+seno e o cosseno trocam de sinal **juntos**, e o quociente não muda:
+$\frac{-0{,}71}{-0{,}71} = 1$.
+
+<details>
+<summary>Confira: quanto vale tg(π/3 + π)? E tg(π/3 + 2π)?</summary>
+
+As duas valem $\tg\frac{\pi}{3} = \sqrt{3} \approx 1{,}73$. Somar $\pi$ é meia
+volta, e a tangente se repete a cada meia volta. Somar $2\pi$ é somar $\pi$
+duas vezes, então também não muda nada.
+
+</details>
+
+## Em cada ramo, a tangente sobe e passa por todos os números reais
+
+Olhe um ramo só, o do meio, de $-\frac{\pi}{2}$ a $\frac{\pi}{2}$.
 
 <CartesianPlane
   xMin={-1.75} xMax={1.75} yMin={-3.2} yMax={3.2}
@@ -233,78 +440,138 @@ cópias do mesmo ramo.
     {at: 0.7853982, label: '\\frac{\\pi}{4}'},
     {at: 1.5707963, label: '\\frac{\\pi}{2}'},
   ]}
-  functions={[{f: (x) => Math.tan(x), tone: 1, domain: [-1.5, 1.5]}]}
+  functions={[{f: (x) => Math.tan(x), tone: 1}]}
   lines={[
-    {x: -1.5707963, tone: 2, dashed: true},
-    {x: 1.5707963, tone: 2, dashed: true},
+    {x: -1.5707963, dashed: true, muted: true},
+    {x: 1.5707963, dashed: true, muted: true},
   ]}
   points={[
-    {at: [0, 0], tone: 3},
-    {at: [0.7853982, 1], tone: 3},
-    {at: [-0.7853982, -1], tone: 3},
+    {at: [0, 0], tone: 2},
+    {at: [0.7853982, 1], tone: 2},
+    {at: [-0.7853982, -1], tone: 2},
   ]}
-  caption="O ramo central, de −π/2 a π/2. A função é crescente do começo ao fim, passando por (0,0) e por (π/4, 1)."
+  caption="O ramo do meio, de −π/2 a π/2. A curva sobe do começo ao fim e passa por (−π/4, −1), (0, 0) e (π/4, 1)."
 />
 
-Dentro de cada ramo, a tangente é **sempre crescente**: começa vindo de baixo
-(valores muito negativos), passa por zero no meio e dispara para cima. Ela
-percorre **todos** os números reais em cada ramo — é por isso que qualquer
-equação $\tg x = c$ tem solução, seja qual for $c$.
+Da esquerda para a direita, a curva **só sobe**. Ela começa colada na assíntota
+da esquerda, com valores muito negativos. Passa por zero no meio. E termina
+colada na assíntota da direita, com valores muito grandes. No caminho, ela não
+pula nenhum valor. Por isso, dentro de um único ramo, a tangente passa por
+**todos** os números reais.
 
-Compare a velocidade do crescimento com a tabela do laser: de 0° a 45°, a
-tangente vai de 0 a 1; de 45° a 80°, vai de 1 a 5,67; de 80° a 89°, salta para
-57,3. **Perto da assíntota, um passo minúsculo no ângulo produz um salto enorme
-no valor.**
+> A **imagem** da tangente é o conjunto de todos os números reais. Em cada
+> ramo, a tangente é **crescente** e atinge cada número real exatamente uma
+> vez.
 
-## O que “assíntota” significa, com precisão
+A consequência prática: a equação $\tg x = c$ tem solução para **qualquer**
+número $c$, uma em cada ramo. A figura deixa você testar. A reta horizontal
+$y = c$ corta os três ramos desenhados, sempre uma vez em cada um. Os botões
+levam $c$ para valores grandes, como 1 000. Depois, compare com o seno.
 
-Em [Funções racionais](../funcoes/funcoes-racionais), a assíntota vertical de
-$\frac{1}{x}$ foi descrita como a reta da qual a curva se aproxima
-“disparando”. Aqui vale dizer com precisão o que “disparar” significa:
+<TangentLevelLine initial={1} />
 
-> Dizer que $x = \frac{\pi}{2}$ é **assíntota vertical** de $\tg x$ significa
-> que, tomando $x$ suficientemente próximo de $\frac{\pi}{2}$ (por valores
-> menores), $\tg x$ fica maior do que **qualquer** número escolhido de antemão.
+Com o seno é diferente. Ele nunca passa de 1 nem fica abaixo de $-1$, porque é
+a altura de um ponto preso ao círculo de raio 1. Por isso $\sen x = 3$ não tem
+solução nenhuma, enquanto $\tg x = 3$ tem uma em cada ramo.
 
-Escolha um milhão. Existe um ângulo com tangente maior que um milhão? Existe.
-Chegando perto o bastante de 90°, a tangente passa de um milhão:
+Este é um ponto que confunde: a tangente é crescente **dentro de cada ramo**,
+mas não no domínio inteiro. Compare dois números de ramos diferentes:
+$1{,}5 < 2$, e mesmo assim $\tg 1{,}5 \approx 14{,}10$ é **maior** que
+$\tg 2 \approx -2{,}19$. Entre 1,5 e 2 há uma assíntota (em
+$\frac{\pi}{2} \approx 1{,}57$), e a função volta lá de baixo.
 
-$$
-\tg 89{,}999943^\circ \approx 1\,005\,000.
-$$
+Repare também na simetria do ramo do meio. O ponto $\left(\frac{\pi}{4},\ 1\right)$
+tem um par, $\left(-\frac{\pi}{4},\ -1\right)$: trocar o sinal da entrada troca
+o sinal da saída. No ciclo, girar $-\theta$ é refletir o ponto $P$ no eixo
+horizontal, e o ponto $T$ é refletido junto. Por isso $\tg(-x) = -\tg x$: a
+tangente é uma função **ímpar**, como o seno.
 
-Escolha um bilhão. Também existe. Não há teto.
+<details>
+<summary>Confira: quantas soluções tem tg x = −1 000 entre −π/2 e 5π/2? E sen x = −1 000?</summary>
 
-E, mesmo assim, a curva **nunca toca** a reta tracejada. Tocá-la significaria
-existir um valor em $x = \frac{\pi}{2}$, e esse valor não existe. (Isso vale
-para assíntotas **verticais**, as únicas da tangente. Como visto em funções
-racionais, uma assíntota horizontal pode ser cruzada.)
+Nesse trecho há três ramos inteiros, e cada ramo atinge $-1\,000$ uma vez:
+**3 soluções** para a tangente, todas coladas na assíntota da esquerda de cada
+ramo. Para o seno, **nenhuma**, porque o seno nunca fica abaixo de $-1$.
 
-> **Erro comum: dizer que $\tg 90^\circ = \infty$.** Infinito não é um número, e
-> escrever isso sugere que a função tem um valor ali. O correto é: a tangente
-> **não está definida** em 90°, e **cresce sem limite** quando o ângulo se
-> aproxima de 90° por baixo. As duas frases dizem coisas diferentes, e só a
-> segunda descreve o comportamento.
+</details>
+
+## A tangente de um ângulo é a inclinação da reta que forma esse ângulo
+
+O ponto $T$ tem mais um significado. A reta do raio é uma reta que passa
+pela origem. Andando 1 unidade para a direita sobre ela (da origem até a reta
+$x = 1$), ela sobe até a altura de $T$. E “quanto a reta sobe a cada 1 que anda
+para a direita” é o **coeficiente angular** dela, estudado em
+[Equação da reta](./equacao-da-reta).
+
+<CartesianPlane
+  xMin={-0.6} xMax={2.4} yMin={-0.6} yMax={2.4}
+  xUnit={110} yUnit={110}
+  xStep={0.5} yStep={0.5}
+  lines={[
+    {m: 0.5773503, n: 0, tone: 1},
+    {m: 1.7320508, n: 0, tone: 2},
+    {x: 1, dashed: true, muted: true},
+  ]}
+  segments={[
+    {from: [0, 0], to: [1, 0], tone: 3},
+    {from: [1, 0], to: [1, 1.7320508], tone: 2},
+    {from: [1, 0], to: [1, 0.5773503], tone: 1},
+  ]}
+  points={[
+    {at: [1, 0.5773503], tone: 1, label: '\\tg 30^\\circ \\approx 0{,}58', dx: 62, dy: 4},
+    {at: [1, 1.7320508], tone: 2, label: '\\tg 60^\\circ \\approx 1{,}73', dx: 62, dy: 4},
+  ]}
+  labels={[{at: [0.5, 0], math: '1', dy: -13, tone: 3}]}
+  caption="Duas retas pela origem, a 30° (azul) e a 60° (laranja). Andando 1 para a direita (verde), a de 30° sobe tg 30° e a de 60° sobe tg 60°. Essas subidas são os coeficientes angulares."
+/>
+
+> Uma reta que forma um ângulo $\theta$ com o eixo horizontal tem coeficiente
+> angular $m = \tg\theta$.
+
+Exemplo: uma reta a 45° sobe 1 a cada 1 que anda, então $m = \tg 45^\circ = 1$.
+Contraexemplo: uma reta vertical forma 90° com a horizontal, e $\tg 90^\circ$
+não existe. Isso combina com o que a página de retas já tinha mostrado: retas
+verticais não têm coeficiente angular, porque nelas $\Delta x = 0$ e a conta
+$\frac{\Delta y}{\Delta x}$ divide por zero. As duas afirmações são o mesmo
+fato, dito de dois jeitos.
+
+<details>
+<summary>Confira: qual é o coeficiente angular de uma reta que forma 135° com a horizontal?</summary>
+
+$m = \tg 135^\circ = -1$. A reta desce 1 a cada 1 que anda para a direita: é a
+reta $y = -x$, se passar pela origem.
+
+</details>
 
 ## Resolvendo o problema do laser
 
-Retomando as perguntas:
+Agora as três perguntas da abertura têm resposta.
 
-**O que acontece em 90°?** O feixe fica paralelo à parede. Ele nunca a atinge —
-não há ponto luminoso, e não há altura para medir. É a mesma coisa que a
-inexistência de $\tg 90^\circ$, dita em termos físicos.
+**Por que a altura cresce cada vez mais rápido?** A altura do ponto é
+$\tg\theta$, e o gráfico da tangente fica cada vez mais íngreme perto de
+$\frac{\pi}{2}$. Em números: de 0° a 45° o ponto sobe 1 m; de 45° a 80°, sobe
+mais 4,67 m; de 80° a 89°, sobe mais 51,62 m. E um único grau, de 88° para
+89°, já faz o ponto subir 28,65 m.
 
-**E depois de 90°?** O feixe passa a apontar para cima e para trás, afastando-se
-da parede. A parede continua sendo atingida apenas pelo **prolongamento** do
-feixe para trás — o que, em termos geométricos, corresponde a um ponto abaixo do
-eixo, isto é, a uma tangente negativa. Em termos físicos, não há mais projeção
-na parede da frente.
+**O que acontece em 90°?** O feixe fica paralelo à parede. Ele nunca a atinge:
+não há ponto luminoso e não há altura para medir. É a inexistência de
+$\tg 90^\circ$, contada em termos físicos.
 
-Este é um bom lugar para uma observação sobre modelos: a fórmula
-$h = \tg\theta$ descreve o laser fielmente **enquanto** $0 \le \theta < 90^\circ$.
-Fora dessa faixa, a matemática continua produzindo números, mas eles deixam de
-corresponder ao fenômeno. Saber o **domínio de validade do modelo** é parte de
-usá-lo — e não é a álgebra que informa isso, é a situação.
+**E depois de 90°?** Leve o controle para 135°.
+
+<LaserWall initial={135} presets={[60, 89, 90, 91, 120, 135, 180]} caption="Depois de 90°, o feixe aponta para trás e não atinge mais a parede. Só o prolongamento dele para trás (tracejado) cruza a parede: abaixo do laser, ou na altura dele em 180°." />
+
+O feixe passa a apontar para cima e para trás, e se afasta da parede. Só o
+**prolongamento** do feixe para trás, o tracejado, cruza a parede. Ele a cruza
+abaixo do laser: em 135°, 1 m abaixo, porque $\tg 135^\circ = -1$. Esse é o
+ponto $T$ do ciclo, abaixo do eixo, de tangente negativa. Mas nenhuma luz
+chega lá.
+
+O laser depois de 90° ensina uma coisa sobre modelos. A fórmula $h = \tg\theta$ descreve o
+laser fielmente **enquanto** $0^\circ \le \theta < 90^\circ$. Fora dessa faixa,
+a fórmula continua produzindo números, mas eles deixam de corresponder ao
+fenômeno. Saber em que faixa o modelo vale faz parte de usá-lo. Quem informa
+essa faixa é a situação real, e não a álgebra.
 
 ## Exemplos resolvidos
 
@@ -312,6 +579,9 @@ usá-lo — e não é a álgebra que informa isso, é a situação.
 
 Calcule, quando existir: $\tg 0$, $\tg\frac{\pi}{4}$, $\tg\frac{\pi}{2}$,
 $\tg\pi$, $\tg\frac{3\pi}{4}$.
+
+Previsão: $0$ e $\pi$ são zeros do seno, então devem dar zero; $\frac{\pi}{2}$
+zera o cosseno, então não deve existir.
 
 $$
 \tg 0 = 0,
@@ -327,31 +597,47 @@ $$
 \tg\frac{3\pi}{4} = -1.
 $$
 
-O último por [redução](./reducao-ao-primeiro-quadrante): $\frac{3\pi}{4} =
-135^\circ$, segundo quadrante, referência 45°, tangente negativa.
+O último sai por [redução](./reducao-ao-primeiro-quadrante): $\frac{3\pi}{4} =
+135^\circ$ está no segundo quadrante, com referência 45°, e ali a tangente é
+negativa.
 
 ### Exemplo 2: domínio
 
 *Pause e tente antes de ler.* Qual é o domínio de $f(x) = \tg(2x)$?
 
-A tangente não existe quando seu argumento vale $\frac{\pi}{2} + k\pi$. Aqui o
-argumento é $2x$:
+Previsão: dentro da tangente está $2x$, que anda duas vezes mais rápido que
+$x$. Em [Transformações de gráficos](../funcoes/transformacoes-de-graficos),
+multiplicar a entrada por 2 apertava o gráfico pela metade na horizontal. Então
+os valores proibidos devem chegar duas vezes mais cedo, e as assíntotas devem
+ficar mais próximas umas das outras.
+
+A tangente não existe quando aquilo que está dentro dela vale
+$\frac{\pi}{2} + k\pi$. Aqui, o que está dentro é $2x$:
 
 $$
-2x \neq \frac{\pi}{2} + k\pi
-\Longrightarrow
+2x \neq \frac{\pi}{2} + k\pi.
+$$
+
+Para chegar ao $x$, divida os dois lados por 2. Cada parcela do lado direito é
+dividida por 2:
+
+$$
 x \neq \frac{\pi}{4} + \frac{k\pi}{2}.
 $$
 
-As assíntotas ficam **duas vezes mais próximas** que as de $\tg x$ — o que faz
-sentido, já que $2x$ percorre os valores proibidos duas vezes mais rápido.
+As assíntotas ficam a $\frac{\pi}{2}$ uma da outra, metade da distância das de
+$\tg x$, como a previsão dizia. Conferindo um caso: com $k = 0$,
+$x = \frac{\pi}{4}$ dá $2x = \frac{\pi}{2}$, que de fato é proibido ✓.
 
 ### Exemplo 3: resolver uma equação
 
 *Pause e tente antes de ler.* Determine todos os $x$ em $[0, 2\pi]$ com
 $\tg x = \sqrt{3}$.
 
-A referência é 60°, onde $\tg 60^\circ = \sqrt{3}$. A tangente é positiva no
+Previsão: entre 0 e $2\pi$ cabem dois períodos da tangente, então devem
+aparecer duas soluções, a $\pi$ uma da outra.
+
+A referência é 60°, porque $\tg 60^\circ = \sqrt{3}$. A tangente é positiva no
 primeiro e no terceiro quadrantes:
 
 $$
@@ -360,94 +646,110 @@ x = \frac{\pi}{3}
 x = \frac{\pi}{3} + \pi = \frac{4\pi}{3}.
 $$
 
-Repare que as duas soluções distam exatamente $\pi$ — consequência direta do
-período. Para o seno ou o cosseno, as duas soluções por volta **não** distam um
-valor fixo; para a tangente, distam.
+As duas soluções distam exatamente $\pi$, por causa do período. Para o seno ou
+o cosseno, as duas soluções de uma volta **não** distam um valor fixo; para a
+tangente, distam sempre $\pi$.
 
 ### Exemplo 4: comparar sem calcular
 
-*Pause e tente antes de ler.* Qual é maior: $\tg 1$ ou $\tg 1{,}5$? (Radianos.)
+*Pause e tente antes de ler.* Qual é maior: $\tg 1$ ou $\tg 1{,}5$? (Os dois
+em radianos.)
 
-Os dois estão no intervalo $\left(-\frac{\pi}{2},\ \frac{\pi}{2}\right)$, já que
-$\frac{\pi}{2} \approx 1{,}571$. Nesse ramo a tangente é **crescente**, então o
-maior argumento dá o maior valor:
+Os dois estão no ramo do meio, de $-\frac{\pi}{2}$ a $\frac{\pi}{2}$, porque
+$\frac{\pi}{2} \approx 1{,}571$. Nesse ramo a tangente é **crescente**, então
+o maior número de entrada dá o maior valor:
 
 $$
 \tg 1{,}5 > \tg 1.
 $$
 
-Conferindo: $\tg 1 \approx 1{,}557$ e $\tg 1{,}5 \approx 14{,}10$ — a diferença
-é enorme porque 1,5 está bem perto da assíntota ✓.
+Previsão do tamanho da diferença: 1,5 está bem perto da assíntota, e 1 não
+está. Então $\tg 1{,}5$ deve ser muito maior. Conferindo:
+$\tg 1 \approx 1{,}557$ e $\tg 1{,}5 \approx 14{,}10$ ✓.
 
 ### Exemplo 5: a inclinação de uma reta
 
-*Pause e tente antes de ler.* Uma reta forma 30° com o eixo horizontal. Qual é
-seu coeficiente angular? E se formar 90°?
+*Pause e tente antes de ler.* Uma reta passa pela origem e forma 30° com o
+eixo horizontal. Qual é o coeficiente angular? E se ela formar 90°?
 
-O [coeficiente angular](./equacao-da-reta) é $\frac{\Delta y}{\Delta x}$ — que
-é exatamente a tangente do ângulo com a horizontal:
+Previsão: 30° é menos que 45°, e a reta de 45° tem coeficiente 1. Então o
+coeficiente deve ser menor que 1.
 
 $$
 m = \tg 30^\circ = \frac{\sqrt{3}}{3} \approx 0{,}577.
 $$
 
-Com 90°, a reta é vertical, e $\tg 90^\circ$ não existe — em perfeita coerência
-com o que aquela página afirmou: **retas verticais não têm coeficiente
-angular**. As duas afirmações são a mesma, ditas em linguagens diferentes.
+A reta é $y \approx 0{,}577x$. Com 90°, a reta é vertical, e $\tg 90^\circ$
+não existe: a reta vertical não tem coeficiente angular.
 
 ## Erros comuns
 
 > **Erro 1: ligar os ramos.** O gráfico é interrompido em cada assíntota.
+> Uma curva que atravessa a reta $x = \frac{\pi}{2}$ afirma um valor que não
+> existe.
 
 > **Erro 2: dizer que $\tg 90^\circ$ é infinito.** Ela não está definida.
+> Perto de 90° ela cresce sem limite, mas nenhum ângulo tem tangente igual a
+> “infinito”, porque infinito não é número.
 
-> **Erro 3: usar período $2\pi$.** O da tangente é $\pi$. Isso muda o número de
-> soluções de uma equação num intervalo.
+> **Erro 3: usar período $2\pi$.** O da tangente é $\pi$. Isso muda a
+> contagem de soluções. Em $[0, 2\pi]$, a equação $\tg x = 1$ tem **duas**
+> soluções, $\frac{\pi}{4}$ e $\frac{5\pi}{4}$. Quem usa período $2\pi$ só acha
+> a primeira.
 
-> **Erro 4: procurar amplitude.** A tangente não é limitada, então não há
-> amplitude — nem valor máximo, nem mínimo.
+> **Erro 4: procurar amplitude.** A tangente não fica presa entre dois
+> valores, então não tem amplitude, nem valor máximo, nem valor mínimo.
 
-> **Erro 5: esquecer que a tangente também zera.** Em $0$, $\pi$, $2\pi$, … ela
-> vale 0, exatamente como o seno. Assíntota e zero se alternam a cada
-> $\frac{\pi}{2}$.
+> **Erro 5: esquecer que a tangente também zera.** Em $0$, $\pi$, $2\pi$,
+> $\ldots$ ela vale 0, exatamente onde o seno vale 0. Zeros e assíntotas se
+> alternam a cada $\frac{\pi}{2}$.
+
+> **Erro 6: misturar graus e radianos na calculadora.** $\tg 1$ (1 radiano)
+> vale cerca de 1,557, mas $\tg 1^\circ$ vale cerca de 0,0175. Se a calculadora
+> deu 0,0175 para $\tg 1$, ela está no modo de graus. Os números do eixo do
+> gráfico estão em radianos.
 
 ## Perguntas de verificação
 
-1. Por que a tangente não é limitada, enquanto seno e cosseno são?
-2. Por que $\tg 90^\circ$ não existe? Dê a explicação geométrica e a algébrica.
+1. Por que a tangente não fica presa entre $-1$ e 1, enquanto seno e cosseno
+   ficam?
+2. Por que $\tg 90^\circ$ não existe? Dê a explicação geométrica e a
+   algébrica.
 3. Por que o período da tangente é $\pi$ e não $2\pi$?
 4. Qual é a diferença entre “a função vale infinito” e “a função cresce sem
    limite”?
-5. Por que a tangente é crescente em cada ramo, mas não é correto dizer que ela
-   é crescente em todo o domínio?
+5. Por que a tangente é crescente em cada ramo, mas não é correto dizer que
+   ela é crescente em todo o domínio?
 6. Como a inexistência de $\tg 90^\circ$ se relaciona com o fato de retas
    verticais não terem coeficiente angular?
 
 <details>
 <summary>Respostas para conferência</summary>
 
-1. Porque seno e cosseno são coordenadas de um ponto **sobre** a circunferência
-   de raio 1, e nenhum ponto dela tem coordenada maior que 1. A tangente é lida
-   sobre a reta $x = 1$, que se estende indefinidamente para cima e para baixo.
-2. **Geometricamente:** em 90° o lado do ângulo é vertical, paralelo à reta
-   $x=1$; retas paralelas não se cruzam, então não existe o ponto de leitura.
+1. Seno e cosseno são coordenadas de um ponto **sobre** a circunferência de
+   raio 1. Nenhum ponto dela tem coordenada maior que 1 ou menor que $-1$. A
+   tangente é a altura do ponto $T$, sobre a reta $x = 1$, que não tem fim nem
+   para cima nem para baixo.
+2. **Geometricamente:** em 90° a reta do raio é vertical, paralela à reta
+   $x = 1$. Retas paralelas não se cruzam, então não existe o ponto $T$.
    **Algebricamente:** $\tg 90^\circ = \frac{\sen 90^\circ}{\cos 90^\circ} =
    \frac{1}{0}$, e divisão por zero não está definida.
-3. Porque o valor depende da **reta** determinada pelo ângulo, não do sentido do
-   percurso. Somar $\pi$ leva ao ponto diametralmente oposto, que determina a
-   mesma reta e, portanto, o mesmo ponto de leitura.
-4. “Vale infinito” afirma que existe um valor, e infinito não é um número —
-   a frase é falsa. “Cresce sem limite” descreve um comportamento: para qualquer
-   número escolhido, há pontos próximos da assíntota em que a função o supera.
-   A função continua sem valor **no** ponto da assíntota.
-5. Porque “crescente” compara valores em dois pontos: $a < b$ deveria implicar
-   $f(a) < f(b)$. Isso vale dentro de cada ramo, mas falha entre ramos —
-   $\tg 1{,}5 \approx 14{,}1$ é maior que $\tg 2 \approx -2{,}19$, embora
-   $1{,}5 < 2$. Entre os dois há uma assíntota.
+3. O valor depende só da **reta** do raio, e não do sentido para onde o raio
+   aponta. Somar $\pi$ leva o ponto do ciclo para o lado oposto, sobre a mesma
+   reta. Então o ponto $T$ é o mesmo, e a tangente também.
+4. “Vale infinito” afirma que existe um valor, e infinito não é um número.
+   Por isso a frase é falsa. “Cresce sem limite” descreve um comportamento:
+   para qualquer número escolhido, há pontos perto da assíntota em que a
+   função passa dele. No ponto da assíntota, a função continua sem valor.
+5. “Crescente” compara dois pontos: se $a < b$, então deveria valer
+   $f(a) < f(b)$. Isso vale dentro de cada ramo, mas falha entre ramos:
+   $1{,}5 < 2$, e mesmo assim $\tg 1{,}5 \approx 14{,}10$ é maior que
+   $\tg 2 \approx -2{,}19$. Entre os dois há uma assíntota.
 6. São o mesmo fato. O coeficiente angular de uma reta é a tangente do ângulo
    que ela forma com a horizontal. Uma reta vertical forma 90°, e como
-   $\tg 90^\circ$ não existe, ela não tem coeficiente angular — exatamente o que
-   a página de retas afirmou por outro caminho ($\Delta x = 0$ no denominador).
+   $\tg 90^\circ$ não existe, ela não tem coeficiente angular. A página de
+   retas chegou ao mesmo resultado por outro caminho: $\Delta x = 0$ no
+   denominador.
 
 </details>
 
@@ -478,119 +780,137 @@ angular**. As duas afirmações são a mesma, ditas em linguagens diferentes.
 
 10. Quantas soluções tem $\tg x = 5$ no intervalo $[0, 4\pi]$?
 11. Ordene, sem calculadora: $\tg 0{,}5$, $\tg 1$, $\tg 1{,}4$.
-12. Qual é o período de $g(x) = \tg(3x)$? E suas assíntotas?
+12. Qual é o período de $g(x) = \tg(3x)$? E as assíntotas?
 
 <details>
 <summary>Dica para o 12</summary>
 
-A função completa um ciclo quando o **argumento** $3x$ avança $\pi$. Quanto
-precisa avançar $x$ para isso acontecer?
+É o mesmo raciocínio do exemplo 2. A função completa um ciclo quando o que
+está dentro da tangente, $3x$, avança $\pi$. Quanto o $x$ precisa avançar para
+isso acontecer?
 
 </details>
 
 ### 5. Problema misto
 
-13. Uma reta passa pela origem formando 65° com o eixo horizontal. Determine seu
-    coeficiente angular e escreva sua equação. O que aconteceria com 89,9°?
+13. Uma reta passa pela origem formando 65° com o eixo horizontal. Determine o
+    coeficiente angular e escreva a equação dela. O que aconteceria com 89,9°?
 14. O laser da página está a 1 m da parede. Determine a altura do ponto
-    luminoso para 30°, 60° e 85°, e explique por que a diferença entre 60° e 85°
-    é muito maior que entre 30° e 60°, mesmo os intervalos de ângulo sendo
-    parecidos.
+    luminoso para 30°, 60° e 85°. Explique por que a diferença entre 60° e 85°
+    é muito maior que a diferença entre 30° e 60°, mesmo os intervalos de
+    ângulo sendo parecidos.
 
 ### 6. Justificativa
 
-15. Mostre que os zeros da tangente coincidem com os do seno, e que suas
-    assíntotas coincidem com os zeros do cosseno. Justifique pelos papéis de
-    numerador e denominador.
-16. Explique por que a tangente assume **todos** os valores reais dentro de um
+15. Mostre que os zeros da tangente coincidem com os do seno, e que as
+    assíntotas dela coincidem com os zeros do cosseno. Justifique pelos papéis
+    de numerador e denominador.
+16. Explique por que a tangente atinge **todos** os valores reais dentro de um
     único ramo, e o que isso significa para a existência de soluções de
     $\tg x = c$.
 
 <details>
 <summary>Respostas para conferência</summary>
 
-1. (a) $\frac{\sqrt{3}}{3}$; (b) $\sqrt{3}$; (c) não existe — é uma assíntota;
-   (d) $\frac{5\pi}{4} = 225^\circ$, terceiro quadrante, referência 45°,
-   tangente positiva: $1$.
-2. $x = \frac{\pi}{2}$ e $x = \frac{3\pi}{2}$.
-3. Período $\pi$; domínio $\mathbb{R}$ exceto $\frac{\pi}{2}+k\pi$; imagem
-   $\mathbb{R}$.
-4. Porque a função não existe nos pontos em que o cosseno se anula. Nesses
-   valores o gráfico é interrompido, e o que sobra são pedaços contínuos entre
-   assíntotas consecutivas.
+1. (a) $\frac{\sqrt{3}}{3}$; (b) $\sqrt{3}$; (c) não existe, porque
+   $\cos\frac{3\pi}{2} = 0$ e ali há uma assíntota; (d) $\frac{5\pi}{4} =
+   225^\circ$, terceiro quadrante, referência 45°, tangente positiva: $1$.
+   Se você achou $-1$ no item (d), lembre que no terceiro quadrante seno e
+   cosseno são negativos ao mesmo tempo, e o quociente de dois negativos é
+   positivo.
+2. $x = \frac{\pi}{2}$ e $x = \frac{3\pi}{2}$, os zeros do cosseno nesse
+   intervalo.
+3. Período $\pi$; domínio: os reais exceto $\frac{\pi}{2}+k\pi$, com $k$
+   inteiro; imagem: todos os reais.
+4. A função não existe nos pontos em que o cosseno zera. Nesses pontos o
+   gráfico é interrompido, e o que sobra são pedaços sem interrupção entre
+   duas assíntotas vizinhas.
 5. O correto é dizer que $\tg\frac{\pi}{2}$ **não existe**. “Igual a infinito”
-   afirmaria que a função tem um valor naquele ponto; o que ocorre é que ela
-   cresce sem limite ao se **aproximar** dele, sem nunca chegar a ter valor ali.
-6. Porque a imagem da tangente é todo $\mathbb{R}$ — em cada ramo ela percorre
-   todos os valores reais. Já a imagem do seno é $[-1,1]$, e 1 000 está fora
-   dela: nenhum ponto do ciclo tem altura 1 000.
-7. $x = \frac{\pi}{4}$ e $x = \frac{5\pi}{4}$.
-8. Tangente negativa no segundo e no quarto quadrantes, referência 60°:
+   afirmaria que a função tem um valor naquele ponto. O que acontece é que ela
+   cresce sem limite ao se **aproximar** dele, sem nunca ter valor ali.
+6. A imagem da tangente é o conjunto de todos os reais: em cada ramo ela passa
+   por todos os valores, inclusive 1 000. Já o seno fica entre $-1$ e 1, e
+   1 000 está fora disso: nenhum ponto do ciclo tem altura 1 000.
+7. $x = \frac{\pi}{4}$ e $x = \frac{5\pi}{4}$. Se você achou só
+   $\frac{\pi}{4}$, provavelmente usou período $2\pi$: some $\pi$ para achar a
+   segunda.
+8. Tangente negativa no segundo e no quarto quadrantes, com referência 60°:
    $x = \pi - \frac{\pi}{3} = \frac{2\pi}{3}$ e
-   $x = 2\pi - \frac{\pi}{3} = \frac{5\pi}{3}$.
-9. $x - \frac{\pi}{4} \neq \frac{\pi}{2} + k\pi$, ou seja,
-   $x \neq \frac{3\pi}{4} + k\pi$.
+   $x = 2\pi - \frac{\pi}{3} = \frac{5\pi}{3}$. As duas distam
+   $\frac{5\pi}{3} - \frac{2\pi}{3} = \pi$, como deveria.
+9. O que está dentro da tangente não pode valer $\frac{\pi}{2} + k\pi$:
+   $x - \frac{\pi}{4} \neq \frac{\pi}{2} + k\pi$. Somando $\frac{\pi}{4}$ aos
+   dois lados, $x \neq \frac{3\pi}{4} + k\pi$. Se você achou
+   $x \neq \frac{\pi}{4} + k\pi$, subtraiu $\frac{\pi}{4}$ em vez de somar:
+   confira com $k = 0$, em que $x = \frac{3\pi}{4}$ dá
+   $x - \frac{\pi}{4} = \frac{\pi}{2}$, o valor proibido.
 10. O período é $\pi$. Divida $[0, 4\pi]$ em 4 trechos de largura $\pi$:
     $[0,\pi]$, $[\pi, 2\pi]$, $[2\pi, 3\pi]$ e $[3\pi, 4\pi]$. Cada trecho
-    contém exatamente uma vez cada valor da tangente, então o valor 5 aparece
-    uma vez em cada um: **4 soluções**, em $x \approx 1{,}373$; $4{,}515$;
-    $7{,}657$ e $10{,}798$ (cada uma é a anterior mais $\pi$). Repare que
-    esses trechos não são ramos inteiros: o intervalo começa no meio de um
-    ramo e termina no meio de outro, mas isso não muda a contagem.
-11. Todos estão no ramo central e a tangente é crescente ali, então a ordem
-    segue a dos argumentos: $\tg 0{,}5 < \tg 1 < \tg 1{,}4$. (Valores:
-    0,546; 1,557; 5,798.)
-12. O período é $\frac{\pi}{3}$: o argumento $3x$ avança $\pi$ quando $x$ avança
-    $\frac{\pi}{3}$. Assíntotas em $3x = \frac{\pi}{2}+k\pi$, ou seja,
-    $x = \frac{\pi}{6} + \frac{k\pi}{3}$.
+    tem a largura de um período, e num período a tangente passa uma vez só
+    pelo valor 5. Então o valor 5 aparece uma vez em cada trecho: **4 soluções**, em $x \approx 1{,}373$; $4{,}515$; $7{,}657$ e
+    $10{,}798$ (cada uma é a anterior mais $\pi$). Esses trechos não são ramos
+    inteiros: o intervalo começa no meio de um ramo e termina no meio de outro.
+    Mas isso não muda a contagem. Se você achou 2, usou período $2\pi$.
+11. Os três estão no ramo do meio (todos menores que $\frac{\pi}{2} \approx
+    1{,}571$), e ali a tangente é crescente. Então a ordem segue a dos números
+    de entrada: $\tg 0{,}5 < \tg 1 < \tg 1{,}4$. (Valores: 0,546; 1,557;
+    5,798.)
+12. O período é $\frac{\pi}{3}$: o que está dentro, $3x$, avança $\pi$ quando
+    $x$ avança $\frac{\pi}{3}$. Assíntotas em $3x = \frac{\pi}{2}+k\pi$.
+    Dividindo cada parcela por 3: $x = \frac{\pi}{6} + \frac{k\pi}{3}$. Se você
+    achou período $3\pi$, multiplicou em vez de dividir: com o 3 dentro, a
+    função anda **mais rápido**, e o período fica menor.
 13. $m = \tg 65^\circ \approx 2{,}145$, e a equação é $y \approx 2{,}145x$. Com
-    89,9°, $m = \tg 89{,}9^\circ \approx 573$ — uma reta quase vertical, com
+    89,9°, $m = \tg 89{,}9^\circ \approx 573$: uma reta quase vertical, com
     coeficiente enorme. Em 90° exatos ela seria vertical e não teria
-    coeficiente algum.
+    coeficiente angular.
 14. $\tg 30^\circ \approx 0{,}577$ m; $\tg 60^\circ \approx 1{,}732$ m;
-    $\tg 85^\circ \approx 11{,}43$ m. De 30° a 60° a altura cresce cerca de
-    1,15 m; de 60° a 85°, cerca de 9,7 m. A razão é a proximidade da assíntota:
-    perto de 90°, o denominador $\cos\theta$ fica muito pequeno, e dividir por
-    um número minúsculo produz saltos enormes.
-15. $\tg x = \frac{\sen x}{\cos x}$. Uma fração vale zero exatamente quando o
-    **numerador** zera (com denominador não nulo) — daí os zeros da tangente
-    serem os zeros do seno. E ela deixa de existir quando o **denominador**
-    zera — daí as assíntotas estarem nos zeros do cosseno. Como os zeros do seno
-    e os do cosseno nunca coincidem (não existe ângulo com seno e cosseno nulos
-    ao mesmo tempo, pela relação fundamental), não há ambiguidade.
-16. Em cada ramo, a tangente é contínua e crescente, partindo de valores tão
-    negativos quanto se queira (junto à assíntota da esquerda) até valores tão
-    positivos quanto se queira (junto à da direita). Percorrendo esse caminho
-    ela passa por todos os valores intermediários — ou seja, por todo
-    $\mathbb{R}$. Logo, $\tg x = c$ tem solução para **qualquer** $c$, e
-    exatamente uma solução por ramo.
+    $\tg 85^\circ \approx 11{,}430$ m. De 30° a 60°, a altura cresce cerca de
+    1,15 m; de 60° a 85°, cerca de 9,70 m. A razão é a proximidade da
+    assíntota. Perto de 90°, o denominador $\cos\theta$ fica muito pequeno, e
+    dividir por um número muito pequeno dá um resultado muito grande.
+15. $\tg x = \frac{\sen x}{\cos x}$. Uma fração vale zero quando o
+    **numerador** é zero e o denominador não é. Por isso os zeros da tangente
+    são os zeros do seno. E a fração deixa de existir quando o
+    **denominador** é zero. Por isso as assíntotas estão nos zeros do cosseno.
+    Os dois casos nunca acontecem no mesmo $x$: seno e cosseno nunca zeram
+    juntos, porque $\cos^2 x + \sen^2 x = 1$ (dois zeros dariam
+    $0 + 0 = 1$).
+16. Em cada ramo, a tangente não tem interrupção e só sobe. Ela começa com
+    valores tão negativos quanto se queira (junto à assíntota da esquerda) e
+    termina com valores tão grandes quanto se queira (junto à da direita).
+    Para ir de um extremo ao outro sem pular, ela passa por todos os valores
+    do meio, ou seja, por todos os números reais. Por isso $\tg x = c$ tem
+    solução para **qualquer** $c$. E cada ramo tem exatamente uma solução:
+    como a curva só sobe, ela não volta a passar pela mesma altura.
 
-**Se sua resposta não bateu:**
-
-Se desenhou um ponto sobre uma assíntota, confira se o cosseno zera ali.
-Um valor muito grande existe perto da assíntota; na própria assíntota,
-a tangente não está definida. Não ligue os ramos atravessando essa posição.
+**Se a sua resposta não bateu:** se você desenhou um ponto sobre uma
+assíntota, confira se o cosseno zera ali. Um valor muito grande existe perto da
+assíntota; na própria assíntota, a tangente não está definida. Não ligue os
+ramos atravessando essa posição.
 
 </details>
 
 ## Revisão curta
 
-- $\tg x = \frac{\sen x}{\cos x}$: os **zeros** vêm do numerador ($x = k\pi$) e
-  as **assíntotas**, do denominador ($x = \frac{\pi}{2}+k\pi$).
-- Domínio: $\mathbb{R}$ menos as assíntotas. Imagem: **todo** $\mathbb{R}$.
-  Período: $\pi$. Não há amplitude.
-- O gráfico é formado por **ramos separados**, cada um crescente e percorrendo
-  todos os reais. Não se ligam os ramos.
-- A tangente não é limitada porque é lida na reta infinita $x=1$, ao contrário
-  de seno e cosseno, presos ao ciclo de raio 1.
-- $\tg 90^\circ$ **não existe** — não é infinito. Perto de 90°, a função cresce
-  sem limite.
-- $\tg x = c$ tem solução para qualquer $c$, uma por ramo, e as soluções distam
-  exatamente $\pi$.
+- O gráfico da tangente é a altura do ponto $T$, onde a reta do raio corta a
+  reta $x = 1$, registrada giro a giro.
+- $\tg x = \frac{\sen x}{\cos x}$: os **zeros** vêm do numerador
+  ($x = k\pi$), e as **assíntotas** vêm do denominador
+  ($x = \frac{\pi}{2}+k\pi$).
+- Domínio: os reais menos as assíntotas. Imagem: **todos** os reais. Período:
+  $\pi$. Não há amplitude. A tangente é ímpar: $\tg(-x) = -\tg x$.
+- O gráfico é formado por **ramos separados**, cada um crescente e passando
+  por todos os reais. Os ramos não se ligam.
+- $\tg 90^\circ$ **não existe**, e não é infinito. Perto de 90°, a função
+  cresce sem limite.
+- $\tg x = c$ tem solução para qualquer $c$, uma por ramo, e duas soluções
+  vizinhas distam exatamente $\pi$.
 - O coeficiente angular de uma reta é a tangente do ângulo dela com a
-  horizontal — e a reta vertical não tem coeficiente pelo mesmo motivo que
-  $\tg 90^\circ$ não existe.
+  horizontal. A reta vertical não tem coeficiente angular pelo mesmo motivo
+  que $\tg 90^\circ$ não existe.
 
 Com as três curvas desenhadas, o passo seguinte é mexer nelas: o que cada
-parâmetro em $a\sen(bx+c)+d$ faz com a onda —
-[esticar, comprimir, deslocar](./parametros-das-funcoes-trigonometricas).
+parâmetro em $a\sen(bx+c)+d$ faz com a onda. É o assunto de
+[Os parâmetros da onda](./parametros-das-funcoes-trigonometricas): esticar,
+comprimir e deslocar.
