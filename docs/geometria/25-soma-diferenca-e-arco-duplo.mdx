@@ -2,366 +2,543 @@
 title: Soma, diferença e arco duplo
 ---
 
-import GeoFigure from '@site/src/components/GeoFigure';
+import CartesianPlane from '@site/src/components/CartesianPlane';
+import AngleSumRise from '@site/src/components/AngleSumRise';
+import AngleSumRotation from '@site/src/components/AngleSumRotation';
+import DoubleCosineRoutes from '@site/src/components/DoubleCosineRoutes';
+import SineCosineCombo from '@site/src/components/SineCosineCombo';
 
 # Soma, diferença e arco duplo: $\sen(a \pm b)$ e $\sen 2x$
 
-## Problema motivador: quanto vale $\sen 75^\circ$?
+## Problema motivador: o braço robótico que gira duas vezes
 
-A tabela de [ângulos notáveis](./angulos-notaveis) traz valores exatos para 30°,
-45° e 60°. Fora deles, o curso vinha recorrendo a tabelas decimais ou à
-calculadora.
+Volte ao braço robótico de
+[Funções trigonométricas inversas](./funcoes-trigonometricas-inversas), agora
+com **4 m** do ombro até a garra. O programa faz dois movimentos seguidos:
 
-Mas 75° é a soma de dois notáveis:
+1. gira o braço 45° acima da horizontal;
+2. a partir dali, gira mais 30° no mesmo sentido.
 
-$$
-75^\circ = 45^\circ + 30^\circ.
-$$
+O braço termina a 75° da horizontal. Você precisa saber a **altura da garra
+acima do ombro**, para instalar um sensor nessa altura.
 
-> Existe valor exato para $\sen 75^\circ$? E se existir, como obtê-lo a partir
-> dos valores de 45° e 30°?
-
-A tentativa óbvia é somar:
+A tabela de [ângulos notáveis](./angulos-notaveis) tem 45° e 30°, mas não tem
+75°. A ideia tentadora é somar as duas subidas, cada uma calculada pela tabela:
 
 $$
-\sen 45^\circ + \sen 30^\circ = \frac{\sqrt{2}}{2} + \frac{1}{2}
-\approx 0{,}707 + 0{,}5 = 1{,}207.
+4\sen 45^\circ + 4\sen 30^\circ \approx 2{,}83 + 2{,}00 = 4{,}83\ \text{m}.
 $$
 
-Isso está errado, e o erro é detectável sem saber a resposta certa: **nenhum
-seno passa de 1**. O seno não se distribui sobre a soma.
+Essa conta não pode estar certa. O braço mede 4 m, e a garra nunca fica mais
+alta que o comprimento do braço. A figura mostra o que acontece: o braço gira
+45°, depois mais 30°, e no fim as barras comparam a soma com a altura de
+verdade.
 
-Então como ele se comporta? A resposta é uma das fórmulas mais úteis da
-trigonometria — e é dela que sai, como caso particular, tudo o que se sabe sobre
-o **arco duplo**.
+<AngleSumRise
+  a={45}
+  b={30}
+  length={4}
+  unit="m"
+  mystery
+  caption="O braço de 4 m gira 45° e depois mais 30°. Azul: a altura depois do primeiro giro. Laranja: quanto o segundo giro sobe de verdade. Verde: quanto um giro de 30° sobe quando começa do zero. A barra “somando” passa da linha tracejada dos 4 m."
+/>
 
-## Mapa das ideias
+> Dá para calcular a altura exata da garra usando só os valores de 45° e de
+> 30°, que estão na tabela?
 
-- **fórmulas de adição** — expressam $\sen(a+b)$ e $\cos(a+b)$ em termos dos
-  senos e cossenos de $a$ e de $b$;
-- **fórmulas de subtração** — as mesmas, com $b$ trocado por $-b$;
-- **arco duplo** — o caso $b = a$, que dá $\sen 2a$ e $\cos 2a$.
+Dá. A resposta é uma fórmula para o seno de uma soma de ângulos. Desta mesma
+fórmula sai, como caso particular, o seno do **arco duplo** (o seno de $2a$).
+Mais adiante, na seção “Resolvendo o braço robótico”, a altura da garra sai exata: $\sqrt{6} + \sqrt{2}$ metros.
 
-Exemplo: $\sen(a+b) = \sen a\cos b + \cos a\sen b$. Contraexemplo:
-$\sen(a+b) \neq \sen a + \sen b$ — teste com $a = b = 30^\circ$: o lado esquerdo
-é $\sen 60^\circ \approx 0{,}866$ e o direito é $0{,}5+0{,}5 = 1$.
+## Roteiro da lição
+
+1. Um giro não sobe sempre o mesmo tanto: a subida depende de onde ele começa.
+   Por isso $\sen(a+b)$ não é $\sen a + \sen b$.
+2. Girando a figura inteira, a altura do ponto se separa em duas parcelas:
+   $\sen(a+b) = \sen a\cos b + \cos a\sen b$.
+3. Na mesma figura, a abscissa avança e depois recua:
+   $\cos(a+b) = \cos a\cos b - \sen a\sen b$.
+4. Girar para trás é trocar $b$ por $-b$: nas fórmulas da diferença, o seno
+   acompanha o sinal e o cosseno inverte.
+5. Com os dois giros iguais, as duas parcelas da altura ficam iguais:
+   $\sen 2a = 2\sen a\cos a$.
+6. O cosseno do dobro tem três escritas, e a relação fundamental passa de uma
+   para outra.
+7. Isolando o quadrado na fórmula do cosseno do dobro, $\sen^2 x$ vira uma onda
+   sem expoente.
+8. A tangente da soma sai dividindo a fórmula do seno pela do cosseno.
+9. Toda soma $A\sen x + B\cos x$ é uma única onda, de pico $\sqrt{A^2+B^2}$.
 
 ## Para que isso serve?
 
-- obter valores exatos de mais ângulos (15°, 75°, 105°…);
-- simplificar expressões e resolver equações trigonométricas;
-- em física e engenharia, somar ondas de mesma frequência — duas senoides
-  somadas dão outra senoide, e são estas fórmulas que mostram isso;
-- em processamento de sinais, modulação e batimento;
-- e, no cálculo, as fórmulas de arco duplo são o principal recurso para
-  integrar $\sen^2 x$ e $\cos^2 x$.
+- **Robôs e programas de desenho.** Um giro de 30° seguido de um giro de 60° é
+  um giro de 90°. O programa calcula a posição final com as fórmulas desta
+  página, usando só os senos e cossenos dos dois giros. Para o ponto $(1,\ 0)$,
+  a abscissa final é
+  $\cos 30^\circ\cos 60^\circ - \sen 30^\circ\sen 60^\circ \approx 0{,}433 - 0{,}433 = 0$,
+  e o ponto chega a $(0,\ 1)$, como um giro de 90° deve fazer.
+- **Deep learning.** Muitos modelos de linguagem marcam a posição de cada
+  palavra com um giro (a técnica se chama *rotary position embedding*). Na
+  versão mais simples, cada posição gira 0,1 rad. A palavra na
+  posição 5 recebe o par $(\cos 0{,}5;\ \sen 0{,}5)$, e a da posição 3, o par
+  $(\cos 0{,}3;\ \sen 0{,}3)$. A conta que o modelo faz para comparar as duas é
+  $\cos 0{,}5\cos 0{,}3 + \sen 0{,}5\sen 0{,}3$. Pela fórmula do cosseno da
+  diferença, ela vale $\cos(0{,}5 - 0{,}3) = \cos 0{,}2 \approx 0{,}980$. As
+  posições 12 e 10 dão o mesmo $0{,}980$. Por isso a comparação só enxerga a
+  **distância** entre as palavras, e não o lugar delas na frase.
+- **Eletricidade.** A tomada de 127 V tem pico de uns 180 V, porque
+  $127 \times \sqrt{2} \approx 179{,}6$. O $\sqrt{2}$ vem da média de
+  $\sen^2$ ao longo de uma volta, que é $\frac12$. É a fórmula da seção de
+  $\sen^2 x$ que mostra isso.
+- **Som.** Somar duas ondas de mesmo ritmo dá outra onda do mesmo ritmo. Por
+  exemplo, $3\sen x + 4\cos x$ é uma onda de pico 5 (e não 7). A seção sobre
+  a soma de um seno com um cosseno mostra por quê.
+- **Dentro da matemática.** Valores exatos de ângulos fora da tabela:
+  $\sen 15^\circ = \frac{\sqrt{6} - \sqrt{2}}{4} \approx 0{,}2588$. E, no
+  cálculo, a fórmula do seno da soma é o primeiro passo para descobrir a
+  derivada do seno.
 
 ## Ideias anteriores que voltam aqui
 
-**1. Valores notáveis** (de [Ângulos notáveis](./angulos-notaveis)). Quanto valem
-$\sen 45^\circ$, $\cos 45^\circ$, $\sen 30^\circ$ e $\cos 30^\circ$?
+**1. Valores notáveis** (de [Ângulos notáveis](./angulos-notaveis)). Quanto
+valem $\sen 45^\circ$, $\cos 45^\circ$, $\sen 30^\circ$ e $\cos 30^\circ$?
 
 <details>
 <summary>Conferir</summary>
 
 $\frac{\sqrt{2}}{2}$, $\frac{\sqrt{2}}{2}$, $\frac{1}{2}$ e
-$\frac{\sqrt{3}}{2}$. São as quatro peças que vão montar $\sen 75^\circ$.
+$\frac{\sqrt{3}}{2}$. São as quatro peças que vão montar a altura da garra.
 
 </details>
 
-**2. Relação fundamental** (de [Relações fundamentais](./relacoes-fundamentais)).
+**2. Quanto um segmento inclinado sobe e avança** (de
+[Resolvendo triângulos retângulos](./resolvendo-triangulos-retangulos)). Uma
+rampa de 10 m faz 30° com a horizontal. Quanto ela sobe? Quanto ela avança na
+horizontal?
+
+<details>
+<summary>Conferir</summary>
+
+A rampa é a hipotenusa. A subida é o cateto oposto ao ângulo de 30°:
+$10\sen 30^\circ = 5$ m. O avanço é o cateto vizinho:
+$10\cos 30^\circ \approx 8{,}66$ m. A dedução das fórmulas desta página faz
+essa mesma conta duas vezes, uma para cada cateto de um triângulo.
+
+</details>
+
+**3. Relação fundamental** (de [Relações fundamentais](./relacoes-fundamentais)).
 Quanto vale $\sen^2 x + \cos^2 x$?
 
 <details>
 <summary>Conferir</summary>
 
-Vale 1. Ela vai transformar uma das fórmulas do arco duplo em três versões
-equivalentes.
+Vale 1, para qualquer $x$. Ela vai transformar a fórmula do cosseno do dobro em
+três escritas equivalentes.
 
 </details>
 
-**3. Paridade** (de [Ciclo trigonométrico](./ciclo-trigonometrico)). Quanto
-valem $\sen(-b)$ e $\cos(-b)$?
+**4. Girar para trás** (de [Ciclo trigonométrico](./ciclo-trigonometrico)).
+Quanto valem $\sen(-b)$ e $\cos(-b)$?
 
 <details>
 <summary>Conferir</summary>
 
-$\sen(-b) = -\sen b$ e $\cos(-b) = \cos b$. É com isso que as fórmulas de
-subtração serão obtidas das de adição, sem nenhum trabalho novo.
+$\sen(-b) = -\sen b$ e $\cos(-b) = \cos b$. Girar para trás leva o ponto ao
+espelho dele no eixo horizontal: a altura troca de sinal e a abscissa fica
+igual. É com isso que as fórmulas da diferença vão sair das fórmulas da soma.
 
 </details>
 
-**4. Multiplicação de radicais** (de [Raízes](../numeros-e-operacoes/raizes)).
+**5. Multiplicação de raízes** (de [Raízes](../numeros-e-operacoes/raizes)).
 Quanto vale $\sqrt{2} \times \sqrt{3}$?
 
 <details>
 <summary>Conferir</summary>
 
-$\sqrt{6}$ — a raiz **se distribui sobre produto**. Isso aparecerá ao
-simplificar o resultado de $\sen 75^\circ$.
+$\sqrt{6}$: a raiz de um produto é o produto das raízes. Isso aparece ao
+simplificar a altura da garra.
 
 </details>
 
-## Por que a soma não se distribui
+**6. Amplitude e fase** (de
+[Os parâmetros da onda](./parametros-das-funcoes-trigonometricas)). Que curva
+é $y = 5\sen\left(x + \frac{\pi}{3}\right)$?
 
-Antes de apresentar a fórmula certa, vale entender por que a errada é tentadora
-e por que falha.
+<details>
+<summary>Conferir</summary>
 
-Distributividade é uma propriedade de **operações**, não de funções quaisquer.
-Vale que $2(a+b) = 2a+2b$, porque multiplicar é somar repetidamente. Mas o seno
-não é uma multiplicação: é uma **projeção de um giro**.
+É a onda do seno esticada na vertical até o pico 5 (amplitude 5) e deslizada
+$\frac{\pi}{3}$ para a esquerda (fase $\frac{\pi}{3}$). A seção sobre a soma
+de um seno com um cosseno mostra que somar um seno com um cosseno dá uma curva desse tipo.
 
-Somar dois giros não soma as projeções. Um giro de 30° levanta o ponto até 0,5;
-outro giro de 30° a partir dali não levanta mais 0,5, porque o ponto já está
-subindo em direção ao topo, onde o movimento se torna mais horizontal do que
-vertical.
+</details>
 
-<GeoFigure
-  unit={44}
-  padding={54}
-  arcs={[{at: [0, 0], r: 3, from: 0, to: 90, tone: 0}]}
-  segments={[
-    {from: [0, 0], to: [3.2, 0], tone: 0},
-    {from: [0, 0], to: [0, 3.2], tone: 0},
-    {from: [2.598, 0], to: [2.598, 1.5], tone: 1, dashed: true},
-    {from: [0, 1.5], to: [2.598, 1.5], tone: 1, dashed: true},
-    {from: [1.5, 0], to: [1.5, 2.598], tone: 2, dashed: true},
-    {from: [0, 2.598], to: [1.5, 2.598], tone: 2, dashed: true},
-    {from: [0, 0], to: [2.598, 1.5], tone: 1},
-    {from: [0, 0], to: [1.5, 2.598], tone: 2},
-  ]}
-  labels={[
-    {at: [-0.5, 1.5], math: '0{,}5', tone: 1, fontSize: 12},
-    {at: [-0.6, 2.598], math: '0{,}87', tone: 2, fontSize: 12},
-  ]}
-  caption="De 0° a 30° a altura sobe 0,5. De 30° a 60°, o mesmo giro de 30° sobe apenas mais 0,37."
-/>
+## Um giro não sobe sempre o mesmo tanto: o seno de uma soma não é a soma dos senos
 
-Os primeiros 30° de giro elevam o ponto de 0 a 0,5. Os 30° seguintes elevam
-apenas de 0,5 a 0,866 — um ganho de 0,37, menor. **O efeito de um giro depende
-de onde ele começa.** É por isso que a fórmula precisa envolver os quatro
-valores ($\sen a$, $\cos a$, $\sen b$, $\cos b$), e não só os dois senos.
+Pense na cadeirinha de uma roda-gigante. Logo depois do embarque, ela sobe
+quase na vertical: quase todo o giro vira subida. Perto do topo, ela anda
+quase na horizontal: o mesmo tanto de giro quase não muda a altura.
 
-## As fórmulas de adição
+No círculo de raio 1, três giros seguidos de 30° mostram isso em números:
 
-> $$\sen(a+b) = \sen a\,\cos b + \cos a\,\sen b$$
-> $$\cos(a+b) = \cos a\,\cos b - \sen a\,\sen b$$
+| Giro | Altura no começo | Altura no fim | Quanto subiu |
+|---|---|---|---|
+| de 0° a 30° | 0 | 0,5 | 0,5 |
+| de 30° a 60° | 0,5 | 0,866 | 0,366 |
+| de 60° a 90° | 0,866 | 1 | 0,134 |
 
-Duas coisas a observar antes da dedução:
+Os três giros são do mesmo tamanho, e as três subidas são diferentes.
+**Quanto um giro sobe depende de onde ele começa.**
 
-- **O seno mistura** os dois tipos ($\sen$ com $\cos$) e **soma**.
-- **O cosseno usa os iguais** ($\cos$ com $\cos$, $\sen$ com $\sen$) e
-  **subtrai**. O sinal de menos é o detalhe que mais escapa.
+A regra errada $\sen(a+b) = \sen a + \sen b$ esquece isso. Ela soma $\sen b$,
+que é quanto o giro $b$ sobe **quando começa do zero**. Mas o segundo giro
+começa em $a$, e dali ele sobe outro tanto. Arraste os dois giros e compare a
+barra laranja (a subida de verdade) com a verde (a subida que a regra errada
+usa).
 
-### De onde vêm
+<AngleSumRise sliders a={40} b={30} />
 
-A dedução abaixo vale para $a$ e $b$ agudos com $a+b$ agudo; as fórmulas valem
-para quaisquer ângulos, mas a extensão exige tratar cada quadrante ou usar
-rotações no plano, o que fica fora do escopo aqui. A construção geométrica
-convence e mostra a origem de cada termo.
-
-Tome o ciclo de raio 1. Marque o ponto $P$ no ângulo $a+b$. Trace também o raio
-no ângulo $a$, e baixe de $P$ a perpendicular a esse raio, com pé em $R$.
-
-<GeoFigure
-  unit={54}
-  padding={58}
-  segments={[
-    {from: [0, 0], to: [4.4, 0], tone: 0},
-    {from: [0, 0], to: [3.6, 2.52], tone: 3},
-    {from: [0, 0], to: [2, 3.464], tone: 1},
-    {from: [2, 3.464], to: [2.9698, 2.0793], tone: 2},
-    {from: [2, 3.464], to: [2, 0], tone: 0, dashed: true},
-    {from: [2.9698, 2.0793], to: [2.9698, 0], tone: 0, dashed: true},
-    {from: [2, 2.0793], to: [2.9698, 2.0793], tone: 0, dashed: true},
-  ]}
-  angles={[
-    {at: [0, 0], from: [4.4, 0], to: [3.6, 2.52], label: 'a', tone: 3, radius: 44, labelRadius: 64},
-    {at: [0, 0], from: [3.6, 2.52], to: [2, 3.464], label: 'b', tone: 1, radius: 78, labelRadius: 98},
-    {at: [2.9698, 2.0793], from: [0, 0], to: [2, 3.464], right: true, tone: 2},
-    {at: [2, 2.0793], from: [2.9698, 2.0793], to: [2, 3.464], right: true, tone: 0},
-    {at: [2, 3.464], from: [2, 2.0793], to: [2.9698, 2.0793], label: 'a', tone: 3, radius: 30, labelRadius: 48},
-  ]}
-  points={[
-    {at: [2, 3.464], label: 'P', tone: 1, place: 'above', distance: 22},
-    {at: [2.9698, 2.0793], label: 'R', tone: 2, place: 'right', distance: 22},
-    {at: [2, 2.0793], label: 'C', tone: 0, place: 'left', distance: 22},
-  ]}
-  labels={[
-    {at: [1.55, 0.72], math: '\\cos b', tone: 3, fontSize: 12},
-    {at: [2.88, 3.05], math: '\\sen b', tone: 2, fontSize: 12},
-  ]}
-  caption="O ponto P está no ângulo a + b. O triângulo ORP é retângulo em R, com OR = cos b e RP = sen b."
-/>
-
-**Passo 1 — os lados do triângulo $ORP$.** No triângulo retângulo $ORP$, a
-hipotenusa $OP$ é o raio, que vale 1, e o ângulo em $O$ é $b$. Logo:
+A altura de verdade, então, é
 
 $$
-OR = \cos b, \qquad RP = \sen b.
+\sen(a+b) = \sen a + \text{(quanto o giro } b \text{ sobe, começando em } a\text{)}.
 $$
 
-**Passo 2 — a altura de $P$.** Ela é a soma de duas parcelas: a altura de $R$
-mais a subida de $R$ até $P$.
+Esse segundo pedaço não sai direto da tabela. Por isso a próxima seção mede a
+altura da ponta de outro jeito. Ela corta a altura em dois pedaços, e cada um
+se calcula com os valores de $a$ e de $b$.
 
-- $R$ está sobre o raio de ângulo $a$, a distância $\cos b$ da origem. Sua
-  altura é $\cos b \times \sen a$.
-- A subida de $R$ até $P$ é o cateto $CP$ do triângulo $RCP$, que é retângulo
-  em $C$. Para calcular $CP$, precisamos do ângulo desse triângulo em $P$. Ele
-  sai em três passos, todos olhando para o vértice $R$:
-  1. O segmento $RC$ é horizontal, paralelo ao eixo. O raio $OR$ é uma
-     transversal que corta os dois. Por isso, o ângulo entre $RC$ e $RO$ é
-     igual ao ângulo entre o eixo e o raio, que é $a$ — são ângulos alternos
-     internos, como em [Ângulos](./angulos).
-  2. Em $R$, o ângulo entre $RO$ e $RP$ é reto, porque $RP$ foi traçado
-     perpendicular ao raio. Esse ângulo reto é a soma do ângulo de $RO$ até
-     $RC$ (que vale $a$) com o ângulo de $RC$ até $RP$. Então o ângulo de $RC$
-     até $RP$, que é o ângulo do triângulo $RCP$ em $R$, vale $90^\circ - a$.
-  3. No triângulo $RCP$, os três ângulos somam $180^\circ$ (de
-     [Triângulos](./triangulos)): $90^\circ$ em $C$, $90^\circ - a$ em $R$.
-     Sobra para $P$:
-     $180^\circ - 90^\circ - (90^\circ - a) = a$.
+Exemplo em que a soma dos senos dá certo: $a = 0$. O segundo giro começa do
+zero, e $\sen(0 + b) = \sen 0 + \sen b = \sen b$. Contraexemplo:
+$a = b = 30^\circ$. A soma dos senos dá $0{,}5 + 0{,}5 = 1$, mas
+$\sen 60^\circ \approx 0{,}866$.
 
-  Agora, no triângulo $RCP$, a hipotenusa é $RP = \sen b$ e o cateto $CP$ é
-  adjacente ao ângulo $a$ em $P$. Logo a subida é
-  $CP = RP\cos a = \sen b\cos a$.
+> **Erro comum: distribuir o seno.** $\sen(a+b) \neq \sen a + \sen b$. Há um
+> teste que pega o erro sem calculadora: a soma de dois senos pode passar de 1,
+> e nenhum seno passa de 1. O mesmo erro aparece disfarçado em
+> $\sen 2a = 2\sen a$, que a seção do arco duplo conserta.
 
-Somando:
+<details>
+<summary>Confira: com a = 60° e b = 30°, quanto dá a soma dos senos? Como saber, sem calculadora, que ela não é o seno de 90°?</summary>
 
-$$
-\sen(a+b) = \underbrace{\sen a\cos b}_{\text{altura de } R}
-+ \underbrace{\cos a\sen b}_{\text{subida de } R \text{ a } P}.
-$$
+$\sen 60^\circ + \sen 30^\circ \approx 0{,}866 + 0{,}5 = 1{,}366$. Esse número
+passa de 1, e nenhum seno passa de 1. O valor certo é $\sen 90^\circ = 1$: o
+segundo giro, começando em 60°, sobe só $1 - 0{,}866 = 0{,}134$.
 
-**Passo 3 — a abscissa de $P$.** Aqui aparece a subtração. A posição horizontal
-de $R$ é $\cos b\cos a$. Mas o segmento $RP$ aponta para **trás**: ele leva o
-ponto para a esquerda, recuando $RP\sen a = \sen b\sen a$.
+</details>
 
-$$
-\cos(a+b) = \cos a\cos b - \sen a\sen b.
-$$
+## Girando a figura inteira, a altura se separa em duas parcelas
 
-> O sinal negativo tem significado geométrico preciso: ao girar mais, o ponto
-> **se afasta** do eixo vertical direito, então a abscissa **diminui**. A
-> altura, ao contrário, aumenta — daí o mais na primeira fórmula.
+Para medir a subida do segundo giro, vamos montar o ângulo $a + b$ em duas
+etapas, com um triângulo:
 
-### Conferência numérica
+1. Desenhe o triângulo retângulo do ângulo $b$ deitado no eixo horizontal. A
+   hipotenusa vai da origem $O$ até o ponto $P$ do ciclo, e mede 1. O cateto
+   deitado vai de $O$ até $R$ e mede $\cos b$. O cateto em pé vai de $R$ até
+   $P$ e mede $\sen b$.
+2. Gire o triângulo inteiro de $a$, em torno da origem. O ponto $P$ vai para o
+   ângulo $a + b$, que é o que queremos.
+3. Meça a altura de $P$ em dois pedaços: a altura de $R$, e a subida de $R$
+   até $P$.
 
-Vale testar antes de usar. Com $a = b = 30^\circ$:
+<AngleSumRotation part="sen" a={40} b={30} />
+
+**Pedaço 1: a altura de $R$.** O cateto $OR$ mede $\cos b$ e, depois do giro,
+está inclinado $a$ sobre a horizontal. É a conta da rampa, de
+[Resolvendo triângulos retângulos](./resolvendo-triangulos-retangulos): a
+subida é o comprimento vezes o seno da inclinação. Então a altura de $R$ é
+$\cos b \times \sen a$.
+
+**Pedaço 2: a subida de $R$ até $P$.** O cateto $RP$ mede $\sen b$. Antes do
+giro, ele estava em pé. Girar a figura inteira de $a$ gira **toda direção** de
+$a$, inclusive a do cateto em pé. Por isso, depois do giro, $RP$ faz o ângulo
+$a$ com a vertical (é o ângulo marcado em $P$ na figura). A subida é a parte
+vertical de $RP$. Ela é o cateto **vizinho** do ângulo $a$, e cateto vizinho
+é hipotenusa vezes cosseno. Então a subida é $\sen b \times \cos a$.
+
+Repare na troca: no pedaço 1 o ângulo $a$ é medido a partir da horizontal, e a
+subida usa o **seno** de $a$. No pedaço 2 o ângulo $a$ é medido a partir da
+vertical, e a subida usa o **cosseno** de $a$.
+
+Somando os dois pedaços:
+
+> $$\sen(a+b) = \underbrace{\sen a\cos b}_{\text{altura de } R} + \underbrace{\cos a\sen b}_{\text{subida de } R \text{ a } P}$$
+
+Compare com a seção anterior. Lá, a altura foi cortada em “altura depois do
+primeiro giro” mais “subida do segundo giro”, e o segundo pedaço não tinha
+conta pronta. Aqui o corte é outro. O ponto $R$ fica no raio de $a$, mas mais
+perto da origem: a distância $\cos b$, e não 1. Com esse corte, os dois
+pedaços saem com a conta da rampa, usando só os senos e cossenos de $a$ e de
+$b$.
+
+**Exemplo:** $a = b = 30^\circ$.
 
 $$
 \sen 60^\circ = \sen 30^\circ\cos 30^\circ + \cos 30^\circ\sen 30^\circ
 = \frac{1}{2}\times\frac{\sqrt{3}}{2} + \frac{\sqrt{3}}{2}\times\frac{1}{2}
-= \frac{\sqrt{3}}{2}. \quad ✓
+= \frac{\sqrt{3}}{4} + \frac{\sqrt{3}}{4} = \frac{\sqrt{3}}{2}. \quad ✓
 $$
+
+**Contraexemplo:** juntar seno com seno e cosseno com cosseno,
+$\sen a\sen b + \cos a\cos b$. Com $a = b = 30^\circ$ ele dá
+$\frac{1}{4} + \frac{3}{4} = 1$, e não $\frac{\sqrt{3}}{2}$. Na fórmula certa,
+**cada parcela tem um seno e um cosseno**: o seno mistura as duas funções.
+
+A figura foi desenhada com $a$ e $b$ entre 0° e 90°. A fórmula vale para
+quaisquer ângulos, inclusive negativos ou maiores que 90°. A prova de todos os
+casos de uma vez usa as rotações da lição
+[Produto de matrizes](../algebra-linear/produto-de-matrizes). Aqui, confira
+com um caso fora do desenho: $a = 120^\circ$ e $b = 90^\circ$. A fórmula dá
+$\sen 120^\circ \times 0 + \cos 120^\circ \times 1 = -\frac12$, e de fato
+$\sen 210^\circ = -\frac{1}{2}$.
+
+<details>
+<summary>Confira: arraste a até 90°. Quanto vale cada pedaço da altura? Por que a subida de R até P some?</summary>
+
+Com $a = 90^\circ$, o raio $OR$ fica em pé. A altura de $R$ é
+$\sen 90^\circ\cos b = \cos b$. O cateto $RP$ é perpendicular ao raio, então
+fica deitado, e um segmento deitado não sobe nada: a subida é
+$\cos 90^\circ\sen b = 0$. Resultado: $\sen(90^\circ + b) = \cos b$.
+
+</details>
+
+## Na mesma figura, a abscissa avança e depois recua: o cosseno da soma
+
+O cosseno de $a + b$ é a **abscissa** de $P$, a posição horizontal dele:
+positiva à direita do eixo vertical, negativa à esquerda. A mesma figura dá a abscissa, também em dois pedaços:
+
+1. o avanço de $O$ até $R$ na horizontal;
+2. o movimento horizontal de $R$ até $P$.
+
+<AngleSumRotation part="cos" a={40} b={30} />
+
+**Pedaço 1: o avanço até $R$.** O cateto $OR$ mede $\cos b$ e está inclinado
+$a$ sobre a horizontal. O avanço é o comprimento vezes o cosseno da
+inclinação: $\cos b \times \cos a$.
+
+**Pedaço 2: de $R$ até $P$, o ponto recua.** O cateto $RP$ faz o ângulo $a$
+com a vertical, e ele aponta para cima e **para a esquerda**. A parte
+horizontal dele é o cateto **oposto** ao ângulo $a$, que é hipotenusa vezes
+seno: $\sen b \times \sen a$. Como ela aponta para a esquerda, ela é
+**descontada** do avanço.
+
+> $$\cos(a+b) = \underbrace{\cos a\cos b}_{\text{avanço até } R} - \underbrace{\sen a\sen b}_{\text{recuo de } R \text{ a } P}$$
+
+Este é o ponto que mais confunde na página, e a figura ajuda a guardar: o
+seno **mistura** as funções e **soma**; o cosseno **junta as iguais** (cosseno
+com cosseno, seno com seno) e **subtrai**. O sinal de menos tem razão
+geométrica: quanto mais o ponto gira, mais ele se aproxima do eixo vertical, e
+a abscissa diminui.
+
+**Exemplo:** $a = b = 30^\circ$.
 
 $$
 \cos 60^\circ = \cos 30^\circ\cos 30^\circ - \sen 30^\circ\sen 30^\circ
 = \frac{3}{4} - \frac{1}{4} = \frac{1}{2}. \quad ✓
 $$
 
-Ambos batem com a tabela.
+**Contraexemplo:** com o sinal de mais, a mesma conta daria
+$\frac{3}{4} + \frac{1}{4} = 1$, que é $\cos 0^\circ$, e não $\cos 60^\circ$.
 
-## As fórmulas de subtração
+Quando o recuo é maior que o avanço, a abscissa fica negativa. Com
+$a = b = 60^\circ$: $\cos 120^\circ = \frac{1}{4} - \frac{3}{4} = -\frac{1}{2}$.
+Arraste os dois giros até 60° e veja $P$ passar para a esquerda do eixo
+vertical.
 
-Não é preciso deduzir nada de novo: basta trocar $b$ por $-b$ e usar a paridade
-($\sen(-b) = -\sen b$, $\cos(-b) = \cos b$):
+<details>
+<summary>Confira: com a = b = 45°, quanto o ponto avança, quanto recua, e onde P para?</summary>
+
+Avança $\cos 45^\circ\cos 45^\circ = \frac{1}{2}$ e recua
+$\sen 45^\circ\sen 45^\circ = \frac{1}{2}$. A abscissa final é
+$\frac12 - \frac12 = 0$: $P$ para em cima do eixo vertical, no topo do ciclo.
+Faz sentido, porque $45^\circ + 45^\circ = 90^\circ$.
+
+</details>
+
+## Girar para trás é trocar b por −b: o seno acompanha o sinal, o cosseno inverte
+
+Girar $a$ e depois $b$ **para trás** leva o ponto ao ângulo $a - b$. Na figura,
+o triângulo do ângulo $b$ passa para o outro lado do raio $OR$. O cateto
+$RP$, que antes apontava para cima e para a esquerda, agora aponta para baixo e
+para a direita. Use os botões para ver a altura e a abscissa.
+
+<AngleSumRotation backward toggle part="sen" a={60} b={30} caption="O segundo giro é para trás: o triângulo fica do outro lado do raio. Na altura, o cateto laranja desce; na abscissa, ele avança. Use os botões para trocar entre seno e cosseno." />
+
+Na altura, a subida de $R$ até $P$ virou **descida**: ela é descontada. Na
+abscissa, o recuo virou **avanço**: ele é somado.
+
+As mesmas trocas saem das fórmulas da soma sem desenhar nada. Girar $b$ para
+trás é girar $-b$. Troque $b$ por $-b$ e use $\sen(-b) = -\sen b$ e
+$\cos(-b) = \cos b$, que vieram do ciclo:
 
 $$
-\sen(a-b) = \sen a\cos(-b) + \cos a\sen(-b) = \sen a\cos b - \cos a\sen b.
+\sen(a-b) = \sen a\cos(-b) + \cos a\sen(-b) = \sen a\cos b - \cos a\sen b,
 $$
 
 $$
 \cos(a-b) = \cos a\cos(-b) - \sen a\sen(-b) = \cos a\cos b + \sen a\sen b.
 $$
 
+Só o termo que tem $\sen b$ muda de sinal. O termo com $\cos b$ fica igual.
+
 > $$\sen(a-b) = \sen a\cos b - \cos a\sen b$$
+>
 > $$\cos(a-b) = \cos a\cos b + \sen a\sen b$$
 
-Repare no padrão dos sinais, que é a forma mais econômica de memorizar as
-quatro:
+As quatro fórmulas cabem numa tabela de sinais:
 
-| | sinal dentro | sinal na fórmula |
+| | sinal dentro do parêntese | sinal no meio da fórmula |
 |---|:---:|:---:|
-| $\sen(a \pm b)$ | $\pm$ | **o mesmo** $\pm$ |
-| $\cos(a \pm b)$ | $\pm$ | **o oposto** $\mp$ |
+| $\sen(a \pm b)$ | $\pm$ | **o mesmo** |
+| $\cos(a \pm b)$ | $\pm$ | **o oposto** |
 
-Ou seja: **o seno acompanha o sinal; o cosseno inverte.**
+Em uma frase: **o seno acompanha o sinal; o cosseno inverte.**
 
-## Resolvendo $\sen 75^\circ$
-
-$$
-\sen 75^\circ = \sen(45^\circ + 30^\circ)
-= \sen 45^\circ\cos 30^\circ + \cos 45^\circ\sen 30^\circ
-$$
+**Exemplo:** $a = 60^\circ$ e $b = 30^\circ$, que dá $a - b = 30^\circ$.
 
 $$
-= \frac{\sqrt{2}}{2}\times\frac{\sqrt{3}}{2}
-+ \frac{\sqrt{2}}{2}\times\frac{1}{2}
-= \frac{\sqrt{6}}{4} + \frac{\sqrt{2}}{4}
+\sen 30^\circ = \frac{\sqrt{3}}{2}\times\frac{\sqrt{3}}{2} - \frac{1}{2}\times\frac{1}{2}
+= \frac{3}{4} - \frac{1}{4} = \frac{1}{2}. \quad ✓
 $$
 
 $$
-\boxed{\ \sen 75^\circ = \frac{\sqrt{6}+\sqrt{2}}{4}\ }
+\cos 30^\circ = \frac{1}{2}\times\frac{\sqrt{3}}{2} + \frac{\sqrt{3}}{2}\times\frac{1}{2}
+= \frac{\sqrt{3}}{2}. \quad ✓
 $$
 
-Em decimais: $\frac{2{,}449 + 1{,}414}{4} = \frac{3{,}863}{4} \approx 0{,}9659$
-— um valor **abaixo de 1**, como tinha de ser, e coerente com a tabela de
-[Seno, cosseno e tangente](./razoes-trigonometricas), que dá 0,9659 para 75°. ✓
+**Contraexemplo:** o cosseno também não se distribui sobre a diferença.
+$\cos(60^\circ - 60^\circ) = \cos 0^\circ = 1$, mas
+$\cos 60^\circ - \cos 60^\circ = 0$.
 
-Compare com a tentativa errada do começo, 1,207: a diferença não é pequena, e o
-teste do limite 1 a teria descartado imediatamente.
+<details>
+<summary>Confira: use a fórmula do cosseno da diferença para escrever cos(90° − b) de outro jeito.</summary>
 
-E o cosseno, pelo mesmo caminho:
+$\cos(90^\circ - b) = \cos 90^\circ\cos b + \sen 90^\circ\sen b
+= 0 \times \cos b + 1 \times \sen b = \sen b$. É a regra do ângulo
+complementar de [Seno, cosseno e tangente](./razoes-trigonometricas): o
+cosseno de um ângulo é o seno do complementar. Agora ela saiu de uma conta.
 
-$$
-\cos 75^\circ = \cos 45^\circ\cos 30^\circ - \sen 45^\circ\sen 30^\circ
-= \frac{\sqrt{6}}{4} - \frac{\sqrt{2}}{4}
-= \frac{\sqrt{6}-\sqrt{2}}{4} \approx 0{,}2588.
-$$
+</details>
 
-Conferindo com a relação fundamental:
-$0{,}9659^2 + 0{,}2588^2 = 0{,}9330 + 0{,}0670 = 1$ ✓.
+## Resolvendo o braço robótico
 
-Bônus: como $15^\circ = 45^\circ - 30^\circ$, o mesmo par de fórmulas dá
+Agora a altura da garra sai com os valores da tabela. Antes da conta, a
+previsão: 75° está perto de 90°, então a garra deve ficar um pouco abaixo de
+4 m, que é o máximo.
 
-$$
-\sen 15^\circ = \frac{\sqrt{6}-\sqrt{2}}{4}
-\qquad
-\cos 15^\circ = \frac{\sqrt{6}+\sqrt{2}}{4}.
-$$
-
-Os valores de 15° e 75° trocaram de lugar — o que é esperado, já que os ângulos
-são complementares.
-
-## Arco duplo
-
-Agora o caso particular mais usado: fazer $b = a$ nas fórmulas de adição.
-
-**Seno:**
+O ângulo final é $75^\circ = 45^\circ + 30^\circ$. Pelo seno da soma:
 
 $$
-\sen 2a = \sen(a+a) = \sen a\cos a + \cos a\sen a
+\sen 75^\circ = \sen 45^\circ\cos 30^\circ + \cos 45^\circ\sen 30^\circ
+= \frac{\sqrt{2}}{2}\times\frac{\sqrt{3}}{2} + \frac{\sqrt{2}}{2}\times\frac{1}{2}
+= \frac{\sqrt{6}}{4} + \frac{\sqrt{2}}{4} = \frac{\sqrt{6}+\sqrt{2}}{4}.
 $$
 
-> $$\sen 2a = 2\sen a\cos a.$$
-
-**Cosseno:**
-
-$$
-\cos 2a = \cos(a+a) = \cos a\cos a - \sen a\sen a
-$$
-
-> $$\cos 2a = \cos^2 a - \sen^2 a.$$
-
-### As três versões do cosseno do arco duplo
-
-A fórmula do cosseno tem duas variantes, obtidas usando
-$\sen^2 a + \cos^2 a = 1$ para eliminar um dos termos:
+O $\sqrt{6}$ veio de $\sqrt{2} \times \sqrt{3}$. O braço mede 4 m, então a
+altura da garra é 4 vezes esse seno:
 
 $$
-\cos 2a = \cos^2 a - \sen^2 a
+\boxed{\ h = 4 \times \frac{\sqrt{6}+\sqrt{2}}{4} = \sqrt{6} + \sqrt{2} \approx 2{,}449 + 1{,}414 = 3{,}863\ \text{m}\ }
 $$
+
+Bate com a previsão: um pouco abaixo de 4 m. A soma errada do começo dava
+4,83 m, quase um metro a mais.
+
+<AngleSumRise
+  a={45}
+  b={30}
+  length={4}
+  unit="m"
+  caption="O mesmo braço. A barra “de verdade” mede √6 + √2 ≈ 3,86 m: a altura depois do primeiro giro (azul) mais a subida do segundo giro, começando em 45° (laranja)."
+/>
+
+A distância horizontal do ombro até a garra sai do cosseno da soma, pelo
+mesmo caminho:
+
+$$
+4\cos 75^\circ = 4\left(\cos 45^\circ\cos 30^\circ - \sen 45^\circ\sen 30^\circ\right)
+= 4\left(\frac{\sqrt{6}}{4} - \frac{\sqrt{2}}{4}\right) = \sqrt{6} - \sqrt{2} \approx 1{,}035\ \text{m}.
+$$
+
+Conferência pela relação fundamental, com o seno e o cosseno de 75°:
+$0{,}9659^2 + 0{,}2588^2 \approx 0{,}9330 + 0{,}0670 = 1$. ✓
+
+<details>
+<summary>Confira: se o segundo giro fosse de 30° para trás, a garra pararia a 15°. A que altura?</summary>
+
+$15^\circ = 45^\circ - 30^\circ$, e o seno acompanha o sinal:
+$\sen 15^\circ = \frac{\sqrt{2}}{2}\times\frac{\sqrt{3}}{2} - \frac{\sqrt{2}}{2}\times\frac{1}{2}
+= \frac{\sqrt{6}-\sqrt{2}}{4}$. A altura é
+$4 \times \frac{\sqrt{6}-\sqrt{2}}{4} = \sqrt{6} - \sqrt{2} \approx 1{,}035$ m.
+É o mesmo número da distância horizontal a 75°, porque 15° e 75° são
+complementares: o seno de um é o cosseno do outro.
+
+</details>
+
+## Arco duplo: com os dois giros iguais, as duas parcelas ficam iguais
+
+Agora o caso mais usado das fórmulas da soma: o segundo giro é igual ao
+primeiro, $b = a$. O ponto termina em $a + a = 2a$, o **arco duplo**.
+
+Na figura, o deslizante é um só: o triângulo do ângulo $a$ é girado de $a$.
+Repare na régua. Os dois pedaços da altura têm o mesmo tamanho.
+
+<AngleSumRotation double toggle part="sen" a={30} caption="O triângulo do ângulo a girado de a. Na altura, os dois pedaços da régua são iguais: sen a cos a cada um. Use os botões para ver também a abscissa." />
+
+Na fórmula, é a mesma coisa. Troque $b$ por $a$:
+
+$$
+\sen 2a = \sen(a+a) = \sen a\cos a + \cos a\sen a.
+$$
+
+As duas parcelas são o mesmo produto, escrito em ordens diferentes. Duas
+vezes o mesmo produto é 2 vezes ele:
+
+> $$\sen 2a = 2\sen a\cos a$$
+
+**Exemplo:** $a = 30^\circ$. $2\sen 30^\circ\cos 30^\circ
+= 2 \times \frac{1}{2} \times \frac{\sqrt{3}}{2} = \frac{\sqrt{3}}{2}$, que é
+$\sen 60^\circ$. ✓
+
+**Contraexemplo:** $2\sen a$, sem o cosseno. Com $a = 60^\circ$ ele dá
+$2 \times 0{,}866 = 1{,}732$, que passa de 1. O certo é
+$\sen 120^\circ = 2 \times 0{,}866 \times 0{,}5 = 0{,}866$.
+
+> **Erro comum: $\sen 2a = 2\sen a$.** Dobrar o ângulo não dobra o seno. O
+> erro foi anunciado em [Ângulos notáveis](./angulos-notaveis), e agora o
+> conserto está na mão: falta o fator $\cos a$. Como $\cos a$ é menor que 1
+> entre 0° e 90°, o seno do dobro é **menos** que o dobro do seno.
+
+Com os botões da figura, a abscissa mostra o cosseno do dobro: o ponto avança
+$\cos a \times \cos a$ e recua $\sen a \times \sen a$. Então
+
+$$
+\cos 2a = \cos(a + a) = \cos a\cos a - \sen a\sen a = \cos^2 a - \sen^2 a.
+$$
+
+A próxima seção trabalha essa fórmula.
+
+<details>
+<summary>Confira: sem calculadora, por que sen 2a = 2 sen a cos a nunca passa de 1, mesmo quando 2 sen a passa?</summary>
+
+Porque $2\sen a\cos a$ é o seno de um ângulo (o ângulo $2a$), e nenhum seno
+passa de 1. Na figura, a altura de $P$ é a soma dos dois pedaços iguais, e $P$
+está no círculo de raio 1. O maior valor acontece em $a = 45^\circ$:
+$2 \times \frac{\sqrt2}{2} \times \frac{\sqrt2}{2} = 1$, o topo do ciclo.
+
+</details>
+
+## O cosseno do dobro tem três escritas, e a relação fundamental passa de uma para outra
+
+A fórmula $\cos 2a = \cos^2 a - \sen^2 a$ tem um seno e um cosseno. Às vezes
+o problema só tem senos, ou só cossenos. A relação fundamental,
+$\sen^2 a + \cos^2 a = 1$, permite trocar um pelo outro:
+
+- isolando o cosseno, $\cos^2 a = 1 - \sen^2 a$;
+- isolando o seno, $\sen^2 a = 1 - \cos^2 a$.
+
+Troque o $\cos^2 a$ da fórmula pela primeira escrita. Depois, em outra conta,
+troque o $\sen^2 a$ pela segunda:
 
 $$
 \cos 2a = (1 - \sen^2 a) - \sen^2 a = 1 - 2\sen^2 a
@@ -371,10 +548,20 @@ $$
 \cos 2a = \cos^2 a - (1 - \cos^2 a) = 2\cos^2 a - 1
 $$
 
-As três são a mesma identidade. A escolha entre elas é de conveniência: se o
-problema tem só senos, use a segunda; se tem só cossenos, a terceira.
+O que muda é a escrita. O valor é o mesmo nas três, porque cada troca põe no
+lugar de um termo outro termo **igual** a ele. A figura mostra as três contas
+como três caminhos na reta numérica, saindo do zero. O cinza tem comprimento 1,
+que é um azul mais um laranja. Arraste o ângulo e veja as três chegadas
+caírem sempre no mesmo ponto.
 
-Conferindo com $a = 30^\circ$, onde $\cos 60^\circ = \frac{1}{2}$:
+<DoubleCosineRoutes initial={30} />
+
+> $$\cos 2a = \cos^2 a - \sen^2 a = 1 - 2\sen^2 a = 2\cos^2 a - 1$$
+
+Qual escolher? A que tem só a função que o problema dá. Se o problema dá o
+seno, use $1 - 2\sen^2 a$; se dá o cosseno, use $2\cos^2 a - 1$.
+
+**Exemplo:** $a = 30^\circ$, em que $\cos 60^\circ = \frac{1}{2}$:
 
 $$
 \frac{3}{4}-\frac{1}{4} = \frac{1}{2} \ ✓
@@ -384,261 +571,408 @@ $$
 2\times\frac{3}{4} - 1 = \frac{1}{2} \ ✓
 $$
 
-> **Erro comum: $\sen 2a = 2\sen a$.** Falso. Teste com $a = 30^\circ$:
-> $\sen 60^\circ \approx 0{,}866$, mas $2\sen 30^\circ = 1$. A fórmula correta
-> tem o **cosseno** junto: $2\sen 30^\circ\cos 30^\circ = 2 \times \frac{1}{2} \times
-> \frac{\sqrt{3}}{2} = \frac{\sqrt{3}}{2}$ ✓. Esse foi, aliás, exatamente o erro
-> apontado em [Ângulos notáveis](./angulos-notaveis) — agora com a correção na
-> mão.
+**Contraexemplo:** $(\cos a - \sen a)^2$, que parece com $\cos^2 a - \sen^2 a$
+e não é. O primeiro é o quadrado de uma diferença; o segundo é uma diferença de
+quadrados. Com $a = 30^\circ$: $(0{,}866 - 0{,}5)^2 \approx 0{,}134$, e não
+$0{,}5$.
 
-### A tangente
+<details>
+<summary>Confira: arraste até a = 45°. Onde caem as três chegadas, e por quê?</summary>
 
-Dividindo as fórmulas do seno e do cosseno e simplificando, obtêm-se:
+No zero. Com $a = 45^\circ$, $\cos^2 a = \sen^2 a = \frac{1}{2}$: o avanço e o
+recuo da primeira linha são iguais. E $\cos 90^\circ = 0$. Passando de 45°, o
+recuo fica maior que o avanço e as chegadas passam para a esquerda do zero.
+
+</details>
+
+## Isolando o quadrado, sen² x vira uma onda sem expoente
+
+Às vezes o problema tem $\sen^2 x$ e queremos uma expressão **sem quadrado**.
+É o caso da média de $\sen^2$ na tomada, citada no começo, e de muitas contas
+do cálculo. A escrita $\cos 2x = 1 - 2\sen^2 x$ já contém o $\sen^2 x$. Falta
+isolá-lo, um passo de cada vez:
+
+1. some $2\sen^2 x$ aos dois lados: $\cos 2x + 2\sen^2 x = 1$;
+2. subtraia $\cos 2x$ dos dois lados: $2\sen^2 x = 1 - \cos 2x$;
+3. divida os dois lados por 2.
+
+> $$\sen^2 x = \frac{1 - \cos 2x}{2} \qquad\qquad \cos^2 x = \frac{1 + \cos 2x}{2}$$
+
+A segunda sai do mesmo jeito, partindo de $\cos 2x = 2\cos^2 x - 1$. Essas duas
+são as **fórmulas de redução de potência**: trocam um quadrado por um cosseno
+sem expoente.
+
+O que a fórmula diz sobre a curva? $\frac{1 - \cos 2x}{2}$ é
+$\frac{1}{2} - \frac{1}{2}\cos 2x$: uma onda com altura média $\frac12$,
+amplitude $\frac{1}{2}$ e ritmo dobrado (o $2x$ completa uma volta quando $x$
+anda só $\pi$). O gráfico confirma.
+
+<CartesianPlane
+  xMin={-0.4} xMax={6.9} yMin={-0.35} yMax={1.35}
+  xUnit={50} yUnit={120}
+  xStep={1.5707963} yStep={0.5}
+  xTicks={[
+    {at: 1.5707963, label: '\\frac{\\pi}{2}'},
+    {at: 3.1415927, label: '\\pi'},
+    {at: 4.712389, label: '\\frac{3\\pi}{2}'},
+    {at: 6.2831853, label: '2\\pi'},
+  ]}
+  yTicks={[{at: 0.5, label: '\\frac{1}{2}'}, {at: 1, label: '1'}]}
+  lines={[{m: 0, n: 0.5, dashed: true, muted: true}]}
+  functions={[
+    {f: (x) => Math.sin(x) ** 2, tone: 2},
+    {f: (x) => Math.cos(x) ** 2, tone: 1, dashed: true},
+  ]}
+  caption="Laranja: sen² x. Azul tracejado: cos² x. As duas são ondas em torno da altura 1/2 (tracejado cinza), com amplitude 1/2, que se repetem a cada π. Onde uma está no pico, a outra está no vale, e as duas somam 1."
+/>
+
+Como a onda $\sen^2 x$ sobe e desce em torno de $\frac{1}{2}$ por igual, a média
+dela numa volta é $\frac12$. É desse $\frac{1}{2}$ que sai o $\sqrt{2}$ da
+tomada.
+
+**Exemplo:** $x = 60^\circ$. $\sen^2 60^\circ = \frac{3}{4}$, e
+$\frac{1 - \cos 120^\circ}{2} = \frac{1 - \left(-\frac{1}{2}\right)}{2}
+= \frac{\frac32}{2} = \frac{3}{4}$. ✓
+
+**Contraexemplo:** esquecer o 2 do cosseno, $\frac{1 - \cos x}{2}$. Com
+$x = 60^\circ$ dá $\frac{1 - 0{,}5}{2} = 0{,}25$, e não $0{,}75$. O cosseno é
+do **dobro** do ângulo; no gráfico, é por isso que a onda se repete a cada
+$\pi$.
+
+<details>
+<summary>Confira: calcule cos² 15° exato, sem calcular cos 15° antes.</summary>
+
+$\cos^2 15^\circ = \frac{1 + \cos 30^\circ}{2} = \frac{1 + \frac{\sqrt{3}}{2}}{2}
+= \frac{2 + \sqrt{3}}{4} \approx 0{,}933$. Conferindo com o valor de
+$\cos 15^\circ \approx 0{,}9659$: $0{,}9659^2 \approx 0{,}933$. ✓
+
+</details>
+
+## A tangente da soma sai dividindo a fórmula do seno pela do cosseno
+
+A tangente é o seno dividido pelo cosseno. Então a tangente de $a + b$ é a
+fórmula do seno da soma dividida pela do cosseno da soma. Queremos escrever o
+resultado só com $\tg a$ e $\tg b$. O caminho é dividir o numerador e o
+denominador por $\cos a\cos b$. Dividir os dois andares de uma fração pelo
+mesmo número (diferente de zero) não muda o valor dela: é o mesmo que
+multiplicar por 1.
 
 $$
-\tg(a+b) = \frac{\tg a + \tg b}{1 - \tg a\,\tg b}
-\qquad
-\tg 2a = \frac{2\tg a}{1 - \tg^2 a}.
+\begin{array}{rcl}
+\tg(a+b) & = & \dfrac{\sen a\cos b + \cos a\sen b}{\cos a\cos b - \sen a\sen b} \\[14pt]
+ & = & \dfrac{\dfrac{\sen a\cos b}{\cos a\cos b} + \dfrac{\cos a\sen b}{\cos a\cos b}}{\dfrac{\cos a\cos b}{\cos a\cos b} - \dfrac{\sen a\sen b}{\cos a\cos b}} \\[30pt]
+ & = & \dfrac{\dfrac{\sen a}{\cos a} + \dfrac{\sen b}{\cos b}}{1 - \dfrac{\sen a}{\cos a}\times\dfrac{\sen b}{\cos b}} \\[30pt]
+ & = & \dfrac{\tg a + \tg b}{1 - \tg a\,\tg b}
+\end{array}
 $$
 
-Elas são menos usadas e podem sempre ser substituídas pelo quociente
-$\frac{\sen}{\cos}$ das anteriores — o que costuma ser mais seguro do que
-memorizá-las.
+Na terceira linha, cada fração perdeu o fator que aparece em cima e embaixo
+(o $\cos b$ na primeira, o $\cos a$ na segunda). Com $b = a$ sai a tangente do
+arco duplo:
 
-Verificação rápida com $a = 30^\circ$:
+> $$\tg(a+b) = \frac{\tg a + \tg b}{1 - \tg a\,\tg b} \qquad\qquad \tg 2a = \frac{2\tg a}{1 - \tg^2 a}$$
+
+A divisão por $\cos a\cos b$ só vale quando $\cos a$ e $\cos b$ não são
+zero, isto é, quando $\tg a$ e $\tg b$ existem. Há uma segunda condição: o
+denominador $1 - \tg a\,\tg b$ não pode ser zero. Ele é zero exatamente
+quando $\cos(a+b) = 0$, e nesse caso $\tg(a+b)$ não existe (o contraexemplo
+abaixo mostra um caso assim). No arco duplo, essa condição pede
+$\tg^2 a \neq 1$. Se você esquecer a fórmula, a divisão $\frac{\sen}{\cos}$
+das fórmulas anteriores sempre dá o mesmo resultado.
+
+**Exemplo:** $a = b = 30^\circ$, com $\tg 30^\circ = \frac{\sqrt{3}}{3}$:
 $\frac{2 \times \frac{\sqrt{3}}{3}}{1 - \frac{1}{3}} =
-\frac{\frac{2\sqrt{3}}{3}}{\frac{2}{3}} = \sqrt{3} = \tg 60^\circ$ ✓.
+\frac{\frac{2\sqrt{3}}{3}}{\frac{2}{3}} = \sqrt{3}$, que é $\tg 60^\circ$. ✓
+
+**Contraexemplo:** $\tg(a+b) \neq \tg a + \tg b$. Com $a = b = 45^\circ$, a
+soma das tangentes dá $1 + 1 = 2$. Mas $\tg 90^\circ$ não existe. A fórmula
+certa avisa: o denominador fica $1 - 1 \times 1 = 0$.
+
+<details>
+<summary>Confira: use a fórmula para calcular tg 2a sabendo que tg a = 1/2.</summary>
+
+$\tg 2a = \frac{2 \times \frac{1}{2}}{1 - \frac{1}{4}} = \frac{1}{\frac{3}{4}}
+= \frac{4}{3}$. Previsão para conferir: $\tg a = 0{,}5$ dá $a \approx 26{,}6^\circ$,
+então $2a \approx 53{,}1^\circ$, cuja tangente é $\approx 1{,}33$. ✓
+
+</details>
+
+## Toda soma A sen x + B cos x é uma única onda
+
+Some uma onda do seno com uma onda do cosseno, as duas com o mesmo ritmo. O
+resultado parece uma curva nova, mas é outra onda do mesmo tipo, só que com
+outro pico e deslizada para o lado. A figura mostra isso para cada escolha
+de $A$ e $B$ nos deslizantes: a soma (laranja) cai exatamente sobre uma onda
+$R\sen(x + \varphi)$ (azul tracejado).
+
+<SineCosineCombo A={3} B={4} />
+
+**Por que vale.** Queremos achar um pico $R$ e uma fase $\varphi$ que deixem
+
+$$
+R\sen(x+\varphi) = A\sen x + B\cos x
+$$
+
+verdadeira para todo $x$. Abra o lado esquerdo com a fórmula do seno da soma:
+
+$$
+R\sen(x+\varphi) = (R\cos\varphi)\sen x + (R\sen\varphi)\cos x.
+$$
+
+Compare com o lado direito, termo a termo. Os dois lados ficam iguais para
+todo $x$ quando o número que multiplica $\sen x$ é o mesmo dos dois lados. O
+número que multiplica $\cos x$ também precisa ser o mesmo:
+
+$$
+R\cos\varphi = A, \qquad R\sen\varphi = B.
+$$
+
+Essas duas igualdades dizem que o ponto $(A,\ B)$ está a distância $R$ da
+origem, na direção do ângulo $\varphi$. É o painel da esquerda da figura.
+
+- **Para achar $R$:** a distância de $(A,\ B)$ até a origem, pelo teorema de
+  Pitágoras, é $R = \sqrt{A^2+B^2}$. (A conta: eleve as duas igualdades ao
+  quadrado e some. Fica $R^2(\cos^2\varphi + \sen^2\varphi) = A^2 + B^2$, e o
+  parêntese vale 1 pela relação fundamental.)
+- **Para achar $\varphi$:** divida a segunda igualdade pela primeira. O $R$ se
+  cancela e sobra $\tg\varphi = \frac{B}{A}$. Com $A$ e $B$ positivos, o ponto
+  está no primeiro quadrante e $\varphi$ é agudo.
+
+Com $A$ ou $B$ negativo, a tangente sozinha não decide o ângulo. Dois ângulos
+que diferem de 180° têm a mesma tangente, e só um deles aponta para o ponto
+$(A,\ B)$. É o mesmo cuidado do braço robótico de
+[Funções trigonométricas inversas](./funcoes-trigonometricas-inversas):
+escolha o $\varphi$ do quadrante desse ponto. Por exemplo, $-\sen x + \cos x$
+tem $A = -1$ e $B = 1$, e $\tg\varphi = -1$. O ponto $(-1,\ 1)$ está no
+segundo quadrante, então $\varphi = 135^\circ$, e não $-45^\circ$. Confira em
+$x = 0$: $\sqrt{2}\sen 135^\circ = 1$, que é o $B$, mas
+$\sqrt{2}\sen(-45^\circ) = -1$. E com $A = 0$ não dá para dividir: o ponto
+está no eixo vertical, e $\varphi = 90^\circ$ se $B$ é positivo, ou
+$\varphi = -90^\circ$ se $B$ é negativo.
+
+> $$A\sen x + B\cos x = R\sen(x + \varphi), \quad R = \sqrt{A^2+B^2}, \quad \tg\varphi = \frac{B}{A}$$
+>
+> com $\varphi$ no quadrante do ponto $(A,\ B)$.
+
+**Exemplo:** $3\sen x + 4\cos x$. $R = \sqrt{9 + 16} = 5$ e
+$\tg\varphi = \frac{4}{3}$, o que dá $\varphi \approx 53{,}13^\circ$. Confira
+em $x = 0$: o lado de partida vale $3 \times 0 + 4 \times 1 = 4$, e o lado novo
+vale $5\sen 53{,}13^\circ \approx 5 \times 0{,}8 = 4$. ✓
+
+**Contraexemplo:** o pico **não** é $A + B$. Para $3\sen x + 4\cos x$, a soma
+$3 + 4 = 7$ seria o pico só se o seno e o cosseno chegassem ao máximo no
+mesmo $x$. Mas o seno chega ao máximo em $\frac{\pi}{2}$, onde o cosseno vale
+zero. O pico de verdade é 5.
+
+É por isso que somar sons de mesma frequência nunca cria uma frequência nova:
+muda só o pico e a fase.
+
+<details>
+<summary>Confira: ponha A = 1 e B = 1 na figura. Qual é o pico de sen x + cos x, e em que x ele acontece?</summary>
+
+$R = \sqrt{1 + 1} = \sqrt{2} \approx 1{,}414$ e $\tg\varphi = 1$, então
+$\varphi = 45^\circ$. A onda é $\sqrt{2}\sen(x + 45^\circ)$, que chega ao pico
+quando $x + 45^\circ = 90^\circ$, ou seja, em $x = 45^\circ$. Conferindo:
+$\sen 45^\circ + \cos 45^\circ = \frac{\sqrt2}{2} + \frac{\sqrt2}{2} = \sqrt{2}$. ✓
+
+</details>
 
 ## Exemplos resolvidos
 
-### Exemplo 1: valor exato de 105°
+### Exemplo 1: valor exato de cos 105°
 
 Calcule $\cos 105^\circ$.
 
-$105^\circ = 60^\circ + 45^\circ$:
+**Previsão.** 105° está no segundo quadrante, um pouco depois de 90°. O
+cosseno deve ser negativo e pequeno, perto de zero.
+
+$105^\circ = 60^\circ + 45^\circ$, e o cosseno da soma subtrai:
 
 $$
 \cos 105^\circ = \cos 60^\circ\cos 45^\circ - \sen 60^\circ\sen 45^\circ
 = \frac{1}{2}\times\frac{\sqrt{2}}{2} - \frac{\sqrt{3}}{2}\times\frac{\sqrt{2}}{2}
-$$
-
-$$
 = \frac{\sqrt{2}}{4} - \frac{\sqrt{6}}{4} = \frac{\sqrt{2}-\sqrt{6}}{4}
 \approx -0{,}2588.
 $$
 
-Negativo, como esperado — 105° está no segundo quadrante ✓.
+Negativo e perto de zero, como previsto. ✓
 
 ### Exemplo 2: arco duplo a partir de um valor
 
-*Pause e tente antes de ler.* Sabendo que $\sen x = \frac{3}{5}$ e que $x$ está
-no primeiro quadrante, calcule $\sen 2x$ e $\cos 2x$.
+*Pause e tente antes de ler.* Sabendo que $\sen x = \frac{3}{5}$ e que $x$
+está no primeiro quadrante, calcule $\sen 2x$ e $\cos 2x$.
 
-Primeiro o cosseno, pela relação fundamental:
+**Previsão.** $\sen x = 0{,}6$ dá $x$ um pouco abaixo de 37°, então $2x$ fica
+perto de 74°. Esperamos $\sen 2x$ perto de 1 e $\cos 2x$ positivo e pequeno.
+
+O seno do dobro pede também o cosseno. Pela relação fundamental, e com o
+cosseno positivo no primeiro quadrante:
 
 $$
-\cos x = \sqrt{1 - \frac{9}{25}} = \frac{4}{5}.
+\cos x = \sqrt{1 - \frac{9}{25}} = \sqrt{\frac{16}{25}} = \frac{4}{5}.
 $$
 
 $$
 \sen 2x = 2 \times \frac{3}{5} \times \frac{4}{5} = \frac{24}{25} = 0{,}96
 $$
 
+Para o cosseno do dobro, o problema deu o seno. Então a escrita mais direta é
+$1 - 2\sen^2 x$:
+
 $$
 \cos 2x = 1 - 2\left(\frac{3}{5}\right)^2 = 1 - \frac{18}{25} = \frac{7}{25}
 = 0{,}28.
 $$
 
-Conferência: $0{,}96^2 + 0{,}28^2 = 0{,}9216 + 0{,}0784 = 1$ ✓. (E lá está de
-novo o terno $(7,24,25)$.)
+Bate com a previsão. Conferência pela relação fundamental:
+$0{,}96^2 + 0{,}28^2 = 0{,}9216 + 0{,}0784 = 1$. ✓
 
-### Exemplo 3: simplificar
+### Exemplo 3: ler a fórmula de trás para a frente
 
 *Pause e tente antes de ler.* Simplifique
 $\sen 40^\circ\cos 20^\circ + \cos 40^\circ\sen 20^\circ$.
 
-O padrão é exatamente o do seno da soma, com $a = 40^\circ$ e $b = 20^\circ$:
+**Previsão da forma.** Cada parcela tem um seno e um cosseno, e o sinal do meio
+é mais. É o desenho do seno de uma soma.
+
+Com $a = 40^\circ$ e $b = 20^\circ$, a expressão é o lado direito da fórmula:
 
 $$
+\sen 40^\circ\cos 20^\circ + \cos 40^\circ\sen 20^\circ
 = \sen(40^\circ + 20^\circ) = \sen 60^\circ = \frac{\sqrt{3}}{2}.
 $$
 
-Ler a fórmula **da direita para a esquerda** é tão importante quanto usá-la na
-ordem natural — é assim que expressões complicadas se colapsam.
+Usar a fórmula da direita para a esquerda junta quatro valores difíceis num
+valor só, que está na tabela.
 
-### Exemplo 4: uma equação
+### Exemplo 4: uma equação com arco duplo
 
 *Pause e tente antes de ler.* Resolva $\sen 2x = \sen x$ para $x$ em
-$[0, 2\pi]$.
+$[0,\ 2\pi]$.
 
-Substitua o arco duplo e passe tudo para um lado:
+**Previsão.** O $\sen 2x$ faz duas ondas no intervalo, e o $\sen x$ faz uma.
+As curvas devem se cruzar várias vezes, então esperamos mais de duas soluções.
+
+Troque $\sen 2x$ pela fórmula do arco duplo e passe tudo para um lado:
 
 $$
 2\sen x\cos x = \sen x
 \quad\Longrightarrow\quad
 2\sen x\cos x - \sen x = 0
-$$
-
-$$
+\quad\Longrightarrow\quad
 \sen x\,(2\cos x - 1) = 0.
 $$
 
-> **Atenção:** não divida por $\sen x$. Isso descartaria as soluções em que
-> $\sen x = 0$ — e elas existem. **Fatore**, como em
-> [Fator comum em evidência](../algebra/fator-comum-em-evidencia).
+O $\sen x$ estava nas duas parcelas e saiu em evidência, como em
+[Fator comum em evidência](../algebra/fator-comum-em-evidencia).
+
+> **Atenção:** não divida os dois lados por $\sen x$. Dividir supõe que
+> $\sen x$ não é zero, e isso descarta justamente as soluções em que ele é
+> zero. Fatore.
 
 Um produto é zero quando um dos fatores é zero:
 
-- $\sen x = 0 \Rightarrow x = 0,\ \pi,\ 2\pi$;
-- $2\cos x - 1 = 0 \Rightarrow \cos x = \frac{1}{2} \Rightarrow
-  x = \frac{\pi}{3}$ ou $x = \frac{5\pi}{3}$.
+- $\sen x = 0$ dá $x = 0$, $\pi$ ou $2\pi$;
+- $2\cos x - 1 = 0$ dá $\cos x = \frac{1}{2}$, ou seja, $x = \frac{\pi}{3}$ ou
+  $x = \frac{5\pi}{3}$.
 
-Cinco soluções: $0$, $\frac{\pi}{3}$, $\pi$, $\frac{5\pi}{3}$ e $2\pi$.
-
+São cinco soluções: $0$, $\frac{\pi}{3}$, $\pi$, $\frac{5\pi}{3}$ e $2\pi$.
 Conferindo $x = \frac{\pi}{3}$: $\sen\frac{2\pi}{3} = \frac{\sqrt{3}}{2}$ e
-$\sen\frac{\pi}{3} = \frac{\sqrt{3}}{2}$ ✓.
+$\sen\frac{\pi}{3} = \frac{\sqrt{3}}{2}$. ✓
 
-### Exemplo 5: somar duas ondas
+### Exemplo 5: uma onda só
 
-*Pause e tente antes de ler.* Mostre que
-$\sen(x+\varphi) = \sen x\cos\varphi + \cos x\sen\varphi$ significa que
-**deslocar uma senoide é o mesmo que combinar um seno com um cosseno**.
+*Pause e tente antes de ler.* Escreva $\sen x + \sqrt{3}\cos x$ como uma onda
+só, e diga o pico.
 
-Aplicando a fórmula da soma com $a = x$ e $b = \varphi$ (constante), obtém-se
+**Previsão.** O pico é menor que a soma dos coeficientes,
+$1 + \sqrt{3} \approx 2{,}73$, porque o seno e o cosseno não chegam ao máximo
+no mesmo $x$.
 
-$$
-\sen(x+\varphi) = \underbrace{\cos\varphi}_{\text{constante}}\sen x
-+ \underbrace{\sen\varphi}_{\text{constante}}\cos x.
-$$
-
-Ou seja: qualquer senoide deslocada pode ser escrita como
-$A\sen x + B\cos x$, com $A$ e $B$ constantes. E vale a recíproca — toda
-combinação $A\sen x + B\cos x$ é uma única senoide, de amplitude
-$\sqrt{A^2+B^2}$ e fase adequada.
-
-**Por que vale a recíproca.** Comece com $A\sen x + B\cos x$, com $A$ e $B$
-positivos, como nos exemplos desta página. Queremos achar dois números: uma
-amplitude $R$ e uma fase $\varphi$ que deixem
+Aqui $A = 1$ e $B = \sqrt{3}$:
 
 $$
-R\sen(x+\varphi) = A\sen x + B\cos x
+R = \sqrt{1^2 + (\sqrt{3})^2} = \sqrt{1 + 3} = 2,
+\qquad
+\tg\varphi = \frac{\sqrt{3}}{1} = \sqrt{3},
 $$
 
-verdadeira para todo $x$. Abra o lado esquerdo com a fórmula da soma:
+e o ângulo agudo de tangente $\sqrt{3}$ é $60^\circ$, ou $\frac{\pi}{3}$:
 
 $$
-R\sen(x+\varphi) = (R\cos\varphi)\sen x + (R\sen\varphi)\cos x.
+\sen x + \sqrt{3}\cos x = 2\sen\left(x + \frac{\pi}{3}\right).
 $$
 
-Compare com o lado direito, termo a termo. Os dois lados ficam iguais para todo
-$x$ se o número que multiplica $\sen x$ for o mesmo dos dois lados, e o número
-que multiplica $\cos x$ também:
-
-$$
-R\cos\varphi = A, \qquad R\sen\varphi = B.
-$$
-
-- **Para achar $R$:** eleve as duas igualdades ao quadrado e some. Fica
-  $R^2\cos^2\varphi + R^2\sen^2\varphi = A^2 + B^2$. No lado esquerdo, ponha
-  $R^2$ em evidência: $R^2(\cos^2\varphi + \sen^2\varphi)$. Pela
-  [relação fundamental](./relacoes-fundamentais), o parêntese vale 1. Então
-  $R^2 = A^2 + B^2$, e $R = \sqrt{A^2+B^2}$.
-- **Para achar $\varphi$:** divida a segunda igualdade pela primeira. O $R$ se
-  cancela, e sobra $\frac{\sen\varphi}{\cos\varphi} = \frac{B}{A}$, isto é,
-  $\tg\varphi = \frac{B}{A}$. Como $A$ e $B$ são positivos, $\cos\varphi$ e
-  $\sen\varphi$ também são, e $\varphi$ é um ângulo agudo.
-
-**Teste com números.** Para $3\sen x + 4\cos x$: $R = \sqrt{9 + 16} = 5$ e
-$\tg\varphi = \frac{4}{3}$, o que dá $\varphi \approx 53{,}13^\circ$. Confira em
-$x = 0^\circ$. O lado de partida vale $3 \times 0 + 4 \times 1 = 4$. O lado
-novo vale $5\sen 53{,}13^\circ \approx 5 \times 0{,}8 = 4$ ✓.
-
-Esse resultado é a base do processamento de sinais: somar ondas de mesma
-frequência **nunca** cria uma frequência nova, apenas muda amplitude e fase.
-
-### Exemplo 6: reduzir potência
-
-*Pause e tente antes de ler.* Escreva $\sen^2 x$ sem expoente 2.
-
-Parta de $\cos 2x = 1 - 2\sen^2 x$ e isole:
-
-$$
-2\sen^2 x = 1 - \cos 2x
-\quad\Longrightarrow\quad
-\sen^2 x = \frac{1-\cos 2x}{2}.
-$$
-
-Analogamente, de $\cos 2x = 2\cos^2 x - 1$:
-
-$$
-\cos^2 x = \frac{1+\cos 2x}{2}.
-$$
-
-Teste com $x = 60^\circ$: $\sen^2 60^\circ = \frac{3}{4}$, e
-$\frac{1 - \cos 120^\circ}{2} = \frac{1-(-\frac{1}{2})}{2} = \frac{3/2}{2}
-= \frac{3}{4}$ ✓.
-
-Essas duas são chamadas de **fórmulas de redução de potência**, e são o
-instrumento padrão para integrar $\sen^2$ e $\cos^2$ no cálculo — trocam um
-quadrado por uma expressão de primeiro grau em $\cos 2x$.
+O pico é 2, abaixo de 2,73, como previsto. Conferência em $x = 0$: o lado de
+partida vale $0 + \sqrt{3} \times 1 = \sqrt{3}$, e o lado novo vale
+$2\sen\frac{\pi}{3} = 2 \times \frac{\sqrt{3}}{2} = \sqrt{3}$. ✓
 
 ## Erros comuns
 
-> **Erro 1: distribuir.** $\sen(a+b) \neq \sen a + \sen b$. Detecção imediata:
-> a soma dos senos pode passar de 1, e nenhum seno passa.
+Cada um destes erros já apareceu na sua seção. Aqui eles estão juntos, para
+revisar.
 
-> **Erro 2: errar o sinal do cosseno.** $\cos(a+b)$ tem **menos**;
-> $\cos(a-b)$ tem **mais**. O cosseno inverte o sinal; o seno o mantém.
+> **Erro 1: distribuir.** $\sen(a+b) \neq \sen a + \sen b$, e
+> $\cos(a-b) \neq \cos a - \cos b$. Teste rápido: a soma de dois senos pode
+> passar de 1, e nenhum seno passa.
 
-> **Erro 3: $\sen 2a = 2\sen a$.** Falta o cosseno:
-> $\sen 2a = 2\sen a\cos a$.
+> **Erro 2: errar o sinal do cosseno.** $\cos(a+b)$ tem **menos** no meio;
+> $\cos(a-b)$ tem **mais**. O seno acompanha o sinal; o cosseno inverte.
 
-> **Erro 4: dividir por $\sen x$ ao resolver equações.** Isso perde soluções.
-> Fatore.
+> **Erro 3: $\sen 2a = 2\sen a$.** Falta o cosseno: $\sen 2a = 2\sen a\cos a$.
+
+> **Erro 4: dividir por $\sen x$ numa equação.** Isso perde as soluções em que
+> $\sen x = 0$. Fatore.
 
 > **Erro 5: confundir $\cos^2 a - \sen^2 a$ com $(\cos a - \sen a)^2$.** O
-> primeiro é uma diferença de quadrados; o segundo é um quadrado de diferença, e
-> vale $1 - 2\sen a\cos a$.
+> primeiro é uma diferença de quadrados e vale $\cos 2a$. O segundo é o
+> quadrado de uma diferença e vale $1 - 2\sen a\cos a$.
 
-> **Erro 6: usar as fórmulas sem conferir.** Todas admitem teste numérico com
-> ângulos notáveis. Um teste custa trinta segundos e pega qualquer sinal
-> trocado.
+> **Erro 6: esquecer o 2 na redução de potência.** É
+> $\sen^2 x = \frac{1 - \cos 2x}{2}$, com o cosseno do **dobro**.
+
+> **Erro 7: usar a fórmula sem testar.** Todas as fórmulas desta página
+> aceitam um teste com ângulos notáveis, como $a = b = 30^\circ$. O teste
+> custa um minuto e pega qualquer sinal trocado.
 
 ## Perguntas de verificação
 
-1. Por que $\sen(a+b)$ não pode ser $\sen a + \sen b$?
-2. Na dedução geométrica, de onde vem cada uma das duas parcelas de
-   $\sen(a+b)$?
-3. Por que a fórmula do cosseno da soma tem um sinal de menos?
-4. Como as fórmulas de subtração são obtidas sem nenhuma dedução nova?
-5. Por que existem três versões de $\cos 2a$, e como escolher entre elas?
-6. Por que não se deve dividir por $\sen x$ ao resolver $\sen 2x = \sen x$?
+1. Por que $\sen(a+b)$ não pode ser $\sen a + \sen b$? Dê o motivo pelo
+   desenho, não só por um contraexemplo.
+2. Na figura do triângulo girado, de onde vem cada parcela de $\sen(a+b)$? Por
+   que uma usa $\sen a$ e a outra usa $\cos a$?
+3. Por que o cosseno da soma tem um sinal de menos?
+4. Como as fórmulas da diferença saem das fórmulas da soma, sem desenho novo?
+5. Por que o arco duplo do seno tem um 2 na frente?
+6. Por que existem três escritas de $\cos 2a$, e como escolher entre elas?
+7. Por que não se deve dividir por $\sen x$ ao resolver $\sen 2x = \sen x$?
+8. Por que o pico de $3\sen x + 4\cos x$ é 5 e não 7?
 
 <details>
 <summary>Respostas para conferência</summary>
 
-1. Porque o seno não é uma operação distributiva, e sim a projeção vertical de
-   um giro. O quanto um giro adicional eleva o ponto depende de **onde ele
-   começa**. Além disso, a soma dos senos pode ultrapassar 1, o que é impossível
-   para um seno.
-2. A primeira, $\sen a\cos b$, é a **altura do ponto $R$** — o pé da
-   perpendicular baixada de $P$ sobre o raio de ângulo $a$, que está a distância
-   $\cos b$ da origem. A segunda, $\cos a\sen b$, é a **subida adicional** de
-   $R$ até $P$, que é a componente vertical do segmento $RP$ (de comprimento
-   $\sen b$, inclinado de $a$ em relação à vertical).
-3. Porque, ao girar mais, o ponto se afasta do eixo vertical: a abscissa
-   **diminui**. Geometricamente, o segmento $RP$ aponta para trás e recua o
-   ponto em $\sen a\sen b$.
-4. Trocando $b$ por $-b$ e usando a paridade: $\cos(-b) = \cos b$ e
-   $\sen(-b) = -\sen b$. Isso inverte o sinal do termo que contém $\sen b$, e
-   nada mais.
-5. Porque a relação fundamental permite trocar $\sen^2 a$ por
-   $1-\cos^2 a$ (e vice-versa) dentro da fórmula. Escolhe-se a versão que
-   contém apenas a função que aparece no problema — se há só senos, usa-se
-   $1-2\sen^2 a$; se há só cossenos, $2\cos^2 a - 1$.
-6. Porque dividir supõe que $\sen x \neq 0$, e isso descarta exatamente as
-   soluções em que ele **é** zero — que neste caso existem ($x = 0$, $\pi$,
-   $2\pi$). Fatorando, todas as soluções são preservadas.
+1. Porque quanto um giro sobe depende de onde ele começa. A soma dos senos usa
+   $\sen b$, que é a subida do giro $b$ começando do zero. Mas o segundo giro
+   começa em $a$, mais alto, e de lá sobe menos.
+2. A primeira, $\sen a\cos b$, é a altura de $R$: o cateto $OR$ mede $\cos b$
+   e está inclinado $a$ sobre a **horizontal**, então sobe $\cos b$ vezes
+   $\sen a$. A segunda, $\cos a\sen b$, é a subida de $R$ até $P$: o cateto
+   $RP$ mede $\sen b$ e faz o ângulo $a$ com a **vertical**, então a parte
+   vertical é o cateto vizinho, $\sen b$ vezes $\cos a$.
+3. Porque o cateto $RP$ aponta para a esquerda. O ponto avança
+   $\cos a\cos b$ até $R$ e depois recua $\sen a\sen b$ de $R$ até $P$.
+4. Trocando $b$ por $-b$ e usando $\cos(-b) = \cos b$ e $\sen(-b) = -\sen b$.
+   Só o termo que tem $\sen b$ troca de sinal.
+5. Porque, com $b = a$, as duas parcelas de $\sen(a+a)$ são o mesmo produto,
+   $\sen a\cos a$. Na figura, os dois pedaços da altura ficam iguais.
+6. Porque a relação fundamental permite trocar $\cos^2 a$ por $1 - \sen^2 a$,
+   ou $\sen^2 a$ por $1 - \cos^2 a$, sem mudar o valor. Escolha a escrita que
+   tem só a função que o problema dá.
+7. Porque dividir supõe que $\sen x$ não é zero, e isso descarta as soluções em
+   que ele é zero ($x = 0$, $\pi$, $2\pi$). Fatorando, nenhuma se perde.
+8. Porque $3\sen x$ e $4\cos x$ não chegam ao pico no mesmo $x$: quando o seno
+   está no máximo, o cosseno vale zero. A soma é uma onda só, de pico
+   $\sqrt{3^2 + 4^2} = 5$.
 
 </details>
 
@@ -647,153 +981,191 @@ quadrado por uma expressão de primeiro grau em $\cos 2x$.
 ### 1. Reconhecimento
 
 1. Escreva as fórmulas de $\sen(a+b)$, $\cos(a+b)$, $\sen(a-b)$ e $\cos(a-b)$.
-2. Escreva as três versões de $\cos 2a$.
-3. Reconheça e simplifique:
+2. Escreva as três escritas de $\cos 2a$.
+3. Reconheça a fórmula e simplifique:
    $\cos 50^\circ\cos 20^\circ + \sen 50^\circ\sen 20^\circ$.
+4. Qual destas expressões é igual a $\sen 2a$ para todo $a$?
+   (a) $2\sen a$; (b) $\sen^2 a$; (c) $2\sen a\cos a$; (d) $\sen a\cos a$.
 
 ### 2. Explicação
 
-4. Explique, sem fórmula, por que o segundo giro de 30° eleva o ponto menos que
-   o primeiro.
-5. Um colega escreveu $\sen 2x = 2\sen x$. Mostre com números que está errado e
-   escreva o correto.
-6. Explique por que $\cos(a-b)$ tem sinal de mais, enquanto $\cos(a+b)$ tem
-   sinal de menos.
+5. Explique, sem fórmula, por que um giro de 30° começando em 30° sobe menos
+   que um giro de 30° começando em 0°.
+6. Um colega escreveu $\sen 2x = 2\sen x$. Mostre com números que está errado
+   e escreva o correto.
+7. Explique por que $\cos(a-b)$ tem sinal de mais no meio, enquanto $\cos(a+b)$
+   tem sinal de menos.
 
 ### 3. Aplicação direta
 
-7. Calcule os valores exatos de $\sen 105^\circ$ e $\cos 15^\circ$.
-8. Sabendo que $\cos x = \frac{5}{13}$ e $x$ é do primeiro quadrante, calcule
-   $\sen 2x$ e $\cos 2x$.
-9. Simplifique $2\sen 15^\circ\cos 15^\circ$.
+8. Calcule os valores exatos de $\sen 105^\circ$ e $\cos 15^\circ$.
+9. Sabendo que $\cos x = \frac{5}{13}$ e que $x$ está no primeiro quadrante,
+   calcule $\sen 2x$ e $\cos 2x$.
+10. Simplifique $2\sen 15^\circ\cos 15^\circ$.
 
 ### 4. Variação
 
-10. Resolva $\cos 2x = \cos x$ em $[0, 2\pi]$.
-11. Mostre que $\sen 3x = \sen(2x + x)$ pode ser escrito só com $\sen x$ e
-    $\cos x$, e desenvolva a expressão.
-12. Calcule $\tg 75^\circ$ de duas formas: pela fórmula da tangente da soma e
-    pelo quociente $\frac{\sen 75^\circ}{\cos 75^\circ}$. Compare.
+11. Resolva $\cos 2x = \cos x$ em $[0,\ 2\pi]$.
+12. Escreva $\sen 3x = \sen(2x + x)$ só com $\sen x$, sem cosseno.
+13. Calcule $\tg 75^\circ$ de dois jeitos: pela fórmula da tangente da soma e
+    pela divisão $\frac{\sen 75^\circ}{\cos 75^\circ}$. Compare.
 
 <details>
-<summary>Dica para o 10</summary>
+<summary>Dica para o 11</summary>
 
-Use a versão de $\cos 2x$ que só tem cossenos. A equação vira uma
+Use a escrita de $\cos 2x$ que só tem cossenos. A equação vira uma
 [equação do 2º grau](../equacoes/equacoes-do-segundo-grau) em $\cos x$.
+
+</details>
+
+<details>
+<summary>Dica para o 12</summary>
+
+Abra $\sen(2x + x)$ pela fórmula da soma. Depois troque $\sen 2x$ e $\cos 2x$
+pelas fórmulas do arco duplo, escolhendo para o cosseno a escrita que só tem
+senos. No fim, sobra um $\cos^2 x$: troque-o por $1 - \sen^2 x$.
 
 </details>
 
 ### 5. Problema misto
 
-13. Uma tensão elétrica é $v(t) = 10\sen(t) + 10\sqrt{3}\cos(t)$. Usando a ideia
-    do Exemplo 5, mostre que ela é uma única senoide e determine sua amplitude.
-14. Mostre que a área de um triângulo de lados $a$ e $b$ com ângulo $\theta$
-    entre eles é $\frac{1}{2}ab\sen\theta$, e use isso para calcular a área de um
-    triângulo com $a = 6$, $b = 8$ e $\theta = 150^\circ$.
+14. Uma tensão elétrica é $v(t) = 10\sen t + 10\sqrt{3}\cos t$, com $t$ em
+    radianos. Escreva $v$ como uma onda só e diga o pico.
+15. Uma rampa de 10 m de comprimento faz 15° com o chão. Calcule a altura que
+    ela vence, em valor exato e em decimal.
+16. Num modelo de linguagem, como na seção “Para que isso serve?”, a posição
+    $n$ recebe o par $(\cos 0{,}1n;\ \sen 0{,}1n)$. Calcule
+    $\cos 0{,}7\cos 0{,}4 + \sen 0{,}7\sen 0{,}4$, que compara as posições 7
+    e 4, usando uma fórmula desta lição. Que outro par de posições dá o mesmo
+    número? E as posições 7 e 1 dão um número maior ou menor?
+
+<details>
+<summary>Dica para o 16</summary>
+
+A expressão tem cosseno com cosseno e seno com seno, com sinal de mais no
+meio. Que fórmula tem esse desenho?
+
+</details>
 
 ### 6. Justificativa
 
-15. Deduza $\sen 2a = 2\sen a\cos a$ a partir da fórmula da soma, e verifique-a
-    em $a = 45^\circ$.
-16. Deduza a fórmula de redução de potência $\cos^2 x = \frac{1+\cos 2x}{2}$ e
-    explique por que ela é útil.
+17. Deduza $\sen 2a = 2\sen a\cos a$ a partir da fórmula da soma, e confira em
+    $a = 45^\circ$.
+18. Deduza a fórmula $\cos^2 x = \frac{1+\cos 2x}{2}$ e explique para que ela
+    serve.
 
 <details>
 <summary>Respostas para conferência</summary>
 
-1. $\sen(a\pm b) = \sen a\cos b \pm \cos a\sen b$;
-   $\cos(a\pm b) = \cos a\cos b \mp \sen a\sen b$.
+1. $\sen(a + b) = \sen a\cos b + \cos a\sen b$;
+   $\cos(a + b) = \cos a\cos b - \sen a\sen b$;
+   $\sen(a - b) = \sen a\cos b - \cos a\sen b$;
+   $\cos(a - b) = \cos a\cos b + \sen a\sen b$.
 2. $\cos^2 a - \sen^2 a$; $1 - 2\sen^2 a$; $2\cos^2 a - 1$.
-3. É o cosseno da **diferença**: $\cos(50^\circ - 20^\circ) = \cos 30^\circ =
-   \frac{\sqrt{3}}{2}$.
-4. Porque perto de 0° o ponto sobe quase na vertical — quase todo o movimento
-   vira altura. Perto de 60°, o ponto já está alto e se move quase na
-   horizontal, de modo que o mesmo tanto de giro produz pouca subida. O efeito de
-   um giro depende de onde ele começa.
-5. Com $x = 30^\circ$: $\sen 60^\circ \approx 0{,}866$, mas
+3. Cosseno com cosseno, seno com seno, sinal de mais: é o cosseno da
+   **diferença**. $\cos(50^\circ - 20^\circ) = \cos 30^\circ = \frac{\sqrt{3}}{2}$.
+   Se você escreveu $\cos 70^\circ$, trocou o sinal: o cosseno inverte, e o
+   mais no meio vem do menos no parêntese.
+4. (c). Teste com $a = 30^\circ$: $\sen 60^\circ \approx 0{,}866$; (a) dá 1,
+   (b) dá 0,25, (c) dá $2 \times 0{,}5 \times 0{,}866 = 0{,}866$ e (d) dá
+   0,433.
+5. Perto de 0°, o ponto do círculo anda quase na vertical, e quase todo o giro
+   vira subida. Em 30°, o ponto já está mais alto e anda mais inclinado, mais
+   para o lado. O mesmo tanto de giro produz menos subida: 0,366 em vez de 0,5.
+6. Com $x = 30^\circ$: $\sen 60^\circ \approx 0{,}866$, mas
    $2\sen 30^\circ = 1$. O correto é $\sen 2x = 2\sen x\cos x$, que dá
-   $2 \times 0{,}5 \times 0{,}866 = 0{,}866$ ✓.
-6. Porque a fórmula da diferença é obtida trocando $b$ por $-b$. Isso não altera
-   $\cos b$, mas troca o sinal de $\sen b$ — e o termo $-\sen a\sen b$ vira
-   $+\sen a\sen b$.
-7. $\sen 105^\circ = \sen(60^\circ+45^\circ) = \frac{\sqrt{3}}{2}\frac{\sqrt{2}}{2} +
-   \frac{1}{2}\frac{\sqrt{2}}{2} = \frac{\sqrt{6}+\sqrt{2}}{4} \approx 0{,}9659$.
-   $\cos 15^\circ = \cos(45^\circ-30^\circ) = \frac{\sqrt{2}}{2}\frac{\sqrt{3}}{2} +
-   \frac{\sqrt{2}}{2}\frac{1}{2} = \frac{\sqrt{6}+\sqrt{2}}{4} \approx 0{,}9659$
-   — o mesmo valor de $\sen 105^\circ$, o que era previsível: $105^\circ$ e
-   $75^\circ$ são suplementares (mesmo seno), e $75^\circ$ e $15^\circ$ são
-   complementares (o seno de um é o cosseno do outro).
-8. $\sen x = \frac{12}{13}$. Então
-   $\sen 2x = 2\times\frac{12}{13}\times\frac{5}{13} = \frac{120}{169}$ e
-   $\cos 2x = 2\left(\frac{5}{13}\right)^2 - 1 = \frac{50}{169}-1 =
-   -\frac{119}{169}$. Confere:
-   $\left(\frac{120}{169}\right)^2+\left(\frac{119}{169}\right)^2 =
-   \frac{14\,400+14\,161}{28\,561} = 1$ ✓.
-9. $2\sen 15^\circ\cos 15^\circ = \sen 30^\circ = \frac{1}{2}$.
-10. $2\cos^2 x - 1 = \cos x \Rightarrow 2\cos^2 x - \cos x - 1 = 0$. Com
-    $u = \cos x$: $2u^2 - u - 1 = 0$, cujas raízes são $u = 1$ e
-    $u = -\frac{1}{2}$. Logo $\cos x = 1 \Rightarrow x = 0,\ 2\pi$; e
-    $\cos x = -\frac{1}{2} \Rightarrow x = \frac{2\pi}{3},\ \frac{4\pi}{3}$.
-11. $\sen 3x = \sen 2x\cos x + \cos 2x\sen x =
-    (2\sen x\cos x)\cos x + (1-2\sen^2 x)\sen x =
-    2\sen x\cos^2 x + \sen x - 2\sen^3 x$. Trocando
-    $\cos^2 x = 1-\sen^2 x$: $= 3\sen x - 4\sen^3 x$.
-12. Pela tangente da soma:
+   $2 \times 0{,}5 \times 0{,}866 = 0{,}866$. ✓
+7. A fórmula da diferença sai da soma trocando $b$ por $-b$. Essa troca não
+   muda $\cos b$, mas troca o sinal de $\sen b$. Por isso o termo
+   $-\sen a\sen b$ vira $+\sen a\sen b$. No desenho: girando para trás, o
+   cateto $RP$ aponta para a direita, e o recuo vira avanço.
+8. $\sen 105^\circ = \sen(60^\circ + 45^\circ)
+   = \frac{\sqrt{3}}{2}\times\frac{\sqrt{2}}{2} + \frac{1}{2}\times\frac{\sqrt{2}}{2}
+   = \frac{\sqrt{6}+\sqrt{2}}{4} \approx 0{,}9659$.
+   $\cos 15^\circ = \cos(45^\circ - 30^\circ)
+   = \frac{\sqrt{2}}{2}\times\frac{\sqrt{3}}{2} + \frac{\sqrt{2}}{2}\times\frac{1}{2}
+   = \frac{\sqrt{6}+\sqrt{2}}{4} \approx 0{,}9659$. Os dois são iguais, e isso
+   era previsível: $\sen 105^\circ = \sen 75^\circ$ (ângulos suplementares têm
+   o mesmo seno) e $\sen 75^\circ = \cos 15^\circ$ (complementares).
+9. Primeiro o seno: $\sen x = \sqrt{1 - \frac{25}{169}} = \frac{12}{13}$
+   (positivo no primeiro quadrante). Então
+   $\sen 2x = 2\times\frac{12}{13}\times\frac{5}{13} = \frac{120}{169}$ e, pela
+   escrita só com cossenos,
+   $\cos 2x = 2\left(\frac{5}{13}\right)^2 - 1 = \frac{50}{169} - 1 = -\frac{119}{169}$.
+   O cosseno negativo faz sentido: $\cos x \approx 0{,}38$ dá $x \approx 67^\circ$,
+   e $2x \approx 135^\circ$ está no segundo quadrante. Conferência:
+   $\frac{120^2 + 119^2}{169^2} = \frac{14\,400 + 14\,161}{28\,561} = 1$. ✓
+10. É o arco duplo lido de trás para a frente:
+    $2\sen 15^\circ\cos 15^\circ = \sen 30^\circ = \frac{1}{2}$.
+11. $2\cos^2 x - 1 = \cos x$, ou seja, $2\cos^2 x - \cos x - 1 = 0$. Com
+    $u = \cos x$: $2u^2 - u - 1 = 0$, de raízes $u = 1$ e $u = -\frac{1}{2}$.
+    $\cos x = 1$ dá $x = 0$ e $x = 2\pi$; $\cos x = -\frac12$ dá
+    $x = \frac{2\pi}{3}$ e $x = \frac{4\pi}{3}$. São quatro soluções. Se você
+    achou só duas, provavelmente esqueceu que $\cos x = 1$ acontece nas duas
+    pontas do intervalo.
+12. $\sen 3x = \sen 2x\cos x + \cos 2x\sen x
+    = (2\sen x\cos x)\cos x + (1 - 2\sen^2 x)\sen x
+    = 2\sen x\cos^2 x + \sen x - 2\sen^3 x$. Trocando $\cos^2 x$ por
+    $1 - \sen^2 x$: $2\sen x - 2\sen^3 x + \sen x - 2\sen^3 x
+    = 3\sen x - 4\sen^3 x$. Teste em $x = 30^\circ$: $\sen 90^\circ = 1$ e
+    $3 \times 0{,}5 - 4 \times 0{,}125 = 1$. ✓
+13. Pela tangente da soma, com $\tg 45^\circ = 1$ e
+    $\tg 30^\circ = \frac{\sqrt{3}}{3}$:
     $\tg 75^\circ = \frac{1 + \frac{\sqrt{3}}{3}}{1 - \frac{\sqrt{3}}{3}}
-    \approx \frac{1{,}5774}{0{,}4226} \approx 3{,}732$. Pelo quociente:
-    $\frac{0{,}9659}{0{,}2588} \approx 3{,}732$ ✓. O valor exato é
+    \approx \frac{1{,}5774}{0{,}4226} \approx 3{,}732$. Pela divisão:
+    $\frac{0{,}9659}{0{,}2588} \approx 3{,}732$. ✓ O valor exato é
     $2+\sqrt{3}$.
-13. Pela dedução do Exemplo 5, $A\sen t + B\cos t$ é uma senoide de amplitude
-    $\sqrt{A^2+B^2}$. Aqui $A = 10$ e $B = 10\sqrt{3}$:
-    $\sqrt{100 + 300} = \sqrt{400} = 20$. A tensão é uma senoide de amplitude
-    **20**. (A fase satisfaz $\tg\varphi = \frac{B}{A} = \sqrt{3}$, logo
-    $\varphi = 60^\circ$, que em radianos é $\frac{\pi}{3}$. Como o $t$ desta
-    fórmula é um número em radianos, a fase precisa estar na mesma unidade:
-    $v(t) = 20\sen\left(t + \frac{\pi}{3}\right)$.)
-14. Tomando o lado $a$ como base, a altura relativa a ela é $b\sen\theta$ — pois
-    o lado $b$ faz ângulo $\theta$ com a base, e sua componente perpendicular é
-    $b\sen\theta$. Assim,
-    $A = \frac{1}{2} \times a \times b\sen\theta$. Com os números:
-    $\sen 150^\circ = \frac{1}{2}$, então
-    $A = \frac{1}{2}\times 6\times 8\times\frac{1}{2} = 12$.
-15. $\sen(a+a) = \sen a\cos a + \cos a\sen a = 2\sen a\cos a$. Em $a=45^\circ$:
-    $2 \times \frac{\sqrt{2}}{2} \times \frac{\sqrt{2}}{2} = 2 \times
-    \frac{1}{2} = 1$, e $\sen 90^\circ = 1$ ✓.
-16. De $\cos 2x = 2\cos^2 x - 1$, some 1 aos dois lados e divida por 2:
-    $\cos^2 x = \frac{1+\cos 2x}{2}$. É útil porque troca um **quadrado** por
-    uma expressão de primeiro grau em cosseno, o que permite integrar,
-    linearizar e simplificar expressões que, com o expoente, seriam
-    intratáveis.
-
-**Se sua resposta não bateu:**
-
-Se o valor exato não bateu, confira separadamente a fórmula, os sinais e os
-valores notáveis. Se dividiu uma equação por uma função que pode zerar,
-retome a fatoração e analise também o caso em que esse fator é zero.
+14. $A = 10$ e $B = 10\sqrt{3}$: $R = \sqrt{100 + 300} = \sqrt{400} = 20$ e
+    $\tg\varphi = \frac{10\sqrt{3}}{10} = \sqrt{3}$, então
+    $\varphi = 60^\circ = \frac{\pi}{3}$. Como $t$ está em radianos, a fase
+    também precisa estar: $v(t) = 20\sen\left(t + \frac{\pi}{3}\right)$, de
+    pico **20**. Se você achou $10 + 10\sqrt{3} \approx 27{,}3$, somou os picos,
+    e eles não acontecem no mesmo $t$.
+15. A altura é o cateto oposto ao ângulo de 15°: $10\sen 15^\circ$. Com
+    $\sen 15^\circ = \sen(45^\circ - 30^\circ) = \frac{\sqrt{6}-\sqrt{2}}{4}$:
+    $10 \times \frac{\sqrt{6}-\sqrt{2}}{4} = 2{,}5\left(\sqrt{6} - \sqrt{2}\right)
+    \approx 2{,}588$ m.
+16. É o cosseno da diferença: $\cos(0{,}7 - 0{,}4) = \cos 0{,}3 \approx 0{,}955$.
+    Qualquer par de posições a 3 de distância dá o mesmo número, por exemplo 9
+    e 6 ($\cos(0{,}9 - 0{,}6) = \cos 0{,}3$). As posições 7 e 1 estão a 6 de
+    distância e dão $\cos 0{,}6 \approx 0{,}825$, um número **menor**: entre 0
+    e $\pi$, quanto maior a distância, menor o cosseno.
+17. $\sen(a + a) = \sen a\cos a + \cos a\sen a = 2\sen a\cos a$, porque as duas
+    parcelas são o mesmo produto. Em $a = 45^\circ$:
+    $2 \times \frac{\sqrt{2}}{2} \times \frac{\sqrt{2}}{2} = 2 \times \frac{2}{4} = 1$,
+    e $\sen 90^\circ = 1$. ✓
+18. Parta de $\cos 2x = 2\cos^2 x - 1$. Some 1 aos dois lados:
+    $1 + \cos 2x = 2\cos^2 x$. Divida os dois lados por 2:
+    $\cos^2 x = \frac{1 + \cos 2x}{2}$. Ela troca um **quadrado** por um
+    cosseno sem expoente. Isso mostra que $\cos^2 x$ é uma onda de altura média
+    $\frac12$. Ela também permite calcular médias, como a da tomada. No
+    cálculo, é o recurso para integrar $\cos^2 x$.
 
 </details>
 
 ## Revisão curta
 
-- $\sen(a\pm b) = \sen a\cos b \pm \cos a\sen b$ — o seno **mistura** as funções
-  e **mantém** o sinal.
-- $\cos(a\pm b) = \cos a\cos b \mp \sen a\sen b$ — o cosseno **junta as iguais**
-  e **inverte** o sinal.
-- As fórmulas de subtração saem das de adição trocando $b$ por $-b$ e usando a
-  paridade.
+- Quanto um giro sobe depende de onde ele começa. Por isso o seno não se
+  distribui: $\sen(a+b) \neq \sen a + \sen b$.
+- Girando o triângulo do ângulo $b$ de $a$, a altura de $P$ se separa em duas
+  parcelas: $\sen(a\pm b) = \sen a\cos b \pm \cos a\sen b$. O seno **mistura**
+  as funções e **acompanha** o sinal.
+- A abscissa avança até $R$ e recua até $P$:
+  $\cos(a\pm b) = \cos a\cos b \mp \sen a\sen b$. O cosseno **junta as
+  iguais** e **inverte** o sinal.
+- As fórmulas da diferença saem das da soma trocando $b$ por $-b$.
 - **Arco duplo:** $\sen 2a = 2\sen a\cos a$ e
   $\cos 2a = \cos^2 a - \sen^2 a = 1-2\sen^2 a = 2\cos^2 a - 1$.
 - **Redução de potência:** $\sen^2 x = \frac{1-\cos 2x}{2}$ e
   $\cos^2 x = \frac{1+\cos 2x}{2}$.
-- Ler as fórmulas **da direita para a esquerda** é o que colapsa expressões
-  longas.
-- Em equações, **fatore** em vez de dividir — dividir por um fator que pode ser
-  zero apaga soluções.
-- Toda combinação $A\sen x + B\cos x$ é uma única senoide de amplitude
-  $\sqrt{A^2+B^2}$.
+- **Tangente:** $\tg(a+b) = \frac{\tg a + \tg b}{1 - \tg a\,\tg b}$, que sai
+  dividindo o seno da soma pelo cosseno da soma.
+- $A\sen x + B\cos x$ é uma onda só, de pico $\sqrt{A^2+B^2}$.
+- Ler as fórmulas da direita para a esquerda junta expressões longas num valor
+  só. Em equações, fatore em vez de dividir.
 - Confira sempre com ângulos notáveis: um teste numérico pega qualquer sinal
   trocado.
 
-Na próxima lição, as identidades ajudam a resolver
+Na próxima lição, estas fórmulas ajudam a resolver
 [equações trigonométricas](./equacoes-trigonometricas). O
 [roteiro do capítulo](./) mostra a sequência completa.
