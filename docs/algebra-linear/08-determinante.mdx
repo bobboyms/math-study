@@ -220,7 +220,7 @@ diretamente: não sabemos a altura. Mas dá para medir a área dele por recorte.
 
 Desenhe o retângulo que envolve o paralelogramo. Ele vai de $x = 0$ a
 $x = 3 + 1 = 4$ e de $y = 0$ a $y = 1 + 2 = 3$. A parte do retângulo que fica
-fora do paralelogramo se divide em seis peças fáceis: quatro triângulos
+fora do paralelogramo se divide em seis peças de formato simples: quatro triângulos
 retângulos e dois retângulos pequenos.
 
 <CartesianPlane
@@ -619,7 +619,9 @@ então o $bc$ da fórmula é zero) e a altura é $t_{33}$.
 **Contraexemplo.** Para a matriz
 $\begin{bmatrix} 3 & 1 \\ 1 & 2 \end{bmatrix}$ do loteamento, que **não** é
 triangular, o produto da diagonal dá $3 \times 2 = 6$, e o determinante é 5.
-A regra da diagonal só vale quando há zeros embaixo dela.
+A regra da diagonal só vale quando há zeros de um dos lados dela: embaixo
+(triangular superior) ou em cima (triangular inferior, em que tudo acima da
+diagonal é zero e a conta dá o mesmo produto).
 
 ### 8.8 O caso geral: escalonar e acompanhar o determinante
 
@@ -665,12 +667,14 @@ $0 - 1 = -1$.)
 
 **Multiplicar uma linha por $k$: o determinante fica multiplicado por $k$.**
 Multiplicar a linha 2 por $k$ é multiplicar pela matriz que estica a direção
-$y$ por $k$ e deixa as outras como estão. Todo volume fica multiplicado por
-$k$.
+$y$ por $k$ e deixa as outras como estão. Com $k$ positivo, todo volume fica
+multiplicado por $k$. Com $k$ negativo, o volume fica multiplicado por
+$\lvert k \rvert$ e o espaço é espelhado, e o determinante fica multiplicado
+por $k$ do mesmo jeito.
 
 | Operação | Efeito no determinante |
 |---|---|
-| $L_i \leftarrow L_i + kL_j$ | nenhum |
+| $L_i \leftarrow L_i + kL_j$, com $j \neq i$ | nenhum |
 | $L_i \leftrightarrow L_j$ | troca o sinal |
 | $L_i \leftarrow kL_i$ | multiplica por $k$ |
 
@@ -758,7 +762,7 @@ $$
 O mesmo 1 do escalonamento.
 
 > **A regra de Sarrus vale só para matrizes $3 \times 3$.** Para matrizes
-> maiores, o esquema das diagonais dá um número errado (Erro 3 da seção 11).
+> maiores, o esquema das diagonais em geral dá um número errado (Erro 3 da seção 11).
 > O escalonamento funciona em qualquer tamanho.
 
 ### 8.10 O que o determinante resume
@@ -775,8 +779,9 @@ pontos de vista diferentes:
 | inversa | $A$ tem inversa |
 | sistemas | $A\vec{x} = \vec{b}$ tem exatamente uma solução, para todo $\vec{b}$ |
 
-Se uma delas é falsa, todas são falsas. Esta tabela liga as últimas quatro
-lições do capítulo.
+Se uma delas é falsa, todas são falsas. Esta tabela liga o determinante a
+quatro lições anteriores do capítulo: sistemas, independência,
+transformações e inversa.
 
 ## 9. Resolvendo o problema do loteamento
 
@@ -1024,8 +1029,8 @@ preciso desfazer $F$, e a inversa divide as áreas por 3, como mostrou a seção
    nem a altura. Base e altura iguais dão área igual. Pela fórmula,
    $\det \begin{bmatrix} 1 & k \\ 0 & 1 \end{bmatrix} = 1 - 0 = 1$.
 3. Porque o paralelogramo é o mesmo, então a área é a mesma. Mas os lados
-   chegam em ordem trocada: o giro do primeiro lado para o segundo, que era
-   anti-horário, passa a ser horário. Na fórmula: trocar as colunas troca
+   chegam em ordem trocada: o giro do primeiro lado para o segundo inverte o
+   sentido (anti-horário vira horário, e horário vira anti-horário). Na fórmula: trocar as colunas troca
    $ad - bc$ por $bc - ad$, que é o mesmo número com o sinal oposto.
 4. Porque determinante zero quer dizer que o espaço foi achatado, e então
    pontos diferentes vão para o mesmo lugar. Uma inversa teria de devolver um

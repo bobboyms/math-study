@@ -10,7 +10,7 @@ import Space3D from '@site/src/components/Space3D';
 ## 1. Problema motivador: a loja de tintas tem uma base sobrando?
 
 Uma loja de tintas fabrica as cores na hora, misturando **bases**. Cada base é
-uma tinta pronta que leva três pigmentos — ciano, magenta e amarelo — em
+uma tinta pronta que leva três pigmentos (ciano, magenta e amarelo) em
 quantidades fixas. A tabela diz quantos gramas de cada pigmento há em **um
 litro** de cada base.
 
@@ -60,8 +60,8 @@ As duas perguntas têm nome em álgebra linear: **conjunto gerado** e
   as colunas “loja física”, “online” e “total”. A coluna do total é a soma das
   outras duas, então não traz informação nova. Detectar colunas assim é
   detectar dependência linear.
-- **Aprendizado de máquina.** Um modelo que recebe duas colunas dependentes —
-  como a mesma medida em metros e em centímetros — não consegue decidir quanto
+- **Aprendizado de máquina.** Um modelo que recebe duas colunas dependentes
+  (como a mesma medida em metros e em centímetros) não consegue decidir quanto
   peso dar a cada uma. O nome técnico desse problema é **multicolinearidade**, e
   ele é dependência linear.
 - **Sistemas lineares.** Saber se um sistema $A\vec{x} = \vec{b}$ tem solução
@@ -115,7 +115,7 @@ paralelos? E $(2,\ 1)$ e $(1,\ 3)$?
 <details>
 <summary>Conferir</summary>
 
-Dois vetores são paralelos quando um é múltiplo do outro. $(6,\ 3) =
+Dois vetores não nulos são paralelos quando um é múltiplo do outro. $(6,\ 3) =
 3(2,\ 1)$, então os dois primeiros são paralelos. Já $(1,\ 3)$ não é múltiplo
 de $(2,\ 1)$: para a primeira coordenada passar de 2 para 1, o fator teria de
 ser $\frac{1}{2}$, e aí a segunda coordenada seria $\frac{1}{2}$, não 3.
@@ -251,8 +251,9 @@ inteiro.
 bases da loja como setas no espaço, com um eixo para cada pigmento. A seta de
 R não aponta para uma direção nova: ela termina exatamente onde se chega
 andando $\vec{p}$ uma vez e depois $\vec{q}$ duas vezes. Na figura, o eixo
-que sai do papel é o do magenta. Com outra escolha, a folha das três setas
-seria vista de perfil, e as setas se sobreporiam no desenho.
+que sai do papel é o do magenta. Com o ciano saindo do papel, a folha das
+três setas seria vista quase de perfil, e as setas quase se sobreporiam no
+desenho.
 
 <Space3D
   max={[3, 3, 4]}
@@ -338,7 +339,7 @@ e os resultados só são somados.
 
 > O **conjunto gerado** pelos vetores $\vec{v}_1,\ \ldots,\ \vec{v}_k$ é o
 > conjunto de todas as combinações lineares deles, com todos os coeficientes
-> possíveis — positivos, negativos, zero e fracionários.
+> possíveis: positivos, negativos, zero e fracionários.
 
 Na loja, o conjunto gerado pelas bases é o “cardápio” de fórmulas que a
 matemática permite. Mais adiante, na seção 9, aparece uma restrição que a
@@ -409,8 +410,8 @@ $L_2 \leftarrow L_2 - 2L_1$ transforma a segunda coluna em $(3,\ 6 - 6) =
 $y = 2x$ escapam da linha impossível. São os pontos da reta dos dois vetores
 paralelos.
 
-> **No plano**, dois vetores geram o plano inteiro se, e somente se, não são
-> paralelos.
+> **No plano**, dois vetores geram o plano inteiro se, e somente se, nenhum
+> dos dois é múltiplo do outro: os dois são não nulos e não são paralelos.
 
 ### 8.5 Dependência linear: um vetor que sobra
 
@@ -489,8 +490,9 @@ Três casos especiais saem da definição, sem conta nenhuma:
 
 - **Um conjunto que contém o vetor nulo é sempre dependente.** A receita “1
   vez o $\vec{0}$ e zero de todos os outros” dá zero e não é trivial.
-- **Dois vetores são dependentes exatamente quando são paralelos** (um é
-  múltiplo do outro). É a dependência que já se via no desenho.
+- **Dois vetores são dependentes exatamente quando um é múltiplo do
+  outro.** Se nenhum dos dois é nulo, isso quer dizer que são paralelos. É a
+  dependência que já se via no desenho.
 - **Um único vetor não nulo é independente.** Se $c\vec{v} = \vec{0}$ e
   $\vec{v}$ tem alguma coordenada diferente de zero, essa coordenada vezes $c$
   dá zero, e por isso $c = 0$.
@@ -510,7 +512,7 @@ escalonamento](./sistemas-lineares-e-escalonamento), sobram dois:
 |---|---|---|
 | uma única solução, a trivial | toda coluna tem pivô | independentes |
 | infinitas soluções | alguma coluna sem pivô (variável livre) | dependentes |
-| nenhuma solução | não acontece: $\vec{c} = \vec{0}$ sempre serve | — |
+| nenhuma solução | não acontece: $\vec{c} = \vec{0}$ sempre serve | não se aplica |
 
 A coluna de zeros do lado direito nunca muda durante o escalonamento: cada
 operação combina zeros com zeros. Por isso, para testar independência,
@@ -558,7 +560,7 @@ pivôs**. Duas consequências:
    $k > n$, há mais colunas que pivôs possíveis, e alguma coluna fica sem
    pivô. Exemplo: três vetores quaisquer do plano são dependentes.
 2. **Menos de $n$ vetores nunca geram $\mathbb{R}^n$.** Com $k < n$ colunas,
-   há no máximo $k$ pivôs, e alguma das $n$ linhas fica sem pivô — ela zera
+   há no máximo $k$ pivôs, e alguma das $n$ linhas fica sem pivô: ela zera
    na forma escalonada. Do lado aumentado, essa linha recebe uma combinação
    das coordenadas do alvo, como o $y - 2x$ da seção 8.4. Há alvos que deixam
    esse número diferente de zero, e eles produzem a linha impossível. Exemplo:
@@ -654,7 +656,7 @@ $$
 Três pivôs em três colunas: $\vec{p}$, $\vec{q}$ e $\vec{s}$ são
 independentes. Pela seção 8.8, três vetores independentes em $\mathbb{R}^3$
 geram o espaço inteiro. Com P, Q e S, toda fórmula de pigmentos tem uma
-receita — ainda que, para algumas, a receita peça litros negativos.
+receita, ainda que, para algumas, a receita peça litros negativos.
 
 <Space3D
   max={[2, 3, 3]}
@@ -697,7 +699,7 @@ Os vetores $(1,\ 2,\ 3)$ e $(2,\ 4,\ 6)$ são dependentes?
 
 São. O segundo é o dobro do primeiro, então a receita
 $2(1,\ 2,\ 3) - (2,\ 4,\ 6) = (0,\ 0,\ 0)$ dá zero sem ser trivial. Com dois
-vetores, dependente quer dizer paralelo, e paralelismo se vê comparando as
+vetores não nulos, dependente quer dizer paralelo, e paralelismo se vê comparando as
 coordenadas.
 
 ### Exemplo 3: nenhum par é paralelo, e ainda assim há dependência
@@ -762,8 +764,8 @@ $\vec{t} = \vec{f} + \vec{o}$, ou $\vec{f} + \vec{o} - \vec{t} = \vec{0}$.
 
 Apagar a coluna do total não perde nada: ela se refaz somando as outras duas.
 Já $\vec{f}$ e $\vec{o}$ são independentes: dois vetores só são dependentes
-se forem paralelos, e o cliente 3 tem 0 numa coluna e 60 na outra, enquanto
-o cliente 4 tem 80 numa e 0 na outra — nenhum múltiplo faz isso.
+se um for múltiplo do outro, e o cliente 3 tem 0 numa coluna e 60 na outra, enquanto
+o cliente 4 tem 80 numa e 0 na outra. Nenhum múltiplo faz isso.
 
 ### Exemplo 6: um parâmetro que decide
 
@@ -790,8 +792,8 @@ segundo é $-2$ vezes o primeiro.
 > **Erro 1: achar que três vetores de $\mathbb{R}^3$ sempre geram o
 > espaço.** As bases P, Q e R da loja são três vetores de $\mathbb{R}^3$ e
 > geram só uma folha: o laranja $(1,\ 0,\ 1)$ fica de fora. Três vetores
-> geram o espaço **se forem independentes**. A quantidade certa de vetores é
-> necessária, mas não basta.
+> geram o espaço **se forem independentes**. Ter pelo menos três vetores é
+> necessário, mas não basta.
 
 > **Erro 2: testar a independência par a par.** No exemplo 3, nenhum par é
 > paralelo, e mesmo assim $\vec{w} = \vec{u} + \vec{v}$. Olhar os pares só
@@ -888,8 +890,8 @@ segundo é $-2$ vezes o primeiro.
 
 4. Explique, com palavras, por que um conjunto de vetores que contém o vetor
    nulo é sempre dependente.
-5. Explique por que dois vetores são dependentes exatamente quando são
-   paralelos.
+5. Explique por que dois vetores são dependentes exatamente quando um é
+   múltiplo do outro (paralelos, se nenhum for nulo).
 6. Um colega escreve: “$0\vec{u} + 0\vec{v} + 0\vec{w} = \vec{0}$, logo os
    vetores são dependentes”. Explique o erro.
 
@@ -974,8 +976,9 @@ $\vec{w}$.
    é múltiplo do outro (um tem 0 onde o outro tem 1).
 3. Só em b). Em a), a segunda coluna não tem pivô (o pivô da segunda linha
    está na terceira coluna), então os vetores são dependentes. Em b), as três
-   colunas têm pivô (3, 2 e 5). Se você respondeu “a) também”, contou as
-   linhas não nulas sem conferir em que coluna cada pivô está.
+   colunas têm pivô (3, 2 e 5). Se você respondeu “a) também”, confundiu ter
+   um número diferente de zero na coluna com ter pivô: o 2 da segunda coluna
+   não é o primeiro número diferente de zero da sua linha.
 4. Porque a receita “1 vez o vetor nulo e 0 vez cada um dos outros” dá o
    vetor nulo, e o coeficiente 1 não é zero. Existe, então, uma combinação
    não trivial que dá zero.
@@ -1027,7 +1030,9 @@ $\vec{w}$.
     ($10$, $5$, $0$, $8$). As colunas do total e do desconto podem ser
     apagadas e refeitas a partir de loja física e online. Essas duas são
     independentes (não são paralelas), então não dá para apagar mais nada sem
-    perder informação. Se você achou que o desconto era 10% do total,
+    perder informação. Outra escolha também serve: apagar a loja física
+    (que é total menos online) e o desconto. Se você achou que o desconto era
+    10% do total,
     confira o cliente 3: o total é 60 e o desconto é 0.
 14. $\left[\begin{array}{ccc|c} 2 & 0 & 1 & 5 \\ 1 & 1 & 0 & 3 \\ 0 & 2 & 1 & 3
     \end{array}\right]$. Com $L_2 \leftarrow L_2 - \frac{1}{2}L_1$, a

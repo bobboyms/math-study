@@ -73,7 +73,8 @@ exemplo numérico que vem logo depois dele e volte.
 - **vetores singulares**: as direções especiais. Os $\vec{v}_i$ ficam no
   plano de partida; os $\vec{u}_i$, no plano de chegada;
 - **decomposição em valores singulares**: $A = U\Sigma V^{\mathsf{T}}$, que se
-  lê “gire com $V^{\mathsf{T}}$, estique com $\Sigma$, gire com $U$”;
+  lê “gire com $V^{\mathsf{T}}$, estique com $\Sigma$, gire com $U$” (cada
+  giro pode ser também um espelho);
 - **camada de posto 1**: $\sigma_i\vec{u}_i\vec{v}_i^{\mathsf{T}}$, uma matriz
   em que toda linha é múltiplo de uma mesma linha;
 - **aproximação de posto 1**: ficar só com a primeira camada, que é a mais
@@ -211,7 +212,8 @@ nada.
 
 Agora desenhe na lona um **círculo** de raio 1 com centro na origem. Depois de
 esticar, o círculo vira uma figura oval. Essa figura é sempre uma **elipse**
-(ou, no caso extremo em que a matriz achata o plano, um segmento de reta).
+(ou, no caso extremo em que a matriz achata o plano, um segmento de reta; se a
+matriz for toda de zeros, um único ponto).
 
 Uma elipse tem duas medidas que chamam atenção:
 
@@ -236,6 +238,10 @@ faz só três coisas, uma depois da outra:
    $\sigma_2$;
 3. **gira** de novo, levando os eixos esticados até as direções dos semieixos
    da elipse.
+
+Um dos dois giros pode ter de ser um **espelho**: é o que acontece quando o
+determinante da matriz é negativo, porque ela vira a figura do avesso (o
+Exemplo 1 da seção 10 mostra um caso).
 
 Os dois números de esticar, $\sigma_1$ e $\sigma_2$, são os **valores
 singulares** da matriz.
@@ -316,8 +322,8 @@ figuras usam a mesma escala.
 />
 
 Para a matriz $S$, o terceiro passo desfez o giro do primeiro. Isso acontece
-porque $S$ é simétrica. Numa matriz qualquer, os dois giros são
-**diferentes**. Veja a matriz que vai acompanhar toda a seção 8:
+porque $S$ é simétrica e não tem autovalores negativos. Numa matriz que não é
+simétrica, os dois giros são sempre **diferentes**. Veja a matriz que vai acompanhar toda a seção 8:
 
 $$
 A = \begin{bmatrix} 3 & 0 \\ 4 & 5 \end{bmatrix}.
@@ -551,7 +557,8 @@ seção 8.2 garantia.
 Agora dá para responder à primeira pergunta da seção 7. Chame de $\vec{v}_1$ e
 $\vec{v}_2$ os autovetores de $A^{\mathsf{T}}A$, com comprimento 1, na ordem
 dos autovalores, $\lambda_1 \geq \lambda_2$. Pela seção 8.2, eles são
-perpendiculares.
+perpendiculares. (Se os dois autovalores forem iguais, a seção 8.2 não se
+aplica, mas aí todo vetor é autovetor, e escolhem-se dois perpendiculares.)
 
 Todo vetor $\vec{v}$ de comprimento 1 pode ser escrito na base formada por
 eles: $\vec{v} = a\vec{v}_1 + b\vec{v}_2$. Como $\vec{v}_1$ e $\vec{v}_2$ são
@@ -745,7 +752,12 @@ singulares, inclusive as retangulares. Se $A$ é $m \times n$:
 - $V$ é $n \times n$ e ortogonal; $U$ é $m \times m$ e ortogonal;
 - $\Sigma$ é $m \times n$, com os valores singulares na diagonal e zero em
   todo o resto;
-- o número de valores singulares diferentes de zero é o **posto** de $A$.
+- o número de valores singulares diferentes de zero é o **posto** de $A$;
+- os valores singulares são únicos, mas os vetores singulares não: trocar
+  $\vec{v}_i$ por $-\vec{v}_i$ e, junto, $\vec{u}_i$ por $-\vec{u}_i$ dá outra
+  decomposição igualmente correta. Por isso uma SVD sua pode diferir da do
+  texto nos sinais e ainda estar certa: confira multiplicando
+  $U\Sigma V^{\mathsf{T}}$.
 
 Esta lição não demonstra o caso geral. A demonstração repete os passos das
 seções 8.3 a 8.7 com $n$ vetores em vez de dois, mais um cuidado com os
@@ -817,7 +829,7 @@ comprimento 1. Então:
 E há um resultado mais forte, que esta lição só enuncia, conhecido como
 teorema de Eckart-Young: **nenhuma** matriz de posto 1 fica mais perto de $A$
 do que $A_1$. Entre todas as matrizes em que toda linha é múltiplo de uma
-mesma linha, a primeira camada da SVD é a que erra menos. É o mesmo tipo de
+mesma linha, nenhuma erra menos que a primeira camada da SVD. É o mesmo tipo de
 garantia dos mínimos quadrados: a melhor aproximação possível, medida pela
 soma dos quadrados.
 
@@ -907,8 +919,9 @@ arredondada para duas casas:
   caption="A miniatura reconstruída só com a primeira camada, guardada em 13 números. A faixa clara do meio está inteira. O que sumiu foi o logotipo: o canto de cima, à esquerda, voltou a seguir o padrão do resto."
 />
 
-O maior erro de um pixel é cerca de $0{,}79$, justamente nos pixels do
-logotipo, que valiam 2 e voltaram para perto de $1{,}21$. Arredondando a
+O maior erro de um pixel é cerca de $0{,}79$, justamente nos dois pixels de
+cima do logotipo, que valiam 2 e voltaram para perto de $1{,}21$ (os dois de
+baixo valiam 3 e voltaram para perto de $2{,}31$). Arredondando a
 aproximação para inteiros, ela devolve exatamente a miniatura **sem** o
 logotipo.
 
@@ -985,7 +998,10 @@ $\vec{u}_1 = C\vec{v}_1/5 = \frac{1}{5\sqrt{5}}(5,\ 10) = \frac{1}{\sqrt{5}}(1,\
 Para $\sigma_2 = 0$, a fórmula $\vec{u}_2 = C\vec{v}_2/\sigma_2$ divide por
 zero e não serve. Mas nem é preciso: a camada de $\sigma_2$ é zero vezes
 alguma coisa. Para completar $U$, escolhe-se qualquer vetor de comprimento 1
-perpendicular a $\vec{u}_1$, como $\frac{1}{\sqrt{5}}(-2,\ 1)$. A matriz
+perpendicular a $\vec{u}_1$, como $\frac{1}{\sqrt{5}}(-2,\ 1)$. Para $V$, o
+autovetor de $\lambda = 0$ é $(-2,\ 1)$, porque
+$C^{\mathsf{T}}C(-2,\ 1) = (0,\ 0)$, e então
+$\vec{v}_2 = \frac{1}{\sqrt{5}}(-2,\ 1)$. A matriz
 inteira é uma camada só:
 
 $$
@@ -1100,7 +1116,9 @@ Porque elas são autovetores de $A^{\mathsf{T}}A$, e $A^{\mathsf{T}}A$ é
 simétrica. A seção 8.2 mostrou que autovetores de autovalores diferentes de
 uma matriz simétrica são perpendiculares: calculando
 $(S\vec{w}_1) \cdot \vec{w}_2$ de dois jeitos, sobra
-$(\lambda_1 - \lambda_2)(\vec{w}_1 \cdot \vec{w}_2) = 0$.
+$(\lambda_1 - \lambda_2)(\vec{w}_1 \cdot \vec{w}_2) = 0$. (Se os dois
+esticamentos forem iguais, todas as direções esticam igual, e escolhem-se duas
+perpendiculares.)
 
 </details>
 
@@ -1295,6 +1313,9 @@ primeira coluna de $R_{30^\circ}$ por 4. Depois multiplique pela transposta.
    Para 25, o autovetor é $(2,\ 1)$, então
    $\vec{v}_1 = \frac{1}{\sqrt{5}}(2,\ 1)$ e
    $\vec{u}_1 = \frac{1}{5} \times \frac{1}{\sqrt{5}}(5,\ 10) = \frac{1}{\sqrt{5}}(1,\ 2)$.
+   Para completar $V$ e $U$, como no Exemplo 2:
+   $\vec{v}_2 = \frac{1}{\sqrt{5}}(-1,\ 2)$ (autovetor de 0) e
+   $\vec{u}_2 = \frac{1}{\sqrt{5}}(-2,\ 1)$, perpendicular a $\vec{u}_1$.
    Uma camada só:
    $5 \times \frac{1}{\sqrt{5}}\begin{bmatrix} 1 \\ 2 \end{bmatrix} \times \frac{1}{\sqrt{5}}\begin{bmatrix} 2 & 1 \end{bmatrix} = \begin{bmatrix} 1 \\ 2 \end{bmatrix}\begin{bmatrix} 2 & 1 \end{bmatrix} = \begin{bmatrix} 2 & 1 \\ 4 & 2 \end{bmatrix}$.
 8. $\begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}\begin{bmatrix} 1 & 0 \\ 1 & 1 \end{bmatrix} = \begin{bmatrix} 2 & 1 \\ 1 & 1 \end{bmatrix}$.
@@ -1373,7 +1394,7 @@ primeira coluna de $R_{30^\circ}$ por 4. Depois multiplique pela transposta.
 ## 14. Revisão curta
 
 - **A ideia central.** Toda matriz faz três coisas: gira, estica cada eixo por
-  um número e gira de novo. Em fórmula, $A = U\Sigma V^{\mathsf{T}}$. Os
+  um número e gira de novo (cada giro pode ser também um espelho). Em fórmula, $A = U\Sigma V^{\mathsf{T}}$. Os
   números de esticar são os **valores singulares**.
 - **Como calcular.** Monte $A^{\mathsf{T}}A$, que é simétrica. Os autovetores
   dela, com comprimento 1, são os $\vec{v}_i$. As raízes dos autovalores são

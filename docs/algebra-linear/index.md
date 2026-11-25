@@ -16,7 +16,7 @@ três casos, o dado é uma **lista de números**, e uma coleção de dados é um
 Essa é a pergunta deste capítulo. **Álgebra linear** é o estudo dessas contas.
 Ela começa nas setas do plano, que você estudou no módulo de vetores da
 geometria, e mostra que as mesmas contas funcionam com listas de qualquer
-tamanho — 5, 1.000 ou um milhão de números.
+tamanho: 5, 1.000 ou um milhão de números.
 
 É a matemática de base da computação gráfica, da análise de dados e do
 aprendizado de máquina. Uma camada de uma rede neural, por exemplo, é uma conta
@@ -97,40 +97,40 @@ desconhecidas ou descobrir redundância.
 
 ### Vetores e matrizes
 
-1. [Vetores com muitas coordenadas](./vetores-com-muitas-coordenadas) —
+1. [Vetores com muitas coordenadas](./vetores-com-muitas-coordenadas):
    as contas da seta valem para listas de qualquer tamanho; distância e
    cosseno medem semelhanças diferentes.
-2. [Matrizes e o produto de matriz por vetor](./matrizes) — a tabela de
-   números, e as duas leituras de $A\vec{x}$: por linhas e por colunas.
+2. [Matrizes e o produto de matriz por vetor](./matrizes): a tabela de
+   números, e as duas leituras de $A\vec{x}$, por linhas e por colunas.
 
 ### Sistemas e redundância
 
-3. [Sistemas lineares e escalonamento](./sistemas-lineares-e-escalonamento) —
+3. [Sistemas lineares e escalonamento](./sistemas-lineares-e-escalonamento):
    a eliminação organizada para muitas equações e muitas incógnitas.
-4. [Combinação linear e independência](./combinacao-linear-e-independencia)
-   — o que se alcança misturando vetores, e quando um deles sobra.
+4. [Combinação linear e independência](./combinacao-linear-e-independencia):
+   o que se alcança misturando vetores, e quando um deles sobra.
 
 ### Matrizes como transformações
 
-5. [Transformações lineares](./transformacoes-lineares) — girar, esticar e
+5. [Transformações lineares](./transformacoes-lineares): girar, esticar e
    inclinar o plano inteiro com quatro números.
-6. [Produto de matrizes](./produto-de-matrizes) — fazer duas transformações em
+6. [Produto de matrizes](./produto-de-matrizes): fazer duas transformações em
    sequência, e por que a ordem importa.
-7. [Matriz inversa](./matriz-inversa) — a transformação que desfaz outra, e
+7. [Matriz inversa](./matriz-inversa): a transformação que desfaz outra, e
    quando ela não existe.
-8. [Determinante](./determinante) — o número que diz quanto a transformação
+8. [Determinante](./determinante): o número que diz quanto a transformação
    multiplica as áreas.
 
 ### Estrutura e aplicações
 
-9. [Base, dimensão e posto](./base-dimensao-e-posto) — quantas colunas de uma
+9. [Base, dimensão e posto](./base-dimensao-e-posto): quantas colunas de uma
    tabela carregam informação de verdade.
-10. [Autovalores e autovetores](./autovalores-e-autovetores) — as direções que
+10. [Autovalores e autovetores](./autovalores-e-autovetores): as direções que
     uma matriz só estica, e o que acontece depois de muitas aplicações.
-11. [Mínimos quadrados](./minimos-quadrados) — a reta que erra menos, e o
+11. [Mínimos quadrados](./minimos-quadrados): a reta que erra menos, e o
     primeiro modelo de aprendizado de máquina.
-12. [Decomposição em valores singulares](./decomposicao-em-valores-singulares)
-    — toda matriz é girar, esticar e girar; compressão de dados.
+12. [Decomposição em valores singulares](./decomposicao-em-valores-singulares):
+    toda matriz é girar, esticar e girar; compressão de dados.
 
 Estude na ordem. As lições 5 a 8 formam um bloco: cada uma usa a imagem da
 malha transformada da anterior. A última lição é a mais difícil do capítulo e
@@ -158,12 +158,12 @@ mínimos quadrados e valores singulares.
 Para estudar deep learning ainda faltam outras partes, que este curso não
 cobre por enquanto:
 
-- **cálculo de várias variáveis** — o gradiente e a regra da cadeia com
+- **cálculo de várias variáveis**: o gradiente e a regra da cadeia com
   várias variáveis, que é o que as redes usam para aprender. O
   [Cálculo 1](../calculo/calculo-1/) já ensina a regra da cadeia com uma
   variável;
-- **probabilidade e estatística** — distribuições, média, variância e
+- **probabilidade e estatística**: distribuições, média, variância e
   verossimilhança. A [análise combinatória](../analise-combinatoria/) dá só a
   introdução;
-- **otimização** — como achar o menor erro quando não existe uma fórmula
+- **otimização**: como achar o menor erro quando não existe uma fórmula
   pronta.

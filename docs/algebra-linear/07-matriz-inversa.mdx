@@ -187,7 +187,7 @@ uma:
 |---|---|
 | girar $30^\circ$ no sentido anti-horário | girar $30^\circ$ no sentido horário |
 | esticar 2 vezes na horizontal | encolher pela metade na horizontal |
-| cisalhar: cada andar escorrega $k$ para a direita | escorregar cada andar $k$ para a esquerda |
+| cisalhar: escorregar $k$ casas por andar para a direita | escorregar $k$ casas por andar para a esquerda |
 | projetar sobre o eixo $x$ | **não dá** |
 
 Nas três primeiras linhas, a volta existe e é outra transformação do mesmo
@@ -344,7 +344,7 @@ As duas igualdades têm leituras concretas no código da filial:
 - $A^{-1}A = I$: **codificar e depois decodificar** devolve o par original.
   Para todo $\vec{v}$, $A^{-1}(A\vec{v}) = I\vec{v} = \vec{v}$.
 - $AA^{-1} = I$: **decodificar e depois codificar** devolve o par recebido.
-  Todo par que chega veio de algum par de letras.
+  Todo par que chega veio de algum par $(x,\ y)$.
 
 Para matrizes quadradas, vale um fato que não vamos demonstrar: se uma das
 duas igualdades vale, a outra também vale. Na prática, conferimos uma delas.
@@ -670,6 +670,8 @@ primeiro vai encontrar o sapato no caminho.
 Com matrizes é igual. O produto $AB$ aplica primeiro $B$ (a meia) e depois $A$
 (o sapato). Para desfazer, primeiro desfazemos $A$, depois $B$:
 
+> Se $A$ e $B$ são inversíveis e do mesmo tamanho, então $AB$ também é, e
+>
 > $$(AB)^{-1} = B^{-1}A^{-1}.$$
 
 **Por que vale.** Multiplique $AB$ pelo candidato. A associatividade do
@@ -729,8 +731,8 @@ $\vec{x}$. Então:
 É o que a seção 7 fez com o código: $\vec{x} = A^{-1}(p,\ q)$.
 
 “Pela esquerda” é parte da regra. O produto de matrizes depende da ordem, então
-multiplicar um lado pela esquerda e o outro pela direita não preserva a
-igualdade. Escrever $\vec{b}A^{-1}$ nem faz sentido: um vetor coluna com 2
+multiplicar um lado pela esquerda e o outro pela direita, em geral, não
+preserva a igualdade. Escrever $\vec{b}A^{-1}$ nem faz sentido: um vetor coluna com 2
 linhas não multiplica uma matriz $2 \times 2$ pela esquerda.
 
 **Então por que escalonar, se existe a inversa?** Para um sistema só, calcular
@@ -1005,8 +1007,8 @@ $$
 $$
 
 Conferência do primeiro: $C(2,\ 2,\ 3) = (2 + 2,\ 2 + 4 + 3,\ 2 + 6) =
-(4,\ 9,\ 8)$. Confere. Do segundo: $C(3,\ -1,\ 4) = (3 - 1,\ 3 - 2 + 4,\
--1 + 8) = (2,\ 5,\ 7)$. Confere.
+(4,\ 9,\ 8)$. Confere. Do segundo:
+$C(3,\ -1,\ 4) = (3 - 1,\ 3 - 2 + 4,\ -1 + 8) = (2,\ 5,\ 7)$. Confere.
 
 Depois que $C^{-1}$ está calculada, cada sistema novo custa uma multiplicação de
 matriz por vetor, sem escalonamento.
@@ -1106,7 +1108,7 @@ $AA^{-1} = I$?
 $A^{-1}A = I$ diz que codificar e depois decodificar devolve o par original de
 letras. $AA^{-1} = I$ diz que decodificar e depois codificar devolve o par que
 chegou. A primeira garante que nenhuma palavra se perde; a segunda, que todo
-par recebido corresponde a algum par de letras.
+par recebido vem de algum par $(x,\ y)$.
 
 </details>
 
@@ -1116,8 +1118,8 @@ decide se uma matriz $2 \times 2$ tem inversa?
 <details>
 <summary>Resposta</summary>
 
-O número $ad - bc$. Se ele é zero, as colunas são paralelas (dependentes), a
-matriz achata o plano numa reta e dois vetores diferentes vão para o mesmo
+O número $ad - bc$. Se ele é zero, as colunas são dependentes (paralelas, ou
+uma delas nula), a matriz achata o plano numa reta (ou num ponto) e dois vetores diferentes vão para o mesmo
 lugar. Nesse caso não existe volta. Se $ad - bc \neq 0$, a fórmula da seção 8.3
 fornece a inversa.
 
@@ -1301,8 +1303,8 @@ independência, quantos vetores de $\mathbb{R}^2$ podem ser independentes?
 2. Sim. O produto
    $\begin{bmatrix} 1 & 2 \\ 0 & 1 \end{bmatrix}\begin{bmatrix} 1 & -2 \\ 0 & 1 \end{bmatrix}
    = \begin{bmatrix} 1 & -2 + 2 \\ 0 & 1 \end{bmatrix} = I$. Faz sentido no
-   desenho: a primeira é um cisalhamento que escorrega cada andar 2 para a
-   direita; a segunda escorrega 2 para a esquerda.
+   desenho: a primeira é um cisalhamento que escorrega 2 casas por andar para
+   a direita; a segunda escorrega 2 casas por andar para a esquerda.
 
 3. Decodificar o par $(p,\ q)$ é achar o par $(x,\ y)$ com
    $A(x,\ y) = (p,\ q)$, e isso é um sistema de duas equações. Todos os pares
@@ -1427,5 +1429,5 @@ independência, quantos vetores de $\mathbb{R}^2$ podem ser independentes?
 A próxima lição, [Determinante](./determinante), dá nome e significado ao número
 $ad - bc$. Ele mede quanto a matriz estica as áreas: o quadrado de lado 1 vira
 um paralelogramo de área $\lvert ad - bc \rvert$. Quando essa área é zero, o
-quadrado foi achatado num segmento, e é por isso que a inversa deixa de
+quadrado foi achatado num segmento (ou num ponto), e é por isso que a inversa deixa de
 existir.
