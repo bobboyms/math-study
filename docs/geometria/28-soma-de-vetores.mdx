@@ -3,70 +3,96 @@ title: Soma de vetores e multiplicação por número
 ---
 
 import CartesianPlane from '@site/src/components/CartesianPlane';
+import BoatCurrent from '@site/src/components/BoatCurrent';
+import TipToTail from '@site/src/components/TipToTail';
+import SumByAxis from '@site/src/components/SumByAxis';
+import SumParallelogram from '@site/src/components/SumParallelogram';
+import VectorDifference from '@site/src/components/VectorDifference';
+import ScaleVector from '@site/src/components/ScaleVector';
+import RobotRecipe from '@site/src/components/RobotRecipe';
+import PathFraction from '@site/src/components/PathFraction';
+import ScaledSumTriangle from '@site/src/components/ScaledSumTriangle';
+import SumLengthAngle from '@site/src/components/SumLengthAngle';
 
 # Soma de vetores e multiplicação por número: combinar movimentos
 
-## 1. Problema motivador: o barco e a correnteza
+## Problema motivador: o barco e a correnteza
 
-Um barco atravessa um rio largo. O motor empurra o barco para o **norte** a
-8 km/h: é a velocidade que ele teria em água parada. Só que o rio corre, e a
-correnteza arrasta tudo o que está na água para o **leste** a 6 km/h.
+Um barco atravessa um rio de 8 km de largura. O motor empurra o barco para o
+**norte** a 8 km/h: é a velocidade que ele teria em água parada. Só que o rio
+corre, e a correnteza arrasta tudo o que está na água para o **leste** a
+6 km/h.
 
 Os dois empurrões acontecem **ao mesmo tempo**. O barco não anda primeiro para
-o norte e depois para o leste: ele sofre os dois o tempo todo.
+o norte e depois para o leste: ele sofre os dois o tempo todo. A figura faz
+passar uma hora de viagem.
 
-<CartesianPlane
-  xMin={-1} xMax={8} yMin={-1} yMax={9}
-  xUnit={30}
-  segments={[
-    {from: [0, 0], to: [0, 8], arrow: true, tone: 1, label: '\\vec{b} = (0,\\ 8)', dx: 52, dy: 0},
-    {from: [0, 0], to: [6, 0], arrow: true, tone: 2, label: '\\vec{c} = (6,\\ 0)', dy: -16},
-  ]}
-  axisLabels={['x', 'y']}
-  caption="O eixo x aponta para o leste e o eixo y para o norte, com 1 unidade igual a 1 km/h. A seta do motor, b, aponta 8 unidades para o norte. A seta da correnteza, c, aponta 6 unidades para o leste."
-/>
+<BoatCurrent />
 
-Três perguntas:
+O barco não chega em frente ao ponto de partida. Ele chega à outra margem
+6 km mais para o leste, e o caminho dele é uma reta inclinada. Três perguntas:
 
-1. Depois de uma hora, onde o barco está em relação ao ponto de partida?
-2. Para que lado ele realmente anda?
+1. Por que o barco termina exatamente em $(6,\ 8)$?
+2. Para que lado ele anda de verdade?
 3. Com que velocidade ele anda de verdade?
 
 Uma resposta tentadora para a terceira pergunta é $8 + 6 = 14$ km/h. Ela está
 **errada**, e esta lição mostra por quê. A resposta certa é 10 km/h. Para
-chegar a ela, precisamos de uma operação nova: **somar vetores**.
+chegar a ela, precisamos de uma operação nova: **somar vetores**. A seção
+“Resolvendo o problema do barco” responde às três perguntas.
 
-## 2. Mapa das ideias
+## Roteiro da lição
 
-- **soma de vetores**: o vetor que faz, de uma vez só, o mesmo deslocamento
-  que dois vetores feitos um depois do outro;
-- **ponta com cauda**: o desenho da soma, em que a segunda seta começa onde a
-  primeira termina;
-- **regra do paralelogramo**: o mesmo desenho, com as duas setas saindo do
-  mesmo ponto;
-- **subtração de vetores**: somar o oposto, $\vec{u} - \vec{v} = \vec{u} +
-  (-\vec{v})$;
-- **multiplicação de um número por um vetor**: esticar, encolher ou inverter a
-  seta, sem mudar a reta em que ela está;
-- **vetores paralelos**: vetores em que um é múltiplo do outro;
-- **combinação linear**: uma “receita” do tipo $a\vec{u} + b\vec{v}$, que mistura
-  dois vetores em quantidades escolhidas.
+1. Somar dois deslocamentos é encadear os dois: a segunda seta começa onde a
+   primeira termina, e a soma vai do começo de tudo ao fim de tudo.
+2. Cada eixo soma sozinho: passos horizontais só se juntam com passos
+   horizontais. Por isso a soma é feita **coordenada a coordenada**.
+3. A ordem das parcelas não muda a soma. Os dois caminhos possíveis fecham um
+   **paralelogramo**, e a soma é a diagonal.
+4. Subtrair é perguntar quanto falta: $\vec{u} - \vec{v}$ é a seta que vai da
+   ponta de $\vec{v}$ até a ponta de $\vec{u}$. A regra “chegada menos saída”
+   da lição anterior é uma subtração de vetores.
+5. Multiplicar um vetor por um número estica, encolhe ou vira a seta, sem
+   tirá-la da reta em que ela está. O comprimento fica multiplicado pelo valor
+   absoluto do número.
+6. Dois vetores são **paralelos** quando um é múltiplo do outro: o mesmo
+   número precisa servir para as duas coordenadas.
+7. Uma **combinação linear** é uma receita: quanto andar na direção de cada
+   vetor. Achar a receita que leva a um ponto é resolver um sistema.
+8. Andar uma fração $t$ do caminho de $A$ até $B$ leva ao ponto
+   $A + t\overrightarrow{AB}$. Com $t = \frac{1}{2}$, é o ponto médio.
+9. As contas com vetores herdam as propriedades das contas com números,
+   porque são feitas coordenada a coordenada.
+10. O comprimento da soma **não** é a soma dos comprimentos. Ele só chega lá
+    quando as duas setas apontam para o mesmo lado.
 
-## 3. Para que serve
+## Para que isso serve?
 
-- navegação: barco com correnteza, avião com vento, drone com rajada;
-- engenharia: várias forças puxando a mesma peça se somam numa força só, e a
-  peça fica parada quando essa soma dá o vetor nulo;
-- jogos e animação: a cada quadro, a posição de um personagem recebe a soma
-  com o vetor velocidade;
-- robótica: um braço mecânico com dois motores, cada um movendo numa direção
-  fixa, alcança um ponto escolhendo quanto acionar cada motor — uma combinação
-  linear;
-- dentro da matemática: a equação da reta com vetores (lição
-  [Retas com vetores](./retas-com-vetores)) e o capítulo de álgebra linear
+- **Navegação.** Um drone voa para o leste a 12 m/s, e o vento o empurra para o
+  norte a 5 m/s. A velocidade real é $(12,\ 0) + (0,\ 5) = (12,\ 5)$, de
+  módulo $\sqrt{144 + 25} = \sqrt{169} = 13$ m/s, e não $12 + 5 = 17$ m/s.
+- **Jogos e animação.** A cada quadro, a posição de um personagem recebe a
+  soma com o vetor velocidade. Com posição $(100,\ 50)$ pixels e velocidade
+  $(3,\ -2)$ pixels por quadro, depois de 10 quadros ele está em
+  $(100,\ 50) + 10 \times (3,\ -2) = (130,\ 30)$.
+- **Engenharia.** Forças que puxam a mesma peça se somam numa força só. Duas
+  pessoas puxando com 50 N cada, em direções diferentes, podem produzir só
+  cerca de 82 N juntas (o Exemplo 2 faz a conta).
+- **Robótica.** Um robô com dois motores, cada um empurrando numa direção fixa,
+  alcança um ponto escolhendo quantas voltas dar em cada motor. Com 3 voltas
+  do motor $(2,\ 1)$ e 1 volta do motor $(1,\ 3)$, ele chega a
+  $(6,\ 3) + (1,\ 3) = (7,\ 6)$.
+- **Deep learning.** Treinar uma rede neural é corrigir uma lista de números,
+  os **pesos**, muitas vezes seguidas. A cada passo, o programa calcula um
+  vetor de correção $\vec{g}$ e faz a conta $\vec{w} - 0{,}1\vec{g}$, que usa
+  as duas operações desta página. Com $\vec{w} = (2,\ 3)$ e
+  $\vec{g} = (4,\ -2)$: $(2,\ 3) - (0{,}4;\ -0{,}2) = (1{,}6;\ 3{,}2)$.
+- **Dentro da matemática.** O ponto médio vira uma conta com vetores (seção
+  “Andar uma fração do caminho”). A equação da reta com vetores, na lição
+  [Retas com vetores](./retas-com-vetores), e o capítulo de álgebra linear
   inteiro são feitos de somas e de múltiplos de vetores.
 
-## 4. Ideias anteriores que voltam aqui
+## Ideias anteriores que voltam aqui
 
 Responda de cabeça antes de abrir cada resposta. Se alguma falhar, releia a
 página indicada antes de continuar.
@@ -78,11 +104,11 @@ dele?
 <details>
 <summary>Conferir</summary>
 
-O vetor de um ponto a outro se obtém subtraindo **chegada menos partida**,
-coordenada a coordenada: $\overrightarrow{AB} = B - A = (4 - 1,\ 6 - 2) =
-(3,\ 4)$. Ele diz “3 para a direita e 4 para cima”.
+O vetor de um ponto a outro é **chegada menos saída**, coordenada a
+coordenada: $\overrightarrow{AB} = B - A = (4 - 1,\ 6 - 2) = (3,\ 4)$. Ele diz
+“3 para a direita e 4 para cima”.
 
-O módulo é o tamanho da seta, calculado por Pitágoras:
+O módulo é o comprimento da seta, calculado por Pitágoras:
 $\lVert \overrightarrow{AB} \rVert = \sqrt{3^2 + 4^2} = \sqrt{25} = 5$.
 
 </details>
@@ -95,9 +121,9 @@ diferente?
 <summary>Conferir</summary>
 
 É $-\vec{v} = (-2,\ 5)$: as duas coordenadas trocam de sinal. A seta tem o
-mesmo tamanho e está na mesma reta, mas aponta para o **sentido contrário**.
-Fazer o deslocamento $\vec{v}$ e depois o $-\vec{v}$ leva você de volta ao
-ponto de partida.
+mesmo comprimento e está na mesma reta, mas aponta para o **sentido
+contrário**. Fazer o deslocamento $\vec{v}$ e depois o $-\vec{v}$ leva você de
+volta ao ponto de saída.
 
 </details>
 
@@ -140,101 +166,149 @@ canudo de 9 cm.
 
 </details>
 
-As perguntas 3 e 5 vão voltar na segunda metade da lição. O ponto médio vai
-virar uma conta com vetores. E a desigualdade triangular vai explicar por que o
+As perguntas 3 e 5 voltam na segunda metade da lição. O ponto médio vai virar
+uma conta com vetores. E a desigualdade triangular vai explicar por que o
 barco não anda a 14 km/h.
 
-## 5. Intuição: dois movimentos que valem por um
+## Somar dois deslocamentos é encadear: a segunda seta começa onde a primeira termina
 
-Esqueça o barco por um momento e pense num caminho a pé, numa cidade de
-quarteirões.
-
-Você anda 3 quarteirões para o leste e 1 para o norte. Depois, a partir de
-onde parou, anda mais 1 quarteirão para o leste e 2 para o norte. Onde você
-terminou, em relação ao ponto de partida?
+Esqueça o barco por um momento e pense num passeio a pé, numa cidade de
+quarteirões. Você anda 3 quarteirões para o leste e 1 para o norte. Depois, a
+partir de onde parou, anda mais 1 quarteirão para o leste e 2 para o norte.
+Onde você terminou, em relação ao ponto de saída?
 
 Conte cada direção separadamente:
 
 - para o leste, você andou 3 quarteirões e depois mais 1: ao todo, 4;
 - para o norte, andou 1 e depois mais 2: ao todo, 3.
 
-Você terminou 4 quarteirões a leste e 3 a norte do ponto de partida. Um amigo
-que tivesse feito **um único** deslocamento de “4 para o leste e 3 para o
-norte” chegaria ao mesmo lugar.
-
-Esse deslocamento único é a **soma** dos dois deslocamentos. Ele não diz por
+Você terminou 4 quarteirões a leste e 3 a norte da saída. Um amigo que tivesse
+feito **um único** deslocamento de “4 para o leste e 3 para o norte” chegaria
+ao mesmo lugar. Esse deslocamento único é a **soma** dos dois. Ele não diz por
 onde você passou. Ele diz só o efeito final: de onde você saiu e aonde chegou.
 
-## 6. Modelo visual: ponta com cauda
-
-Os dois deslocamentos do passeio são vetores: $\vec{u} = (3,\ 1)$ e
+Os dois trechos do passeio são vetores: $\vec{u} = (3,\ 1)$ e
 $\vec{v} = (1,\ 2)$. Para desenhar a soma, siga três passos:
 
-1. desenhe $\vec{u}$ saindo da origem;
-2. desenhe $\vec{v}$ começando **na ponta** de $\vec{u}$ — é a parte do
-   passeio que começa onde a primeira parte terminou;
-3. a soma é a seta que vai da **cauda** de $\vec{u}$ (o início de tudo) até a
-   **ponta** de $\vec{v}$ (o fim de tudo).
+1. Desenhe $\vec{u}$ saindo da origem.
+2. Desenhe $\vec{v}$ começando **na ponta** de $\vec{u}$, porque o segundo
+   trecho começa onde o primeiro terminou.
+3. Desenhe a seta que vai da **cauda** de $\vec{u}$ (o começo de tudo) até a
+   **ponta** de $\vec{v}$ (o fim de tudo). Essa seta é a soma.
 
-<CartesianPlane
-  xMin={-1} xMax={6} yMin={-1} yMax={4}
-  xUnit={44}
-  segments={[
-    {from: [0, 0], to: [3, 1], arrow: true, tone: 1, label: '\\vec{u} = (3,\\ 1)', dx: 92, dy: 4},
-    {from: [3, 1], to: [4, 3], arrow: true, tone: 2, label: '\\vec{v} = (1,\\ 2)', dx: 52, dy: 0},
-    {from: [0, 0], to: [4, 3], arrow: true, tone: 3, label: '\\vec{u} + \\vec{v} = (4,\\ 3)', dx: -62, dy: -6},
-  ]}
-  caption="Ponta com cauda: a seta v começa onde a seta u termina. A soma u + v vai do começo de u até o fim de v."
-/>
+<TipToTail />
 
-Esse desenho é chamado de regra da **ponta com cauda**. Ela funciona porque
-um vetor pode ser desenhado começando em qualquer ponto. Essa ideia veio da
-lição anterior: setas iguais em lugares diferentes representam o mesmo vetor.
-Por isso, mover $\vec{v}$ para a ponta de $\vec{u}$ não muda $\vec{v}$. Muda
-só o lugar onde decidimos desenhá-la.
+Esse desenho se chama regra da **ponta com cauda**: a cauda da segunda seta
+encosta na ponta da primeira. Ela é legítima por causa de uma ideia da lição
+[Vetores](./vetores): a mesma seta desenhada em lugares diferentes é o mesmo
+vetor. Por isso, desenhar $\vec{v}$ a partir da ponta de $\vec{u}$ não muda
+$\vec{v}$. Muda só o lugar onde decidimos desenhá-la.
 
-### Por que a soma é feita coordenada a coordenada
+> **Soma de vetores.** A soma $\vec{u} + \vec{v}$ é o vetor que faz, de uma
+> vez só, o mesmo deslocamento que $\vec{u}$ seguido de $\vec{v}$. No desenho,
+> com $\vec{v}$ começando na ponta de $\vec{u}$, é a seta da cauda de
+> $\vec{u}$ até a ponta de $\vec{v}$.
 
-Olhe de novo o passeio. O deslocamento para o leste do primeiro trecho (3) só
-se junta ao deslocamento para o leste do segundo trecho (1). Ele nunca se
-mistura com o deslocamento para o norte. A mesma coisa acontece com o norte.
+**Exemplo.** Ande $(2,\ 0)$, dois quarteirões para o leste, e depois
+$(0,\ 3)$, três para o norte. A soma é $(2,\ 3)$: a seta que sai da saída e
+aponta direto para a esquina onde você parou.
 
-No desenho, isso aparece assim. A primeira coordenada de cada vetor é um passo
-na horizontal. Passos na horizontal se acumulam com passos na horizontal:
-$3 + 1 = 4$. A segunda coordenada é um passo na vertical, e passos na vertical
-se acumulam com passos na vertical: $1 + 2 = 3$.
+**Contraexemplo.** A soma **não** é a seta que liga a ponta de $\vec{u}$ à
+ponta de $\vec{v}$ quando as duas foram desenhadas saindo do mesmo ponto. Essa
+seta mede outra coisa (ela volta na seção da subtração). A soma sempre sai do
+começo do primeiro trecho.
 
-Por isso a soma é feita **separadamente em cada coordenada**. É a mesma razão
-pela qual, no ponto médio, fizemos uma média para o $x$ e outra para o $y$: os
-dois eixos não interferem um no outro.
+<details>
+<summary>Confira: você anda (−2, 1) e depois (4, 3). Onde termina? Qual é a soma?</summary>
 
-### A regra do paralelogramo
+Para o leste: $-2$ (dois para o oeste) e depois $+4$, ao todo $2$. Para o
+norte: $1$ e depois $3$, ao todo $4$. Você termina em $(2,\ 4)$, contando a
+partir da saída, e a soma é $(-2,\ 1) + (4,\ 3) = (2,\ 4)$.
 
-Agora faça o passeio na ordem inversa: primeiro $\vec{v}$, depois $\vec{u}$.
-Você anda 1 para o leste e 2 para o norte, e depois 3 para o leste e 1 para o
-norte. No fim, andou $1 + 3 = 4$ para o leste e $2 + 1 = 3$ para o norte.
-Chegou ao mesmo ponto.
+</details>
 
-Desenhando os dois caminhos juntos, aparece um paralelogramo:
+## Cada eixo soma sozinho: a soma é feita coordenada a coordenada
 
-<CartesianPlane
-  xMin={-1} xMax={6} yMin={-1} yMax={4}
-  xUnit={44}
-  segments={[
-    {from: [0, 0], to: [3, 1], arrow: true, tone: 1, label: '\\vec{u}', dx: 14, dy: 12},
-    {from: [1, 2], to: [4, 3], arrow: true, tone: 1, dashed: true, label: '\\vec{u}', dy: -16},
-    {from: [0, 0], to: [1, 2], arrow: true, tone: 2, label: '\\vec{v}', dx: 16, dy: -4},
-    {from: [3, 1], to: [4, 3], arrow: true, tone: 2, dashed: true, label: '\\vec{v}', dx: 16, dy: 0},
-    {from: [0, 0], to: [4, 3], arrow: true, tone: 3, label: '\\vec{u} + \\vec{v}', dx: 26, dy: 4},
-  ]}
-  caption="Regra do paralelogramo: u e v saem da mesma origem. As cópias tracejadas mostram os dois caminhos possíveis, u depois v (por baixo) e v depois u (por cima). Os dois terminam no mesmo ponto, e a soma é a diagonal."
-/>
+Olhe de novo o passeio. O passo para o leste do primeiro trecho (3) só se
+junta ao passo para o leste do segundo trecho (1). Ele nunca se mistura com o
+passo para o norte. A mesma coisa acontece com o norte.
 
-A **regra do paralelogramo** é o mesmo desenho visto de outro jeito:
+A figura mostra isso desmontando as setas. Cada seta vira um passo horizontal
+e um passo vertical, tracejados. Depois, os passos horizontais descem até uma
+faixa embaixo do desenho, e os verticais vão até uma faixa à esquerda. Repare
+que em cada faixa os dois passos chegam **encostados**, um depois do outro, e
+que nenhum passo horizontal vai parar na faixa dos verticais. Use os botões
+para ver outros pares de vetores, inclusive com coordenadas negativas.
 
-1. desenhe $\vec{u}$ e $\vec{v}$ saindo do mesmo ponto;
-2. complete o paralelogramo, com uma cópia de cada seta na ponta da outra;
-3. a soma é a diagonal que sai do ponto comum.
+<SumByAxis />
+
+No primeiro par, os passos horizontais somam $3 + 1 = 4$, e os verticais,
+$1 + 2 = 3$. A soma $(4,\ 3)$ tem exatamente esses dois totais como
+coordenadas. Por isso a soma é feita **separadamente em cada coordenada**. É a
+mesma razão pela qual, no ponto médio, fizemos uma média para o $x$ e outra
+para o $y$: os dois eixos não interferem um no outro.
+
+Agora o que a figura mostrou pode ser escrito com letras. Os dois vetores têm
+coordenadas quaisquer, $\vec{u} = (u_1,\ u_2)$ e $\vec{v} = (v_1,\ v_2)$. O
+índice 1 marca a coordenada horizontal, e o índice 2, a vertical.
+
+> **Soma em coordenadas.** A soma de $\vec{u} = (u_1,\ u_2)$ com
+> $\vec{v} = (v_1,\ v_2)$ é o vetor
+>
+> $$\vec{u} + \vec{v} = (u_1 + v_1,\ u_2 + v_2).$$
+
+A fórmula não acrescenta nada ao desenho. Ela escreve com letras a conta que
+a figura fez com os passos: horizontal com horizontal, vertical com vertical.
+
+**Exemplo.** É o segundo par da figura:
+$(5,\ -2) + (-1,\ 6) = (5 + (-1),\ -2 + 6) = (4,\ 4)$. No papel quadriculado:
+5 para a direita e 2 para baixo, depois 1 para a esquerda e 6 para cima. No
+fim, você está 4 à direita e 4 acima da saída.
+
+**Contraexemplo.** A soma **não** mistura coordenadas de posições diferentes.
+Somar $(3,\ 4) + (1,\ 2)$ fazendo $(3 + 4,\ 1 + 2) = (7,\ 3)$ junta o passo
+horizontal de um vetor com o passo vertical do mesmo vetor. É como somar
+quilômetros para o leste com quilômetros para o norte. A conta certa é
+$(3 + 1,\ 4 + 2) = (4,\ 6)$.
+
+O **vetor nulo** $\vec{0} = (0,\ 0)$ faz na soma o papel que o zero faz nos
+números. Somar $\vec{0}$ não muda nada: $\vec{v} + \vec{0} = \vec{v}$. E somar
+um vetor ao seu oposto dá o nulo: $\vec{v} + (-\vec{v}) = \vec{0}$, porque ir
+e voltar pelo mesmo caminho deixa você onde estava.
+
+<details>
+<summary>Confira: antes de apertar o terceiro botão da figura, calcule (4, 1) + (−3, 2).</summary>
+
+Horizontal: $4 + (-3) = 1$. Vertical: $1 + 2 = 3$. A soma é $(1,\ 3)$. Na
+figura, o passo horizontal laranja volta para a esquerda, por cima do azul, e o
+total verde da faixa de baixo mede só 1.
+
+</details>
+
+## A ordem não muda a soma: os dois caminhos fecham um paralelogramo
+
+Faça o passeio na ordem inversa: primeiro $\vec{v}$, depois $\vec{u}$. Você
+anda 1 para o leste e 2 para o norte, e depois 3 para o leste e 1 para o norte.
+No fim, andou $1 + 3 = 4$ para o leste e $2 + 1 = 3$ para o norte. Chegou ao
+mesmo ponto.
+
+A figura desenha os dois caminhos juntos. Primeiro, $\vec{u}$ e $\vec{v}$ saem
+do mesmo ponto. Depois, uma cópia de $\vec{v}$ desliza até a ponta de
+$\vec{u}$: é o caminho de baixo. Em seguida, uma cópia de $\vec{u}$ desliza
+até a ponta de $\vec{v}$: é o caminho de cima.
+
+<SumParallelogram />
+
+Os quatro lados formam um **paralelogramo**: os lados de baixo e de cima são
+a mesma seta $\vec{u}$, e os da esquerda e da direita são a mesma seta
+$\vec{v}$. Os dois caminhos fecham no mesmo canto, e a soma é a diagonal que
+sai do ponto comum.
+
+A **regra do paralelogramo** é o mesmo desenho, visto como receita:
+
+1. Desenhe $\vec{u}$ e $\vec{v}$ saindo do mesmo ponto.
+2. Complete o paralelogramo, com uma cópia de cada seta na ponta da outra.
+3. Desenhe a diagonal que sai do ponto comum. Ela é a soma.
 
 Ela é útil quando os dois vetores agem **ao mesmo tempo** sobre o mesmo
 objeto, como o motor e a correnteza no barco. Nesse caso, faz mais sentido
@@ -242,49 +316,36 @@ desenhar as duas setas saindo do barco do que uma depois da outra. A ponta com
 cauda e o paralelogramo dão sempre a mesma resposta, porque o paralelogramo é
 formado pelos dois caminhos de ponta com cauda.
 
-Esse desenho também mostra que **a ordem das parcelas não muda a soma**:
-$\vec{u} + \vec{v} = \vec{v} + \vec{u}$. É a propriedade comutativa, que você
-conhece dos números, agora vista como dois caminhos que fecham no mesmo
-ponto.
+O desenho também mostra que **a ordem das parcelas não muda a soma**:
 
-## 7. A soma, formalizada
+$$
+\vec{u} + \vec{v} = \vec{v} + \vec{u}.
+$$
 
-O que o desenho mostrou pode agora ser escrito com letras. Os dois vetores
-têm coordenadas quaisquer, $\vec{u} = (u_1,\ u_2)$ e $\vec{v} = (v_1,\ v_2)$.
-O índice 1 marca a coordenada horizontal, e o índice 2, a vertical.
+É a propriedade comutativa, que você conhece dos números, agora vista como dois
+caminhos que fecham no mesmo canto.
 
-> **Soma de vetores.** A soma de $\vec{u} = (u_1,\ u_2)$ com
-> $\vec{v} = (v_1,\ v_2)$ é o vetor
->
-> $$\vec{u} + \vec{v} = (u_1 + v_1,\ u_2 + v_2).$$
->
-> No desenho, é a seta que vai da cauda de $\vec{u}$ até a ponta de $\vec{v}$,
-> quando $\vec{v}$ começa na ponta de $\vec{u}$.
+**Exemplo.** $(3,\ 1) + (1,\ 2) = (4,\ 3)$ e $(1,\ 2) + (3,\ 1) = (4,\ 3)$.
 
-A passagem do desenho para a fórmula é legítima pela razão da seção anterior.
-Cada coordenada é um passo ao longo de um eixo, e passos ao longo do mesmo eixo
-se acumulam somando. A fórmula não acrescenta nada ao desenho. Ela só escreve
-com letras a conta que o desenho fazia com quadradinhos.
+**Contraexemplo.** O paralelogramo tem **duas** diagonais, e só uma é a soma:
+a que sai do ponto comum das duas setas. A outra diagonal liga a ponta de
+$\vec{u}$ à ponta de $\vec{v}$. Ela é a diferença das duas setas, assunto da
+seção da subtração.
 
-**Exemplo.** $(5,\ -2) + (-1,\ 6) = (5 + (-1),\ -2 + 6) = (4,\ 4)$. Confira no
-papel quadriculado: 5 para a direita e 2 para baixo, depois 1 para a esquerda e
-6 para cima. No fim, você está 4 à direita e 4 acima do começo.
+<details>
+<summary>Confira: por que os lados de baixo e de cima do paralelogramo são a mesma seta?</summary>
 
-**Contraexemplo.** A soma **não** mistura coordenadas de posições diferentes.
-Somar $(3,\ 4) + (1,\ 2)$ fazendo $(3 + 4,\ 1 + 2) = (7,\ 3)$ junta o passo
-horizontal de um vetor com o passo vertical do mesmo vetor, o que não tem
-significado: é como somar quilômetros para o leste com quilômetros para o
-norte. A conta certa é $(3 + 1,\ 4 + 2) = (4,\ 6)$.
+Porque os dois são cópias de $\vec{u}$: um sai da origem, o outro sai da ponta
+de $\vec{v}$. Uma seta desenhada em outro lugar continua sendo o mesmo vetor,
+com o mesmo comprimento, a mesma direção e o mesmo sentido. Por isso os lados
+opostos são paralelos e do mesmo tamanho.
 
-O **vetor nulo** $\vec{0} = (0,\ 0)$ faz na soma o papel que o zero faz nos
-números. Somar $\vec{0}$ não muda nada: $\vec{v} + \vec{0} = \vec{v}$. E somar
-um vetor ao seu oposto dá o nulo: $\vec{v} + (-\vec{v}) = \vec{0}$. Ir e voltar
-pelo mesmo caminho deixa você onde estava.
+</details>
 
-## 8. Resolvendo o problema do barco
+## Resolvendo o problema do barco
 
 O motor dá $\vec{b} = (0,\ 8)$ e a correnteza dá $\vec{c} = (6,\ 0)$, em km/h.
-Os dois agem juntos. O efeito combinado é a soma:
+Os dois agem juntos. Pela regra do paralelogramo, o efeito combinado é a soma:
 
 $$
 \vec{b} + \vec{c} = (0 + 6,\ 8 + 0) = (6,\ 8).
@@ -294,26 +355,25 @@ $$
   xMin={-1} xMax={8} yMin={-1} yMax={9}
   xUnit={30}
   segments={[
-    {from: [0, 0], to: [0, 8], arrow: true, tone: 1, label: '\\vec{b}', dx: 16, dy: 0},
-    {from: [0, 8], to: [6, 8], arrow: true, tone: 2, label: '\\vec{c}', dy: -16},
-    {from: [0, 0], to: [6, 8], arrow: true, tone: 3, label: '\\vec{b} + \\vec{c} = (6,\\ 8)', dx: 58, dy: 6},
+    {from: [0, 0], to: [0, 8], arrow: true, tone: 1, label: '\\vec{b} = (0,\\ 8)', dx: 52, dy: 0},
+    {from: [0, 8], to: [6, 8], arrow: true, tone: 2, label: '\\vec{c} = (6,\\ 0)', dy: -16},
+    {from: [0, 0], to: [6, 8], arrow: true, tone: 3, label: '\\vec{b} + \\vec{c} = (6,\\ 8)', dx: 62, dy: 4},
   ]}
-  caption="A seta da correnteza, c, foi desenhada a partir da ponta da seta do motor, b. A soma vai da partida até a ponta de c: 6 para o leste e 8 para o norte a cada hora."
+  axisLabels={['x', 'y']}
+  caption="A seta da correnteza, c, foi desenhada a partir da ponta da seta do motor, b. A soma vai da partida até a ponta de c: 6 para o leste e 8 para o norte a cada hora. As três setas formam um triângulo retângulo de catetos 8 e 6."
 />
 
-Agora as três perguntas do começo.
+**1. Por que o barco termina em $(6,\ 8)$?** A velocidade $(6,\ 8)$ diz que, a
+cada hora, o barco se desloca 6 km para o leste e 8 km para o norte. Os 8 km
+para o norte são exatamente a largura do rio. Então, depois de uma hora, ele
+toca a outra margem no ponto $(6,\ 8)$, contando a partir da partida.
 
-**1. Onde está o barco depois de uma hora?** A velocidade $(6,\ 8)$ diz que,
-a cada hora, o barco se desloca 6 km para o leste e 8 km para o norte. Depois
-de uma hora, ele está no ponto $(6,\ 8)$, em quilômetros, contando a partir da
-partida.
-
-**2. Para que lado ele anda?** Na direção da seta $(6,\ 8)$: em diagonal, para
-o nordeste, mais para o norte do que para o leste, porque 8 é maior que 6. O
-ângulo exato dessa direção é assunto da lição
+**2. Para que lado ele anda?** Na direção da seta $(6,\ 8)$: em diagonal,
+para o nordeste, mais para o norte do que para o leste, porque 8 é maior que
+6. O ângulo exato dessa direção é assunto da lição
 [Módulo, direção e componentes](./modulo-direcao-e-componentes).
 
-**3. Com que velocidade?** A velocidade de verdade é o **tamanho** da seta
+**3. Com que velocidade?** A velocidade de verdade é o **comprimento** da seta
 $(6,\ 8)$, isto é, o módulo dela:
 
 $$
@@ -321,15 +381,16 @@ $$
 $$
 
 O barco anda a 10 km/h, e não a 14 km/h. A diferença está no desenho: as
-setas $\vec{b}$ e $\vec{c}$ formam com a soma um triângulo retângulo de catetos
-8 e 6. A soma é a **hipotenusa**, e a hipotenusa é mais curta que os dois
-catetos juntos. A seção 14 volta a esse ponto, porque ele é o erro mais comum
-desta lição.
+setas $\vec{b}$ e $\vec{c}$ formam com a soma um triângulo retângulo de
+catetos 8 e 6. A soma é a **hipotenusa**, e a hipotenusa é mais curta que os
+dois catetos juntos. A última seção do corpo da lição volta a esse ponto,
+porque ele é o erro mais comum desta página.
 
-## 9. Subtração: a seta que liga duas pontas
+## Subtrair é perguntar quanto falta: a seta vai da ponta de v até a ponta de u
 
-Nos números, subtrair 5 é o mesmo que somar $-5$: $8 - 5 = 8 + (-5) = 3$.
-Com vetores, a subtração é definida exatamente assim.
+Nos números, subtrair 5 é o mesmo que somar $-5$: $8 - 5 = 8 + (-5) = 3$. E
+$8 - 5$ responde a uma pergunta: quanto falta somar a 5 para chegar a 8? Com
+vetores, a subtração é definida do mesmo jeito.
 
 > **Subtração de vetores.** $\vec{u} - \vec{v} = \vec{u} + (-\vec{v})$. Em
 > coordenadas,
@@ -340,68 +401,100 @@ A fórmula em coordenadas vem da definição. O oposto $-\vec{v}$ tem as
 coordenadas $(-v_1,\ -v_2)$. Somando com $\vec{u}$, fica
 $(u_1 + (-v_1),\ u_2 + (-v_2))$, que é o mesmo que $(u_1 - v_1,\ u_2 - v_2)$.
 
-**Exemplo.** $(4,\ 1) - (1,\ 3) = (4 - 1,\ 1 - 3) = (3,\ -2)$.
-
-**Contraexemplo.** A ordem importa:
-$(1,\ 3) - (4,\ 1) = (-3,\ 2)$, que é o **oposto** de $(3,\ -2)$. Na subtração
-de vetores, como na de números, trocar a ordem troca o sinal do resultado.
-
 O desenho da subtração é o ponto que mais confunde nesta lição. Desenhe
 $\vec{u}$ e $\vec{v}$ saindo da origem. A diferença $\vec{u} - \vec{v}$ é a
-seta que vai **da ponta de $\vec{v}$ até a ponta de $\vec{u}$**.
+seta que vai **da ponta de $\vec{v}$ até a ponta de $\vec{u}$**. A figura faz
+essa seta crescer e depois a desliza até a origem. O botão “Ler como
+$\vec{u} + (-\vec{v})$” mostra a mesma conta pelo outro caminho.
 
-<CartesianPlane
-  xMin={-1} xMax={6} yMin={-1} yMax={4}
-  xUnit={44}
-  segments={[
-    {from: [0, 0], to: [4, 1], arrow: true, tone: 1, label: '\\vec{u} = (4,\\ 1)', dx: 0, dy: -28},
-    {from: [0, 0], to: [1, 3], arrow: true, tone: 2, label: '\\vec{v} = (1,\\ 3)', dx: -50, dy: 0},
-    {from: [1, 3], to: [4, 1], arrow: true, tone: 3, label: '\\vec{u} - \\vec{v} = (3,\\ -2)', dx: 70, dy: -8},
-  ]}
-  caption="Com u e v saindo da origem, a diferença u − v é a seta da ponta de v até a ponta de u. Ela responde: quanto falta andar, depois de v, para chegar ao fim de u?"
-/>
+<VectorDifference />
 
 Por que a seta vai nesse sentido, e não no contrário? Leia o desenho como uma
 soma de ponta com cauda. Partindo da origem, ande $\vec{v}$ e chegue à ponta
-de $\vec{v}$. Depois ande a seta da diferença e chegue à ponta de $\vec{u}$.
-Esse caminho mostra que
+de $\vec{v}$. Depois ande a seta verde e chegue à ponta de $\vec{u}$. Esse
+caminho mostra que
 
 $$
 \vec{v} + (\vec{u} - \vec{v}) = \vec{u}.
 $$
 
 A diferença $\vec{u} - \vec{v}$ é, portanto, o que **falta somar a $\vec{v}$
-para chegar a $\vec{u}$**. É a mesma ideia de $8 - 5$: quanto falta somar a 5
-para chegar a 8. Por isso a seta sai de $\vec{v}$ (o que se tem) e chega a
-$\vec{u}$ (aonde se quer ir).
+para chegar a $\vec{u}$**, como $8 - 5$ é o que falta somar a 5 para chegar
+a 8. Por isso a seta sai de $\vec{v}$ (o que se tem) e chega a $\vec{u}$ (aonde
+se quer ir).
 
-Confira com os números do desenho: $(1,\ 3) + (3,\ -2) = (4,\ 1)$. ✓
+**Exemplo.** São os números da figura: $(4,\ 1) - (1,\ 3) = (4 - 1,\ 1 - 3) =
+(3,\ -2)$. Confira: $(1,\ 3) + (3,\ -2) = (4,\ 1)$. ✓
 
-### A ponte com o vetor entre dois pontos
+**Contraexemplo.** A ordem importa: $(1,\ 3) - (4,\ 1) = (-3,\ 2)$, que é o
+**oposto** de $(3,\ -2)$. No desenho, é a mesma seta verde com a ponta do
+outro lado, indo da ponta de $\vec{u}$ até a ponta de $\vec{v}$. Na subtração
+de vetores, como na de números, trocar a ordem troca o sinal do resultado.
+
+<details>
+<summary>Confira: com u e v saindo da origem, para onde aponta a seta de v − u?</summary>
+
+Ela é o que falta somar a $\vec{u}$ para chegar a $\vec{v}$. Então sai da ponta
+de $\vec{u}$ e chega à ponta de $\vec{v}$: o sentido oposto ao da seta verde
+da figura. Com os números da figura, $\vec{v} - \vec{u} = (-3,\ 2)$.
+
+</details>
+
+### A regra “chegada menos saída” é uma subtração de vetores
 
 Na lição [Vetores](./vetores), o vetor de $A$ até $B$ foi calculado como
-$\overrightarrow{AB} = B - A$, chegada menos partida. Agora dá para ver que
-essa conta é uma subtração de vetores.
+$\overrightarrow{AB} = B - A$, chegada menos saída. Agora dá para ver que essa
+conta é uma subtração de vetores.
 
 Chame de $\vec{a}$ a seta que vai da origem até $A$ e de $\vec{b}$ a seta que
 vai da origem até $B$. Essas setas têm as mesmas coordenadas que os pontos. O
 vetor $\overrightarrow{AB}$ vai da ponta de $\vec{a}$ até a ponta de $\vec{b}$.
 Pelo desenho da subtração, ele é exatamente $\vec{b} - \vec{a}$.
 
-Com os números da pergunta de resgate 1: $A = (1,\ 2)$ e $B = (4,\ 6)$ dão
-$\overrightarrow{AB} = (4,\ 6) - (1,\ 2) = (3,\ 4)$, o mesmo resultado de antes.
-A regra “chegada menos partida” não era uma regra solta. Ela é o desenho da
-subtração.
+<VectorDifference
+  u={[2, 5]}
+  v={[5, 1]}
+  uName="\vec{b}"
+  vName="\vec{a}"
+  diffName="\overrightarrow{AB}"
+  tips={['B', 'A']}
+  slide={false}
+  minusButton={false}
+  window={{xMin: -1, xMax: 7, yMin: -1, yMax: 6}}
+  xUnit={42}
+  offsets={{u: [-58, 0], v: [16, -16], d: [62, 8], tipU: [-14, -12], tipV: [14, -12]}}
+  caption="As setas a e b vão da origem até os pontos A = (5, 1) e B = (2, 5). O vetor AB vai da ponta de a até a ponta de b: é a diferença b − a, chegada menos saída."
+/>
 
-## 10. Multiplicação por número: esticar, encolher, inverter
+Na figura, $\overrightarrow{AB} = (2,\ 5) - (5,\ 1) = (-3,\ 4)$: 3 para a
+esquerda e 4 para cima. Com os números da pergunta de resgate 1,
+$A = (1,\ 2)$ e $B = (4,\ 6)$ dão
+$\overrightarrow{AB} = (4,\ 6) - (1,\ 2) = (3,\ 4)$, o mesmo resultado de
+antes. A regra “chegada menos saída” não era uma regra solta. Ela é o desenho
+da subtração.
+
+<details>
+<summary>Confira: com A = (6, 2) e B = (1, 3), escreva AB como uma subtração de vetores e calcule.</summary>
+
+$\overrightarrow{AB} = \vec{b} - \vec{a} = (1,\ 3) - (6,\ 2) = (-5,\ 1)$: 5
+para a esquerda e 1 para cima, o que falta andar, depois de chegar a $A$, para
+chegar a $B$.
+
+</details>
+
+## Número vezes vetor estica, encolhe ou vira a seta, sem tirá-la da reta
 
 Num dia de cheia, a correnteza do rio corre com o triplo da velocidade
-normal: em vez de $(6,\ 0)$, ela vale $(18,\ 0)$. Num dia calmo, corre com
-metade: $(3,\ 0)$. Essas novas correntezas são a mesma seta, só que três vezes
-mais comprida, ou com a metade do comprimento.
+normal: em vez de $(6,\ 0)$, ela vale $(18,\ 0)$. Num dia calmo, corre com a
+metade: $(3,\ 0)$. Essas correntezas novas apontam para o mesmo lado. Só o
+comprimento da seta mudou: três vezes mais comprida, ou metade.
 
-Multiplicar um vetor por um número faz isso: muda o tamanho da seta sem
-tirá-la da reta em que ela está.
+Multiplicar um vetor por um número faz isso. Na figura, o tracejado cinza é a
+reta que passa pela origem na direção de $\vec{v} = (2,\ 1)$. Ao aparecer, o
+número $k$ passeia sozinho; depois, arraste o controle e observe que a seta
+laranja estica, encolhe ou vira, mas **nunca sai da reta**.
+
+<ScaleVector />
 
 > **Número vezes vetor.** Se $k$ é um número e $\vec{v} = (v_1,\ v_2)$, então
 >
@@ -414,33 +507,23 @@ De onde vem a fórmula? Para $k = 3$, pense em $3\vec{v}$ como
 $\vec{v} + \vec{v} + \vec{v}$: três vezes o mesmo deslocamento, um depois do
 outro. Pela soma coordenada a coordenada, isso dá
 $(v_1 + v_1 + v_1,\ v_2 + v_2 + v_2) = (3 \times v_1,\ 3 \times v_2)$. Para
-números que não são inteiros, como $\frac{1}{2}$, a fórmula é a **definição**:
-ela é escolhida para continuar valendo a mesma ideia. Metade do vetor é o
-vetor que, somado a si mesmo, dá $\vec{v}$, e $\frac{1}{2}\vec{v} +
-\frac{1}{2}\vec{v} = \vec{v}$ de fato.
+$k = -2$, a ideia é a mesma com o oposto: $-2\vec{v}$ é
+$(-\vec{v}) + (-\vec{v})$, que dá $(-2 \times v_1,\ -2 \times v_2)$. Para
+números que não são inteiros, como $\frac{1}{2}$, a fórmula é a
+**definição**, escolhida para continuar valendo a mesma ideia. Metade do vetor
+é o vetor que, somado a si mesmo, dá $\vec{v}$. E de fato
+$\frac{1}{2}\vec{v} + \frac{1}{2}\vec{v} = \vec{v}$.
 
 **Exemplo.** Com $\vec{v} = (2,\ 1)$: $3\vec{v} = (6,\ 3)$,
-$\frac{1}{2}\vec{v} = (1;\ 0{,}5)$ e $-2\vec{v} = (-4,\ -2)$.
+$\frac{1}{2}\vec{v} = (1;\ 0{,}5)$ e $-2\vec{v} = (-4,\ -2)$. Leve o controle
+a esses três valores e confira.
 
 **Contraexemplo.** $3\vec{v}$ **não** é $(3 \times 2,\ 1) = (6,\ 1)$. O número
 multiplica **as duas** coordenadas. Se multiplicasse só a primeira, a seta
-mudaria de direção, e não só de tamanho: $(6,\ 1)$ é bem mais deitada que
-$(2,\ 1)$.
+mudaria de direção, e não só de comprimento: o ponto $(6,\ 1)$ está fora do
+tracejado da figura.
 
 O que o número $k$ faz com a seta depende do valor dele:
-
-<CartesianPlane
-  xMin={-6} xMax={7} yMin={-4} yMax={5}
-  xUnit={34}
-  segments={[
-    {from: [1, 2], to: [3, 3], arrow: true, tone: 1, label: '\\vec{v}', dx: -6, dy: -16},
-    {from: [-5, 1], to: [-1, 3], arrow: true, tone: 1, label: '2\\vec{v}', dx: -8, dy: -16},
-    {from: [4, 2], to: [5, 2.5], arrow: true, tone: 2, label: '\\tfrac{1}{2}\\vec{v}', dx: 0, dy: -20},
-    {from: [4, -1], to: [2, -2], arrow: true, tone: 3, label: '-\\vec{v}', dx: 6, dy: 18},
-    {from: [0, -1], to: [-4, -3], arrow: true, tone: 3, label: '-2\\vec{v}', dx: 8, dy: 18},
-  ]}
-  caption="O vetor v = (2, 1) e alguns múltiplos, desenhados em lugares diferentes para não se sobreporem. Todos estão em retas paralelas. Com número positivo, a seta aponta para o mesmo lado de v; com número negativo, para o lado contrário."
-/>
 
 | Valor de $k$ | O que acontece com a seta | Exemplo com $\vec{v} = (2,\ 1)$ |
 |---|---|---|
@@ -454,7 +537,16 @@ O que o número $k$ faz com a seta depende do valor dele:
 A linha $k = -1$ mostra que o vetor oposto da lição anterior é um caso
 particular: $-\vec{v}$ é o mesmo que $(-1)\vec{v}$.
 
-### O que acontece com o módulo
+<details>
+<summary>Confira: o que acontece com a seta de v em −3v? E em 1/4 de v?</summary>
+
+Em $-3\vec{v}$, a seta fica 3 vezes mais comprida e aponta para o lado
+contrário. Em $\frac{1}{4}\vec{v}$, fica com um quarto do comprimento e aponta
+para o mesmo lado. Nos dois casos ela continua na reta de $\vec{v}$.
+
+</details>
+
+### O comprimento fica multiplicado pelo valor absoluto do número
 
 Quando a seta é multiplicada por 3, o comprimento dela fica 3 vezes maior.
 A conta confirma isso. Com $\vec{v} = (3,\ 4)$, que tem módulo 5:
@@ -471,7 +563,8 @@ $$
 
 O módulo dobrou, e não virou $-10$. Um comprimento nunca é negativo: o sinal
 de menos inverteu o sentido da seta, mas não deixou a seta “negativa”. Por
-isso a regra usa o **valor absoluto** do número:
+isso a regra usa o **valor absoluto** do número. O painel da figura acima faz
+essa conta para cada $k$.
 
 > $$\lVert k\vec{v} \rVert = \lvert k \rvert \times \lVert \vec{v} \rVert.$$
 
@@ -489,13 +582,42 @@ $k = -2$, temos $k^2 = 4$ e $\sqrt{4} = 2$, que é $\lvert -2 \rvert$, e não
 $-2$. Em geral, $\sqrt{k^2} = \lvert k \rvert$. Assim a conta termina em
 $\lvert k \rvert \times \lVert \vec{v} \rVert$.
 
-### Vetores paralelos
+<details>
+<summary>Confira: o vetor w tem módulo 4. Quanto mede −3w?</summary>
 
-Todos os múltiplos de $\vec{v}$ ficam em retas paralelas à de $\vec{v}$. Isso
-dá um teste para saber se duas setas são paralelas.
+$\lVert -3\vec{w} \rVert = \lvert -3 \rvert \times 4 = 3 \times 4 = 12$. O
+sinal de menos só vira a seta; o comprimento é 12, e não $-12$.
+
+</details>
+
+## Paralelos são múltiplos: o mesmo número precisa servir para as duas coordenadas
+
+A figura anterior mostrou que todos os múltiplos de $\vec{v}$ ficam na reta de
+$\vec{v}$. Isso dá um teste para saber se duas setas são paralelas: uma é
+múltiplo da outra?
 
 > **Vetores paralelos.** Dois vetores não nulos são **paralelos** quando um é
 > múltiplo do outro: existe um número $k$ com $\vec{u} = k\vec{v}$.
+
+O vetor nulo fica de fora da definição. Ele é múltiplo de qualquer vetor,
+porque $\vec{0} = 0\vec{v}$. Mas ele é um ponto, sem seta, e por isso não tem
+direção para comparar com a de outro vetor.
+
+Na figura, $\vec{v} = (2,\ 3)$, e há dois alvos marcados: $(-4,\ -6)$ e
+$(4,\ 5)$. Procure, com o controle, um $k$ que leve a ponta da seta laranja
+até cada alvo. O painel guarda os alvos que você alcançar.
+
+<ScaleVector
+  v={[2, 3]}
+  initial={1}
+  kMin={-2.5}
+  kMax={2.5}
+  targets={[[-4, -6], [4, 5]]}
+  window={{xMin: -6, xMax: 6, yMin: -8, yMax: 8}}
+  xUnit={22}
+  labelEvery={2}
+  caption="O tracejado cinza é a reta de v = (2, 3). Os círculos vazios são os alvos; um alvo alcançado fica verde. O alvo (4, 5) está fora da reta, e nenhum k leva a seta até ele."
+/>
 
 **Exemplo.** $(-4,\ -6)$ e $(2,\ 3)$ são paralelos, porque
 $(-4,\ -6) = -2 \times (2,\ 3)$, multiplicando cada coordenada. O sinal
@@ -503,39 +625,59 @@ negativo diz que eles apontam em sentidos opostos.
 
 **Contraexemplo.** $(4,\ 5)$ e $(2,\ 3)$ **não** são paralelos. Para a
 primeira coordenada passar de 2 para 4, o número teria de ser $k = 2$. Mas
-$2 \times 3 = 6$, e não 5. Nenhum número único serve para as duas coordenadas
-ao mesmo tempo.
+$2 \times 3 = 6$, e não 5. Na figura, com $k = 2$ a seta passa por $(4,\ 6)$,
+logo acima do alvo. Nenhum número único serve para as duas coordenadas ao
+mesmo tempo.
 
 O teste prático é dividir coordenada por coordenada e ver se dá o mesmo número
 nas duas: $\frac{-4}{2} = -2$ e $\frac{-6}{3} = -2$ dão o mesmo número, mas
-$\frac{4}{2} = 2$ e $\frac{5}{3} \approx 1{,}67$ não dão. (Quando alguma
-coordenada é zero, a divisão não serve: compare direto. $(0,\ 5)$ e
-$(0,\ -2)$ são paralelos, os dois verticais.)
+$\frac{4}{2} = 2$ e $\frac{5}{3} \approx 1{,}67$ não dão. Quando alguma
+coordenada é zero, a divisão não serve, e a comparação é feita direto:
+$(0,\ 5)$ e $(0,\ -2)$ são paralelos, porque os dois são verticais.
 
-## 11. Combinação linear: uma receita com dois ingredientes
+<details>
+<summary>Confira: (6, 9) é paralelo a (2, 3)? E (3, 4)?</summary>
+
+$(6,\ 9)$ é: $\frac{6}{2} = 3$ e $\frac{9}{3} = 3$, então
+$(6,\ 9) = 3 \times (2,\ 3)$, no mesmo sentido. $(3,\ 4)$ não é:
+$\frac{3}{2} = 1{,}5$, mas $\frac{4}{3} \approx 1{,}33$.
+
+</details>
+
+## Combinação linear: uma receita de quanto andar em cada direção
 
 Agora as duas operações juntas.
 
 Num depósito, um robô se move sobre trilhos. Um motor o empurra na direção
 $\vec{u} = (2,\ 1)$, em metros, a cada volta do motor. Outro motor o empurra na
-direção $\vec{v} = (1,\ 3)$. O robô parte da origem. Para chegar à prateleira em
-$(7,\ 6)$, quantas voltas cada motor precisa dar?
+direção $\vec{v} = (1,\ 3)$. O robô parte da origem. Para chegar à prateleira
+em $(7,\ 6)$, quantas voltas cada motor precisa dar?
 
 Se o primeiro motor der $a$ voltas e o segundo der $b$ voltas, o robô se
-desloca $a\vec{u}$ mais $b\vec{v}$. O ponto de chegada é
+desloca $a\vec{u}$ e depois $b\vec{v}$. O ponto de chegada é
 
 $$
 a\vec{u} + b\vec{v}.
 $$
+
+A figura monta primeiro a receita que funciona. Depois, mexa nos dois
+controles: cada seta azul é uma volta do motor $\vec{u}$, e cada seta laranja,
+uma volta do motor $\vec{v}$. Voltas negativas são o motor girando ao
+contrário. As linhas tracejadas são paralelas a $\vec{u}$ e a $\vec{v}$, e
+cada cruzamento é um ponto que o robô alcança com um número inteiro de voltas.
+
+<RobotRecipe />
 
 > **Combinação linear.** Uma **combinação linear** de $\vec{u}$ e $\vec{v}$ é
 > qualquer vetor da forma $a\vec{u} + b\vec{v}$, em que $a$ e $b$ são números.
 > Os números $a$ e $b$ são os **coeficientes** da combinação: dizem quanto de
 > cada vetor entra na mistura.
 
-Pense na combinação como uma **receita**. Os vetores $\vec{u}$ e $\vec{v}$ são
-os ingredientes. Os coeficientes dizem quanto pôr de cada um. Coeficiente
-negativo quer dizer andar ao contrário no trilho daquele motor.
+Pense na combinação como uma **receita** de cozinha. Os vetores $\vec{u}$ e
+$\vec{v}$ são os ingredientes, e os coeficientes dizem quanto pôr de cada um. A
+comparação para num ponto: numa receita não existe “menos duas colheres”, mas
+aqui um coeficiente negativo existe e quer dizer andar ao contrário no trilho
+daquele motor.
 
 **Exemplo.** $3\vec{u} + 1\vec{v} = (6,\ 3) + (1,\ 3) = (7,\ 6)$. Com 3 voltas
 do primeiro motor e 1 do segundo, o robô chega à prateleira.
@@ -546,40 +688,17 @@ combinação linear de $\vec{u}$ e $\vec{v}$. Numa combinação linear, cada vet
 só pode ser multiplicado por um **número**, e os resultados só podem ser
 **somados**.
 
-O desenho abaixo mostra todas as receitas com coeficientes inteiros ao mesmo
-tempo. As linhas tracejadas são paralelas a $\vec{u}$ e a $\vec{v}$. Cada
-cruzamento é um ponto que o robô alcança com um número inteiro de voltas em cada
-motor.
+<details>
+<summary>Confira: onde o robô chega com a = 1 e b = 2? Confira depois nos controles.</summary>
 
-<CartesianPlane
-  xMin={-1} xMax={9} yMin={-1} yMax={8}
-  xUnit={36}
-  lines={[
-    {through: [[0, 0], [2, 1]], dashed: true, muted: true},
-    {through: [[1, 3], [3, 4]], dashed: true, muted: true},
-    {through: [[2, 6], [4, 7]], dashed: true, muted: true},
-    {through: [[-1, -3], [1, -2]], dashed: true, muted: true},
-    {through: [[0, 0], [1, 3]], dashed: true, muted: true},
-    {through: [[2, 1], [3, 4]], dashed: true, muted: true},
-    {through: [[4, 2], [5, 5]], dashed: true, muted: true},
-    {through: [[6, 3], [7, 6]], dashed: true, muted: true},
-    {through: [[8, 4], [9, 7]], dashed: true, muted: true},
-  ]}
-  segments={[
-    {from: [0, 0], to: [2, 1], arrow: true, tone: 1},
-    {from: [2, 1], to: [4, 2], arrow: true, tone: 1},
-    {from: [4, 2], to: [6, 3], arrow: true, tone: 1, label: '3\\vec{u}', dx: 0, dy: 18},
-    {from: [6, 3], to: [7, 6], arrow: true, tone: 2, label: '\\vec{v}', dx: 16, dy: 0},
-    {from: [0, 0], to: [7, 6], arrow: true, tone: 3, label: '3\\vec{u} + \\vec{v}', dx: -40, dy: -4},
-  ]}
-  points={[{at: [7, 6], label: '(7,\\ 6)', tone: 3, dx: 26, dy: -10}]}
-  caption="A malha das receitas: as linhas tracejadas são paralelas a u = (2, 1) e a v = (1, 3). Para chegar a (7, 6), o robô anda u três vezes e depois v uma vez."
-/>
+$1 \times (2,\ 1) + 2 \times (1,\ 3) = (2,\ 1) + (2,\ 6) = (4,\ 7)$.
+
+</details>
 
 ### Achar a receita é resolver um sistema
 
-No exemplo, a receita $a = 3$ e $b = 1$ foi dada pronta. Como descobri-la sem
-adivinhar?
+Na figura, a receita $a = 3$ e $b = 1$ veio pronta, ou foi achada por
+tentativa. Como descobri-la sem adivinhar?
 
 Escreva a combinação em coordenadas e compare com o ponto de chegada:
 
@@ -587,8 +706,8 @@ $$
 a(2,\ 1) + b(1,\ 3) = (2a + b,\ a + 3b) = (7,\ 6).
 $$
 
-Dois vetores são iguais quando as coordenadas correspondentes são iguais. Isso
-dá duas equações, uma para cada coordenada:
+Dois vetores são iguais quando as coordenadas correspondentes são iguais. Por
+isso a igualdade de vetores vira duas equações, uma para cada coordenada:
 
 $$
 \begin{cases}
@@ -603,25 +722,50 @@ substituição: da primeira equação, $b = 7 - 2a$. Trocando o $b$ da segunda p
 essa expressão, fica $a + 3(7 - 2a) = 6$, que é $a + 21 - 6a = 6$, ou
 $-5a = -15$. Então $a = 3$ e $b = 7 - 2 \times 3 = 1$.
 
-Encontramos a receita do desenho, agora por conta. Essa ligação entre
+Encontramos a receita da figura, agora por conta.
+
+A receita não precisa ter números inteiros. Para chegar a $(4,\ 4)$, o mesmo
+tipo de sistema dá $a = 1{,}6$ e $b = 0{,}8$: o robô para entre os
+cruzamentos da malha. Com estes dois motores, que não são paralelos, todo
+ponto do plano tem uma receita. Mas, se os dois motores empurrassem na mesma
+direção, o robô só andaria sobre uma reta. Aí um ponto fora dessa reta não
+teria receita, e o sistema não teria solução.
+
+Essa ligação entre
 combinação linear e sistema é a ideia que abre o capítulo de álgebra linear:
 lá, os sistemas vão ter mais equações e mais vetores, mas a pergunta continua
 sendo “qual receita produz este vetor?”.
 
-## 12. O ponto médio, visto de novo
+<details>
+<summary>Confira: que sistema dá a receita para chegar a (3, −1)?</summary>
+
+$a(2,\ 1) + b(1,\ 3) = (2a + b,\ a + 3b) = (3,\ -1)$, então
+$2a + b = 3$ e $a + 3b = -1$. Da primeira, $b = 3 - 2a$; na segunda,
+$a + 9 - 6a = -1$, logo $a = 2$ e $b = -1$. Conferência:
+$(4,\ 2) + (-1,\ -3) = (3,\ -1)$. ✓
+
+</details>
+
+## Andar uma fração do caminho: o ponto médio é A mais metade de AB
 
 Na lição de distância, o ponto médio entre $A$ e $B$ veio de uma média para
 cada coordenada. Com vetores, existe outra forma de pensar nele: **saia de $A$
 e ande metade do caminho até $B$.**
 
 O caminho inteiro de $A$ até $B$ é o vetor $\overrightarrow{AB}$. Metade dele é
-$\frac{1}{2}\overrightarrow{AB}$. Somar um vetor a um ponto quer dizer andar
-aquele deslocamento a partir do ponto: soma-se coordenada a coordenada, como
-na soma de vetores. Então
+$\frac{1}{2}\overrightarrow{AB}$. E, pela lição [Vetores](./vetores), somar um
+vetor a um ponto é andar aquele deslocamento a partir do ponto, coordenada a
+coordenada. Então
 
 $$
 M = A + \tfrac{1}{2}\overrightarrow{AB}.
 $$
+
+Na figura, o controle escolhe a fração $t$ do caminho, e o ponto $T$ fica na
+ponta da seta laranja, $A + t\overrightarrow{AB}$. Ao aparecer, o $t$ vai
+sozinho de 0 até $\frac{1}{2}$.
+
+<PathFraction />
 
 Com os números da pergunta de resgate 3, $A = (2,\ 2)$ e $B = (11,\ 7)$:
 
@@ -637,36 +781,31 @@ $$
 coordenada, $x_1 + \frac{1}{2}(x_2 - x_1)$ distribui em
 $x_1 + \frac{x_2}{2} - \frac{x_1}{2}$, que é $\frac{x_1 + x_2}{2}$, a média.
 
-A forma com vetores tem uma vantagem. Ela responde perguntas que a média não
-responde. Onde fica o ponto a **um terço** do caminho de $A$ até $B$? Para
-responder, troque $\frac{1}{2}$ por $\frac{1}{3}$ na mesma conta:
+A forma com vetores tem uma vantagem: ela responde perguntas que a média não
+responde. Onde fica o ponto a **um terço** do caminho de $A$ até $B$? Antes da
+conta, a previsão: um terço de 9 é 3, então $T$ deve ficar 3 à direita de
+$A$, em $x = 5$, um pouco antes do ponto médio. Agora troque $\frac{1}{2}$ por
+$\frac{1}{3}$ na mesma conta:
 
 $$
-T = A + \tfrac{1}{3}\overrightarrow{AB} = (2,\ 2) + \left(3,\ \tfrac{5}{3}\right) = \left(5,\ \tfrac{11}{3}\right).
+T = A + \tfrac{1}{3}\overrightarrow{AB} = (2,\ 2) + \left(3,\ \tfrac{5}{3}\right) = \left(5,\ \tfrac{11}{3}\right) \approx (5;\ 3{,}67).
 $$
 
-<CartesianPlane
-  xMin={-1} xMax={12} yMin={-1} yMax={8}
-  xUnit={32}
-  segments={[
-    {from: [2, 2], to: [11, 7], arrow: true, tone: 1, label: '\\overrightarrow{AB}', dx: 66, dy: -69},
-    {from: [2, 2], to: [5, 3.6667], arrow: true, tone: 2, label: '\\tfrac{1}{3}\\overrightarrow{AB}', dx: 14, dy: 24},
-  ]}
-  points={[
-    {at: [2, 2], label: 'A', tone: 1, dx: -14, dy: -6},
-    {at: [11, 7], label: 'B', tone: 1, dx: 14, dy: -6},
-    {at: [6.5, 4.5], label: 'M', tone: 3, dx: -4, dy: -18},
-    {at: [5, 3.6667], label: 'T', tone: 2, dx: -10, dy: -16},
-  ]}
-  caption="De A até B: o ponto médio M fica a metade do vetor AB a partir de A, e o ponto T fica a um terço."
-/>
-
-Confira que $T$ está no segmento. A distância de $A$ até $B$ é
-$\sqrt{81 + 25} = \sqrt{106}$, e a distância de $A$ até $T$ é o módulo de
-$\left(3,\ \frac{5}{3}\right)$, que pela regra do módulo vale
+Confira que $T$ está a um terço do caminho. A distância de $A$ até $B$ é
+$\sqrt{81 + 25} = \sqrt{106}$. A distância de $A$ até $T$ é o módulo de
+$\frac{1}{3}\overrightarrow{AB}$, que pela regra do módulo vale
 $\frac{1}{3}\sqrt{106}$: exatamente um terço do caminho.
 
-## 13. As propriedades das contas com vetores
+<details>
+<summary>Confira: onde fica o ponto a dois terços do caminho de A = (2, 2) até B = (11, 7)?</summary>
+
+$A + \frac{2}{3}\overrightarrow{AB} = (2,\ 2) + \left(6,\ \frac{10}{3}\right) =
+\left(8,\ \frac{16}{3}\right) \approx (8;\ 5{,}33)$. Leve o controle a
+$t = 2/3$ e confira.
+
+</details>
+
+## As contas com vetores herdam as propriedades dos números
 
 As contas com números obedecem a propriedades: comutativa, associativa,
 distributiva, elemento neutro. As contas com vetores obedecem às mesmas, e
@@ -675,7 +814,7 @@ coordenada**, e em cada coordenada a conta é uma conta com números.
 
 | Propriedade | Com vetores | O que o desenho diz |
 |---|---|---|
-| comutativa | $\vec{u} + \vec{v} = \vec{v} + \vec{u}$ | os dois caminhos do paralelogramo chegam ao mesmo ponto |
+| comutativa | $\vec{u} + \vec{v} = \vec{v} + \vec{u}$ | os dois caminhos do paralelogramo chegam ao mesmo canto |
 | associativa | $(\vec{u} + \vec{v}) + \vec{w} = \vec{u} + (\vec{v} + \vec{w})$ | três trechos seguidos chegam ao mesmo lugar, agrupados como for |
 | neutro | $\vec{v} + \vec{0} = \vec{v}$ | ficar parado não muda o deslocamento |
 | oposto | $\vec{v} + (-\vec{v}) = \vec{0}$ | ir e voltar deixa você onde estava |
@@ -689,29 +828,29 @@ $k \times u_1 + k \times v_1$. Essas duas expressões são iguais pela
 distributiva dos **números**. Na segunda coordenada acontece a mesma coisa.
 Como as duas coordenadas coincidem, os vetores são iguais.
 
-Confira com números: $\vec{u} = (2,\ 1)$, $\vec{v} = (1,\ 2)$ e $k = 2$. Do
-lado esquerdo, $2 \times (3,\ 3) = (6,\ 6)$. Do lado direito,
+O desenho dessa distributiva é um triângulo ampliado. As setas $\vec{u}$,
+$\vec{v}$ e $\vec{u} + \vec{v}$ formam um triângulo (o sombreado). Multiplicar
+as três por $k$ dá um triângulo com os três lados multiplicados por $k$ e os
+mesmos ângulos: um triângulo **semelhante** ao primeiro, como em
+[Semelhança](./semelhanca). Arraste o $k$ e veja que a ponta de
+$k\vec{u} + k\vec{v}$ cai sempre na ponta de $k(\vec{u} + \vec{v})$.
+
+<ScaledSumTriangle />
+
+Confira com os números da figura: $\vec{u} = (2,\ 1)$, $\vec{v} = (1,\ 2)$ e
+$k = 2$. Do lado esquerdo, $2 \times (3,\ 3) = (6,\ 6)$. Do lado direito,
 $(4,\ 2) + (2,\ 4) = (6,\ 6)$. ✓
 
-O desenho dessa distributiva é um triângulo ampliado. As setas $\vec{u}$,
-$\vec{v}$ e $\vec{u} + \vec{v}$ formam um triângulo. Multiplicar tudo por 2 dá
-um triângulo com os três lados dobrados, e os mesmos ângulos. É um triângulo
-**semelhante** ao primeiro, como em [Semelhança](./semelhanca):
+<details>
+<summary>Confira: calcule 3(u + v) e 3u + 3v com u = (1, −2) e v = (4, 0).</summary>
 
-<CartesianPlane
-  xMin={-1} xMax={7} yMin={-1} yMax={7}
-  xUnit={38}
-  segments={[
-    {from: [0, 0], to: [2, 1], arrow: true, tone: 1, dashed: true, label: '\\vec{u}', dx: 23, dy: 6},
-    {from: [2, 1], to: [3, 3], arrow: true, tone: 2, dashed: true, label: '\\vec{v}', dx: 16, dy: 2},
-    {from: [0, 0], to: [4, 2], arrow: true, tone: 1, label: '2\\vec{u}', dx: 18, dy: 18},
-    {from: [4, 2], to: [6, 6], arrow: true, tone: 2, label: '2\\vec{v}', dx: 22, dy: 0},
-    {from: [0, 0], to: [6, 6], arrow: true, tone: 3, label: '2(\\vec{u} + \\vec{v})', dx: -46, dy: -10},
-  ]}
-  caption="O triângulo pequeno tem os lados u, v (tracejado) e o trecho da diagonal até (3, 3), que é u + v. O triângulo grande tem os três lados dobrados: 2u, 2v e 2(u + v), que chega a (6, 6)."
-/>
+$\vec{u} + \vec{v} = (5,\ -2)$, e $3 \times (5,\ -2) = (15,\ -6)$. Do outro
+jeito, $3\vec{u} = (3,\ -6)$ e $3\vec{v} = (12,\ 0)$, que somam
+$(15,\ -6)$. Os dois lados dão o mesmo vetor.
 
-## 14. O módulo da soma não é a soma dos módulos
+</details>
+
+## O comprimento da soma não é a soma dos comprimentos
 
 Volte ao barco. O motor tem módulo 8, a correnteza tem módulo 6, e a soma tem
 módulo 10. Em símbolos:
@@ -727,8 +866,16 @@ parte. O barco gasta parte do esforço indo para o leste e parte indo para o
 norte. Por isso ele não se afasta 14 km da partida em uma hora: afasta-se
 10 km.
 
-A pergunta de resgate 5 explica isso por inteiro. No desenho de ponta com
-cauda, $\vec{u}$, $\vec{v}$ e $\vec{u} + \vec{v}$ são os três lados de um
+A figura deita o barco para caber na tela: a seta $\vec{b}$ do motor (8)
+aponta para a direita, e a seta $\vec{c}$ da correnteza (6) sai da ponta dela,
+fazendo o ângulo que você escolher. Embaixo, a régua cinza mede $8 + 6 = 14$ e
+a régua verde mede o comprimento da soma. Leve o ângulo de 0° a 180° e observe
+a régua verde.
+
+<SumLengthAngle />
+
+A pergunta de resgate 5 explica o que a régua mostra. No desenho de ponta com
+cauda, $\vec{b}$, $\vec{c}$ e $\vec{b} + \vec{c}$ são os três lados de um
 triângulo. Pela **desigualdade triangular**, um lado é menor que a soma dos
 outros dois. Então:
 
@@ -736,30 +883,45 @@ outros dois. Então:
 >
 > $$\lVert \vec{u} + \vec{v} \rVert \le \lVert \vec{u} \rVert + \lVert \vec{v} \rVert.$$
 
-Quando vale a igualdade? Quando o triângulo fica achatado sobre uma reta, isto
-é, quando $\vec{u}$ e $\vec{v}$ apontam para o **mesmo lado**. Exemplo: um
-barco que vai para o leste a 8 km/h, com uma correnteza também para o leste a
-6 km/h, anda de fato a 14 km/h. Em qualquer outra situação, o módulo da soma é
-menor.
+Quando vale a igualdade? Quando $\vec{u}$ e $\vec{v}$ apontam para o **mesmo
+lado** (o ângulo 0° da figura). Aí o triângulo fica achatado sobre uma reta, e
+a seta da soma cobre as duas setas, uma depois da outra. Exemplo: um barco que vai para o leste a 8 km/h, com uma correnteza
+também para o leste a 6 km/h, anda de fato a 14 km/h. Em qualquer outra
+situação, o módulo da soma é menor.
 
-E o caso do sentido oposto? Um barco que sobe o rio a 8 km/h contra uma
-correnteza de 6 km/h anda a $8 - 6 = 2$ km/h. Nesse caso, a soma dos vetores
-tem o menor módulo possível para aqueles dois tamanhos.
+E o caso do sentido oposto, o ângulo 180°? Um barco que sobe o rio a 8 km/h
+contra uma correnteza de 6 km/h anda a $8 - 6 = 2$ km/h. O triângulo também
+fica achatado, mas agora a seta $\vec{c}$ volta por cima de $\vec{b}$, e a
+soma mede a diferença dos comprimentos. Nesse caso, a soma dos vetores tem o
+menor módulo possível para aqueles dois comprimentos.
 
-## 15. Exemplos resolvidos
+<details>
+<summary>Confira: duas forças de 30 N e 40 N puxam a mesma caixa. Entre que valores pode ficar a força total?</summary>
+
+O maior valor é $30 + 40 = 70$ N, quando as duas apontam para o mesmo lado. O
+menor é $40 - 30 = 10$ N, quando apontam para lados opostos. Em ângulo reto, o
+total é $\sqrt{30^2 + 40^2} = 50$ N, entre os dois.
+
+</details>
+
+## Exemplos resolvidos
 
 ### Exemplo 1: as quatro contas
 
 Com $\vec{u} = (4,\ -1)$ e $\vec{v} = (-2,\ 3)$, calcule $\vec{u} + \vec{v}$,
 $\vec{u} - \vec{v}$ e $2\vec{u} - 3\vec{v}$.
 
+**Previsão.** $\vec{u}$ aponta para a direita e um pouco para baixo, e
+$\vec{v}$ para a esquerda e para cima. Os passos horizontais se compensam em
+parte, então a primeira coordenada de $\vec{u} + \vec{v}$ deve ficar pequena.
+
 **Solução.** Cada conta é feita coordenada a coordenada.
 
 - $\vec{u} + \vec{v} = (4 + (-2),\ -1 + 3) = (2,\ 2)$.
 - $\vec{u} - \vec{v} = (4 - (-2),\ -1 - 3) = (6,\ -4)$. Cuidado com o sinal:
   subtrair $-2$ é somar 2.
-- Primeiro os múltiplos: $2\vec{u} = (8,\ -2)$ e $3\vec{v} = (-6,\ 9)$. Depois a
-  subtração: $(8 - (-6),\ -2 - 9) = (14,\ -11)$.
+- Primeiro os múltiplos: $2\vec{u} = (8,\ -2)$ e $3\vec{v} = (-6,\ 9)$. Depois
+  a subtração: $(8 - (-6),\ -2 - 9) = (14,\ -11)$.
 
 **Conferência.** Se $\vec{u} - \vec{v} = (6,\ -4)$, então somar $\vec{v}$ de
 volta tem de dar $\vec{u}$: $(6 + (-2),\ -4 + 3) = (4,\ -1)$. ✓
@@ -774,27 +936,34 @@ Cada uma puxa com 50 N. a) Qual é a força total sobre a caixa, e qual é o
 módulo dela? b) Que força uma terceira pessoa precisaria fazer para a caixa
 ficar parada?
 
+**Previsão.** As duas cordas não apontam para o mesmo lado: a primeira puxa
+para cima e a segunda um pouco para baixo. Pela desigualdade triangular, o
+total deve ficar abaixo de $50 + 50 = 100$ N.
+
 **Solução.** a) Forças que agem juntas se somam:
 $\vec{F}_1 + \vec{F}_2 = (78,\ 26)$. O módulo é
 $\sqrt{78^2 + 26^2} = \sqrt{6084 + 676} = \sqrt{6760} \approx 82{,}2$ N.
 
-Confira primeiro os 50 N de cada um: $\sqrt{30^2 + 40^2} = \sqrt{2500} = 50$ e
+Confira os 50 N de cada um: $\sqrt{30^2 + 40^2} = \sqrt{2500} = 50$ e
 $\sqrt{48^2 + 14^2} = \sqrt{2304 + 196} = \sqrt{2500} = 50$. As duas pessoas
-fazem 50 N cada, mas o total é cerca de 82,2 N, e não 100 N. As cordas
-apontam para direções diferentes, e parte do esforço de uma se perde contra o
-da outra: a primeira puxa para cima, a segunda puxa um pouco para baixo.
+fazem 50 N cada, mas o total é cerca de 82,2 N, e não 100 N, como a previsão
+indicou.
 
 b) A caixa fica parada quando a soma de todas as forças é o vetor nulo. A
 terceira força $\vec{F}_3$ precisa cumprir
-$\vec{F}_1 + \vec{F}_2 + \vec{F}_3 = \vec{0}$, ou seja,
+$\vec{F}_1 + \vec{F}_2 + \vec{F}_3 = \vec{0}$. Somando o oposto de
+$\vec{F}_1 + \vec{F}_2$ aos dois lados, fica
 $\vec{F}_3 = -(\vec{F}_1 + \vec{F}_2) = (-78,\ -26)$. É o oposto da força
-total: o mesmo tamanho, cerca de 82,2 N, no sentido contrário.
+total: o mesmo comprimento, cerca de 82,2 N, no sentido contrário.
 
 ### Exemplo 3: completar um vetor paralelo
 
 *Pause e tente antes de ler a solução.*
 
 Para que valor de $k$ o vetor $(k,\ 6)$ é paralelo a $(2,\ 3)$?
+
+**Previsão.** A segunda coordenada passou de 3 para 6, o dobro. Se os vetores
+são paralelos, a primeira coordenada também dobra: deve dar 4.
 
 **Solução.** Paralelo quer dizer múltiplo: $(k,\ 6) = t \times (2,\ 3)$ para
 algum número $t$. A segunda coordenada decide o $t$: $6 = 3t$ dá $t = 2$. Com
@@ -810,6 +979,11 @@ batem: $\frac{4}{2} = 2$ e $\frac{6}{3} = 2$. ✓
 O robô do depósito tem os motores $\vec{u} = (2,\ 1)$ e $\vec{v} = (1,\ 3)$.
 Quantas voltas de cada motor levam o robô da origem até $(1,\ 8)$?
 
+**Previsão.** O ponto $(1,\ 8)$ fica muito para cima e pouco para a direita. O
+motor $\vec{v}$, que sobe 3 por volta, deve fazer quase todo o trabalho. Mas
+ele também anda 1 para a direita a cada volta. Por isso o motor $\vec{u}$
+talvez precise girar ao contrário, para desfazer esse excesso para a direita.
+
 **Solução.** Procuramos $a$ e $b$ com $a(2,\ 1) + b(1,\ 3) = (1,\ 8)$.
 Comparando as coordenadas:
 
@@ -824,10 +998,12 @@ Da primeira, $b = 1 - 2a$. Trocando na segunda: $a + 3(1 - 2a) = 8$, isto é,
 $a + 3 - 6a = 8$, ou $-5a = 5$. Então $a = -1$ e $b = 1 - 2 \times (-1) = 3$.
 
 O coeficiente $a = -1$ diz que o primeiro motor gira **uma volta ao
-contrário**, levando o robô no sentido de $-\vec{u}$.
+contrário**, levando o robô no sentido de $-\vec{u}$, como a previsão
+indicou.
 
 **Conferência.** $-1 \times (2,\ 1) + 3 \times (1,\ 3) = (-2,\ -1) + (3,\ 9) =
-(1,\ 8)$. ✓
+(1,\ 8)$. ✓ Na figura do robô, a receita $a = -1$ e $b = 3$ leva a seta verde
+até o ponto $(1,\ 8)$.
 
 ### Exemplo 5: dividir uma rota em partes iguais
 
@@ -836,6 +1012,10 @@ contrário**, levando o robô no sentido de $-\vec{u}$.
 Uma rota reta vai de $A = (-1,\ 2)$ a $B = (8,\ -4)$, em quilômetros. Dois
 postos de abastecimento vão ser instalados de modo a dividir a rota em três
 trechos iguais. Onde ficam os postos?
+
+**Previsão.** A rota anda 9 para a direita e 6 para baixo. Cada terço anda
+3 para a direita e 2 para baixo, então o primeiro posto deve ficar perto de
+$(2,\ 0)$.
 
 **Solução.** O caminho inteiro é $\overrightarrow{AB} = (8 - (-1),\ -4 - 2) =
 (9,\ -6)$. Um terço dele é $\frac{1}{3}\overrightarrow{AB} = (3,\ -2)$.
@@ -849,7 +1029,7 @@ trechos iguais. Onde ficam os postos?
 (3,\ -2)$, o mesmo terço. Os três trechos são o mesmo vetor $(3,\ -2)$, e por
 isso têm o mesmo comprimento. ✓
 
-## 16. Erros comuns
+## Erros comuns
 
 > **Erro 1: somar os módulos.** $\lVert \vec{u} + \vec{v} \rVert$ não é
 > $\lVert \vec{u} \rVert + \lVert \vec{v} \rVert$. Teste com o barco:
@@ -860,25 +1040,31 @@ isso têm o mesmo comprimento. ✓
 > $(3 + 1,\ 4 + 2) = (4,\ 6)$. Somar a primeira coordenada com a segunda,
 > como em $(3 + 4,\ 1 + 2)$, junta leste com norte.
 
-> **Erro 3: desenhar a subtração ao contrário.** Com $\vec{u}$ e $\vec{v}$
+> **Erro 3: desenhar a soma ligando as duas pontas.** Com $\vec{u}$ e
+> $\vec{v}$ saindo do mesmo ponto, a seta que liga as pontas é uma
+> **diferença**. A soma é a outra diagonal do paralelogramo, a que sai do
+> ponto comum. Teste com $(3,\ 1)$ e $(1,\ 2)$: a soma é $(4,\ 3)$, e a seta
+> entre as pontas é $(3,\ 1) - (1,\ 2) = (2,\ -1)$.
+
+> **Erro 4: desenhar a subtração ao contrário.** Com $\vec{u}$ e $\vec{v}$
 > saindo da origem, $\vec{u} - \vec{v}$ vai **da ponta de $\vec{v}$ para a
 > ponta de $\vec{u}$**. Teste: $\vec{v} + (\vec{u} - \vec{v})$ tem de dar
 > $\vec{u}$. A seta no sentido oposto é $\vec{v} - \vec{u}$.
 
-> **Erro 4: multiplicar só uma coordenada.** $3 \times (2,\ 1)$ é $(6,\ 3)$,
+> **Erro 5: multiplicar só uma coordenada.** $3 \times (2,\ 1)$ é $(6,\ 3)$,
 > e não $(6,\ 1)$. Se o número multiplica só uma coordenada, a seta muda de
 > direção, e o resultado deixa de ser paralelo ao vetor original.
 
-> **Erro 5: módulo negativo.** $\lVert -2\vec{v} \rVert$ é
+> **Erro 6: módulo negativo.** $\lVert -2\vec{v} \rVert$ é
 > $2\lVert \vec{v} \rVert$, e não $-2\lVert \vec{v} \rVert$. O sinal de menos
 > inverte o sentido da seta; o comprimento continua positivo. A regra usa
 > $\lvert k \rvert$.
 
-> **Erro 6: concluir que são paralelos olhando uma coordenada só.**
+> **Erro 7: concluir que são paralelos olhando uma coordenada só.**
 > $(4,\ 5)$ e $(2,\ 3)$ têm a primeira coordenada dobrada, mas a segunda não.
 > O mesmo número precisa servir para as duas coordenadas ao mesmo tempo.
 
-## 17. Perguntas de verificação
+## Perguntas de verificação
 
 1. Por que a soma de vetores é feita coordenada a coordenada, e não
    misturando as coordenadas?
@@ -890,7 +1076,7 @@ isso têm o mesmo comprimento. ✓
 5. Por que o barco não anda a 14 km/h?
 6. Quando $\lVert \vec{u} + \vec{v} \rVert$ é igual a
    $\lVert \vec{u} \rVert + \lVert \vec{v} \rVert$?
-7. O que a regra “chegada menos partida”, $\overrightarrow{AB} = B - A$, tem a
+7. O que a regra “chegada menos saída”, $\overrightarrow{AB} = B - A$, tem a
    ver com a subtração de vetores?
 8. Por que achar os coeficientes de uma combinação linear leva a um sistema
    de duas equações?
@@ -904,8 +1090,8 @@ isso têm o mesmo comprimento. ✓
    coordenadas seria somar um passo para o leste com um passo para o norte.
 2. Porque o paralelogramo é formado pelos dois caminhos de ponta com cauda:
    $\vec{u}$ depois $\vec{v}$, por um lado, e $\vec{v}$ depois $\vec{u}$, pelo
-   outro. Os dois caminhos chegam ao mesmo vértice, e a diagonal liga o começo
-   a esse vértice.
+   outro. Os dois caminhos chegam ao mesmo canto, e a diagonal liga o começo a
+   esse canto.
 3. Porque $\vec{u} - \vec{v}$ é o que falta somar a $\vec{v}$ para chegar a
    $\vec{u}$. Partindo da origem, quem anda $\vec{v}$ para na ponta de
    $\vec{v}$. De lá, precisa ir até a ponta de $\vec{u}$. A seta desse trecho
@@ -930,7 +1116,7 @@ isso têm o mesmo comprimento. ✓
 
 </details>
 
-## 18. Exercícios
+## Exercícios
 
 ### 1. Reconhecimento
 
@@ -1031,9 +1217,9 @@ módulo: $\lVert \vec{b} \rVert = 10$, ou seja, $p^2 + q^2 = 100$.
    $3 + 1 = 4$ para o leste e $1 + 2 = 3$ para o norte. Um único deslocamento
    de $(4,\ 3)$ leva ao mesmo lugar.
 4. Ela só está certa quando as duas forças apontam para o mesmo lado. Em
-   qualquer outro caso, as forças apontam em direções diferentes, o total é a
-   soma dos **vetores**, e o módulo dessa soma é menor que 100 N. No
-   Exemplo 2, duas forças de 50 N somaram cerca de 82,2 N.
+   qualquer outro caso, o total é a soma dos **vetores**, e o módulo dessa
+   soma fica abaixo de 100 N. No Exemplo 2, duas forças de 50 N somaram cerca
+   de 82,2 N. Em sentidos opostos, uma anula a outra, e o total é 0 N.
 5. a) $(2,\ 2)$ &nbsp; b) $(4,\ -6)$ &nbsp; c) $(9,\ -6)$ &nbsp;
    d) $(6,\ -4) + (-3,\ 12) = (3,\ 8)$ &nbsp;
    e) $(-3,\ 2) + (-0{,}5;\ 2) = (-3{,}5;\ 4)$. Se no b) você encontrou
@@ -1092,7 +1278,7 @@ módulo: $\lVert \vec{b} \rVert = 10$, ou seja, $p^2 + q^2 = 100$.
     depois $\vec{v}$” percorre dois lados do paralelogramo, e o caminho
     “$\vec{v}$ depois $\vec{u}$” percorre os outros dois. Lados opostos de um
     paralelogramo são setas iguais, então os dois caminhos chegam ao mesmo
-    vértice. As duas somas são a mesma seta: a diagonal.
+    canto. As duas somas são a mesma seta: a diagonal.
 
 **Se sua resposta não bateu:**
 
@@ -1103,20 +1289,20 @@ quadrados **antes** de tirar a raiz.
 
 </details>
 
-## 19. Revisão curta
+## Revisão curta
 
 - A **soma** de dois vetores é o deslocamento único que equivale a fazer um e
   depois o outro. Ela é feita **coordenada a coordenada**:
   $(u_1,\ u_2) + (v_1,\ v_2) = (u_1 + v_1,\ u_2 + v_2)$.
 - No desenho: **ponta com cauda** (a segunda seta começa onde a primeira
-  termina) ou **paralelogramo** (as duas saem do mesmo ponto, a soma é a
-  diagonal). Os dois desenhos dão a mesma seta.
+  termina) ou **paralelogramo** (as duas saem do mesmo ponto, e a soma é a
+  diagonal que sai desse ponto). Os dois desenhos dão a mesma seta.
 - A **subtração** $\vec{u} - \vec{v}$ é somar o oposto. No desenho, vai da
-  ponta de $\vec{v}$ até a ponta de $\vec{u}$. A regra
+  ponta de $\vec{v}$ até a ponta de $\vec{u}$: é o que falta andar. A regra
   $\overrightarrow{AB} = B - A$ é uma subtração de vetores.
 - **Número vezes vetor** multiplica as duas coordenadas. Estica ou encolhe a
-  seta, e inverte o sentido quando o número é negativo. O módulo fica
-  multiplicado por $\lvert k \rvert$.
+  seta, e inverte o sentido quando o número é negativo, sem tirá-la da reta. O
+  módulo fica multiplicado por $\lvert k \rvert$.
 - Dois vetores são **paralelos** quando um é múltiplo do outro.
 - Uma **combinação linear** $a\vec{u} + b\vec{v}$ é uma receita. Achar os
   coeficientes que produzem um vetor dado é resolver um sistema.
@@ -1129,5 +1315,5 @@ quadrados **antes** de tirar a raiz.
 Até aqui, cada vetor foi dado pelas coordenadas. Mas no mundo real é comum
 conhecer um vetor de outro jeito: “500 km/h numa direção 30° acima do leste”.
 A próxima lição, [Módulo, direção e componentes](./modulo-direcao-e-componentes),
-mostra como passar desse tamanho e ângulo para as coordenadas e de volta —
-com o seno e o cosseno que você já conhece.
+mostra como passar desse tamanho e ângulo para as coordenadas e de volta, com
+o seno e o cosseno que você já conhece.

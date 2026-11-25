@@ -96,11 +96,90 @@ import AreaModel from '@site/src/components/AreaModel';
 | teste da reta horizontal no seno; trechos candidatos para inverter; nome de cada solução (α, π − α, voltas) | `HorizontalLineSine` (interativo) |
 | onde cada inversa procura a resposta no ciclo: metade direita (arcsen, arctg) ou de cima (arccos) | `InverseCycle` (interativo e animado) |
 | o gráfico da inversa como o trecho guardado dobrado sobre y = x (arcsen, arccos, arctg) | `InverseReflect` (animado) |
+| caixote na rampa: o peso se reparte em P sen θ (ao longo) e P cos θ (contra a rampa); `solved` mostra os valores | `RampForces` (animado) |
+| relação fundamental como identidade: cos² + sen² termina sempre no 1; cos + sen anda com o giro | `IdentityBars` (interativo e animado) |
+| um seno, dois pontos do ciclo: a relação dá o tamanho do cosseno, o quadrante dá o sinal | `SameSinePoints` (interativo) |
+| secante e cossecante como 1 dividido por cosseno e seno: nunca no meio da faixa de −1 a 1, no máximo numa ponta | `ReciprocalLine` (interativo) |
+| dividir a relação por cos² (ou sen²) é ampliar o triângulo do ciclo até x = 1 (ou y = 1): 1 + tg² = sec², 1 + cotg² = cossec² | `ReciprocalTriangle` (interativo e animado) |
+| dois giros seguidos: a subida do segundo depende de onde ele começa; barras "somando" × "de verdade" contra a linha do comprimento do braço | `AngleSumRise` (animado; interativo com `sliders`) |
+| de onde vêm as parcelas de $\sen(a \pm b)$ e $\cos(a \pm b)$: o triângulo do ângulo $b$ girado de $a$, cada cateto separado em vertical e horizontal, régua que empilha as parcelas; giro para trás (`backward`), arco duplo (`double`) | `AngleSumRotation` (animado e interativo) |
+| as três escritas de $\cos 2a$ como três caminhos na reta numérica que chegam ao mesmo ponto | `DoubleCosineRoutes` (interativo) |
+| $A\sen x + B\cos x$ é uma onda só, $R\sen(x+\varphi)$: o ponto $(A, B)$ dá $R$ e $\varphi$, e a soma cai sobre a onda | `SineCosineCombo` (interativo) |
+| roda-gigante de $h(t) = 25 - 20\cos(\pi t)$ com o gráfico na mesma escala: instantes numa altura (`showTimes`) e trechos acima dela (`band`) | `TrigEqWheel` (interativo e animado) |
+| isolar a função trigonométrica como desfazer a receita, da última conta para a primeira; para na camada do cosseno | `TrigEqLayers` (animado) |
+| a reta da equação no ciclo: horizontal (seno), vertical (cosseno) ou de O até T (tangente); dois giros espelhados, um, ou nenhum fora de [−1, 1] | `TrigEqCycleLine` (interativo) |
+| os dois encontros da primeira volta copiados uma volta para cada lado, com a tabela de k | `TrigEqCopies` (animado) |
+| busca dos k cujas soluções caem num intervalo, com registro das tentativas e contagem | `TrigEqInterval` (interativo, busca) |
+| sen(2x) = 1/2: o giro u = 2x anda duas voltas, e cada encontro desce até u/2 | `TrigEqArgument` (animado) |
+| equação do 2º grau em sen x: cada raiz u vira uma reta horizontal no ciclo; u fora da faixa não dá ângulo | `TrigEqRoots` (animado, com botões por equação) |
 | cilindro, cone, esfera, bloco — volume e superfície | `SolidFigure` |
 | volume do cilindro e do cone, efeito do $r^2$ contra o da altura | `CylinderConeExplorer` (interativo) |
 | secante girando na direção da tangente, derivada como limite | `TangentExplorer` (interativo) |
 | área sob a curva por retângulos, soma de Riemann, integral | `RiemannSum` |
 | vetor como seta no plano, soma de vetores, decomposição | `CartesianPlane` com `segments` de `arrow: true` |
+| quatro corridas soltas ao mesmo tempo (`mode="routes"`); as setas deslizam até uma saída comum e as iguais caem uma sobre a outra (`mode="compare"`) | `DeliveryVectors` (animado) |
+| “ande 5 quarteirões”: setas de comprimento 5 em todas as direções, pontas numa circunferência | `FiveBlocksCircle` (animado) |
+| a mesma seta deslizando pelo plano sem girar; ponto × vetor com os mesmos números; chegada = saída + vetor | `VectorSlide` (interativo e animado) |
+| dois números guardam a seta: anda $a$ na horizontal, depois $b$ na vertical, e o sinal vira lado | `VectorSteps` (animado, com botões) |
+| $\overrightarrow{AB} = B - A$: o caminho de A até B em dois trechos, e o sentido trocado | `VectorBetween` (animado, com botões) |
+| módulo pelo Pitágoras com coordenadas negativas; seta × caminho em “L” | `VectorLength` (interativo) |
+| vetor nulo: a volta no quarteirão, caminho andado × deslocamento | `ZeroTrip` (animado) |
+| vetor oposto: a cópia que gira meia volta; contraexemplo que troca um sinal só | `OppositeVector` (animado) |
+| o barco atravessa o rio com motor e correnteza agindo juntos: a trilha inclinada e o ponto “sem correnteza” | `BoatCurrent` (animado) |
+| soma por ponta com cauda: u, depois v a partir da ponta de u, e a seta da saída até a chegada | `TipToTail` (animado) |
+| por que a soma é coordenada a coordenada: os passos horizontais e verticais deslizam até duas faixas e se encostam | `SumByAxis` (animado, com pares de vetores nos botões) |
+| regra do paralelogramo e comutativa: as cópias de v e de u deslizam e fecham no mesmo canto | `SumParallelogram` (animado) |
+| subtração: a seta da ponta de v até a ponta de u, a cópia na origem e a leitura u + (−v); com `tips`, AB = B − A | `VectorDifference` (animado) |
+| número vezes vetor: k estica, encolhe ou vira a seta na reta de v; com `targets`, a busca por múltiplos (paralelos) | `ScaleVector` (interativo, com passeio inicial do k) |
+| combinação linear como receita: voltas de dois motores, malha das receitas inteiras, registro das receitas que acertam o alvo | `RobotRecipe` (interativo e animado) |
+| andar uma fração t do caminho: T = A + t·AB, ponto médio em t = 1/2 | `PathFraction` (interativo) |
+| distributiva k(u + v) = ku + kv como triângulo ampliado, semelhante ao original | `ScaledSumTriangle` (interativo) |
+| comprimento da soma contra a soma dos comprimentos: ângulo entre b (8) e c (6), réguas de 14 e de ‖b + c‖ | `SumLengthAngle` (interativo) |
+| o avião e o vento: uma hora de voo em que o vento arrasta o avião para fora da direção do nariz; a resolução por decompor, somar e recompor | `PlaneWind` (animado) |
+| a mesma instrução por coordenadas (andar em L) e por tamanho e ângulo (linha reta) | `TwoRoutes` (animado) |
+| o ângulo do vetor: o giro a partir do semieixo x positivo, a reta da direção, o ângulo de referência como contraexemplo | `VectorAngleDial` (interativo e animado) |
+| todo vetor é um ponto do ciclo esticado: $r(\cos\theta,\ \sen\theta)$ | `StretchedCycle` (interativo e animado) |
+| componentes como sombras com sinal nos eixos; o triângulo retângulo que dá só o tamanho (`triangle`) | `ComponentShadows` (interativo) |
+| a divisão b/a enxerga a reta e não o lado: o arco tangente e a meia volta; tabela de vetores anotados (`record`) | `ArctanHalfTurn` (interativo e animado) |
+| normalizar: a seta encolhe (ou estica) até o ciclo; o erro de dividir pela soma das coordenadas | `NormalizeShrink` (animado, com botões de vetor) |
+| carrinho puxado rampa acima: a corda desalinhada da rampa (`mode="question"`); a força dividida em parte útil e parte perpendicular, com o ângulo da corda num controle (`mode="solved"`) | `RampPull` (animado; interativo no modo resolvido) |
+| produto escalar como a conta da nota de compra: par com par, depois a soma; trocar as colunas (comutativa) e dobrar uma lista | `DotPairs` (animado, com botões) |
+| sinal do produto escalar: u parado, v nos controles, a reta perpendicular a u dividindo o plano; com `readout="angle"`, o ângulo pelo arco cosseno | `DotSignExplorer` (interativo) |
+| girar as duas setas juntas não muda o produto; no fim v deita no eixo e sobra sombra × tamanho; controles de tamanhos e ângulos com as duas contas lado a lado | `DotRotateInvariant` (animado e interativo) |
+| produto escalar como sombra de u sobre a reta de v vezes o tamanho de v; sombra negativa com ângulo obtuso | `DotShadow` (interativo) |
+| produto zero é ângulo reto: uma cópia de (2, 3) gira um quarto de volta e o produto cai de 13 a 0; contraexemplo (−2, 3) | `PerpTurn` (animado) |
+| regra $m_1 \times m_2 = -1$ como produto escalar das direções $(1,\ m)$; reta horizontal e vertical | `SlopeDirections` (interativo) |
+| tamanho da soma e o dobro do produto: barco de 8 km/h e correnteza de 6 km/h com o ângulo num controle (10 com 90°, 14 com 0°, 2 com 180°) | `DotSumLength` (interativo) |
+| a busca do ponto mais perto numa reta: emenda arrastada pela estrada, ramal medido, tabela de tentativas; a resolução com o pé H, o ângulo reto e a comparação por Pitágoras (`mode="solved"`) | `CableSearch` (interativo, com registro) |
+| o gesto da projeção: da ponta de v desce a linha em ângulo reto, a sombra cresce até o pé, a linha vira o resto | `ProjectionDrop` (animado) |
+| o ângulo entre v e u decide o lado da sombra; o tamanho com sinal da sombra calculado por ‖v‖ cos θ e por (v · u)/‖u‖ (`show="comp"`) | `ProjectionExplorer` (deslizante) |
+| a sombra como tamanho vezes direção: u encolhe até o unitário e estica até a sombra; o erro de dividir só uma vez por ‖u‖ (`error`) | `ProjectionBuild` (animado) |
+| o número k conta quantos u cabem na sombra: cópias de u encostadas como régua | `ProjectionRuler` (animado, com botões de caso) |
+| só o k da fórmula deixa o resto em ângulo reto; Pitágoras só vale para partes perpendiculares (`pythagoras`) | `ResidualSlider` (deslizante) |
+| só a direção de u importa: c u estica, encolhe ou vira, e a sombra fica parada; c = 0 sem reta | `ProjectionScale` (deslizante) |
+| o ponto da reta mais perto de P: AP, a sombra a partir de A, o pé H e a distância; o erro de projetar o próprio P (`error`); outro ponto Q e Pitágoras (`compare`) | `PointToLine` (animado) |
+| duas rotas com tempo: as rotas crescendo (`routes`), um controle por drone para achar o cruzamento (`places`), um controle só para ver se batem (`meeting`) | `DroneRoutes` (animado e interativo) |
+| a reta como caminhada A + t·d: passos inteiros, fracionários e negativos; o botão da semirreta | `LineWalker` (animado e interativo) |
+| o teste de pertencer: cada coordenada da seta AX pede um número de passos; se combinam, o ponto está na reta | `LineReach` (busca com registro) |
+| as paramétricas como duas sombras, uma em cada eixo, cada uma com o seu passo | `ParametricShadows` (animado e interativo) |
+| a mesma reta com outra receita (outro ponto de partida, outro diretor) e o contraexemplo | `SameLineRecipes` (interativo) |
+| a inclinação vem do diretor: escadinha de a na horizontal e b na vertical; a = 0 é vertical | `SlopeSteps` (interativo) |
+| o vetor normal: a seta entre dois pontos da reta faz produto escalar zero com (a, b) | `NormalVector` (interativo) |
+| a reta por um ponto e pelo normal; o sinal do produto escalar diz o lado | `NormalSide` (interativo) |
+| a distância se mede na direção do normal, qualquer que seja o ponto A da reta | `DistanceAlongNormal` (animado e interativo) |
+| a conta ax + by + c como régua: paralelas a cada \|n\| de conta ficam a 1 de distância | `LevelLines` (interativo) |
+| o ponto da rota mais perto de um lugar: produto escalar com o diretor negativo, zero, positivo | `ClosestOnRoute` (animado e interativo) |
+| cena 3D montada peça a peça (setas, pontos, caixas, polígonos, ângulo reto, arco), girável em torno de z | `SpaceScene` |
+| o endereço (x, y, z) percorrido em três movimentos, com zeros e coordenada negativa | `SpaceWalk` |
+| dois pontos diferentes que caem no mesmo lugar do papel; caixa e mesa giratória | `DepthTwins` |
+| Pitágoras duas vezes: diagonal do chão, depois o triângulo em pé | `FloorThenUp` |
+| a vertical perpendicular a toda linha do chão (esquadro girando em volta do poste) | `PoleSquare` |
+| diagonal da caixa contra o caminho pelas arestas, com deslizantes | `BoxDiagonalExplorer` |
+| o mesmo vetor do espaço desenhado em dois lugares (cópia que desliza) | `SpaceVectorSlide` |
+| soma de vetores no espaço, ponta com cauda, e 2u | `SpaceTipToTail` |
+| dois vetores do espaço cabem numa folha plana: a folha gira até ficar de frente | `SheetFlatten` |
+| ângulo entre arestas e diagonais de um cubo, pelo produto escalar | `CubeAngles` |
+| o drone do depósito (motivador da 7.34 e a resolução) | `DroneFlight` |
 | matriz 2×2 como transformação: malha antes e depois, colunas = imagens de $\vec{e}_1$ e $\vec{e}_2$ | `LinearMap` |
 | ponto e vetor no espaço, eixos $x$, $y$, $z$, a “caixa” das coordenadas | `Space3D` |
 | tabela de padrão (entrada → saída, ciclos, crescimento) | tabela markdown |
@@ -1276,6 +1355,312 @@ se fecha, e a volta pelo mesmo caminho faz ele parecer uma linha aberta. O
 ponto marcado foi escolhido longe da reta $y = x$; um ponto perto dela (como
 $(\frac{\pi}{6}; 0{,}5)$) fica escondido pela própria imagem.
 
+## RampForces
+
+Caixote numa rampa com a inclinação de verdade (`sinValue`). A animação faz o
+peso P (verde) crescer e se repartir nas duas componentes (laranja); as
+tracejadas fecham o retângulo, e o ângulo θ aparece também entre P e a
+componente perpendicular. Lição 7.25.
+
+```mdx
+<RampForces />
+<RampForces solved />
+```
+
+| Prop | O que faz |
+|---|---|
+| `weight` | peso em `unit` (padrão 80) |
+| `sinValue` | seno da inclinação (padrão 0,28) |
+| `unit` | unidade do peso (padrão `kgf`) |
+| `solved` | rótulos com os valores, cos θ calculado pela relação fundamental |
+| `caption` | legenda |
+
+## IdentityBars
+
+Ciclo com o triângulo de P (cosseno verde, seno laranja, raio azul) ao lado de
+duas réguas na mesma escala. Em cima, os quadrados empilhados: cos²θ + sen²θ
+termina sempre no 1. Embaixo, cos θ + sen θ como duas setas com sinal: o ponto
+final anda e só cai no 1 em 0° e 90°. Ao aparecer, o giro varre de 0° até
+`initial`. Lição 7.25.
+
+```mdx
+<IdentityBars />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | giro final da animação e valor inicial do deslizante (padrão 300) |
+| `duration` | duração da varredura, em segundos (padrão 5) |
+| `caption` | legenda |
+
+## SameSinePoints
+
+A reta horizontal y = s corta o ciclo em dois pontos de mesmo seno; os
+segmentos verdes mostram cossenos de mesmo tamanho e sinais contrários, e o
+painel faz cos² = 1 − s² e diz o quadrante de cada ponto. Lição 7.25.
+
+```mdx
+<SameSinePoints initial={0.28} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | altura inicial da reta, entre −1 e 1 (padrão 0,28) |
+| `caption` | legenda |
+
+## ReciprocalLine
+
+Régua de −4 a 4 com o cosseno (verde) e a secante (azul), ou o seno (laranja)
+e a cossecante, com a faixa de −1 a 1 sombreada. Botões trocam entre secante e
+cossecante; quando a recíproca passa do fim da régua, uma seta avisa, e com o
+denominador zero o painel diz “não existe”. Lição 7.25.
+
+```mdx
+<ReciprocalLine initial={60} fn="cos" />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | giro inicial em graus (padrão 60) |
+| `fn` | `'cos'` (secante) ou `'sen'` (cossecante) no começo |
+| `caption` | legenda (o padrão acompanha o modo) |
+
+## ReciprocalTriangle
+
+O triângulo do ciclo (cos θ, sen θ, 1) é ampliado, com O parado, pelo fator
+1/cos θ até encostar na reta x = 1 (lados 1, tg θ, sec θ) ou pelo fator
+1/sen θ até a reta y = 1 (lados cotg θ, 1, cossec θ). O triângulo do ciclo fica
+tracejado por dentro, e o painel confere a identidade derivada. Lição 7.25.
+
+```mdx
+<ReciprocalTriangle mode="cos" />
+<ReciprocalTriangle mode="sen" initial={50} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `mode` | `'cos'` (1 + tg² = sec², giro de 20° a 65°) ou `'sen'` (1 + cotg² = cossec², giro de 25° a 80°) |
+| `initial` | giro inicial em graus (padrão 50) |
+| `caption` | legenda (o padrão acompanha o modo) |
+
+## AngleSumRise
+
+Um braço gira `a` e depois mais `b`. Azul: a altura depois do primeiro giro
+($\sen a$). Laranja: quanto o segundo giro sobe de verdade, começando em `a`.
+Verde: quanto o mesmo giro `b` subiria começando do zero ($\sen b$). À direita,
+duas barras no mesmo chão: "somando" (azul + verde, a regra errada
+$\sen a + \sen b$) e "de verdade" (azul + laranja), com a linha tracejada do
+comprimento do braço. Na abertura, o braço gira `a`, depois `b`, e as barras
+crescem.
+
+```mdx
+<AngleSumRise a={45} b={30} length={4} unit="m" mystery />
+<AngleSumRise sliders a={40} b={30} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `a`, `b` | os dois giros, em graus (padrão 30 e 30) |
+| `length`, `unit` | comprimento do braço e unidade dos números (padrão 1, sem unidade) |
+| `sliders` | deslizantes para `a` e `b` (0° a 90°, de 5 em 5); a figura reserva altura para a barra de até 2 |
+| `mystery` | a barra "de verdade" sai com "?" no lugar do número (problema motivador) |
+| `caption` | legenda |
+
+Usado em `geometria/soma-diferenca-e-arco-duplo` (motivador, seção do erro de
+distribuir e resolução do motivador).
+
+## AngleSumRotation
+
+A dedução de $\sen(a+b)$ e $\cos(a+b)$ animada. O triângulo retângulo do
+ângulo `b` (hipotenusa 1, cateto deitado $\cos b$ em azul até $R$, cateto em pé
+$\sen b$ em laranja até $P$) aparece deitado no eixo e gira `a` em torno da
+origem. Depois, cada cateto se separa:
+
+- `part="sen"`: a altura de $P$ é a altura de $R$ ($\sen a\cos b$, tracejado
+  azul) mais a subida de $R$ até $P$ ($\cos a\sen b$, tracejado laranja). O
+  ângulo `a` entre o cateto laranja e a vertical aparece marcado em $P$. Régua
+  vertical à direita empilha as duas parcelas.
+- `part="cos"`: a abscissa de $P$ é o avanço até $R$ ($\cos a\cos b$) menos o
+  recuo de $R$ até $P$ ($\sen a\sen b$). Régua horizontal embaixo: avanço numa
+  faixa, recuo logo abaixo.
+
+O painel mostra a fórmula com os números e confere com o valor direto.
+
+```mdx
+<AngleSumRotation part="sen" a={40} b={30} />
+<AngleSumRotation part="cos" a={40} b={30} />
+<AngleSumRotation backward toggle part="sen" a={60} b={30} />
+<AngleSumRotation double toggle part="sen" a={30} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `a`, `b` | giros iniciais, em graus; deslizantes de 0° a 90°, de 5 em 5 |
+| `part` | `'sen'` (altura) ou `'cos'` (abscissa) |
+| `backward` | o segundo giro é para trás ($a - b$); o deslizante de `b` vai só até `a`, e $P$ fica no primeiro quadrante. Na régua do seno, a descida fica numa coluna ao lado |
+| `double` | `b = a`, um deslizante só (arco duplo); rótulos com `a` nos dois catetos |
+| `toggle` | botões para trocar entre seno e cosseno (a figura reserva espaço para as duas réguas) |
+| `caption` | legenda |
+
+## DoubleCosineRoutes
+
+As três escritas de $\cos 2a$ como três caminhos na reta numérica, saindo do
+zero: $\cos^2 a - \sen^2 a$ (avança azul, recua laranja), $1 - 2\sen^2 a$
+(avança o cinza de comprimento 1, recua dois laranjas) e $2\cos^2 a - 1$
+(avança dois azuis, recua o cinza). A reta verde tracejada marca $\cos 2a$, e
+as três chegadas caem nela. Deslizante para `a` de 0° a 90°.
+
+```mdx
+<DoubleCosineRoutes initial={30} />
+```
+
+## SineCosineCombo
+
+$A\sen x + B\cos x = R\sen(x + \varphi)$. Esquerda: o ponto $(A, B)$, a
+distância $R$ até a origem e o ângulo $\varphi$. Direita: $A\sen x$ (cinza
+tracejado), $B\cos x$ (cinza pontilhado), a soma (laranja) e
+$R\sen(x+\varphi)$ (azul tracejado), que coincidem; o pico marcado vale $R$.
+Deslizantes para `A` e `B`, de 0 a 5, de meio em meio. O painel mostra $R$,
+$\tg\varphi$ e compara o pico com $A + B$.
+
+```mdx
+<SineCosineCombo A={3} B={4} />
+```
+
+## TrigEqWheel
+
+Roda de 40 m de diâmetro, eixo a 25 m, uma volta a cada 2 minutos, cabine
+partindo do fundo. À direita, o gráfico de $h(t)$ em duas voltas, na mesma
+escala vertical da roda: a reta da altura procurada atravessa os dois desenhos.
+Na entrada da tela, a roda dá as duas voltas e o gráfico se desenha; depois, o
+deslizante escolhe o instante (de 5 em 5 segundos).
+
+```mdx
+<TrigEqWheel />
+<TrigEqWheel showTimes />
+<TrigEqWheel band showTimes initial={60} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `level` | altura procurada, em metros (padrão 35) |
+| `showTimes` | rotula os instantes em que a cabine está nessa altura (frações de minuto) e põe botões para eles |
+| `band` | pinta de verde os trechos do gráfico com a cabine nessa altura ou acima, e o arco da roda acima dela |
+| `initial` | instante inicial do deslizante, em segundos (padrão 240) |
+| `caption` | legenda |
+
+## TrigEqLayers
+
+Duas colunas: a "ida" (as contas que a fórmula faz com $t$, na ordem) e a
+"volta" (a equação desfeita de fora para dentro). Cada linha da volta risca a
+conta da ida que ela desfez, e a animação termina destacando a camada do
+cosseno, que não se desfaz com uma resposta só. Os padrões são os da roda.
+
+```mdx
+<TrigEqLayers />
+```
+
+| Prop | O que faz |
+|---|---|
+| `input` | LaTeX da incógnita (padrão `t`) |
+| `forward` | `[{op, value}]`: as contas da ida e o resultado de cada uma |
+| `back` | `[{eq, note, undoes}]`: as linhas da volta; `undoes` é o índice da conta da ida que a linha desfaz |
+| `stop` | índice da conta da ida destacada no fim (padrão 1, o cosseno) |
+| `stopNote` | texto do quadro "Pare aqui" |
+
+## TrigEqCycleLine
+
+Uma volta do ciclo e a reta que procura as soluções, com deslizante para o
+valor $c$ e botões de valores notáveis. O painel dá os giros entre 0 e $2\pi$
+(em fração de π quando possível), o giro da calculadora e o espelho.
+
+```mdx
+<TrigEqCycleLine fn="sin" initial={1.3} />
+<TrigEqCycleLine fn="cos" initial={-0.5} />
+<TrigEqCycleLine fn="tan" initial={1} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `fn` | `'sin'` (reta horizontal; espelho no eixo vertical), `'cos'` (reta vertical; espelho no eixo horizontal) ou `'tan'` (ponto T na reta x = 1 e reta de O até T) |
+| `initial` | valor inicial de $c$ |
+| `presets` | `[{label, value}]`: botões; cada modo tem os seus padrões |
+| `caption` | legenda |
+
+## TrigEqCopies
+
+O gráfico de três voltas, de $-2\pi$ a $4\pi$, com a reta $y = c$. Os dois
+encontros da primeira volta (k = 0) aparecem, e cópias deles deslizam uma
+volta para a direita (k = 1) e uma para a esquerda (k = −1). Cada família tem
+o seu tom; a tabela abaixo da figura lista os valores com o seu $k$.
+
+```mdx
+<TrigEqCopies fn="sin" value={0.5} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `fn` | `'sin'` ou `'cos'` |
+| `value` | o valor $c$ (use $c \ge 0$ no seno: a primeira família é escrita como $\alpha + 2k\pi$) |
+
+## TrigEqInterval
+
+Reta numérica com o intervalo pedido (faixa cinza, pontas fechadas) e botões de
+$k$ para cada família da solução geral. Cada tentativa vai para a reta (ponto
+cheio dentro, vazio fora) e para o registro; o painel conta quantas das
+soluções do intervalo já foram achadas.
+
+```mdx
+<TrigEqInterval
+  families={[
+    {tex: '\\frac{\\pi}{6} + 2k\\pi', base: Math.PI / 6, step: 2 * Math.PI},
+    {tex: '\\frac{5\\pi}{6} + 2k\\pi', base: (5 * Math.PI) / 6, step: 2 * Math.PI},
+  ]}
+  interval={[0, 4 * Math.PI]}
+  intervalTex="[0,\ 4\pi]"
+  ks={[-1, 0, 1, 2]}
+  initialTries={[[0, 0], [1, 0], [0, -1]]}
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `families` | `[{tex, base, step}]`: cada família é `base + k × step`; `tex` é o rótulo |
+| `interval`, `intervalTex` | o intervalo fechado e o LaTeX dele |
+| `ks` | os valores de $k$ oferecidos nos botões |
+| `initialTries` | `[[família, k], ...]` já marcados (o que a página estática mostra) |
+
+## TrigEqArgument
+
+$\sen(2x) = \frac12$ com $x$ em $[0, 2\pi]$, em dois painéis na mesma escala.
+Em cima, $\sen u$ com $u = 2x$ de 0 a $4\pi$ e os quatro encontros. Cada
+encontro desce até $x = u/2$, e embaixo a curva $\sen(2x)$ se desenha por eles;
+no fim, o tracejado $\sen x$ mostra que ele só tem dois encontros. Sem props.
+
+```mdx
+<TrigEqArgument />
+```
+
+## TrigEqRoots
+
+Régua vertical de $u$ (com a faixa de $-1$ a 1 em verde) ao lado do ciclo, na
+mesma escala. Cada raiz $u$ vira, uma de cada vez, uma reta horizontal que
+atravessa o ciclo; os cortes ganham o giro. Raiz fora da faixa: reta
+tracejada por cima do círculo, "nenhum ponto".
+
+```mdx
+<TrigEqRoots
+  sets={[
+    {label: '2u² − u − 1 = 0', roots: [{u: 1, tex: '1'}, {u: -0.5, tex: '-\\frac{1}{2}'}]},
+    {label: '2u² − 3u − 2 = 0', roots: [{u: 2, tex: '2'}, {u: -0.5, tex: '-\\frac{1}{2}'}]},
+  ]}
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `sets` | `[{label, roots: [{u, tex}]}]`: uma ou mais equações; com mais de uma, aparecem botões. A régua vai de −1,4 a 2,35 |
+
 ## LinearMap
 
 O plano antes e depois de uma matriz $2 \times 2$. Ensina que a matriz leva a
@@ -1334,6 +1719,949 @@ Cuidado próprio da perspectiva: dois pontos diferentes do espaço podem cair no
 mesmo lugar do papel. Sempre desenhe a caixa (`boxes`) do ponto que o texto
 discute, e confira na imagem se a linha vertical tracejada não passa em cima de
 um número do eixo.
+
+## DeliveryVectors
+
+As quatro corridas do problema motivador de `geometria/vetores`, num
+`CartesianPlane` de 0 a 13 por 0 a 10.
+
+```mdx
+<DeliveryVectors mode="routes" />
+<DeliveryVectors mode="compare" />
+```
+
+| Prop | O que faz |
+|---|---|
+| `mode` | `'routes'`: os entregadores saem juntos e a seta de cada corrida cresce atrás deles. `'compare'`: as setas, coloridas pelo vetor, deslizam sem girar até a saída comum $(6,\ 1)$; as corridas 1 e 2 coincidem |
+| `caption` | substitui a legenda padrão |
+
+## FiveBlocksCircle
+
+Doze setas de comprimento 5 saem da origem uma depois da outra, nas doze
+esquinas da circunferência de raio 5 ($3$-$4$-$5$ e eixos). No quadro final, a
+circunferência tracejada mostra que todo ponto dela está a 5 da saída. Sem
+props além de `caption`.
+
+## VectorSlide
+
+A seta de um vetor fixo desliza, sem girar, por uma sequência de caudas
+(`tour`), deixando cópias cinza. Depois, dois deslizantes movem a cauda.
+
+```mdx
+<VectorSlide vector={[3, 2]} tour={[[0, 0], [5, 0], [1, 4], [6, 3]]} />
+<VectorSlide vector={[3, 4]} xMin={-1} xMax={10} yMin={-1} yMax={6}
+  tour={[[0, 0], [5, 0]]} point={{at: [3, 4], label: 'P(3,\\ 4)', dx: -34, dy: -8}} readout="point" />
+<VectorSlide vector={[3, 4]} xMin={0} xMax={13} yMin={0} yMax={10} xUnit={30}
+  tour={[[1, 1], [5, 3]]} readout="sum" tailName="A" tipName="B" />
+```
+
+| Prop | O que faz |
+|---|---|
+| `vector` | as coordenadas $(a,\ b)$ da seta |
+| `tour` | caudas por onde a seta passa ao aparecer; a última é a posição inicial dos controles |
+| `xMin`…`yMax`, `xUnit` | janela do plano; os deslizantes só deixam a cauda onde a ponta continua dentro dela |
+| `point` | `{at, label, dx, dy}`: ponto fixo em laranja; com `readout="point"` o painel diz se a ponta caiu nele |
+| `readout` | `'translate'` (padrão), `'point'` ou `'sum'` (escreve $A + \vec{v} = B$ com os números) |
+| `vecLabel`, `tailName`, `tipName` | rótulos em LaTeX da seta, da cauda e da ponta |
+
+## VectorSteps
+
+Um ponto sai da origem e percorre a seta em duas etapas, horizontal e
+vertical; a seta aparece no fim. Botões trocam o vetor: $(3,\ 4)$, $(-3,\ 4)$,
+$(4,\ -2)$, $(-2,\ -5)$ e $(0,\ 5)$. O painel traduz cada sinal em lado.
+`initial` escolhe o botão inicial (índice).
+
+## VectorBetween
+
+O vetor de A até B como “chegada menos saída”: o ponto anda $\Delta x$ e
+depois $\Delta y$, e a seta liga as pontas. Botões com três pares de pontos
+(um com coordenadas negativas) e um botão que troca o sentido (de B até A),
+mostrando as coordenadas trocando de sinal. O painel escreve
+$\overrightarrow{AB} = B - A = (\ldots)$ com os números.
+
+## VectorLength
+
+Deslizantes para $a$ e $b$ de $-8$ a $8$. Os catetos tracejados levam o valor
+sem sinal; a seta leva o comprimento. O painel faz
+$\sqrt{(-3)^2 + 4^2} = \ldots$ e compara com o caminho em “L”,
+$\lvert a \rvert + \lvert b \rvert$. Botões: $(3,\ 4)$, $(-3,\ 4)$, $(6,\ -8)$,
+$(0,\ -7)$ e o vetor nulo. Props: `initialA`, `initialB`, `caption`.
+
+## ZeroTrip
+
+O entregador contorna o retângulo de $(1,\ 1)$ a $(6,\ 4)$ e volta ao
+restaurante. A seta azul liga a saída à posição atual e some na chegada; o
+painel mostra o caminho andado (16 quarteirões) e o deslocamento $(0,\ 0)$.
+
+## OppositeVector
+
+A seta $\vec{v} = \overrightarrow{AB} = (4,\ 2)$, de $A(1,\ 1)$ a $B(5,\ 3)$;
+uma cópia sobe duas unidades e gira meia volta em torno do meio, virando
+$-\vec{v}$. Um botão mostra o contraexemplo $(-4,\ 2)$, tracejado.
+
+## BoatCurrent
+
+O problema motivador da 7.29. O rio corre entre y = 0 e y = 8 (km); o motor
+empurra para o norte a 8 km/h e a correnteza para o leste a 6 km/h. A animação
+faz passar uma hora: o barco (ponto verde) deixa a trilha tracejada, duas
+setinhas presas a ele (em escala 1/4) mostram os dois empurrões, e um ponto
+cinza mostra onde ele estaria sem correnteza. Quadro final: barco em (6, 8),
+ponto cinza em (0, 8). O painel mostra o tempo e as duas posições.
+
+```mdx
+<BoatCurrent />
+```
+
+| Prop | O que faz |
+|---|---|
+| `caption` | troca a legenda |
+
+## TipToTail
+
+Ponta com cauda, animado: u cresce a partir da origem, v cresce a partir da
+ponta de u, e a soma liga a saída à chegada. Um ponto cinza percorre os dois
+trechos.
+
+```mdx
+<TipToTail u={[3, 1]} v={[1, 2]} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `u`, `v` | os dois vetores (janela fixa de −1 a 6 por −1 a 4) |
+| `caption` | troca a legenda |
+
+## SumByAxis
+
+Por que a soma é coordenada a coordenada. As setas aparecem ponta com cauda,
+cada uma se desmonta num passo horizontal e num vertical, os horizontais descem
+até uma faixa embaixo e os verticais vão até uma faixa à esquerda, chegando
+encostados; por fim aparecem os totais (verde) e a seta da soma. Botões trocam
+o par: (3, 1) e (1, 2); (5, −2) e (−1, 6); (4, 1) e (−3, 2).
+
+```mdx
+<SumByAxis initial={0} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | índice do par mostrado primeiro (0, 1 ou 2) |
+| `caption` | troca a legenda |
+
+## SumParallelogram
+
+Regra do paralelogramo, animado: u e v saem do mesmo ponto, uma cópia de v
+desliza até a ponta de u, uma cópia de u desliza até a ponta de v, e a diagonal
+verde aparece. O painel escreve as duas somas.
+
+```mdx
+<SumParallelogram u={[3, 1]} v={[1, 2]} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `u`, `v` | os dois vetores (janela fixa de −1 a 6 por −1 a 4) |
+| `caption` | troca a legenda |
+
+## VectorDifference
+
+Subtração, animado: u e v saem da origem, a seta verde cresce da ponta de v
+até a ponta de u (u − v), e uma cópia tracejada desliza até a origem. O botão
+“Ler como u + (−v)” acrescenta −v saindo da ponta de u, que chega ao mesmo
+ponto. Com `tips`, as pontas ganham nomes de pontos e a figura mostra
+AB = b − a.
+
+```mdx
+<VectorDifference />
+
+<VectorDifference
+  u={[2, 5]} v={[5, 1]}
+  uName="\vec{b}" vName="\vec{a}" diffName="\overrightarrow{AB}"
+  tips={['B', 'A']} slide={false} minusButton={false}
+  window={{xMin: -1, xMax: 7, yMin: -1, yMax: 6}} xUnit={42}
+  offsets={{u: [-58, 0], v: [16, -16], d: [62, 8], tipU: [-14, -12], tipV: [14, -12]}}
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `u`, `v` | os vetores; a figura desenha u − v |
+| `uName`, `vName`, `diffName` | nomes em LaTeX (atributo JSX entre aspas: barra simples) |
+| `tips` | `[nome da ponta de u, nome da ponta de v]` |
+| `slide` | `false` tira a cópia que desliza até a origem |
+| `minusButton` | `false` tira o botão “Ler como u + (−v)” |
+| `window`, `xUnit` | janela e escala do plano |
+| `offsets` | deslocamentos `[dx, dy]` em pixels dos rótulos `u`, `v`, `d`, `tipU`, `tipV` |
+| `caption` | troca a legenda |
+
+## ScaleVector
+
+Número vezes vetor. O tracejado cinza é a reta pela origem na direção de v; a
+seta laranja é k·v, e v fica tracejado em azul por cima. Ao entrar na tela o k
+passeia sozinho (1 → 3 → −2 → `initial`); depois o aluno controla o
+deslizante. O painel mostra k·v, o módulo |k| × ‖v‖ e o que o k fez com a seta.
+Com `targets`, vira busca: o painel guarda os alvos alcançados e avisa quando
+só a primeira coordenada bate.
+
+```mdx
+<ScaleVector />
+
+<ScaleVector
+  v={[2, 3]} initial={1} kMin={-2.5} kMax={2.5}
+  targets={[[-4, -6], [4, 5]]}
+  window={{xMin: -6, xMax: 6, yMin: -8, yMax: 8}} xUnit={22} labelEvery={2}
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `v` | o vetor |
+| `initial`, `kMin`, `kMax`, `step` | valor final do passeio e limites do deslizante |
+| `targets` | pontos-alvo `[[x, y], ...]` |
+| `window`, `xUnit`, `labelEvery` | janela, escala e numeração dos eixos |
+| `caption` | troca a legenda |
+
+## RobotRecipe
+
+Combinação linear como receita. Dois deslizantes inteiros (a e b, de −1 a 3)
+dão as voltas dos motores u e v; cada volta é uma seta. A seta verde vai da
+origem até onde o robô parou. A malha tracejada mostra as receitas inteiras. O
+painel escreve a·u + b·v, diz quanto falta para o alvo e guarda as receitas que
+acertaram. Com `intro`, monta a receita inicial volta por volta ao entrar na
+tela.
+
+```mdx
+<RobotRecipe />
+```
+
+| Prop | O que faz |
+|---|---|
+| `u`, `v` | direções dos motores (padrão (2, 1) e (1, 3); a janela é fixa para esses dois) |
+| `target`, `targetName` | o alvo e o nome dele em LaTeX |
+| `initialA`, `initialB` | receita inicial |
+| `intro` | `false` desliga a montagem animada |
+| `caption` | troca a legenda |
+
+## PathFraction
+
+T = A + t·AB. Deslizante em doze avos do caminho (passa por 1/4, 1/3, 1/2, 2/3,
+3/4); botões 1/3, 1/2 e 2/3. Ao entrar na tela, o t vai de 0 a 1/2. O painel
+escreve a conta, com “≈” quando a coordenada não é exata.
+
+```mdx
+<PathFraction A={[2, 2]} B={[11, 7]} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `A`, `B` | os pontos (janela fixa de −1 a 12 por −1 a 8) |
+| `initial` | número de doze avos mostrado no fim do passeio (padrão 6) |
+| `caption` | troca a legenda |
+
+## ScaledSumTriangle
+
+A distributiva k(u + v) = ku + kv. O triângulo sombreado de lados tracejados é
+u, v e u + v; o triângulo de setas é o mesmo com os lados multiplicados por k
+(deslizante de 0,5 a 2,5). O painel escreve os dois lados da igualdade. Ao
+entrar na tela, o k vai de 1 a 2.
+
+```mdx
+<ScaledSumTriangle u={[2, 1]} v={[1, 2]} />
+```
+
+## SumLengthAngle
+
+O comprimento da soma contra a soma dos comprimentos. A seta b (8) aponta para
+a direita; c (6) sai da ponta de b com o ângulo do deslizante (0° a 180°). A
+seta verde é b + c. Duas réguas embaixo: a cinza mede 14, a verde mede
+‖b + c‖. Botões 0°, 90° e 180°. Ao entrar na tela, o ângulo vai de 0° a 90°.
+
+```mdx
+<SumLengthAngle initial={90} />
+```
+
+## PlaneWind
+
+O problema motivador e a resolução da lição 7.30. Cada unidade do plano vale
+100 km/h. Avião a 500 km/h e 30° do leste, vento de 60 km/h para o sul.
+
+```mdx
+<PlaneWind />                 {/* o problema */}
+<PlaneWind mode="solved" />   {/* a resolução */}
+```
+
+| Prop | O que faz |
+|---|---|
+| `mode` | `'problem'` (padrão): uma hora de voo em 4 s. A seta azul tracejada cresce na direção do nariz (onde o avião estaria sem vento); a laranja, da ponta dela, mostra o arrasto do vento; o ponto e o rastro verdes são o avião de verdade, com "GPS: ?" no fim. `'solved'`: componentes da seta azul (433 e 250), o vento descendo 60 da ponta, a seta verde (433, 190) com ≈ 472,9 e 23,7° |
+| `caption` | **texto simples** |
+
+## TwoRoutes
+
+Da praça (origem) até a padaria (4, 3): o caminhante laranja anda 4 para o
+leste e 3 para o norte; depois o azul anda 5 em linha reta, e a cunha marca
+≈ 36,9°.
+
+```mdx
+<TwoRoutes />
+```
+
+Só `caption` (texto simples).
+
+## VectorAngleDial
+
+Seta de tamanho 4 na origem, cunha azul do semieixo x positivo até ela
+(anti-horário) e a reta da direção em cinza tracejado. Deslizante de 0° a
+359°; cada botão faz a seta girar do ângulo atual até o novo. Ao aparecer,
+gira de 0° até `initial`.
+
+```mdx
+<VectorAngleDial initial={30} />
+<VectorAngleDial initial={216.87} reference caption="..." />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | ângulo final da animação inicial (padrão 30) |
+| `reference` | mostra o ângulo de referência (cunha laranja, até a parte do eixo x mais próxima) fora do 1º quadrante, como contraexemplo |
+| `presets` | `[{deg, label}]` (padrão 30°, 210°, 90° e a seta de (−4, −3)) |
+| `caption` | **texto simples** |
+
+## StretchedCycle
+
+O ciclo de raio 1 (laranja) com a seta até $(\cos\theta,\ \sen\theta)$; ao
+aparecer, a seta estica sem girar até o tamanho r (azul), e a circunferência
+tracejada de raio r acompanha. Deslizantes de ângulo e tamanho; o painel
+mostra $r \times (\cos\theta,\ \sen\theta)$ com os números.
+
+```mdx
+<StretchedCycle />   {/* começa em (4, 3): r = 5, θ ≈ 36,87° */}
+```
+
+| Prop | O que faz |
+|---|---|
+| `initialAngle`, `initialR` | padrão 36,87° e 5 |
+| `caption` | **texto simples** |
+
+Quando r é menor que 1, a seta azul é desenhada por cima da laranja, para as
+duas continuarem visíveis.
+
+## ComponentShadows
+
+Seta azul de tamanho r e ângulo θ; linhas cinza até os eixos; as sombras com
+sinal são setas sobre os eixos (horizontal laranja, vertical verde), rotuladas
+$r\cos\theta = \ldots$ e $r\sen\theta = \ldots$.
+
+```mdx
+<ComponentShadows />                       {/* 5 a 150° */}
+<ComponentShadows triangle presets={[...]} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initialR`, `initialAngle` | padrão 5 e 150 |
+| `triangle` | desenha o triângulo retângulo sob a seta, com o ângulo de referência (cunha laranja) e catetos rotulados pelo **tamanho**, sem sinal; o painel compara com a fórmula |
+| `presets` | `[{r, deg}]` (padrão 5 a 150°, 5 a 30°, 4 a 240°, 4 a 315°) |
+| `caption` | **texto simples** |
+
+Deslizante de ângulo em passos de 5°, de tamanho em passos de 0,5.
+
+## ArctanHalfTurn
+
+Deslizantes para as coordenadas inteiras a e b (de −6 a 6). A seta azul é o
+vetor; a reta cinza tracejada tem inclinação b/a; a seta laranja tracejada, do
+mesmo tamanho, aponta em $\arctg\frac{b}{a}$, com a cunha do ângulo. Com a
+negativo aparece o botão "Girar a seta laranja meia volta", que a gira 180°
+até cair sobre a azul. Com a = 0, o painel diz que a divisão não existe e dá
+90° ou 270°; com o vetor nulo, que não há ângulo.
+
+```mdx
+<ArctanHalfTurn />                                     {/* começa em (−3, 4) */}
+<ArctanHalfTurn record initialA={1} initialB={2} presets={[[1, 2], [-1, 2]]} caption="..." />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initialA`, `initialB` | vetor inicial (padrão −3 e 4) |
+| `record` | botão "Anotar este vetor na tabela" e tabela com b/a, arctg, "a é negativo?" e o ângulo certo (até 6 linhas, sem repetir vetor) |
+| `presets` | `[[a, b], ...]` (padrão (−3, 4), (3, −4), (4, 3), (−4, −3), (0, 5)) |
+| `caption` | **texto simples** |
+
+## NormalizeShrink
+
+O vetor v (azul, fica tracejado quando a cópia começa a mudar) e o ciclo de
+raio 1 (verde tracejado). Uma cópia verde encolhe, ou estica, sobre a mesma
+reta até a ponta tocar o ciclo; o painel mostra o módulo e a divisão de cada
+coordenada por ele. O botão do erro desenha (laranja) o resultado de dividir
+pela soma das coordenadas, com o tamanho dele; quando a soma é zero ou
+negativa, o painel explica por que nem isso funciona. O botão (0, 0) mostra
+que o vetor nulo não se normaliza.
+
+```mdx
+<NormalizeShrink />   {/* começa em (4, 3) */}
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | vetor inicial (padrão `[4, 3]`); os botões trocam entre (4, 3), (1, 1), (−3, 4), (0,4; −0,3) e (0, 0) |
+| `caption` | **texto simples** |
+
+## RampPull
+
+O carrinho da lição `geometria/produto-escalar`. A rampa avança 8 e sobe 6
+($\vec{d} = (8,\ 6)$); a corda puxa com 50 N na direção de $(30,\ 40)$. Escala
+da força: 1 unidade para 10 N.
+
+```mdx
+<RampPull />
+<RampPull mode="solved" />
+```
+
+| Prop | O que faz |
+|---|---|
+| `mode` | `'question'` (padrão): o carrinho sobe a rampa puxado pela corda e termina com o ângulo $\theta = ?$ e a seta $\vec{d}$ sobre a rampa. `'solved'`: a força se divide em parte ao longo da rampa (azul, a força útil) e parte perpendicular (verde), com tracejados fechando o retângulo; controle do ângulo entre corda e rampa (0° a 180°) e botões “alinhada”, “como no problema” (16,26°, exatamente $(30,\ 40)$), “em ângulo reto” e “obtusa, 120°”. O painel faz $\vec{F} \cdot \vec{d}$ e a força útil |
+| `caption` | substitui a legenda padrão |
+
+## DotPairs
+
+Duas listas lado a lado, uma linha por par, em cartões. Na animação, cada
+linha escreve o produto do seu par e, no fim, os produtos são somados num
+número só.
+
+```mdx
+<DotPairs a={[3, 2, 5]} b={[4, 10, 2]} names={['café', 'queijo', 'pão']} unit="reais" />
+<DotPairs a={[3, 4]} b={[2, -1]} names={['primeira', 'segunda']}
+  headA="\vec{u} = (3,\ 4)" headB="\vec{v} = (2,\ -1)" />
+<DotPairs a={[3, 2, 5]} b={[4, 10, 2]} names={['café', 'queijo', 'pão']} unit="reais"
+  controls={['swap', 'double']} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `a`, `b` | as duas listas (mesmo tamanho) |
+| `names` | nome de cada linha, à esquerda (texto curto: a coluna tem uns 90 px) |
+| `headA`, `headB`, `headP` | títulos das colunas, em LaTeX (padrão: quantidade, preço, produto) |
+| `unit` | unidade escrita depois do total |
+| `controls` | `'swap'` troca as colunas (os produtos não mudam); `'double'` dobra a primeira lista (cada produto e o total dobram) |
+| `caption` | legenda |
+
+## DotSignExplorer
+
+Plano de $-6$ a $6$. O vetor `u` fica parado; dois controles escolhem as
+coordenadas inteiras de $\vec{v}$. A reta tracejada passa pela origem em
+ângulo reto com $\vec{u}$; o lado de $\vec{u}$ fica sombreado (produto
+positivo). Uma fatia verde marca o ângulo entre as setas, pelo lado menor.
+
+```mdx
+<DotSignExplorer />
+<DotSignExplorer u={[3, 0]} initial={[3, 3]} presets={[[3, 3], [0, 4], [-3, 3], [-4, -3]]} readout="angle" />
+```
+
+| Prop | O que faz |
+|---|---|
+| `u` | o vetor parado (padrão $(4,\ 1)$) |
+| `initial`, `presets` | $\vec{v}$ inicial e os botões |
+| `readout` | `'sign'` (padrão): conta das coordenadas e tipo de ângulo. `'angle'`: acrescenta $\cos\theta$ e $\theta$ pelo arco cosseno |
+| `range` | alcance dos controles (padrão 5) |
+| `caption` | substitui a legenda padrão |
+
+## DotRotateInvariant
+
+$\vec{u}$ (tamanho 4, a 65° do eixo) e $\vec{v}$ (tamanho 5, a 20°) giram
+juntos 20° no sentido horário; o painel mostra as coordenadas mudando e a
+conta das coordenadas parada em 14,14. No fim, $\vec{v}$ fica no eixo $x$ e um
+tracejado verde mostra a sombra $4\cos 45^\circ$. Depois, quatro controles
+(tamanhos e ângulos com o eixo) e o painel com as duas contas lado a lado:
+pelas coordenadas e por tamanho × tamanho × cosseno. Sem props além de
+`caption`.
+
+## DotShadow
+
+$\vec{v}$ deitado (tamanho no controle, 1 a 6) e $\vec{u}$ de tamanho 4 com o
+ângulo no outro controle (0° a 180°). O tracejado desce da ponta de $\vec{u}$
+em ângulo reto com a reta de $\vec{v}$, e uma faixa verde mostra a sombra,
+que passa para o outro lado da origem com ângulo obtuso. O painel faz
+$\text{sombra} \times \lVert \vec{v} \rVert$ e confere pelas coordenadas.
+Props: `initialTheta` (50), `initialB` (5), `caption`.
+
+## PerpTurn
+
+$\vec{u} = (2,\ 3)$ parado; uma cópia gira um quarto de volta até
+$(-3,\ 2)$, com a fatia do ângulo crescendo, e o painel acompanha o produto
+(13 no começo, 0 no fim, com o quadradinho do ângulo reto). Botão do
+contraexemplo $(-2,\ 3)$, tracejado, com produto 5. Sem props além de
+`caption`.
+
+## SlopeDirections
+
+Duas retas pela origem com inclinações $m_1$ e $m_2$ (controles de $-3$ a $3$,
+passo 0,25) e as setas $(1,\ m_1)$ e $(1,\ m_2)$. O painel faz
+$1 + m_1 m_2$ e diz se as retas são perpendiculares. Botões: $(2;\ -0{,}5)$,
+$(1;\ -1)$, $(0{,}5;\ 1)$ e “horizontal e vertical”, que troca a segunda reta
+pela vertical $(0,\ 1)$. Sem props além de `caption`.
+
+## DotSumLength
+
+O barco da lição de soma: velocidade própria de 8 km/h, correnteza de 6 km/h,
+ângulo entre as duas num controle. O paralelogramo tracejado e a soma em
+verde. O painel abre $\lVert \vec{u} + \vec{v} \rVert^2 = 64 + 2\,\vec{u}
+\cdot \vec{v} + 36$: 10 com 90°, 14 com 0°, 2 com 180°. Props: `initial` (90),
+`caption`.
+
+## CableSearch
+
+O problema motivador e a resolução da lição 7.32: estrada pela origem na
+direção de (4, 3), galpão em G(2, 9), R\$ 15 mil por km de ramal.
+
+```mdx
+<CableSearch />                 {/* a busca, com tabela de tentativas */}
+<CableSearch mode="solved" />   {/* a resolução */}
+```
+
+| Prop | O que faz |
+|---|---|
+| `mode` | `'search'` (padrão): o deslizante leva a emenda E pela estrada (de −1 a 10 km do poste, de 0,5 em 0,5); o painel mede o ramal e o custo; "Registrar esta tentativa" guarda o caso numa tabela, com o menor em negrito e o aviso de que a tabela não cobre os pontos entre dois testes. `'solved'`: H(5,6; 4,2) marcado, a sombra de 7 km, o ramal de 6 km e o ângulo reto; o deslizante leva outra emenda Q, e o painel mostra o ramal de Q como a raiz de 6² + (s − 7)² |
+| `initial` | posição inicial da emenda, em km do poste (padrão 0 na busca, 5 na resolução) |
+| `caption` | **texto simples** |
+
+## ProjectionDrop
+
+Os três passos do gesto, animados: a linha que desce em ângulo reto da ponta
+de v até a reta de u; a sombra crescendo da origem até o pé; a marca de ângulo
+reto e os rótulos "sombra" e "resto". Botões trocam a vara: (1, 4), (3, 3) e
+(−3, 1), este com a sombra atrás da origem.
+
+```mdx
+<ProjectionDrop />
+<ProjectionDrop u={[4, 2]} initial={[1, 4]} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `u` | o vetor do chão (padrão (4, 2)) |
+| `initial` | a vara inicial (padrão (1, 4)) |
+| `caption` | **texto simples** |
+
+## ProjectionExplorer
+
+u = (4, 2) parado; v de tamanho 4 fazendo com u o ângulo do deslizante (0° a
+180°, de 5 em 5), com botões 30°, 90° e 135°. A sombra encolhe, vira o vetor
+nulo em 90° e cai atrás da origem no obtuso.
+
+```mdx
+<ProjectionExplorer />
+<ProjectionExplorer show="comp" initial={135} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | ângulo inicial, em graus (padrão 50) |
+| `show` | `'sign'` (padrão): o painel liga o sinal de v · u ao lado da sombra. `'comp'`: o rótulo verde vira o número da sombra, e o painel o calcula como ‖v‖ cos θ e como (v · u)/‖u‖ |
+| `caption` | **texto simples** |
+
+## ProjectionBuild
+
+Animação em dois movimentos: uma cópia de u encolhe até o unitário; o unitário
+estica pelo tamanho da sombra até o pé. O painel faz as duas peças e a conta
+única com u · u.
+
+```mdx
+<ProjectionBuild />
+<ProjectionBuild u={[2, 0]} v={[3, 5]} error box={[-1, 7, -1, 6]} unit={44} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `u`, `v` | os vetores (padrão (4, 2) e (1, 4)) |
+| `error` | acrescenta o botão "Mostrar o erro: dividir só uma vez", que desenha (laranja) o tamanho da sombra vezes o próprio u, mais comprido que v |
+| `box` | janela `[xMin, xMax, yMin, yMax]`; sem ela, a janela envolve os pontos com folga de 1 |
+| `unit` | pixels por unidade (padrão 52) |
+| `caption` | **texto simples** |
+
+## ProjectionRuler
+
+A sombra de v (verde) e, logo abaixo da reta, cópias de u (azul) encostadas
+uma na ponta da outra, uma por vez; o pedaço que sobra sai tracejado, com o
+valor. Com k negativo, as cópias são de −u e vão para trás.
+
+```mdx
+<ProjectionRuler />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | caso inicial: 0 = v (2, 9) sobre u (4, 3), k = 1,4; 1 = (1, 4) sobre (4, 2), k = 0,6; 2 = (−4, 3) sobre (2, 1), k = −1. Os três têm botão |
+| `caption` | **texto simples** |
+
+## ResidualSlider
+
+v = (1, 4), u = (4, 2). O deslizante escolhe k (0,2 a 1,6, de 0,1 em 0,1); a
+seta verde é k u, e o resto (laranja tracejado) vai dela até a ponta de v. Só
+em k = 0,6 o resto · u dá zero e a marca de ângulo reto aparece.
+
+```mdx
+<ResidualSlider />
+<ResidualSlider pythagoras initial={1.2} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | k inicial (padrão 1,2) |
+| `pythagoras` | o painel soma os quadrados dos tamanhos das duas partes e compara com 17, o quadrado do tamanho de v |
+| `caption` | **texto simples** |
+
+O deslizante começa em 0,2 de propósito: em k = 0 a "decomposição" v = 0 + v
+também satisfaz a soma dos quadrados, sem ângulo reto nenhum, e confundiria.
+
+## ProjectionScale
+
+v = (1, 4) parado; o vetor do chão é c (2, 1), com c no deslizante (−3 a 3, de
+0,5 em 0,5). A sombra fica sempre em (2,4; 1,2); o painel mostra o k mudando.
+Com c = 0, a figura tira a reta e o painel explica a divisão por zero.
+
+```mdx
+<ProjectionScale />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | c inicial (padrão 1) |
+| `caption` | **texto simples** |
+
+## PointToLine
+
+A reta (azul) por A na direção u e o ponto P. Animação: a seta de A até P; a
+linha que desce de P em ângulo reto; a sombra de AP crescendo a partir de A; o
+pé H, o ângulo reto e a distância. Padrão: o exemplo 5 da lição 7.12, reta
+y = 2x + 3, A(0, 3), u = (1, 2), P(1, 8), H(2,2; 7,4), d ≈ 1,34.
+
+```mdx
+<PointToLine error />
+<PointToLine compare caption="..." />
+```
+
+| Prop | O que faz |
+|---|---|
+| `A`, `u`, `P` | a reta e o ponto |
+| `box`, `unit` | janela e pixels por unidade (padrão `[-1, 4.6, -0.6, 9.6]` e 44) |
+| `lineLabel` | rótulo da reta, em LaTeX (padrão `'y = 2x + 3'`; `null` tira) |
+| `error` | botão "Mostrar o erro: projetar o próprio P": a reta pela origem (cinza), a seta da origem até P e o ponto vazado que sai, fora da reta azul |
+| `compare` | deslizante de outro ponto Q = A + s u da reta; o painel faz PQ² = PH² + HQ² |
+| `caption` | **texto simples** |
+
+## DroneRoutes
+
+Os drones do galpão: A parte de (1, 2) com (2, 1) por segundo, B parte de
+(9, 1) com (−1, 2). Janela de 0 a 11 por 0 a 10.
+
+```mdx
+<DroneRoutes mode="routes" caption="..." />   {/* o problema motivador */}
+<DroneRoutes mode="places" caption="..." />   {/* as rotas se cruzam? */}
+<DroneRoutes mode="meeting" caption="..." />  {/* os drones batem? */}
+```
+
+| Prop | O que faz |
+|---|---|
+| `mode` | `'routes'`: cada drone com a seta de um segundo; as rotas tracejadas crescem até a borda (3,5 s), botão "Ver as rotas de novo". `'places'`: dois controles, t (drone A) e s (drone B), de 0 a 4 em meios segundos; rastro sólido de cada drone; o painel avisa quando os dois param no mesmo ponto. `'meeting'`: um controle só, o mesmo t; tracejado cinza entre os drones, diferença em x, em y e distância. Nos dois últimos, pontinhos com os instantes 0 a 4 e um círculo verde no cruzamento |
+| `A`, `u`, `B`, `v` | partida e deslocamento por segundo de cada drone |
+| `marks` | instantes marcados nas rotas (padrão 0 a 4) |
+| `xMin`…`yMax`, `xUnit` | janela |
+| `caption` | **texto simples** |
+
+## LineWalker
+
+A caminhada P = A + t·d. Ao aparecer, o ponto dá `steps` passos iguais (uma
+seta azul por passo). Depois o controle escolhe t: passo fracionário aparece
+como pedaço de seta, passo negativo vai para trás em laranja, com a seta d de
+referência em cinza. Botão "Só t ≥ 0" mostra a semirreta.
+
+```mdx
+<LineWalker A={[1, 2]} d={[2, 1]} caption="..." />
+```
+
+| Prop | O que faz |
+|---|---|
+| `A`, `d` | partida e diretor |
+| `tMin`, `tMax`, `step` | faixa do controle (padrão −2 a 4, de meio em meio) |
+| `steps` | passos da animação; também o valor inicial do controle (padrão 3) |
+| `initial` | valor inicial do controle, se for outro |
+| `marks` | passos marcados com o número embaixo (padrão −1 a 4) |
+| `xMin`…`yMax`, `xUnit` | janela |
+
+## LineReach
+
+O teste de pertencer. Dois controles movem um ponto X (coordenadas inteiras).
+A seta AX sai em laranja e o diretor d em azul, por cima. O painel calcula
+quantos passos cada coordenada pede e diz se combinam. Botão "Guardar este
+ponto" monta uma lista dos pontos testados.
+
+```mdx
+<LineReach A={[1, 2]} d={[2, 1]} caption="..." />
+```
+
+Props: `A`, `d`, `initial` (padrão `[7, 5]`), `xMin`…`yMax`, `xUnit`,
+`caption`. Trata o caso X = A e diretores com coordenada zero.
+
+## ParametricShadows
+
+O ponto P anda pela reta e leva duas sombras: azul no eixo x, verde no eixo y.
+Na animação (t de 0 a `tEnd`), cada passo inteiro deixa uma marca em cada
+eixo. O painel escreve as duas paramétricas com o t do controle.
+
+```mdx
+<ParametricShadows A={[1, 2]} d={[2, 1]} caption="..." />
+```
+
+Props: `A`, `d`, `tMin`, `tMax` (controle de meio em meio), `tEnd` (padrão 3),
+`xMin`…`yMax`, `xUnit`, `caption`.
+
+## SameLineRecipes
+
+Receita azul A + t·d fixa e receita laranja B + t·e escolhida nos botões
+("Outro relógio" (5, 4) + t(2, 1), "Outro passo" (1, 2) + t(−4, −2), "Os dois
+trocados" (5, 4) + t(−4, −2), "Contraexemplo" (1, 2) + t(1, 2)). Um controle
+move P e Q com o mesmo t; pontinhos marcam os passos inteiros das duas
+receitas. O painel faz os dois testes (diretores paralelos, partida na reta).
+
+```mdx
+<SameLineRecipes A={[1, 2]} d={[2, 1]} caption="..." />
+```
+
+Props: `A`, `d`, `initialRecipe` (`'clock'`, `'step'`, `'both'`, `'wrong'`),
+`xMin`…`yMax`, `xUnit`, `caption`. As receitas estão fixas no componente,
+feitas para a rota (1, 2) + t(2, 1).
+
+## SlopeSteps
+
+Dois controles escolhem o diretor (a, b), inteiros de −3 a 3. A reta passa
+por A; os dois primeiros passos aparecem como escadinha (a em azul, b em
+verde) e o diretor como seta laranja. O painel dá m = b/a simplificada, ou
+avisa que a reta é vertical (a = 0) ou que não há reta (vetor nulo).
+
+```mdx
+<SlopeSteps caption="..." />
+```
+
+Props: `A` (padrão `[1, 2]`), `initial` (padrão `[2, 1]`), `xMin`…`yMax`,
+`xUnit`, `caption`.
+
+## NormalVector
+
+A reta a·x + b·y = k, dois pontos dela movidos por controles (de `step` em
+`step` na coordenada x) e o normal n saindo de P₁ com o quadradinho do ângulo
+reto. O painel mostra as duas contas que dão k, a diferença zero e o produto
+escalar n · P₁P₂ = 0. Botão "Andar na direção de n": o ponto R = P₁ + n sai da
+reta.
+
+```mdx
+<NormalVector caption="..." />
+```
+
+Props: `n` (padrão `[2, 3]`), `k` (padrão 12), `p1Range`, `p2Range`, `step`
+(padrão 1,5, para as coordenadas saírem inteiras), `initial` (x de P₁ e de
+P₂), `xMin`…`yMax`, `xUnit`, `caption`. Escolha `p1Range` de modo que P₁ + n
+caiba na janela.
+
+## NormalSide
+
+P₀ e n fixos; o aluno move P (inteiros). Sombreia o semiplano para onde n
+aponta. O painel calcula n · (P − P₀) e diz: zero (na reta), positivo (lado
+de n), negativo (outro lado).
+
+```mdx
+<NormalSide caption="..." />
+```
+
+Props: `P0` (padrão `[3, 2]`), `n` (padrão `[2, 3]`), `initial`, `xMin`…`yMax`,
+`xUnit`, `caption`.
+
+## DistanceAlongNormal
+
+A reta a·x + b·y + c = 0 (com b ≠ 0), o ponto P e um ponto A que desliza
+pela reta (animação de 5 s: vai de uma ponta à outra da faixa e volta a
+`initial`; depois, o controle). Mostra w = AP, o normal n em A, a parte de w
+na direção de n (verde, saindo de A), o resto de w (tracejado cinza) e o
+tracejado verde de P até o pé H, com ângulo reto. O painel mostra que w · n
+não muda.
+
+```mdx
+<DistanceAlongNormal caption="..." />
+```
+
+Props: `a`, `b`, `c` (padrão 2, −1, 3), `P` (padrão `[1, 8]`), `sRange`
+(faixa da coordenada x de A, padrão −1,5 a 2), `initial` (padrão 0),
+`xMin`…`yMax`, `xUnit`, `caption`.
+
+## LevelLines
+
+A reta a·x + b·y + c = 0 e as paralelas onde a conta vale múltiplos de |n|
+(tracejadas), a 1 de distância uma da outra. O valor de cada paralela fica
+escrito ao lado do normal, como numa régua. O aluno move P (inteiros) e o
+painel calcula a conta e a distância |conta| ÷ |n|.
+
+```mdx
+<LevelLines caption="..." />
+```
+
+Props: `a`, `b`, `c` (padrão 3, 4, −7), `base` (ponto da reta onde sai o
+normal, padrão `[1, 1]`), `levels` (múltiplos de |n| desenhados, padrão −2 a
+6 sem o 0), `initial` (padrão `[4, 5]`), `xMin`…`yMax`, `xUnit`, `caption`.
+Funciona melhor com |n| inteiro (3, 4 → 5).
+
+## ClosestOnRoute
+
+A rota A + t·d, um ponto fixo S e o drone no instante t (controle de `step`
+em `step`). Tracejado verde do drone até S com a distância; seta d no drone;
+quadradinho de ângulo reto no instante do ponto mais perto. Na animação, o
+drone voa de t = 0 até esse instante. O painel dá o sinal de (P(t) − S) · d.
+
+```mdx
+<ClosestOnRoute caption="..." />
+```
+
+Props: `A`, `d`, `S` (padrão `[1, 2]`, `[2, 1]`, `[4, 8]`), `tMax`, `step`
+(padrão 0,2, para cair em 2,4), `xMin`…`yMax`, `xUnit`, `caption`.
+
+## SpaceScene
+
+Cena em três dimensões, com a mesma convenção do `Space3D` (y para a direita,
+z para cima, x na diagonal para baixo e para a esquerda, encurtado). A
+diferença: recebe uma lista de peças, que um componente animado remonta a cada
+quadro, e pode girar em torno do eixo z.
+
+O eixo x vai na tela para (−0,5; −0,25) por unidade (no `Space3D` é 0,6 a
+210°). Com esses números, (x, y, z) cai no papel em (y − 0,5x; z − 0,25x): os
+pontos (0, 2, 3) e (4, 4, 4) coincidem, o que o `DepthTwins` usa.
+
+```mdx
+<SpaceScene
+  unit={40}
+  axes={{max: [4, 5, 4]}}
+  frame={[[3, 4, 2]]}
+  items={[
+    {type: 'arrow', from: [0, 0, 0], to: [3, 4, 2], tone: 1, math: '\\vec{v}'},
+    {type: 'point', at: [3, 4, 2], tone: 2},
+  ]}
+  caption="..."
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `items` | lista de peças (abaixo) |
+| `view` | giro da cena em torno de z, em graus (padrão 0) |
+| `frame`, `frameViews` | pontos que precisam caber e vistas em que precisam caber; o tamanho da figura só depende deles, e não muda enquanto as peças se movem |
+| `axes` | `{max: [x, y, z], min: [x, y, z]}`; `null` esconde os eixos |
+| `axesOpacity` | apaga os eixos (o `SheetFlatten` usa durante o giro da folha) |
+| `unit`, `padding`, `maxWidth`, `axisLabels`, `caption` | escala, margem, largura máxima, nomes dos eixos, legenda |
+
+Peças (`type`): `line` (`from`, `to`, `dashed`, `dotted`, `guide`, `width`),
+`arrow` (`from`, `to`), `point` (`at`, `r`), `poly` (`pts`, `fill`, `stroke`),
+`right` (marca de ângulo reto: `at`, direções `a` e `b`, `size`), `arc` (arco
+de ângulo: `at`, `a`, `b`, `r`, `labelR`), `label` (`at`, `math`). Toda peça
+aceita `tone`, `opacity` e um rótulo `math` com `dx`, `dy`, `anchor`, `size`.
+
+Funções exportadas: `project`, `turn`, `add`, `sub`, `times`, `dot`, `norm`,
+`cross`, `lerp`, `arcPoints`, `pointBox(p)` (a caixa do ponto, como no
+`Space3D`), `fullBox(a, b)` (as 12 arestas tracejadas), `num`, `tex`, `triple`
+(terna na notação da casa).
+
+Cuidado próprio: a marca de ângulo reto é desenhada no espaço, então sai como
+paralelogramo em perspectiva. Use-a junto de um polígono pintado (o triângulo
+do ângulo), para o aluno ler o canto.
+
+## SpaceWalk
+
+Animação do endereço: o ponto anda x, depois y (no chão), depois sobe z,
+deixando os três trechos verdes (as arestas da caixa). Botões trocam o ponto.
+
+```mdx
+<SpaceWalk presets={[[3, 4, 2], [2, 4, 3], [2, 3, -1]]} />
+<SpaceWalk showWhere presets={[[0, 0, 3], [3, 0, 0], [3, 4, 0], [0, 3, 2]]} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `presets` | lista de ternas inteiras (os botões) |
+| `initial` | índice do ponto inicial |
+| `showWhere` | o painel diz se o ponto está num eixo, no chão ou numa parede |
+
+## DepthTwins
+
+P(0, 2, 3) e Q(4, 4, 4) caem no mesmo lugar do papel. Botões mostram a caixa
+de cada um; o deslizante gira a cena (−40° a 40°) e separa os dois. Sem props
+além de `caption`.
+
+## FloorThenUp
+
+Pitágoras duas vezes com os números do drone (3, 4, 12): catetos 3 e 4 com
+ângulo reto, diagonal do chão 5; depois a vertical 12 com ângulo reto em S e
+a hipotenusa 13. O painel mostra as duas contas. `stages={1}` para só a etapa
+do chão.
+
+## PoleSquare
+
+Um esquadro em pé, com um lado no poste vertical e outro no chão, dá uma volta
+em torno do poste e termina apontando para a origem. Sem props além de
+`caption`.
+
+## BoxDiagonalExplorer
+
+Caixa com cantos A e A + (a, b, c): o caminho verde pelas arestas e a seta
+azul pela diagonal; o painel compara a + b + c com √(a² + b² + c²).
+
+```mdx
+<BoxDiagonalExplorer />
+<BoxDiagonalExplorer from={[1, 2, 3]} initial={[2, 3, 6]} sliders={false} names={['A', 'B']} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `from` | canto de saída (padrão a origem) |
+| `initial` | arestas (a, b, c) |
+| `sliders`, `max` | deslizantes de 0 a `max` (padrão 6) |
+| `names` | nomes dos dois cantos (padrão O e P) |
+
+## SpaceVectorSlide
+
+A seta de A(1, 3, 0) até B(3, 6, 6) e a cópia que desliza até a origem,
+terminando em (2, 3, 6). Botão para comparar com (2, 3, −6), de mesmo módulo.
+
+## SpaceTipToTail
+
+u = (0, 2, 1) e, da ponta dele, v = (3, 1, −1); a soma (3, 3, 0) volta ao
+chão. Botão "Mostrar 2u".
+
+## SheetFlatten
+
+u e v saem da origem; o triângulo O, ponta de u, ponta de v vira uma folha
+verde, que gira como objeto rígido (rotação de Rodrigues) até o plano yz, que
+sai sem perspectiva. No fim: θ, ‖u‖, ‖v‖, ‖u − v‖. O painel faz a conta dos três
+lados e do cosseno. Dois pares: (1, 2, 2) e (2, −1, 3) (θ ≈ 57,7°), e (1, 1, 0)
+e (0, 1, 1) (60°, triângulo equilátero).
+
+## CubeAngles
+
+Cubo de aresta 1 com um canto na origem; botões escolhem pares de setas
+(arestas, diagonal do chão, diagonal do cubo, diagonais de face). Arco do
+ângulo, ou marca de ângulo reto quando o produto é zero. Prop `pairs` para
+trocar a lista: `[{name, u, v}]`.
+
+## DroneFlight
+
+`mode="intro"`: o drone voa de O até P(3, 4, 12), com as três medidas e "? m".
+`mode="solved"`: sombra 5, subida 12 com ângulo reto em S, voo 13 e θ ≈ 67,4°.
+
+## Auxiliares dos componentes de vetores
+
+Funções sem desenho, importadas pelos componentes do Módulo 8. Use-as num
+componente novo de vetor em vez de reescrever as contas e a formatação.
+
+| Arquivo | O que tem |
+|---|---|
+| `mathviz/vectorArc.js` | `polar`, `angleOf` (ângulo de 0° a 360°), `wedge` (arco de ângulo), `edgePoint`, `dec`/`decText` (vírgula decimal), `pairTex` (par na notação da casa) |
+| `mathviz/projection.js` | `dot`, `add`, `sub`, `times`, `norm`, `lerp`, `kOf` (fator da projeção), `rightAngle` (marca de ângulo reto), `clipLine` (reta cortada na janela), `num`/`par`/`pair` (números e pares formatados) |
+| `mathviz/lineParam.js` | `at(A, d, t)` (ponto da reta), `windowRange`, `rightAngleMark`, `signed`, e as mesmas `add`/`sub`/`dot`/`norm` |
+| `VectorSumKit/index.js` | `pairMath` (ponto e vírgula quando alguma coordenada tem vírgula), `signedMath`, `plainNumber` |
 
 ## useAnimation
 

@@ -4,10 +4,18 @@ title: Produto escalar
 
 import CartesianPlane from '@site/src/components/CartesianPlane';
 import GeoFigure from '@site/src/components/GeoFigure';
+import RampPull from '@site/src/components/RampPull';
+import DotPairs from '@site/src/components/DotPairs';
+import DotSignExplorer from '@site/src/components/DotSignExplorer';
+import DotRotateInvariant from '@site/src/components/DotRotateInvariant';
+import DotShadow from '@site/src/components/DotShadow';
+import PerpTurn from '@site/src/components/PerpTurn';
+import SlopeDirections from '@site/src/components/SlopeDirections';
+import DotSumLength from '@site/src/components/DotSumLength';
 
 # Produto escalar: quanto dois vetores apontam para o mesmo lado
 
-## 1. Problema motivador: a nota da compra e o carrinho na rampa
+## Problema motivador: a nota da compra e o carrinho na rampa
 
 Comece por uma conta que você já faz sem pensar. Numa compra, você leva 3
 pacotes de café, 2 queijos e 5 pães. Os preços são R\$ 4 o café, R\$ 10 o
@@ -25,77 +33,81 @@ Depois somamos tudo. O resultado não é uma lista: é **um número só**, o tot
 Agora uma situação que parece não ter nada a ver com isso.
 
 Um carrinho de carga sobe uma rampa. A rampa avança 8 metros na horizontal e
-sobe 6 metros, então o carrinho percorre o deslocamento $\vec{d} = (8,\ 6)$,
+sobe 6 metros. Por isso o carrinho percorre o deslocamento $\vec{d} = (8,\ 6)$,
 de 10 metros ao longo da rampa. Uma corda puxa o carrinho com uma força de 50
 newtons. (O **newton**, de símbolo N, é a unidade de força: 50 N é mais ou menos
 a força para segurar uma sacola de 5 kg.) Só que a corda não está alinhada
-com a rampa: ela puxa na direção da força $\vec{F} = (30,\ 40)$, mais inclinada
-que o piso da rampa.
+com a rampa. Ela puxa na direção da força $\vec{F} = (30,\ 40)$, mais
+inclinada que o piso da rampa.
 
-<GeoFigure
-  unit={36}
-  padding={50}
-  polygons={[{points: [[0, 0], [8, 0], [8, 6]], tone: 0}]}
-  segments={[
-    {from: [0, 0], to: [8, 6], tone: 1, arrow: true},
-    {from: [0, 0], to: [3, 4], tone: 2, arrow: true},
-  ]}
-  angles={[
-    {at: [0, 0], from: [8, 6], to: [3, 4], label: '\\theta', tone: 3, radius: 70, labelRadius: 116},
-  ]}
-  labels={[
-    {at: [5.6, 4.2], math: '\\vec{d} = (8,\\ 6)', tone: 1, dx: 34, dy: 26},
-    {at: [3, 4], math: '\\vec{F} = (30,\\ 40)', tone: 2, dx: -18, dy: -18},
-  ]}
-  caption="O carrinho percorre a rampa na direção de d. A corda puxa na direção de F, mais inclinada. As duas setas estão em escalas diferentes: a de F tem 5 unidades para 50 N, e a de d tem 10 unidades para 10 m."
-/>
+<RampPull />
 
 O dono da empresa quer saber duas coisas:
 
 1. **Quanto dos 50 N realmente empurra o carrinho ao longo da rampa?** Uma parte
-   da força puxa o carrinho para cima e para fora da rampa, e essa parte não
+   da força puxa o carrinho para cima, para fora do piso, e essa parte não
    ajuda a subir.
 2. **Qual é o ângulo $\theta$ entre a corda e a rampa?**
 
 Ninguém mediu esse ângulo. Temos só as coordenadas das duas setas.
 
-Esta lição mostra que as duas perguntas — a nota da compra e a corda na rampa —
-se resolvem com **a mesma conta**: multiplicar par com par e somar.
+Esta lição mostra que as duas situações (a nota da compra e a corda na rampa)
+se resolvem com **a mesma conta**: multiplicar par com par e somar. A seção
+“Resolvendo o problema do carrinho na rampa” responde às duas perguntas.
 
-## 2. Mapa das ideias
+## Roteiro da lição
 
-- **Produto escalar** $\vec{u} \cdot \vec{v}$: multiplica as coordenadas
-  correspondentes de dois vetores e soma os resultados. O resultado é um
-  **número**, não um vetor.
-- **Ângulo entre dois vetores** $\theta$: a abertura entre as duas setas quando
-  elas partem do mesmo ponto, sempre entre $0^\circ$ e $180^\circ$.
-- **Significado geométrico:** $\vec{u} \cdot \vec{v} = \lVert \vec{u} \rVert
-  \lVert \vec{v} \rVert \cos\theta$. O produto escalar mede quanto um vetor
-  aponta na direção do outro.
-- **Sinal:** positivo quando o ângulo é agudo, zero quando é reto, negativo
-  quando é obtuso.
-- **Vetores perpendiculares** (também chamados **ortogonais**): vetores não
-  nulos cujo produto escalar dá zero.
+1. A conta da nota de compra também se faz com dois vetores: multiplicar par
+   com par e somar. O resultado é um número só, o **produto escalar**.
+2. O sinal desse número separa três casos: setas que apontam para o mesmo
+   lado, setas em ângulo reto e setas que apontam para lados opostos.
+3. Um vetor com ele mesmo dá o quadrado do próprio comprimento.
+4. A ordem das setas não importa, a soma se distribui e um número que
+   multiplica uma seta sai para fora da conta.
+5. O ângulo entre dois vetores se mede pelo lado menor, de $0^\circ$ a
+   $180^\circ$.
+6. Girar as duas setas juntas não muda o produto escalar. Por isso ele é
+   tamanho vezes tamanho vezes o cosseno do ângulo entre elas.
+7. O produto escalar é a sombra de uma seta sobre a outra, vezes o
+   comprimento da outra. É a parte útil de uma força.
+8. Dividindo o produto pelos dois tamanhos, sai o cosseno do ângulo, e o arco
+   cosseno devolve o ângulo.
+9. Com vetores não nulos, produto zero quer dizer ângulo reto.
+10. A regra $m_1 \times m_2 = -1$ das retas perpendiculares é o produto zero de
+    duas setas, e agora a reta vertical também entra no teste.
+11. O tamanho de uma soma de vetores depende do produto escalar: é ele que
+    corrige o Pitágoras quando o ângulo não é reto.
 
-## 3. Para que serve
+## Para que isso serve?
 
-- **Totais ponderados:** valor de uma nota, custo de uma receita, média com
-  pesos. Toda conta do tipo “multiplica cada par e soma” é um produto escalar.
-- **Força útil e trabalho:** em física, a parte de uma força que age na
-  direção do movimento é $\lVert \vec{F} \rVert \cos\theta$. O produto
-  $\vec{F} \cdot \vec{d}$ recebe o nome de **trabalho** e mede a energia gasta
-  para mover o objeto.
-- **Ângulo entre direções:** entre duas rotas, entre duas paredes, entre a
-  corda e a rampa — a partir das coordenadas, sem transferidor.
-- **Teste de perpendicularidade:** decidir se duas direções formam ângulo reto
-  com uma conta de multiplicar e somar, sem raiz e sem divisão.
-- **Computação gráfica:** o brilho de uma superfície iluminada depende do
-  cosseno do ângulo entre a luz e a superfície, calculado com produto escalar.
-- **Aprendizado de máquina:** um neurônio artificial faz exatamente a conta da
-  nota de compra — multiplica cada entrada por um peso e soma. O capítulo de
-  álgebra linear volta a essa conta com listas de muitos números.
+- **Totais ponderados.** Valor de uma nota, custo de uma receita, média com
+  pesos. Uma prova com notas 6, 8 e 9 e pesos 2, 3 e 5 tem média
+  $\frac{(6,\ 8,\ 9) \cdot (2,\ 3,\ 5)}{10} = \frac{12 + 24 + 45}{10} =
+  8{,}1$. Toda conta do tipo “multiplica cada par e soma” é um produto
+  escalar.
+- **Força útil e trabalho.** Em física, o produto da força pelo deslocamento
+  se chama **trabalho** e mede a energia gasta para mover um objeto. Empurrar
+  uma caixa 3 m para a direita com 20 N na mesma direção dá
+  $(20,\ 0) \cdot (3,\ 0) = 60$ joules.
+- **Ângulo entre direções.** Entre duas ruas, duas paredes, a corda e a rampa,
+  a partir das coordenadas e sem transferidor. Duas ruas com direções
+  $(2,\ 1)$ e $(1,\ 3)$ se cruzam a $45^\circ$, como o Exemplo 7 desta lição
+  vai mostrar com a fórmula.
+- **Teste de ângulo reto.** Um pedreiro confere o canto de uma laje com as
+  direções $(3,\ 4)$ e $(4,\ -3)$: $3 \times 4 + 4 \times (-3) = 0$, e o canto
+  é reto. A conta só multiplica e soma: não tem raiz nem divisão.
+- **Computação gráfica.** O brilho de uma superfície iluminada é proporcional
+  ao cosseno do ângulo entre a luz e a reta perpendicular à superfície. Uma
+  luz que chega a $60^\circ$ dessa perpendicular deixa a superfície com
+  $\cos 60^\circ = 0{,}5$, isto é, metade do brilho máximo. O programa calcula
+  esse cosseno com um produto escalar.
+- **Aprendizado de máquina.** Um neurônio artificial faz a conta da nota de
+  compra: multiplica cada entrada por um peso e soma. Com entradas
+  $(2,\ 1,\ 3)$ e pesos $(0{,}5;\ -1;\ 0{,}2)$, ele calcula
+  $1 - 1 + 0{,}6 = 0{,}6$. O capítulo de álgebra linear volta a essa conta com
+  listas de muitos números.
 
-## 4. Ideias anteriores que voltam aqui
+## Ideias anteriores que voltam aqui
 
 **1. Do [módulo de um vetor](./vetores).** Quanto mede o vetor $\vec{v} =
 (8,\ 6)$? E o vetor $(-3,\ 4)$?
@@ -158,131 +170,67 @@ a regra $m_1 \times m_2 = -1$ não consegue testar?
 <summary>Conferir</summary>
 
 Inverte-se a fração e troca-se o sinal: $m_2 = -\frac{1}{2}$, e de fato $2
-\times \left(-\frac{1}{2}\right) = -1$. A regra não testa o par formado por uma
-reta horizontal e uma vertical: a vertical não tem coeficiente angular, então
-não há produto para fazer. A lição de retas resolvia esse caso olhando as
-equações, fora da regra.
+\times \left(-\frac{1}{2}\right) = -1$. A regra não testa nenhum par em que
+uma das retas é vertical: a vertical não tem coeficiente angular, então não há
+produto para fazer. O caso que mais faz falta é o par de uma reta horizontal
+com uma vertical, que são perpendiculares. A lição de retas resolvia esse caso
+olhando as equações, fora da regra.
 
 </details>
 
-O item 5 deixou um caso fora da regra. No fim desta lição, a regra
+O item 5 deixou um caso fora da regra. Perto do fim desta lição, a regra
 $m_1 \times m_2 = -1$ vai reaparecer como um caso particular de uma ideia mais
-ampla, e o caso que ficou fora vai entrar sem tratamento especial.
+ampla. E nessa ideia a reta vertical entra sem tratamento especial.
 
-## 5. Intuição: quanto um vetor anda junto com o outro
+## Multiplicar par com par e somar: o resultado é um número
 
-Pense em duas pessoas puxando o mesmo carrinho, cada uma com a sua corda.
+A nota da compra tem duas listas na mesma ordem. Um vetor também é uma lista
+de números em ordem: $(8,\ 6)$ é “8 na primeira coordenada, 6 na segunda”.
+Então a conta da nota pode ser feita com dois vetores. Os passos são estes:
 
-- Se as duas cordas apontam **para o mesmo lado**, cada uma ajuda a outra por
-  inteiro.
-- Se uma corda está **atravessada** em ângulo reto em relação à outra, ela não
-  ajuda nem atrapalha o movimento na direção da outra. Ela puxa para o lado.
-- Se as cordas apontam **para lados quase opostos**, uma trabalha contra a
-  outra.
+1. Escreva os dois vetores um embaixo do outro, coordenada com coordenada.
+2. Multiplique as primeiras coordenadas.
+3. Multiplique as segundas coordenadas (e as terceiras, se houver).
+4. Some os produtos.
 
-Entre “ajuda por inteiro” e “trabalha contra” há uma escala contínua. O
-produto escalar é o número que mede onde, nessa escala, dois vetores estão.
-Ele sai positivo quando os vetores apontam mais ou menos para o mesmo lado.
-Sai zero quando eles se cruzam em ângulo reto. E sai negativo quando apontam
-para lados mais ou menos opostos.
+A figura faz esses passos com a nota e mostra o momento que mais importa: os
+produtos separados ainda não são a resposta. Só a soma deles é.
 
-O tamanho dos vetores também conta: uma corda puxando com o dobro de força dá o
-dobro de ajuda. Por isso o produto escalar cresce quando qualquer um dos dois
-vetores cresce.
-
-## 6. Modelo visual: agudo, reto e obtuso
-
-Fixe o vetor $\vec{u} = (4,\ 1)$ e compare com três vetores $\vec{v}$
-diferentes. Em cada caso, as duas setas partem do mesmo ponto.
-
-<GeoFigure
-  unit={30}
-  padding={46}
-  segments={[
-    {from: [0, 0], to: [4, 1], tone: 1, arrow: true},
-    {from: [0, 0], to: [2, 3], tone: 2, arrow: true},
-    {from: [8, 0], to: [12, 1], tone: 1, arrow: true},
-    {from: [8, 0], to: [7, 4], tone: 2, arrow: true},
-    {from: [17, 0], to: [21, 1], tone: 1, arrow: true},
-    {from: [17, 0], to: [14, 2], tone: 2, arrow: true},
-  ]}
-  angles={[
-    {at: [0, 0], from: [4, 1], to: [2, 3], label: '42^\\circ', tone: 3, radius: 30, labelRadius: 52},
-    {at: [8, 0], from: [12, 1], to: [7, 4], right: true, tone: 3},
-    {at: [17, 0], from: [21, 1], to: [14, 2], label: '132^\\circ', tone: 3, radius: 26, labelRadius: 50},
-  ]}
-  labels={[
-    {at: [4, 1], math: '\\vec{u}', tone: 1, dx: 14, dy: -4},
-    {at: [2, 3], math: '\\vec{v}', tone: 2, dx: 0, dy: -14},
-    {at: [12, 1], math: '\\vec{u}', tone: 1, dx: 14, dy: -4},
-    {at: [7, 4], math: '\\vec{v}', tone: 2, dx: 0, dy: -14},
-    {at: [21, 1], math: '\\vec{u}', tone: 1, dx: 14, dy: -4},
-    {at: [14, 2], math: '\\vec{v}', tone: 2, dx: -6, dy: -14},
-    {at: [2, -1], math: '\\vec{u} \\cdot \\vec{v} = 11'},
-    {at: [10, -1], math: '\\vec{u} \\cdot \\vec{v} = 0'},
-    {at: [18.5, -1], math: '\\vec{u} \\cdot \\vec{v} = -10'},
-  ]}
-  caption="Com u = (4, 1): à esquerda, v = (2, 3) forma ângulo agudo e o produto escalar é positivo; no meio, v = (−1, 4) forma ângulo reto e o produto é zero; à direita, v = (−3, 2) forma ângulo obtuso e o produto é negativo."
+<DotPairs
+  a={[3, 2, 5]}
+  b={[4, 10, 2]}
+  names={['café', 'queijo', 'pão']}
+  unit="reais"
+  caption="Cada linha é um par: a quantidade de um produto e o preço dele. A linha multiplica o seu par. No fim, os três produtos são somados num número só, o total da nota."
 />
 
-Os três números do desenho saem da conta da nota de compra — multiplicar as
-primeiras coordenadas, multiplicar as segundas e somar:
+Com dois vetores do plano a conta tem só duas linhas, uma por coordenada:
 
-| $\vec{v}$ | conta | $\vec{u} \cdot \vec{v}$ | ângulo entre as setas |
-|---|---|---|---|
-| $(2,\ 3)$ | $4 \times 2 + 1 \times 3 = 8 + 3$ | $11$ | agudo (cerca de $42^\circ$) |
-| $(-1,\ 4)$ | $4 \times (-1) + 1 \times 4 = -4 + 4$ | $0$ | reto ($90^\circ$) |
-| $(-3,\ 2)$ | $4 \times (-3) + 1 \times 2 = -12 + 2$ | $-10$ | obtuso (cerca de $132^\circ$) |
-
-O sinal do resultado acompanhou o tipo de ângulo nos três casos. Isso não é
-coincidência destes números, e a seção 8 mostra por quê.
-
-## 7. Ponte para a formalização
-
-Temos duas maneiras de descrever um vetor, vindas das lições anteriores:
-
-- pelas **coordenadas**, como $\vec{F} = (30,\ 40)$;
-- pelo **tamanho e pelo ângulo**, como $\vec{F} = 50(\cos\alpha,\ \sen\alpha)$.
-
-A pergunta da rampa (“quanto da força age ao longo da rampa?”) é natural na
-segunda linguagem. Num triângulo retângulo com a força como hipotenusa, a parte
-alinhada com a rampa é o cateto adjacente ao ângulo $\theta$, e vale
-$\lVert \vec{F} \rVert \cos\theta$ — é a decomposição de forças da
-[lição anterior](./modulo-direcao-e-componentes). O problema é que não
-conhecemos $\theta$.
-
-A conta da nota de compra é natural na primeira linguagem: ela só usa
-coordenadas. O que vamos fazer agora é:
-
-1. definir o produto escalar pela conta das coordenadas, que sempre podemos
-   fazer;
-2. **provar** que essa conta dá o mesmo número que $\lVert \vec{u} \rVert
-   \lVert \vec{v} \rVert \cos\theta$, que é a conta que a pergunta da rampa
-   pede.
-
-Provado isso, a conta das coordenadas responde à pergunta do ângulo. A prova é
-o ponto mais difícil da lição. Se ela não fechar na primeira leitura, isso é
-esperado: siga para os exemplos e volte a ela depois.
-
-## 8. Formalização
-
-### Definição
+<DotPairs
+  a={[3, 4]}
+  b={[2, -1]}
+  names={['primeira', 'segunda']}
+  headA="\vec{u} = (3,\ 4)"
+  headB="\vec{v} = (2,\ -1)"
+  caption="Os vetores u = (3, 4) e v = (2, −1), coordenada com coordenada. As primeiras coordenadas dão 3 × 2 = 6, as segundas dão 4 × (−1) = −4, e a soma é 2."
+/>
 
 > O **produto escalar** dos vetores $\vec{u} = (u_1,\ u_2)$ e $\vec{v} =
 > (v_1,\ v_2)$ é o número
-> $$\vec{u} \cdot \vec{v} = u_1 v_1 + u_2 v_2.$$
+>
+> $$
+> \vec{u} \cdot \vec{v} = u_1 v_1 + u_2 v_2.
+> $$
 
-Em palavras: multiplique as primeiras coordenadas, multiplique as segundas
-coordenadas e some os dois resultados. Os índices dizem só “primeira
-coordenada” e “segunda coordenada”: $u_1$ é a primeira coordenada de
-$\vec{u}$.
+Os índices dizem só “primeira coordenada” e “segunda coordenada”: $u_1$ é a
+primeira coordenada de $\vec{u}$, e $v_2$ é a segunda coordenada de $\vec{v}$.
 
 **Exemplo.** $(3,\ 4) \cdot (2,\ -1) = 3 \times 2 + 4 \times (-1) = 6 - 4 =
-2$. O resultado é o número 2.
+2$. O resultado é o número 2, como na segunda figura.
 
 **Contraexemplo.** Multiplicar coordenada por coordenada e **guardar os dois
 resultados numa lista** não é o produto escalar. A partir de $(1,\ 2)$ e
-$(3,\ 4)$, a lista $(3,\ 8)$ não é o produto escalar. Falta o passo de somar,
+$(3,\ 4)$, a lista $(3,\ 8)$ não é o produto escalar. Falta o passo 4, somar,
 e o produto escalar é $3 + 8 = 11$.
 
 > **Aviso de notação.** Neste curso, a multiplicação de números se escreve com
@@ -292,71 +240,211 @@ e o produto escalar é $3 + 8 = 11$.
 > Sempre que você vir um ponto entre duas setas, leia “produto escalar”, e não
 > “vezes”.
 
-O nome “escalar” vem justamente do resultado: em matemática, **escalar** é um
-número comum, em contraste com um vetor. O produto escalar é o produto que dá
-um escalar.
+O nome “escalar” vem do resultado. Em matemática, **escalar** é um número
+comum, em contraste com um vetor. O produto escalar é o produto que dá um
+escalar.
 
-### Um vetor com ele mesmo
+A nota da compra é um produto escalar de vetores com três coordenadas:
+$(3,\ 2,\ 5) \cdot (4,\ 10,\ 2) = 42$. A conta é a mesma, com uma linha a mais.
+A lição de [vetores no espaço](./vetores-no-espaco), mais adiante, vai
+mostrar que nada na definição impede a terceira coordenada.
 
-Faça o produto escalar de $\vec{v} = (8,\ 6)$ com ele mesmo:
+<details>
+<summary>Confira: quanto vale (5, 1) · (2, −3)? E por que a resposta não é (10, −3)?</summary>
+
+Primeiras coordenadas: $5 \times 2 = 10$. Segundas: $1 \times (-3) = -3$.
+Somando, $(5,\ 1) \cdot (2,\ -3) = 10 - 3 = 7$. A lista $(10,\ -3)$ tem os dois
+produtos, mas ainda não foi somada. O produto escalar é o número 7.
+
+</details>
+
+## O sinal do produto diz se as setas apontam para o mesmo lado
+
+Pense em duas pessoas puxando o mesmo carrinho, cada uma com a sua corda.
+
+- Se as duas cordas apontam **para o mesmo lado**, uma ajuda a outra.
+- Se uma corda está **atravessada**, em ângulo reto com a outra, ela não ajuda
+  nem atrapalha o movimento na direção da outra. Ela puxa para o lado.
+- Se as cordas apontam **para lados quase opostos**, uma trabalha contra a
+  outra.
+
+O produto escalar acompanha essa escala pelo sinal. Fixe o vetor
+$\vec{u} = (4,\ 1)$ e mude o vetor $\vec{v}$ na figura. Comece pelos três
+botões e depois mexa nos controles.
+
+<DotSignExplorer />
+
+Os três botões dão estes números:
+
+| $\vec{v}$ | conta | $\vec{u} \cdot \vec{v}$ | ângulo entre as setas |
+|---|---|---|---|
+| $(2,\ 3)$ | $4 \times 2 + 1 \times 3 = 8 + 3$ | $11$ | agudo (cerca de $42^\circ$) |
+| $(-1,\ 4)$ | $4 \times (-1) + 1 \times 4 = -4 + 4$ | $0$ | reto ($90^\circ$) |
+| $(-3,\ 2)$ | $4 \times (-3) + 1 \times 2 = -12 + 2$ | $-10$ | obtuso (cerca de $132^\circ$) |
+
+A reta tracejada da figura passa pela origem em ângulo reto com $\vec{u}$. Ela
+divide o plano em dois lados:
+
+- com a ponta de $\vec{v}$ do lado de $\vec{u}$ (sombreado), o produto sai
+  **positivo** e o ângulo é **agudo**;
+- com a ponta de $\vec{v}$ em cima da reta, fora da origem, o produto dá
+  **zero** e o ângulo é **reto**;
+- com a ponta de $\vec{v}$ do outro lado, o produto sai **negativo** e o ângulo
+  é **obtuso**. A exceção é $\vec{v}$ apontar exatamente para o lado oposto ao
+  de $\vec{u}$, como $(-4,\ -1)$: aí o ângulo é **raso**, de $180^\circ$.
+
+Com $\vec{v} = (0,\ 0)$, o produto também dá zero, mas não há ângulo nenhum: o
+vetor nulo é um ponto só e não tem direção.
+
+Por enquanto isso é uma observação: você viu acontecer, mas ainda não sabe por
+que acontece. A seção “Girar as duas setas juntas não muda o produto” explica
+o motivo, e a seção da sombra mostra o significado dele.
+
+<details>
+<summary>Confira: com u = (4, 1), o vetor v = (1, −4) cai de que lado da reta tracejada? Faça a conta antes de mexer na figura.</summary>
+
+$(4,\ 1) \cdot (1,\ -4) = 4 \times 1 + 1 \times (-4) = 4 - 4 = 0$. O produto é
+zero, então a ponta de $(1,\ -4)$ está em cima da reta tracejada, do lado de
+baixo da origem. O ângulo entre as setas é reto.
+
+</details>
+
+## Um vetor com ele mesmo dá o quadrado do comprimento
+
+Faça o produto escalar de $\vec{v} = (8,\ 6)$ com ele mesmo. Os dois vetores
+da conta são a mesma seta, então cada linha multiplica uma coordenada por ela
+mesma:
 
 $$
 \vec{v} \cdot \vec{v} = 8 \times 8 + 6 \times 6 = 64 + 36 = 100.
 $$
 
-O número 100 é o quadrado do módulo, porque $\lVert \vec{v} \rVert = 10$. Isso
-acontece com qualquer vetor. Para $\vec{v} = (a,\ b)$, a conta $\vec{v} \cdot
-\vec{v}$ é $a^2 + b^2$, e $a^2 + b^2$ é exatamente o que fica dentro da raiz na
-fórmula do módulo:
+Os números 64 e 36 são as áreas dos quadrados construídos sobre os dois
+catetos do triângulo da seta. E 100 é a área do quadrado sobre a hipotenusa,
+que é a própria seta. É o teorema de Pitágoras desenhado:
 
-> $$\vec{v} \cdot \vec{v} = \lVert \vec{v} \rVert^2.$$
+<GeoFigure
+  unit={18}
+  padding={30}
+  polygons={[
+    {points: [[0, 0], [8, 0], [8, -8], [0, -8]], tone: 1},
+    {points: [[8, 0], [14, 0], [14, 6], [8, 6]], tone: 2},
+    {points: [[0, 0], [8, 6], [2, 14], [-6, 8]], tone: 3},
+  ]}
+  segments={[{from: [0, 0], to: [8, 6], tone: 3, arrow: true}]}
+  angles={[{at: [8, 0], from: [0, 0], to: [8, 6], right: true}]}
+  labels={[
+    {at: [4, -4], math: '8 \\times 8 = 64', tone: 1},
+    {at: [11, 3], math: '6 \\times 6 = 36', tone: 2, dx: 0, dy: 0},
+    {at: [1, 7], math: '100', tone: 3},
+    {at: [4, 3], math: '\\vec{v}', tone: 3, dx: 14, dy: 14},
+  ]}
+  caption="A seta v = (8, 6) é a hipotenusa de um triângulo retângulo de catetos 8 e 6. A conta v · v soma as áreas dos quadrados sobre os catetos, 64 + 36, e dá a área do quadrado sobre a seta, 100."
+/>
+
+Isso acontece com qualquer vetor. Para $\vec{v} = (a,\ b)$, a conta
+$\vec{v} \cdot \vec{v}$ é $a^2 + b^2$, e $a^2 + b^2$ é exatamente o número que
+fica dentro da raiz na fórmula do módulo. Por isso
+
+> $$
+> \vec{v} \cdot \vec{v} = \lVert \vec{v} \rVert^2.
+> $$
 
 Daí sai uma consequência: $\vec{v} \cdot \vec{v}$ nunca é negativo, porque é
 uma soma de quadrados. E só dá zero quando as duas coordenadas são zero, isto
 é, quando $\vec{v}$ é o vetor nulo $\vec{0}$.
 
-### Propriedades
+**Exemplo.** $(-3,\ 4) \cdot (-3,\ 4) = 9 + 16 = 25 = 5^2$, e o módulo de
+$(-3,\ 4)$ é 5.
 
-As propriedades do produto escalar vêm das propriedades dos números, porque a
-conta é feita coordenada a coordenada com multiplicações e somas comuns.
+**Contraexemplo.** $\vec{v} \cdot \vec{v}$ **não** é o módulo; é o módulo ao
+quadrado. Para $(8,\ 6)$, o produto dá 100, e o comprimento da seta é 10. Para
+voltar ao comprimento, tire a raiz: $\lVert \vec{v} \rVert = \sqrt{\vec{v}
+\cdot \vec{v}}$.
 
-- **Comutativa:** $\vec{u} \cdot \vec{v} = \vec{v} \cdot \vec{u}$. A conta
-  $u_1 v_1 + u_2 v_2$ e a conta $v_1 u_1 + v_2 u_2$ têm as mesmas parcelas,
-  porque $u_1 \times v_1 = v_1 \times u_1$ (comutativa dos números).
-- **Distributiva:** $\vec{u} \cdot (\vec{v} + \vec{w}) = \vec{u} \cdot \vec{v} +
-  \vec{u} \cdot \vec{w}$.
-- **Número para fora:** $(k\vec{u}) \cdot \vec{v} = k(\vec{u} \cdot \vec{v})$.
-  Dobrar um dos vetores dobra o produto, como na intuição das cordas.
+<details>
+<summary>Confira: quanto vale (5, −12) · (5, −12)? Qual é o comprimento dessa seta?</summary>
 
-Confira a distributiva com $\vec{u} = (2,\ 1)$, $\vec{v} = (3,\ 0)$ e
-$\vec{w} = (1,\ 4)$. Pelo lado esquerdo, primeiro somamos $\vec{v} + \vec{w} =
-(4,\ 4)$ e depois $\vec{u} \cdot (4,\ 4) = 8 + 4 = 12$. Pelo lado direito,
-$\vec{u} \cdot \vec{v} = 6 + 0 = 6$ e $\vec{u} \cdot \vec{w} = 2 + 4 = 6$, que
-somam 12. Os dois caminhos dão 12.
+$5 \times 5 + (-12) \times (-12) = 25 + 144 = 169$. O comprimento é a raiz:
+$\sqrt{169} = 13$.
 
-Com a distributiva, dá para abrir $(\vec{u} + \vec{v}) \cdot (\vec{u} +
-\vec{v})$ do mesmo jeito que se abre $(a + b)^2$ em
-[produtos notáveis](../algebra/produtos-notaveis):
+</details>
 
-$$
-\lVert \vec{u} + \vec{v} \rVert^2 = (\vec{u} + \vec{v}) \cdot (\vec{u} + \vec{v})
-= \vec{u} \cdot \vec{u} + 2\,\vec{u} \cdot \vec{v} + \vec{v} \cdot \vec{v}
-= \lVert \vec{u} \rVert^2 + 2\,\vec{u} \cdot \vec{v} + \lVert \vec{v} \rVert^2.
-$$
+## A ordem não importa, a soma se distribui e o número sai para fora
 
-O termo do meio aparece duas vezes porque $\vec{u} \cdot \vec{v}$ e $\vec{v}
-\cdot \vec{u}$ são iguais (comutativa). Ele é o “dobro do produto” dos
-vetores. Na [lição de soma](./soma-de-vetores), o barco com velocidade
-própria $(0,\ 8)$ e correnteza $(6,\ 0)$ andava a 10 km/h, e não a $8 + 6 =
-14$. Agora dá para ver de onde vem a diferença: $(0,\ 8) \cdot (6,\ 0) = 0$,
-então o dobro do produto some e sobra $8^2 + 6^2 = 100$, ou seja, velocidade
-$\sqrt{100} = 10$. É o teorema de Pitágoras, que aparece quando o produto
-escalar é zero.
+O produto escalar é feito linha por linha, com multiplicações e somas de
+números comuns. Por isso ele herda três propriedades das contas com números.
+Use os botões da figura para ver as duas primeiras acontecerem na nota da
+compra.
 
-### O significado geométrico
+<DotPairs
+  a={[3, 2, 5]}
+  b={[4, 10, 2]}
+  names={['café', 'queijo', 'pão']}
+  unit="reais"
+  controls={['swap', 'double']}
+  caption="Trocar as colunas de lugar não muda nenhum produto, e por isso o total continua 42. Dobrar as quantidades dobra cada produto, e o total vai para 84."
+/>
 
-Agora a parte que liga a conta das coordenadas ao ângulo. Primeiro, o que é
-esse ângulo.
+- **A ordem não importa (comutativa):** $\vec{u} \cdot \vec{v} = \vec{v} \cdot
+  \vec{u}$. A conta $u_1 v_1 + u_2 v_2$ e a conta $v_1 u_1 + v_2 u_2$ têm as
+  mesmas parcelas, porque $u_1 \times v_1 = v_1 \times u_1$ (a comutativa dos
+  números).
+- **Um número que multiplica uma seta sai para fora:** $(k\vec{u}) \cdot \vec{v}
+  = k(\vec{u} \cdot \vec{v})$. Multiplicar $\vec{u}$ por $k$ multiplica cada
+  linha da conta por $k$, e a soma das linhas fica multiplicada por $k$. Na
+  figura, dobrar as quantidades levou o total de 42 para 84.
+- **A soma se distribui (distributiva):** $\vec{u} \cdot (\vec{v} + \vec{w}) =
+  \vec{u} \cdot \vec{v} + \vec{u} \cdot \vec{w}$. Numa compra, é pagar duas
+  sacolas juntas ou cada uma no seu caixa: o total é o mesmo.
+
+Confira a distributiva com números. Tome $\vec{u} = (2,\ 1)$, $\vec{v} =
+(3,\ 0)$ e $\vec{w} = (1,\ 4)$.
+
+- Pelo lado esquerdo, primeiro some $\vec{v} + \vec{w} = (4,\ 4)$. Depois faça
+  $\vec{u} \cdot (4,\ 4) = 8 + 4 = 12$.
+- Pelo lado direito, faça $\vec{u} \cdot \vec{v} = 6 + 0 = 6$ e $\vec{u} \cdot
+  \vec{w} = 2 + 4 = 6$, e some: $6 + 6 = 12$.
+
+Os dois caminhos dão 12.
+
+**Contraexemplo.** Nem toda propriedade dos números vale aqui. Com números,
+$a \times (b \times c)$ existe sempre. Com vetores, $\vec{u} \cdot (\vec{v}
+\cdot \vec{w})$ **não existe**: o parêntese de dentro já é um número, e não há
+produto escalar entre um vetor e um número.
+
+<details>
+<summary>Confira: sabendo que u · v = 7, quanto vale (3u) · v? E v · u?</summary>
+
+$(3\vec{u}) \cdot \vec{v} = 3(\vec{u} \cdot \vec{v}) = 3 \times 7 = 21$, porque
+o 3 multiplica cada linha da conta. E $\vec{v} \cdot \vec{u} = \vec{u} \cdot
+\vec{v} = 7$, porque a ordem não importa.
+
+</details>
+
+## O ângulo entre dois vetores se mede pelo lado menor
+
+Para ligar o produto escalar ao ângulo, primeiro é preciso dizer de que ângulo
+se fala. Duas setas que saem do mesmo ponto abrem dois ângulos, um de cada
+lado, e os dois juntos dão uma volta inteira.
+
+<GeoFigure
+  unit={40}
+  padding={40}
+  bounds={[-1.8, -1.8, 3, 3]}
+  segments={[
+    {from: [0, 0], to: [2.6, 0], tone: 1, arrow: true},
+    {from: [0, 0], to: [0, 2.6], tone: 2, arrow: true},
+  ]}
+  angles={[{at: [0, 0], from: [2.6, 0], to: [0, 2.6], label: '90^\\circ', tone: 3, radius: 34, labelRadius: 56}]}
+  arcs={[{at: [0, 0], r: 1.1, from: 90, to: 360, tone: 0}]}
+  labels={[
+    {at: [2.6, 0], math: '(1,\\ 0)', tone: 1, dx: 4, dy: 20},
+    {at: [0, 2.6], math: '(0,\\ 1)', tone: 2, dx: 30, dy: 0},
+    {at: [-0.95, -0.95], math: '270^\\circ', dx: -20, dy: 16},
+  ]}
+  caption="Entre (1, 0) e (0, 1) há dois ângulos: 90° pelo lado de dentro e 270° pelo lado de fora. O ângulo entre os vetores é o menor dos dois, 90°."
+/>
 
 > O **ângulo entre dois vetores** não nulos $\vec{u}$ e $\vec{v}$ é a abertura
 > $\theta$ entre as duas setas quando elas partem do mesmo ponto, medida pelo
@@ -367,42 +455,81 @@ aponta para cima, o ângulo é $90^\circ$.
 
 **Contraexemplo.** Girando de $(0,\ 1)$ até $(1,\ 0)$ no sentido anti-horário,
 damos três quartos de volta, $270^\circ$. Esse giro existe, mas $270^\circ$
-**não** é o ângulo entre os vetores: o ângulo entre eles é medido pelo lado
-menor, $360^\circ - 270^\circ = 90^\circ$.
+**não** é o ângulo entre os vetores. O ângulo entre eles é medido pelo lado
+menor: $360^\circ - 270^\circ = 90^\circ$.
+
+Repare que o ângulo entre os vetores **não** é o ângulo que cada um faz com o
+eixo $x$. É a abertura entre os dois, e o eixo não entra na conta.
+
+<details>
+<summary>Confira: uma seta faz 30° com o eixo x e outra faz 300°. Qual é o ângulo entre elas?</summary>
+
+A diferença dos giros é $300^\circ - 30^\circ = 270^\circ$, que passa de
+$180^\circ$. Então esse é o lado maior, e o ângulo entre as setas é o outro
+lado: $360^\circ - 270^\circ = 90^\circ$.
+
+</details>
+
+## Girar as duas setas juntas não muda o produto
+
+Este é o ponto mais difícil da lição. Se ele não fechar na primeira leitura,
+isso é esperado: siga para os exemplos e volte aqui depois.
+
+Temos duas maneiras de descrever um vetor, vindas das lições anteriores:
+
+- pelas **coordenadas**, como $\vec{F} = (30,\ 40)$;
+- pelo **tamanho e pelo ângulo com o eixo**, como $\vec{F} = 50(\cos\alpha,\
+  \sen\alpha)$: o ponto do ciclo na direção da seta, esticado pelo tamanho.
+
+A conta da nota usa a primeira maneira. A pergunta da rampa (o ângulo entre a
+corda e a rampa) é uma pergunta sobre a segunda. O plano é mostrar que o número
+que sai da conta das coordenadas depende só dos tamanhos e do ângulo entre as
+setas.
+
+**O que a figura mostra.** As setas $\vec{u}$ (tamanho 4, a $65^\circ$ do
+eixo) e $\vec{v}$ (tamanho 5, a $20^\circ$ do eixo) giram juntas, $20^\circ$
+no sentido horário. A abertura entre elas não muda. Acompanhe o painel: as
+coordenadas mudam o tempo todo, e a conta das coordenadas fica parada em
+$14{,}14$.
+
+<DotRotateInvariant />
+
+No fim do giro, $\vec{v}$ está deitado no eixo $x$: $\vec{v} = (5,\ 0)$. Agora
+a conta das coordenadas encolhe. A segunda coordenada de $\vec{v}$ é 0, e por
+isso a segunda linha da conta dá 0. Só a primeira linha sobra:
+
+$$
+\vec{u} \cdot \vec{v} = (\text{primeira coordenada de } \vec{u}) \times 5 + (\text{segunda coordenada de } \vec{u}) \times 0.
+$$
+
+A primeira coordenada de $\vec{u}$ é a sombra de $\vec{u}$ no eixo, o trecho
+verde: o cateto adjacente ao ângulo de $45^\circ$, que mede $4\cos 45^\circ$.
+Então
+
+$$
+\vec{u} \cdot \vec{v} = 4 \cos 45^\circ \times 5 = 20 \times \frac{\sqrt{2}}{2} = 10\sqrt{2} \approx 14{,}14.
+$$
+
+É tamanho de $\vec{u}$ vezes tamanho de $\vec{v}$ vezes o cosseno do ângulo
+entre eles. Mexa nos controles da figura: as duas contas do painel, pelas
+coordenadas e por tamanhos e ângulo, dão sempre o mesmo número.
 
 > **O produto escalar e o ângulo.** Para vetores não nulos $\vec{u}$ e
 > $\vec{v}$ com ângulo $\theta$ entre eles,
-> $$\vec{u} \cdot \vec{v} = \lVert \vec{u} \rVert \, \lVert \vec{v} \rVert \cos\theta.$$
+>
+> $$
+> \vec{u} \cdot \vec{v} = \lVert \vec{u} \rVert \, \lVert \vec{v} \rVert \cos\theta.
+> $$
 
 Os dois lados da igualdade são números. O lado esquerdo se calcula com as
 coordenadas. O lado direito usa os tamanhos e o ângulo.
 
-**Por que vale.** Vamos escrever os dois vetores na forma de tamanho e ângulo,
-calcular o produto escalar pelas coordenadas e reconhecer a fórmula do cosseno
-da diferença.
+**Por que vale para quaisquer duas setas.** A figura mostrou um caso. A prova
+abaixo mostra que a conta das coordenadas sempre dá o lado direito. Ela
+escreve os vetores com tamanho e ângulo, faz a conta das coordenadas e
+reconhece a fórmula do cosseno da diferença.
 
-<GeoFigure
-  unit={44}
-  padding={50}
-  segments={[
-    {from: [0, 0], to: [5.6, 0], tone: 0},
-    {from: [0, 0], to: [4.698, 1.71], tone: 1, arrow: true},
-    {from: [0, 0], to: [1.69, 3.625], tone: 2, arrow: true},
-  ]}
-  angles={[
-    {at: [0, 0], from: [5.6, 0], to: [4.698, 1.71], label: '\\beta', tone: 1, radius: 58, labelRadius: 76},
-    {at: [0, 0], from: [5.6, 0], to: [1.69, 3.625], tone: 2, radius: 34},
-    {at: [0, 0], from: [4.698, 1.71], to: [1.69, 3.625], label: '\\theta', tone: 3, radius: 104, labelRadius: 124},
-  ]}
-  labels={[
-    {at: [1.69, 3.625], math: '\\vec{u}', tone: 2, dx: 0, dy: -16},
-    {at: [4.698, 1.71], math: '\\vec{v}', tone: 1, dx: 16, dy: -4},
-    {at: [0.76, 0.85], math: '\\alpha', tone: 2},
-  ]}
-  caption="O vetor u faz ângulo α com o eixo horizontal; o vetor v faz ângulo β. A abertura entre os dois é θ = α − β."
-/>
-
-**Passo 1 — reescrever os vetores.** Chame de $a = \lVert \vec{u} \rVert$ e
+**Passo 1: reescrever os vetores.** Chame de $a = \lVert \vec{u} \rVert$ e
 $b = \lVert \vec{v} \rVert$ os tamanhos. Chame de $\alpha$ e $\beta$ os
 ângulos que cada seta faz com o eixo $x$. Pela
 [lição anterior](./modulo-direcao-e-componentes), cada vetor é o ponto do
@@ -413,7 +540,7 @@ $$
 \vec{v} = (b\cos\beta,\ b\sen\beta).
 $$
 
-**Passo 2 — fazer a conta das coordenadas.** Multiplique as primeiras
+**Passo 2: fazer a conta das coordenadas.** Multiplique as primeiras
 coordenadas, multiplique as segundas e some:
 
 $$
@@ -421,7 +548,7 @@ $$
 = a\cos\alpha \times b\cos\beta + a\sen\alpha \times b\sen\beta.
 $$
 
-**Passo 3 — pôr o fator comum em evidência.** As duas parcelas têm o fator
+**Passo 3: pôr o fator comum em evidência.** As duas parcelas têm o fator
 $a \times b$. Tirando esse fator para fora do parêntese (é a distributiva lida
 de trás para a frente), sobra:
 
@@ -429,7 +556,7 @@ $$
 \vec{u} \cdot \vec{v} = ab\,(\cos\alpha\cos\beta + \sen\alpha\sen\beta).
 $$
 
-**Passo 4 — reconhecer o cosseno da diferença.** O que está dentro do
+**Passo 4: reconhecer o cosseno da diferença.** O que está dentro do
 parêntese é, termo a termo, o lado direito da fórmula de
 [$\cos(\alpha - \beta)$](./soma-diferenca-e-arco-duplo): cosseno com cosseno,
 seno com seno, somados. Trocando o parêntese pelo cosseno que ele vale:
@@ -438,9 +565,14 @@ $$
 \vec{u} \cdot \vec{v} = ab\cos(\alpha - \beta).
 $$
 
-**Passo 5 — de $\alpha - \beta$ para $\theta$.** No desenho, $\alpha - \beta$
-é exatamente a abertura $\theta$ entre as setas. Mas nem sempre a diferença
-dos ângulos com o eixo é o ângulo entre os vetores. Há dois casos a conferir:
+Esse passo também explica a figura. Girar as duas setas juntas soma o mesmo
+número a $\alpha$ e a $\beta$, e por isso a diferença $\alpha - \beta$ não
+muda. Então o produto também não muda.
+
+**Passo 5: de $\alpha - \beta$ para $\theta$.** No desenho do começo,
+$\alpha - \beta = 65^\circ - 20^\circ = 45^\circ$ é exatamente a abertura entre
+as setas. Mas nem sempre a diferença dos ângulos com o eixo é o ângulo entre
+os vetores. Há dois casos a conferir:
 
 - Se $\vec{v}$ tiver o ângulo maior, a diferença $\alpha - \beta$ sai
   negativa, por exemplo $-45^\circ$. Esse sinal não muda o cosseno:
@@ -452,60 +584,124 @@ dos ângulos com o eixo é o ângulo entre os vetores. Há dois casos a conferir
   eixo horizontal que a [redução ao primeiro quadrante](./reducao-ao-primeiro-quadrante)
   usou.
 
-Nos dois casos, $\cos(\alpha - \beta) = \cos\theta$. Como $a$ e $b$ são os
-módulos, chegamos a
+Os dois casos podem acontecer juntos, como numa diferença de $-280^\circ$.
+Então aplique um depois do outro: o primeiro tira o sinal ($280^\circ$), e o
+segundo passa para o lado menor ($80^\circ$). Em todos os casos,
+$\cos(\alpha - \beta) = \cos\theta$. Como $a$ e $b$ são os módulos, chegamos
+a
 
 $$
 \vec{u} \cdot \vec{v} = \lVert \vec{u} \rVert \, \lVert \vec{v} \rVert \cos\theta.
 $$
 
-A fórmula de $\cos(a - b)$ foi deduzida em sua lição com uma figura de ângulos
+A fórmula de $\cos(a - b)$ foi deduzida na sua lição com uma figura de ângulos
 agudos, mas lá também se avisou que ela vale para quaisquer ângulos. É dessa
 versão geral que a prova precisa, porque $\alpha$ e $\beta$ podem estar em
 qualquer quadrante.
 
-**Conferindo num caso numérico.** No desenho acima, $\vec{u}$ tem tamanho 4 e
-ângulo $65^\circ$; $\vec{v}$ tem tamanho 5 e ângulo $20^\circ$. Pelas
-coordenadas, $\vec{u} \approx (1{,}690;\ 3{,}625)$ e $\vec{v} \approx
-(4{,}698;\ 1{,}710)$, e
+**Agora o sinal tem explicação.** Os dois módulos são positivos. Então o sinal
+de $\vec{u} \cdot \vec{v}$ é o sinal de $\cos\theta$. E o cosseno, de
+$0^\circ$ a $180^\circ$, é positivo antes de $90^\circ$, zero em $90^\circ$ e
+negativo depois:
 
-$$
-\vec{u} \cdot \vec{v} \approx 1{,}690 \times 4{,}698 + 3{,}625 \times 1{,}710
-\approx 7{,}94 + 6{,}20 = 14{,}14.
-$$
+| ângulo $\theta$ | $\cos\theta$ | $\vec{u} \cdot \vec{v}$ | leitura |
+|---|---|---|---|
+| agudo, de $0^\circ$ a menos de $90^\circ$ | positivo | positivo | apontam para o mesmo lado |
+| reto, $90^\circ$ | zero | zero | um não avança nada na direção do outro |
+| obtuso, de mais de $90^\circ$ a menos de $180^\circ$ | negativo | negativo | apontam para lados opostos |
+| raso, $180^\circ$ | $-1$ | negativo | apontam para lados exatamente opostos |
 
-Pelo outro lado, $4 \times 5 \times \cos(65^\circ - 20^\circ) = 20 \cos 45^\circ
-= 20 \times \frac{\sqrt{2}}{2} = 10\sqrt{2} \approx 14{,}14$. Os dois caminhos
-dão o mesmo número.
+É por isso que, na figura da reta tracejada, o sinal acompanhou o tipo de
+ângulo. Para saber **se** o ângulo é agudo, reto ou obtuso, não é preciso
+calcular o ângulo: o sinal do produto escalar responde.
 
-### O que a fórmula diz: força útil
+**Exemplo.** $\vec{u}$ de tamanho 3, $\vec{v}$ de tamanho 2 e $60^\circ$ entre
+eles: $\vec{u} \cdot \vec{v} = 3 \times 2 \times \cos 60^\circ = 6 \times 0{,}5
+= 3$.
+
+**Contraexemplo.** Multiplicar só os tamanhos não é o produto escalar. Com
+$(3,\ 4)$ e $(4,\ -3)$, os tamanhos são 5 e 5, e $5 \times 5 = 25$. Mas o
+produto escalar é $12 - 12 = 0$. Falta o cosseno, que aqui é
+$\cos 90^\circ = 0$.
+
+<details>
+<summary>Confira: na figura, ponha u com 70° e v com 340°. A diferença dos ângulos com o eixo é 270°. Qual ângulo entra na fórmula, e quanto dá o produto se os tamanhos forem 4 e 5?</summary>
+
+Os $270^\circ$ são o lado maior. O ângulo entre as setas é o lado menor,
+$360^\circ - 270^\circ = 90^\circ$. Então $\vec{u} \cdot \vec{v} = 4 \times 5
+\times \cos 90^\circ = 0$, e as setas estão em ângulo reto. O cosseno de
+$270^\circ$ também é 0, como o Passo 5 garantiu.
+
+</details>
+
+## O produto escalar é a sombra de uma seta vezes o comprimento da outra
 
 Leia $\lVert \vec{u} \rVert \, \lVert \vec{v} \rVert \cos\theta$ em duas
-partes: $\lVert \vec{u} \rVert \cos\theta$ vezes $\lVert \vec{v} \rVert$. O
-primeiro pedaço é o cateto adjacente do triângulo retângulo que tem $\vec{u}$
-como hipotenusa — a parte de $\vec{u}$ que aponta na direção de $\vec{v}$. Então:
+partes: $\lVert \vec{u} \rVert \cos\theta$, vezes $\lVert \vec{v} \rVert$.
 
-> O produto escalar é **a parte de $\vec{u}$ que aponta na direção de
-> $\vec{v}$, multiplicada pelo tamanho de $\vec{v}$**.
+O primeiro pedaço tem um desenho. Na [lição
+anterior](./modulo-direcao-e-componentes), as componentes de um vetor eram as
+sombras da seta nos eixos. Agora a sombra cai sobre a reta de **outro vetor**.
+O gesto é este:
 
-Quando $\vec{v}$ tem tamanho 1, sobra só a parte de $\vec{u}$ na direção de
-$\vec{v}$. Dividindo pelo tamanho de $\vec{v}$, obtemos essa parte em qualquer
-caso:
+1. Desenhe $\vec{u}$ e $\vec{v}$ saindo do mesmo ponto.
+2. Da ponta de $\vec{u}$, desça uma linha em ângulo reto até a reta de
+   $\vec{v}$.
+3. O trecho da reta de $\vec{v}$ que vai da origem até o pé dessa linha é a
+   **sombra** de $\vec{u}$ sobre $\vec{v}$.
+
+A sombra, a linha que desce e a seta $\vec{u}$ formam um triângulo retângulo.
+A seta $\vec{u}$ é a hipotenusa, e a sombra é o cateto adjacente ao ângulo
+$\theta$. Por isso a sombra mede $\lVert \vec{u} \rVert \cos\theta$.
+
+<DotShadow />
+
+> O produto escalar é **a sombra de $\vec{u}$ sobre a reta de $\vec{v}$,
+> multiplicada pelo tamanho de $\vec{v}$**.
+
+A sombra tem sinal. Com ângulo agudo, ela cai do lado para onde $\vec{v}$
+aponta e conta como positiva. Com ângulo obtuso, ela cai do outro lado da
+origem e conta como negativa, porque o cosseno é negativo. Com ângulo reto, ela
+encolhe até um ponto e vale zero. É mais um jeito de ver o sinal do produto.
+
+Na corda da rampa, a sombra é exatamente o que o dono da empresa quer saber: a
+parte da força que segue a rampa, a **força útil**. Para obter só a sombra,
+divida o produto pelo tamanho de $\vec{v}$:
 
 $$
-\text{parte de } \vec{u} \text{ na direção de } \vec{v}
+\text{sombra de } \vec{u} \text{ sobre } \vec{v}
 = \lVert \vec{u} \rVert \cos\theta
 = \frac{\vec{u} \cdot \vec{v}}{\lVert \vec{v} \rVert}.
 $$
 
+**Exemplo.** Com $\vec{u} = (3,\ 4)$ e $\vec{v} = (2,\ 0)$, a conta dá
+$\vec{u} \cdot \vec{v} = 6$. A sombra é $\frac{6}{2} = 3$: a primeira
+coordenada de $\vec{u}$, como se espera de uma sombra no eixo $x$.
+
+**Contraexemplo.** A sombra e o produto escalar são números diferentes. No
+exemplo, o produto é 6 e a sombra é 3. O produto é a sombra vezes
+$\lVert \vec{v} \rVert$. Por isso os dois só coincidem quando
+$\lVert \vec{v} \rVert = 1$ ou quando a sombra é zero (ângulo reto).
+
 A [próxima lição](./projecao-ortogonal) desenvolve essa ideia, que se chama
 projeção.
 
-### O ângulo entre dois vetores
+<details>
+<summary>Confira: na figura, ponha o ângulo em 120° e o tamanho de v em 5. Antes de olhar o painel, quanto vale a sombra? E o produto?</summary>
 
-Na fórmula, tudo é conhecido a partir das coordenadas, exceto $\cos\theta$.
-Isolando o cosseno (dividimos os dois lados por $\lVert \vec{u} \rVert \,
-\lVert \vec{v} \rVert$, que não é zero porque os vetores não são nulos):
+A sombra é $4 \cos 120^\circ = 4 \times \left(-\frac{1}{2}\right) = -2$: ela
+tem 2 de comprimento e cai do lado contrário ao de $\vec{v}$. O produto é a
+sombra vezes 5: $-2 \times 5 = -10$.
+
+</details>
+
+## O ângulo sai do produto dividido pelos dois tamanhos
+
+Na fórmula $\vec{u} \cdot \vec{v} = \lVert \vec{u} \rVert \, \lVert \vec{v}
+\rVert \cos\theta$, tudo se calcula a partir das coordenadas, exceto
+$\cos\theta$. Para isolar o cosseno, divida os dois lados por $\lVert \vec{u}
+\rVert \, \lVert \vec{v} \rVert$. A divisão é permitida porque os vetores não
+são nulos, e por isso esse produto de tamanhos não é zero.
 
 > $$
 > \cos\theta = \frac{\vec{u} \cdot \vec{v}}{\lVert \vec{u} \rVert \, \lVert \vec{v} \rVert},
@@ -513,100 +709,55 @@ Isolando o cosseno (dividimos os dois lados por $\lVert \vec{u} \rVert \,
 > $$
 
 O $\arccos$ é a inversa certa para esse trabalho. Ele devolve ângulos de
-$0^\circ$ a $180^\circ$, e o ângulo entre dois vetores vive exatamente nesse
+$0^\circ$ a $180^\circ$, e o ângulo entre dois vetores fica exatamente nesse
 intervalo. O $\arcsen$ não serviria: ele devolve ângulos de $-90^\circ$ a
 $90^\circ$ e não distingue $30^\circ$ de $150^\circ$, que têm o mesmo seno.
 
+A figura faz a conta inteira para qualquer $\vec{v}$, com $\vec{u} = (3,\ 0)$
+parado. O primeiro botão, $\vec{v} = (3,\ 3)$, aponta na mesma direção de
+$(1,\ 1)$, a diagonal do quadrado.
+
+<DotSignExplorer
+  u={[3, 0]}
+  initial={[3, 3]}
+  presets={[
+    [3, 3],
+    [0, 4],
+    [-3, 3],
+    [-4, -3],
+  ]}
+  readout="angle"
+  caption="A seta azul é u = (3, 0), deitada no eixo x. Mude v nos controles. O painel calcula o produto, divide pelos dois tamanhos e aplica o arco cosseno. A fatia verde mostra o ângulo que a conta devolve."
+/>
+
 **Exemplo.** Entre $(1,\ 0)$ e $(1,\ 1)$: o produto escalar é $1 \times 1 + 0
-\times 1 = 1$; os módulos são $1$ e $\sqrt{2}$. Então $\cos\theta =
+\times 1 = 1$, e os módulos são $1$ e $\sqrt{2}$. Então $\cos\theta =
 \frac{1}{\sqrt{2}} = \frac{\sqrt{2}}{2}$, e $\theta = 45^\circ$. Faz sentido:
 $(1,\ 1)$ é a diagonal do quadrado, a meio caminho entre a horizontal e a
 vertical.
 
-### O sinal do produto escalar
+**Contraexemplo.** Se a sua conta de $\cos\theta$ deu 1,4 ou $-2$, há um
+erro, porque o cosseno de qualquer ângulo fica entre $-1$ e $1$. Esse número
+não tem $\arccos$.
 
-Na fórmula $\lVert \vec{u} \rVert \, \lVert \vec{v} \rVert \cos\theta$, os
-dois módulos são positivos. Então o sinal do produto escalar é o sinal de
-$\cos\theta$. E o cosseno, de $0^\circ$ a $180^\circ$, é positivo antes de
-$90^\circ$, zero em $90^\circ$ e negativo depois.
+<details>
+<summary>Confira: entre (1, 0) e (−1, 1), o ângulo é agudo ou obtuso? Quanto ele mede?</summary>
 
-| ângulo $\theta$ | $\cos\theta$ | $\vec{u} \cdot \vec{v}$ | leitura |
-|---|---|---|---|
-| agudo, de $0^\circ$ a menos de $90^\circ$ | positivo | positivo | apontam para o mesmo lado |
-| reto, $90^\circ$ | zero | zero | um não avança nada na direção do outro |
-| obtuso, de mais de $90^\circ$ a $180^\circ$ | negativo | negativo | apontam para lados opostos |
+O produto é $1 \times (-1) + 0 \times 1 = -1$, negativo: o ângulo é obtuso. Os
+módulos são 1 e $\sqrt{2}$, então $\cos\theta = -\frac{1}{\sqrt{2}} =
+-\frac{\sqrt{2}}{2}$, e $\theta = 135^\circ$.
 
-É por isso que, na seção 6, o sinal acompanhou o tipo de ângulo. Para saber
-**se** o ângulo é agudo, reto ou obtuso, não é preciso calcular o ângulo: o
-sinal do produto escalar responde.
+</details>
 
-### Vetores perpendiculares
-
-> Dois vetores não nulos são **perpendiculares** (ou **ortogonais**) quando
-> $$\vec{u} \cdot \vec{v} = 0.$$
-
-O zero vem de $\cos 90^\circ = 0$. Vale nos dois sentidos: se o ângulo é reto, o
-produto é zero; se o produto é zero com vetores não nulos, o cosseno é zero, e
-o único ângulo entre $0^\circ$ e $180^\circ$ com cosseno zero é $90^\circ$.
-
-**Exemplo.** $(2,\ 3) \cdot (-3,\ 2) = -6 + 6 = 0$. São perpendiculares. Esse
-par já apareceu antes: na lição de retas perpendiculares, girar a seta $(2,\
-3)$ um quarto de volta produziu exatamente $(-3,\ 2)$.
-
-**Contraexemplo.** Trocar só o sinal de uma coordenada **não** produz um
-perpendicular: $(2,\ 3) \cdot (-2,\ 3) = -4 + 9 = 5$, que não é zero. O giro de
-$90^\circ$ troca as coordenadas de lugar **e** troca um sinal.
-
-A exigência “não nulos” está na definição por um motivo. O vetor nulo dá
-produto zero com qualquer vetor, mas não tem direção, então não faz sentido
-dizer que ele forma ângulo reto com alguma coisa.
-
-### A regra das inclinações, de novo
-
-Uma reta $y = mx + n$ tem uma direção de caminhada: andando 1 para a direita,
-ela sobe $m$. Então o vetor $(1,\ m)$ aponta ao longo da reta.
-
-<CartesianPlane
-  xMin={-3} xMax={3} yMin={-2} yMax={3}
-  xUnit={44}
-  lines={[
-    {m: 2, n: 0, tone: 1, dashed: true},
-    {m: -0.5, n: 0, tone: 2, dashed: true},
-  ]}
-  segments={[
-    {from: [0, 0], to: [1, 2], tone: 1, arrow: true},
-    {from: [0, 0], to: [1, -0.5], tone: 2, arrow: true},
-  ]}
-  labels={[
-    {at: [1, 2], math: '(1,\\ 2)', tone: 1, dx: 34, dy: 0},
-    {at: [1, -0.5], math: '(1,\\ -\\tfrac{1}{2})', tone: 2, dx: -6, dy: 40},
-  ]}
-  caption="A reta y = 2x tem direção (1, 2). A reta y = −x/2 tem direção (1, −1/2). O produto escalar das direções é 1 − 1 = 0: as retas são perpendiculares."
-/>
-
-Duas retas com inclinações $m_1$ e $m_2$ têm direções $(1,\ m_1)$ e $(1,\
-m_2)$. Elas são perpendiculares quando o produto escalar dessas direções dá
-zero:
-
-$$
-(1,\ m_1) \cdot (1,\ m_2) = 1 \times 1 + m_1 \times m_2 = 1 + m_1 m_2 = 0.
-$$
-
-Subtraindo 1 dos dois lados, sobra $m_1 \times m_2 = -1$. É a regra da lição de
-[paralelas e perpendiculares](./paralelas-e-perpendiculares), que agora sai
-como um caso particular do produto escalar zero.
-
-E o caso que a regra deixava de fora? Uma reta horizontal tem direção $(1,\
-0)$, e uma vertical tem direção $(0,\ 1)$. O produto escalar é $1 \times 0 + 0
-\times 1 = 0$. São perpendiculares, e o teste com vetores não precisou de
-nenhuma exceção. A regra das inclinações falhava nesse caso porque a vertical não
-tem inclinação. Os vetores não dependem de inclinação: a vertical tem direção
-como qualquer outra reta.
-
-## 9. Resolvendo o problema do carrinho na rampa
+## Resolvendo o problema do carrinho na rampa
 
 Os dados eram a força $\vec{F} = (30,\ 40)$, em newtons, e o deslocamento
 $\vec{d} = (8,\ 6)$, em metros.
+
+**Previsão.** A corda é mais inclinada que a rampa, mas não muito: as duas
+setas apontam mais ou menos para o mesmo lado. Então o produto deve sair
+positivo, o ângulo deve ser agudo e pequeno, e a força útil deve ficar pouco
+abaixo dos 50 N.
 
 **O produto escalar.** Multiplicando par com par e somando:
 
@@ -624,60 +775,204 @@ $$
 \qquad \theta = \arccos 0{,}96 \approx 16{,}26^\circ.
 $$
 
-Confira com os ângulos que cada seta faz com o chão: a corda faz cerca de
-$53{,}13^\circ$ (calculado no resgate 2) e a rampa faz cerca de
-$36{,}87^\circ$. A diferença é $53{,}13^\circ - 36{,}87^\circ = 16{,}26^\circ$.
-Os dois caminhos concordam.
+Confira com os ângulos que cada seta faz com o chão. A corda faz cerca de
+$53{,}13^\circ$ (calculado no resgate 2), e a rampa faz $\arctg \frac{6}{8}
+\approx 36{,}87^\circ$. A diferença é $53{,}13^\circ - 36{,}87^\circ =
+16{,}26^\circ$. Os dois caminhos concordam.
 
-**Pergunta 1, a força útil.** A parte da força que age ao longo da rampa é
+**Pergunta 1, a força útil.** A parte da força que segue a rampa é a sombra de
+$\vec{F}$ sobre $\vec{d}$:
 
 $$
 \lVert \vec{F} \rVert \cos\theta = \frac{\vec{F} \cdot \vec{d}}{\lVert \vec{d} \rVert}
 = \frac{480}{10} = 48 \text{ N}.
 $$
 
-Dos 50 N da corda, 48 N empurram o carrinho rampa acima. A pequena diferença
-vem dos $16^\circ$ de desalinhamento: o cosseno de um ângulo pequeno é próximo
-de 1, então quase toda a força é aproveitada.
+Dos 50 N da corda, 48 N empurram o carrinho rampa acima. A diferença é pequena
+porque o desalinhamento é de cerca de $16^\circ$, e o cosseno de um ângulo pequeno é
+próximo de 1. A outra parte da força, em ângulo reto com a rampa, mede
+$50 \sen\theta$. O seno sai do cosseno pela
+[relação fundamental](./relacoes-fundamentais), $\sen^2\theta + \cos^2\theta =
+1$: $\sen\theta = \sqrt{1 - 0{,}96^2} = \sqrt{0{,}0784} = 0{,}28$. Então essa
+parte mede $50 \times 0{,}28 = 14$ N. Ela só puxa o carrinho para fora do
+piso. Conferência pelo Pitágoras: $48^2 + 14^2 = 2\,304 + 196 = 2\,500 = 50^2$.
 
 Em física, o próprio número $\vec{F} \cdot \vec{d} = 480$ tem nome: é o
-**trabalho** da força, medido em joules — 48 N ao longo de 10 m.
+**trabalho** da força, medido em joules. São 48 N de força útil ao longo de
+10 m.
 
-**Variando a corda.** O produto escalar mostra o que aconteceria com outras
-direções da mesma força de 50 N:
+A figura mostra a força dividida nas duas partes. Os botões e o controle mudam
+a direção da corda, sempre com 50 N:
+
+<RampPull mode="solved" />
 
 | corda | $\vec{F}$ | $\vec{F} \cdot \vec{d}$ | força útil |
 |---|---|---|---|
 | alinhada com a rampa | $(40,\ 30)$ | $320 + 180 = 500$ | $50$ N, toda a força |
 | como no problema | $(30,\ 40)$ | $240 + 240 = 480$ | $48$ N |
-| perpendicular à rampa | $(-30,\ 40)$ | $-240 + 240 = 0$ | nada |
+| em ângulo reto com a rampa | $(-30,\ 40)$ | $-240 + 240 = 0$ | nada |
 
 **E a nota de compra?** O total de R\$ 42 é o produto escalar das quantidades
-$(3,\ 2,\ 5)$ pelos preços $(4,\ 10,\ 2)$. São vetores com três coordenadas, e
-a conta é a mesma: um produto por coordenada, todos somados. A lição de
-[vetores no espaço](./vetores-no-espaco) mostra que nada na definição impede a
-terceira coordenada. Mais adiante, no capítulo de álgebra linear, a mesma
-conta aparece com listas de centenas de números — é ela que um neurônio
-artificial faz com as suas entradas e os seus pesos.
+$(3,\ 2,\ 5)$ pelos preços $(4,\ 10,\ 2)$. As duas perguntas da abertura
+usaram a mesma conta: par com par, e depois a soma. No capítulo de álgebra
+linear, essa conta aparece com listas de centenas de números. É ela que um
+neurônio artificial faz com as suas entradas e os seus pesos.
 
-## 10. Exemplos resolvidos
+## Com vetores não nulos, produto zero é ângulo reto
+
+A figura gira uma cópia de $\vec{u} = (2,\ 3)$ um quarto de volta. No começo,
+a cópia está em cima de $\vec{u}$, e o produto é $\vec{u} \cdot \vec{u} = 4 +
+9 = 13$. Enquanto ela gira, o produto diminui. Ele chega a zero no momento em
+que a cópia forma ângulo reto com $\vec{u}$.
+
+<PerpTurn />
+
+> Dois vetores não nulos são **perpendiculares** (ou **ortogonais**) quando
+>
+> $$
+> \vec{u} \cdot \vec{v} = 0.
+> $$
+
+O zero vem de $\cos 90^\circ = 0$. A frase vale nos dois sentidos:
+
+- se o ângulo é reto, o produto é zero;
+- se o produto é zero com vetores não nulos, o cosseno é zero, e o único
+  ângulo entre $0^\circ$ e $180^\circ$ com cosseno zero é $90^\circ$.
+
+**Exemplo.** $(2,\ 3) \cdot (-3,\ 2) = -6 + 6 = 0$. São perpendiculares. Esse
+par já apareceu antes: na lição de retas perpendiculares, girar a seta
+$(2,\ 3)$ um quarto de volta produziu exatamente $(-3,\ 2)$.
+
+**Contraexemplo.** Trocar só o sinal de uma coordenada **não** produz um
+perpendicular: $(2,\ 3) \cdot (-2,\ 3) = -4 + 9 = 5$, que não é zero. O giro de
+$90^\circ$ troca as coordenadas de lugar **e** troca um sinal.
+
+A exigência “não nulos” está na definição por um motivo. O vetor nulo dá
+produto zero com qualquer vetor, mas não tem direção. Por isso não faz sentido
+dizer que ele forma ângulo reto com alguma coisa.
+
+<details>
+<summary>Confira: os vetores (6, −4) e (2, 3) são perpendiculares? E (6, −4) e (3, 2)?</summary>
+
+$(6,\ -4) \cdot (2,\ 3) = 12 - 12 = 0$: são perpendiculares. Já
+$(6,\ -4) \cdot (3,\ 2) = 18 - 8 = 10$: não são. O produto positivo diz que o
+ângulo entre eles é agudo.
+
+</details>
+
+## A regra das inclinações é o produto zero das direções
+
+Uma reta $y = mx + n$ tem uma direção de caminhada: andando 1 para a direita,
+ela sobe $m$. Por isso o vetor $(1,\ m)$ aponta ao longo da reta.
+
+Duas retas com inclinações $m_1$ e $m_2$ têm direções $(1,\ m_1)$ e
+$(1,\ m_2)$. Elas são perpendiculares quando o produto escalar dessas direções
+dá zero:
+
+$$
+(1,\ m_1) \cdot (1,\ m_2) = 1 \times 1 + m_1 \times m_2 = 1 + m_1 m_2 = 0.
+$$
+
+Subtraindo 1 dos dois lados, sobra $m_1 \times m_2 = -1$. É a regra da lição de
+[paralelas e perpendiculares](./paralelas-e-perpendiculares), que agora sai
+como um caso particular do produto escalar zero.
+
+<SlopeDirections />
+
+E o caso que a regra deixava de fora? Use o último botão da figura. Uma reta
+horizontal tem direção $(1,\ 0)$, e uma vertical tem direção $(0,\ 1)$. O
+produto escalar é $1 \times 0 + 0 \times 1 = 0$. São perpendiculares, e o
+teste com vetores não precisou de nenhuma exceção. A regra das inclinações
+falhava nesse caso porque a vertical não tem inclinação. O teste com vetores
+não depende de inclinação: a vertical tem direção, como qualquer outra reta.
+
+**Exemplo.** As retas $y = 3x$ e $y = -\frac{1}{3}x$ têm direções $(1,\ 3)$ e
+$\left(1,\ -\frac{1}{3}\right)$. O produto é $1 + 3 \times
+\left(-\frac{1}{3}\right) = 1 - 1 = 0$: perpendiculares.
+
+**Contraexemplo.** As retas $y = 2x$ e $y = -2x$ têm inclinações de sinais
+opostos, mas não são perpendiculares. O produto das direções é
+$1 + 2 \times (-2) = -3$, e não zero.
+
+<details>
+<summary>Confira: a reta x = 4 (vertical) e a reta y = 5 (horizontal) são perpendiculares? Mostre com as direções.</summary>
+
+A vertical tem direção $(0,\ 1)$, e a horizontal tem direção $(1,\ 0)$. O
+produto é $0 \times 1 + 1 \times 0 = 0$, e as duas direções não são nulas.
+Então as retas são perpendiculares. A regra $m_1 \times m_2 = -1$ não
+conseguiria dizer isso, porque a reta $x = 4$ não tem inclinação.
+
+</details>
+
+## O tamanho de uma soma depende do produto escalar
+
+Na [lição de soma](./soma-de-vetores), o barco com velocidade própria
+$(0,\ 8)$ e correnteza $(6,\ 0)$ andava a 10 km/h, e não a $8 + 6 = 14$. A
+conta foi um Pitágoras, porque as duas velocidades formavam ângulo reto. E se
+o ângulo não for reto?
+
+O produto escalar responde. O quadrado do tamanho de uma seta é ela com ela
+mesma, e a distributiva abre a conta como se abre $(a + b)^2$ em
+[produtos notáveis](../algebra/produtos-notaveis):
+
+$$
+\lVert \vec{u} + \vec{v} \rVert^2 = (\vec{u} + \vec{v}) \cdot (\vec{u} + \vec{v})
+= \vec{u} \cdot \vec{u} + 2\,\vec{u} \cdot \vec{v} + \vec{v} \cdot \vec{v}
+= \lVert \vec{u} \rVert^2 + 2\,\vec{u} \cdot \vec{v} + \lVert \vec{v} \rVert^2.
+$$
+
+A abertura tem quatro parcelas: $\vec{u} \cdot \vec{u}$, $\vec{u} \cdot
+\vec{v}$, $\vec{v} \cdot \vec{u}$ e $\vec{v} \cdot \vec{v}$. As duas do meio
+são iguais (a ordem não importa) e se juntam no $2\,\vec{u} \cdot \vec{v}$. É
+o “dobro do produto” dos vetores.
+
+Na figura, mude o ângulo entre o barco e a correnteza:
+
+<DotSumLength />
+
+- Com $90^\circ$, o produto é zero, o dobro do produto some e sobra
+  $64 + 36 = 100$: velocidade $\sqrt{100} = 10$. É o Pitágoras, que aparece
+  quando o produto escalar é zero.
+- Com $0^\circ$, o produto é $8 \times 6 = 48$, e $64 + 96 + 36 = 196$:
+  velocidade 14. Só nesse caso as velocidades se somam como números.
+- Com $180^\circ$, o produto é $-48$, e $64 - 96 + 36 = 4$: velocidade 2. Uma
+  velocidade desconta a outra.
+
+<details>
+<summary>Confira: com 60° entre o barco (8 km/h) e a correnteza (6 km/h), o barco anda mais rápido ou mais devagar que 10 km/h? Faça a previsão e depois a conta.</summary>
+
+Previsão: $60^\circ$ é agudo, então o produto é positivo e a soma fica maior
+que a do Pitágoras, mais de 10 km/h. Conta: $\vec{u} \cdot \vec{v} = 8 \times 6
+\times \cos 60^\circ = 24$, e $\lVert \vec{u} + \vec{v} \rVert^2 = 64 + 48 +
+36 = 148$. A velocidade é $\sqrt{148} \approx 12{,}17$ km/h.
+
+</details>
+
+## Exemplos resolvidos
 
 ### Exemplo 1: calcular e classificar
 
 Calcule $(5,\ -2) \cdot (3,\ 4)$ e diga se o ângulo entre os vetores é agudo,
 reto ou obtuso.
 
+**Previsão.** $(5,\ -2)$ aponta para a direita e um pouco para baixo;
+$(3,\ 4)$, para a direita e para cima. As duas vão para a direita, então o
+ângulo deve ser agudo, mas não muito pequeno.
+
 $$
 (5,\ -2) \cdot (3,\ 4) = 5 \times 3 + (-2) \times 4 = 15 - 8 = 7.
 $$
 
-O resultado é positivo, então o ângulo é agudo. Não foi preciso calcular o
-ângulo para saber disso. (Ele vale cerca de $74{,}9^\circ$.)
+O resultado é positivo, e o ângulo é agudo, como previsto. Não foi preciso
+calcular o ângulo para saber disso. (Ele vale cerca de $74{,}9^\circ$.)
 
 ### Exemplo 2: um ângulo exato
 
 Pause e tente antes de ler: qual é o ângulo entre $\vec{u} = (1,\ \sqrt{3})$ e
 $\vec{v} = (\sqrt{3},\ 1)$?
+
+**Previsão.** As duas setas estão no primeiro quadrante, uma mais em pé e a
+outra mais deitada. O ângulo deve ser agudo.
 
 O produto escalar: $1 \times \sqrt{3} + \sqrt{3} \times 1 = 2\sqrt{3}$.
 
@@ -698,8 +993,11 @@ $$
 Pause e tente: qual é o ângulo entre $\vec{u} = (2,\ 1)$ e $\vec{v} = (-3,\
 1)$?
 
-O produto escalar: $2 \times (-3) + 1 \times 1 = -6 + 1 = -5$. Já sabemos que o
-ângulo é obtuso, porque o resultado é negativo.
+**Previsão.** $\vec{u}$ aponta para a direita e $\vec{v}$, para a esquerda.
+O produto deve sair negativo, e o ângulo, obtuso.
+
+O produto escalar: $2 \times (-3) + 1 \times 1 = -6 + 1 = -5$. O resultado é
+negativo, e o ângulo é obtuso.
 
 Os módulos: $\lVert \vec{u} \rVert = \sqrt{5}$ e $\lVert \vec{v} \rVert =
 \sqrt{10}$. O produto dos módulos é $\sqrt{5} \times \sqrt{10} = \sqrt{50} =
@@ -717,6 +1015,9 @@ porque o seu intervalo, de $0^\circ$ a $180^\circ$, já inclui os obtusos.
 
 Pause e tente: para que valor de $k$ os vetores $(k,\ 3)$ e $(2,\ -4)$ são
 perpendiculares?
+
+**Previsão da forma.** A condição “produto igual a zero” vai virar uma equação
+do 1º grau em $k$, com uma só resposta.
 
 Perpendiculares têm produto escalar zero. Escrevemos essa condição como uma
 equação em $k$:
@@ -753,8 +1054,10 @@ algum ângulo reto?
   caption="As setas saem de B e vão até A e até C. Se o ângulo em B for reto, o produto escalar das duas setas dá zero."
 />
 
+**Previsão.** No desenho, o ângulo em $B$ parece o mais próximo de reto.
+
 Em cada vértice, o ângulo do triângulo é o ângulo entre as duas setas que saem
-dele. Testamos os três vértices com o produto escalar. Cada seta é a diferença
+dele. Testamos os vértices com o produto escalar. Cada seta é a diferença
 “ponto de chegada menos ponto de partida”.
 
 - Em $A$: $\overrightarrow{AB} = (4,\ 2)$ e $\overrightarrow{AC} = (2,\ 6)$.
@@ -772,8 +1075,12 @@ inclinação não existiria.
 
 ### Exemplo 6: dois caminhos para a mesma força útil
 
-Uma caixa é arrastada 12 m pelo chão, para a direita. A corda puxa com 40 N,
-fazendo $30^\circ$ com o chão. Quanto da força age na direção do movimento?
+Pause e tente: uma caixa é arrastada 12 m pelo chão, para a direita. A corda
+puxa com 40 N, fazendo $30^\circ$ com o chão. Quanto da força age na direção do
+movimento?
+
+**Previsão.** $30^\circ$ é um desalinhamento moderado. A força útil deve ficar
+abaixo de 40 N, mas bem acima da metade.
 
 **Caminho pelo ângulo.** Aqui o ângulo é dado. A força útil é $\lVert \vec{F}
 \rVert \cos\theta = 40 \cos 30^\circ = 40 \times \frac{\sqrt{3}}{2} = 20\sqrt{3}
@@ -785,10 +1092,31 @@ fazendo $30^\circ$ com o chão. Quanto da força age na direção do movimento?
 
 **Quando usar cada um.** Se o problema dá **o ângulo e os tamanhos**, use
 $\lVert \vec{u} \rVert \, \lVert \vec{v} \rVert \cos\theta$. Se dá **as
-coordenadas**, faça a conta das coordenadas — e, se precisar do ângulo, ele
-sai do resultado, como na rampa.
+coordenadas**, faça a conta das coordenadas. Se precisar do ângulo, ele sai do
+resultado, como na rampa.
 
-## 11. Erros comuns
+### Exemplo 7: o ângulo entre duas ruas
+
+Pause e tente: duas ruas seguem as direções $(2,\ 1)$ e $(1,\ 3)$. Qual é o
+ângulo entre elas?
+
+**Previsão.** As duas direções estão no primeiro quadrante, uma mais deitada e
+a outra mais em pé. O ângulo deve ser agudo, nem muito pequeno nem perto de
+$90^\circ$.
+
+O produto escalar: $2 \times 1 + 1 \times 3 = 5$. Os módulos: $\sqrt{5}$ e
+$\sqrt{10}$, com produto $\sqrt{50} = 5\sqrt{2}$.
+
+$$
+\cos\theta = \frac{5}{5\sqrt{2}} = \frac{\sqrt{2}}{2}, \qquad \theta = 45^\circ.
+$$
+
+Compare com o Exemplo 3: os mesmos módulos, $\sqrt{5}$ e $\sqrt{10}$, e um
+produto de mesmo tamanho com o sinal trocado. Lá o ângulo deu $135^\circ$, e
+aqui dá $45^\circ$. Os dois ângulos somam $180^\circ$, porque
+$\cos(180^\circ - x) = -\cos x$.
+
+## Erros comuns
 
 > **Erro 1: achar que o resultado é um vetor.** É tentador escrever $(1,\ 2)
 > \cdot (3,\ 4) = (3,\ 8)$, porque a soma de vetores também é feita coordenada a
@@ -807,20 +1135,27 @@ sai do resultado, como na rampa.
 > escalar. Com $(3,\ 4)$ e $(4,\ -3)$, os módulos são 5 e 5, e $5 \times 5 =
 > 25$. Mas o produto escalar é $12 - 12 = 0$: os vetores são perpendiculares, e
 > nenhum avança nada na direção do outro. O produto dos módulos só acerta
-> quando os vetores apontam para o mesmo lado, porque aí $\cos 0^\circ = 1$.
+> quando os vetores têm a mesma direção e o mesmo sentido, com
+> $\theta = 0^\circ$, porque aí $\cos 0^\circ = 1$.
 
 > **Erro 4: um cosseno maior que 1.** Se a sua conta de $\cos\theta$ deu 1,4
-> ou $-2$, há um erro, porque o cosseno vive entre $-1$ e $1$. As causas mais
+> ou $-2$, há um erro, porque o cosseno fica entre $-1$ e $1$. As causas mais
 > frequentes são dividir só por um dos módulos ou esquecer a raiz quadrada no
-> módulo. Conferir esse intervalo é uma verificação que não exige conta nova, e vale
-> fazê-la antes de usar o $\arccos$.
+> módulo. Conferir esse intervalo não exige conta nova, e vale fazer essa
+> conferência antes de usar o $\arccos$.
 
 > **Erro 5: ler o ponto como “vezes”.** Em $\vec{u} \cdot \vec{v}$, o ponto é a
 > operação produto escalar, e não a multiplicação de números. Uma consequência:
 > $\vec{u} \cdot (\vec{v} \cdot \vec{w})$ não existe. O parêntese de dentro já é
 > um número, e não há produto escalar entre um vetor e um número.
 
-## 12. Perguntas de verificação
+> **Erro 6: confundir a sombra com o produto.** O produto escalar é a sombra
+> **vezes** o tamanho do outro vetor. Com $\vec{u} = (3,\ 4)$ e $\vec{v} =
+> (2,\ 0)$, o produto é 6, e a sombra de $\vec{u}$ sobre $\vec{v}$ é
+> $\frac{6}{2} = 3$. Os dois números só coincidem quando $\vec{v}$ tem
+> tamanho 1 ou quando a sombra é zero.
+
+## Perguntas de verificação
 
 1. Por que o produto escalar de dois vetores é um número, e não um vetor?
 2. Por que $\vec{v} \cdot \vec{v}$ nunca é negativo?
@@ -828,11 +1163,12 @@ sai do resultado, como na rampa.
    obtuso, sem calcular o ângulo?
 4. Na demonstração da fórmula $\lVert \vec{u} \rVert \, \lVert \vec{v} \rVert
    \cos\theta$, que fórmula de uma lição anterior fez o trabalho principal?
-5. Por que se usa $\arccos$, e não $\arcsen$, para achar o ângulo entre dois
+5. Por que girar as duas setas juntas não muda o produto escalar?
+6. Por que se usa $\arccos$, e não $\arcsen$, para achar o ângulo entre dois
    vetores?
-6. Por que o teste do produto escalar zero cobre retas verticais, e a regra
+7. Por que o teste do produto escalar zero cobre retas verticais, e a regra
    $m_1 \times m_2 = -1$ não cobre?
-7. No problema da rampa, por que a força útil (48 N) é menor que a força da
+8. No problema da rampa, por que a força útil (48 N) é menor que a força da
    corda (50 N)? Em que situação ela seria igual?
 
 <details>
@@ -848,27 +1184,31 @@ sai do resultado, como na rampa.
 3. Porque $\vec{u} \cdot \vec{v} = \lVert \vec{u} \rVert \, \lVert \vec{v}
    \rVert \cos\theta$, e os módulos são positivos. O sinal do produto é o sinal
    do cosseno, que é positivo para ângulos agudos, zero no ângulo reto e
-   negativo para obtusos.
+   negativo para os obtusos e para o raso, de $180^\circ$.
 4. A fórmula do cosseno da diferença, $\cos(\alpha - \beta) = \cos\alpha
    \cos\beta + \sen\alpha \sen\beta$. Depois de escrever os vetores com
    tamanho e ângulo, a conta das coordenadas produziu exatamente o lado direito
    dessa fórmula, multiplicado por $ab$.
-5. Porque o ângulo entre dois vetores vai de $0^\circ$ a $180^\circ$, que é
+5. Porque o produto escalar é $ab\cos(\alpha - \beta)$. Girar as duas setas
+   juntas soma o mesmo ângulo a $\alpha$ e a $\beta$. A diferença
+   $\alpha - \beta$ fica igual, e os tamanhos também, então o produto fica
+   igual.
+6. Porque o ângulo entre dois vetores vai de $0^\circ$ a $180^\circ$, que é
    exatamente o intervalo que o $\arccos$ devolve. O $\arcsen$ devolve
    ângulos de $-90^\circ$ a $90^\circ$ e não distingue um ângulo agudo do
    obtuso que tem o mesmo seno, como $30^\circ$ e $150^\circ$.
-6. Porque a regra das inclinações precisa do coeficiente angular, e a reta
+7. Porque a regra das inclinações precisa do coeficiente angular, e a reta
    vertical não tem um. O teste com vetores usa a direção, e toda reta tem
    direção: a vertical tem $(0,\ 1)$. Por isso o teste não precisa de exceção.
-7. Porque a corda está desalinhada da rampa em cerca de $16{,}26^\circ$, e a
+8. Porque a corda está desalinhada da rampa em cerca de $16{,}26^\circ$, e a
    parte útil é $50 \cos\theta$, com $\cos\theta = 0{,}96$, menor que 1. Seria
    igual se a corda estivesse alinhada com a rampa: com $\theta = 0^\circ$,
    $\cos\theta = 1$ e toda a força seria útil. É o caso $\vec{F} = (40,\ 30)$
-   da tabela da seção 9.
+   da tabela da seção “Resolvendo o problema do carrinho na rampa”.
 
 </details>
 
-## 13. Exercícios
+## Exercícios
 
 ### 1. Reconhecimento
 
@@ -884,7 +1224,7 @@ sai do resultado, como na rampa.
 ### 2. Explicação
 
 4. Explique, sem fórmulas, o que significa o produto escalar de dois vetores
-   dar zero.
+   não nulos dar zero.
 5. Explique por que dobrar um dos vetores dobra o produto escalar.
 6. Um colega calculou o ângulo entre dois vetores e encontrou $\cos\theta =
    1{,}25$. Explique o que isso revela sobre a conta dele.
@@ -914,8 +1254,9 @@ sai do resultado, como na rampa.
 <summary>Dica para o exercício 12b</summary>
 
 Não tente achar as coordenadas. Use a abertura de $(\vec{u} + \vec{v}) \cdot
-(\vec{u} + \vec{v})$ da seção 8, que só precisa de $\lVert \vec{u} \rVert$,
-$\lVert \vec{v} \rVert$ e do resultado do item a.
+(\vec{u} + \vec{v})$ da seção “O tamanho de uma soma depende do produto
+escalar”, que só precisa de $\lVert \vec{u} \rVert$, $\lVert \vec{v} \rVert$ e
+do resultado do item a.
 
 </details>
 
@@ -946,8 +1287,9 @@ $\overrightarrow{BA}$ e $\overrightarrow{BC}$.
 
 16. Mostre, com coordenadas, que $\vec{u} \cdot (\vec{v} + \vec{w}) = \vec{u}
     \cdot \vec{v} + \vec{u} \cdot \vec{w}$ para quaisquer vetores do plano.
-17. Na demonstração da seção 8, por que não importa qual dos dois vetores faz
-    o ângulo maior com o eixo $x$?
+17. Na demonstração da seção “Girar as duas setas juntas não muda o produto”,
+    por que não importa qual dos dois vetores faz o ângulo maior com o eixo
+    $x$?
 18. Mostre que, se $\vec{u}$ e $\vec{v}$ são perpendiculares, então $\lVert
     \vec{u} + \vec{v} \rVert^2 = \lVert \vec{u} \rVert^2 + \lVert \vec{v}
     \rVert^2$. Que teorema conhecido é esse?
@@ -957,7 +1299,7 @@ $\overrightarrow{BA}$ e $\overrightarrow{BC}$.
 
 1. a) número &nbsp; b) vetor &nbsp; c) vetor &nbsp; d) número &nbsp; e) vetor:
    o parêntese é um número, e um número vezes o vetor $\vec{w}$ é um vetor
-   esticado.
+   (um múltiplo de $\vec{w}$).
 2. a) $3 + 2 = 5$, positivo: **agudo** &nbsp; b) $10 - 10 = 0$: **reto** &nbsp;
    c) $-3 - 4 = -7$, negativo: **obtuso**.
 3. a) Sim: número mais número. &nbsp; b) Não: $\vec{v} \cdot \vec{w}$ é um
@@ -965,8 +1307,8 @@ $\overrightarrow{BA}$ e $\overrightarrow{BC}$.
    &nbsp; c) Sim: número mais número. &nbsp; d) Não: $\vec{u} \cdot \vec{v}$ é
    um número, e não se soma número com vetor.
 4. Significa que nenhum dos dois vetores avança nada na direção do outro: eles
-   formam ângulo reto. Se fossem cordas puxando um carrinho, uma não ajudaria
-   nem atrapalharia a outra.
+   formam ângulo reto. A sombra de um sobre o outro é um ponto só. Se fossem
+   cordas puxando um carrinho, uma não ajudaria nem atrapalharia a outra.
 5. Porque, em $\lVert \vec{u} \rVert \, \lVert \vec{v} \rVert \cos\theta$,
    dobrar $\vec{u}$ dobra $\lVert \vec{u} \rVert$ e não muda a direção, então o
    ângulo fica igual. Pelas coordenadas: cada parcela $u_1 v_1$ e $u_2 v_2$
@@ -989,8 +1331,8 @@ $\overrightarrow{BA}$ e $\overrightarrow{BC}$.
 10. $(a,\ b) \cdot (-b,\ a) = -ab + ba = 0$, porque $ba = ab$. Como os vetores
     não são nulos, são perpendiculares. É o giro de um quarto de volta no
     sentido anti-horário da lição de retas: $(2,\ 3)$ virou $(-3,\ 2)$.
-11. Pelo exercício 10, $(-4,\ 3)$ é perpendicular a $(3,\ 4)$. Seu módulo é 5,
-    então, dividindo por 5, $\left(-\frac{4}{5},\ \frac{3}{5}\right) =
+11. Pelo exercício 10, $(-4,\ 3)$ é perpendicular a $(3,\ 4)$. Seu módulo é 5.
+    Dividindo por 5, $\left(-\frac{4}{5},\ \frac{3}{5}\right) =
     (-0{,}8;\ 0{,}6)$ tem módulo 1. O oposto, $(0{,}8;\ -0{,}6)$, também serve.
     São dois, um para cada lado.
 12. a) $3 \times 4 \times \cos 120^\circ = 12 \times \left(-\frac{1}{2}\right)
@@ -1020,7 +1362,9 @@ $\overrightarrow{BA}$ e $\overrightarrow{BC}$.
     = \sqrt{2600} \approx 50{,}99$; $\cos\theta = \frac{220}{10 \times 50{,}99}
     \approx 0{,}431$, logo $\theta \approx 64{,}4^\circ$. A corda nova é um
     pouco mais forte que a antiga, mas aproveita menos da metade da força,
-    porque está muito desalinhada.
+    porque está muito desalinhada. Se você dividiu 220 por 50,99 e achou cerca
+    de 4,3 N, dividiu pelo tamanho da força: a sombra de $\vec{F}$ sobre
+    $\vec{d}$ se obtém dividindo pelo tamanho de $\vec{d}$, que é 10.
 16. Com $\vec{u} = (u_1,\ u_2)$, $\vec{v} = (v_1,\ v_2)$ e $\vec{w} = (w_1,\
     w_2)$: $\vec{v} + \vec{w} = (v_1 + w_1,\ v_2 + w_2)$, e $\vec{u} \cdot
     (\vec{v} + \vec{w}) = u_1(v_1 + w_1) + u_2(v_2 + w_2)$. Pela distributiva
@@ -1041,28 +1385,34 @@ $\overrightarrow{BA}$ e $\overrightarrow{BC}$.
 
 Se um produto escalar saiu com sinal trocado, confira as multiplicações com
 números negativos: $(-3) \times (-1) = +3$. Se o ângulo saiu errado com o
-produto certo, confira os módulos — o erro mais frequente é esquecer a raiz. E
+produto certo, confira os módulos: o erro mais frequente é esquecer a raiz. E
 se o cosseno saiu fora de $[-1,\ 1]$, a divisão foi feita pelo número errado.
 
 </details>
 
-## 14. Revisão curta
+## Revisão curta
 
 - O **produto escalar** de $(u_1,\ u_2)$ e $(v_1,\ v_2)$ é $u_1 v_1 + u_2
   v_2$: multiplicar par com par e somar. O resultado é um **número**.
 - O ponto em $\vec{u} \cdot \vec{v}$ não é a multiplicação de números, que
   continua sendo $\times$. É o nome de uma operação entre dois vetores.
 - $\vec{v} \cdot \vec{v} = \lVert \vec{v} \rVert^2$.
+- A ordem não importa, a soma se distribui e um número que multiplica uma seta
+  sai para fora.
 - **Significado geométrico:** $\vec{u} \cdot \vec{v} = \lVert \vec{u} \rVert
   \, \lVert \vec{v} \rVert \cos\theta$, demonstrado com a fórmula de
-  $\cos(\alpha - \beta)$. É a parte de $\vec{u}$ na direção de $\vec{v}$, vezes
-  o tamanho de $\vec{v}$.
+  $\cos(\alpha - \beta)$. É a sombra de $\vec{u}$ sobre a reta de $\vec{v}$,
+  vezes o tamanho de $\vec{v}$.
 - **Ângulo entre vetores:** $\theta = \arccos\left(\dfrac{\vec{u} \cdot
   \vec{v}}{\lVert \vec{u} \rVert \, \lVert \vec{v} \rVert}\right)$, sempre
   entre $0^\circ$ e $180^\circ$.
-- **Sinal:** positivo para ângulo agudo, zero para reto, negativo para obtuso.
-- **Perpendiculares:** produto escalar zero. A regra $m_1 \times m_2 = -1$ é
+- **Sinal:** positivo para ângulo agudo, zero para reto, negativo para obtuso
+  ou raso.
+- **Perpendiculares:** vetores não nulos com produto escalar zero. A regra $m_1 \times m_2 = -1$ é
   um caso particular, e o teste com vetores cobre também as retas verticais.
+- **Tamanho da soma:** $\lVert \vec{u} + \vec{v} \rVert^2 = \lVert \vec{u}
+  \rVert^2 + 2\,\vec{u} \cdot \vec{v} + \lVert \vec{v} \rVert^2$. Com ângulo
+  reto, é o Pitágoras.
 - Use a conta das coordenadas quando tiver coordenadas; use $\lVert \vec{u}
   \rVert \, \lVert \vec{v} \rVert \cos\theta$ quando tiver tamanhos e ângulo.
 

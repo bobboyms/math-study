@@ -4,10 +4,18 @@ title: Projeção ortogonal
 
 import CartesianPlane from '@site/src/components/CartesianPlane';
 import GeoFigure from '@site/src/components/GeoFigure';
+import CableSearch from '@site/src/components/CableSearch';
+import ProjectionDrop from '@site/src/components/ProjectionDrop';
+import ProjectionExplorer from '@site/src/components/ProjectionExplorer';
+import ProjectionBuild from '@site/src/components/ProjectionBuild';
+import ProjectionRuler from '@site/src/components/ProjectionRuler';
+import ResidualSlider from '@site/src/components/ResidualSlider';
+import ProjectionScale from '@site/src/components/ProjectionScale';
+import PointToLine from '@site/src/components/PointToLine';
 
 # Projeção ortogonal: a sombra de um vetor sobre uma direção
 
-## 1. Problema motivador: o cabo até o galpão
+## Problema motivador: o cabo até o galpão
 
 Uma operadora de internet tem um cabo de fibra óptica que corre ao lado de uma
 estrada reta. As coordenadas são medidas em quilômetros, com origem num poste
@@ -16,20 +24,8 @@ $(4,\ 3)$: a cada 4 km para o leste, ela avança 3 km para o norte.
 
 Um galpão $G$, no ponto $(2,\ 9)$, precisa ser ligado ao cabo. A ligação é um
 **ramal**: um cabo novo, em linha reta, que sai do galpão e encontra o cabo
-da estrada em algum ponto. Cada quilômetro de ramal custa R\$ 15 mil.
-
-<CartesianPlane
-  xMin={-1} xMax={9} yMin={-1} yMax={10}
-  xUnit={32}
-  lines={[{m: 0.75, n: 0, tone: 1}]}
-  points={[
-    {at: [0, 0], label: 'O', tone: 1, dx: 14, dy: -14},
-    {at: [2, 9], label: 'G(2,\\ 9)', tone: 2, dx: 42, dy: 0},
-  ]}
-  labels={[{at: [7.6, 5.7], math: '\\text{estrada}', tone: 1, dx: -6, dy: 22}]}
-  axisLabels={['x', 'y']}
-  caption="A estrada passa pelo poste O e segue a direção do vetor (4, 3). O galpão G fica fora da estrada, no ponto (2, 9). Coordenadas em quilômetros."
-/>
+da estrada num ponto chamado **emenda**. Cada quilômetro de ramal custa
+R\$ 15 mil.
 
 A equipe técnica faz três perguntas:
 
@@ -40,60 +36,86 @@ A equipe técnica faz três perguntas:
    o quanto o técnico vai andar pela estrada, a partir do poste, até o
    lugar da obra.
 
-Dá para testar palpites. Com a emenda no próprio poste, o ramal vai de
-$(0,\ 0)$ até $(2,\ 9)$ e mede $\sqrt{2^2 + 9^2} = \sqrt{85} \approx 9{,}22$
-km. Com a emenda no ponto $(4,\ 3)$, que também está na estrada, o ramal mede
+Antes de qualquer fórmula, tente. Na figura, o deslizante leva a emenda $E$
+ao longo da estrada, e o painel mede o ramal. Registre algumas tentativas e
+procure o ramal mais curto.
+
+<CableSearch />
+
+Com a emenda no próprio poste, o ramal vai de $(0,\ 0)$ até $(2,\ 9)$ e mede
+$\sqrt{2^2 + 9^2} = \sqrt{85} \approx 9{,}22$ km. Com a emenda no ponto
+$(4,\ 3)$, a 5 km do poste, o ramal mede
 $\sqrt{(2-4)^2 + (9-3)^2} = \sqrt{40} \approx 6{,}32$ km. O segundo palpite é
-melhor. Mas é o melhor de todos? Testar ponto por ponto nunca termina, porque
-a estrada tem infinitos pontos.
+melhor.
+
+A tabela mostra o melhor ramal **entre os que você testou**. Mas ela não
+garante nada sobre os pontos que ficaram entre dois testes. A estrada tem
+infinitos pontos, e testar um por um nunca termina.
 
 > Qual é o ponto de uma reta mais perto de um ponto dado, e como calculá-lo
 > direto, sem tentativa?
 
-A ferramenta que responde é a **projeção ortogonal**. A resposta completa
-está na seção 9.
+A ferramenta que responde é a **projeção ortogonal**. A lição volta ao cabo
+assim que ela estiver pronta, na seção “Resolvendo o problema do cabo”.
 
-## 2. Mapa das ideias
+## Roteiro da lição
 
-- **projeção ortogonal de $\vec{v}$ sobre $\vec{u}$**, escrita
-  $\operatorname{proj}_{\vec{u}} \vec{v}$: o vetor na direção de $\vec{u}$ que
-  é a “sombra” de $\vec{v}$, quando a luz cai em ângulo reto sobre a direção
-  de $\vec{u}$;
-- **componente escalar de $\vec{v}$ sobre $\vec{u}$**, escrita
-  $\operatorname{comp}_{\vec{u}} \vec{v}$: um número com sinal. O tamanho dele
-  é o comprimento da sombra, e o sinal diz se ela aponta para o mesmo lado de
-  $\vec{u}$ ou para o lado oposto;
-- **resto** (ou **componente ortogonal**): o que sobra de $\vec{v}$ depois de
-  tirar a sombra, $\vec{v} - \operatorname{proj}_{\vec{u}} \vec{v}$. Ele é
-  sempre perpendicular a $\vec{u}$;
-- **decomposição ortogonal**: escrever $\vec{v}$ como a soma de duas partes
-  perpendiculares entre si, a sombra e o resto;
-- **pé da perpendicular**: o ponto da reta mais perto de um ponto dado;
-- **distância de ponto a reta**: o comprimento do segmento que liga o ponto
-  ao pé da perpendicular. Com vetores, ela é o módulo do resto.
+1. A **sombra** de um vetor $\vec{v}$ sobre a reta de outro vetor $\vec{u}$
+   termina onde a linha que desce da ponta de $\vec{v}$, em ângulo reto,
+   encontra essa reta.
+2. O **lado** da sombra acompanha o ângulo entre os vetores: ângulo agudo, a
+   sombra aponta para o lado de $\vec{u}$; reto, ela é nula; obtuso ou raso,
+   ela cai para trás. O sinal de $\vec{v} \cdot \vec{u}$ avisa qual é o caso.
+3. O **tamanho com sinal** da sombra é a **componente escalar**,
+   $\frac{\vec{v} \cdot \vec{u}}{\lVert \vec{u} \rVert}$.
+4. A sombra, como vetor, é **tamanho vezes direção**. As duas divisões por
+   $\lVert \vec{u} \rVert$ se juntam numa divisão por $\vec{u} \cdot \vec{u}$.
+5. O número $k = \frac{\vec{v} \cdot \vec{u}}{\vec{u} \cdot \vec{u}}$
+   **conta quantos $\vec{u}$ cabem na sombra**. Por isso a ordem dos dois
+   vetores importa.
+6. O **resto**, $\vec{v}$ menos a sombra, tem sempre produto escalar zero
+   com $\vec{u}$: quando não é nulo, ele é perpendicular a $\vec{u}$. E esse
+   $k$ é o único que faz isso.
+7. Sombra e resto formam um **triângulo retângulo** com $\vec{v}$: vale
+   Pitágoras.
+8. **Só a direção de $\vec{u}$ importa**: esticar, encolher ou virar
+   $\vec{u}$ não muda a sombra.
+9. O **ponto da reta mais perto** de um ponto $P$: desconte um ponto $A$ da
+   reta, projete $\overrightarrow{AP}$ e some $A$ de volta. A distância é o
+   tamanho do resto.
 
-## 3. Para que serve
+## Para que isso serve?
 
-- **Física.** Uma caixa numa rampa: quanto do peso puxa a caixa ladeira
-  abaixo, e quanto aperta a caixa contra o piso? São as duas partes de uma
-  decomposição ortogonal (exemplo 3).
-- **Aviação.** O vento quase nunca sopra alinhado com a pista. O piloto
-  precisa saber quanto do vento sopra ao longo da pista e quanto sopra **de
-  través**, isto é, atravessado. Cada avião tem um limite de vento de través
-  para pousar (exercício 10).
+- **Física.** Uma caixa de 500 N parada numa rampa que sobe 3 m a cada 4 m:
+  300 N do peso puxam a caixa ladeira abaixo, e 400 N apertam a caixa contra
+  o piso. São as duas partes de uma projeção (exemplo 3).
+- **Aviação.** O vento quase nunca sopra alinhado com a pista. Numa pista que
+  aponta para o leste, um vento de $(-12,\ 9)$ km/h tem 12 km/h ao longo da
+  pista (de frente para quem pousa rumo ao leste) e 9 km/h **de través**,
+  isto é, atravessado. Cada avião tem um limite de vento de través para
+  pousar (exercício 10).
 - **Mapas no celular.** O GPS mede a sua posição com erro de alguns metros, e
   o ponto medido muitas vezes cai no meio de um quarteirão. O aplicativo
-  mostra você no ponto da rua mais perto do ponto medido — uma projeção
-  (exemplo 5).
+  desenha você no ponto da rua mais perto do ponto medido. No exemplo 4, a
+  pessoa medida em $(4,\ 5)$ é desenhada em $(5,\ 3)$, a cerca de 2,24
+  quarteirões do ponto medido.
 - **Computação gráfica.** A luz que uma superfície recebe depende de quanto a
-  direção da luz aponta contra a superfície. É uma componente escalar, e os
-  programas de jogos e animação calculam milhões delas por segundo.
+  direção da luz aponta contra ela. Com a luz vindo na direção unitária
+  $(0{,}6;\ 0{,}8)$ e o piso virado para cima, na direção $(0,\ 1)$, a
+  componente é $0{,}6 \times 0 + 0{,}8 \times 1 = 0{,}8$: o piso recebe 80% da
+  luz que receberia com ela caindo de frente. Programas de jogos calculam
+  milhões dessas contas por segundo.
 - **Dentro da matemática.** “O ponto mais perto possível” é a ideia que, no
   capítulo de álgebra linear, vira o **método dos mínimos quadrados**. É o
-  jeito de escolher a reta que melhor se ajusta a dados que não cabem numa
-  reta só — o primeiro modelo do aprendizado de máquina.
+  jeito de escolher a reta que melhor se ajusta a dados que não cabem numa reta só.
+  Os pontos $(0,\ 1)$, $(1,\ 2)$ e $(2,\ 4)$ não estão alinhados, e a reta
+  que o método escolhe para eles é $y \approx 0{,}83 + 1{,}5x$. É o primeiro
+  modelo do aprendizado de máquina.
 
-## 4. Ideias anteriores que voltam aqui
+## Ideias anteriores que voltam aqui
+
+Cinco peças antigas sustentam esta lição. Tente cada pergunta antes de abrir a
+resposta. Se travar em alguma, vale reler a página indicada antes de seguir.
 
 **1. Do [produto escalar](./produto-escalar).** Quanto vale
 $(2,\ 9) \cdot (4,\ 3)$? O que o sinal do resultado diz sobre o ângulo entre os
@@ -109,7 +131,7 @@ apontam “mais ou menos para o mesmo lado”.
 
 </details>
 
-**2. Da parte de um vetor na direção de outro, no
+**2. Da sombra de um vetor sobre outro, no
 [produto escalar](./produto-escalar).** No problema do carrinho na rampa, a
 corda puxava com $\vec{F} = (30,\ 40)$ e a rampa seguia $\vec{d} = (8,\ 6)$.
 Dos 50 N da corda, quanto agia ao longo da rampa? Qual foi a conta?
@@ -117,17 +139,17 @@ Dos 50 N da corda, quanto agia ao longo da rampa? Qual foi a conta?
 <details>
 <summary>Conferir</summary>
 
-Agiam 48 N. A conta foi
+Agiam 48 N. A conta foi a sombra de $\vec{F}$ sobre a reta de $\vec{d}$:
 
 $$
 \lVert \vec{F} \rVert \cos\theta = \frac{\vec{F} \cdot \vec{d}}{\lVert \vec{d} \rVert}
 = \frac{480}{10} = 48.
 $$
 
-O produto escalar dividido pelo módulo do vetor que dá a direção. Com os
+É o produto escalar dividido pelo módulo do vetor que dá a direção. Com os
 números do galpão: a parte de $(2,\ 9)$ na direção de $(4,\ 3)$ é
 $\frac{35}{\lVert (4,\ 3) \rVert} = \frac{35}{5} = 7$. Guarde esse 7: ele
-volta na seção 9.
+volta na resolução do cabo.
 
 </details>
 
@@ -138,10 +160,11 @@ aponta para o mesmo lado de $(4,\ 3)$? E quanto vale $7 \times$ esse unitário?
 <details>
 <summary>Conferir</summary>
 
-O módulo de $(4,\ 3)$ é $\sqrt{16 + 9} = 5$. Normalizar é multiplicar por
-$\frac{1}{5}$: o unitário é $(0{,}8;\ 0{,}6)$. Multiplicando por 7, cada
-coordenada fica 7 vezes maior: $7(0{,}8;\ 0{,}6) = (5{,}6;\ 4{,}2)$. Esse
-vetor aponta para o mesmo lado de $(4,\ 3)$ e tem módulo $7 \times 1 = 7$.
+O módulo de $(4,\ 3)$ é $\sqrt{16 + 9} = 5$. Normalizar é dividir cada
+coordenada pelo módulo: o unitário é $(0{,}8;\ 0{,}6)$. Multiplicando por 7,
+cada coordenada fica 7 vezes maior: $7(0{,}8;\ 0{,}6) = (5{,}6;\ 4{,}2)$.
+Esse vetor aponta para o mesmo lado de $(4,\ 3)$ e tem módulo
+$7 \times 1 = 7$.
 
 </details>
 
@@ -172,119 +195,196 @@ cateto.
 
 </details>
 
-Se alguma dessas respostas não veio, releia a lição indicada antes de seguir.
-As cinco ideias são usadas logo adiante, e as respostas 2, 3 e 4 já são
-pedaços da solução do galpão.
+As respostas 2, 3 e 4 já são pedaços da solução do galpão. As cinco ideias
+voltam logo adiante.
 
-## 5. Intuição: a sombra de uma vara
+## A sombra termina onde a linha em ângulo reto encontra a reta
 
 Pense numa vara presa no chão por uma ponta, e numa luz que cai em ângulo
-reto sobre o chão. A vara deixa uma sombra no chão.
+reto sobre o chão. A vara deixa uma sombra no chão. A sombra **começa** onde
+a vara está presa e **termina** no ponto do chão exatamente abaixo da ponta
+solta. “Exatamente abaixo” quer dizer: na linha que desce da ponta até o chão
+formando ângulo reto com ele.
 
-- A sombra **começa** onde a vara está presa.
-- A sombra **termina** no ponto do chão exatamente abaixo da ponta solta da
-  vara. “Exatamente abaixo” quer dizer: na linha que desce da ponta até o
-  chão formando ângulo reto com ele.
+Com vetores, o gesto vira três passos:
 
-O comprimento da sombra depende de como a vara está inclinada:
+1. Desenhe $\vec{u}$ e $\vec{v}$ saindo do mesmo ponto. A reta de $\vec{u}$
+   é o chão; $\vec{v}$ é a vara.
+2. Da ponta de $\vec{v}$, desça uma linha em ângulo reto até a reta de
+   $\vec{u}$.
+3. A seta que vai da origem até o pé dessa linha é a **sombra** de $\vec{v}$
+   sobre $\vec{u}$.
 
-- vara deitada no chão: a sombra é a vara inteira;
-- vara inclinada para a frente: a sombra é mais curta que a vara;
-- vara em pé, em ângulo reto com o chão: a sombra é um ponto só, de
-  comprimento zero;
-- vara inclinada para trás: a sombra aparece **atrás** do ponto em que a
-  vara está presa.
+A figura faz os três passos com $\vec{u} = (4,\ 2)$ e $\vec{v} = (1,\ 4)$.
+Os botões trocam a vara.
 
-Agora a parte que não aparece no chão. Da ponta da sombra até a ponta da vara
-há um segmento que sobe em ângulo reto. Chame esse segmento de **resto**. Se
-você andar primeiro pela sombra e depois subir pelo resto, chega à ponta da
-vara. Então a vara é a soma de dois deslocamentos: a sombra, que corre ao
-longo do chão, e o resto, que é perpendicular ao chão.
+<ProjectionDrop />
 
-A analogia funciona assim. O **chão** é a direção de um vetor $\vec{u}$. A
-**vara** é outro vetor, $\vec{v}$, desenhado a partir do mesmo ponto. A
-**sombra** é a projeção. E a **luz** não é parte da matemática: ela está ali
-só para dizer “desça em ângulo reto”. Na matemática, o que faz o papel da luz
-é a exigência de que o resto seja perpendicular a $\vec{u}$.
+Da ponta da sombra até a ponta da vara sobra o segmento que desceu. Chame esse
+segmento de **resto**. Andar primeiro pela sombra e depois subir pelo resto
+leva à ponta de $\vec{v}$. Então a vara é a soma de dois deslocamentos: a
+sombra, que corre ao longo do chão, e o resto, que forma ângulo reto com ele.
 
-## 6. Modelo visual: sombra, resto e ângulo reto
+A analogia tem um limite, e ele precisa ficar claro. O **chão** é a reta de
+$\vec{u}$, a **vara** é $\vec{v}$ e a **sombra** é a projeção. Mas a **luz**
+não é parte da matemática: ela está ali só para dizer “desça em ângulo reto”.
+Na matemática, quem faz o papel da luz é a exigência de que o resto seja
+perpendicular a $\vec{u}$.
 
-Na figura, $\vec{u} = (4,\ 2)$ dá a direção do chão e $\vec{v} = (1,\ 4)$ é a
-vara. A sombra de $\vec{v}$ sobre a direção de $\vec{u}$ é a seta verde, que
-termina em $(2{,}4;\ 1{,}2)$. O resto, tracejado, sobe dali até a ponta de
-$\vec{v}$ e forma um ângulo reto com a direção de $\vec{u}$.
+Duas coisas se confundem aqui. **A sombra é um vetor sobre a reta de
+$\vec{u}$; o resto é o vetor que sai da reta e vai até a ponta de $\vec{v}$.**
 
-<CartesianPlane
-  xMin={-1} xMax={5} yMin={-1} yMax={5}
-  xUnit={52}
-  segments={[
-    {from: [0, 0], to: [4, 2], tone: 1, arrow: true},
-    {from: [0, 0], to: [1, 4], tone: 2, arrow: true},
-    {from: [0, 0], to: [2.4, 1.2], tone: 3, arrow: true},
-    {from: [2.4, 1.2], to: [1, 4], tone: 2, dashed: true},
-    {from: [2.65, 1.325], to: [2.525, 1.576], tone: 0},
-    {from: [2.525, 1.576], to: [2.275, 1.45], tone: 0},
-  ]}
-  labels={[
-    {at: [4, 2], math: '\\vec{u}', tone: 1, dx: 16, dy: -8},
-    {at: [1, 4], math: '\\vec{v}', tone: 2, dx: -16, dy: -6},
-    {at: [1.8, 0.9], math: '\\operatorname{proj}_{\\vec{u}} \\vec{v}', tone: 3, dx: 26, dy: 26},
-    {at: [1.7, 2.6], math: '\\text{resto}', tone: 2, dx: 38, dy: 2},
-  ]}
-  axisLabels={['x', 'y']}
-  caption="A seta verde é a projeção de v sobre a direção de u: a sombra. O tracejado é o resto, que liga a ponta da sombra à ponta de v e forma ângulo reto com u. Sombra mais resto é igual a v."
-/>
+<details>
+<summary>Confira: na figura, troque a vara para v = (3, 3). Antes de olhar, a sombra fica mais comprida ou mais curta que a de (1, 4)? Por quê?</summary>
 
-Três leituras da figura:
+Mais comprida. A vara $(3,\ 3)$ está mais deitada sobre o chão: ela faz um
+ângulo menor com $\vec{u}$. As duas varas têm quase o mesmo comprimento
+(cerca de 4,24 e 4,12). Com comprimentos parecidos, quanto mais deitada a
+vara, mais perto a ponta dela fica do chão, e mais longe o pé da linha que
+desce. Na figura, a sombra
+de $(3,\ 3)$ termina em $(3{,}6;\ 1{,}8)$, e a de $(1,\ 4)$ termina em
+$(2{,}4;\ 1{,}2)$.
 
-1. A sombra **está sobre a reta de $\vec{u}$**. Ela é um múltiplo de
-   $\vec{u}$: aqui, um pouco mais da metade dele.
-2. O resto **forma ângulo reto** com a reta de $\vec{u}$.
-3. Sombra e resto, encadeados ponta com cauda, **reconstroem $\vec{v}$**.
+</details>
 
-O lado para onde a sombra aponta depende do ângulo entre os vetores, como a
-vara inclinada para a frente ou para trás:
+## O ângulo decide o lado da sombra, e o sinal do produto avisa
+
+O comprimento e o lado da sombra dependem de como a vara está inclinada:
+
+- vara deitada sobre o chão, no mesmo sentido de $\vec{u}$: a sombra é a vara
+  inteira;
+- vara inclinada para a frente (ângulo agudo): a sombra é mais curta que a
+  vara e aponta para o lado de $\vec{u}$;
+- vara em pé, em ângulo reto com o chão: a sombra é um ponto só, o vetor
+  nulo;
+- vara inclinada para trás (ângulo obtuso): a sombra cai **atrás** da origem,
+  no prolongamento da reta, e aponta contra $\vec{u}$;
+- vara deitada sobre o chão, no sentido oposto ao de $\vec{u}$ (ângulo raso,
+  de $180^\circ$): a sombra é de novo a vara inteira, agora apontando contra
+  $\vec{u}$.
+
+Arraste o ângulo entre as duas setas e veja a sombra encolher, sumir em 90° e
+reaparecer do outro lado.
+
+<ProjectionExplorer />
+
+A lição do [produto escalar](./produto-escalar) ligou o ângulo ao sinal do
+produto. A mesma ligação vale para a sombra:
 
 | ângulo entre $\vec{v}$ e $\vec{u}$ | sinal de $\vec{v} \cdot \vec{u}$ | a sombra |
 |---|---|---|
 | agudo | positivo | aponta para o mesmo lado de $\vec{u}$ |
 | reto | zero | é o vetor nulo |
 | obtuso | negativo | aponta para o lado oposto ao de $\vec{u}$ |
+| raso, $180^\circ$ | negativo | é a própria vara, apontando para o lado oposto ao de $\vec{u}$ |
 
-A tabela liga a sombra ao sinal do produto escalar. Essa ligação já sugere
-que o produto escalar vai entrar na fórmula.
+**Exemplo.** Com $\vec{u} = (4,\ 2)$, a sombra de $(1,\ 4)$ aponta para o lado
+de $\vec{u}$, porque $1 \times 4 + 4 \times 2 = 12$ é positivo.
 
-## 7. Ponte para a formalização: tamanho vezes direção
+**Contraexemplo.** A sombra de $(-3,\ 1)$ não aponta para o lado de
+$\vec{u}$, porque $(-3) \times 4 + 1 \times 2 = -10$ é negativo. Na figura
+anterior, o botão $v = (-3,\ 1)$ mostra essa sombra caindo atrás da origem.
 
-Queremos uma fórmula para a seta verde. Na lição de
-[módulo, direção e componentes](./modulo-direcao-e-componentes), todo vetor
-não nulo foi escrito como
+A tabela diz que o produto escalar decide o lado da sombra. Isso já sugere
+que ele vai aparecer na fórmula.
 
-$$
-\text{vetor} = (\text{quão comprido}) \times (\text{unitário que diz para onde aponta}).
-$$
+<details>
+<summary>Confira: com u = (4, 2), para que lado cai a sombra de (−1, 2)? E a de (−3, −1)? E a de (2, 5)? Decida só pelo sinal do produto escalar.</summary>
 
-Então precisamos de duas peças.
+- $(-1,\ 2) \cdot (4,\ 2) = -4 + 4 = 0$: ângulo reto, a sombra é o vetor
+  nulo.
+- $(-3,\ -1) \cdot (4,\ 2) = -12 - 2 = -14$: negativo, a sombra cai para
+  trás.
+- $(2,\ 5) \cdot (4,\ 2) = 8 + 10 = 18$: positivo, a sombra aponta para o
+  lado de $\vec{u}$.
 
-**Peça 1: o tamanho da sombra.** A lição do
-[produto escalar](./produto-escalar) já calculou a parte de um vetor na
-direção de outro. É o cateto adjacente do triângulo retângulo que tem
-$\vec{v}$ como hipotenusa:
+</details>
+
+## O tamanho com sinal da sombra é a componente escalar
+
+A vara, a sombra e a linha que desce formam um triângulo retângulo. A vara
+$\vec{v}$ é a hipotenusa, e a sombra é o cateto adjacente ao ângulo $\theta$
+entre os vetores. Pela lição de
+[seno, cosseno e tangente](./razoes-trigonometricas), esse cateto mede
+$\lVert \vec{v} \rVert \cos\theta$.
+
+A lição do [produto escalar](./produto-escalar) já fez essa conta sem o
+ângulo: dividindo o produto pelo tamanho de $\vec{u}$,
 
 $$
 \lVert \vec{v} \rVert \cos\theta = \frac{\vec{v} \cdot \vec{u}}{\lVert \vec{u} \rVert}.
 $$
 
-Esse número vem com sinal. Quando o ângulo $\theta$ é obtuso, o cosseno é
-negativo, e o número sai negativo. É assim que a conta registra a vara
-inclinada para trás.
+O número vem **com sinal**. Quando o ângulo é obtuso, o cosseno é negativo, e
+o número sai negativo. É assim que a conta registra a vara inclinada para
+trás. Na figura, o rótulo verde é esse número, e o painel o calcula pelos dois
+lados da igualdade.
 
-**Peça 2: a direção.** A sombra corre sobre a reta de $\vec{u}$. O unitário
-dessa direção é $\vec{u}$ normalizado:
+<ProjectionExplorer show="comp" initial={135} />
+
+> A **componente escalar** de $\vec{v}$ sobre um vetor não nulo $\vec{u}$ é o
+> número
+>
+> $$\operatorname{comp}_{\vec{u}} \vec{v} = \frac{\vec{v} \cdot \vec{u}}{\lVert \vec{u} \rVert} = \lVert \vec{v} \rVert \cos\theta.$$
+>
+> O tamanho dela é o comprimento da sombra. O sinal é positivo se a sombra
+> aponta para o lado de $\vec{u}$ e negativo se aponta para o lado oposto. Ela
+> vale zero quando a sombra é o vetor nulo.
+
+**Exemplo.** A componente de $(2,\ 9)$ sobre $(4,\ 3)$ é
+$\frac{35}{5} = 7$, como no resgate 2.
+
+**Contraexemplo 1: a componente não é o módulo de $\vec{v}$.** O módulo de
+$(2,\ 9)$ é $\sqrt{85} \approx 9{,}22$, e a componente é 7. Com
+$\vec{v}$ não nulo, os dois só coincidem quando $\vec{v}$ tem a mesma
+direção e o mesmo sentido de $\vec{u}$, porque aí
+$\cos\theta = \cos 0^\circ = 1$.
+
+**Contraexemplo 2: a componente não é sempre positiva.** A componente de
+$(-4,\ 3)$ sobre $(2,\ 1)$ é
 
 $$
-\frac{\vec{u}}{\lVert \vec{u} \rVert}.
+\frac{(-4) \times 2 + 3 \times 1}{\sqrt{2^2 + 1^2}} = \frac{-5}{\sqrt{5}} = -\sqrt{5} \approx -2{,}24.
 $$
+
+O sinal negativo diz que a sombra cai para trás, no lado oposto ao de
+$(2,\ 1)$. O exemplo 2 desenha essa situação.
+
+<details>
+<summary>Confira: quanto vale a componente escalar de (3, 4) sobre (0, 2)? O que esse número mede no desenho?</summary>
+
+$\frac{3 \times 0 + 4 \times 2}{\sqrt{0^2 + 2^2}} = \frac{8}{2} = 4$. O vetor
+$(0,\ 2)$ aponta para cima, então o chão é o eixo $y$. A sombra de $(3,\ 4)$
+no eixo $y$ mede 4, que é a segunda coordenada. Repare que 4 não é o módulo
+de $(3,\ 4)$, que é 5.
+
+</details>
+
+## A sombra, como vetor, é tamanho vezes direção
+
+A componente escalar é um **número**. A sombra é uma **seta**. Para passar do
+número à seta, use o que a lição de
+[módulo, direção e componentes](./modulo-direcao-e-componentes) ensinou: todo
+vetor não nulo é
+
+$$
+\text{vetor} = (\text{quão comprido}) \times (\text{unitário que diz para onde aponta}).
+$$
+
+Precisamos de duas peças.
+
+**Peça 1: a direção.** A sombra corre sobre a reta de $\vec{u}$. O unitário
+dessa direção é $\vec{u}$ dividido pelo próprio módulo:
+$\frac{\vec{u}}{\lVert \vec{u} \rVert}$.
+
+**Peça 2: o tamanho, com sinal.** É a componente escalar,
+$\frac{\vec{v} \cdot \vec{u}}{\lVert \vec{u} \rVert}$, da seção anterior.
+
+A figura faz as duas peças acontecerem: uma cópia de $\vec{u}$ encolhe até
+medir 1, e depois estica pelo tamanho da sombra. A ponta para exatamente no
+pé da linha que desce.
+
+<ProjectionBuild />
 
 **Juntando.** Multiplicamos o tamanho, com sinal, pelo unitário:
 
@@ -293,19 +393,20 @@ $$
 = \frac{\vec{v} \cdot \vec{u}}{\lVert \vec{u} \rVert} \times \frac{\vec{u}}{\lVert \vec{u} \rVert}.
 $$
 
-Os dois denominadores são o mesmo número, $\lVert \vec{u} \rVert$. Multiplicados,
-eles dão $\lVert \vec{u} \rVert^2$. E $\lVert \vec{u} \rVert^2$ tem outro nome,
-visto no produto escalar: $\vec{u} \cdot \vec{u}$. Por isso
+Os dois denominadores são o mesmo número, $\lVert \vec{u} \rVert$.
+Multiplicados, eles dão $\lVert \vec{u} \rVert^2$. E
+$\lVert \vec{u} \rVert^2$ tem outro nome, visto no produto escalar:
+$\vec{u} \cdot \vec{u}$. Por isso
 
-$$
-\operatorname{proj}_{\vec{u}} \vec{v}
-= \frac{\vec{v} \cdot \vec{u}}{\vec{u} \cdot \vec{u}}\,\vec{u}.
-$$
+> A **projeção ortogonal** de $\vec{v}$ sobre um vetor não nulo $\vec{u}$ é o
+> vetor
+>
+> $$\operatorname{proj}_{\vec{u}} \vec{v} = \frac{\vec{v} \cdot \vec{u}}{\vec{u} \cdot \vec{u}}\,\vec{u}.$$
 
-**O que mudou na escrita:** as raízes sumiram. O módulo $\lVert \vec{u} \rVert$
-tem raiz quadrada, mas $\vec{u} \cdot \vec{u}$ não tem, porque é só
-“multiplica par com par e soma”. **O que não mudou:** o vetor é o mesmo,
-porque trocamos $\lVert \vec{u} \rVert^2$ por um número igual a ele.
+**O que mudou na escrita:** as raízes sumiram. O módulo
+$\lVert \vec{u} \rVert$ tem raiz quadrada, mas $\vec{u} \cdot \vec{u}$ não
+tem, porque é “multiplica par com par e soma”. **O que não mudou:** o vetor é
+o mesmo, porque trocamos $\lVert \vec{u} \rVert^2$ por um número igual a ele.
 
 **Conferindo com a figura.** Com $\vec{v} = (1,\ 4)$ e $\vec{u} = (4,\ 2)$:
 
@@ -319,49 +420,28 @@ $$
 \operatorname{proj}_{\vec{u}} \vec{v} = \frac{12}{20}\,(4,\ 2) = 0{,}6\,(4,\ 2) = (2{,}4;\ 1{,}2).
 $$
 
-É exatamente onde a seta verde termina.
+É exatamente onde a seta verde termina. O caminho de duas peças dá o mesmo
+ponto, só que com raízes no meio: $\frac{12}{\sqrt{20}} \approx 2{,}683$
+vezes $\frac{(4,\ 2)}{\sqrt{20}} \approx (0{,}894;\ 0{,}447)$.
 
-Repare na forma final: um **número** vezes $\vec{u}$. A sombra é sempre um
-múltiplo de $\vec{u}$, como a primeira leitura da figura dizia. E o sinal
-desse número cuida da tabela da seção 6 sozinho: positivo, a sombra aponta
-para o lado de $\vec{u}$; zero, a sombra é nula; negativo, aponta para o lado
-oposto. Não precisamos de três regras.
+**Contraexemplo.** Dividir uma vez só por $\lVert \vec{u} \rVert$ não dá a
+projeção. Na seção “Erros comuns”, a figura mostra essa seta errada passando
+da ponta da sombra.
 
-## 8. Formalização
+<details>
+<summary>Confira: projete v = (3, 1) sobre u = (0, 3) pelos dois caminhos: tamanho vezes unitário, e a fórmula com u · u.</summary>
 
-### 8.1 Componente escalar
+Pelas duas peças: o unitário é $\frac{(0,\ 3)}{3} = (0,\ 1)$, e o tamanho é
+$\frac{3 \times 0 + 1 \times 3}{3} = 1$. A sombra é $1 \times (0,\ 1) =
+(0,\ 1)$.
 
-> A **componente escalar** de $\vec{v}$ sobre um vetor não nulo $\vec{u}$ é o
-> número
-> $$\operatorname{comp}_{\vec{u}} \vec{v} = \frac{\vec{v} \cdot \vec{u}}{\lVert \vec{u} \rVert} = \lVert \vec{v} \rVert \cos\theta,$$
-> em que $\theta$ é o ângulo entre $\vec{v}$ e $\vec{u}$. Ela mede o
-> comprimento da sombra de $\vec{v}$ sobre a direção de $\vec{u}$, com sinal
-> positivo se a sombra aponta para o lado de $\vec{u}$ e negativo se aponta
-> para o lado oposto.
+Pela fórmula: $\vec{v} \cdot \vec{u} = 3$ e $\vec{u} \cdot \vec{u} = 9$, então
+$\frac{3}{9}\,(0,\ 3) = (0,\ 1)$. O mesmo vetor. A sombra no eixo $y$ guarda a
+segunda coordenada de $\vec{v}$, que é 1.
 
-**Exemplo.** A componente de $(2,\ 9)$ sobre $(4,\ 3)$ é
-$\frac{35}{5} = 7$, como no resgate 2.
+</details>
 
-**Contraexemplo 1: a componente não é o módulo de $\vec{v}$.** O módulo de
-$(2,\ 9)$ é $\sqrt{85} \approx 9{,}22$, e a componente é 7. Os dois só
-coincidem quando $\vec{v}$ aponta exatamente para o lado de $\vec{u}$, porque
-aí $\cos\theta = \cos 0^\circ = 1$.
-
-**Contraexemplo 2: a componente não é sempre positiva.** A componente de
-$(-4,\ 3)$ sobre $(2,\ 1)$ é
-
-$$
-\frac{(-4) \times 2 + 3 \times 1}{\sqrt{2^2 + 1^2}} = \frac{-5}{\sqrt{5}} = -\sqrt{5} \approx -2{,}24.
-$$
-
-O sinal negativo diz que a sombra cai para trás, no lado oposto ao de
-$(2,\ 1)$. O exemplo 2 desenha essa situação.
-
-### 8.2 O vetor projeção
-
-> A **projeção ortogonal** de $\vec{v}$ sobre um vetor não nulo $\vec{u}$ é o
-> vetor
-> $$\operatorname{proj}_{\vec{u}} \vec{v} = \frac{\vec{v} \cdot \vec{u}}{\vec{u} \cdot \vec{u}}\,\vec{u}.$$
+## O número k conta quantos u cabem na sombra
 
 Leia a fórmula como uma receita de dois passos. Primeiro, calcule o **número**
 
@@ -369,11 +449,14 @@ $$
 k = \frac{\vec{v} \cdot \vec{u}}{\vec{u} \cdot \vec{u}}.
 $$
 
-Depois, multiplique $\vec{u}$ por esse número. O número $k$ diz **quantos
-$\vec{u}$ cabem na sombra**: $k = 0{,}6$ quer dizer que a sombra tem 60% do
-comprimento de $\vec{u}$ e aponta para o mesmo lado.
+Depois, multiplique $\vec{u}$ por esse número. O $k$ tem um significado que
+se pode contar: ele diz **quantos $\vec{u}$ cabem na sombra**. Na figura,
+cópias de $\vec{u}$ são encostadas uma na ponta da outra, como uma régua,
+até cobrir a sombra.
 
-**Exemplo.** Projeção de $(2,\ 9)$ sobre $(4,\ 3)$:
+<ProjectionRuler />
+
+**Exemplo.** Projeção de $(2,\ 9)$ sobre $(4,\ 3)$, os números do galpão:
 
 $$
 k = \frac{35}{4^2 + 3^2} = \frac{35}{25} = 1{,}4,
@@ -381,32 +464,81 @@ k = \frac{35}{4^2 + 3^2} = \frac{35}{25} = 1{,}4,
 \operatorname{proj}_{(4,\ 3)} (2,\ 9) = 1{,}4\,(4,\ 3) = (5{,}6;\ 4{,}2).
 $$
 
-O módulo desse vetor é $1{,}4 \times 5 = 7$: o mesmo 7 da componente escalar.
-Sempre que $k$ é positivo, o módulo da projeção é igual à componente escalar.
+Na sombra cabem uma cópia inteira de $(4,\ 3)$ e mais 0,4 de outra. O
+módulo desse vetor é $1{,}4 \times 5 = 7$: o mesmo 7 da componente escalar.
+Quando $k$ é positivo, o módulo da projeção é igual à componente escalar.
+Quando $k$ é negativo, as cópias são de $-\vec{u}$ e vão para trás: o terceiro
+botão da figura mostra $k = -1$.
 
 **Contraexemplo: a ordem importa.** Projetar $(4,\ 3)$ sobre $(2,\ 9)$ é
 outra conta. O produto escalar continua 35, porque ele não depende da ordem.
-Mas agora divide-se por $(2,\ 9) \cdot (2,\ 9) = 85$ e multiplica-se
-$(2,\ 9)$:
+Mas agora o chão é $(2,\ 9)$: divide-se por $(2,\ 9) \cdot (2,\ 9) = 85$ e
+multiplica-se $(2,\ 9)$:
 
 $$
 \operatorname{proj}_{(2,\ 9)} (4,\ 3) = \frac{35}{85}\,(2,\ 9) = \frac{7}{17}\,(2,\ 9) \approx (0{,}82;\ 3{,}71).
 $$
 
-É um vetor sobre a reta de $(2,\ 9)$, completamente diferente de
-$(5{,}6;\ 4{,}2)$. O vetor que vem depois da palavra “sobre” é o chão. Ele
-dá a direção da sombra e aparece duas vezes na fórmula: no denominador e no
-fim.
+<CartesianPlane
+  xMin={-2.4} xMax={7} yMin={-1} yMax={10}
+  xUnit={30}
+  lines={[{m: 0.75, n: 0, tone: 1, dashed: true}, {m: 4.5, n: 0, tone: 2, dashed: true}]}
+  segments={[
+    {from: [0, 0], to: [4, 3], tone: 1, arrow: true},
+    {from: [0, 0], to: [2, 9], tone: 2, arrow: true},
+    {from: [0, 0], to: [5.6, 4.2], tone: 3, arrow: true},
+    {from: [2, 9], to: [5.6, 4.2], muted: true, dashed: true},
+    {from: [0, 0], to: [0.824, 3.706], tone: 3, arrow: true},
+    {from: [4, 3], to: [0.824, 3.706], muted: true, dashed: true},
+  ]}
+  labels={[
+    {at: [4, 3], math: '(4,\\ 3)', tone: 1, dx: 30, dy: 14},
+    {at: [2, 9], math: '(2,\\ 9)', tone: 2, dx: 32, dy: 0},
+    {at: [5.6, 4.2], math: '(5{,}6;\\ 4{,}2)', tone: 3, dx: 40, dy: -8},
+    {at: [0.824, 3.706], math: '(0{,}82;\\ 3{,}71)', tone: 3, dx: -50, dy: -6},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="As duas projeções com os mesmos vetores. A sombra de (2, 9) sobre a reta de (4, 3) termina em (5,6; 4,2). A sombra de (4, 3) sobre a reta de (2, 9) termina em cerca de (0,82; 3,71). As linhas cinza tracejadas descem em ângulo reto até cada chão."
+/>
 
-### 8.3 O resto é perpendicular
+São duas sombras em retas diferentes. O vetor que vem depois da palavra
+“sobre” é o chão. Ele dá a direção da sombra e aparece duas vezes na fórmula:
+no denominador e no fim.
+
+<details>
+<summary>Confira: o que se sabe da sombra quando k = 2,5? E quando k = −0,5?</summary>
+
+Com $k = 2{,}5$, a sombra é $2{,}5\,\vec{u}$: aponta para o lado de
+$\vec{u}$ e mede duas vezes e meia o comprimento dele. Com $k = -0{,}5$, a
+sombra é $-0{,}5\,\vec{u}$: aponta para o lado oposto e mede metade do
+comprimento de $\vec{u}$. Nos dois casos, a sombra está sobre a reta de
+$\vec{u}$.
+
+</details>
+
+## O resto é sempre perpendicular a u, e só esse k consegue isso
 
 > O **resto** da projeção é o vetor
+>
 > $$\vec{r} = \vec{v} - \operatorname{proj}_{\vec{u}} \vec{v}.$$
-> Ele é sempre perpendicular a $\vec{u}$.
+>
+> O produto escalar dele com $\vec{u}$ é sempre zero. Por isso, quando o resto
+> não é nulo, ele é perpendicular a $\vec{u}$. (O resto só é nulo quando
+> $\vec{v}$ já está sobre a reta de $\vec{u}$.)
 
-A figura da seção 6 mostra o ângulo reto. A conta prova que ele está sempre
-lá. Escreva a projeção como $k\vec{u}$, com o número $k$ da seção 8.2, e faça
-o produto escalar do resto com $\vec{u}$:
+Primeiro, veja. Na figura, a seta verde é **uma candidata** a sombra: $k$
+vezes $\vec{u}$, com o $k$ que você escolher. O resto é o que falta dela até a
+ponta de $\vec{v}$. Procure o $k$ que deixa o resto em ângulo reto com a reta.
+
+<ResidualSlider />
+
+Só $k = 0{,}6$ faz o produto escalar do resto com $\vec{u}$ dar zero. E o
+$0{,}6$ é exatamente o $k$ da fórmula, $\frac{12}{20}$. Repare também no
+tamanho do resto: ele é o menor de todos nesse mesmo $k$.
+
+Agora a conta que prova que o ângulo reto aparece **sempre**, e não só neste
+exemplo. Escreva a projeção como $k\vec{u}$ e faça o produto escalar do resto
+com $\vec{u}$:
 
 $$
 \vec{r} \cdot \vec{u} = (\vec{v} - k\vec{u}) \cdot \vec{u}.
@@ -419,12 +551,11 @@ $$
 (\vec{v} - k\vec{u}) \cdot \vec{u} = \vec{v} \cdot \vec{u} - (k\vec{u}) \cdot \vec{u}.
 $$
 
-Na segunda parcela, o número $k$ pode sair da conta. É a propriedade “número
-para fora” do produto escalar: multiplicar cada
-coordenada de $\vec{u}$ por $k$ e depois somar os produtos dá o mesmo que
-somar primeiro e multiplicar a soma por $k$. Então
-$(k\vec{u}) \cdot \vec{u} = k\,(\vec{u} \cdot \vec{u})$. Agora troque $k$ pelo
-que ele vale:
+Na segunda parcela, o número $k$ sai da conta. É a propriedade “o número sai
+para fora” do produto escalar: multiplicar cada coordenada de $\vec{u}$ por
+$k$ e depois somar os produtos dá o mesmo que somar primeiro e multiplicar a
+soma por $k$. Então $(k\vec{u}) \cdot \vec{u} = k\,(\vec{u} \cdot \vec{u})$.
+Agora troque $k$ pelo que ele vale:
 
 $$
 \vec{r} \cdot \vec{u}
@@ -433,13 +564,12 @@ $$
 $$
 
 O número $\vec{u} \cdot \vec{u}$ aparece dividindo e multiplicando, e os dois
-se cancelam. Sobra um número menos ele mesmo, que é zero. Produto escalar
-zero quer dizer ângulo reto.
+se cancelam. Sobra um número menos ele mesmo, que é zero. Entre vetores não
+nulos, produto escalar zero quer dizer ângulo reto.
 
-**Um segundo caminho até a mesma fórmula.** A conta acima pode ser lida ao
-contrário. Suponha que você não conhece a fórmula da projeção e só sabe que a
-sombra é algum múltiplo $k\vec{u}$, com o resto perpendicular a $\vec{u}$.
-Escrevendo essa exigência,
+**A mesma conta, lida ao contrário.** Suponha que você não conhece a fórmula
+da projeção. Você só sabe que a sombra é algum múltiplo $k\vec{u}$ e que o
+resto tem de ser perpendicular a $\vec{u}$. Escrevendo essa exigência,
 
 $$
 (\vec{v} - k\vec{u}) \cdot \vec{u} = 0
@@ -451,9 +581,11 @@ $$
 
 O último passo isola o $k$, como numa equação do 1º grau: soma-se
 $k\,(\vec{u} \cdot \vec{u})$ aos dois lados e divide-se tudo por
-$\vec{u} \cdot \vec{u}$. Chegamos ao mesmo $k$ da seção 7, agora sem usar
-cosseno. Os dois caminhos concordam: a sombra calculada pelo cosseno é
-exatamente o múltiplo de $\vec{u}$ que deixa o resto em ângulo reto.
+$\vec{u} \cdot \vec{u}$. Essa divisão pode ser feita porque $\vec{u}$ não é
+nulo, e então $\vec{u} \cdot \vec{u}$ não é zero. A equação tem uma solução
+só. Por isso o $k$ da
+fórmula é o **único** número que deixa o resto em ângulo reto, que é o que o
+deslizante mostrou.
 
 **Exemplo.** No galpão, o resto é
 
@@ -466,39 +598,74 @@ e $\vec{r} \cdot (4,\ 3) = -14{,}4 + 14{,}4 = 0$. É a conta do resgate 4.
 **Contraexemplo.** Outro múltiplo de $\vec{u}$ não deixa resto perpendicular.
 Com $2\,(4,\ 3) = (8,\ 6)$ no lugar da sombra, o “resto” seria
 $(2,\ 9) - (8,\ 6) = (-6,\ 3)$, e $(-6,\ 3) \cdot (4,\ 3) = -24 + 9 = -15$, que
-não é zero. Só o $k = 1{,}4$ funciona.
+não é zero.
 
-### 8.4 Decomposição ortogonal e Pitágoras
+<details>
+<summary>Confira: com v = (1, 4) e u = (4, 2), qual seria o resto se você usasse k = 1? Ele é perpendicular a u?</summary>
+
+Com $k = 1$, a candidata é o próprio $(4,\ 2)$, e o resto é
+$(1,\ 4) - (4,\ 2) = (-3,\ 2)$. O produto com $\vec{u}$ é
+$(-3) \times 4 + 2 \times 2 = -12 + 4 = -8$, que não é zero. Não é
+perpendicular. A candidata $k = 1$ passou do pé da sombra, que fica em
+$k = 0{,}6$.
+
+</details>
+
+## Sombra e resto formam um triângulo retângulo com v
 
 Pela definição do resto, a soma da sombra com o resto devolve o vetor
 original:
 
 > $$\vec{v} = \operatorname{proj}_{\vec{u}} \vec{v} + \vec{r},$$
+>
 > com a primeira parte na direção de $\vec{u}$ e a segunda perpendicular a
 > ela. Essa é a **decomposição ortogonal** de $\vec{v}$ em relação a
 > $\vec{u}$.
 
-Na figura, as duas partes e o próprio $\vec{v}$ formam um triângulo
-retângulo: as partes são os catetos e $\vec{v}$ é a hipotenusa. Pelo
-teorema de Pitágoras,
+As duas partes e o próprio $\vec{v}$ formam um triângulo retângulo: as partes
+são os catetos, e $\vec{v}$ é a hipotenusa. Pelo teorema de Pitágoras,
 
 $$
 \lVert \vec{v} \rVert^2 = \lVert \operatorname{proj}_{\vec{u}} \vec{v} \rVert^2 + \lVert \vec{r} \rVert^2.
 $$
 
-**Conferindo no galpão.** $\lVert (2,\ 9) \rVert^2 = 85$. A sombra mede 7, e o
-resto mede $\sqrt{3{,}6^2 + 4{,}8^2} = \sqrt{12{,}96 + 23{,}04} = \sqrt{36} = 6$.
-E de fato $7^2 + 6^2 = 49 + 36 = 85$.
+A figura é a mesma da seção anterior, mas o painel agora soma os quadrados dos
+dois tamanhos e compara com $\lVert (1,\ 4) \rVert^2 = 1 + 16 = 17$.
+
+<ResidualSlider pythagoras initial={0.3} />
+
+Com $k = 0{,}6$, a sombra $(2{,}4;\ 1{,}2)$ tem quadrado do tamanho
+$5{,}76 + 1{,}44 = 7{,}2$, e o resto $(-1{,}4;\ 2{,}8)$ tem
+$1{,}96 + 7{,}84 = 9{,}8$. A soma é $7{,}2 + 9{,}8 = 17$. Com qualquer outro
+$k$ do deslizante, a soma passa de 17 ou fica abaixo.
+
+**Exemplo, no galpão.** $\lVert (2,\ 9) \rVert^2 = 85$. A sombra mede 7, e o
+resto mede $\sqrt{3{,}6^2 + 4{,}8^2} = \sqrt{12{,}96 + 23{,}04} = \sqrt{36} =
+6$. E de fato $7^2 + 6^2 = 49 + 36 = 85$.
 
 **Contraexemplo.** Uma decomposição em partes que **não** são perpendiculares
-não obedece a Pitágoras. Com $(2,\ 9) = (8,\ 6) + (-6,\ 3)$, do contraexemplo
+não obedece a Pitágoras. Com $(2,\ 9) = (8,\ 6) + (-6,\ 3)$, da seção
 anterior, a soma dos quadrados dos módulos é $100 + 45 = 145$, longe de 85.
 
-### 8.5 Só a direção de $\vec{u}$ importa
+<details>
+<summary>Confira: a sombra de uma vara mede 5 e a vara mede 13. Quanto mede o resto?</summary>
+
+Sombra e resto são os catetos, e a vara é a hipotenusa:
+$13^2 = 5^2 + \lVert \vec{r} \rVert^2$. Então
+$\lVert \vec{r} \rVert^2 = 169 - 25 = 144$, e o resto mede 12.
+
+</details>
+
+## Só a direção de u importa: esticar ou virar u não muda a sombra
 
 A sombra de uma vara depende do chão, e não do tamanho da régua que você usa
-para marcar a direção do chão. A fórmula concorda. Troque $\vec{u}$ por
-$3\vec{u}$:
+para marcar a direção do chão. Na figura, o vetor que marca o chão é
+$c\,(2,\ 1)$, com o $c$ que você escolher. A sombra de $(1,\ 4)$ não sai do
+lugar.
+
+<ProjectionScale />
+
+A fórmula concorda. Troque $\vec{u}$ por $3\vec{u}$:
 
 - no numerador, $\vec{v} \cdot (3\vec{u})$ fica 3 vezes maior;
 - no denominador, $(3\vec{u}) \cdot (3\vec{u})$ fica $3 \times 3 = 9$ vezes
@@ -507,52 +674,106 @@ $3\vec{u}$:
 
 No total, o resultado é multiplicado por $\frac{3}{9} \times 3 = 1$: não muda.
 
-**Conferindo.** Com $\vec{v} = (1,\ 4)$ e $3\vec{u} = (12,\ 6)$:
+**Conferindo.** Com $\vec{v} = (1,\ 4)$ e $3\,(2,\ 1) = (6,\ 3)$:
 
 $$
-\frac{1 \times 12 + 4 \times 6}{12^2 + 6^2}\,(12,\ 6) = \frac{36}{180}\,(12,\ 6) = 0{,}2\,(12,\ 6) = (2{,}4;\ 1{,}2),
+\frac{1 \times 6 + 4 \times 3}{6^2 + 3^2}\,(6,\ 3) = \frac{18}{45}\,(6,\ 3) = 0{,}4\,(6,\ 3) = (2{,}4;\ 1{,}2).
 $$
 
-a mesma sombra da seção 7. O número $k$ mudou de $0{,}6$ para $0{,}2$, porque
-agora a régua é 3 vezes maior e cabe menos vezes na sombra. Mas a sombra é a
-mesma.
+É a mesma sombra que $(4,\ 2)$ deu na seção “A sombra, como vetor, é tamanho
+vezes direção”, porque $(2,\ 1)$, $(4,\ 2)$ e $(6,\ 3)$ estão todos sobre a
+mesma reta. O número $k$ mudou: com $(2,\ 1)$ ele é $\frac{6}{5} = 1{,}2$, com
+$(4,\ 2)$ é $0{,}6$, com $(6,\ 3)$ é $0{,}4$. Uma régua mais comprida cabe
+menos vezes na mesma sombra.
 
 O mesmo vale para $-\vec{u}$, que aponta para o lado oposto mas está sobre a
 mesma reta: o numerador troca de sinal, o vetor do fim também, e as duas
 trocas se anulam.
 
 Isso tem uma consequência prática: **você pode escolher o $\vec{u}$ mais
-cômodo** para a direção de uma reta. Para a reta de inclinação $\frac{3}{4}$,
-tanto faz usar $(4,\ 3)$, $(8,\ 6)$ ou $(0{,}8;\ 0{,}6)$.
+cômodo** para a direção de uma reta. Para a reta de inclinação
+$\frac{3}{4}$, tanto faz usar $(4,\ 3)$, $(8,\ 6)$ ou $(0{,}8;\ 0{,}6)$.
 
 **Contraexemplo.** O vetor nulo não serve como $\vec{u}$. Com
 $\vec{u} = (0,\ 0)$, o denominador $\vec{u} \cdot \vec{u}$ vale zero, e a
 divisão não está definida. Isso combina com a intuição: o vetor nulo não
-aponta para lado nenhum, então não existe “a direção do chão”.
+aponta para lado nenhum, então não existe “a direção do chão”. Na figura,
+$c = 0$ mostra isso.
 
-### 8.6 O ponto mais perto e a distância
+<details>
+<summary>Confira: projete (2, 9) sobre o unitário (0,8; 0,6). Por que o resultado é o mesmo da projeção sobre (4, 3), e por que esta conta é mais curta?</summary>
 
-Agora a pergunta da abertura. Temos uma reta que passa pelo ponto $A$ e segue a
-direção de $\vec{u}$, e um ponto $P$ fora dela.
+O produto escalar é $2 \times 0{,}8 + 9 \times 0{,}6 = 1{,}6 + 5{,}4 = 7$, e
+$(0{,}8;\ 0{,}6) \cdot (0{,}8;\ 0{,}6) = 0{,}64 + 0{,}36 = 1$. Então
+$k = 7$, e a projeção é $7\,(0{,}8;\ 0{,}6) = (5{,}6;\ 4{,}2)$: a mesma de
+antes, porque $(0{,}8;\ 0{,}6)$ e $(4,\ 3)$ estão sobre a mesma reta. A conta
+é mais curta porque o denominador de um unitário é 1, e dividir por 1 não
+muda nada.
+
+</details>
+
+## O ponto da reta mais perto de P: desconte A, projete, some A de volta
+
+Até aqui o chão passava pela origem. Uma reta qualquer passa por um ponto
+$A$ e segue a direção de $\vec{u}$. Seja $P$ um ponto fora dela. Este é o
+trecho mais difícil da lição, porque mistura pontos e vetores. Vale ir devagar.
+
+O caso abaixo é o do exemplo 5 da lição de
+[paralelas e perpendiculares](./paralelas-e-perpendiculares): a distância do
+ponto $P(1,\ 8)$ à reta $y = 2x + 3$. Com $x = 0$, a reta passa por
+$A(0,\ 3)$. A inclinação é 2: a cada 1 passo para a direita, a reta sobe 2.
+Então ela segue a direção $\vec{u} = (1,\ 2)$.
+
+**Previsão.** Na lição de paralelas e perpendiculares, a resposta foi cerca
+de 1,34. O caminho pela projeção tem de chegar ao mesmo número.
 
 **Passo 1: transformar o ponto num vetor que sai da reta.** A projeção fala de
 vetores que saem do mesmo ponto. Por isso usamos o vetor que vai de $A$ até
-$P$: $\vec{v} = \overrightarrow{AP} = P - A$, chegada menos saída.
+$P$, chegada menos saída:
+
+$$
+\overrightarrow{AP} = P - A = (1,\ 8) - (0,\ 3) = (1,\ 5).
+$$
 
 **Passo 2: projetar.** A sombra de $\overrightarrow{AP}$ sobre a direção da
 reta diz quanto se anda **ao longo da reta**, a partir de $A$, até ficar bem
-em frente a $P$. Somando esse deslocamento ao ponto $A$, chega-se ao pé da
-perpendicular:
+em frente a $P$:
 
 $$
-H = A + \operatorname{proj}_{\vec{u}} \overrightarrow{AP}.
+k = \frac{1 \times 1 + 5 \times 2}{1^2 + 2^2} = \frac{11}{5} = 2{,}2,
+\qquad
+\operatorname{proj}_{\vec{u}} \overrightarrow{AP} = 2{,}2\,(1,\ 2) = (2{,}2;\ 4{,}4).
 $$
 
-**Passo 3: medir o resto.** O resto liga $H$ a $P$ e é perpendicular à reta.
+**Passo 3: somar $A$ de volta.** A sombra é um deslocamento que começa em
+$A$. Somando esse deslocamento ao ponto $A$, chega-se ao **pé da
+perpendicular** $H$:
+
+$$
+H = A + \operatorname{proj}_{\vec{u}} \overrightarrow{AP} = (0 + 2{,}2;\ 3 + 4{,}4) = (2{,}2;\ 7{,}4).
+$$
+
+**Passo 4: medir o resto.** O resto liga $H$ a $P$ e é perpendicular à reta.
 O comprimento dele é a distância procurada:
 
 $$
-d(P,\ \text{reta}) = \lVert \overrightarrow{AP} - \operatorname{proj}_{\vec{u}} \overrightarrow{AP} \rVert = \lVert P - H \rVert.
+P - H = (1 - 2{,}2;\ 8 - 7{,}4) = (-1{,}2;\ 0{,}6),
+\qquad
+d = \sqrt{1{,}44 + 0{,}36} = \sqrt{1{,}8} \approx 1{,}34.
+$$
+
+É o mesmo pé e a mesma distância que a lição de paralelas e perpendiculares
+encontrou. A figura faz
+os passos em sequência.
+
+<PointToLine error />
+
+Em símbolos, para qualquer reta que passa por $A$ com direção $\vec{u}$:
+
+$$
+H = A + \operatorname{proj}_{\vec{u}} \overrightarrow{AP},
+\qquad
+d(P,\ \text{reta}) = \lVert P - H \rVert.
 $$
 
 **Por que $H$ é o ponto mais perto.** Pegue qualquer outro ponto $Q$ da reta.
@@ -568,13 +789,47 @@ $$
 Como $\lVert H - Q \rVert^2$ é positivo quando $Q$ é diferente de $H$, o lado
 esquerdo é maior que $\lVert P - H \rVert^2$. Qualquer outro ponto da reta
 fica mais longe de $P$ do que $H$. É o argumento do resgate 5, agora escrito
-com vetores.
+com vetores. Arraste $Q$ na figura e confira a soma.
 
-## 9. Resolvendo o problema do cabo
+<PointToLine compare caption="O pé H e a distância de P à reta, como na figura anterior. Arraste o ponto Q pela reta: a linha tracejada de P até Q é sempre mais comprida que a distância até H, e o painel mostra a soma de Pitágoras." />
+
+**Comparando com o caminho antigo.**
+
+| | caminho de 7.12 | caminho da projeção |
+|---|---|---|
+| passo 1 | equação da reta perpendicular por $P$ | um ponto $A$ da reta e a direção $\vec{u}$ |
+| passo 2 | resolver o sistema das duas retas | um produto escalar e uma divisão |
+| passo 3 | distância entre $P$ e o pé | módulo do resto |
+| reta vertical | não funciona: não existe inclinação | funciona igual, com $\vec{u} = (0,\ 1)$ |
+
+No caminho antigo, a perpendicular e o sistema serviam para achar o pé. Na
+projeção, o número $k$ já é escolhido para deixar o resto em ângulo reto, e
+por isso o pé sai sem sistema. O caminho antigo continua bom quando você já
+tem as equações das retas escritas e quer o ponto de encontro. O caminho da
+projeção é melhor quando você tem pontos e direções, e é o único dos dois que
+trata a reta vertical sem exceção.
+
+<details>
+<summary>Confira: uma reta passa por A(2, 1) e segue a direção (1, 0). Qual é o pé da perpendicular baixada de P(5, 4), e qual é a distância de P à reta?</summary>
+
+$\overrightarrow{AP} = (5,\ 4) - (2,\ 1) = (3,\ 3)$. Com $\vec{u} = (1,\ 0)$,
+$k = \frac{3 \times 1 + 3 \times 0}{1} = 3$, e a sombra é $(3,\ 0)$. Somando
+$A$ de volta, $H = (2 + 3,\ 1 + 0) = (5,\ 1)$. O resto é
+$P - H = (0,\ 3)$, e a distância é 3. Faz sentido: a reta é horizontal, na
+altura 1, e $P$ está na altura 4.
+
+</details>
+
+## Resolvendo o problema do cabo
 
 A estrada passa pelo poste $O(0,\ 0)$ e segue $\vec{u} = (4,\ 3)$. O galpão é
-$G(2,\ 9)$. Como a reta passa pela origem, o ponto $A$ da seção 8.6 é o
+$G(2,\ 9)$. Como a reta passa pela origem, o ponto $A$ da seção anterior é o
 próprio poste, e $\overrightarrow{OG} = G - O = (2,\ 9)$.
+
+**Previsão.** Na busca do começo da lição, o palpite mais simples de conferir era o
+ramal de 6,32 km, com a emenda a 5 km do poste. O ramal certo deve ser um
+pouco mais curto, e a emenda deve ficar um pouco mais adiante, onde o ramal
+chega em ângulo reto.
 
 **O número $k$.**
 
@@ -592,8 +847,8 @@ $$
 H = O + 1{,}4\,(4,\ 3) = (0,\ 0) + (5{,}6;\ 4{,}2) = (5{,}6;\ 4{,}2).
 $$
 
-Conferência: $H$ está na estrada? A estrada sobe 3 a cada 4, então os pontos
-dela satisfazem $y = 0{,}75\,x$. E $0{,}75 \times 5{,}6 = 4{,}2$. Está.
+Conferência: $H$ está na estrada? A estrada sobe 3 a cada 4, então nos pontos
+dela vale $y = 0{,}75\,x$. E $0{,}75 \times 5{,}6 = 4{,}2$. Está.
 
 **Pergunta 2: o comprimento e o custo do ramal.** O ramal é o resto:
 
@@ -610,44 +865,30 @@ comprimento da sombra: a componente escalar,
 $\operatorname{comp}_{\vec{u}} \overrightarrow{OG} = \frac{35}{5} = 7$ km. O
 técnico anda 7 km pela estrada e depois puxa 6 km de ramal.
 
-<CartesianPlane
-  xMin={-1} xMax={9} yMin={-1} yMax={10}
-  xUnit={32}
-  lines={[{m: 0.75, n: 0, tone: 1}]}
-  segments={[
-    {from: [0, 0], to: [5.6, 4.2], tone: 3, arrow: true, label: '7', dx: 10, dy: 14},
-    {from: [5.6, 4.2], to: [2, 9], tone: 2, label: '6', dx: 14, dy: 4},
-    {from: [4, 3], to: [2, 9], tone: 0, dashed: true},
-    {from: [5.28, 3.96], to: [5.04, 4.28], tone: 0},
-    {from: [5.04, 4.28], to: [5.36, 4.52], tone: 0},
-  ]}
-  points={[
-    {at: [0, 0], label: 'O', tone: 1, dx: 14, dy: -14},
-    {at: [2, 9], label: 'G', tone: 2, dx: 16, dy: -8},
-    {at: [5.6, 4.2], label: 'H(5{,}6;\\ 4{,}2)', tone: 3, dx: 62, dy: 2},
-    {at: [4, 3], label: 'Q', tone: 0, dx: 12, dy: 14},
-  ]}
-  labels={[{at: [3, 6], math: '\\approx 6{,}32', dx: -40, dy: 0}]}
-  axisLabels={['x', 'y']}
-  caption="A emenda em H: o técnico anda 7 km pela estrada (seta verde) e o ramal de H até G tem 6 km, em ângulo reto com a estrada. O ramal tracejado, saindo do palpite Q(4, 3), é mais longo: cerca de 6,32 km."
-/>
+<CableSearch mode="solved" />
 
 **Comparando com os palpites.** O ramal saindo do poste media
 $\sqrt{85} \approx 9{,}22$ km e custaria cerca de R\$ 138,3 mil. O ramal
 saindo de $(4,\ 3)$ media $\sqrt{40} \approx 6{,}32$ km e custaria cerca de
-R\$ 94,9 mil. A emenda em $H$ economiza quase R\$ 5 mil em relação ao melhor
-palpite. E a seção 8.6 garante que nenhum outro ponto da estrada faz melhor.
+R\$ 94,9 mil. A emenda em $H$ economiza quase R\$ 5 mil em relação a esse
+palpite. E o argumento de Pitágoras da seção anterior garante que nenhum
+outro ponto da estrada faz melhor. Na figura, o ramal de uma emenda $Q$ a
+$s$ km do poste mede $\sqrt{6^2 + (s - 7)^2}$, que só vale 6 quando $s = 7$.
 
 **Conferência final por Pitágoras.** O triângulo $O$, $H$, $G$ tem ângulo
-reto em $H$, catetos 7 e 6, e hipotenusa $\lVert \overrightarrow{OG} \rVert =
-\sqrt{85}$. E $7^2 + 6^2 = 85$.
+reto em $H$, catetos 7 e 6, e hipotenusa
+$\lVert \overrightarrow{OG} \rVert = \sqrt{85}$. E $7^2 + 6^2 = 85$.
 
-## 10. Exemplos resolvidos
+## Exemplos resolvidos
 
 ### Exemplo 1: projetar sobre o eixo horizontal
 
 Projete $\vec{v} = (3,\ 5)$ sobre $\vec{u} = (1,\ 0)$, que aponta ao longo do
 eixo $x$.
+
+**Previsão.** A luz que desce em ângulo reto sobre o eixo horizontal desce na
+vertical. A sombra deve guardar a coordenada horizontal, 3, e perder a
+vertical.
 
 $$
 k = \frac{3 \times 1 + 5 \times 0}{1^2 + 0^2} = \frac{3}{1} = 3,
@@ -655,8 +896,7 @@ k = \frac{3 \times 1 + 5 \times 0}{1^2 + 0^2} = \frac{3}{1} = 3,
 \operatorname{proj}_{(1,\ 0)} (3,\ 5) = 3\,(1,\ 0) = (3,\ 0).
 $$
 
-A sombra sobre o eixo horizontal guarda a coordenada horizontal e zera a
-vertical. O resto é $(3,\ 5) - (3,\ 0) = (0,\ 5)$: a parte vertical.
+O resto é $(3,\ 5) - (3,\ 0) = (0,\ 5)$: a parte vertical.
 
 Isso revela algo sobre a lição de
 [componentes](./modulo-direcao-e-componentes). As duas coordenadas de um
@@ -664,14 +904,17 @@ vetor são as suas componentes escalares sobre os eixos: 3 é a sombra no eixo
 $x$, e 5 é a sombra no eixo $y$. Decompor um vetor em “parte horizontal mais
 parte vertical” é um caso particular da decomposição ortogonal.
 
-Pela seção 8.5, trocar $(1,\ 0)$ por $(2,\ 0)$ não muda nada:
+Trocar $(1,\ 0)$ por $(2,\ 0)$ não muda nada, porque só a direção importa:
 $\frac{6}{4}\,(2,\ 0) = 1{,}5\,(2,\ 0) = (3,\ 0)$. Guarde este caso, porque o
-erro 1 da seção 11 usa ele.
+erro 1 da seção “Erros comuns” usa ele.
 
 ### Exemplo 2: quando a sombra cai para trás
 
 *Pause e tente antes de ler.* Projete $\vec{v} = (-4,\ 3)$ sobre
 $\vec{u} = (2,\ 1)$ e encontre o resto.
+
+**Previsão.** $\vec{v}$ aponta para a esquerda e para cima; $\vec{u}$ aponta
+para a direita. O ângulo parece obtuso, então a sombra deve cair para trás.
 
 $$
 \vec{v} \cdot \vec{u} = (-4) \times 2 + 3 \times 1 = -8 + 3 = -5,
@@ -685,8 +928,9 @@ $$
 \operatorname{proj}_{\vec{u}} \vec{v} = -1\,(2,\ 1) = (-2,\ -1).
 $$
 
-O número $k$ é negativo, então a sombra aponta para o lado oposto ao de
-$\vec{u}$. Ela tem o mesmo tamanho de $\vec{u}$, porque $k = -1$. O resto é
+O número $k$ é negativo, como a previsão dizia: a sombra aponta para o lado
+oposto ao de $\vec{u}$. Ela tem o mesmo tamanho de $\vec{u}$, porque
+$k = -1$. O resto é
 
 $$
 \vec{r} = (-4,\ 3) - (-2,\ -1) = (-4 + 2;\ 3 + 1) = (-2,\ 4).
@@ -697,7 +941,8 @@ Conferência do ângulo reto: $(-2,\ 4) \cdot (2,\ 1) = -4 + 4 = 0$.
 <CartesianPlane
   xMin={-5} xMax={3} yMin={-2} yMax={4}
   xUnit={46}
-  lines={[{m: 0.5, n: 0, tone: 0, dashed: true}]}
+  xTicks={[{at: -4}, {at: -3}, {at: 1}, {at: 2}, {at: 3}]}
+  lines={[{m: 0.5, n: 0, muted: true, dashed: true}]}
   segments={[
     {from: [0, 0], to: [2, 1], tone: 1, arrow: true},
     {from: [0, 0], to: [-4, 3], tone: 2, arrow: true},
@@ -717,9 +962,9 @@ Conferência do ângulo reto: $(-2,\ 4) \cdot (2,\ 1) = -4 + 4 = 0$.
 />
 
 A componente escalar é $\frac{-5}{\sqrt{5}} = -\sqrt{5} \approx -2{,}24$, o
-valor do contraexemplo 2 da seção 8.1. O módulo da sombra é
+valor do contraexemplo 2 da componente escalar. O módulo da sombra é
 $\lVert (-2,\ -1) \rVert = \sqrt{5}$: o mesmo número, sem o sinal. O sinal
-ficou guardado na direção da seta.
+ficou guardado no lado para onde a seta aponta.
 
 ### Exemplo 3: a caixa na rampa
 
@@ -728,14 +973,19 @@ horizontal. Uma caixa parada nela tem peso de 500 N, que puxa para baixo:
 $\vec{F} = (0,\ -500)$. Quanto do peso puxa a caixa ladeira abaixo, e quanto
 aperta a caixa contra o piso da rampa?
 
+**Previsão.** O peso aponta para baixo, e a rampa sobe. Então a parte ao
+longo da rampa aponta rampa abaixo, e o $k$ deve sair negativo. As duas
+partes devem ser menores que 500 N, porque são catetos de um triângulo em que
+o peso é a hipotenusa.
+
 A direção da rampa é $\vec{u} = (4,\ 3)$. Projetando o peso sobre ela:
 
 $$
-\vec{F} \cdot \vec{u} = 0 \times 4 + (-500) \times 3 = -1500,
+\vec{F} \cdot \vec{u} = 0 \times 4 + (-500) \times 3 = -1\,500,
 \qquad
 \vec{u} \cdot \vec{u} = 25,
 \qquad
-k = \frac{-1500}{25} = -60.
+k = \frac{-1\,500}{25} = -60.
 $$
 
 $$
@@ -783,88 +1033,18 @@ $500 \cos 36{,}87^\circ \approx 400$ N. Os dois caminhos concordam.
 
 **Qual caminho escolher.** Quando o problema dá coordenadas, a projeção
 resolve sem calcular ângulo nenhum, e os números saem exatos. Quando o
-problema dá o ângulo da rampa, seno e cosseno são mais diretos. E conferir 
-$300^2 + 400^2 = 500^2$ é a decomposição ortogonal da seção 8.4 em ação.
+problema dá o ângulo da rampa, seno e cosseno são mais diretos. E conferir
+$300^2 + 400^2 = 500^2$ é a decomposição ortogonal com Pitágoras.
 
-### Exemplo 4: refazendo a distância de ponto a reta
-
-*Pause e tente antes de ler.* Na lição de
-[paralelas e perpendiculares](./paralelas-e-perpendiculares), o exemplo 5
-calculou a distância do ponto $P(1,\ 8)$ à reta $y = 2x + 3$. Refaça com
-projeção.
-
-**Um ponto da reta e a direção.** Com $x = 0$, a reta passa por $A(0,\ 3)$. A
-inclinação é 2: a cada 1 passo para a direita, a reta sobe 2. Então ela segue
-a direção $\vec{u} = (1,\ 2)$.
-
-**O vetor que sai da reta.** $\overrightarrow{AP} = (1,\ 8) - (0,\ 3) = (1,\ 5)$.
-
-**A projeção e o pé.**
-
-$$
-k = \frac{1 \times 1 + 5 \times 2}{1^2 + 2^2} = \frac{11}{5} = 2{,}2,
-\qquad
-\operatorname{proj}_{\vec{u}} \overrightarrow{AP} = 2{,}2\,(1,\ 2) = (2{,}2;\ 4{,}4),
-$$
-
-$$
-H = A + (2{,}2;\ 4{,}4) = (0 + 2{,}2;\ 3 + 4{,}4) = (2{,}2;\ 7{,}4).
-$$
-
-É o mesmo pé que a lição antiga encontrou.
-
-**A distância.** O resto é $P - H = (1 - 2{,}2;\ 8 - 7{,}4) = (-1{,}2;\ 0{,}6)$,
-e
-
-$$
-d = \sqrt{1{,}44 + 0{,}36} = \sqrt{1{,}8} \approx 1{,}34.
-$$
-
-Também é o mesmo valor.
-
-<CartesianPlane
-  xMin={-1} xMax={4} yMin={-1} yMax={9}
-  xUnit={40}
-  lines={[{m: 2, n: 3, tone: 1}]}
-  segments={[
-    {from: [0, 3], to: [1, 8], tone: 2, arrow: true},
-    {from: [0, 3], to: [2.2, 7.4], tone: 3, arrow: true},
-    {from: [2.2, 7.4], to: [1, 8], tone: 2, dashed: true},
-    {from: [2.066, 7.132], to: [1.798, 7.266], tone: 0},
-    {from: [1.798, 7.266], to: [1.932, 7.534], tone: 0},
-  ]}
-  points={[
-    {at: [0, 3], label: 'A', tone: 1, dx: -16, dy: -4},
-    {at: [1, 8], label: 'P', tone: 2, dx: -14, dy: -10},
-    {at: [2.2, 7.4], label: 'H', tone: 3, dx: 16, dy: 6},
-  ]}
-  labels={[{at: [3.1, 8.9], math: 'y = 2x + 3', tone: 1, dx: -6, dy: 24}]}
-  axisLabels={['x', 'y']}
-  caption="A seta azul vai de A até P. A seta verde é a sua sombra sobre a reta y = 2x + 3, e termina no pé H(2,2; 7,4). O resto, tracejado, é a distância: cerca de 1,34."
-/>
-
-**Comparando os dois caminhos.**
-
-| | caminho de 7.12 | caminho da projeção |
-|---|---|---|
-| passo 1 | equação da reta perpendicular por $P$ | um ponto $A$ da reta e a direção $\vec{u}$ |
-| passo 2 | resolver o sistema das duas retas | um produto escalar e uma divisão |
-| passo 3 | distância entre $P$ e o pé | módulo do resto |
-| reta vertical | não funciona: não existe inclinação | funciona igual, com $\vec{u} = (0,\ 1)$ |
-
-No caminho antigo, a perpendicular e o sistema serviam para achar o pé. Na
-projeção, o número $k$ já é escolhido para deixar o resto em ângulo reto
-(seção 8.3), e por isso o pé sai sem sistema. O caminho antigo continua bom
-quando você já tem as equações das retas escritas e quer o ponto de
-encontro. O caminho da projeção é melhor quando você tem pontos e direções,
-e é o único dos dois que trata a reta vertical sem exceção.
-
-### Exemplo 5: o celular e o trecho de rua
+### Exemplo 4: o celular e o trecho de rua
 
 *Pause e tente antes de ler.* Num mapa em quarteirões, um trecho de rua vai do
 cruzamento $A(1,\ 1)$ ao cruzamento $B(7,\ 4)$, e acaba ali. O GPS mede a
 posição de duas pessoas: $P_1(4,\ 5)$ e $P_2(9,\ 1)$. Em que ponto do trecho o
 aplicativo deve desenhar cada uma?
+
+**Previsão.** $P_1$ fica acima do meio do trecho, e o pé dele deve cair entre
+$A$ e $B$. $P_2$ fica à direita de $B$, e o pé dele pode passar do fim da rua.
 
 A direção do trecho é $\vec{u} = B - A = (6,\ 3)$, e
 $\vec{u} \cdot \vec{u} = 45$.
@@ -886,8 +1066,8 @@ $$
 k = \frac{8 \times 6 + 0 \times 3}{45} = \frac{48}{45} = \frac{16}{15} \approx 1{,}07.
 $$
 
-Aqui aparece uma novidade. Como $H = A + k\,\overrightarrow{AB}$, o número $k$
-diz **onde** o pé cai ao longo da rua:
+Aqui o número $k$ ganha mais um uso. Como $H = A + k\,\overrightarrow{AB}$, o
+$k$ diz **onde** o pé cai ao longo da rua:
 
 - com $k = 0$, o pé é o próprio $A$;
 - com $k = 1$, o pé é o próprio $B$;
@@ -905,11 +1085,11 @@ $\sqrt{2^2 + 3^2} = \sqrt{13} \approx 3{,}61$ quarteirões do ponto medido.
 <CartesianPlane
   xMin={0} xMax={10} yMin={0} yMax={6}
   xUnit={42}
-  lines={[{through: [[1, 1], [7, 4]], tone: 0, dashed: true}]}
+  lines={[{through: [[1, 1], [7, 4]], muted: true, dashed: true}]}
   segments={[
     {from: [1, 1], to: [7, 4], tone: 1},
     {from: [4, 5], to: [5, 3], tone: 2, dashed: true},
-    {from: [9, 1], to: [7.4, 4.2], tone: 0, dashed: true},
+    {from: [9, 1], to: [7.4, 4.2], muted: true, dashed: true},
     {from: [9, 1], to: [7, 4], tone: 3},
     {from: [4.687, 2.843], to: [4.53, 3.157], tone: 0},
     {from: [4.53, 3.157], to: [4.843, 3.313], tone: 0},
@@ -923,7 +1103,7 @@ $\sqrt{2^2 + 3^2} = \sqrt{13} \approx 3{,}61$ quarteirões do ponto medido.
     {at: [7.4, 4.2], label: '(7{,}4;\\ 4{,}2)', tone: 0, dx: 34, dy: -16, r: 3.5},
   ]}
   axisLabels={['x', 'y']}
-  caption="O trecho de rua vai de A a B (linha cheia); o tracejado é o prolongamento. O pé de P1 cai dentro do trecho, em H1. O pé de P2 na reta, (7,4; 4,2), cai depois de B, fora da rua, e por isso o ponto da rua mais perto de P2 é o próprio B."
+  caption="O trecho de rua vai de A a B (linha cheia); o tracejado cinza é o prolongamento. O pé de P1 cai dentro do trecho, em H1. O pé de P2 na reta, (7,4; 4,2), cai depois de B, fora da rua, e por isso o ponto da rua mais perto de P2 é o próprio B."
 />
 
 Repare que $\sqrt{13} \approx 3{,}61$ é um pouco mais que a distância de
@@ -932,34 +1112,37 @@ $\lVert (9,\ 1) - (7{,}4;\ 4{,}2) \rVert = \sqrt{12{,}8} \approx 3{,}58$. A
 reta continua depois de $B$, e a rua não. A projeção responde sobre a reta
 inteira, e o valor de $k$ avisa quando essa resposta cai fora do trecho.
 
-## 11. Erros comuns
+## Erros comuns
 
 > **Erro 1: dividir por $\lVert \vec{u} \rVert$ em vez de $\vec{u} \cdot \vec{u}$.**
 > A componente escalar divide uma vez pelo módulo, e é tentador fazer o mesmo
 > na fórmula do vetor. Teste com $\vec{v} = (3,\ 5)$ e $\vec{u} = (2,\ 0)$,
-> do exemplo 1. A conta errada dá
-> $\frac{6}{2}\,(2,\ 0) = (6,\ 0)$, uma sombra de comprimento 6. Mas a vara
-> $\vec{v}$ mede $\sqrt{34} \approx 5{,}83$, e nenhuma sombra é mais comprida
-> que a vara. A conta certa divide por $\vec{u} \cdot \vec{u} = 4$ e dá
-> $(3,\ 0)$. A fórmula do vetor divide **duas vezes** pelo módulo: uma para
-> achar o tamanho da sombra e outra para transformar $\vec{u}$ em unitário. As
-> duas contas só coincidem quando $\vec{u}$ já é unitário.
+> do exemplo 1. A conta errada dá $\frac{6}{2}\,(2,\ 0) = (6,\ 0)$, uma sombra
+> de comprimento 6. Mas a vara $\vec{v}$ mede $\sqrt{34} \approx 5{,}83$, e
+> nenhuma sombra é mais comprida que a vara. A conta certa divide por
+> $\vec{u} \cdot \vec{u} = 4$ e dá $(3,\ 0)$. A fórmula do vetor divide **duas
+> vezes** pelo módulo: uma para achar o tamanho da sombra e outra para
+> transformar $\vec{u}$ em unitário. Os dois denominadores só são iguais
+> quando $\vec{u}$ já é unitário.
+
+<ProjectionBuild u={[2, 0]} v={[3, 5]} error box={[-1, 7, -1, 6]} unit={44} caption="Com u = (2, 0) e v = (3, 5): a cópia de u encolhe até o unitário (1, 0) e estica até a sombra (3, 0). O botão do erro mostra a seta de dividir só uma vez: ela vai até (6, 0), mais comprida que a própria vara." />
 
 > **Erro 2: trocar os papéis dos dois vetores.** “Projetar $\vec{v}$ sobre
 > $\vec{u}$” põe a sombra na reta de $\vec{u}$. Como o produto escalar não
 > depende da ordem, é tentador achar que a projeção também não depende. Mas a
-> seção 8.2 mostrou que a projeção de $(2,\ 9)$ sobre $(4,\ 3)$ é
-> $(5{,}6;\ 4{,}2)$, e a de $(4,\ 3)$ sobre $(2,\ 9)$ é cerca de
-> $(0{,}82;\ 3{,}71)$. Antes de calcular, diga em voz alta qual é o chão.
+> projeção de $(2,\ 9)$ sobre $(4,\ 3)$ é $(5{,}6;\ 4{,}2)$, e a de $(4,\ 3)$
+> sobre $(2,\ 9)$ é cerca de $(0{,}82;\ 3{,}71)$. Antes de calcular, diga em
+> voz alta qual é o chão.
 
-> **Erro 3: projetar o próprio ponto quando a reta não passa pela origem.** No
-> exemplo 4, projetar $P = (1,\ 8)$ direto sobre $(1,\ 2)$ dá
-> $\frac{17}{5}\,(1,\ 2) = (3{,}4;\ 6{,}8)$. Esse ponto não está na reta
-> $y = 2x + 3$, porque $2 \times 3{,}4 + 3 = 9{,}8$, e não $6{,}8$. A projeção
-> fala de vetores que saem da reta. Por isso o primeiro passo é sempre
+> **Erro 3: projetar o próprio ponto quando a reta não passa pela origem.** Na
+> reta $y = 2x + 3$, projetar $P = (1,\ 8)$ direto sobre $(1,\ 2)$ dá
+> $\frac{17}{5}\,(1,\ 2) = (3{,}4;\ 6{,}8)$. Esse ponto não está na reta,
+> porque $2 \times 3{,}4 + 3 = 9{,}8$, e não $6{,}8$. A projeção fala de
+> vetores que saem da reta. Por isso o primeiro passo é sempre
 > $\overrightarrow{AP} = P - A$, com $A$ na reta, e o último é somar $A$ de
-> volta. Um teste rápido pega esse erro: o pé encontrado precisa satisfazer a
-> equação da reta.
+> volta. Um teste rápido pega esse erro: troque $x$ e $y$ na equação da reta pelas
+> coordenadas do pé encontrado. A igualdade tem de valer. A primeira figura da seção do ponto mais perto tem o botão
+> que mostra esse ponto errado.
 
 > **Erro 4: responder com o tamanho da sombra quando a pergunta é a distância.**
 > No galpão, aparecem dois comprimentos: 7 km, ao longo da estrada, e 6 km, o
@@ -971,9 +1154,10 @@ inteira, e o valor de $k$ avisa quando essa resposta cai fora do trecho.
 > usa $60$ no lugar de $-60$ obtém $(240,\ 180)$, uma força de 300 N empurrando
 > a caixa **rampa acima**, o que não acontece. O sinal negativo é a
 > informação “ladeira abaixo”. O tamanho da sombra é o valor absoluto de
-> $\operatorname{comp}_{\vec{u}} \vec{v}$; a direção da seta vem do sinal.
+> $\operatorname{comp}_{\vec{u}} \vec{v}$; o lado para onde a seta aponta vem
+> do sinal.
 
-## 12. Perguntas de verificação
+## Perguntas de verificação
 
 **1.** Por que a projeção de um vetor perpendicular a $\vec{u}$ é o vetor
 nulo? Responda com a fórmula e com a vara.
@@ -994,9 +1178,10 @@ $\lVert \vec{v} \rVert$?
 <summary>Resposta</summary>
 
 Não. Ela vale $\lVert \vec{v} \rVert \cos\theta$, e o cosseno fica sempre entre
-$-1$ e $1$. Por isso a sombra mede no máximo o comprimento da vara. A igualdade
-só acontece quando $\vec{v}$ aponta para o mesmo lado de $\vec{u}$. É esse fato
-que denuncia o erro 1.
+$-1$ e $1$. Por isso a sombra mede no máximo o comprimento da vara. A sombra
+só fica do tamanho da vara quando $\vec{v}$ está sobre a reta de $\vec{u}$:
+com ângulo de 0°, a componente é $\lVert \vec{v} \rVert$; com ângulo raso,
+de 180°, ela é $-\lVert \vec{v} \rVert$. É esse fato que denuncia o erro 1.
 
 </details>
 
@@ -1021,7 +1206,7 @@ informa?
 
 Onde o pé da perpendicular cai: $H = A + k\,(B - A)$. Com $k = 0$ o pé é $A$,
 com $k = 1$ é $B$, entre 0 e 1 fica entre os dois, e fora desse intervalo cai
-no prolongamento. Foi assim que o exemplo 5 descobriu que o pé de $P_2$
+no prolongamento. Foi assim que o exemplo 4 descobriu que o pé de $P_2$
 ficava além do fim da rua.
 
 </details>
@@ -1032,11 +1217,13 @@ exemplos, ou acontece sempre?
 <details>
 <summary>Resposta</summary>
 
-Acontece sempre. A seção 8.3 mostrou que
+Acontece sempre. A conta da seção do resto mostrou que
 $\vec{r} \cdot \vec{u} = \vec{v} \cdot \vec{u} - \vec{v} \cdot \vec{u} = 0$
-para quaisquer $\vec{v}$ e $\vec{u}$, com $\vec{u}$ não nulo. E o caminho
-inverso mostrou mais: o $k$ da fórmula é o **único** número que deixa o resto
-perpendicular.
+para quaisquer $\vec{v}$ e $\vec{u}$, com $\vec{u}$ não nulo. Quando o resto
+não é nulo, isso quer dizer ângulo reto. (Ele só é nulo quando $\vec{v}$ está
+sobre a reta de $\vec{u}$, como no exercício 1d.) E a mesma conta,
+lida ao contrário, mostrou mais: o $k$ da fórmula é o **único** número que
+deixa o resto perpendicular.
 
 </details>
 
@@ -1048,14 +1235,28 @@ projeção dispensa os dois?
 <summary>Resposta</summary>
 
 O sistema servia para achar o ponto em que a perpendicular encontra a reta.
-Na projeção, o pé é procurado já sobre a reta, na forma $A + k\vec{u}$, e o
-número $k$ é escolhido de modo que o resto fique perpendicular. As duas
-exigências do caminho antigo — estar na reta e estar na perpendicular — viram
-uma equação só, com uma incógnita, cuja solução é a fórmula de $k$.
+Na projeção, o pé é procurado já sobre a reta, na forma $A + k\vec{u}$. O
+número $k$ é escolhido de modo que o resto fique perpendicular. Assim, as duas
+exigências do caminho antigo (estar na reta e estar na perpendicular) viram
+uma equação só, com uma incógnita. A solução dessa equação é a fórmula de
+$k$.
 
 </details>
 
-## 13. Exercícios
+**7.** Na busca do problema motivador, por que a tabela de tentativas não
+bastava para responder à equipe técnica?
+
+<details>
+<summary>Resposta</summary>
+
+A tabela compara só os pontos testados. Entre dois testes sobram infinitos
+pontos da estrada, e um deles poderia dar um ramal menor. A projeção resolve
+isso de dois jeitos: ela calcula o ponto direto, e o argumento de Pitágoras
+prova que nenhum outro ponto da reta fica mais perto.
+
+</details>
+
+## Exercícios
 
 ### 1. Reconhecimento
 
@@ -1130,6 +1331,14 @@ Pitágoras: $\lVert \vec{w} \rVert^2 = (\text{ao longo})^2 + (\text{través})^2$
 
 </details>
 
+<details>
+<summary>Dica para o 12</summary>
+
+A rua não passa pela origem. Comece por $\overrightarrow{AP}$, projete sobre
+$(2,\ 1)$ e some $A$ de volta para achar o ponto da ligação.
+
+</details>
+
 ### 6. Justificativa
 
 13. Mostre, usando só as propriedades do produto escalar, que
@@ -1156,22 +1365,25 @@ um múltiplo de $\vec{u}$ e $\vec{r}$ é perpendicular a $\vec{u}$?
 <summary>Respostas para conferência</summary>
 
 1. O sinal de $\vec{v} \cdot \vec{u}$ decide, porque o denominador
-   $\vec{u} \cdot \vec{u}$ é sempre positivo e não muda o sinal de $k$. a) $6 + 1 = 7$, positivo: mesmo
-   lado. b) $-2 + 2 = 0$: vetor nulo. c) $-6 - 4 = -10$, negativo: lado oposto.
-   d) $8 + 2 = 10$, positivo: mesmo lado. Em d), $(4,\ 2) = 2\,(2,\ 1)$ está
-   sobre a própria reta de $\vec{u}$, então a projeção é o próprio vetor:
-   $k = \frac{10}{5} = 2$ e $2\,(2,\ 1) = (4,\ 2)$. O resto é nulo.
+   $\vec{u} \cdot \vec{u}$ é positivo ($\vec{u}$ não é nulo) e não muda o
+   sinal de $k$.
+   a) $6 + 1 = 7$, positivo: mesmo lado. b) $-2 + 2 = 0$: vetor nulo.
+   c) $-6 - 4 = -10$, negativo: lado oposto. d) $8 + 2 = 10$, positivo: mesmo
+   lado. Em d), $(4,\ 2) = 2\,(2,\ 1)$ está sobre a própria reta de
+   $\vec{u}$, então a projeção é o próprio vetor: $k = \frac{10}{5} = 2$ e
+   $2\,(2,\ 1) = (4,\ 2)$. O resto é nulo.
 2. 7 km é a componente escalar: quanto se anda pela estrada, do poste até a
    emenda. 6 km é o módulo do resto: o ramal. $\sqrt{85}$ km é a distância do
-   poste ao galpão em linha reta, a hipotenusa. A distância do galpão à estrada
-   é 6 km, o comprimento do ramal.
+   poste ao galpão em linha reta, a hipotenusa. A distância do galpão à
+   estrada é 6 km, o comprimento do ramal. Se você respondeu 7, mediu ao longo
+   da estrada: é o erro 4.
 3. A componente escalar é um **número**: o tamanho da sombra. Ele vem de
    $\lVert \vec{v} \rVert \cos\theta$, e dividir uma vez por
    $\lVert \vec{u} \rVert$ tira do produto escalar o tamanho de $\vec{u}$,
-   que ele carrega uma vez. O vetor projeção precisa ainda de uma **direção**, e a fórmula usa
-   o próprio $\vec{u}$ para isso. Como $\vec{u}$ tem tamanho
-   $\lVert \vec{u} \rVert$, é preciso dividir mais uma vez para que ele
-   funcione como unitário. As duas divisões juntas dão
+   que ele carrega uma vez. O vetor projeção precisa ainda de uma
+   **direção**, e a fórmula usa o próprio $\vec{u}$ para isso. Como
+   $\vec{u}$ tem tamanho $\lVert \vec{u} \rVert$, é preciso dividir mais uma
+   vez para que ele funcione como unitário. As duas divisões juntas dão
    $\lVert \vec{u} \rVert^2 = \vec{u} \cdot \vec{u}$.
 4. O produto escalar é o mesmo, 35, nas duas ordens. Mas a fórmula da projeção
    tem mais duas peças, e elas dependem de qual vetor é o chão: o denominador e
@@ -1209,9 +1421,9 @@ um múltiplo de $\vec{u}$ e $\vec{r}$ é perpendicular a $\vec{u}$?
    $k = \frac{0 + 2}{1} = 2$. Pé: $H = (1,\ 0) + 2\,(0,\ 1) = (1,\ 2)$. Resto:
    $P - H = (4,\ 0)$. Distância: 4. Faz sentido: de $(5,\ 2)$ até a reta
    $x = 1$ são 4 passos na horizontal. O caminho pela inclinação não serve
-   porque a reta vertical não tem inclinação, e a perpendicular a ela seria a
-   reta horizontal, de inclinação zero, que a regra $m_1 \times m_2 = -1$ não
-   alcança.
+   porque a reta vertical não tem inclinação. A perpendicular a ela seria a
+   reta horizontal, de inclinação zero, e a regra $m_1 \times m_2 = -1$ não
+   alcança esse par.
 10. a) $\vec{w} \cdot (3,\ 4) = 60 - 20 = 40$ e $\lVert (3,\ 4) \rVert = 5$. A
     componente ao longo da pista é $\frac{40}{5} = 8$ km/h, positiva: o vento
     sopra no sentido da pista. b) A projeção é
@@ -1226,18 +1438,21 @@ um múltiplo de $\vec{u}$ e $\vec{r}$ é perpendicular a $\vec{u}$?
     a componente escalar é o próprio produto escalar:
     $\vec{F} \cdot \vec{u} = 0 \times \frac{\sqrt{3}}{2} + (-600) \times
     \frac{1}{2} = -300$. São 300 N ladeira abaixo (o sinal negativo diz
-    “contra $\vec{u}$”, que aponta rampa acima). Pela decomposição
+    “contra $\vec{u}$”, e $\vec{u}$ aponta rampa acima). Pela decomposição
     ortogonal, a parte contra a rampa mede
     $\sqrt{600^2 - 300^2} = \sqrt{270\,000} = 300\sqrt{3} \approx 519{,}6$ N.
     Conferência pela trigonometria: $600 \sen 30^\circ = 300$ e
-    $600 \cos 30^\circ = 300\sqrt{3}$.
+    $600 \cos 30^\circ = 300\sqrt{3}$. Se você encontrou $-300$ e respondeu
+    “300 N rampa acima”, jogou fora o sinal: é o erro 5.
 12. $\overrightarrow{AP} = (4,\ 7)$, $\vec{u} = (2,\ 1)$,
     $k = \frac{8 + 7}{5} = 3$. Pé: $H = (0,\ 1) + 3\,(2,\ 1) = (6,\ 4)$. Resto:
     $P - H = (-2,\ 4)$, de módulo $\sqrt{20} = 2\sqrt{5} \approx 4{,}47$ km.
-    Custo: $2\sqrt{5} \times 12 = 24\sqrt{5} \approx 53{,}7$, ou seja, cerca de R\$ 53,7 mil.
-    Conferência pelo caminho antigo: a rua é $y = \frac{1}{2}x + 1$, a
-    perpendicular por $P$ tem inclinação $-2$ e é $y = -2x + 16$, e
-    $\frac{1}{2}x + 1 = -2x + 16$ dá $x = 6$ e $y = 4$. O mesmo ponto.
+    Custo: $2\sqrt{5} \times 12 = 24\sqrt{5} \approx 53{,}7$, ou seja, cerca
+    de R\$ 53,7 mil. Conferência pelo caminho antigo: a rua é
+    $y = \frac{1}{2}x + 1$, a perpendicular por $P$ tem inclinação $-2$ e é
+    $y = -2x + 16$, e $\frac{1}{2}x + 1 = -2x + 16$ dá $x = 6$ e $y = 4$. O
+    mesmo ponto. Se você encontrou o pé $(6,\ 3)$, esqueceu de somar $A$ de
+    volta: é o erro 3.
 13. Abrindo pela distributiva,
     $(\vec{p} + \vec{r}) \cdot (\vec{p} + \vec{r}) = \vec{p} \cdot \vec{p} +
     2\,(\vec{p} \cdot \vec{r}) + \vec{r} \cdot \vec{r}$. Como $\vec{p} =
@@ -1254,9 +1469,9 @@ um múltiplo de $\vec{u}$ e $\vec{r}$ é perpendicular a $\vec{u}$?
     \rVert \cos\theta$.
 15. O pé é $H = A + k\,(B - A)$. Com $k = 0$, $H = A$; com $k = 1$,
     $H = A + B - A = B$. Para $k$ entre 0 e 1, o deslocamento $k\,(B - A)$ tem
-    o mesmo sentido de $\overrightarrow{AB}$ e é mais curto que ele, então
-    saindo de $A$ não se chega até $B$. O ponto $H$ fica no caminho entre os
-    dois.
+    o mesmo sentido de $\overrightarrow{AB}$ e é mais curto que ele. Então,
+    saindo de $A$, o pé não chega até $B$: o ponto $H$ fica no caminho entre
+    os dois.
 
 **Se sua resposta não bateu:**
 
@@ -1268,19 +1483,22 @@ para que lado a sombra aponta.
 
 </details>
 
-## 14. Revisão curta
+## Revisão curta
 
 - A **projeção ortogonal** de $\vec{v}$ sobre $\vec{u}$ é a sombra de
-  $\vec{v}$ na direção de $\vec{u}$, com a luz caindo em ângulo reto:
+  $\vec{v}$ na reta de $\vec{u}$, com a linha descendo em ângulo reto:
+
   $$\operatorname{proj}_{\vec{u}} \vec{v} = \frac{\vec{v} \cdot \vec{u}}{\vec{u} \cdot \vec{u}}\,\vec{u}.$$
+
 - A **componente escalar**
   $\operatorname{comp}_{\vec{u}} \vec{v} = \frac{\vec{v} \cdot \vec{u}}{\lVert
   \vec{u} \rVert} = \lVert \vec{v} \rVert \cos\theta$ é o tamanho da sombra,
   com sinal.
 - O número $k = \frac{\vec{v} \cdot \vec{u}}{\vec{u} \cdot \vec{u}}$ diz
   quantos $\vec{u}$ cabem na sombra. Negativo quer dizer sombra para trás.
-- O **resto** $\vec{v} - \operatorname{proj}_{\vec{u}} \vec{v}$ é sempre
-  perpendicular a $\vec{u}$, e $\vec{v}$ = sombra + resto. Por isso vale
+- O **resto** $\vec{v} - \operatorname{proj}_{\vec{u}} \vec{v}$ tem sempre
+  produto escalar zero com $\vec{u}$ (quando não é nulo, é perpendicular a
+  $\vec{u}$), e $\vec{v}$ = sombra + resto. Por isso vale
   Pitágoras: $\lVert \vec{v} \rVert^2 = \lVert \text{sombra} \rVert^2 +
   \lVert \text{resto} \rVert^2$.
 - Só a direção de $\vec{u}$ importa: $\vec{u}$, $3\vec{u}$ e $-\vec{u}$ dão a

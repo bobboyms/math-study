@@ -3,10 +3,18 @@ title: Vetores
 ---
 
 import CartesianPlane from '@site/src/components/CartesianPlane';
+import DeliveryVectors from '@site/src/components/DeliveryVectors';
+import FiveBlocksCircle from '@site/src/components/FiveBlocksCircle';
+import VectorSlide from '@site/src/components/VectorSlide';
+import VectorSteps from '@site/src/components/VectorSteps';
+import VectorBetween from '@site/src/components/VectorBetween';
+import VectorLength from '@site/src/components/VectorLength';
+import ZeroTrip from '@site/src/components/ZeroTrip';
+import OppositeVector from '@site/src/components/OppositeVector';
 
 # Vetores: quanto e para onde
 
-## 1. Problema motivador: quatro entregas do mesmo tamanho
+## Problema motivador: quatro entregas do mesmo tamanho
 
 Um aplicativo de entregas registra, para cada corrida, o ponto de saída e o
 ponto de chegada do entregador. As coordenadas são contadas em quarteirões a
@@ -22,18 +30,10 @@ Quatro corridas da tarde:
 | 3 | $(12,\ 2)$ | $(9,\ 6)$ |
 | 4 | $(1,\ 6)$ | $(5,\ 9)$ |
 
-<CartesianPlane
-  xMin={0} xMax={13} yMin={0} yMax={10}
-  xUnit={30}
-  segments={[
-    {from: [1, 1], to: [4, 5], tone: 0, arrow: true, label: '1', dx: -22, dy: -2},
-    {from: [5, 3], to: [8, 7], tone: 0, arrow: true, label: '2', dx: -22, dy: -2},
-    {from: [12, 2], to: [9, 6], tone: 0, arrow: true, label: '3', dx: 20, dy: -2},
-    {from: [1, 6], to: [5, 9], tone: 0, arrow: true, label: '4', dx: -12, dy: -16},
-  ]}
-  axisLabels={['x', 'y']}
-  caption="As quatro corridas da tarde. Cada seta sai do ponto de saída e termina no ponto de chegada. O eixo x aponta para o leste e o eixo y para o norte."
-/>
+A figura solta os quatro entregadores ao mesmo tempo. Cada um sai do seu ponto
+de saída, e a seta da corrida cresce atrás dele até a chegada.
+
+<DeliveryVectors mode="routes" />
 
 Se você calcular a distância em linha reta entre a saída e a chegada de cada
 corrida, vai encontrar **5 quarteirões nas quatro**. Pela distância, as quatro
@@ -48,44 +48,59 @@ mesmo que em bairros diferentes. Ele faz duas perguntas:
 
 A distância não responde, porque ela é igual para todas. Falta registrar
 **para onde** cada entregador andou, e não só **quanto**. O objeto que guarda
-essas duas informações juntas é o **vetor**, e esta página o constrói. A
-resposta ao gerente está na seção 9.
+essas duas informações juntas é o **vetor**, e esta página o constrói. Perto
+do fim, a seção “Resolvendo o problema das entregas” responde ao gerente.
 
-## 2. Mapa das ideias
+## Roteiro da lição
 
-- **grandeza escalar**: uma quantidade que fica completa com um número só,
-  como preço, massa ou temperatura;
-- **grandeza vetorial**: uma quantidade que precisa de tamanho **e** de
-  direção, como deslocamento, velocidade ou força;
-- **vetor**: um deslocamento, desenhado como uma seta. Ele tem **módulo**
-  (tamanho), **direção** (a inclinação da reta em que a seta está) e
-  **sentido** (para qual lado dessa reta a seta aponta);
-- **coordenadas do vetor**: o par $(a,\ b)$ que diz quanto a seta anda na
-  horizontal e quanto anda na vertical;
-- **vetor entre dois pontos**: $\overrightarrow{AB}$, o deslocamento que leva
-  do ponto $A$ ao ponto $B$; calcula-se como “chegada menos saída”;
-- **módulo do vetor**: $\lVert \vec{v} \rVert$, o comprimento da seta;
-- **vetor nulo**: $\vec{0} = (0,\ 0)$, o deslocamento de quem não saiu do
-  lugar;
-- **vetor oposto**: $-\vec{v}$, o deslocamento que desfaz $\vec{v}$.
+1. Um número só não diz para onde. “Ande 5 quarteirões” leva a uma
+   circunferência inteira de lugares. Quantidades assim se chamam
+   **vetoriais**.
+2. A direção é a reta em que o movimento acontece. O sentido é o lado dessa
+   reta para onde ele vai.
+3. Um vetor é um movimento. Por isso o lugar onde a seta é desenhada não faz
+   parte dele: a mesma seta pode ser desenhada em qualquer lugar.
+4. Um ponto e um vetor podem ter os mesmos números e continuar sendo coisas
+   diferentes: o ponto é um lugar, o vetor é um movimento.
+5. Dois números guardam a seta inteira: quanto ela anda na horizontal e quanto
+   anda na vertical.
+6. O vetor que leva de $A$ até $B$ é “chegada menos saída”, $B - A$.
+7. Saída mais vetor dá a chegada, $A + \vec{v}$.
+8. O comprimento da seta, o **módulo**, sai do teorema de Pitágoras.
+9. Quem sai e volta ao mesmo lugar fez o **vetor nulo**, $(0,\ 0)$.
+10. O **vetor oposto** desfaz o movimento: ele troca os dois sinais.
 
-## 3. Para que serve
+## Para que isso serve?
 
-- **Navegação e mapas.** O GPS precisa saber não só a que distância você está
-  do destino, mas para que lado virar. “Faltam 300 metros” não é suficiente;
-  “300 metros para o norte” é.
-- **Física.** Velocidade e força são vetores. Um carro a 60 km/h para o norte e
-  outro a 60 km/h para o sul têm a mesma rapidez e movimentos opostos.
-- **Jogos e animação.** A cada quadro da tela, a posição de um personagem é
-  atualizada somando a ela um deslocamento. Esse deslocamento é um vetor.
-- **Robótica e logística.** Um robô de armazém recebe comandos do tipo “ande 3
-  metros para leste e 2 para sul”, que são vetores.
-- **Dentro da matemática.** Os vetores são a porta de entrada da álgebra
-  linear. Lá, um vetor deixa de ter só duas coordenadas e passa a ser qualquer
-  lista de números, como uma linha de planilha. É dessa forma que programas de
-  aprendizado de máquina guardam imagens, textos e preferências de clientes.
+- **Navegação.** “O destino fica a 300 m” não diz para que lado virar. Os
+  lugares a 300 m de você formam uma circunferência de raio 300 m, com
+  $2 \times \pi \times 300 \approx 1\,885$ m de contorno. “300 m para o norte”
+  aponta um lugar só: o vetor $(0,\ 300)$, com o leste no primeiro número e o
+  norte no segundo.
+- **Física.** Dois carros saem do mesmo posto a 60 km/h, um para o norte e o
+  outro para o sul. As velocidades são os vetores $(0,\ 60)$ e $(0,\ -60)$:
+  mesmo tamanho, lados opostos. Depois de 1 hora, um está 60 km ao norte e o
+  outro 60 km ao sul, e os dois estão a $60 + 60 = 120$ km um do outro.
+- **Jogos e animação.** A cada quadro da tela, a posição de um personagem
+  recebe um deslocamento. Um personagem em $(100,\ 50)$, que anda
+  $(4,\ 1)$ pixels por quadro, depois de 60 quadros (1 segundo, numa tela de
+  60 quadros por segundo) está em
+  $(100 + 60 \times 4,\ 50 + 60 \times 1) = (340,\ 110)$.
+- **Robótica e logística.** Um robô de armazém em $(2,\ 3)$, com coordenadas
+  em metros, recebe o comando “ande 3 m para leste e 2 m para sul”. O comando
+  é o vetor $(3,\ -2)$, e o robô para em $(2 + 3,\ 3 - 2) = (5,\ 1)$.
+- **Dentro da matemática, e no aprendizado de máquina.** Os vetores são a
+  porta de entrada da [álgebra linear](../algebra-linear/). Lá, um vetor
+  deixa de ter só duas coordenadas e passa a ser qualquer lista de números,
+  como uma linha de planilha. Uma foto de 28 por 28 pixels em tons de cinza,
+  por exemplo, vira um vetor de $28 \times 28 = 784$ números, um por pixel. É
+  assim que os programas de aprendizado de máquina guardam imagens, textos e
+  preferências de clientes.
 
-## 4. Ideias anteriores que voltam aqui
+## Ideias anteriores que voltam aqui
+
+Responda de cabeça antes de abrir cada resposta. Se alguma falhar, releia a
+página indicada antes de seguir.
 
 **1. Do [plano cartesiano](./plano-cartesiano-e-distancia).** O par $(4,\ 5)$
 indica o mesmo ponto que $(5,\ 4)$? E o que quer dizer, como instrução de
@@ -95,8 +110,9 @@ caminhada a partir da origem, o par $(-2,\ 3)$?
 <summary>Conferir</summary>
 
 Não indica. O primeiro número é lido no eixo horizontal e o segundo no
-vertical, então trocar a ordem muda o lugar. O par $(-2,\ 3)$ quer dizer “ande
-2 unidades para a esquerda e suba 3”: o sinal negativo indica o lado esquerdo.
+vertical. Por isso, trocar a ordem muda o lugar. O par $(-2,\ 3)$ quer dizer
+“ande 2 unidades para a esquerda e suba 3”: o sinal negativo indica o lado
+esquerdo.
 
 </details>
 
@@ -157,28 +173,7 @@ inclinação. Aqui, o par $(\Delta x,\ \Delta y)$ inteiro vai virar um vetor.
 
 </details>
 
-Se alguma dessas respostas não veio, releia a página indicada antes de
-seguir. O resto desta lição usa as cinco ideias sem explicá-las de novo.
-
-## 5. Intuição: um lugar é diferente de um movimento
-
-Compare duas frases que um entregador pode ouvir:
-
-- “Vá até a esquina da rua 4 com a avenida 5.”
-- “Ande 3 quarteirões para leste e depois 4 para norte.”
-
-A primeira frase indica um **lugar**. Não importa de onde o entregador parte:
-ele precisa terminar naquela esquina.
-
-A segunda frase indica um **movimento**. Ela não diz onde o entregador
-termina. Quem parte da praça termina num lugar, e quem parte da estação
-termina em outro. Mas os dois fazem a mesma coisa com as pernas: 3 para leste,
-4 para norte.
-
-Essa diferença é a ideia principal desta página. Um ponto é um lugar. Um vetor
-é um movimento.
-
-### Quando um número basta, e quando não basta
+## Um número só não diz para onde
 
 Algumas quantidades ficam completas com um número só:
 
@@ -189,17 +184,42 @@ Algumas quantidades ficam completas com um número só:
 Ninguém pergunta “23 °C para que lado?”. Quantidades assim se chamam
 **escalares**.
 
-Outras quantidades ficam incompletas com um número só:
+Outras quantidades ficam incompletas com um número só. “Ande 5 quarteirões” é
+uma delas. A figura mostra por quê:
 
-- “o vento sopra a 30 km/h” — vindo de onde, indo para onde?
-- “empurre com força de 50 newtons” — para a frente, para cima, para o lado?
-- “ande 5 quarteirões” — o problema motivador mostrou que isso leva a quatro
-  lugares diferentes, e a infinitos outros.
+1. Ponha um entregador num ponto de saída.
+2. Mande-o andar 5 quarteirões em linha reta, para um lado qualquer.
+3. Marque onde ele chega.
+4. Repita com outro entregador, mandando-o para outro lado.
 
-Quantidades assim precisam de um **tamanho** e de uma **direção com sentido**.
-Elas se chamam **vetoriais**, e o objeto que as representa é o vetor.
+<FiveBlocksCircle />
 
-### Direção e sentido não são a mesma coisa
+Todos andaram os mesmos 5 quarteirões, e cada um chegou a um lugar diferente.
+As doze setas da figura terminam em esquinas: pontos de coordenadas
+inteiras. Mas os lugares possíveis não param nessas doze esquinas: toda a
+circunferência tracejada, de raio 5, está a 5 quarteirões da saída. As quatro
+corridas do problema motivador são quatro dessas setas, desenhadas em
+bairros diferentes.
+
+Para saber onde o entregador termina, falta dizer **para onde** ele andou. Uma
+quantidade que precisa de um tamanho **e** de um “para onde” se chama
+**vetorial**, e o objeto que a representa é o **vetor**.
+
+- **Exemplo:** “vento de 30 km/h soprando do sul para o norte” é vetorial e
+  está completo: tem o tamanho (30 km/h) e o “para onde” (para o norte).
+- **Contraexemplo:** “a conta deu R\$ 85” não é vetorial. Perguntar “R\$ 85
+  para que lado?” não faz sentido: o preço fica completo com o número.
+
+<details>
+<summary>Confira: “empurre a caixa com uma força de 50 newtons” é uma frase completa?</summary>
+
+Não. Força é uma quantidade vetorial, e a frase dá só o tamanho, 50 newtons.
+Falta dizer para onde empurrar: para a frente, para o lado, para cima. Cada
+escolha dá um efeito diferente na caixa.
+
+</details>
+
+## A direção é a reta; o sentido é o lado
 
 Em português, os livros separam duas palavras que no dia a dia se confundem:
 
@@ -207,120 +227,191 @@ Em português, os livros separam duas palavras que no dia a dia se confundem:
   inclinada de algum jeito;
 - **sentido** é para qual dos dois lados dessa reta o movimento vai.
 
-Uma estrada reta de norte a sul tem uma **direção** só, a vertical do mapa.
-Nela, um carro pode andar em dois **sentidos**: para o norte ou para o sul.
-Por isso, “mesma direção” não garante “mesmo movimento”: dois carros na mesma
-estrada, em sentidos opostos, se afastam um do outro.
+Uma estrada reta tem uma **direção** só. Nela, um carro pode andar em dois
+**sentidos**: indo ou voltando. Na figura, a estrada é a reta tracejada.
 
-Um vetor fica determinado por três coisas: **tamanho**, **direção** e
-**sentido**. Na matemática, o tamanho do vetor se chama **módulo**.
+<CartesianPlane
+  xMin={0} xMax={10} yMin={0} yMax={7}
+  xUnit={34}
+  lines={[{through: [[0, 1], [2, 2]], muted: true, dashed: true}]}
+  segments={[
+    {from: [1, 1.5], to: [4, 3], tone: 1, arrow: true, label: '\\text{carro 1}', dx: -16, dy: -16},
+    {from: [9, 5.5], to: [6, 4], tone: 2, arrow: true, label: '\\text{carro 2}', dx: -14, dy: -18},
+    {from: [6, 1], to: [9, 1], tone: 3, arrow: true, label: '\\text{carro 3}', dy: -14},
+  ]}
+  axisLabels={['x', 'y']}
+  caption="Os carros 1 e 2 estão na mesma estrada tracejada: mesma direção, sentidos opostos. O carro 3 anda numa reta horizontal, que é outra direção."
+/>
 
-## 6. Modelo visual: a seta
+Os carros 1 e 2 estão na mesma estrada. Eles têm a **mesma direção** e
+**sentidos opostos**: se continuarem andando, vão se cruzar e depois se
+afastar. O carro 3 anda numa reta horizontal, com outra inclinação. Ele tem
+**outra direção**. Por isso não dá para comparar o sentido dele com o dos
+outros dois: sentido só se compara entre setas da mesma direção.
 
-O desenho natural de um movimento é uma **seta**. A seta sai do ponto de
-partida, que se chama **origem** do vetor (ou cauda), e termina no ponto de
-chegada, que se chama **extremidade** (ou ponta).
+Os carros 1 e 2 mostram que “mesma direção” não garante “mesmo movimento”. Um vetor fica
+determinado por três coisas: **tamanho**, **direção** e **sentido**. Na
+matemática, o tamanho do vetor se chama **módulo**.
 
-Cada uma das três informações do vetor aparece no desenho:
+- **Exemplo:** “60 km/h para o norte” e “60 km/h para o sul” têm o mesmo
+  módulo e a mesma direção (a vertical do mapa). O sentido é o que muda.
+- **Contraexemplo:** “60 km/h para o norte” e “60 km/h para o leste” **não**
+  têm a mesma direção. Uma é a vertical do mapa e a outra é a horizontal.
+
+<details>
+<summary>Confira: um elevador sobe 3 andares e depois desce 3. Os dois movimentos têm a mesma direção? E o mesmo sentido?</summary>
+
+Mesma direção: os dois acontecem na vertical, no poço do elevador. Sentidos
+opostos: um vai para cima e o outro para baixo. O módulo também é o mesmo, 3
+andares.
+
+</details>
+
+## Um vetor é um movimento: a mesma seta vale em qualquer lugar
+
+Compare duas frases que um entregador pode ouvir:
+
+- “Vá até a esquina da rua 4 com a avenida 5.”
+- “Ande 3 quarteirões para leste e depois 2 para norte.”
+
+A primeira frase indica um **lugar**. Não importa de onde o entregador parte:
+ele precisa terminar naquela esquina.
+
+A segunda frase indica um **movimento**. Ela não diz onde o entregador
+termina. Quem parte da praça termina num lugar, e quem parte da estação
+termina em outro. Mas os dois fazem a mesma coisa com as pernas: 3 para leste,
+2 para norte.
+
+O desenho de um movimento é uma **seta**. Ela sai do ponto de partida, que se
+chama **origem** do vetor (ou **cauda**), e termina no ponto de chegada, que
+se chama **extremidade** (ou **ponta**). As três informações do vetor
+aparecem no desenho:
 
 - o **módulo** é o comprimento da seta;
-- a **direção** é a inclinação da reta em que a seta está;
+- a **direção** é a reta em que a seta está;
 - o **sentido** é o lado para onde a ponta aponta.
 
-### A mesma seta em lugares diferentes
+Na figura, a seta do movimento “3 para a direita e 2 para cima” desliza pelo
+plano. Ela não gira e não estica. Em cada parada fica uma cópia cinza. Depois,
+use os controles para levar a cauda aonde quiser.
 
-A ideia que mais surpreende no início é esta: **o lugar onde a seta é
-desenhada não faz parte do vetor**. Um movimento de 3 para a direita e 2 para
-cima é o mesmo movimento, comece ele onde começar.
-
-<CartesianPlane
-  xMin={-1} xMax={10} yMin={-1} yMax={7}
-  xUnit={32}
-  segments={[
-    {from: [0, 0], to: [3, 2], tone: 1, arrow: true, label: '\\vec{v}', dx: -10, dy: -10},
-    {from: [5, 0], to: [8, 2], tone: 1, arrow: true, label: '\\vec{v}', dx: -10, dy: -10},
-    {from: [1, 4], to: [4, 6], tone: 1, arrow: true, label: '\\vec{v}', dx: -10, dy: -10},
-    {from: [6, 3], to: [9, 5], tone: 1, arrow: true, label: '\\vec{v}', dx: -10, dy: -10},
-  ]}
-  axisLabels={['x', 'y']}
-  caption="Quatro desenhos do mesmo vetor v. Em cada um, a seta anda 3 unidades para a direita e 2 para cima. Mudou o lugar do desenho; o movimento é o mesmo."
+<VectorSlide
+  vector={[3, 2]}
+  tour={[[0, 0], [5, 0], [1, 4], [6, 3]]}
+  caption="A seta azul anda 3 unidades para a direita e 2 para cima, da cauda até a ponta. As cópias cinza são a mesma seta, deixada nas paradas anteriores."
 />
 
-Confira na malha: em cada uma das quatro setas, conte 3 quadradinhos na
-horizontal e 2 na vertical, da cauda até a ponta. As quatro dão a mesma
-contagem. Por isso elas recebem o mesmo nome, $\vec{v}$.
+Confira na malha: em cada uma das setas, conte 3 quadradinhos na horizontal e
+2 na vertical, da cauda até a ponta. Todas dão a mesma contagem. Por isso todas
+recebem o mesmo nome, $\vec{v}$. A setinha em cima da letra avisa, por escrito,
+que $\vec{v}$ é um vetor e não um número. Lê-se “vetor $v$”.
 
-A setinha em cima da letra é o jeito de avisar, por escrito, que $\vec{v}$ é um
-vetor e não um número. Lê-se “vetor $v$”.
+Esta é a ideia principal da página: **o lugar onde a seta é desenhada não faz
+parte do vetor**. O vetor é o movimento, e o mesmo movimento pode ser feito a
+partir de qualquer lugar.
 
-### Um ponto e um vetor com os mesmos números
+- **Exemplo:** a seta de $(5,\ 0)$ até $(8,\ 2)$ e a seta de $(1,\ 4)$ até
+  $(4,\ 6)$ são o mesmo vetor $\vec{v}$: as duas andam 3 para a direita e 2
+  para cima.
+- **Contraexemplo:** a seta de $(0,\ 0)$ até $(2,\ 3)$ **não** é $\vec{v}$.
+  Ela tem o mesmo tamanho, mas anda 2 para a direita e 3 para cima. É
+  outro movimento.
+
+<details>
+<summary>Confira: uma cópia de v começa em (4, 1). Onde fica a ponta dela?</summary>
+
+A seta anda 3 para a direita e 2 para cima. Saindo de $(4,\ 1)$, ela termina
+em $(4 + 3,\ 1 + 2) = (7,\ 3)$. Ponha a cauda em $(4,\ 1)$ com os controles da
+figura para conferir.
+
+</details>
+
+## Um ponto e um vetor com os mesmos números são coisas diferentes
 
 Agora coloque lado a lado o ponto $P(3,\ 4)$ e o vetor $(3,\ 4)$. Os números
-são os mesmos, mas os objetos são diferentes.
+são os mesmos, mas os objetos são diferentes:
 
-<CartesianPlane
+- o ponto $P(3,\ 4)$ é um **lugar fixo**, marcado em laranja;
+- o vetor $(3,\ 4)$ é a **instrução** “ande 3 para a direita e 4 para cima”,
+  desenhada em azul.
+
+Na figura, a seta do vetor $(3,\ 4)$ começa na origem e depois desliza até
+$(5,\ 0)$. Use os controles para mover a cauda e procure as posições em que a
+ponta cai em cima de $P$.
+
+<VectorSlide
+  vector={[3, 4]}
   xMin={-1} xMax={10} yMin={-1} yMax={6}
-  xUnit={32}
-  points={[
-    {at: [3, 4], label: 'P(3,\\ 4)', tone: 2, dx: -6, dy: -20},
-    {at: [8, 4], tone: 0, r: 4, label: '(8,\\ 4)', dx: 0, dy: -18},
-  ]}
-  segments={[
-    {from: [0, 0], to: [3, 4], tone: 1, arrow: true, label: '\\vec{v}', dx: -14, dy: 2},
-    {from: [5, 0], to: [8, 4], tone: 1, arrow: true, label: '\\vec{v}', dx: -14, dy: 2},
-  ]}
-  axisLabels={['x', 'y']}
-  caption="O ponto P(3, 4) é um lugar. O vetor v = (3, 4) é um movimento: desenhado a partir da origem, ele termina em P; desenhado a partir de (5, 0), termina em (8, 4)."
+  tour={[[0, 0], [5, 0]]}
+  point={{at: [3, 4], label: 'P(3,\\ 4)', dx: -34, dy: -8}}
+  readout="point"
+  caption="Em laranja, o ponto P(3, 4), que não sai do lugar. Em azul, o vetor (3, 4). Desenhado a partir da origem (cópia cinza), ele termina em P. Desenhado a partir de (5, 0), termina em (8, 4)."
 />
 
-O ponto $P(3,\ 4)$ está num lugar fixo. O vetor $(3,\ 4)$ é a instrução “ande 3
-para a direita e 4 para cima”. Quando essa instrução começa na origem
-$(0,\ 0)$, ela termina exatamente em $P$. Esse é o único caso em que as
+Só há uma posição: a cauda na origem $(0,\ 0)$. Esse é o único caso em que as
 coordenadas do vetor coincidem com as coordenadas do ponto de chegada. Se a
 mesma instrução começa em $(5,\ 0)$, ela termina em $(8,\ 4)$, que não é $P$.
 
-## 7. Ponte para a formalização: dois números guardam a seta inteira
+> **Erro comum: achar que o vetor $(3,\ 4)$ termina no ponto $(3,\ 4)$.** Isso
+> só acontece quando a seta começa na origem. A partir de $(5,\ 0)$, o mesmo
+> vetor termina em $(8,\ 4)$. O vetor é o movimento; o ponto onde ele termina
+> depende de onde ele começou.
+
+<details>
+<summary>Confira: o vetor (3, 4), desenhado a partir de (−2, 1), termina em que ponto? Esse ponto é P?</summary>
+
+Termina em $(-2 + 3,\ 1 + 4) = (1,\ 5)$. Não é $P(3,\ 4)$, porque a cauda não
+está na origem.
+
+</details>
+
+## Dois números guardam a seta inteira
 
 Uma seta parece ter muita informação: um comprimento, uma inclinação, um lado
 para onde apontar. Para fazer contas com ela, precisamos guardá-la em
 números. Quantos números são necessários?
 
-Dois números são suficientes, e o motivo vem da malha. Toda seta no plano pode ser percorrida
-em duas etapas:
+Dois números são suficientes, e o motivo vem da malha. Saindo da cauda, toda seta no plano pode ser percorrida em duas etapas:
 
-1. um trecho na horizontal, da cauda até ficar embaixo (ou em cima) da ponta;
-2. um trecho na vertical, até chegar à ponta.
+1. Ande na horizontal até ficar embaixo (ou em cima) da ponta.
+2. Ande na vertical até chegar à ponta.
+
+A figura faz esse caminho. Escolha um vetor nos botões e acompanhe o ponto
+laranja.
+
+<VectorSteps />
 
 O trecho horizontal é o $\Delta x$ da [equação da reta](./equacao-da-reta), e
-o vertical é o $\Delta y$. Com o sinal de cada um, sabemos também o lado:
-$\Delta x$ positivo é para a direita, negativo é para a esquerda; $\Delta y$
-positivo é para cima, negativo é para baixo.
+o vertical é o $\Delta y$. O sinal de cada um diz o lado:
+
+| Sinal | Na horizontal | Na vertical |
+|---|---|---|
+| positivo | para a direita | para cima |
+| negativo | para a esquerda | para baixo |
+| zero | não anda | não anda |
 
 Agora confira que esses dois números recuperam as três informações da seta:
 
-- **o módulo**: a seta é a hipotenusa de um triângulo retângulo de catetos
-  $\lvert \Delta x \rvert$ e $\lvert \Delta y \rvert$. Pelo
-  [teorema de Pitágoras](./teorema-de-pitagoras), o comprimento sai dos dois
-  números;
+- **o módulo**: a seta é a hipotenusa de um triângulo retângulo cujos catetos
+  são os dois trechos. Pelo [teorema de Pitágoras](./teorema-de-pitagoras), o
+  comprimento sai dos dois números (a seção do módulo faz essa conta);
 - **a direção**: a inclinação da seta é $\frac{\Delta y}{\Delta x}$, como na
-  equação da reta;
+  equação da reta (quando $\Delta x = 0$, não há divisão: a seta é vertical);
 - **o sentido**: os sinais de $\Delta x$ e $\Delta y$ dizem para que lado a
   ponta aponta.
 
 Duas setas com o mesmo par $(\Delta x,\ \Delta y)$ coincidem nas três
-informações. Por isso o par pode substituir a seta nas contas. O que se perde
-ao trocar a seta pelo par é só o lugar onde ela foi desenhada, e a seção
-anterior mostrou que esse lugar não faz parte do vetor.
-
-## 8. Formalização
-
-### Vetor e suas coordenadas
+informações. Por isso o par pode substituir a seta nas contas. Ao trocar a
+seta pelo par, perde-se só o lugar onde ela foi desenhada. E a seção “Um vetor
+é um movimento” mostrou que esse lugar não faz parte do vetor.
 
 > **Vetor no plano** é um deslocamento descrito por um par de números
 > $(a,\ b)$: $a$ é quanto ele anda na horizontal e $b$ é quanto anda na
 > vertical. Escreve-se
 >
-> $$\vec{v} = (a,\ b).$$
+> $$
+> \vec{v} = (a,\ b).
+> $$
 >
 > Os números $a$ e $b$ são as **coordenadas** (ou **componentes**) do vetor.
 
@@ -334,112 +425,150 @@ anterior mostrou que esse lugar não faz parte do vetor.
 
 ### Quando dois vetores são iguais
 
+Como o par guarda a seta inteira, comparar setas vira comparar pares.
+
 > Dois vetores são **iguais** quando têm as mesmas coordenadas:
 > $(a,\ b) = (c,\ d)$ exatamente quando $a = c$ e $b = d$. Isso é o mesmo que
 > ter o mesmo módulo, a mesma direção e o mesmo sentido.
 
-- **Exemplo:** as quatro setas da figura da seção 6 são o mesmo vetor
-  $(3,\ 2)$, embora estejam em quatro lugares.
+- **Exemplo:** todas as setas da figura que desliza são o mesmo vetor
+  $(3,\ 2)$, embora estejam em lugares diferentes.
 - **Contraexemplo:** $(3,\ 4)$ e $(-3,\ 4)$ têm o mesmo módulo (5), mas não
   são iguais. O primeiro anda para a direita e o segundo para a esquerda: as
-  setas estão em direções diferentes.
+  setas estão em direções diferentes. Os botões $(3,\ 4)$ e $(-3,\ 4)$ da
+  figura mostram as duas.
 
-### O vetor que leva de um ponto a outro
+<details>
+<summary>Confira: que vetor é “ande 4 para a esquerda e não suba nem desça”? E “desça 6”?</summary>
+
+“4 para a esquerda” é $-4$ na horizontal, e “não suba nem desça” é 0 na
+vertical: o vetor é $(-4,\ 0)$. “Desça 6” não anda na horizontal e anda $-6$
+na vertical: o vetor é $(0,\ -6)$.
+
+</details>
+
+## O vetor de A até B é chegada menos saída
 
 Muitas vezes não recebemos o vetor pronto. Recebemos os dois pontos, como no
 aplicativo de entregas, e precisamos descobrir o deslocamento.
 
 O deslocamento horizontal de $A$ até $B$ é “onde terminou menos onde
 começou”, ou seja, $x_B - x_A$. O vertical é $y_B - y_A$. É a mesma conta de
-$\Delta x$ e $\Delta y$.
+$\Delta x$ e $\Delta y$. A figura faz o caminho de $A$ até $B$ em duas etapas
+e escreve a conta de cada etapa.
+
+<VectorBetween />
 
 > O **vetor de $A$ até $B$** é
 >
-> $$\overrightarrow{AB} = B - A = (x_B - x_A,\ y_B - y_A).$$
+> $$
+> \overrightarrow{AB} = B - A = (x_B - x_A,\ y_B - y_A).
+> $$
 >
 > Lê-se “vetor $AB$”. A seta em cima das duas letras aponta de $A$ para $B$:
 > $A$ é a saída e $B$ é a chegada.
 
-A expressão $B - A$ é um jeito curto de dizer “subtraia as coordenadas,
-coordenada por coordenada”: a primeira de $B$ menos a primeira de $A$, e a
-segunda de $B$ menos a segunda de $A$.
-
-<CartesianPlane
-  xMin={0} xMax={10} yMin={0} yMax={6}
-  xUnit={34}
-  points={[
-    {at: [2, 1], label: 'A(2,\\ 1)', tone: 2, dx: -10, dy: 20},
-    {at: [7, 4], label: 'B(7,\\ 4)', tone: 2, dx: -10, dy: -20},
-  ]}
-  segments={[
-    {from: [2, 1], to: [7, 1], tone: 3, dashed: true, label: '\\Delta x = 7 - 2 = 5', dy: 20},
-    {from: [7, 1], to: [7, 4], tone: 3, dashed: true, label: '\\Delta y = 4 - 1 = 3', dx: 66, dy: 0},
-    {from: [2, 1], to: [7, 4], tone: 1, arrow: true, label: '\\overrightarrow{AB}', dx: -14, dy: -12},
-  ]}
-  axisLabels={['x', 'y']}
-  caption="De A(2, 1) até B(7, 4), a seta anda 5 na horizontal e 3 na vertical. Por isso AB = (5, 3)."
-/>
+A expressão $B - A$ é um jeito curto de dizer “subtraia as coordenadas, uma
+de cada vez”: a primeira de $B$ menos a primeira de $A$, e a segunda de $B$
+menos a segunda de $A$.
 
 - **Exemplo:** com $A(2,\ 1)$ e $B(7,\ 4)$, a figura mostra
   $\overrightarrow{AB} = (7 - 2,\ 4 - 1) = (5,\ 3)$.
 - **Contraexemplo:** a conta $A - B = (2 - 7,\ 1 - 4) = (-5,\ -3)$ **não** dá
-  $\overrightarrow{AB}$. Ela dá o caminho de volta, de $B$ até $A$. A ordem da
-  subtração escolhe o sentido da seta.
+  $\overrightarrow{AB}$. Ela dá o caminho de volta, de $B$ até $A$. Aperte
+  “Trocar o sentido” na figura: a seta vira para o outro lado e as duas
+  coordenadas trocam de sinal. A ordem da subtração escolhe o sentido da seta.
 
-### Da saída e do vetor, a chegada
+> **Erro comum: subtrair na ordem errada.** O vetor $\overrightarrow{AB}$ é
+> $B - A$, chegada menos saída. Calcular $A - B$ dá o vetor oposto. Uma frase
+> que ajuda: **a seta aponta para o ponto que vem primeiro na subtração**. Em
+> $B - A$, o primeiro é $B$, e a seta aponta para $B$.
+
+<details>
+<summary>Confira: um entregador sai de (6, 2) e chega a (1, 5). Qual é o vetor da corrida? Para que lado ele andou?</summary>
+
+Chegada menos saída: $(1 - 6,\ 5 - 2) = (-5,\ 3)$. Ele andou 5 quarteirões
+para oeste (o $-5$) e 3 para norte (o $3$).
+
+</details>
+
+## Saída mais vetor dá a chegada
 
 A conta também anda no outro sentido. Se sabemos de onde o entregador saiu e
 qual deslocamento ele fez, sabemos onde ele chegou: somamos o deslocamento à
-posição de saída, coordenada por coordenada.
+posição de saída, uma coordenada de cada vez.
 
 > Se o ponto $A$ recebe o deslocamento $\vec{v} = (a,\ b)$, ele chega ao ponto
 >
-> $$B = A + \vec{v} = (x_A + a,\ y_A + b).$$
+> $$
+> B = A + \vec{v} = (x_A + a,\ y_A + b).
+> $$
 
-Isso é a igualdade $\overrightarrow{AB} = B - A$ lida ao contrário. Se
-$x_B - x_A = a$, então $x_B = x_A + a$, somando $x_A$ aos dois lados. O mesmo
+Essa fórmula é a igualdade $\overrightarrow{AB} = B - A$ lida ao contrário. Se
+$x_B - x_A = a$, então $x_B = x_A + a$: somamos $x_A$ aos dois lados. O mesmo
 vale para a segunda coordenada.
 
-Exemplo: saindo de $(5,\ 0)$ com o vetor $(3,\ 4)$, chega-se a
-$(5 + 3,\ 0 + 4) = (8,\ 4)$, que é o que a figura do ponto e do vetor mostrou.
+A figura usa o vetor $(3,\ 4)$ das entregas 1 e 2. Ela começa na saída da
+entrega 1 e desliza até a saída da entrega 2. Mova a cauda e veja a conta da
+chegada mudar.
 
-### O módulo: o comprimento da seta
+<VectorSlide
+  vector={[3, 4]}
+  xMin={0} xMax={13} yMin={0} yMax={10}
+  xUnit={30}
+  tour={[[1, 1], [5, 3]]}
+  readout="sum"
+  tailName="A"
+  tipName="B"
+  caption="A seta (3, 4) com a cauda na saída A. A ponta B é a chegada. A cópia cinza é a mesma seta na saída da entrega 1."
+/>
+
+- **Exemplo:** saindo de $(5,\ 3)$ com o vetor $(3,\ 4)$, chega-se a
+  $(5 + 3,\ 3 + 4) = (8,\ 7)$, que é a chegada da entrega 2.
+- **Contraexemplo:** a chegada **não** é $(5 + 4,\ 3 + 3) = (9,\ 6)$. Essa
+  conta cruzou os eixos: somou o $x$ do ponto com o $y$ do vetor. Cada
+  coordenada se soma com a coordenada do mesmo eixo, horizontal com
+  horizontal e vertical com vertical.
+
+<details>
+<summary>Confira: um entregador sai de (12, 2) e faz o deslocamento (−3, 4). Antes da conta: ele termina à esquerda ou à direita da saída?</summary>
+
+À esquerda, porque a primeira coordenada do deslocamento é negativa. A conta
+confirma: $(12 + (-3),\ 2 + 4) = (9,\ 6)$. O $x$ foi de 12 para 9, para a
+esquerda. É a chegada da entrega 3.
+
+</details>
+
+## O módulo é o comprimento da seta
 
 O comprimento da seta $\vec{v} = (a,\ b)$ é a hipotenusa de um triângulo
 retângulo. Um cateto é o trecho horizontal e o outro é o vertical.
 
 Há um cuidado com o sinal. Se $a = -3$, a seta anda 3 para a **esquerda**. O
-cateto horizontal continua medindo 3, porque comprimento não tem sinal. A
-figura abaixo mostra esse caso.
+cateto horizontal continua medindo 3, porque comprimento não tem sinal. Na
+figura, mude as coordenadas e acompanhe a conta.
 
-<CartesianPlane
-  xMin={-5} xMax={2} yMin={-1} yMax={5}
-  xUnit={40}
-  segments={[
-    {from: [0, 0], to: [-3, 0], tone: 3, dashed: true, label: '3', dy: -14},
-    {from: [-3, 0], to: [-3, 4], tone: 3, dashed: true, label: '4', dx: -16, dy: 0},
-    {from: [0, 0], to: [-3, 4], tone: 1, arrow: true, label: '\\lVert \\vec{v} \\rVert = 5', dx: 44, dy: -6},
-  ]}
-  labels={[{at: [-3, 4], math: '\\vec{v} = (-3,\\ 4)', dx: 0, dy: -20, tone: 1}]}
-  axisLabels={['x', 'y']}
-  caption="O vetor v = (−3, 4) anda 3 para a esquerda e 4 para cima. Os catetos medem 3 e 4, sem sinal, e a seta mede 5."
-/>
+<VectorLength />
 
-Pelo [teorema de Pitágoras](./teorema-de-pitagoras), o comprimento é
-$\sqrt{3^2 + 4^2} = 5$. Agora repare: se escrevermos a conta com a coordenada
-como ela é, $(-3)^2 = 9$, que é o mesmo que $3^2$. O quadrado apaga o sinal,
-como já tinha apagado na [fórmula da distância](./plano-cartesiano-e-distancia).
-Por isso podemos usar as coordenadas diretamente, com sinal e tudo:
+Com o vetor $(-3,\ 4)$ da figura, os catetos medem 3 e 4. Pelo
+[teorema de Pitágoras](./teorema-de-pitagoras), o comprimento é
+$\sqrt{3^2 + 4^2} = 5$. Agora repare: escrevendo a conta com a coordenada como
+ela é, $(-3)^2 = 9$, que é o mesmo que $3^2$. O quadrado apaga o sinal, como já
+tinha apagado na [fórmula da distância](./plano-cartesiano-e-distancia). Por
+isso podemos usar as coordenadas diretamente, com sinal e tudo:
 
 > O **módulo** do vetor $\vec{v} = (a,\ b)$ é o comprimento da seta:
 >
-> $$\lVert \vec{v} \rVert = \sqrt{a^2 + b^2}.$$
+> $$
+> \lVert \vec{v} \rVert = \sqrt{a^2 + b^2}.
+> $$
 
 - **Exemplo:** $\lVert (-3,\ 4) \rVert = \sqrt{(-3)^2 + 4^2} = \sqrt{9 + 16}
   = \sqrt{25} = 5$.
 - **Contraexemplo:** o módulo de $(3,\ 4)$ **não** é $3 + 4 = 7$. A soma das
   coordenadas é o caminho em “L”, andando primeiro na horizontal e depois na
-  vertical. A seta vai em linha reta, pela hipotenusa, e mede 5.
+  vertical. A seta vai em linha reta, pela hipotenusa, e mede 5. O painel da
+  figura compara os dois comprimentos.
 
 **Por que duas barras de cada lado.** No curso, $\lvert -7 \rvert$ já é o valor
 absoluto, também chamado de módulo de um número. Os dois nomes são iguais de
@@ -448,8 +577,14 @@ distância do número até o zero, e o módulo do vetor mede o comprimento da
 seta. Mas são operações diferentes: uma recebe um número, a outra recebe um
 par. As barras duplas $\lVert \ \rVert$ avisam que dentro delas há um vetor.
 
-**O módulo do vetor entre dois pontos é a distância entre eles.** Se
-$\overrightarrow{AB} = (x_B - x_A,\ y_B - y_A)$, então
+> **Erro comum: perder o sinal dentro do quadrado.** No módulo de
+> $(-3,\ 4)$, a conta $\sqrt{-9 + 16} = \sqrt{7}$ está errada. O quadrado de
+> $-3$ é $(-3) \times (-3) = 9$, positivo. O certo é $\sqrt{9 + 16} = 5$.
+> Escreva os parênteses, $(-3)^2$, e o erro não acontece.
+
+### O módulo do vetor entre dois pontos é a distância entre eles
+
+Se $\overrightarrow{AB} = (x_B - x_A,\ y_B - y_A)$, a fórmula do módulo dá
 
 $$
 \lVert \overrightarrow{AB} \rVert = \sqrt{(x_B - x_A)^2 + (y_B - y_A)^2},
@@ -460,14 +595,37 @@ que é exatamente a fórmula da distância de
 coincidência: a seta de $A$ até $B$ é o segmento $AB$ com uma ponta
 desenhada, e o comprimento dela é a distância entre $A$ e $B$.
 
-### O vetor nulo
+<details>
+<summary>Confira: qual é o módulo de (6, −8)? Antes da conta: ele fica entre que valores?</summary>
+
+O módulo é maior que 8 (a seta é a hipotenusa, mais comprida que o maior
+cateto) e menor que $6 + 8 = 14$ (o caminho em “L”). A conta:
+$\sqrt{6^2 + (-8)^2} = \sqrt{36 + 64} = \sqrt{100} = 10$. Está entre 8 e 14,
+como previsto. O botão $(6,\ -8)$ da figura mostra a seta.
+
+</details>
+
+## O vetor nulo: sair e voltar ao mesmo lugar
+
+Um entregador sai do restaurante $R$ e anda 5 quarteirões para leste, 3 para
+norte, 5 para oeste e 3 para sul. Assim ele volta ao restaurante, depois de
+andar $5 + 3 + 5 + 3 = 16$ quarteirões. Mas, do começo ao fim, qual foi o
+deslocamento? A figura acompanha a volta. A seta azul liga o restaurante ao
+lugar onde ele está a cada instante.
+
+<ZeroTrip />
+
+A seta cresce enquanto ele se afasta, muda de inclinação enquanto ele
+dá a volta e encolhe quando ele se aproxima de novo. Na chegada, ela some: o lugar de
+chegada é o lugar de saída, e a diferença entre os dois é zero nas duas
+coordenadas. Ele andou 16 quarteirões, e o deslocamento total é
+$\overrightarrow{RR} = R - R = (0,\ 0)$.
 
 > O **vetor nulo** é $\vec{0} = (0,\ 0)$: andar zero na horizontal e zero na
 > vertical. Seu módulo é $\lVert \vec{0} \rVert = \sqrt{0 + 0} = 0$.
 
-- **Exemplo:** um entregador que sai do restaurante e volta a ele faz, do
-  começo ao fim, o deslocamento $\overrightarrow{AA} = A - A = (0,\ 0)$. Ele
-  andou bastante, mas o deslocamento total é nulo.
+- **Exemplo:** para qualquer ponto $A$, o vetor $\overrightarrow{AA}$ é
+  $A - A = (0,\ 0)$, como na volta da figura.
 - **Contraexemplo:** $(0,\ 5)$ não é o vetor nulo. Ter uma coordenada zero não
   é suficiente: esse vetor anda 5 para cima e tem módulo 5.
 
@@ -477,37 +635,62 @@ ser zero, e isso só acontece com $a = 0$ e $b = 0$. Como a seta tem
 comprimento zero, o vetor nulo não tem direção nem sentido: não há seta para
 apontar.
 
-### O vetor oposto
+Este caso separa duas coisas que se confundem: o **caminho andado** (os 16
+quarteirões, que o hodômetro da moto conta) e o **deslocamento** (a diferença
+entre chegada e saída, que é o vetor). O vetor só registra o deslocamento.
+
+<details>
+<summary>Confira: no meio da volta, o entregador está em (6, 4). Qual é o deslocamento desde o restaurante R(1, 1)? E quantos quarteirões ele andou até ali?</summary>
+
+Deslocamento: $(6 - 1,\ 4 - 1) = (5,\ 3)$. Caminho andado: 5 quarteirões para
+leste e 3 para norte, total de 8. O deslocamento tem módulo
+$\sqrt{25 + 9} = \sqrt{34} \approx 5{,}83$, menos que os 8 andados, porque a
+seta vai em linha reta.
+
+</details>
+
+## O vetor oposto desfaz o movimento
+
+Voltar pelo mesmo caminho desfaz a ida. A volta tem o mesmo tamanho e anda na
+mesma reta, mas para o outro lado. Na figura, uma cópia de $\vec{v}$ sobe duas
+unidades, para não cobrir a primeira, e gira meia volta em torno do próprio
+meio. O que muda e o que fica?
+
+<OppositeVector />
+
+O comprimento ficou o mesmo, e a seta continua na mesma inclinação. Só a ponta
+passou para o outro lado. Por isso, nas coordenadas, os dois números trocam de
+sinal: andar 4 para a direita vira andar 4 para a esquerda, e subir 2 vira
+descer 2.
 
 > O **oposto** de $\vec{v} = (a,\ b)$ é o vetor $-\vec{v} = (-a,\ -b)$. Ele
 > tem o mesmo módulo e a mesma direção de $\vec{v}$, e o sentido contrário.
 > Fazer $\vec{v}$ e depois $-\vec{v}$ leva de volta ao ponto de partida.
 
-<CartesianPlane
-  xMin={0} xMax={7} yMin={0} yMax={6}
-  xUnit={40}
-  points={[
-    {at: [1, 1], label: 'A', tone: 2, dx: -12, dy: 14},
-    {at: [5, 3], label: 'B', tone: 2, dx: 12, dy: 14},
-  ]}
-  segments={[
-    {from: [1, 1], to: [5, 3], tone: 1, arrow: true, label: '\\overrightarrow{AB} = (4,\\ 2)', dx: 44, dy: 22},
-    {from: [5, 5], to: [1, 3], tone: 2, arrow: true, label: '\\overrightarrow{BA} = (-4,\\ -2)', dx: -40, dy: -34},
-  ]}
-  axisLabels={['x', 'y']}
-  caption="Embaixo, a seta de A(1, 1) até B(5, 3). Em cima, a seta de B até A, desenhada duas unidades acima para não cobrir a primeira. As duas têm o mesmo comprimento e a mesma inclinação, e apontam para lados contrários."
-/>
-
 - **Exemplo:** com $A(1,\ 1)$ e $B(5,\ 3)$,
-  $\overrightarrow{AB} = (4,\ 2)$ e $\overrightarrow{BA} = (1 - 5,\ 1 - 3) =
-  (-4,\ -2)$. Então $\overrightarrow{BA} = -\overrightarrow{AB}$: ir de $B$
-  até $A$ desfaz o caminho de $A$ até $B$.
+  $\overrightarrow{AB} = (4,\ 2)$ e
+  $\overrightarrow{BA} = (1 - 5,\ 1 - 3) = (-4,\ -2)$. Então
+  $\overrightarrow{BA} = -\overrightarrow{AB}$: ir de $B$ até $A$ desfaz o
+  caminho de $A$ até $B$.
 - **Contraexemplo:** o oposto de $(4,\ 2)$ **não** é $(-4,\ 2)$. Trocar o
-  sinal de uma coordenada só muda a direção da seta: $(-4,\ 2)$ anda para a
-  esquerda e para cima, e não fica sobre a mesma reta que $(4,\ 2)$. O oposto
-  troca os **dois** sinais.
+  sinal de uma só coordenada muda a direção da seta: $(-4,\ 2)$ anda para a
+  esquerda e para cima, e não fica sobre a mesma reta que $(4,\ 2)$. Aperte o
+  botão do contraexemplo na figura para ver. O oposto troca os **dois** sinais.
 
-## 9. Resolvendo o problema das entregas
+<details>
+<summary>Confira: qual é o oposto de (−3, 0)? Desenhe as duas setas a partir da origem.</summary>
+
+O oposto troca os dois sinais: $(3,\ 0)$, porque o oposto de 0 é 0. A seta de
+$(-3,\ 0)$ deita no eixo $x$ apontando para a esquerda, e a de $(3,\ 0)$ deita
+no mesmo eixo apontando para a direita. Mesma reta, sentidos contrários.
+
+</details>
+
+## Resolvendo o problema das entregas
+
+Antes da conta, uma previsão. As setas 1 e 2 da primeira figura pareciam
+paralelas e do mesmo tamanho. A seta 3 ia para a esquerda, e a 4 parecia mais
+deitada. Então esperamos que só as entregas 1 e 2 tenham o mesmo vetor.
 
 Para cada corrida, o deslocamento é “chegada menos saída”:
 
@@ -520,24 +703,15 @@ Para cada corrida, o deslocamento é “chegada menos saída”:
 
 A última coluna confirma o que o gerente já sabia: as quatro corridas têm o
 mesmo tamanho, 5 quarteirões. A coluna dos vetores mostra o que a distância
-escondia.
+escondia. A figura leva as quatro setas, sem girar, até uma mesma saída: as
+setas que caem uma em cima da outra são o mesmo vetor.
 
-<CartesianPlane
-  xMin={0} xMax={13} yMin={0} yMax={10}
-  xUnit={30}
-  segments={[
-    {from: [1, 1], to: [4, 5], tone: 1, arrow: true, label: '1', dx: -22, dy: -2},
-    {from: [5, 3], to: [8, 7], tone: 1, arrow: true, label: '2', dx: -22, dy: -2},
-    {from: [12, 2], to: [9, 6], tone: 2, arrow: true, label: '3', dx: 20, dy: -2},
-    {from: [1, 6], to: [5, 9], tone: 3, arrow: true, label: '4', dx: -12, dy: -16},
-  ]}
-  axisLabels={['x', 'y']}
-  caption="As mesmas corridas, agora coloridas pelo vetor. As entregas 1 e 2 têm o mesmo vetor (3, 4) e a mesma cor. A entrega 3 anda para oeste, e a entrega 4 anda mais para leste do que para norte."
-/>
+<DeliveryVectors mode="compare" />
 
 **Primeira pergunta: quais corridas fizeram o mesmo movimento?** As entregas
 1 e 2. As duas têm o vetor $(3,\ 4)$: 3 quarteirões para leste e 4 para
-norte. As outras duas são diferentes por motivos diferentes:
+norte. Na figura, as duas setas caíram uma sobre a outra. As outras duas são
+diferentes por motivos diferentes:
 
 - a entrega 3 tem o vetor $(-3,\ 4)$. O $-3$ diz que ela andou 3 quarteirões
   para **oeste**. É a mesma quantidade de passos para o lado, mas para o lado
@@ -561,23 +735,27 @@ $$
 O vetor registrou o que o gerente queria agrupar: **quanto** cada entregador
 andou e **para onde**, sem misturar isso com **de onde** ele saiu.
 
-## 10. Exemplos resolvidos
+## Exemplos resolvidos
 
 ### Exemplo 1: o vetor entre dois pontos com coordenadas negativas
 
 Calcule $\overrightarrow{AB}$ e $\overrightarrow{BA}$ para $A(-2,\ 3)$ e
 $B(4,\ -1)$.
 
-Chegada menos saída, coordenada por coordenada. Os parênteses em volta dos
+**Previsão.** $B$ está à direita de $A$ (o $x$ vai de $-2$ para 4) e abaixo
+dele (o $y$ vai de 3 para $-1$). Então o caminho de $A$ até $B$ deve ter a
+primeira coordenada positiva e a segunda negativa.
+
+Chegada menos saída, uma coordenada de cada vez. Os parênteses em volta dos
 negativos evitam erro de sinal:
 
 $$
 \overrightarrow{AB} = \big(4 - (-2),\ -1 - 3\big) = (6,\ -4).
 $$
 
-Leitura: de $A$ até $B$, anda-se 6 para a direita e 4 para baixo. Conferindo
-no plano, $A$ está à esquerda e acima de $B$, então o caminho de $A$ até $B$
-vai mesmo para a direita e para baixo.
+Leitura: de $A$ até $B$, anda-se 6 para a direita e 4 para baixo, como a
+previsão dizia. O segundo botão da figura de $\overrightarrow{AB}$, com
+$A(-2,\ 3)$ e $B(4,\ -1)$, mostra esse caminho.
 
 Para o caminho de volta, a saída passa a ser $B$:
 
@@ -592,6 +770,11 @@ Os sinais trocaram nas duas coordenadas, como esperado de um vetor oposto.
 *Pause e tente antes de ler.* Calcule o módulo de $(5,\ -12)$, de
 $(-6,\ -8)$ e de $(0,\ -7)$.
 
+**Previsão.** Cada módulo fica entre a maior coordenada sem sinal e a soma
+das duas sem sinal: entre 12 e 17 para o primeiro, entre 8 e 14 para o
+segundo. O terceiro é uma seta vertical de 7 unidades, então deve dar
+exatamente 7.
+
 $$
 \lVert (5,\ -12) \rVert = \sqrt{25 + 144} = \sqrt{169} = 13.
 $$
@@ -604,16 +787,19 @@ $$
 \lVert (0,\ -7) \rVert = \sqrt{0 + 49} = \sqrt{49} = 7.
 $$
 
-Em todas, o quadrado de um número negativo deu positivo: $(-12)^2 = 144$,
-$(-6)^2 = 36$, $(-8)^2 = 64$, $(-7)^2 = 49$. O último vetor anda só na
-vertical, 7 para baixo, e o módulo é 7, como se esperaria de uma seta vertical
-de 7 unidades.
+Os três resultados caíram dentro das faixas previstas. Em todas as contas, o
+quadrado de um número negativo deu positivo: $(-12)^2 = 144$,
+$(-6)^2 = 36$, $(-8)^2 = 64$, $(-7)^2 = 49$.
 
 ### Exemplo 3: achar a chegada e achar a saída
 
 *Pause e tente antes de ler.* a) Um drone parte de $(3,\ -2)$ e faz o
 deslocamento $(-5,\ 6)$. Onde ele chega? b) Outro drone chegou a $(1,\ 7)$
 depois de fazer o deslocamento $(4,\ -3)$. De onde ele saiu?
+
+**Previsão.** Em a), o drone vai para a esquerda e para cima, então a
+chegada tem $x$ menor que 3 e $y$ maior que $-2$. Em b), a saída é a chegada
+com o deslocamento desfeito: $x$ menor que 1 e $y$ maior que 7.
 
 a) A chegada é a saída mais o vetor:
 
@@ -643,6 +829,9 @@ e o lado de cima, percorrido de $D$ para $C$, precisam ser **o mesmo vetor**.
 Mesmo vetor quer dizer mesmo comprimento, mesma direção e mesmo sentido, que é
 exatamente “paralelos e do mesmo tamanho”.
 
+**Previsão.** A olho, o desenho parece um paralelogramo. Mas a olho não dá
+para ter certeza: a conta decide.
+
 $$
 \overrightarrow{AB} = (5 - 1,\ 2 - 1) = (4,\ 1)
 \qquad
@@ -671,12 +860,13 @@ $\overrightarrow{BC} = (1,\ 3)$, também iguais.
   caption="O lado AB e o lado DC são o mesmo vetor (4, 1). Por isso são paralelos e do mesmo tamanho, e o quadrilátero ABCD é um paralelogramo."
 />
 
-Repare na escolha de $\overrightarrow{DC}$ e não de $\overrightarrow{CD}$. Andando
-pelo contorno $A \to B \to C \to D$, o lado de cima é percorrido de $C$ para
-$D$, ao contrário do lado de baixo. Para comparar os dois lados no mesmo
-sentido, usamos $D \to C$. Se você calculasse $\overrightarrow{CD} = (-4,\ -1)$,
-encontraria o oposto, e isso também mostraria que os lados são paralelos e
-iguais, só que percorridos em sentidos contrários.
+Repare na escolha de $\overrightarrow{DC}$ e não de $\overrightarrow{CD}$.
+Andando pelo contorno $A \to B \to C \to D$, o lado de cima é percorrido de
+$C$ para $D$, ao contrário do lado de baixo. Para comparar os dois lados no
+mesmo sentido, usamos $D \to C$. Se você calculasse
+$\overrightarrow{CD} = (-4,\ -1)$, encontraria o oposto. Isso também mostraria
+que os lados são paralelos e iguais, só que percorridos em sentidos
+contrários.
 
 ### Exemplo 5: o vértice que falta
 
@@ -685,6 +875,9 @@ $A(-1,\ 2)$, $B(3,\ 1)$ e $C(5,\ 4)$. Onde fica $D$?
 
 No paralelogramo, o lado $AD$ é o mesmo vetor que o lado $BC$. Então $D$ é o
 ponto que se alcança saindo de $A$ com o deslocamento $\overrightarrow{BC}$.
+
+**Previsão.** De $B$ para $C$ o caminho sobe e vai para a direita. Então $D$
+fica acima e à direita de $A$.
 
 $$
 \overrightarrow{BC} = (5 - 3,\ 4 - 1) = (2,\ 3)
@@ -698,23 +891,23 @@ Conferência pelo outro par de lados:
 $\overrightarrow{AB} = (3 - (-1),\ 1 - 2) = (4,\ -1)$ e
 $\overrightarrow{DC} = (5 - 1,\ 4 - 5) = (4,\ -1)$. Iguais, como precisam ser.
 
-## 11. Erros comuns
+## Erros comuns
+
+Três destes erros já apareceram nas seções do corpo. Aqui eles estão juntos,
+para revisão.
 
 > **Erro 1: subtrair na ordem errada.** O vetor $\overrightarrow{AB}$ é
 > $B - A$, chegada menos saída. Calcular $A - B$ dá o vetor oposto. Teste com
 > $A(1,\ 1)$ e $B(5,\ 3)$: o certo é $(4,\ 2)$, que aponta de $A$ para $B$; a
-> conta invertida dá $(-4,\ -2)$, que aponta de $B$ para $A$. Uma frase que
-> ajuda: **a seta aponta para quem vem primeiro na subtração**.
+> conta invertida dá $(-4,\ -2)$, que aponta de $B$ para $A$.
 
 > **Erro 2: achar que o vetor $(3,\ 4)$ termina no ponto $(3,\ 4)$.** Isso só
 > acontece quando a seta começa na origem. A partir de $(5,\ 0)$, o mesmo
-> vetor termina em $(8,\ 4)$. O vetor é o movimento; o ponto onde ele termina
-> depende de onde ele começou.
+> vetor termina em $(8,\ 4)$.
 
 > **Erro 3: perder o sinal dentro do quadrado.** No módulo de $(-3,\ 4)$, a
-> conta $\sqrt{-9 + 16} = \sqrt{7}$ está errada. O quadrado de $-3$ é
-> $(-3) \times (-3) = 9$, positivo. O certo é $\sqrt{9 + 16} = 5$. Escreva os
-> parênteses, $(-3)^2$, e o erro não acontece.
+> conta $\sqrt{-9 + 16} = \sqrt{7}$ está errada. O certo é
+> $\sqrt{(-3)^2 + 4^2} = \sqrt{9 + 16} = 5$.
 
 > **Erro 4: somar as coordenadas para achar o módulo.** O módulo de $(3,\ 4)$
 > não é 7. A soma das coordenadas é o caminho em “L”, pelos catetos; o módulo
@@ -729,7 +922,7 @@ $\overrightarrow{DC} = (5 - 1,\ 4 - 5) = (4,\ -1)$. Iguais, como precisam ser.
 > oposto de $(4,\ 2)$ é $(-4,\ -2)$. O vetor $(-4,\ 2)$ é outro vetor, que nem
 > está na mesma reta: ele anda para a esquerda e para **cima**.
 
-## 12. Perguntas de verificação
+## Perguntas de verificação
 
 1. Por que “ande 5 quarteirões” não basta para saber onde o entregador vai
    terminar, mesmo sabendo de onde ele saiu?
@@ -751,16 +944,18 @@ $\overrightarrow{DC} = (5 - 1,\ 4 - 5) = (4,\ -1)$. Iguais, como precisam ser.
 
 1. Porque 5 quarteirões é só o tamanho do movimento. A partir do mesmo ponto,
    andar 5 quarteirões em linha reta pode terminar em qualquer ponto de uma
-   circunferência de raio 5 em volta da saída. Para saber o ponto exato,
-   falta a direção e o sentido, que o vetor registra.
+   circunferência de raio 5 em volta da saída. É o que mostra a figura das doze
+   setas.
+   Para saber o ponto exato, falta a direção e o sentido, que o vetor
+   registra.
 2. Porque o vetor é um movimento, e o mesmo movimento pode ser feito a partir
    de qualquer lugar. O que define o vetor é quanto a seta anda na
-   horizontal e na vertical, e isso não muda quando a seta é transportada sem
-   girar. Um ponto, ao contrário, é um lugar: mudar o desenho de lugar é
-   mudar o ponto.
+   horizontal e na vertical, e essas duas quantidades não mudam quando a seta
+   desliza sem girar. Um ponto, ao contrário, é um lugar: mudar o desenho de
+   lugar é mudar o ponto.
 3. Quando $A$ é a origem $(0,\ 0)$. Nesse caso,
    $\overrightarrow{AB} = (x_B - 0,\ y_B - 0) = (x_B,\ y_B)$. Subtrair zero
-   não muda nada, então o vetor tem as mesmas coordenadas do ponto de
+   não muda nada. Por isso o vetor tem as mesmas coordenadas do ponto de
    chegada.
 4. Porque ele é a raiz quadrada de $a^2 + b^2$. Os quadrados nunca são
    negativos, então a soma também não é, e a raiz quadrada de um número não
@@ -785,7 +980,7 @@ $\overrightarrow{DC} = (5 - 1,\ 4 - 5) = (4,\ -1)$. Iguais, como precisam ser.
 
 </details>
 
-## 13. Exercícios
+## Exercícios
 
 ### 1. Reconhecimento
 
@@ -923,16 +1118,17 @@ dos quadrados dos outros dois.
     $\overrightarrow{DC} = (5 - 1,\ 4 - 4) = (4,\ 0)$. Os vetores são
     diferentes, então os lados $AB$ e $DC$ não são paralelos e do mesmo
     tamanho. O outro par também falha: $\overrightarrow{AD} = (1,\ 4)$ e
-    $\overrightarrow{BC} = (1,\ 3)$. A figura parece um paralelogramo a olho,
-    e é por isso que a conta é necessária.
+    $\overrightarrow{BC} = (1,\ 3)$. Desenhado na malha, o quadrilátero
+    parece um paralelogramo a olho, e é por isso que a conta é necessária.
 12. a) Depois do primeiro comando: $(2 + 5,\ 3 - 1) = (7,\ 2)$. Depois do
     segundo: $(7 - 2,\ 2 + 4) = (5,\ 6)$. &nbsp; b) $(5 - 2,\ 6 - 3) =
     (3,\ 3)$. &nbsp; c) $\lVert (3,\ 3) \rVert = \sqrt{18} = 3\sqrt{2} \approx
     4{,}24$ m. &nbsp; d) $\lVert (5,\ -1) \rVert + \lVert (-2,\ 4) \rVert =
     \sqrt{26} + \sqrt{20} \approx 5{,}10 + 4{,}47 = 9{,}57$ m. A resposta de
-    d) é maior porque o robô não foi em linha reta: fez um caminho com uma
-    curva no meio, e o caminho em linha reta é o mais curto entre dois
-    pontos.
+    d) é maior porque o robô não foi em linha reta: ele mudou de direção no
+    meio do caminho, e o caminho em linha reta é o mais curto entre dois
+    pontos. É a mesma diferença entre caminho andado e deslocamento da volta
+    no quarteirão.
 13. $\overrightarrow{AB} = (3,\ 4)$, módulo 5. $\overrightarrow{BC} =
     (4,\ -3)$, módulo 5. $\overrightarrow{CA} = (1 - 8,\ 1 - 2) = (-7,\ -1)$,
     módulo $\sqrt{49 + 1} = \sqrt{50}$. Dois lados medem 5, então o triângulo
@@ -962,7 +1158,7 @@ coordenadas onde deveria usar Pitágoras.
 
 </details>
 
-## 14. Revisão curta
+## Revisão curta
 
 - Um **ponto** é um lugar. Um **vetor** é um movimento: quanto se anda e para
   onde.

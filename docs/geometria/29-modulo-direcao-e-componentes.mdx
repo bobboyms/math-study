@@ -3,10 +3,17 @@ title: Módulo, direção e componentes
 ---
 
 import CartesianPlane from '@site/src/components/CartesianPlane';
+import PlaneWind from '@site/src/components/PlaneWind';
+import TwoRoutes from '@site/src/components/TwoRoutes';
+import VectorAngleDial from '@site/src/components/VectorAngleDial';
+import StretchedCycle from '@site/src/components/StretchedCycle';
+import ComponentShadows from '@site/src/components/ComponentShadows';
+import ArctanHalfTurn from '@site/src/components/ArctanHalfTurn';
+import NormalizeShrink from '@site/src/components/NormalizeShrink';
 
 # Módulo, direção e componentes: o vetor descrito por tamanho e ângulo
 
-## 1. Problema motivador: o GPS discorda do painel
+## Problema motivador: o GPS discorda do painel
 
 Um avião pequeno voa com o nariz apontado para uma direção que faz 30° com o
 leste, girando para o norte. O velocímetro do painel marca 500 km/h. Esse
@@ -14,83 +21,83 @@ velocímetro mede a velocidade do avião **em relação ao ar** em volta dele.
 
 Só que o ar também se move. Há vento soprando para o sul, a 60 km/h.
 
-O copiloto olha o GPS, que mede o movimento **em relação ao chão**, e os números
+O copiloto olha o GPS, que mede o movimento **em relação ao chão**. Os números
 não batem com o painel:
 
 - o GPS mostra uma velocidade **menor** que 500 km/h;
 - o GPS mostra o avião avançando numa direção **mais baixa** que 30°.
 
-<CartesianPlane
-  xMin={-0.6} xMax={5.4} yMin={-1.2} yMax={3.2}
-  xUnit={64}
-  xTicks={[
-    {at: 1, label: '100'},
-    {at: 2, label: '200'},
-    {at: 3, label: '300'},
-    {at: 4, label: '400'},
-    {at: 5, label: '500'},
-  ]}
-  yTicks={[
-    {at: 1, label: '100'},
-    {at: 2, label: '200'},
-    {at: 3, label: '300'},
-    {at: -1, label: '-100'},
-  ]}
-  segments={[
-    {from: [0, 0], to: [4.33, 2.5], arrow: true, tone: 1, label: '500\\ \\text{km/h a } 30^\\circ', dx: -46, dy: -18},
-    {from: [0, 0], to: [0, -0.6], arrow: true, tone: 2, label: '60\\ \\text{km/h para o sul}', dx: 84, dy: 28},
-  ]}
-  caption="Os dois dados do problema como setas. Cada unidade da malha vale 100 km/h. A seta azul é a velocidade do avião em relação ao ar; a laranja é a velocidade do vento."
-/>
+A figura mostra uma hora de voo. A seta azul tracejada cresce na direção do
+nariz: é onde o avião estaria se não houvesse vento. Enquanto isso, o vento
+arrasta o avião para o sul (seta laranja). O ponto verde é o avião de verdade,
+e o rastro verde é o que o GPS registra.
 
-> Qual é a velocidade do avião em relação ao chão — quanto ela mede e para onde
+<PlaneWind />
+
+> Qual é a velocidade do avião em relação ao chão: quanto ela mede e para onde
 > ela aponta?
 
-Na lição anterior você aprendeu que a velocidade real é a **soma** dos dois
-vetores. E aprendeu também que somar os tamanhos não serve: $500 + 60 = 560$ só
-seria a resposta se o vento soprasse para o mesmo lado que o avião aponta.
+Na [lição anterior](./soma-de-vetores) você viu que a velocidade em relação ao
+chão é a **soma** das duas velocidades. Você viu também que somar os tamanhos
+não serve: $500 + 60 = 560$ só seria a resposta se o vento soprasse para o
+mesmo lado que o avião aponta.
 
-Quando os vetores estão escritos em coordenadas, a soma tem uma regra direta: soma-se
-coordenada com coordenada. Mas aqui ninguém deu coordenadas. Os dois vetores
-chegaram descritos de outro jeito: **um tamanho e um ângulo**.
+Quando os vetores estão escritos em coordenadas, a soma tem uma regra direta:
+soma-se coordenada com coordenada. Mas aqui ninguém deu coordenadas. Os dois
+vetores chegaram descritos de outro jeito: **um tamanho e um ângulo**.
 
 Esta lição ensina a traduzir entre os dois jeitos de descrever um vetor. Com
 essa tradução, o problema do avião se resolve em três passos: traduzir para
 coordenadas, somar e traduzir de volta.
 
-## 2. Mapa das ideias
+## Roteiro da lição
 
-- **módulo** de um vetor: o tamanho da seta, $\lVert \vec{v} \rVert$;
-- **vetor unitário**: vetor de módulo 1;
-- **normalizar** um vetor: dividir o vetor pelo próprio módulo, para obter o
-  unitário que aponta para o mesmo lado;
-- **ângulo do vetor**, $\theta$: o giro, a partir do semieixo $x$ positivo e no
-  sentido anti-horário, até a seta. Ele guarda ao mesmo tempo a direção e o
-  sentido do vetor;
-- **forma módulo e ângulo**: o vetor de módulo $r$ e ângulo $\theta$ é
-  $r(\cos\theta,\ \sen\theta)$;
-- **componentes**: as duas coordenadas do vetor, lidas como “quanto ele aponta
-  para o leste” e “quanto ele aponta para o norte”;
-- **decompor** um vetor: achar as componentes a partir do módulo e do ângulo;
-  **recompor**: o caminho de volta.
+1. Um vetor pode ser descrito de dois jeitos: pelas **coordenadas** ("4 para o
+   leste, 3 para o norte") ou pelo **tamanho e ângulo** ("5 em linha reta, a
+   36,9° do leste").
+2. O **ângulo do vetor** é o giro que leva o semieixo $x$ positivo até a seta,
+   no sentido anti-horário. Um só número guarda a direção e o sentido.
+3. Todo vetor é um ponto do ciclo trigonométrico **esticado**: o vetor de
+   tamanho $r$ e ângulo $\theta$ é $r(\cos\theta,\ \sen\theta)$.
+4. As **componentes** são as sombras da seta nos dois eixos. O sinal de cada
+   uma sai da conta, sem olhar o desenho.
+5. O triângulo retângulo dá o **tamanho** das sombras, mas não o sinal. Por isso
+   a fórmula do ciclo é mais segura fora do primeiro quadrante.
+6. No caminho de volta, a divisão $\frac{b}{a}$ enxerga só a **reta** da seta,
+   não o lado. Por isso o arco tangente erra metade dos vetores.
+7. A regra do ângulo: arco tangente e, quando a primeira coordenada é negativa,
+   **meia volta** (somar 180°).
+8. Um **vetor unitário** é um vetor de tamanho 1: a ponta dele cai sobre o
+   ciclo.
+9. **Normalizar** é encolher (ou esticar) a seta até a ponta tocar o ciclo:
+   dividir cada coordenada pelo módulo.
 
-## 3. Para que serve
+## Para que isso serve?
 
-- **Navegação.** Instrumentos medem tamanho e ângulo (velocímetro e bússola).
-  Vento e correnteza se somam em coordenadas. A tradução nos dois sentidos é o
-  trabalho diário de um navegador.
-- **Física e engenharia.** Uma força é dada por intensidade e inclinação. Para
-  somar várias forças num cabo, numa viga ou num poste, decompõe-se cada uma.
-- **Jogos e robótica.** O controle de um jogo informa uma direção; o
-  personagem precisa andar sempre com a mesma velocidade, em qualquer direção.
-  Isso exige normalizar o vetor do controle, como o exemplo 4 vai mostrar.
+- **Navegação.** Instrumentos medem tamanho e ângulo: o velocímetro e a
+  bússola. O avião do problema, a 500 km/h e 30°, avança
+  $500 \times \cos 30^\circ \approx 433$ km/h para o leste. Vento e correnteza
+  se somam em coordenadas, e a tradução nos dois sentidos é o trabalho diário
+  de um navegador.
+- **Física e engenharia.** Uma força é dada por intensidade e inclinação. Um
+  carro rebocado por uma corda que puxa com 1 000 N, a 20° do chão, é puxado
+  para a frente com $1\,000 \times \cos 20^\circ \approx 940$ N. Os outros
+  $1\,000 \times \sen 20^\circ \approx 342$ N puxam a frente do carro para
+  cima e não ajudam a andar.
+- **Jogos.** Um personagem deve correr a 5 m/s em qualquer direção. Se o
+  programa multiplica por 5 o vetor $(1,\ 1)$ da diagonal do controle, o
+  personagem corre a $\sqrt{50} \approx 7{,}07$ m/s na diagonal: 41% mais
+  rápido. O exemplo 4 mostra o conserto, que é normalizar.
+- **Aprendizado de máquina.** Dois clientes de um serviço de vídeo assistiram
+  $(3,\ 4)$ e $(30,\ 40)$ horas de comédia e de drama. O gosto é o mesmo: só
+  o volume muda. Normalizados, os dois viram o mesmo vetor, $(0{,}6;\ 0{,}8)$.
+  É assim que um sistema de recomendação compara só a direção dos gostos.
 - **Dentro da matemática.** A forma $r(\cos\theta,\ \sen\theta)$ é o que vai
   permitir demonstrar, na próxima lição, a fórmula do
-  [produto escalar](./produto-escalar). E vetores unitários são usados no
-  aprendizado de máquina para comparar só a direção de dois vetores, sem o
-  tamanho.
+  [produto escalar](./produto-escalar), que mede o ângulo **entre** dois
+  vetores.
 
-## 4. Ideias anteriores que voltam aqui
+## Ideias anteriores que voltam aqui
 
 Responda cada pergunta antes de abrir a resposta. Se travar em alguma, vale
 reler a página indicada antes de seguir.
@@ -100,8 +107,8 @@ reler a página indicada antes de seguir.
 <details>
 <summary>Conferir</summary>
 
-O módulo é o tamanho da seta. Ele vem da fórmula da distância, aplicada da
-origem até a ponta:
+O módulo é o tamanho da seta. Ele vem de Pitágoras, aplicado aos dois
+deslocamentos:
 
 $$
 \lVert (-3,\ 4) \rVert = \sqrt{(-3)^2 + 4^2} = \sqrt{9 + 16} = \sqrt{25} = 5.
@@ -115,17 +122,25 @@ direita.
 
 **2. Da [soma e multiplicação por número](./soma-de-vetores).** Quanto vale
 $\tfrac{1}{2}(6,\ 8)$? Compare o módulo do resultado com o módulo de $(6,\ 8)$.
+E quanto mede $-2(3,\ 4)$?
 
 <details>
 <summary>Conferir</summary>
 
 Multiplicar um vetor por um número multiplica cada coordenada:
-$\tfrac{1}{2}(6,\ 8) = (3,\ 4)$.
+$\tfrac{1}{2}(6,\ 8) = (3,\ 4)$. O módulo de $(6,\ 8)$ é
+$\sqrt{36 + 64} = 10$, e o de $(3,\ 4)$ é $\sqrt{9 + 16} = 5$. A seta encolheu
+para a metade e continuou apontando para o mesmo lado.
 
-O módulo de $(6,\ 8)$ é $\sqrt{36 + 64} = 10$. O de $(3,\ 4)$ é
-$\sqrt{9 + 16} = 5$. A seta encolheu para a metade e continuou apontando para o
-mesmo lado. É essa propriedade — multiplicar por um número positivo muda o
-tamanho e mantém a direção — que esta lição vai usar o tempo todo.
+E $-2(3,\ 4) = (-6,\ -8)$, de módulo $\sqrt{36 + 64} = 10$. O tamanho dobrou e
+o sentido inverteu. As duas contas são casos da regra daquela lição:
+
+$$
+\lVert k\vec{v} \rVert = \lvert k \rvert \times \lVert \vec{v} \rVert.
+$$
+
+Multiplicar por um número **positivo** muda o tamanho e mantém o lado para onde
+a seta aponta. Esta lição vai usar esse fato o tempo todo.
 
 </details>
 
@@ -145,9 +160,9 @@ $$
 \text{norte} = 200 \sen 35^\circ \approx 114{,}7 \text{ m}.
 $$
 
-Esse foi o exemplo 5 daquela lição. Ela terminava com a frase “decompor um
-vetor é aplicar seno e cosseno”. Esta lição transforma essa frase numa regra
-que vale para qualquer ângulo, e não só para os agudos.
+Aquela lição anunciava, na lista de usos do começo, a frase "decompor um vetor
+é aplicar seno e cosseno". Esta lição transforma essa frase numa regra que vale para qualquer
+ângulo, e não só para os agudos.
 
 </details>
 
@@ -169,8 +184,8 @@ $$
 (\cos 150^\circ,\ \sen 150^\circ) = \left(-\tfrac{\sqrt{3}}{2};\ \tfrac{1}{2}\right) \approx (-0{,}866;\ 0{,}5).
 $$
 
-A própria lição do ciclo respondeu à segunda pergunta: “num círculo de raio 3,
-a abscissa de $P$ seria $3\cos\theta$”. Guarde essa frase. Ela é a semente da
+A própria lição do ciclo respondeu à segunda pergunta: "num círculo de raio 3,
+a abscissa de $P$ seria $3\cos\theta$". Guarde essa frase. Ela é o começo da
 fórmula principal desta página.
 
 </details>
@@ -188,22 +203,30 @@ extremos.
 Para o ponto $(-3,\ 4)$, a tangente é $\frac{4}{-3} \approx -1{,}333$, e o
 $\arctg$ devolveu $-53{,}1^\circ$. Esse ângulo está no quarto quadrante, mas o
 ponto está no segundo. A correção foi somar 180°, o que deu $126{,}9^\circ$.
-Esta lição vai explicar **por que** a correção é exatamente 180°, e quando ela é
+Esta lição vai mostrar **por que** a correção é exatamente 180°, e quando ela é
 necessária.
 
 </details>
 
-## 5. Intuição: dois jeitos de dar a mesma instrução
+## Dois jeitos de dar a mesma instrução: andar em L ou andar em linha reta
 
 Imagine que você precisa explicar a alguém como ir da praça até a padaria. Há
 dois jeitos de dar a instrução:
 
-- **“Ande 4 quarteirões para o leste e depois 3 para o norte.”**
-- **“Ande 5 quarteirões em linha reta, numa direção quase 37° acima do leste.”**
+- **"Ande 4 quarteirões para o leste e depois 3 para o norte."**
+- **"Ande 5 quarteirões em linha reta, numa direção quase 37° acima do leste."**
 
-As duas instruções levam ao mesmo lugar. Elas descrevem o **mesmo**
+A figura faz as duas pessoas andarem, uma depois da outra.
+
+<TwoRoutes />
+
+As duas instruções terminam no mesmo lugar. Elas descrevem o **mesmo**
 deslocamento, ou seja, o mesmo vetor. A primeira usa as coordenadas do vetor,
 $(4,\ 3)$. A segunda usa o tamanho da seta e o ângulo dela.
+
+Os dois números de cada instrução não são os mesmos. O 5 é o tamanho, que vem
+de Pitágoras: $\sqrt{4^2 + 3^2} = 5$. O ângulo de cerca de 36,9° é a abertura
+entre o leste e a seta. Nenhum dos dois é uma das coordenadas.
 
 Nenhum dos dois jeitos é melhor que o outro. Cada um serve melhor para uma
 tarefa:
@@ -220,48 +243,111 @@ pergunta é uma soma, e a soma pede coordenadas. Por isso precisamos de uma
 tradução **nos dois sentidos**: de tamanho e ângulo para coordenadas, e de
 coordenadas para tamanho e ângulo.
 
-## 6. Modelo visual: o ciclo trigonométrico esticado
+<details>
+<summary>Confira: "ande 6 para o leste e 8 para o norte" e "ande 10 em linha reta" podem ser a mesma instrução? Falta alguma informação na segunda?</summary>
 
-O desenho abaixo mostra duas setas que apontam exatamente para o mesmo lado.
+O tamanho bate: $\sqrt{6^2 + 8^2} = \sqrt{100} = 10$. Mas a segunda instrução
+está incompleta. Dez quarteirões em linha reta podem levar a qualquer ponto de
+uma circunferência de raio 10 em volta da praça. Falta o ângulo, que é o
+assunto da próxima seção.
 
-<CartesianPlane
-  xMin={-1.5} xMax={6} yMin={-1.5} yMax={5.5}
-  xUnit={42}
-  circles={[
-    {center: [0, 0], r: 1, tone: 2},
-    {center: [0, 0], r: 5, tone: 3, dashed: true},
-  ]}
-  functions={[{f: (x) => Math.sqrt(Math.max(0, 2.56 - x * x)), domain: [1.28, 1.6], tone: 0}]}
-  segments={[
-    {from: [0, 0], to: [4, 3], arrow: true, tone: 1},
-    {from: [0, 0], to: [0.8, 0.6], arrow: true, tone: 2},
-  ]}
-  labels={[
-    {at: [4, 3], math: '(4,\\ 3)', dx: 28, dy: -12, tone: 1},
-    {at: [0.8, 0.6], math: '(0{,}8;\\ 0{,}6)', dx: 76, dy: 4, tone: 2},
-    {at: [1.2, 0.3], math: '\\theta'},
-  ]}
-  caption="A seta curta (laranja) termina sobre o ciclo de raio 1. A seta longa (azul) termina sobre a circunferência tracejada de raio 5. As duas fazem o mesmo ângulo θ com o eixo x."
-/>
+</details>
 
-Leia o desenho em três passos.
+## O ângulo do vetor é o giro a partir do leste, no sentido anti-horário
 
-**Primeiro passo: a seta curta.** Ela vai da origem até o ponto $(0{,}8;\ 0{,}6)$.
-Esse ponto está sobre o ciclo trigonométrico, porque
-$0{,}8^2 + 0{,}6^2 = 0{,}64 + 0{,}36 = 1$. Pela definição do
+Para que "tamanho e ângulo" descreva uma seta sem ambiguidade, todos precisam
+medir o ângulo do mesmo jeito. A convenção é a do ciclo trigonométrico. O
+procedimento tem três passos:
+
+1. Coloque a cauda da seta na origem.
+2. Comece com uma semirreta deitada sobre o semieixo $x$ positivo (o leste).
+3. Gire essa semirreta no sentido anti-horário até ela cair sobre a seta. O
+   tamanho do giro é o ângulo do vetor.
+
+A figura começa com a seta no leste e gira até 30°. Use os botões para girar
+até outros ângulos, ou arraste o controle.
+
+<VectorAngleDial initial={30} />
+
+> O **ângulo de um vetor** $\vec{v}$, diferente do vetor nulo, é o ângulo
+> $\theta$ do giro que leva o semieixo $x$ positivo até a seta de $\vec{v}$,
+> girando no sentido anti-horário. Costuma-se escolher $\theta$ entre $0^\circ$
+> e $360^\circ$.
+
+**Exemplo.** O vetor $(0,\ 5)$ aponta para cima. O giro que leva o semieixo $x$
+positivo até ele é de 90°. Então $\theta = 90^\circ$.
+
+**Um ângulo guarda duas informações.** Na lição dos [vetores](./vetores), uma
+seta tinha **direção** (a reta sobre a qual ela está) e **sentido** (para qual
+dos dois lados dessa reta ela aponta). Um único ângulo entre 0° e 360° guarda as
+duas coisas ao mesmo tempo. Gire a figura até 30° e depois até 210°. A reta
+cinza tracejada não muda, porque $210^\circ = 30^\circ + 180^\circ$. Então as
+duas setas têm a mesma direção. Mas a seta passa para o outro lado da reta: os
+sentidos são opostos. Essa observação vai explicar, mais adiante, o erro do
+arco tangente.
+
+**Contraexemplo.** O vetor $(-4,\ -3)$ está no terceiro quadrante. A parte do
+eixo $x$ mais próxima dele é a parte negativa, e com ela a seta forma um ângulo
+de cerca de $36{,}9^\circ$. Mas $36{,}9^\circ$ **não** é o ângulo dele. Esse valor é o
+ângulo de referência, da
+[redução ao primeiro quadrante](./reducao-ao-primeiro-quadrante). A figura
+abaixo mostra os dois: a cunha azul é o ângulo do vetor, e a laranja é o ângulo
+de referência.
+
+<VectorAngleDial initial={216.87} reference caption="A seta de (−4, −3). A cunha azul é o ângulo do vetor, medido a partir do semieixo x positivo: cerca de 216,9°. A cunha laranja é o ângulo de referência, medido até a parte negativa do eixo x: cerca de 36,9°. Só a azul é o ângulo do vetor." />
+
+O ângulo do vetor é medido sempre a partir do semieixo **positivo**, girando no
+sentido anti-horário. Para chegar a $(-4,\ -3)$, que está no terceiro
+quadrante, é preciso girar $180^\circ + 36{,}9^\circ = 216{,}9^\circ$.
+
+**O vetor nulo não tem ângulo.** O vetor $\vec{0} = (0,\ 0)$ não tem seta: o
+ponto de chegada é o próprio ponto de partida. Nenhum giro "leva até ele".
+
+> **Atenção, navegação real.** Pilotos e marinheiros medem o rumo a partir do
+> **norte**, girando no sentido **horário**. Nesse sistema, "leste" é 90°. Esta
+> lição usa sempre a convenção da matemática (a partir do leste, sentido
+> anti-horário), e os enunciados dizem o ângulo nessa convenção: "30° com o
+> leste, girando para o norte".
+
+<details>
+<summary>Confira: qual é o ângulo de um vetor que aponta para o sul? E de um que aponta para o oeste?</summary>
+
+Para o sul, o giro a partir do leste, no sentido anti-horário, passa pelo
+norte (90°) e pelo oeste (180°) e para em 270°. Para o oeste, o giro para em
+180°. Na figura, gire até esses valores e confira que a seta aponta para baixo
+e para a esquerda.
+
+</details>
+
+## Todo vetor é um ponto do ciclo esticado: r(cos θ, sen θ)
+
+Agora a primeira tradução: de tamanho e ângulo para coordenadas. A ideia
+aparece num caso que você já conhece, a padaria em $(4,\ 3)$.
+
+A figura começa com uma seta curta, laranja, que vai da origem até o ponto
+$(0{,}8;\ 0{,}6)$. Esse ponto está sobre o ciclo trigonométrico, porque
+$0{,}8^2 + 0{,}6^2 = 0{,}64 + 0{,}36 = 1$. Depois a seta estica, sem girar, até
+ter tamanho 5.
+
+<StretchedCycle />
+
+Leia o que a figura mostrou em três passos.
+
+**Primeiro passo: a seta curta.** Pela definição do
 [ciclo](./ciclo-trigonometrico), um ponto do ciclo tem coordenadas
-$(\cos\theta,\ \sen\theta)$. Então $\cos\theta = 0{,}8$ e $\sen\theta = 0{,}6$
-para o ângulo $\theta$ marcado.
+$(\cos\theta,\ \sen\theta)$. Então, para o ângulo $\theta$ marcado,
+$\cos\theta = 0{,}8$ e $\sen\theta = 0{,}6$.
 
-**Segundo passo: a seta longa.** Ela vai até $(4,\ 3)$. As coordenadas dela são
-exatamente as da seta curta multiplicadas por 5:
+**Segundo passo: a seta esticada.** Ela termina em $(4,\ 3)$. As coordenadas
+dela são as da seta curta multiplicadas por 5:
 
 $$
 5 \times (0{,}8;\ 0{,}6) = (4,\ 3).
 $$
 
-Multiplicar por 5 estica a seta para cinco vezes o tamanho e mantém o lado para
-onde ela aponta. Por isso as duas setas fazem o mesmo ângulo $\theta$.
+Multiplicar por 5, um número positivo, estica a seta para cinco vezes o tamanho
+e mantém o lado para onde ela aponta. Por isso as duas setas fazem o mesmo
+ângulo $\theta$.
 
 **Terceiro passo: juntar.** A seta longa tem tamanho 5 e ângulo $\theta$. E ela
 é o ponto do ciclo de ângulo $\theta$, esticado 5 vezes:
@@ -270,146 +356,101 @@ $$
 (4,\ 3) = 5 \times (\cos\theta,\ \sen\theta).
 $$
 
-Essa é a ideia inteira da lição. **Todo vetor é um ponto do ciclo
+Essa é a ideia principal da lição: **todo vetor é um ponto do ciclo
 trigonométrico, esticado até o tamanho certo.** O ponto do ciclo diz para onde
 a seta aponta. O número que multiplica diz quão comprida ela é.
 
-## 7. A ponte para a fórmula
+**A ponte para a fórmula.** O caso da padaria vira regra geral com duas
+garantias, ambas já estudadas:
 
-O modelo visual usou um caso particular: tamanho 5, coordenadas $(4,\ 3)$. Para
-transformar isso numa regra que vale para qualquer vetor, precisamos de duas
-garantias.
+- **O ponto do ciclo tem tamanho 1.** A seta da origem até
+  $(\cos\theta,\ \sen\theta)$ mede
+  $\sqrt{\cos^2\theta + \sen^2\theta} = \sqrt{1} = 1$, pela
+  [relação fundamental](./relacoes-fundamentais).
+- **Multiplicar por $r$ multiplica o tamanho por $r$.** É a regra
+  $\lVert k\vec{v} \rVert = \lvert k \rvert \times \lVert \vec{v} \rVert$ da
+  pergunta 2 do resgate. Com $r$ positivo, $\lvert r \rvert = r$, e o lado
+  para onde a seta aponta não muda.
 
-**Garantia 1: o ponto do ciclo tem tamanho 1.** O ponto $(\cos\theta,\ \sen\theta)$
-está sobre a circunferência de raio 1. Então a seta da origem até ele mede 1.
-Em contas, isso é a relação fundamental de Pitágoras no ciclo:
-
-$$
-\lVert (\cos\theta,\ \sen\theta) \rVert = \sqrt{\cos^2\theta + \sen^2\theta} = \sqrt{1} = 1.
-$$
-
-**Garantia 2: multiplicar por $r$ multiplica o tamanho por $r$.** Na lição
-anterior, você viu que multiplicar por um número positivo estica a seta e
-mantém o lado para onde ela aponta. Falta conferir que o novo tamanho é
-**exatamente** $r$ vezes o antigo. Tome um vetor $(a,\ b)$ e um número $k$:
-
-$$
-\lVert k(a,\ b) \rVert = \lVert (ka,\ kb) \rVert
-= \sqrt{k^2 a^2 + k^2 b^2}
-= \sqrt{k^2 (a^2 + b^2)}
-= \sqrt{k^2} \times \sqrt{a^2 + b^2}.
-$$
-
-O que permitiu cada passo:
-
-- dentro da raiz, $k^2$ aparece nas duas parcelas, e por isso pode ser colocado
-  em evidência;
-- a raiz de um produto é o produto das raízes;
-- e $\sqrt{k^2}$ não é $k$: é $\lvert k \rvert$. Teste com $k = -2$:
-  $\sqrt{(-2)^2} = \sqrt{4} = 2$, e não $-2$.
-
-O resultado é:
-
-> $$\lVert k\vec{v} \rVert = \lvert k \rvert \times \lVert \vec{v} \rVert.$$
-
-**Conferindo com números.** Com $k = -2$ e $\vec{v} = (3,\ 4)$, temos
-$k\vec{v} = (-6,\ -8)$. O módulo é $\sqrt{36 + 64} = 10$. Pela fórmula,
-$\lvert -2 \rvert \times 5 = 10$ ✓. O sinal de menos inverteu o lado para onde a
-seta aponta, mas não mudou o tamanho dela.
-
-Com as duas garantias, a seta $r(\cos\theta,\ \sen\theta)$, para $r$ positivo:
-
-- aponta para o mesmo lado que o ponto do ciclo de ângulo $\theta$, porque $r$
-  é positivo;
-- tem tamanho $r \times 1 = r$.
-
-Ela é, portanto, **a** seta de tamanho $r$ e ângulo $\theta$.
-
-## 8. Formalização
-
-### 8.1 O ângulo do vetor
-
-> O **ângulo de um vetor** $\vec{v}$, diferente do vetor nulo, é o ângulo
-> $\theta$ do giro que leva o semieixo $x$ positivo até a seta de $\vec{v}$,
-> girando no sentido anti-horário. Costuma-se escolher $\theta$ entre $0^\circ$
-> e $360^\circ$.
-
-É a mesma convenção do ciclo trigonométrico: parte-se da direita e gira-se no
-sentido anti-horário.
-
-**Exemplo.** O vetor $(0,\ 5)$ aponta para cima. O giro que leva o semieixo $x$
-positivo até ele é de 90°. Então $\theta = 90^\circ$.
-
-**Contraexemplo.** O vetor $(-4,\ -3)$ forma um ângulo de cerca de $36{,}9^\circ$
-com o eixo $x$, se medirmos até a parte do eixo mais próxima da seta, que é a
-parte negativa. Mas $36{,}9^\circ$ **não** é o ângulo dele. Esse valor é o
-ângulo de referência, da
-[redução ao primeiro quadrante](./reducao-ao-primeiro-quadrante). O ângulo do
-vetor é medido sempre a partir do semieixo **positivo**, girando no sentido
-anti-horário. Para chegar a $(-4,\ -3)$, que está no terceiro quadrante, é
-preciso girar $180^\circ + 36{,}9^\circ = 216{,}9^\circ$.
-
-**Um ângulo guarda duas informações.** Na lição dos [vetores](./vetores), uma
-seta tinha **direção** (a reta sobre a qual ela está) e **sentido** (para qual
-dos dois lados dessa reta ela aponta). Um único ângulo entre 0° e 360° guarda as
-duas coisas ao mesmo tempo. Compare 30° e 210°: as duas setas estão sobre a
-mesma reta, porque $210^\circ = 30^\circ + 180^\circ$. Então elas têm a mesma
-direção. Mas apontam para lados opostos, e por isso têm sentidos opostos. Essa
-observação vai explicar, na seção 8.4, o erro do arco tangente.
-
-**O vetor nulo não tem ângulo.** O vetor $\vec{0} = (0,\ 0)$ não tem seta: o
-ponto de chegada é o próprio ponto de partida. Nenhum giro “leva até ele”.
-
-> **Atenção, navegação real.** Pilotos e marinheiros medem o rumo a partir do
-> **norte**, girando no sentido **horário**. Nesse sistema, “leste” é 90°. Esta
-> lição usa sempre a convenção da matemática (a partir do leste, sentido
-> anti-horário), e os enunciados dizem o ângulo nessa convenção: “30° com o
-> leste, girando para o norte”.
-
-### 8.2 De tamanho e ângulo para coordenadas
+Então a seta $r(\cos\theta,\ \sen\theta)$ aponta no ângulo $\theta$ e tem
+tamanho $r \times 1 = r$. Ela é **a** seta de tamanho $r$ e ângulo $\theta$.
 
 > Um vetor de módulo $r$ e ângulo $\theta$ é
-> $$\vec{v} = r(\cos\theta,\ \sen\theta) = (r\cos\theta,\ r\sen\theta).$$
-> Os números $r\cos\theta$ e $r\sen\theta$ são as **componentes** do vetor:
-> a componente horizontal e a componente vertical.
+>
+> $$
+> \vec{v} = r(\cos\theta,\ \sen\theta) = (r\cos\theta,\ r\sen\theta).
+> $$
+>
+> Achar essas duas coordenadas a partir do módulo e do ângulo chama-se
+> **decompor** o vetor.
 
-Achar as componentes a partir do módulo e do ângulo chama-se **decompor** o
-vetor.
+Mexa nos dois controles da figura. Com o tamanho fixo, mudar o ângulo faz a
+ponta correr sobre a circunferência tracejada. Com o ângulo fixo, mudar o
+tamanho faz a ponta andar sobre a mesma reta.
 
-**Exemplo.** O vetor de módulo 5 e ângulo $150^\circ$ é
+**Contraexemplo.** O vetor $(4,\ 3)$ **não** é $4(\cos 3^\circ,\ \sen 3^\circ)$,
+nem nada parecido. Na forma $r(\cos\theta,\ \sen\theta)$, o número de fora é o
+**tamanho** e o de dentro é o **ângulo**. As coordenadas 4 e 3 não são nem uma
+coisa nem outra: o tamanho de $(4,\ 3)$ é 5, e o ângulo é cerca de $36{,}9^\circ$.
+
+<details>
+<summary>Confira: escreva em coordenadas o vetor de tamanho 2 e ângulo 90°. Que seta é essa?</summary>
+
+$2(\cos 90^\circ,\ \sen 90^\circ) = 2 \times (0,\ 1) = (0,\ 2)$. É uma seta de
+tamanho 2 apontando para o norte, sem nenhum avanço para o leste. Na figura,
+ponha o ângulo em 90° e o tamanho em 2 para ver.
+
+</details>
+
+## As componentes são as sombras da seta nos eixos, já com sinal
+
+Os dois números $r\cos\theta$ e $r\sen\theta$ têm um nome e um desenho.
+
+Imagine o sol a pino sobre a seta: a sombra dela no chão (o eixo $x$) mostra
+quanto ela avança para o leste. Agora imagine uma luz vindo do lado: a sombra
+na parede (o eixo $y$) mostra quanto ela avança para o norte. Cada sombra é uma
+seta que sai da origem. Quando a sombra aponta para a esquerda ou para baixo,
+o número dela é negativo.
+
+> Os números $r\cos\theta$ e $r\sen\theta$ são as **componentes** do vetor: a
+> componente horizontal (a sombra no eixo $x$) e a componente vertical (a
+> sombra no eixo $y$).
+
+A figura começa com o vetor de tamanho 5 e ângulo 150°.
+
+<ComponentShadows />
+
+**Exemplo.** O vetor de tamanho 5 e ângulo $150^\circ$ é
 
 $$
 5(\cos 150^\circ,\ \sen 150^\circ) = 5 \times (-0{,}866;\ 0{,}5) \approx (-4{,}33;\ 2{,}5).
 $$
 
-<CartesianPlane
-  xMin={-6.5} xMax={1.5} yMin={-1} yMax={3.5}
-  xUnit={44}
-  functions={[{f: (x) => Math.sqrt(Math.max(0, 0.81 - x * x)), domain: [-0.779, 0.9], tone: 0}]}
-  segments={[
-    {from: [0, 0], to: [-4.33, 2.5], arrow: true, tone: 1},
-    {from: [0, 0], to: [-4.33, 0], arrow: true, tone: 2, label: 'r\\cos\\theta \\approx -4{,}33', dy: 40},
-    {from: [-4.33, 0], to: [-4.33, 2.5], arrow: true, tone: 3, label: 'r\\sen\\theta = 2{,}5', dx: -62, dy: 0},
-  ]}
-  labels={[
-    {at: [-4.33, 2.5], math: '\\vec{v}', dx: -6, dy: -20, tone: 1},
-    {at: [0.6, 1.45], math: '\\theta = 150^\\circ'},
-  ]}
-  caption="O vetor de módulo 5 e ângulo 150°, decomposto. A componente horizontal aponta para a esquerda e por isso é negativa; a vertical aponta para cima e é positiva."
-/>
+A sombra horizontal aponta para a esquerda, e a conta deu um número negativo.
+A sombra vertical aponta para cima, e a conta deu um número positivo. Ninguém
+precisou olhar o desenho para descobrir o sinal: o $\cos 150^\circ$ já é
+negativo.
 
-Repare que o sinal de cada componente **saiu sozinho** da conta. Ninguém
-precisou olhar o desenho para descobrir que a componente horizontal é negativa:
-o $\cos 150^\circ$ já é negativo. Essa é a vantagem da fórmula sobre o triângulo
-retângulo, como mostra a próxima seção.
+**Contraexemplo.** A sombra não é a seta inteira. A componente horizontal de
+um vetor de tamanho 5 a 60° é $5\cos 60^\circ = 2{,}5$, e não 5. Ela só vale o
+tamanho inteiro quando a seta está deitada sobre o eixo $x$ (ângulo 0° ou
+180°, este com sinal de menos).
 
-**Contraexemplo.** O vetor $(4,\ 3)$ **não** é $4(\cos 3^\circ,\ \sen 3^\circ)$, nem
-nada parecido. Na forma $r(\cos\theta,\ \sen\theta)$, o número de fora é o
-**tamanho** e o de dentro é o **ângulo**. As coordenadas $4$ e $3$ não são nem
-uma coisa nem outra. O tamanho de $(4,\ 3)$ é 5, e o ângulo é cerca de
-$36{,}9^\circ$, como a seção 8.4 vai calcular.
+Teste os botões. Em 240°, as duas sombras apontam para o lado negativo. Em
+315°, a horizontal é positiva e a vertical é negativa. Os sinais seguem os
+quadrantes do [ciclo](./ciclo-trigonometrico).
 
-### 8.3 Por que a fórmula concorda com o triângulo retângulo
+<details>
+<summary>Confira: sem calcular, diga o sinal de cada componente de um vetor de tamanho 3 e ângulo 200°.</summary>
+
+200° está entre 180° e 270°, no terceiro quadrante. Ali a seta aponta para a
+esquerda e para baixo. As duas sombras apontam para o lado negativo, e as duas
+componentes são negativas. Com a calculadora:
+$3\cos 200^\circ \approx -2{,}82$ e $3\sen 200^\circ \approx -1{,}03$.
+
+</details>
+
+## O triângulo retângulo dá o tamanho das sombras, mas não o sinal
 
 Em [seno, cosseno e tangente](./razoes-trigonometricas), o drone voou 200 m a
 35° do leste, e as componentes foram os catetos de um triângulo retângulo:
@@ -420,19 +461,40 @@ $$
 $$
 
 os mesmos números. Para qualquer ângulo entre 0° e 90°, as duas contas são a
-mesma conta, porque o ciclo trigonométrico concorda com o triângulo retângulo
-nesse intervalo — foi o que a lição do ciclo verificou.
+mesma conta. O motivo é que, nesse intervalo, o ciclo trigonométrico concorda
+com o triângulo retângulo; a lição do ciclo verificou isso.
 
-A diferença aparece fora do primeiro quadrante. Num vetor de ângulo 150°, o
-triângulo retângulo desenhado sob a seta tem ângulo de 30° junto à origem, e
-catetos positivos, porque lados de triângulo não têm sinal. Quem usa só o
-triângulo precisa olhar o desenho e **acrescentar o sinal à mão**. A fórmula
-$r(\cos\theta,\ \sen\theta)$ não precisa disso: o sinal vem do cosseno e do
-seno, que já são negativos nos quadrantes certos.
+A diferença aparece fora do primeiro quadrante. A figura desenha o triângulo
+retângulo sob a seta de 150°.
 
-### 8.4 De coordenadas para tamanho e ângulo
+<ComponentShadows triangle presets={[{r: 5, deg: 150}, {r: 5, deg: 35}, {r: 4, deg: 240}, {r: 4, deg: 315}]} />
 
-O caminho de volta tem duas partes.
+O triângulo tem ângulo de 30° junto à origem (o ângulo de referência) e catetos
+$5\cos 30^\circ \approx 4{,}33$ e $5\sen 30^\circ = 2{,}5$. Os dois são
+**positivos**, porque lados de triângulo são comprimentos, e comprimento não tem
+sinal. Mas a componente horizontal é $-4{,}33$.
+
+Quem usa só o triângulo precisa olhar o desenho e **acrescentar o sinal à mão**.
+A fórmula $r(\cos\theta,\ \sen\theta)$ não precisa disso: o sinal vem do cosseno
+e do seno, que já são negativos nos quadrantes certos.
+
+**Em resumo:** o triângulo dá o **tamanho** de cada componente; a
+fórmula do ciclo dá a componente **com sinal**.
+
+<details>
+<summary>Confira: um aluno decompôs o vetor de tamanho 4 e ângulo 240° pelo triângulo e escreveu (2; 3,46). O que ele esqueceu?</summary>
+
+Os tamanhos estão certos: a referência de 240° é 60°, e
+$4\cos 60^\circ = 2$, $4\sen 60^\circ \approx 3{,}46$. Mas 240° está no terceiro
+quadrante, onde a seta aponta para a esquerda e para baixo. As duas componentes
+são negativas: $(-2;\ -3{,}46)$. A fórmula dá isso direto, porque
+$\cos 240^\circ = -0{,}5$ e $\sen 240^\circ \approx -0{,}866$.
+
+</details>
+
+## No caminho de volta, a divisão b/a enxerga a reta, não o lado
+
+Agora a segunda tradução: de coordenadas $(a,\ b)$ para tamanho e ângulo.
 
 **O tamanho** é o módulo, e já sabemos calculá-lo:
 
@@ -440,141 +502,256 @@ $$
 r = \lVert (a,\ b) \rVert = \sqrt{a^2 + b^2}.
 $$
 
-**O ângulo** pede mais cuidado. Comparando $(a,\ b) = (r\cos\theta,\ r\sen\theta)$
-coordenada com coordenada, temos $a = r\cos\theta$ e $b = r\sen\theta$.
-Dividindo a segunda igualdade pela primeira (quando $a$ não é zero), o $r$ se
-cancela:
+**O ângulo** pede mais cuidado. Este é o ponto que mais confunde nesta lição,
+então vamos devagar.
+
+Pela seção anterior, $a = r\cos\theta$ e $b = r\sen\theta$. Dividindo a segunda
+igualdade pela primeira (quando $a$ não é zero), o $r$ se cancela, porque é
+fator de cima e de baixo:
 
 $$
 \frac{b}{a} = \frac{r\sen\theta}{r\cos\theta} = \frac{\sen\theta}{\cos\theta} = \tg\theta.
 $$
 
 Então o ângulo é **um** ângulo cuja tangente vale $\frac{b}{a}$. A tentação é
-escrever $\theta = \arctg\frac{b}{a}$ e parar ali. Esse é o ponto que mais
-confunde nesta lição, então vamos devagar.
+escrever $\theta = \arctg\frac{b}{a}$ e parar ali.
 
-**Por que o arco tangente erra.** Olhe os vetores $(-3,\ 4)$ e $(3,\ -4)$. A
-divisão dá o mesmo número para os dois:
+**O que a divisão guarda.** O número $\frac{b}{a}$ é a inclinação da reta que
+passa pela origem e pela ponta da seta: anda-se $a$ na horizontal e $b$ na
+vertical. Só que a reta inteira tem a mesma inclinação dos dois lados da
+origem. Olhe os vetores $(-3,\ 4)$ e $(3,\ -4)$:
 
 $$
 \frac{4}{-3} = \frac{-4}{3} \approx -1{,}333.
 $$
 
-A divisão $\frac{b}{a}$ perdeu a informação de qual dos dois números era
-negativo. E os dois vetores são opostos: um é o outro multiplicado por $-1$.
-Eles estão sobre a mesma reta, apontando para lados contrários.
+A divisão perdeu a informação de qual dos dois números era negativo. Os dois
+vetores são opostos, um é o outro vezes $-1$, e estão sobre a mesma reta,
+apontando para lados contrários.
 
-<CartesianPlane
-  xMin={-4.2} xMax={4.6} yMin={-5} yMax={5}
-  xUnit={34}
-  lines={[{m: -1.3333333, n: 0, tone: 0, dashed: true}]}
-  functions={[
-    {f: (x) => Math.sqrt(Math.max(0, 0.64 - x * x)), domain: [-0.48, 0.8], tone: 1},
-    {f: (x) => -Math.sqrt(Math.max(0, 2.25 - x * x)), domain: [0.9, 1.5], tone: 2},
-  ]}
-  segments={[
-    {from: [0, 0], to: [-3, 4], arrow: true, tone: 1},
-    {from: [0, 0], to: [3, -4], arrow: true, tone: 2, dashed: true},
-  ]}
-  labels={[
-    {at: [-3, 4], math: '(-3,\\ 4)', dx: 40, dy: -4, tone: 1},
-    {at: [3, -4], math: '(3,\\ -4)', dx: -44, dy: 6, tone: 2},
-    {at: [0.55, 0.95], math: '126{,}9^\\circ', dx: 20, dy: -6, tone: 1},
-    {at: [1.6, -1.15], math: '-53{,}1^\\circ', dx: 34, dy: 8, tone: 2},
-  ]}
-  caption="O vetor (−3, 4), em azul, e o seu oposto (3, −4), em laranja tracejado, estão sobre a mesma reta. O arco tangente devolve −53,1°, que é o ângulo do vetor laranja. O ângulo do vetor azul é meia volta adiante: 126,9°."
-/>
+Na figura, a seta azul é o vetor. A reta cinza é tudo o que $\frac{b}{a}$
+guarda. A seta laranja tracejada aponta no ângulo que o arco tangente devolve.
+
+<ArctanHalfTurn />
 
 O $\arctg$ só devolve ângulos entre $-90^\circ$ e $90^\circ$. Esses ângulos
-apontam para a metade **direita** do plano, onde $a$ é positivo. Por isso:
+apontam para a metade **direita** do plano, onde a primeira coordenada é
+positiva. Por isso:
 
 - se $a$ é positivo, o vetor já está na metade direita, e o $\arctg$ acerta;
 - se $a$ é negativo, o vetor está na metade esquerda. O $\arctg$ devolve o
   ângulo do vetor oposto, que está na metade direita, sobre a mesma reta. Para
   chegar ao vetor certo, é preciso girar meia volta: **somar 180°**.
 
-Na linguagem da seção 8.1: a tangente enxerga a **direção** do vetor (a reta),
-mas não o **sentido** (o lado da reta). A informação do sentido está no sinal
-de $a$, e é ele que decide se a meia volta é necessária.
+Aperte o botão "Girar a seta laranja meia volta" com o vetor $(-3,\ 4)$: a
+laranja gira 180° e cai sobre a azul, em $-53{,}1^\circ + 180^\circ = 126{,}9^\circ$.
+Meia volta é o único giro que leva uma seta à oposta e mantém as duas na mesma
+reta. Um giro de outro tamanho tiraria a seta da reta.
 
-> **Ângulo de um vetor $(a,\ b)$ pelas coordenadas:**
-> 1. calcule $\alpha = \arctg\dfrac{b}{a}$;
-> 2. se $a > 0$, então $\theta = \alpha$;
-> 3. se $a < 0$, então $\theta = \alpha + 180^\circ$;
-> 4. se $a = 0$, não há divisão: o vetor é vertical, e $\theta = 90^\circ$ se
+Na linguagem da seção do ângulo: a tangente enxerga a **direção** do vetor (a
+reta), mas não o **sentido** (o lado da reta). A informação do sentido está no
+sinal de $a$, e é ele que decide se a meia volta é necessária.
+
+<details>
+<summary>Confira: os vetores (2, 6) e (−2, −6) dão o mesmo valor de b/a. O arco tangente acerta qual dos dois?</summary>
+
+Os dois dão $\frac{6}{2} = \frac{-6}{-2} = 3$, e $\arctg 3 \approx 71{,}6^\circ$.
+Esse ângulo aponta para a metade direita, onde está $(2,\ 6)$, que tem a
+primeira coordenada positiva. Para $(-2,\ -6)$, o ângulo certo é meia volta
+adiante: $71{,}6^\circ + 180^\circ = 251{,}6^\circ$.
+
+</details>
+
+## A regra do ângulo: arco tangente e, se a for negativo, meia volta
+
+A seção anterior vira uma receita. Use a figura abaixo como laboratório: escolha
+um vetor, aperte "Anotar este vetor na tabela" e repita com vetores dos quatro
+quadrantes. Repare em que linhas a meia volta foi necessária.
+
+<ArctanHalfTurn record initialA={1} initialB={2} presets={[[1, 2], [-1, 2], [-1, -2], [1, -2], [-5, 0], [0, -3]]} caption="Escolha um vetor e anote-o na tabela. A coluna “a é negativo?” decide se o ângulo do arco tangente precisa de meia volta." />
+
+A tabela mostra o padrão: a meia volta aparece exatamente nas linhas em que a
+primeira coordenada é negativa. O vetor $(-5,\ 0)$ é um caso que engana: a
+divisão $\frac{0}{-5} = 0$ existe, e $\arctg 0 = 0^\circ$ aponta para o leste.
+Mas a seta aponta para o oeste. Como $a = -5$ é negativo, a meia volta dá
+$180^\circ$. E com $a = 0$ a divisão nem existe: a seta está sobre o eixo
+vertical.
+
+> **Ângulo de um vetor $(a,\ b)$, diferente do nulo, pelas coordenadas:**
+>
+> 1. se $a = 0$, não há divisão: o vetor é vertical, e $\theta = 90^\circ$ se
 >    $b > 0$ ou $\theta = 270^\circ$ se $b < 0$;
+> 2. se $a$ não é zero, calcule $\alpha = \arctg\dfrac{b}{a}$;
+> 3. se $a > 0$, então $\theta = \alpha$;
+> 4. se $a < 0$, então $\theta = \alpha + 180^\circ$;
 > 5. se o resultado deu negativo e você quer o ângulo entre 0° e 360°, some
 >    360°. Os dois valores descrevem a mesma seta.
 
 **Conferir sempre.** Depois de achar $\theta$, calcule $r\cos\theta$ e
 $r\sen\theta$ e veja se voltam as coordenadas de partida. Para $(-3,\ 4)$:
 $5\cos 126{,}9^\circ \approx -3{,}0$ e $5\sen 126{,}9^\circ \approx 4{,}0$ ✓.
+Se você tivesse parado em $-53{,}1^\circ$, a conferência denunciaria o erro:
+$5\cos(-53{,}1^\circ) \approx 3{,}0$, e a coordenada era $-3$.
 
 **Um segundo caminho: pelo cosseno.** Como $a = r\cos\theta$, temos
 $\cos\theta = \frac{a}{r}$. O $\arccos$ devolve ângulos entre 0° e 180°, ou
 seja, só a metade **de cima** do plano. Por isso:
 
 - se $b \ge 0$, então $\theta = \arccos\frac{a}{r}$;
-- se $b < 0$, o vetor está na metade de baixo, e
+- se $b$ é negativo, o vetor está na metade de baixo, e
   $\theta = 360^\circ - \arccos\frac{a}{r}$.
 
-Os dois caminhos dão a mesma resposta. O caminho do arco tangente é o mais usado
+Os dois caminhos dão a mesma resposta. O do arco tangente é o mais usado,
 porque não exige calcular $r$ antes. O do arco cosseno é cômodo quando você já
 calculou o módulo. Em programação, a função `atan2(b, a)` recebe as **duas**
-coordenadas separadas, sem dividir, e faz essa correção sozinha — como a lição
-das [funções inversas](./funcoes-trigonometricas-inversas) comentou.
+coordenadas separadas, sem dividir, e faz essa correção sozinha, como a lição
+das [funções inversas](./funcoes-trigonometricas-inversas) mostrou com o braço
+robótico.
 
-### 8.5 Vetor unitário e normalização
+<details>
+<summary>Confira: ache o ângulo de (−1, −1) pela receita, e depois pelo caminho do cosseno.</summary>
+
+Pela receita: $\frac{-1}{-1} = 1$, e $\arctg 1 = 45^\circ$. A primeira
+coordenada é negativa, então $\theta = 45^\circ + 180^\circ = 225^\circ$.
+
+Pelo cosseno: $r = \sqrt{2} \approx 1{,}414$ e
+$\arccos\frac{-1}{1{,}414} \approx \arccos(-0{,}707) = 135^\circ$. Como
+$b = -1$ é negativo, $\theta = 360^\circ - 135^\circ = 225^\circ$. Os dois
+caminhos concordam.
+
+</details>
+
+## Um vetor unitário tem tamanho 1: a ponta dele cai sobre o ciclo
 
 > Um **vetor unitário** é um vetor de módulo 1.
 
+Com a cauda na origem, a ponta de um vetor unitário está a distância 1 da
+origem, ou seja, sobre o ciclo trigonométrico. Todo vetor da forma
+$(\cos\theta,\ \sen\theta)$ é unitário, porque é um ponto do ciclo.
+
+<CartesianPlane
+  xMin={-1.5} xMax={1.8} yMin={-1.4} yMax={1.5}
+  xUnit={96}
+  xStep={0.5} yStep={0.5}
+  xTicks={[{at: -1, label: '-1'}, {at: 0.5, label: '0{,}5'}, {at: 1, label: '1'}, {at: 1.5, label: '1{,}5'}]}
+  yTicks={[{at: 0.5, label: '0{,}5'}, {at: 1.5, label: '1{,}5'}]}
+  circles={[{center: [0, 0], r: 1, tone: 3, dashed: true}]}
+  segments={[
+    {from: [0, 0], to: [0.6, 0.8], arrow: true, tone: 3},
+    {from: [0, 0], to: [0, -1], arrow: true, tone: 3},
+    {from: [0, 0], to: [1, 1], arrow: true, tone: 2},
+  ]}
+  labels={[
+    {at: [0.6, 0.8], math: '(0{,}6;\\ 0{,}8)', dx: -62, dy: -6, tone: 3},
+    {at: [0, -1], math: '(0,\\ -1)', dx: 40, dy: 8, tone: 3},
+    {at: [1, 1], math: '(1,\\ 1)', dx: 36, dy: -6, tone: 2},
+  ]}
+  caption="O ciclo de raio 1 (verde tracejado). As setas verdes, (0,6; 0,8) e (0, −1), terminam sobre ele: são unitárias. A seta laranja, (1, 1), passa do ciclo: mede cerca de 1,41."
+/>
+
 **Exemplo.** $(0{,}6;\ 0{,}8)$ é unitário: $\sqrt{0{,}36 + 0{,}64} = \sqrt{1} = 1$.
-Todo vetor da forma $(\cos\theta,\ \sen\theta)$ é unitário, pela garantia 1 da
-seção 7.
+E $(0,\ -1)$ também: $\sqrt{0 + 1} = 1$.
 
 **Contraexemplo.** $(1,\ 1)$ **não** é unitário, embora as duas coordenadas
-valham 1. O módulo dele é $\sqrt{1 + 1} = \sqrt{2} \approx 1{,}414$. Ser
-unitário é uma condição sobre o **tamanho** da seta, não sobre os números que
-aparecem nas coordenadas.
+valham 1. O módulo dele é $\sqrt{1 + 1} = \sqrt{2} \approx 1{,}414$, e a ponta
+passa do ciclo. Ser unitário é uma condição sobre o **tamanho** da seta, não
+sobre os números que aparecem nas coordenadas.
+
+<details>
+<summary>Confira: (0,7; 0,7) é unitário? A ponta cai dentro do ciclo, sobre ele ou fora dele?</summary>
+
+$0{,}7^2 + 0{,}7^2 = 0{,}49 + 0{,}49 = 0{,}98$, e $\sqrt{0{,}98} \approx 0{,}99$.
+Não é unitário, por pouco: a ponta cai um pouco **dentro** do ciclo. Quem olha
+só o desenho pode se enganar; a conta decide.
+
+</details>
+
+## Normalizar é encolher a seta até a ponta tocar o ciclo
 
 Muitas vezes queremos o vetor unitário que aponta para o mesmo lado de um vetor
-dado. A fórmula da seção 7 diz como fazer: multiplicar um vetor de módulo $r$
-pelo número $\frac{1}{r}$ produz um vetor de módulo $\frac{1}{r} \times r = 1$.
-E como $\frac{1}{r}$ é positivo, o lado para onde a seta aponta não muda.
+dado. É o que o programador do jogo precisa: manter a direção do controle e
+trocar o tamanho por 1.
+
+O procedimento, com o vetor $(4,\ 3)$:
+
+1. Calcule o tamanho do vetor: $\sqrt{16 + 9} = 5$.
+2. Divida cada coordenada por esse tamanho: $\left(\frac{4}{5};\ \frac{3}{5}\right) = (0{,}8;\ 0{,}6)$.
+3. Confira: $0{,}8^2 + 0{,}6^2 = 1$ ✓.
+
+Na figura, a seta encolhe sobre a mesma reta, sem girar, até a ponta tocar o
+ciclo. Teste os outros vetores, e repare que um vetor mais curto que 1, como
+$(0{,}4;\ -0{,}3)$, estica em vez de encolher.
+
+<NormalizeShrink />
+
+**Por que funciona.** Dividir por 5 é multiplicar por $\frac{1}{5}$. Pela regra
+$\lVert k\vec{v} \rVert = \lvert k \rvert \times \lVert \vec{v} \rVert$, o novo
+tamanho é $\frac{1}{5} \times 5 = 1$. E como $\frac{1}{5}$ é positivo, o lado
+para onde a seta aponta não muda.
 
 > **Normalizar** um vetor $\vec{v}$, diferente do vetor nulo, é multiplicá-lo
 > por $\dfrac{1}{\lVert \vec{v} \rVert}$:
-> $$\frac{\vec{v}}{\lVert \vec{v} \rVert} = \frac{1}{\lVert \vec{v} \rVert}\,\vec{v}.$$
+>
+> $$
+> \frac{\vec{v}}{\lVert \vec{v} \rVert} = \frac{1}{\lVert \vec{v} \rVert}\,\vec{v}.
+> $$
+>
 > O resultado é o vetor unitário com o mesmo ângulo de $\vec{v}$.
 
-Escrever $\vec{v}$ dividido por um número é outra forma de escrever
-$\vec{v}$ multiplicado pelo inverso desse número. Na prática, divide-se cada
-coordenada pelo módulo.
+Escrever $\vec{v}$ dividido por um número é outra forma de escrever $\vec{v}$
+multiplicado pelo inverso desse número. Na prática, divide-se cada coordenada
+pelo módulo.
 
-**Exemplo.** Normalizar $(4,\ 3)$: o módulo é 5, e
-$\frac{1}{5}(4,\ 3) = (0{,}8;\ 0{,}6)$. É a seta curta do modelo visual.
+**Erro comum: dividir pela soma das coordenadas.** Para $(4,\ 3)$, a conta
+errada faz $\left(\frac{4}{7};\ \frac{3}{7}\right)$, porque $4 + 3 = 7$. Aperte
+"Mostrar o erro" na figura: a seta laranja aponta para o lado certo, mas a
+ponta para antes do ciclo. O tamanho dela é
+$\sqrt{\frac{16}{49} + \frac{9}{49}} = \frac{5}{7} \approx 0{,}71$, e não 1.
+Divide-se pelo **módulo**, 5.
 
 **Contraexemplo.** O vetor nulo **não** pode ser normalizado. O módulo dele é 0,
-e dividir por 0 não está definido. Isso combina com a seção 8.1: o vetor nulo
-não aponta para lado nenhum, então não existe “o unitário que aponta para o
-mesmo lado que ele”.
+e dividir por 0 não está definido. Isso combina com a seção do ângulo: o vetor
+nulo não aponta para lado nenhum, então não existe "o unitário que aponta para
+o mesmo lado que ele". Na figura, o botão $(0,\ 0)$ não tem seta para encolher.
 
-Com a normalização, a forma módulo e ângulo ganha uma leitura nova. Todo vetor
-diferente do nulo é
+Com a normalização, a forma de tamanho e ângulo ganha uma leitura nova. Todo
+vetor diferente do nulo é
 
 $$
 \vec{v} = \underbrace{\lVert \vec{v} \rVert}_{\text{quão comprido}} \times \underbrace{\frac{\vec{v}}{\lVert \vec{v} \rVert}}_{\text{para onde aponta}}.
 $$
 
 O primeiro fator é um número. O segundo é um vetor unitário, que é o ponto
-$(\cos\theta,\ \sen\theta)$ do ciclo.
+$(\cos\theta,\ \sen\theta)$ do ciclo. É a mesma ideia da seção do ciclo
+esticado, agora lida ao contrário: lá esticamos o ponto do ciclo até o vetor;
+aqui encolhemos o vetor até o ponto do ciclo.
 
-## 9. Resolvendo o problema do avião
+<details>
+<summary>Confira: normalize (−3, 4). Em que ponto do ciclo a ponta cai?</summary>
+
+O módulo é $\sqrt{9 + 16} = 5$. Dividindo cada coordenada por 5:
+$\left(-\frac{3}{5};\ \frac{4}{5}\right) = (-0{,}6;\ 0{,}8)$. Confira:
+$0{,}36 + 0{,}64 = 1$ ✓. A ponta cai no ponto do ciclo de ângulo
+$126{,}9^\circ$, o mesmo ângulo de $(-3,\ 4)$.
+
+</details>
+
+## Resolvendo o problema do avião
 
 Agora temos as duas traduções. O plano é: decompor cada velocidade, somar as
 componentes e recompor o resultado.
 
-**Passo 1: decompor a velocidade do avião em relação ao ar.** Módulo 500,
+**Previsão.** O vento tem uma parte contrária ao avanço do avião, porque o
+avião sobe um pouco para o norte e o vento empurra para o sul. Então a
+velocidade deve cair um pouco abaixo de 500, e o ângulo deve ficar abaixo de
+30°. Pela desigualdade triangular, da lição da [soma de vetores](./soma-de-vetores),
+o tamanho da soma não pode passar de $500 + 60 = 560$. A mesma regra impede que
+ele fique abaixo de $500 - 60 = 440$: no triângulo da soma, o lado de 500 não
+pode ser maior que a soma dos outros dois.
+
+<PlaneWind mode="solved" />
+
+**Passo 1: decompor a velocidade do avião em relação ao ar.** Tamanho 500,
 ângulo 30°:
 
 $$
@@ -591,7 +768,7 @@ $$
 60(\cos 270^\circ,\ \sen 270^\circ) = 60 \times (0,\ -1) = (0,\ -60).
 $$
 
-Esse resultado confere com o bom senso: o vento não empurra nada para o leste e
+Esse resultado confere com o desenho: o vento não empurra nada para o leste e
 empurra 60 km/h para o sul, que é o sentido negativo do eixo vertical.
 
 **Passo 3: somar as componentes.** A velocidade em relação ao chão é a soma das
@@ -601,67 +778,45 @@ $$
 (433{,}0;\ 250{,}0) + (0,\ -60) = (433{,}0;\ 190{,}0).
 $$
 
-**Passo 4: recompor.** O módulo é
+**Passo 4: recompor.** O tamanho é
 
 $$
 \sqrt{433{,}0^2 + 190{,}0^2} \approx 472{,}9 \text{ km/h}.
 $$
 
 Para o ângulo, a primeira coordenada é positiva, então o arco tangente dá a
-resposta sem correção:
+resposta sem meia volta:
 
 $$
 \theta = \arctg\frac{190{,}0}{433{,}0} \approx \arctg 0{,}4388 \approx 23{,}7^\circ.
 $$
 
-<CartesianPlane
-  xMin={-0.6} xMax={5.4} yMin={-0.6} yMax={3.2}
-  xUnit={64}
-  xTicks={[
-    {at: 1, label: '100'},
-    {at: 2, label: '200'},
-    {at: 3, label: '300'},
-    {at: 4, label: '400'},
-    {at: 5, label: '500'},
-  ]}
-  yTicks={[
-    {at: 1, label: '100'},
-    {at: 2, label: '200'},
-    {at: 3, label: '300'},
-  ]}
-  segments={[
-    {from: [0, 0], to: [4.33, 2.5], arrow: true, tone: 1, label: '500', dx: -14, dy: -16},
-    {from: [4.33, 2.5], to: [4.33, 1.9], arrow: true, tone: 2, label: '60', dx: 22, dy: 0},
-    {from: [0, 0], to: [4.33, 1.9], arrow: true, tone: 3, label: '\\approx 472{,}9', dx: 18, dy: 20},
-  ]}
-  caption="A seta do vento (laranja) começa na ponta da seta do avião (azul). A soma, em verde, vai da origem até a ponta do vento: 472,9 km/h, a 23,7° do leste."
-/>
-
 **A resposta.** Em relação ao chão, o avião se move a cerca de **472,9 km/h**,
-numa direção de **23,7°** com o leste. É exatamente o que o GPS mostrava: menos
-que 500 km/h e uma direção mais baixa que 30°.
+numa direção de **23,7°** com o leste. É o que o GPS mostrava: menos que
+500 km/h e uma direção mais baixa que 30°.
 
-**Conferindo a resposta com o que já sabemos.**
+**Conferindo a resposta.**
 
-- O vento tem uma parte contrária ao movimento do avião (o avião sobe um pouco
-  para o norte e o vento empurra para o sul). Por isso a velocidade caiu.
-- Pela lição da [soma de vetores](./soma-de-vetores), o módulo da soma não pode
-  passar de $500 + 60 = 560$, nem ficar abaixo de $500 - 60 = 440$. O valor
-  472,9 está entre os dois ✓.
+- A previsão se confirmou: 472,9 está entre 440 e 560 ✓, e 23,7° é menos
+  que 30° ✓.
 - Recompondo: $472{,}9 \times \cos 23{,}7^\circ \approx 433{,}0$ e
   $472{,}9 \times \sen 23{,}7^\circ \approx 190{,}0$ ✓.
 
 O exercício 14 pergunta o que o piloto precisaria fazer para avançar, em
 relação ao chão, exatamente na direção de 30°.
 
-## 10. Exemplos resolvidos
+## Exemplos resolvidos
 
 ### Exemplo 1: decompor no primeiro quadrante
 
 Um cabo puxa com força de 8 newtons (N), formando 60° com a horizontal. Quais
 são as componentes da força?
 
-O módulo é 8 e o ângulo é 60°. Usando os
+**Previsão.** 60° está mais perto da vertical (90°) que da horizontal (0°).
+Então a componente vertical deve ser maior que a horizontal, e as duas devem
+ser positivas e menores que 8.
+
+O tamanho é 8 e o ângulo é 60°. Pelos
 [ângulos notáveis](./angulos-notaveis), $\cos 60^\circ = \frac{1}{2}$ e
 $\sen 60^\circ = \frac{\sqrt{3}}{2}$:
 
@@ -669,18 +824,23 @@ $$
 8(\cos 60^\circ,\ \sen 60^\circ) = \left(8 \times \tfrac{1}{2};\ 8 \times \tfrac{\sqrt{3}}{2}\right) = (4;\ 4\sqrt{3}) \approx (4;\ 6{,}93).
 $$
 
-O cabo puxa 4 N na horizontal e cerca de 6,93 N na vertical.
+O cabo puxa 4 N na horizontal e cerca de 6,93 N na vertical. A previsão se
+confirmou.
 
-**Conferência:** $\sqrt{4^2 + 6{,}93^2} = \sqrt{16 + 48{,}0} = \sqrt{64{,}0} = 8$ ✓.
+**Conferência:** $\sqrt{4^2 + (4\sqrt{3})^2} = \sqrt{16 + 48} = \sqrt{64} = 8$ ✓.
 Os 8 N do cabo voltaram.
 
 ### Exemplo 2: decompor no segundo quadrante
 
-*Pause e tente antes de ler.* Escreva em coordenadas o vetor de módulo 10 e
+*Pause e tente antes de ler.* Escreva em coordenadas o vetor de tamanho 10 e
 ângulo 135°.
 
-O ângulo 135° está no segundo quadrante, com referência
-$180^\circ - 135^\circ = 45^\circ$. O cosseno é negativo e o seno é positivo:
+**Previsão.** 135° fica exatamente no meio entre o norte (90°) e o oeste
+(180°). Então as duas componentes devem ter o mesmo tamanho, com a horizontal
+negativa e a vertical positiva. Cada uma deve ser menor que 10.
+
+A referência de 135° é $180^\circ - 135^\circ = 45^\circ$. No segundo quadrante,
+o cosseno é negativo e o seno é positivo:
 
 $$
 \cos 135^\circ = -\tfrac{\sqrt{2}}{2}, \qquad \sen 135^\circ = \tfrac{\sqrt{2}}{2}.
@@ -692,15 +852,18 @@ $$
 10(\cos 135^\circ,\ \sen 135^\circ) = (-5\sqrt{2};\ 5\sqrt{2}) \approx (-7{,}07;\ 7{,}07).
 $$
 
-**Conferência pelo desenho:** 135° fica exatamente no meio entre o norte (90°) e
-o oeste (180°). Por isso as duas componentes têm o mesmo tamanho, com a
-horizontal negativa. É o que a conta deu.
+As duas componentes têm o mesmo tamanho, 7,07, com a horizontal negativa, como
+previsto.
 
 ### Exemplo 3: recompor um vetor do terceiro quadrante
 
-*Pause e tente antes de ler.* Ache o módulo e o ângulo do vetor $(-6,\ -8)$.
+*Pause e tente antes de ler.* Ache o tamanho e o ângulo do vetor $(-6,\ -8)$.
 
-**Módulo:** $\sqrt{(-6)^2 + (-8)^2} = \sqrt{36 + 64} = \sqrt{100} = 10$.
+**Previsão.** As duas coordenadas são negativas: a seta aponta para a esquerda
+e para baixo, no terceiro quadrante. O ângulo deve ficar entre 180° e 270°. E
+$(-6,\ -8)$ é $-2$ vezes $(3,\ 4)$, então o tamanho deve ser $2 \times 5 = 10$.
+
+**Tamanho:** $\sqrt{(-6)^2 + (-8)^2} = \sqrt{36 + 64} = \sqrt{100} = 10$.
 
 **Ângulo:** a divisão dá $\frac{-8}{-6} = \frac{4}{3}$, e
 $\arctg\frac{4}{3} \approx 53{,}1^\circ$. Mas a primeira coordenada, $-6$, é
@@ -713,10 +876,10 @@ $$
 
 **Conferência:** $10\cos 233{,}1^\circ \approx -6{,}0$ e
 $10\sen 233{,}1^\circ \approx -8{,}0$ ✓. E $233{,}1^\circ$ está entre 180° e
-270°, no terceiro quadrante, onde as duas coordenadas são negativas ✓.
+270°, como a previsão dizia.
 
 Se você tivesse parado em $53{,}1^\circ$, a seta apontaria para cima e para a
-direita — o oposto exato da seta verdadeira.
+direita: o oposto exato da seta verdadeira.
 
 ### Exemplo 4: o personagem que corre mais na diagonal
 
@@ -730,27 +893,12 @@ segundo. O programador leu o controle e obteve:
 Ele calculou a velocidade como $5 \times (\text{vetor do controle})$. Qual é o
 problema na diagonal, e como corrigi-lo?
 
-<CartesianPlane
-  xMin={-0.4} xMax={1.7} yMin={-0.4} yMax={1.6}
-  xUnit={130}
-  xStep={0.5} yStep={0.5}
-  xTicks={[{at: 0.5, label: '0{,}5'}, {at: 1, label: '1'}, {at: 1.5, label: '1{,}5'}]}
-  yTicks={[{at: 0.5, label: '0{,}5'}, {at: 1, label: '1'}, {at: 1.5, label: '1{,}5'}]}
-  circles={[{center: [0, 0], r: 1, tone: 3, dashed: true}]}
-  segments={[
-    {from: [0, 0], to: [1, 1], arrow: true, tone: 2},
-    {from: [0, 0], to: [0.7071, 0.7071], arrow: true, tone: 1},
-  ]}
-  labels={[
-    {at: [1, 1], math: '(1,\\ 1)', dx: 34, dy: -4, tone: 2},
-    {at: [0.7071, 0.7071], math: '(0{,}71;\\ 0{,}71)', dx: 66, dy: 10, tone: 1},
-  ]}
-  caption="O vetor (1, 1) passa da circunferência de raio 1: ele mede cerca de 1,41. O vetor normalizado (0,71; 0,71) aponta para o mesmo lado e termina exatamente sobre a circunferência."
-/>
+**Previsão.** A seção do vetor unitário mostrou que $(1,\ 1)$ passa do ciclo:
+ele é mais comprido que 1. Então, multiplicado por 5, ele deve dar mais que 5.
 
 **O problema.** Nas direções retas, a velocidade sai certa:
-$5 \times (1,\ 0) = (5,\ 0)$, de módulo 5. Mas na diagonal,
-$5 \times (1,\ 1) = (5,\ 5)$, e o módulo é
+$5 \times (1,\ 0) = (5,\ 0)$, de tamanho 5. Mas na diagonal,
+$5 \times (1,\ 1) = (5,\ 5)$, e o tamanho é
 
 $$
 \sqrt{25 + 25} = \sqrt{50} \approx 7{,}07 \text{ m/s}.
@@ -766,14 +914,19 @@ $$
 5 \times (0{,}707;\ 0{,}707) \approx (3{,}54;\ 3{,}54).
 $$
 
-O novo módulo é $\sqrt{3{,}54^2 + 3{,}54^2} \approx 5{,}0$ ✓. A direção continua
-diagonal, e a velocidade agora é a mesma em todas as direções.
+O novo tamanho é $\sqrt{3{,}54^2 + 3{,}54^2} \approx 5{,}0$ ✓. A direção continua
+diagonal, e a velocidade agora é a mesma em todas as direções. Na figura da
+seção de normalizar, o botão $(1,\ 1)$ mostra essa seta encolhendo até o ciclo.
 
 ### Exemplo 5: duas cordas puxando uma caixa
 
 *Pause e tente antes de ler.* Duas pessoas puxam uma caixa pesada com cordas.
 Uma puxa com 300 N, a 20° do leste. A outra puxa com 200 N, a 75° do leste.
-Qual é a força total, em módulo e ângulo?
+Qual é a força total, em tamanho e ângulo?
+
+**Previsão.** As cordas não puxam para o mesmo lado, então a força total deve
+ser menor que $300 + 200 = 500$ N. O ângulo deve ficar entre 20° e 75°, mais
+perto de 20°, que é a direção da corda mais forte.
 
 **Decompor as duas forças:**
 
@@ -799,7 +952,7 @@ $$
 \theta \approx \arctg\frac{295{,}8}{333{,}7} \approx 41{,}6^\circ.
 $$
 
-A primeira coordenada é positiva, por isso não houve correção de quadrante.
+A primeira coordenada é positiva, por isso não houve meia volta.
 
 <CartesianPlane
   xMin={-0.5} xMax={4.3} yMin={-0.5} yMax={3.5}
@@ -823,16 +976,18 @@ A primeira coordenada é positiva, por isso não houve correção de quadrante.
   caption="As duas forças encadeadas, ponta com cauda. Cada unidade da malha vale 100 N. A força total (verde) mede cerca de 445,9 N, a 41,6° do leste."
 />
 
-**Conferência com o que já sabemos:** a força total, 445,9 N, é menor que
-$300 + 200 = 500$ N. Isso era de esperar, porque as cordas não puxam para o
-mesmo lado. E o ângulo, 41,6°, fica entre 20° e 75°, mais perto de 20°, que é a
-direção da corda mais forte.
+**Conferência com a previsão:** 445,9 N é menos que 500 N ✓, e 41,6° fica entre
+20° e 75°, mais perto de 20° ✓.
 
 ### Exemplo 6: dois ângulos para a mesma seta
 
-*Pause e tente antes de ler.* Ache o módulo e o ângulo de $(5,\ -12)$.
+*Pause e tente antes de ler.* Ache o tamanho e o ângulo de $(5,\ -12)$.
 
-**Módulo:** $\sqrt{25 + 144} = \sqrt{169} = 13$.
+**Previsão.** A seta aponta para a direita e para baixo, no quarto quadrante.
+O ângulo deve ficar entre 270° e 360°, ou, se for escrito como giro no sentido
+horário, entre $-90^\circ$ e $0^\circ$.
+
+**Tamanho:** $\sqrt{25 + 144} = \sqrt{169} = 13$.
 
 **Ângulo:** a primeira coordenada, 5, é positiva. Então o arco tangente acerta
 a seta:
@@ -847,31 +1002,31 @@ $-67{,}4^\circ + 360^\circ = 292{,}6^\circ$.
 
 Os dois números descrevem a **mesma** seta, no quarto quadrante. A diferença
 entre eles é uma volta inteira, e uma volta inteira não muda para onde a seta
-aponta — como no ciclo trigonométrico, em que $-30^\circ$ e $330^\circ$ caem no
-mesmo ponto.
+aponta. No ciclo trigonométrico acontece o mesmo: $-30^\circ$ e $330^\circ$
+caem no mesmo ponto.
 
-## 11. Erros comuns
+## Erros comuns
 
 > **Erro 1: usar o arco tangente sem olhar o sinal da primeira coordenada.** É o
 > erro central desta lição. Para $(-3,\ 4)$, o $\arctg$ devolve $-53{,}1^\circ$,
 > que é o ângulo de $(3,\ -4)$: a seta oposta. A divisão $\frac{b}{a}$ não
 > distingue um vetor do seu oposto. Sempre que $a$ for negativo, some 180°. E
-> confira: $5\cos(-53{,}1^\circ) \approx 3$, mas a coordenada era $-3$ — a
+> confira: $5\cos(-53{,}1^\circ) \approx 3$, mas a coordenada era $-3$. A
 > conferência denuncia o erro na hora.
 
 > **Erro 2: usar o cosseno na componente errada.** O cosseno vai na componente
 > horizontal **só quando o ângulo é medido a partir do eixo horizontal**. Se o
-> enunciado diz “a corda faz 25° com a **vertical**”, o ângulo com a horizontal
+> enunciado diz "a corda faz 25° com a **vertical**", o ângulo com a horizontal
 > é $90^\circ - 25^\circ = 65^\circ$. Teste com 50 N: a componente horizontal é
 > $50\cos 65^\circ \approx 21{,}1$ N, e não $50\cos 25^\circ \approx 45{,}3$ N.
 > Em caso de dúvida, converta primeiro para o ângulo a partir do semieixo $x$
 > positivo e só então use a fórmula.
 
-> **Erro 3: somar vetores pelos módulos e pelos ângulos.** No problema do avião,
-> somar os módulos ($500 + 60 = 560$) e tirar a média dos ângulos
+> **Erro 3: somar vetores pelos tamanhos e pelos ângulos.** No problema do
+> avião, somar os tamanhos ($500 + 60 = 560$) e tirar a média dos ângulos
 > ($\frac{30^\circ + 270^\circ}{2} = 150^\circ$) produz um avião voando para o
-> noroeste a 560 km/h. A resposta certa é 472,9 km/h a 23,7°. Módulos e ângulos
-> não se somam: a soma de vetores é feita nas componentes.
+> noroeste a 560 km/h. A resposta certa é 472,9 km/h a 23,7°. Tamanhos e
+> ângulos não se somam: a soma de vetores é feita nas componentes.
 
 > **Erro 4: normalizar dividindo pela soma das coordenadas.** Para $(3,\ 4)$, a
 > conta errada faz $\left(\frac{3}{7};\ \frac{4}{7}\right)$, porque
@@ -888,7 +1043,7 @@ mesmo ponto.
 > Teste rápido antes de começar: $\cos 60$ deve dar 0,5. Em radianos, a
 > calculadora daria cerca de $-0{,}95$.
 
-## 12. Perguntas de verificação
+## Perguntas de verificação
 
 1. Por que o vetor $r(\cos\theta,\ \sen\theta)$ tem módulo $r$, qualquer que
    seja o ângulo $\theta$?
@@ -929,10 +1084,10 @@ mesmo ponto.
    lado para onde ela aponta. Só um número negativo inverteria o sentido.
 6. Porque $500 - 60$ só valeria se o vento soprasse exatamente contra o avião,
    na mesma reta e no sentido oposto. O vento sopra para o sul, que faz um
-   ângulo de 120° com a direção do avião (de 30° até 270° são 240° no sentido
-   anti-horário, ou seja, 120° pelo outro lado). Só uma parte do vento atrapalha
-   o avanço; a outra desvia o avião. Por isso o resultado, 472,9, fica entre
-   $500 - 60 = 440$ e $500 + 60 = 560$.
+   ângulo de 120° com a direção do avião: de 30° até 270° são 240° no sentido
+   anti-horário, e portanto 120° pelo outro lado. Só uma parte do vento
+   atrapalha o avanço; a outra desvia o avião. Por isso o resultado, 472,9,
+   fica entre $500 - 60 = 440$ e $500 + 60 = 560$.
 7. Ninguém. A diferença entre os dois é $360^\circ$, uma volta inteira, e uma
    volta inteira leva a seta de volta ao mesmo lugar. O primeiro é um giro no
    sentido horário; o segundo, no anti-horário. O enunciado decide qual forma
@@ -940,16 +1095,16 @@ mesmo ponto.
 
 </details>
 
-## 13. Exercícios
+## Exercícios
 
 ### 1. Reconhecimento
 
 1. Quais destes vetores são unitários? a) $(0{,}6;\ -0{,}8)$ &nbsp;
-   b) $(1,\ 1)$ &nbsp; c) $(0,\ -1)$ &nbsp; d) $(0{,}5;\ 0{,}5)$ &nbsp;
+   b) $(0{,}7;\ 0{,}7)$ &nbsp; c) $(0,\ -1)$ &nbsp; d) $(0{,}5;\ 0{,}5)$ &nbsp;
    e) $\left(\tfrac{\sqrt{3}}{2};\ \tfrac{1}{2}\right)$
-2. Sem calcular, diga o sinal de cada componente do vetor: a) módulo 5,
-   ângulo 110° &nbsp; b) módulo 3, ângulo 250° &nbsp; c) módulo 7,
-   ângulo 300° &nbsp; d) módulo 2, ângulo 45°
+2. Sem calcular, diga o sinal de cada componente do vetor: a) tamanho 5,
+   ângulo 110° &nbsp; b) tamanho 3, ângulo 250° &nbsp; c) tamanho 7,
+   ângulo 300° &nbsp; d) tamanho 2, ângulo 45°
 3. Para cada vetor, diga se $\arctg\frac{b}{a}$ já dá o ângulo certo ou se
    precisa de correção: a) $(2,\ 5)$ &nbsp; b) $(-2,\ 5)$ &nbsp;
    c) $(-2,\ -5)$ &nbsp; d) $(2,\ -5)$
@@ -957,7 +1112,7 @@ mesmo ponto.
 ### 2. Explicação
 
 4. Explique, com suas palavras, por que todo vetor diferente do nulo pode ser
-   escrito como “um número vezes um ponto do ciclo trigonométrico”. O que o
+   escrito como "um número vezes um ponto do ciclo trigonométrico". O que o
    número diz, e o que o ponto diz?
 5. Explique por que os vetores $(-3,\ 4)$ e $(3,\ -4)$ produzem o mesmo valor
    de $\arctg\frac{b}{a}$, e o que isso tem a ver com a correção de 180°.
@@ -966,11 +1121,11 @@ mesmo ponto.
 
 ### 3. Aplicação direta
 
-7. Escreva em coordenadas o vetor de: a) módulo 6, ângulo 30° &nbsp;
-   b) módulo 4, ângulo 90° &nbsp; c) módulo 10, ângulo 240° &nbsp;
-   d) módulo 2, ângulo 315°
-8. Ache o módulo e o ângulo, entre 0° e 360°, de: a) $(5,\ 12)$ &nbsp;
-   b) $(-8,\ 6)$ &nbsp; c) $(-1,\ -1)$ &nbsp; d) $(0,\ -7)$
+7. Escreva em coordenadas o vetor de: a) tamanho 6, ângulo 30° &nbsp;
+   b) tamanho 4, ângulo 90° &nbsp; c) tamanho 10, ângulo 240° &nbsp;
+   d) tamanho 2, ângulo 315°
+8. Ache o tamanho e o ângulo, entre 0° e 360°, de: a) $(5,\ 12)$ &nbsp;
+   b) $(-8,\ 6)$ &nbsp; c) $(-1,\ 1)$ &nbsp; d) $(0,\ -7)$
 9. Normalize: a) $(6,\ 8)$ &nbsp; b) $(-5,\ 12)$ &nbsp; c) $(2,\ -2)$
 
 ### 4. Variação
@@ -994,19 +1149,19 @@ mesmo ponto.
     60 km/h para o sul. Para que o avião avance, **em relação ao chão**,
     exatamente na direção de 30°, para que ângulo $\varphi$ o piloto deve
     apontar o nariz? Qual será então a velocidade em relação ao chão?
-15. Um barco atravessa um rio de 120 m de largura, com margens retas na direção
-    leste–oeste. O motor empurra o barco para o norte a 4 m/s, e a correnteza o
-    arrasta para o leste a 3 m/s. a) Qual é a velocidade do barco em relação à
-    margem, em módulo e ângulo? b) Quanto tempo leva a travessia? c) Quantos
-    metros rio abaixo ele chega à outra margem?
+15. Um barco atravessa um rio de 120 m de largura. As margens são retas e
+    correm de oeste para leste. O motor empurra o barco para o norte a 4 m/s,
+    e a correnteza o arrasta para o leste a 3 m/s. a) Qual é a velocidade do
+    barco em relação à margem, em tamanho e ângulo? b) Quanto tempo leva a
+    travessia? c) Quantos metros rio abaixo ele chega à outra margem?
 
 <details>
 <summary>Dica para o exercício 14</summary>
 
 A velocidade do avião em relação ao ar é $500(\cos\varphi,\ \sen\varphi)$. Some
-o vento e escreva a condição “o resultado aponta para 30°” como “a segunda
-coordenada dividida pela primeira vale $\tg 30^\circ$”. Depois, multiplique tudo
-por $\cos 30^\circ$ e procure a fórmula do seno da diferença, da lição
+o vento e escreva a condição "o resultado aponta para 30°" como "a segunda
+coordenada dividida pela primeira vale $\tg 30^\circ$". Depois, multiplique em
+cruz e procure a fórmula do seno da diferença, da lição
 [soma, diferença e arco duplo](./soma-diferenca-e-arco-duplo).
 
 </details>
@@ -1037,13 +1192,14 @@ norte e use esse tempo na componente leste.
 
 1. São unitários a), c) e e). Em a), $0{,}36 + 0{,}64 = 1$. Em c), $0 + 1 = 1$.
    Em e), $\frac{3}{4} + \frac{1}{4} = 1$. Não são unitários b), com módulo
-   $\sqrt{2} \approx 1{,}41$, e d), com módulo $\sqrt{0{,}5} \approx 0{,}71$. Se
-   você marcou b), reveja o contraexemplo da seção 8.5: coordenadas iguais a 1
-   não fazem o módulo valer 1.
+   $\sqrt{0{,}98} \approx 0{,}99$, e d), com módulo
+   $\sqrt{0{,}5} \approx 0{,}71$. Se você marcou b), olhou só o desenho: a
+   ponta fica tão perto do ciclo que parece estar sobre ele, mas a soma dos
+   quadrados dá 0,98, e não 1.
 2. a) 110° está no segundo quadrante: horizontal negativa, vertical positiva.
    b) 250° está no terceiro: as duas negativas. c) 300° está no quarto:
    horizontal positiva, vertical negativa. d) 45° está no primeiro: as duas
-   positivas. O módulo não influi no sinal, porque é sempre positivo.
+   positivas. O tamanho não influi no sinal, porque é sempre positivo.
 3. a) Acerta: a primeira coordenada é positiva. O ângulo é cerca de
    $68{,}2^\circ$. b) Precisa somar 180°: $-68{,}2^\circ + 180^\circ \approx
    111{,}8^\circ$. c) Precisa somar 180°: $68{,}2^\circ + 180^\circ \approx
@@ -1059,7 +1215,7 @@ norte e use esse tempo na componente leste.
    direita do plano, então devolve o ângulo de $(3,\ -4)$, que é o que está à
    direita. Para chegar a $(-3,\ 4)$, gira-se meia volta: 180°.
 6. Sim, a causa é a mesma: o vetor nulo não tem seta. A ponta coincide com o
-   ponto de partida, então nenhum giro “leva até ele”, e não há lado para onde
+   ponto de partida, então nenhum giro "leva até ele", e não há lado para onde
    ele aponte. Na conta, normalizar exigiria dividir pelo módulo, que é 0.
 7. a) $6(\cos 30^\circ,\ \sen 30^\circ) = (3\sqrt{3};\ 3) \approx (5{,}20;\ 3)$.
    b) $(0,\ 4)$. c) $10(\cos 240^\circ,\ \sen 240^\circ) = (-5;\ -5\sqrt{3})
@@ -1067,18 +1223,22 @@ norte e use esse tempo na componente leste.
    (\sqrt{2};\ -\sqrt{2}) \approx (1{,}41;\ -1{,}41)$. Se em c) você achou
    valores positivos, a referência de 240° é 60°, mas no terceiro quadrante seno
    e cosseno são os dois negativos.
-8. a) Módulo 13; ângulo $\arctg\frac{12}{5} \approx 67{,}4^\circ$.
-   b) Módulo 10; $\arctg\frac{6}{-8} \approx -36{,}9^\circ$, e como a primeira
+8. a) Tamanho 13; ângulo $\arctg\frac{12}{5} \approx 67{,}4^\circ$.
+   b) Tamanho 10; $\arctg\frac{6}{-8} \approx -36{,}9^\circ$, e como a primeira
    coordenada é negativa, $\theta \approx -36{,}9^\circ + 180^\circ =
-   143{,}1^\circ$. c) Módulo $\sqrt{2} \approx 1{,}41$; $\arctg 1 = 45^\circ$,
-   mais 180°: $\theta = 225^\circ$. d) Módulo 7; a primeira coordenada é zero e a
-   segunda é negativa, então $\theta = 270^\circ$. Se em b) você encontrou
-   $-36{,}9^\circ$ ou $323{,}1^\circ$, faltou a correção de meia volta.
+   143{,}1^\circ$. c) Tamanho $\sqrt{2} \approx 1{,}41$;
+   $\arctg\frac{1}{-1} = \arctg(-1) = -45^\circ$, mais 180°: $\theta = 135^\circ$.
+   d) Tamanho 7; a primeira coordenada é zero e a segunda é negativa, então
+   $\theta = 270^\circ$. Se em b) você encontrou $-36{,}9^\circ$ ou
+   $323{,}1^\circ$, faltou a meia volta; em c), o mesmo erro dá $-45^\circ$ ou
+   $315^\circ$.
 9. a) Módulo 10: $(0{,}6;\ 0{,}8)$. b) Módulo 13:
    $\left(-\tfrac{5}{13};\ \tfrac{12}{13}\right) \approx (-0{,}385;\ 0{,}923)$.
    c) Módulo $\sqrt{8} = 2\sqrt{2}$:
    $\left(\tfrac{\sqrt{2}}{2};\ -\tfrac{\sqrt{2}}{2}\right) \approx
    (0{,}707;\ -0{,}707)$. Confira cada um somando os quadrados: tem de dar 1.
+   Se em a) você achou $\left(\frac{6}{14};\ \frac{8}{14}\right)$, dividiu pela
+   soma das coordenadas (erro 4).
 10. O ângulo com a horizontal é $90^\circ - 25^\circ = 65^\circ$. Para a frente:
     $50\cos 65^\circ \approx 21{,}1$ N. Para cima: $50\sen 65^\circ \approx
     45{,}3$ N. Se você achou 45,3 N para a frente, usou o ângulo com a
@@ -1110,9 +1270,9 @@ norte e use esse tempo na componente leste.
     apontar para $\varphi \approx 36{,}0^\circ$: um pouco acima de 30°, para
     compensar o vento que puxa para o sul. A velocidade em relação ao chão fica
     $(500\cos\varphi;\ 500\sen\varphi - 60) \approx
-    (404{,}7;\ 233{,}6)$, de módulo cerca de 467,3 km/h, e o ângulo confere:
+    (404{,}7;\ 233{,}6)$, de tamanho cerca de 467,3 km/h, e o ângulo confere:
     $\arctg\frac{233{,}6}{404{,}7} \approx 30{,}0^\circ$ ✓.
-15. a) A velocidade é $(3,\ 4)$ m/s: módulo $\sqrt{9 + 16} = 5$ m/s e ângulo
+15. a) A velocidade é $(3,\ 4)$ m/s: tamanho $\sqrt{9 + 16} = 5$ m/s e ângulo
     $\arctg\frac{4}{3} \approx 53{,}1^\circ$ com o leste. b) Para atravessar
     120 m avançando 4 m por segundo para o norte: $120 \div 4 = 30$ s.
     c) Em 30 s, a correnteza leva o barco $3 \times 30 = 90$ m para o leste. O
@@ -1132,7 +1292,7 @@ norte e use esse tempo na componente leste.
 18. Para $\theta$ entre 0° e 90°, baixe uma perpendicular da ponta da seta até
     o eixo $x$. Forma-se um triângulo retângulo de hipotenusa $r$ e ângulo
     $\theta$ junto à origem. Pelas razões trigonométricas, o cateto adjacente é
-    $r\cos\theta$ e o oposto é $r\sen\theta$ — exatamente as duas componentes.
+    $r\cos\theta$ e o oposto é $r\sen\theta$: exatamente as duas componentes.
     Para $\theta = 150^\circ$, a seta está no segundo quadrante. O triângulo
     desenhado sob ela tem ângulo de 30° na origem e catetos
     $r\cos 30^\circ$ e $r\sen 30^\circ$, ambos positivos. O triângulo dá os
@@ -1147,29 +1307,32 @@ $r\sen\theta$ e veja se reaparecem as coordenadas do enunciado.
 
 </details>
 
-## 14. Revisão curta
+## Revisão curta
 
-- Um vetor pode ser descrito por **coordenadas** ou por **módulo e ângulo**. As
-  coordenadas servem para somar; o módulo e o ângulo servem para ler
+- Um vetor pode ser descrito por **coordenadas** ou por **tamanho e ângulo**. As
+  coordenadas servem para somar; o tamanho e o ângulo servem para ler
   instrumentos e comparar direções.
 - O **ângulo de um vetor** é medido a partir do semieixo $x$ positivo, no
-  sentido anti-horário. Ele guarda a direção e o sentido de uma vez.
+  sentido anti-horário. Ele guarda a direção e o sentido de uma vez. O ângulo
+  de referência é outra coisa.
 - **Decompor:** o vetor de módulo $r$ e ângulo $\theta$ é
   $r(\cos\theta,\ \sen\theta)$. É o ponto do ciclo trigonométrico esticado
-  $r$ vezes, e o sinal das componentes sai sozinho.
+  $r$ vezes. As componentes são as sombras nos eixos, e o sinal delas sai da
+  conta; o triângulo retângulo dá só o tamanho.
 - **Recompor:** $r = \sqrt{a^2 + b^2}$; o ângulo vem de $\arctg\frac{b}{a}$,
-  **somando 180° quando $a$ é negativo**, porque a divisão não distingue um
-  vetor do seu oposto.
+  **somando 180° quando $a$ é negativo**, porque a divisão enxerga a reta e não
+  o lado. Com $a = 0$, o ângulo é 90° ou 270°.
 - $\lVert k\vec{v} \rVert = \lvert k \rvert \times \lVert \vec{v} \rVert$.
-- **Normalizar** é dividir o vetor pelo próprio módulo. O resultado é unitário
-  e aponta para o mesmo lado. O vetor nulo não pode ser normalizado.
-- Para somar vetores dados por módulo e ângulo: decompor, somar as componentes,
-  recompor. Nunca somar módulos nem ângulos.
+- **Normalizar** é dividir o vetor pelo próprio módulo: a seta encolhe ou
+  estica até a ponta tocar o ciclo. O resultado é unitário e aponta para o
+  mesmo lado. O vetor nulo não pode ser normalizado.
+- Para somar vetores dados por tamanho e ângulo: decompor, somar as
+  componentes, recompor. Nunca somar tamanhos nem ângulos.
 
 Esta lição se apoia no [ciclo trigonométrico](./ciclo-trigonometrico), nas
 [funções inversas](./funcoes-trigonometricas-inversas) e na
 [soma de vetores](./soma-de-vetores). A próxima, o
 [produto escalar](./produto-escalar), vai usar a forma
-$r(\cos\theta,\ \sen\theta)$ para descobrir o ângulo **entre** dois vetores — e
-para ligar esse ângulo a uma conta tão simples quanto o total de uma nota de
-compra.
+$r(\cos\theta,\ \sen\theta)$ para descobrir o ângulo **entre** dois vetores.
+Esse ângulo vai aparecer ligado a uma conta tão simples quanto o total de uma
+nota de compra.
