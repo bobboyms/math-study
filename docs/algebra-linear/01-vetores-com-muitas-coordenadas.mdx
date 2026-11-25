@@ -2,16 +2,21 @@
 title: Vetores com muitas coordenadas
 ---
 
-import CartesianPlane from '@site/src/components/CartesianPlane';
-import Space3D from '@site/src/components/Space3D';
+import GenreBars from '@site/src/components/GenreBars';
+import GenrePlanePicker from '@site/src/components/GenrePlanePicker';
+import CoordLengthSpiral from '@site/src/components/CoordLengthSpiral';
+import DotPairs from '@site/src/components/DotPairs';
+import PairSheet from '@site/src/components/PairSheet';
+import CauchyParabola from '@site/src/components/CauchyParabola';
+import DiagonalDims from '@site/src/components/DiagonalDims';
 
 # Vetores com muitas coordenadas: uma linha de planilha é um vetor
 
-## 1. Problema motivador: quem tem o gosto mais parecido com o da Ana?
+## Problema motivador: quem tem o gosto mais parecido com o da Paula?
 
-Um serviço de streaming quer recomendar filmes para a cliente Ana. A ideia é
-simples de dizer: achar o cliente com o gosto **mais parecido** com o dela e
-sugerir a Ana os filmes que esse cliente viu e ela ainda não viu.
+Um serviço de streaming quer recomendar filmes para a cliente Paula. O plano
+é achar o cliente com o gosto **mais parecido** com o dela. Depois, sugerir à
+Paula os filmes que esse cliente viu e ela ainda não viu.
 
 Para cada cliente, o sistema guarda quantos filmes ele assistiu no último mês
 em cinco gêneros, sempre na mesma ordem: ação, comédia, drama, terror e
@@ -19,136 +24,129 @@ documentário.
 
 | Cliente | Ação | Comédia | Drama | Terror | Documentário |
 |---|---|---|---|---|---|
-| Ana | 6 | 1 | 0 | 4 | 3 |
-| Bruno | 12 | 2 | 0 | 8 | 6 |
+| Paula | 6 | 1 | 0 | 4 | 3 |
+| Gustavo | 12 | 2 | 0 | 8 | 6 |
 | Carla | 3 | 3 | 4 | 1 | 2 |
 | Davi | 0 | 5 | 4 | 0 | 1 |
 
+A figura desenha cada linha da tabela como um perfil: uma barra por gênero,
+do tamanho do número de filmes.
+
+<GenreBars
+  mode="clients"
+  caption="Os quatro clientes, uma barra por gênero. Paula e Gustavo têm a mesma cor porque, como a animação mostra, as barras de um são as do outro esticadas para o dobro."
+/>
+
 O analista da equipe propõe uma regra que parece razoável: “parecido é quem
 está **perto**”. Ele compara as linhas da tabela coluna por coluna e mede a
-distância entre elas. Pela conta dele, a cliente mais próxima da Ana é a
+distância entre elas. Pela conta dele, a cliente mais próxima da Paula é a
 Carla.
 
-Uma colega olha a mesma tabela e discorda. Ela aponta que o Bruno assistiu
-exatamente o **dobro** da Ana em cada gênero. Ele gosta das mesmas coisas, na
-mesma proporção. Ele só assiste mais filmes. Para ela, o gosto mais parecido
-com o da Ana é o do Bruno, e não o da Carla.
+Uma colega olha a mesma tabela e discorda. Ela aponta o que a figura mostra:
+o Gustavo assistiu exatamente o **dobro** da Paula em cada gênero. Ele gosta
+das mesmas coisas, na mesma proporção. Ele só assiste mais filmes. Para ela,
+o gosto mais parecido com o da Paula é o do Gustavo, e não o da Carla.
 
 > Quem tem razão? E que conta mede “gosto parecido” sem se confundir com
 > “assiste muito” ou “assiste pouco”?
 
 Para responder, precisamos tratar cada linha da tabela como um objeto só: uma
 lista de cinco números que pode ser somada, esticada, medida e comparada com
-outra. Esse objeto é um **vetor com cinco coordenadas**. A resposta para a
-equipe está na seção 9.
+outra. Esse objeto é um **vetor com cinco coordenadas**. A seção “Resolvendo o
+problema da Paula” dá a resposta à equipe.
 
-## 2. Mapa das ideias
+## Roteiro da lição
 
-- **vetor com $n$ coordenadas**: uma lista ordenada de $n$ números, como
-  $(6,\ 1,\ 0,\ 4,\ 3)$; cada posição tem um significado fixo;
-- **$\mathbb{R}^n$**: o nome do conjunto de todos os vetores com $n$
-  coordenadas reais; a Ana é um vetor de $\mathbb{R}^5$;
-- **soma e multiplicação por número**: feitas coordenada a coordenada, como
-  no plano;
-- **módulo** $\lVert \vec{v} \rVert$: a raiz da soma dos quadrados das
-  coordenadas, o “tamanho” do vetor;
-- **distância** entre dois vetores: o módulo da diferença,
-  $\lVert \vec{u} - \vec{v} \rVert$;
-- **produto escalar** $\vec{u} \cdot \vec{v}$: multiplica as coordenadas
-  correspondentes e soma tudo;
-- **similaridade do cosseno**: o número
-  $\frac{\vec{u} \cdot \vec{v}}{\lVert \vec{u} \rVert \, \lVert \vec{v} \rVert}$,
-  que mede se dois vetores apontam para o mesmo lado, sem olhar para o
-  tamanho deles.
+1. Uma linha da planilha é uma lista de números em ordem. A posição de cada
+   número diz o que ele conta, e trocar a ordem dá outro vetor.
+2. Duas colunas de cada vez cabem num desenho do plano. As cinco juntas não
+   cabem em desenho nenhum, e por isso as contas passam a ser o guia.
+3. Somar e multiplicar por número continuam sendo contas feitas posição com
+   posição, como no plano.
+4. O módulo é o teorema de Pitágoras repetido, uma coordenada de cada vez. Em
+   cinco coordenadas ele passa a ser uma definição, escolhida para concordar
+   com o plano e o espaço.
+5. A distância entre dois vetores é o módulo da diferença entre eles.
+6. O produto escalar continua sendo “multiplicar par com par e somar”, com
+   quantas linhas houver.
+7. O ângulo entre dois vetores de cinco coordenadas é definido pela fórmula
+   do cosseno do plano.
+8. A desigualdade de Cauchy-Schwarz garante que essa fórmula nunca passa de 1
+   nem fica abaixo de $-1$. É ela que permite chamar o resultado de cosseno.
+9. Normalizar, isto é, dividir um vetor pelo próprio módulo, tira o volume da
+   comparação. O cosseno compara os vetores normalizados.
+10. Distância e cosseno medem semelhanças diferentes, e o problema da Paula
+    mostra quando usar cada uma.
 
-## 3. Para que serve
+## Para que isso serve?
 
 - **Recomendação.** Lojas virtuais e serviços de música e vídeo comparam
-  clientes e produtos como vetores, exatamente como no problema da Ana.
-- **Planilhas e bancos de dados.** Cada linha de uma tabela com $n$ colunas
-  numéricas é um vetor de $\mathbb{R}^n$. Somar linhas, tirar médias e medir
-  semelhanças são contas com vetores.
+  clientes como vetores, como no problema da Paula. Dois clientes com
+  $(2,\ 0,\ 1)$ e $(4,\ 0,\ 2)$ filmes de três gêneros têm cosseno
+  $\frac{10}{\sqrt{5} \times \sqrt{20}} = \frac{10}{10} = 1$: o mesmo gosto,
+  embora um veja o dobro do outro.
+- **Médias de planilha.** Cada linha de uma tabela com $n$ colunas numéricas é
+  um vetor. O perfil médio de dois clientes é a soma dos vetores dividida por
+  2. Para Paula e Carla, dá $(4{,}5;\ 2;\ 2;\ 2{,}5;\ 2{,}5)$, como a seção da
+  soma vai calcular.
 - **Imagens.** Uma foto em tons de cinza de $28 \times 28$ pixels é uma lista
   de 784 números, um para o brilho de cada pixel. Para o computador, a foto é
-  um vetor de $\mathbb{R}^{784}$.
+  um vetor de 784 coordenadas. Duas fotos iguais, a não ser por um pixel que
+  passa de brilho $0{,}2$ para $0{,}7$, estão à distância
+  $\sqrt{0{,}5^2} = 0{,}5$ uma da outra.
 - **Textos.** Programas que lidam com linguagem guardam cada palavra como uma
-  lista de algumas centenas de números. Palavras de significado próximo ficam
-  com listas de cosseno alto.
-- **Dentro da matemática.** Este capítulo inteiro, de álgebra linear, trabalha
-  com vetores de muitas coordenadas. A próxima lição organiza vários deles numa
-  tabela, a **matriz**.
+  lista de centenas ou milhares de números, e medem a semelhança de
+  significado pelo cosseno. Num exemplo com só três coordenadas e números
+  inventados para ilustrar, “gato” $= (0{,}9;\ 0{,}8;\ 0{,}1)$ e “cachorro”
+  $= (0{,}8;\ 0{,}9;\ 0{,}2)$ têm cosseno de cerca de $0{,}99$. Já “gato” e
+  “imposto” $= (0{,}1;\ 0;\ 0{,}9)$ ficam em cerca de $0{,}16$.
+- **Redes neurais.** Um neurônio artificial recebe uma lista de entradas,
+  multiplica cada uma pelo seu peso e soma: é um produto escalar. Com
+  entradas $(1,\ 0,\ 2,\ 1)$ e pesos $(0{,}5;\ -1;\ 0{,}25;\ 2)$, ele
+  calcula $0{,}5 + 0 + 0{,}5 + 2 = 3$.
+- **Dentro da matemática.** Este capítulo inteiro, de álgebra linear,
+  trabalha com vetores de muitas coordenadas. A próxima lição empilha vários
+  deles numa tabela, a **matriz**.
 
-## 4. Ideias anteriores que voltam aqui
+## Ideias anteriores que voltam aqui
 
-Todo o módulo de vetores da geometria volta nesta lição. Reative cada peça
-antes de seguir.
+Todo o módulo de vetores da geometria volta nesta lição. Reative as três
+peças que mais vão ser usadas.
 
-**1. De [Vetores](../geometria/vetores).** O que as coordenadas de
-$\vec{v} = (3,\ 4)$ dizem, e quanto vale o módulo $\lVert \vec{v} \rVert$?
-
-<details>
-<summary>Conferir</summary>
-
-Dizem quanto a seta anda na horizontal (3) e quanto anda na vertical (4). O
-módulo é o comprimento da seta, calculado pelo teorema de Pitágoras:
-$\lVert \vec{v} \rVert = \sqrt{3^2 + 4^2} = \sqrt{25} = 5$.
-
-</details>
-
-**2. De [Soma de vetores e multiplicação por número](../geometria/soma-de-vetores).**
-Quanto vale $(2,\ 5) + (4,\ -1)$? E quanto vale $3(2,\ 5)$, o vetor
-$(2,\ 5)$ multiplicado por 3?
+**1. De [Vetores](../geometria/vetores) e de
+[Vetores no espaço](../geometria/vetores-no-espaco).** Quanto mede o vetor
+$(3,\ 4)$? E o vetor $(3,\ 4,\ 12)$?
 
 <details>
 <summary>Conferir</summary>
 
-A soma é feita coordenada a coordenada: $(2 + 4,\ 5 + (-1)) = (6,\ 4)$. A
-multiplicação por 3 também: $3(2,\ 5) = (6,\ 15)$. Multiplicar por um número
-maior que 1 estica a seta sem mudar a direção nem o sentido.
+No plano, o módulo é o comprimento da seta, pelo teorema de Pitágoras com as
+coordenadas como catetos: $\sqrt{3^2 + 4^2} = \sqrt{25} = 5$. No espaço,
+Pitágoras é usado duas vezes: primeiro no chão, depois no triângulo em pé. O
+resultado é a mesma fórmula com uma parcela a mais:
+$\sqrt{3^2 + 4^2 + 12^2} = \sqrt{169} = 13$.
 
 </details>
 
-**3. De [Produto escalar](../geometria/produto-escalar).** Quanto vale
-$(3,\ 4) \cdot (2,\ -1)$? O resultado é um número ou um vetor? E quanto vale
-$\vec{v} \cdot \vec{v}$ para $\vec{v} = (3,\ 4)$?
+**2. De [Produto escalar](../geometria/produto-escalar).** Quanto vale
+$(3,\ 4) \cdot (2,\ -1)$? E qual é o ângulo entre $(1,\ 0)$ e $(1,\ 1)$?
 
 <details>
 <summary>Conferir</summary>
 
 $(3,\ 4) \cdot (2,\ -1) = 3 \times 2 + 4 \times (-1) = 6 - 4 = 2$. O
-resultado é um **número**. E $\vec{v} \cdot \vec{v} = 9 + 16 = 25$, que é o
-quadrado do módulo, $5^2$. Lembre também do aviso daquela lição: o ponto em
+resultado é um **número**, e não uma lista. O ponto em
 $\vec{u} \cdot \vec{v}$ não é a multiplicação de números, que o curso escreve
 com $\times$.
 
-</details>
-
-**4. Do ângulo entre vetores, na mesma lição.** Como se calcula o ângulo
-$\theta$ entre $(1,\ 0)$ e $(1,\ 1)$?
-
-<details>
-<summary>Conferir</summary>
-
-Pela fórmula $\cos\theta = \frac{\vec{u} \cdot \vec{v}}{\lVert \vec{u}
-\rVert \, \lVert \vec{v} \rVert}$. O produto escalar é $1$, e os módulos são
-$1$ e $\sqrt{2}$. Então $\cos\theta = \frac{1}{\sqrt{2}} \approx 0{,}707$, e
-$\theta = 45^\circ$.
+O ângulo sai da fórmula
+$\cos\theta = \frac{\vec{u} \cdot \vec{v}}{\lVert \vec{u} \rVert \, \lVert \vec{v} \rVert}$.
+O produto escalar é $1$, e os módulos são $1$ e $\sqrt{2}$. Então
+$\cos\theta = \frac{1}{\sqrt{2}} \approx 0{,}707$, e $\theta = 45^\circ$.
 
 </details>
 
-**5. De [Vetores no espaço](../geometria/vetores-no-espaco).** Qual é o
-módulo de $(3,\ 4,\ 12)$?
-
-<details>
-<summary>Conferir</summary>
-
-No espaço, o teorema de Pitágoras é aplicado duas vezes. O resultado é a
-mesma fórmula do plano, com uma parcela a mais:
-$\sqrt{3^2 + 4^2 + 12^2} = \sqrt{9 + 16 + 144} = \sqrt{169} = 13$.
-
-</details>
-
-**6. Do [discriminante](../equacoes/formula-de-bhaskara) e das
+**3. Do [discriminante](../equacoes/formula-de-bhaskara) e das
 [inequações do 2º grau](../equacoes/inequacoes-do-segundo-grau).** A
 expressão $t^2 - 2t + 5$ fica negativa para algum valor de $t$?
 
@@ -158,159 +156,125 @@ expressão $t^2 - 2t + 5$ fica negativa para algum valor de $t$?
 Não fica. O discriminante é $\Delta = (-2)^2 - 4 \times 1 \times 5 = 4 - 20 =
 -16$, negativo. Sem raízes reais, a parábola não cruza o eixo, e a expressão
 tem o sinal de $a = 1$ em todos os números reais: é sempre positiva. Esta
-pergunta só volta a ser usada na seção 8.6, numa passagem mais difícil.
+ideia volta na seção da desigualdade de Cauchy-Schwarz, a passagem mais
+difícil da lição.
 
 </details>
 
 Se alguma resposta não veio, releia a lição indicada antes de seguir. As
 lições do módulo de vetores são a base inteira desta página.
 
-## 5. Intuição: as contas nunca precisaram do desenho
+## Uma linha da planilha é uma lista em ordem, e a posição dá o significado
 
-Volte ao módulo de vetores e repare em como as contas foram feitas.
+Olhe para a linha da Paula na tabela: 6, 1, 0, 4, 3. Sozinho, o número 4 não
+diz nada. Ele só quer dizer “4 filmes de terror” porque está na quarta
+coluna, e a quarta coluna é terror. A linha inteira é uma **lista em
+ordem**: cada número vale pelo que é e pelo lugar em que está.
 
-- Para **somar** dois vetores, somamos a primeira coordenada com a primeira e
-  a segunda com a segunda.
-- Para **multiplicar** por um número, multiplicamos cada coordenada.
-- Para achar o **módulo**, elevamos cada coordenada ao quadrado, somamos e
-  tiramos a raiz.
-- Para o **produto escalar**, multiplicamos as coordenadas correspondentes e
-  somamos.
+No plano, um vetor também era uma lista em ordem: $(4,\ 5)$ quer dizer “4 na
+horizontal, 5 na vertical”, e $(5,\ 4)$ é outro vetor. A linha da Paula é a
+mesma ideia, com cinco lugares em vez de dois.
 
-No espaço, cada uma dessas contas ganhou uma terceira parcela, e nada mais
-mudou. Nenhuma delas pede régua ou transferidor. Elas pedem só a lista de
-números e a regra “posição com posição”.
-
-Por isso, nada impede uma quarta, uma quinta ou uma centésima coordenada. Não
-existe desenho de uma seta com cinco coordenadas, porque o mundo à nossa volta
-só tem três direções independentes. Mas as contas continuam fazendo sentido.
-A linha da Ana na tabela, $(6,\ 1,\ 0,\ 4,\ 3)$, pode ser somada à da Carla,
-multiplicada por 2 e comparada com a do Bruno, sempre posição com posição.
-
-Uma condição não pode ser esquecida: **a posição carrega o significado**. A
-primeira coordenada é ação em todas as linhas; a terceira é drama em todas.
-Somar a ação da Ana com o drama da Carla seria somar quantidades de coisas
-diferentes, como somar metros com quilos.
-
-## 6. Modelo visual: dois gêneros no plano, três no espaço
-
-Com cinco gêneros não há desenho. Mas, se olharmos só para **dois** gêneros,
-ação e comédia, cada cliente vira uma seta no plano que você já conhece.
-Recortando as duas primeiras colunas da tabela: Ana $(6,\ 1)$, Bruno
-$(12,\ 2)$, Carla $(3,\ 3)$ e Davi $(0,\ 5)$.
-
-<CartesianPlane
-  xMin={-1} xMax={12.8} yMin={-1} yMax={5.8}
-  xUnit={34}
-  segments={[
-    {from: [0, 0], to: [12, 2], tone: 1, arrow: true},
-    {from: [0, 0], to: [6, 1], tone: 1, arrow: true},
-    {from: [0, 0], to: [3, 3], tone: 2, arrow: true},
-    {from: [0, 0], to: [0, 5], tone: 3, arrow: true},
-  ]}
-  labels={[
-    {at: [6, 1], math: '\\text{Ana}', tone: 1, dx: 4, dy: 18},
-    {at: [12, 2], math: '\\text{Bruno}', tone: 1, dx: -10, dy: -18},
-    {at: [3, 3], math: '\\text{Carla}', tone: 2, dx: 10, dy: -16},
-    {at: [0, 5], math: '\\text{Davi}', tone: 3, dx: 30, dy: 2},
-  ]}
-  axisLabels={['\\text{ação}', '\\text{comédia}']}
-  caption="Só as colunas de ação e comédia. A seta do Bruno está sobre a mesma reta que a da Ana, com o dobro do comprimento. A da Carla é mais curta, mas aponta para outro lado."
+<GenreBars
+  mode="row"
+  caption="A linha da tabela desce e vira a lista do vetor. Cada número cai na posição da sua coluna, e a barra acima dele mostra o tamanho. O botão troca as duas primeiras posições: os números são os mesmos, as barras mudam de lugar."
 />
-
-O desenho já mostra a disputa do problema:
-
-- a **ponta** da seta da Carla está mais perto da ponta da seta da Ana do que a
-  ponta da seta do Bruno;
-- mas a seta do Bruno **aponta exatamente para o mesmo lado** que a da Ana. As
-  duas formam ângulo zero. A da Carla forma um ângulo de uns $35^\circ$.
-
-“Perto” e “apontar para o mesmo lado” são perguntas diferentes, e o desenho
-deixa ver isso.
-
-Com **três** gêneros ainda dá para desenhar, no espaço. Abaixo estão Carla e
-Davi, com as colunas ação, comédia e drama: Carla $(3,\ 3,\ 4)$ e Davi
-$(0,\ 5,\ 4)$.
-
-<Space3D
-  max={[3, 5, 4]}
-  unit={36}
-  boxes={[[3, 3, 4]]}
-  vectors={[
-    {to: [3, 3, 4], tone: 2, label: '\\text{Carla}', dx: -34, dy: -6},
-    {to: [0, 5, 4], tone: 3, label: '\\text{Davi}', dx: 26, dy: -8},
-  ]}
-  axisLabels={null}
-  labels={[
-    {at: [3.8, 0, 0], math: '\\text{ação}', dx: 6, dy: 16},
-    {at: [0, 5.8, 0], math: '\\text{comédia}', anchor: 'end', dx: 0, dy: -16},
-    {at: [0, 0, 4.8], math: '\\text{drama}', anchor: 'start', dx: 12, dy: 0},
-  ]}
-  caption="Carla e Davi com três gêneros. O tracejado é a “caixa” da Carla: 3 na direção da ação, 3 na da comédia e 4 de altura no drama. O Davi não viu nenhum filme de ação, então sua seta fica na parede do fundo. A perspectiva encurta a direção da ação: no desenho, a seta da Carla parece mais curta do que é."
-/>
-
-Com cinco gêneros, a figura acaba. É aqui que a matemática troca o desenho
-pelas contas, que funcionam em qualquer número de coordenadas.
-
-## 7. Ponte para a formalização: o que podemos estender, e o que precisamos definir
-
-No plano e no espaço, as fórmulas tinham duas origens diferentes.
-
-**Algumas eram só contas de coordenadas.** A soma e a multiplicação por número
-foram justificadas pelo desenho, mas o resultado era uma regra “posição com
-posição”. Essa regra pode ser aplicada a listas de qualquer tamanho sem nenhum
-ajuste.
-
-**Outras eram teoremas sobre o desenho.** O módulo
-$\sqrt{a^2 + b^2}$ não foi inventado: ele saiu do teorema de Pitágoras,
-aplicado a uma seta que existia no papel. No espaço, ele saiu de Pitágoras
-aplicado duas vezes. E a fórmula do ângulo saiu da trigonometria, para setas
-desenhadas.
-
-Em cinco dimensões, não há seta para medir com régua. Então, nessas medidas, a
-matemática faz uma escolha consciente: **define** o módulo e o ângulo em
-$\mathbb{R}^n$ pelas mesmas fórmulas que funcionavam em 2 e 3 coordenadas. A
-escolha é honesta por dois motivos, que a seção 8 vai conferir:
-
-1. em 2 e 3 coordenadas, a definição nova dá exatamente o que já sabíamos
-   medir no desenho, então nada do que foi aprendido muda;
-2. as propriedades que tornavam essas medidas úteis continuam valendo. O
-   módulo só é zero para o vetor nulo. E o cosseno calculado pela fórmula fica
-   sempre entre $-1$ e $1$, como um cosseno de verdade.
-
-O segundo ponto não é automático. Ele exige uma demonstração, que está na
-seção 8.6.
-
-## 8. Formalização
-
-### 8.1 Vetores de $\mathbb{R}^n$
 
 > Um **vetor com $n$ coordenadas** é uma lista ordenada de $n$ números reais,
 > $\vec{v} = (v_1,\ v_2,\ \ldots,\ v_n)$. O conjunto de todos esses vetores se
 > chama $\mathbb{R}^n$ (lê-se “erre ene”).
 
-O índice diz a posição: $v_1$ é a primeira coordenada, $v_2$ a segunda, e
-$v_n$ a última. O plano é $\mathbb{R}^2$ e o espaço é $\mathbb{R}^3$. A tabela
-do problema mora em $\mathbb{R}^5$.
+O índice embaixo da letra diz a posição: $v_1$ é a primeira coordenada, $v_2$
+a segunda, e $v_n$ a última. O plano é $\mathbb{R}^2$ e o espaço é
+$\mathbb{R}^3$. As linhas da tabela do problema são vetores de $\mathbb{R}^5$.
 
-**Exemplo.** A Ana é o vetor $\vec{a} = (6,\ 1,\ 0,\ 4,\ 3)$ de
-$\mathbb{R}^5$. A coordenada $a_4 = 4$ é o número de filmes de terror, porque
+**Exemplo.** A Paula é o vetor $\vec{p} = (6,\ 1,\ 0,\ 4,\ 3)$ de
+$\mathbb{R}^5$. A coordenada $p_4 = 4$ é o número de filmes de terror, porque
 terror é a quarta coluna.
 
-**Contraexemplo.** A lista $(1,\ 6,\ 0,\ 4,\ 3)$ tem os mesmos cinco números da
-Ana, mas **não** é o vetor da Ana. Ela diz que a cliente viu 1 filme de ação e
-6 de comédia, que é outro gosto. Num vetor, trocar a ordem muda o objeto,
-exatamente como trocar $(4,\ 5)$ por $(5,\ 4)$ mudava o ponto no plano.
+**Contraexemplo.** A lista $(1,\ 6,\ 0,\ 4,\ 3)$ tem os mesmos cinco números
+da Paula, mas **não** é o vetor da Paula. Ela diz que a cliente viu 1 filme de
+ação e 6 de comédia, que é outro gosto. É o que o botão da figura mostra:
+trocar a ordem muda o objeto, como trocar $(4,\ 5)$ por $(5,\ 4)$ mudava o
+ponto no plano.
 
 > **Dois vetores são iguais** quando têm o mesmo número de coordenadas e as
 > coordenadas são iguais posição por posição.
 
 Uma observação sobre os livros. Artigos e livros de aprendizado de máquina
 costumam escrever um vetor em **negrito**, sem seta: $\mathbf{x}$ em vez de
-$\vec{x}$. É só outra grafia para o mesmo objeto. Neste curso continuamos com
-a seta, para que um vetor nunca seja confundido com um número.
+$\vec{x}$. É outra grafia para o mesmo objeto. Neste curso continuamos com a
+seta, para que um vetor nunca seja confundido com um número.
 
-### 8.2 Soma e multiplicação por número
+<details>
+<summary>Confira: no vetor do Davi, (0, 5, 4, 0, 1), quanto vale d₂, e o que esse número conta? E os vetores (0, 5, 4, 0, 1) e (0, 5, 4, 1, 0) são iguais?</summary>
+
+$d_2 = 5$, a segunda coordenada: o Davi viu 5 filmes de comédia, porque
+comédia é a segunda coluna. Os dois vetores **não** são iguais: na quarta e na
+quinta posições os números trocaram de lugar. O segundo diz que o cliente viu
+1 filme de terror e nenhum documentário, o contrário do Davi.
+
+</details>
+
+## Duas colunas de cada vez cabem num desenho, as cinco juntas não
+
+Uma seta do plano tem duas coordenadas. Então, se olharmos só para **duas**
+colunas da tabela, cada cliente vira uma seta do plano que você já conhece.
+Escolher duas colunas e esquecer as outras é fazer um **recorte** da tabela.
+
+Escolha o recorte nos botões e observe duas coisas: onde fica a seta do
+Gustavo em relação à da Paula, e o que acontece com a seta da Carla.
+
+<GenrePlanePicker />
+
+Em todo recorte, a seta do Gustavo fica sobre a mesma reta da seta da Paula,
+com o dobro do comprimento. No recorte de ação e comédia, por exemplo, Paula
+é $(6,\ 1)$ e Gustavo é $(12,\ 2) = 2(6,\ 1)$. Isso acontece porque o Gustavo
+é o dobro da Paula em **todas** as colunas, então é o dobro também em
+qualquer par de colunas.
+
+Já a Carla muda de lugar de um recorte para outro. O ângulo entre Paula e
+Carla é de uns $35{,}5^\circ$ no recorte de ação e comédia, e de uns
+$15{,}3^\circ$ no de ação e terror. Nenhum dos dois é “o” ângulo entre elas,
+porque cada recorte jogou fora três das cinco colunas. Com três colunas ainda
+daria para desenhar no espaço, como na lição de vetores no espaço. Com
+cinco, não há desenho: o mundo à nossa volta só tem três direções em ângulo
+reto umas com as outras.
+
+Por isso, a partir daqui, **as contas passam a ser o guia**. A boa notícia é
+que, no módulo de vetores, nenhuma conta precisou do desenho para ser feita.
+O desenho serviu para mostrar o que as contas querem dizer. As próximas
+seções levam cada conta de duas para cinco coordenadas.
+
+<details>
+<summary>Confira: no recorte de terror e documentário, quais são as setas da Paula e do Gustavo? Por que elas caem na mesma reta?</summary>
+
+Terror é a quarta coluna e documentário é a quinta. A Paula vira $(4,\ 3)$ e
+o Gustavo vira $(8,\ 6)$. Como $(8,\ 6) = 2(4,\ 3)$, a seta do Gustavo é a da
+Paula esticada para o dobro. E multiplicar uma seta por um número positivo não
+muda a reta em que ela está.
+
+</details>
+
+## Somar e multiplicar por número continuam posição com posição
+
+No plano, $(2,\ 5) + (4,\ -1) = (6,\ 4)$: a primeira coordenada com a
+primeira, a segunda com a segunda. E $3(2,\ 5) = (6,\ 15)$: cada coordenada
+multiplicada por 3. O desenho (ponta com cauda, seta esticada) explicou o
+sentido dessas contas, mas o resultado era uma regra sobre números, “posição
+com posição”. Essa regra funciona com listas de qualquer tamanho sem nenhum
+ajuste.
+
+E ela tem sentido concreto na planilha. Suponha que Paula e Carla dividem a
+mesma conta da família. Quantos filmes de cada gênero a conta registrou? Some
+gênero com gênero: a ação da Paula com a ação da Carla, a comédia com a
+comédia, e assim por diante. Na figura, as barras da Carla se encostam nas da
+Paula, uma linha de cada vez.
+
+<GenreBars
+  mode="sum"
+  caption="Barras azuis: o primeiro vetor. Barras que chegam pela direita: o segundo, encostado gênero por gênero. O número no fim é o total daquele gênero. Os botões trocam a conta."
+/>
 
 > Para $\vec{u}$ e $\vec{v}$ em $\mathbb{R}^n$ e um número $k$:
 >
@@ -319,46 +283,101 @@ a seta, para que um vetor nunca seja confundido com um número.
 > \qquad k\vec{v} = (kv_1,\ kv_2,\ \ldots,\ kv_n).
 > $$
 
-**Exemplo.** Ana e Carla dividem a mesma conta da família. O consumo da conta
-no mês é $\vec{a} + \vec{c} = (6 + 3,\ 1 + 3,\ 0 + 4,\ 4 + 1,\ 3 + 2) =
-(9,\ 4,\ 4,\ 5,\ 5)$: 9 filmes de ação, 4 de comédia, e assim por diante. E o
-Bruno é $\vec{b} = 2\vec{a}$, porque
-$2(6,\ 1,\ 0,\ 4,\ 3) = (12,\ 2,\ 0,\ 8,\ 6)$.
+**Exemplo.** A conta da família é
+$\vec{p} + \vec{c} = (6 + 3,\ 1 + 3,\ 0 + 4,\ 4 + 1,\ 3 + 2) =
+(9,\ 4,\ 4,\ 5,\ 5)$: 9 filmes de ação, 4 de comédia, e assim por diante. E
+o Gustavo é $\vec{g} = 2\vec{p}$, porque
+$2(6,\ 1,\ 0,\ 4,\ 3) = (12,\ 2,\ 0,\ 8,\ 6)$. No botão “2 × Paula”, cada
+barra recebe uma cópia dela mesma.
 
 **Contraexemplo.** $(6,\ 1,\ 0,\ 4,\ 3) + (2,\ 5,\ 1,\ 0)$ **não está
 definida**. A segunda lista tem só quatro coordenadas, e a quinta coordenada
-da primeira não tem par. Na prática, isso costuma acontecer quando uma coluna
-da planilha foi perdida. A resposta certa é “não dá para somar”, e não
-“completo com zero e somo”: o zero afirmaria que o cliente não viu
-documentários, e isso não foi medido.
+da primeira não tem par (o “?” do último botão). Na prática, isso costuma
+acontecer quando uma coluna da planilha foi perdida. A resposta certa é “não
+dá para somar”, e não “completo com zero e somo”: o zero afirmaria que o
+cliente não viu documentários, e isso não foi medido.
 
 As propriedades da soma do plano continuam valendo: comutativa, associativa,
 distributiva, vetor nulo $\vec{0} = (0,\ 0,\ \ldots,\ 0)$ e oposto
 $-\vec{v}$. Elas valem pelo mesmo motivo de antes: cada coordenada é uma conta
 comum com números, e as contas com números têm essas propriedades.
 
-Um uso frequente: a **média** de vetores. O perfil médio de Ana e Carla é
-$\frac{1}{2}(\vec{a} + \vec{c}) = \frac{1}{2}(9,\ 4,\ 4,\ 5,\ 5) =
-(4{,}5;\ 2;\ 2;\ 2{,}5;\ 2{,}5)$. É uma
+Um uso frequente: a **média** de vetores. O perfil médio de Paula e Carla é a
+soma dividida por 2, isto é, multiplicada por $\frac{1}{2}$:
+$\frac{1}{2}(\vec{p} + \vec{c}) = \frac{1}{2}(9,\ 4,\ 4,\ 5,\ 5) =
+(4{,}5;\ 2;\ 2;\ 2{,}5;\ 2{,}5)$. É o botão “Média de Paula e Carla”, em que
+as barras somadas encolhem para a metade. Essa conta é uma
 [combinação linear](../geometria/soma-de-vetores), com os pesos $\frac{1}{2}$
 e $\frac{1}{2}$.
 
-### 8.3 Módulo
+<details>
+<summary>Confira: quanto vale c + d, a soma de Carla e Davi? E 3d?</summary>
+
+$\vec{c} + \vec{d} = (3 + 0,\ 3 + 5,\ 4 + 4,\ 1 + 0,\ 2 + 1) =
+(3,\ 8,\ 8,\ 1,\ 3)$. E $3\vec{d} = (0,\ 15,\ 12,\ 0,\ 3)$. Nas duas contas,
+cada posição só entra na conta com a mesma posição do outro vetor.
+
+</details>
+
+## O módulo é Pitágoras repetido, uma coordenada de cada vez
+
+O módulo tem uma história diferente da soma. No plano, $\sqrt{a^2 + b^2}$ não
+foi uma regra inventada: ele saiu do teorema de Pitágoras, aplicado a uma seta
+que existia no papel. No espaço, saiu de Pitágoras aplicado duas vezes:
+primeiro a diagonal do chão, depois o triângulo em pé. Era um **teorema**
+sobre o desenho.
+
+Repare no que o passo do espaço fez. A terceira coordenada é uma perna nova,
+em ângulo reto com tudo o que já estava no chão. Então ela forma um triângulo
+retângulo com a diagonal do chão, e Pitágoras acrescenta o quadrado dela à
+conta. Siga o mesmo gesto, coordenada por coordenada:
+
+1. Deite a primeira coordenada como uma perna.
+2. Ponha a segunda como uma perna nova, em ângulo reto com a primeira. A
+   hipotenusa mede a raiz da soma dos dois quadrados.
+3. Ponha a terceira como outra perna nova, em ângulo reto com essa
+   hipotenusa. A hipotenusa nova soma mais um quadrado.
+4. Repita para cada coordenada que sobrar.
+
+Cada triângulo fica numa folha plana própria, como os dois vetores da lição
+de vetores no espaço. A figura desenha as folhas lado a lado, numa espiral.
+
+<CoordLengthSpiral
+  caption="Cada perna laranja é uma coordenada; cada perna nova fica em ângulo reto com a hipotenusa anterior. A hipotenusa azul é a raiz da soma dos quadrados até ali; as antigas ficam tracejadas. Comece por (3, 4) e (3, 4, 12), que você já conhece."
+/>
+
+Com $(3,\ 4)$ a espiral é o triângulo do plano, de hipotenusa 5. Com
+$(3,\ 4,\ 12)$ é o voo do drone da lição de vetores no espaço, de hipotenusa 13. Com a Paula são cinco
+pernas, 6, 1, 0, 4 e 3. A perna 0 não acrescenta nada, e a hipotenusa final
+mede $\sqrt{36 + 1 + 0 + 16 + 9} = \sqrt{62}$.
+
+Agora um ponto que pede cuidado. Em cinco coordenadas não há régua para medir a
+hipotenusa: não sabemos de antemão o que “comprimento” quer dizer ali. Então
+a matemática faz uma escolha consciente: **define** o módulo em
+$\mathbb{R}^n$ pela mesma fórmula. A espiral mostra por que essa é a escolha
+natural. Se cada coordenada nova for uma direção em ângulo reto com todas as
+anteriores, e Pitágoras continuar valendo, o comprimento só pode ser esse.
 
 > O **módulo** de $\vec{v} = (v_1,\ \ldots,\ v_n)$ é
-> $$\lVert \vec{v} \rVert = \sqrt{v_1^2 + v_2^2 + \cdots + v_n^2}.$$
+>
+> $$
+> \lVert \vec{v} \rVert = \sqrt{v_1^2 + v_2^2 + \cdots + v_n^2}.
+> $$
 
 Com duas coordenadas, a fórmula é a de [Vetores](../geometria/vetores). Com
-três, é a do espaço. Isso cumpre a primeira exigência da seção 7.
+três, é a do espaço. Então a definição nova não muda nada do que já foi
+aprendido: em 2 e 3 coordenadas ela dá exatamente o que a régua media.
 
-**Exemplo.** O módulo da Ana é
-$\lVert \vec{a} \rVert = \sqrt{36 + 1 + 0 + 16 + 9} = \sqrt{62} \approx
+**Exemplo.** O módulo da Paula é
+$\lVert \vec{p} \rVert = \sqrt{36 + 1 + 0 + 16 + 9} = \sqrt{62} \approx
 7{,}87$.
 
-**Contraexemplo.** O módulo **não** é a soma das coordenadas. A Ana viu
+**Contraexemplo.** O módulo **não** é a soma das coordenadas. A Paula viu
 $6 + 1 + 0 + 4 + 3 = 14$ filmes no total, mas o módulo dela é $\sqrt{62}$,
-cerca de 7,87. São duas medidas de tamanho diferentes, e esta lição usa o
-módulo porque é ele que se liga ao produto escalar.
+cerca de 7,87. O botão “Comparar com as pernas em fila” põe as pernas uma
+depois da outra numa linha: elas somam 14, mas o caminho reto da origem até a
+última ponta mede só 7,87. São duas medidas de tamanho diferentes, e esta
+lição usa o módulo porque é ele que se liga ao produto escalar.
 
 Duas propriedades seguem da fórmula, como no plano:
 
@@ -366,28 +385,53 @@ Duas propriedades seguem da fórmula, como no plano:
   quando cada quadrado é zero;
 - **$\lVert k\vec{v} \rVert = \lvert k \rvert \, \lVert \vec{v} \rVert$.** Cada
   quadrado ganha um fator $k^2$, que sai da raiz como $\lvert k \rvert$. O
-  Bruno, que é $2\vec{a}$, tem módulo $2\sqrt{62} = \sqrt{248} \approx 15{,}75$.
+  Gustavo, que é $2\vec{p}$, tem módulo $2\sqrt{62} = \sqrt{248} \approx
+  15{,}75$.
 
-### 8.4 Distância
+<details>
+<summary>Confira: quanto mede o vetor (1, 1, 1, 1)? Faça a previsão pela espiral antes da conta.</summary>
+
+Cada perna mede 1, e a espiral passa por $\sqrt{1}$, $\sqrt{2}$, $\sqrt{3}$ e
+$\sqrt{4}$. Então $\lVert (1,\ 1,\ 1,\ 1) \rVert = \sqrt{1 + 1 + 1 + 1} =
+\sqrt{4} = 2$, e não 4. O 4 é a soma das coordenadas, as pernas em fila.
+
+</details>
+
+## A distância é o módulo da diferença
+
+No plano, a distância entre dois pontos era o comprimento da seta que liga um
+ao outro. Essa seta é a diferença dos dois vetores: $\vec{u} - \vec{v}$ vai da
+ponta de $\vec{v}$ até a ponta de $\vec{u}$. Então a distância é o módulo da
+diferença.
+
+Em cinco coordenadas, a mesma conta tem dois passos. Primeiro, a diferença
+gênero por gênero: quanto um cliente viu a mais (ou a menos) que o outro em
+cada coluna. Depois, o módulo dessa lista de diferenças.
+
+<GenreBars
+  mode="diff"
+  caption="Em cada gênero, a barra de cima é o primeiro cliente e a de baixo é o segundo. O traço verde vai da ponta de uma à ponta da outra: é a diferença naquele gênero. À direita, a conta com sinal."
+/>
 
 > A **distância** entre $\vec{u}$ e $\vec{v}$ é o módulo da diferença:
 > $\lVert \vec{u} - \vec{v} \rVert$.
 
-É a fórmula da distância entre dois pontos, agora com $n$ parcelas. A
-diferença $\vec{u} - \vec{v}$ é o vetor que liga a ponta de $\vec{v}$ à
-ponta de $\vec{u}$, e seu tamanho é a distância.
-
-**Exemplo.** Ana e Carla: $\vec{a} - \vec{c} = (3,\ -2,\ -4,\ 3,\ 1)$, e
+**Exemplo.** Paula e Carla:
+$\vec{p} - \vec{c} = (3,\ -2,\ -4,\ 3,\ 1)$, e
 
 $$
-\lVert \vec{a} - \vec{c} \rVert = \sqrt{9 + 4 + 16 + 9 + 1} = \sqrt{39}
+\lVert \vec{p} - \vec{c} \rVert = \sqrt{9 + 4 + 16 + 9 + 1} = \sqrt{39}
 \approx 6{,}24.
 $$
 
-Foi essa a conta do analista.
+Foi essa a conta do analista. Os sinais negativos somem ao elevar ao quadrado:
+2 filmes de comédia a menos pesam o mesmo que 2 a mais.
 
-**Contraexemplo.** Distância pequena **não** garante gosto parecido. Compare
-dois pares de clientes, com três gêneros:
+**Contraexemplo.** Distância pequena **não** garante gosto parecido. O botão
+“Paula e Gustavo” da figura mostra o primeiro sinal disso: as diferenças são
+grandes em quase todo gênero, e a distância dá $\sqrt{62} \approx 7{,}87$,
+maior que a da Carla, embora o Gustavo tenha o gosto da Paula. Um caso ainda
+mais claro, com três gêneros:
 
 - $(1,\ 0,\ 0)$ e $(0,\ 0,\ 1)$: cada um viu um filme só, de gêneros
   diferentes. Não têm **nenhum** gênero em comum. A diferença é
@@ -399,73 +443,191 @@ dois pares de clientes, com três gêneros:
 
 O primeiro par está **mais perto**, embora seja o par sem nada em comum. A
 distância pequena veio do volume pequeno (um filme cada), e não do gosto.
-É o mesmo fenômeno da Carla e do Bruno, em miniatura.
 
-### 8.5 Produto escalar
+<details>
+<summary>Confira: qual é a distância entre Carla e Davi? Ela é maior ou menor que a distância entre Paula e Carla?</summary>
+
+$\vec{c} - \vec{d} = (3,\ -2,\ 0,\ 1,\ 1)$, e o módulo é
+$\sqrt{9 + 4 + 0 + 1 + 1} = \sqrt{15} \approx 3{,}87$. É menor que os 6,24
+entre Paula e Carla: Carla e Davi estão mais perto um do outro.
+
+</details>
+
+## O produto escalar multiplica par com par e soma, com quantas linhas houver
+
+O produto escalar da lição de geometria era a conta da nota de compra:
+quantidade vezes preço em cada linha, e depois a soma. Com cinco gêneros, a
+nota tem cinco linhas. Nada mais muda.
+
+<DotPairs
+  a={[6, 1, 0, 4, 3]}
+  b={[3, 3, 4, 1, 2]}
+  names={['ação', 'comédia', 'drama', 'terror', 'doc.']}
+  headA="\text{Paula}"
+  headB="\text{Carla}"
+  caption="Paula e Carla, gênero com gênero (doc. é documentário). Cada linha multiplica o seu par; no fim, os cinco produtos são somados num número só, 31."
+/>
 
 > O **produto escalar** de $\vec{u}$ e $\vec{v}$ em $\mathbb{R}^n$ é o número
-> $$\vec{u} \cdot \vec{v} = u_1 v_1 + u_2 v_2 + \cdots + u_n v_n.$$
+>
+> $$
+> \vec{u} \cdot \vec{v} = u_1 v_1 + u_2 v_2 + \cdots + u_n v_n.
+> $$
 
-É a conta da nota de compra da lição de
-[produto escalar](../geometria/produto-escalar), com quantas linhas a nota
-tiver. Continua valendo que $\vec{v} \cdot \vec{v} = \lVert \vec{v} \rVert^2$,
-porque $v_1 v_1 + \cdots + v_n v_n$ é exatamente a soma dos quadrados que fica
-dentro da raiz do módulo. E continuam valendo a comutativa, a distributiva e a
-regra $(k\vec{u}) \cdot \vec{v} = k(\vec{u} \cdot \vec{v})$, pelos mesmos
-motivos de lá.
-
-**Exemplo.** Ana e Carla:
+**Exemplo.** Paula e Carla:
 
 $$
-\vec{a} \cdot \vec{c} = 6 \times 3 + 1 \times 3 + 0 \times 4 + 4 \times 1 + 3
+\vec{p} \cdot \vec{c} = 6 \times 3 + 1 \times 3 + 0 \times 4 + 4 \times 1 + 3
 \times 2 = 18 + 3 + 0 + 4 + 6 = 31.
 $$
 
 Cada parcela é grande quando os **dois** clientes viram muito o mesmo gênero.
-A parcela do drama é zero, porque a Ana não viu drama: o gosto da Carla por
+A parcela do drama é zero, porque a Paula não viu drama: o gosto da Carla por
 drama não conta a favor da semelhança.
 
 **Contraexemplo.** $(1,\ 2,\ 3) \cdot (4,\ 5)$ não está definido, pelo mesmo
 motivo da soma: falta par para a terceira coordenada.
 
-### 8.6 O cosseno entre dois vetores
+As propriedades da lição de [produto escalar](../geometria/produto-escalar)
+continuam valendo, pelos mesmos motivos de lá. Vale a comutativa, vale a
+distributiva e vale a regra $(k\vec{u}) \cdot \vec{v} = k(\vec{u} \cdot
+\vec{v})$. E vale a ligação com o módulo:
+$\vec{v} \cdot \vec{v} = \lVert \vec{v} \rVert^2$, porque
+$v_1 v_1 + \cdots + v_n v_n$ é exatamente a soma dos quadrados que fica
+dentro da raiz do módulo. Para a Paula, $\vec{p} \cdot \vec{p} = 62$, o
+número que estava dentro da raiz de $\sqrt{62}$.
 
-No plano e no espaço, provamos que $\vec{u} \cdot \vec{v} = \lVert \vec{u} \rVert \,
-\lVert \vec{v} \rVert \cos\theta$, onde $\theta$ é o ângulo entre as setas. Em
-$\mathbb{R}^n$, não há ângulo desenhado. Então fazemos o caminho inverso, como
-a seção 7 anunciou:
+<details>
+<summary>Confira: quanto vale p · d, o produto escalar de Paula e Davi? Por que ele sai tão menor que p · c?</summary>
+
+$\vec{p} \cdot \vec{d} = 6 \times 0 + 1 \times 5 + 0 \times 4 + 4 \times 0 + 3
+\times 1 = 0 + 5 + 0 + 0 + 3 = 8$. Sai pequeno porque, nos gêneros que a
+Paula mais vê (ação e terror), o Davi viu zero. As parcelas grandes da Paula
+são multiplicadas por zero.
+
+</details>
+
+## O ângulo em cinco dimensões é definido pelo cosseno
+
+No plano e no espaço, a lição de produto escalar provou que
+$\vec{u} \cdot \vec{v} = \lVert \vec{u} \rVert \, \lVert \vec{v} \rVert
+\cos\theta$, onde $\theta$ é o ângulo entre as setas. Dali saiu a fórmula do
+ângulo. Em $\mathbb{R}^5$ não há ângulo desenhado para medir com
+transferidor. Então fazemos o caminho inverso, como fizemos com o módulo:
+usamos a fórmula para **definir** o ângulo.
 
 > Para $\vec{u}$ e $\vec{v}$ não nulos em $\mathbb{R}^n$, o **cosseno entre
 > os dois vetores** é **definido** por
-> $$\cos\theta = \frac{\vec{u} \cdot \vec{v}}{\lVert \vec{u} \rVert \, \lVert \vec{v} \rVert}.$$
+>
+> $$
+> \cos\theta = \frac{\vec{u} \cdot \vec{v}}{\lVert \vec{u} \rVert \, \lVert \vec{v} \rVert}.
+> $$
+>
 > Em aprendizado de máquina, esse número se chama **similaridade do
 > cosseno**.
 
-**Exemplo.** Ana e Carla: $\cos\theta = \dfrac{31}{\sqrt{62} \times \sqrt{39}}
-\approx \dfrac{31}{49{,}17} \approx 0{,}630$. Pelo $\arccos$, isso
-corresponde a um ângulo de cerca de $50{,}9^\circ$.
+Em 2 e 3 coordenadas a definição dá o ângulo que o transferidor media, porque
+ali a fórmula era um teorema. E em cinco coordenadas o ângulo também pode ser
+desenhado, com as medidas que as contas dão. Na lição de vetores no espaço, dois vetores sempre couberam numa
+folha plana. Com cinco coordenadas não conseguimos ver essa folha, mas
+podemos desenhá-la a partir das contas:
+
+1. Deite o primeiro vetor, com o comprimento igual ao módulo dele.
+2. A partir da mesma origem, desenhe o segundo vetor com o comprimento igual
+   ao módulo dele, aberto do ângulo $\theta$ que a fórmula dá.
+3. Meça, no desenho, a distância entre as duas pontas.
+
+<PairSheet
+  pairs={[['Paula', 'Carla'], ['Carla', 'Davi']]}
+  caption="A folha de dois vetores de cinco coordenadas, desenhada com os dois módulos e o ângulo da fórmula do cosseno. O tracejado liga as pontas; o número dele é medido no desenho."
+/>
+
+**Exemplo.** Paula e Carla: $\cos\theta = \dfrac{31}{\sqrt{62} \times
+\sqrt{39}} \approx \dfrac{31}{49{,}17} \approx 0{,}630$. Pelo arco cosseno,
+isso corresponde a um ângulo de cerca de $50{,}9^\circ$.
+
+Repare no tracejado da figura. Medido no desenho, ele dá 6,24, a mesma
+distância que a conta com as cinco diferenças deu na seção anterior. Não é
+coincidência. Na lição de produto escalar, o tamanho de uma soma dependia do
+produto escalar; com a diferença, a mesma conta dá
+
+$$
+\lVert \vec{u} - \vec{v} \rVert^2 = \lVert \vec{u} \rVert^2 - 2\,\vec{u}
+\cdot \vec{v} + \lVert \vec{v} \rVert^2,
+$$
+
+e o exercício 17 confere que ela vale em $\mathbb{R}^n$. O lado direito usa
+só três números: os dois módulos e o produto escalar. O desenho foi feito com
+esses mesmos três números. Então o lado esquerdo, a distância, também é o
+mesmo no desenho e na conta.
 
 **Contraexemplo.** O cosseno não existe quando um dos vetores é nulo: a conta
 teria zero no denominador. Um cliente novo, que ainda não viu nenhum filme, é o
 vetor $(0,\ 0,\ 0,\ 0,\ 0)$, e não tem cosseno com ninguém. Faz sentido: ele
 não tem gosto nenhum para comparar.
 
-**A fórmula merece o nome de cosseno?** Para isso, o resultado precisa ficar
-sempre entre $-1$ e $1$. Se a conta desse 1,3 para algum par de vetores,
-nenhum ângulo teria esse cosseno, e a definição seria um nome enganoso. O
-resultado de que a conta sempre fica nessa faixa tem nome:
+Com dados de contagem, como filmes vistos, nenhuma coordenada é negativa. Por
+isso cada parcela do produto escalar é zero ou positiva, e o cosseno fica
+entre 0 e 1. A leitura é a mesma do plano:
+
+| $\cos\theta$ | ângulo | leitura para dois clientes |
+|---|---|---|
+| $1$ | $0^\circ$ | mesmas proporções; um vetor é múltiplo positivo do outro |
+| perto de $1$ | pequeno | gostos parecidos |
+| $0$ | $90^\circ$ | nenhum gênero que os dois tenham visto (vetores **perpendiculares**) |
+| negativo | obtuso | só aparece quando há coordenadas negativas (veja os erros comuns) |
+
+<details>
+<summary>Confira: use o botão “Carla e Davi”. Qual é o cosseno entre eles, e o ângulo é maior ou menor que o de Paula e Carla?</summary>
+
+$\vec{c} \cdot \vec{d} = 0 + 15 + 16 + 0 + 2 = 33$, e os módulos são
+$\sqrt{39}$ e $\sqrt{42}$. Então $\cos\theta = \frac{33}{\sqrt{39} \times
+\sqrt{42}} \approx \frac{33}{40{,}47} \approx 0{,}815$, e
+$\theta \approx 35{,}4^\circ$. É menor que os $50{,}9^\circ$ de Paula e
+Carla: Carla e Davi apontam para lados mais parecidos.
+
+</details>
+
+## A conta do cosseno nunca passa de 1: a desigualdade de Cauchy-Schwarz
+
+A fórmula merece o nome de cosseno? O cosseno de um ângulo fica sempre entre
+$-1$ e $1$. Se a conta desse 1,3 para algum par de vetores, nenhum ângulo
+teria esse cosseno, e a definição seria um nome enganoso. Em 2 e 3
+coordenadas isso não acontece, porque ali a fórmula é um teorema. Em
+$\mathbb{R}^n$, precisa de prova. O resultado tem nome:
 
 > **Desigualdade de Cauchy-Schwarz.** Para quaisquer $\vec{u}$ e $\vec{v}$ em
 > $\mathbb{R}^n$,
-> $$\lvert \vec{u} \cdot \vec{v} \rvert \leq \lVert \vec{u} \rVert \, \lVert \vec{v} \rVert.$$
+>
+> $$
+> \lvert \vec{u} \cdot \vec{v} \rvert \leq \lVert \vec{u} \rVert \, \lVert \vec{v} \rVert.
+> $$
 
-Dividindo os dois lados pelos módulos (que não são zero), o valor absoluto do
+Os módulos não são zero, porque o cosseno só foi definido para vetores não
+nulos. Então podemos dividir os dois lados pelos módulos. O valor absoluto do
 cosseno fica menor ou igual a 1, que é o que queríamos.
 
 Esta é a passagem mais difícil da lição. Se ela não fechar na primeira
-leitura, isso é esperado: siga adiante e volte a ela depois da seção 9. A
-demonstração usa só ideias que você já tem: a distributiva do produto escalar
-e o sinal de uma expressão do 2º grau.
+leitura, isso é esperado: siga adiante e volte a ela depois do problema
+resolvido. A ideia usa só duas peças que você já tem: a distributiva do
+produto escalar e o sinal de uma expressão do 2º grau.
+
+A ideia é esta. Pegue os vetores da Paula e da Carla e um número $t$
+qualquer. Monte o vetor $\vec{p} - t\vec{c}$ e calcule o quadrado do módulo
+dele. Esse quadrado é uma soma de quadrados, então **nunca é negativo**,
+qualquer que seja o $t$. Arraste o $t$ e confira.
+
+<CauchyParabola />
+
+A curva tem forma de parábola porque o quadrado do módulo, aberto pela
+distributiva, vira uma expressão do 2º grau em $t$:
+$62 - 62t + 39t^2$. E uma parábola que nunca desce abaixo do eixo tem
+discriminante negativo ou zero. Com Paula e Carla, o discriminante dá
+$(-62)^2 - 4 \times 39 \times 62 = 3844 - 9672 = -5828$, negativo. O botão
+“Paula e Gustavo” mostra o caso do zero: a curva encosta no eixo em
+$t = \frac{1}{2}$, onde $\vec{p} - \frac{1}{2}\vec{g}$ é o vetor nulo.
+
+A demonstração faz a mesma conta com letras.
 
 *Demonstração.* Se $\vec{v}$ é o vetor nulo, os dois lados valem zero e não há
 o que provar. Suponha então $\vec{v}$ não nulo. Escolha um número qualquer $t$
@@ -491,9 +653,9 @@ b = -2\,(\vec{u} \cdot \vec{v}), \qquad
 c = \vec{u} \cdot \vec{u} = \lVert \vec{u} \rVert^2.
 $$
 
-O coeficiente $a$ é positivo, porque $\vec{v}$ não é nulo. Pela tabela das
-[inequações do 2º grau](../equacoes/inequacoes-do-segundo-grau), se o
-discriminante fosse positivo, haveria duas raízes, e entre elas a expressão
+O coeficiente $a$ é positivo, porque $\vec{v}$ não é nulo. Agora use a tabela
+das [inequações do 2º grau](../equacoes/inequacoes-do-segundo-grau). Se o
+discriminante fosse positivo, haveria duas raízes. Entre elas, a expressão
 teria o sinal contrário ao de $a$, isto é, seria negativa. Mas a expressão
 nunca é negativa. Então o discriminante não pode ser positivo:
 
@@ -511,25 +673,24 @@ dos dois lados, chegamos a
 $\lvert \vec{u} \cdot \vec{v} \rvert \leq \lVert \vec{u} \rVert \, \lVert
 \vec{v} \rVert$. $\blacksquare$
 
-**Conferência com números.** Para Ana e Carla, a expressão é
-$62 - 62t + 39t^2$. O discriminante dá
-$(-62)^2 - 4 \times 39 \times 62 = 3844 - 9672 = -5828$, negativo, como a
+**Conferência com números.** Para Paula e Carla, $a = 39$, $b = -62$ e
+$c = 62$, a parábola da figura. O discriminante deu $-5828$, negativo, como a
 demonstração garante. E, de fato,
 $31 \leq \sqrt{62} \times \sqrt{39} \approx 49{,}17$.
 
-Com a desigualdade garantida, a leitura do cosseno é a mesma do plano:
+<details>
+<summary>Confira: na figura, com Paula e Gustavo, a curva encosta no eixo. O que isso diz sobre o cosseno entre os dois?</summary>
 
-| $\cos\theta$ | ângulo | leitura para dois clientes |
-|---|---|---|
-| $1$ | $0^\circ$ | mesmas proporções; um vetor é múltiplo positivo do outro |
-| perto de $1$ | pequeno | gostos parecidos |
-| $0$ | $90^\circ$ | nenhum gênero que os dois tenham visto (vetores **perpendiculares**) |
-| negativo | obtuso | só aparece quando há coordenadas negativas (veja a seção 11) |
+Encostar no eixo quer dizer discriminante zero, e aí a desigualdade vira
+igualdade: $\lvert \vec{p} \cdot \vec{g} \rvert = \lVert \vec{p} \rVert \,
+\lVert \vec{g} \rVert$. Conferindo: $\vec{p} \cdot \vec{g} = 124$ e
+$\sqrt{62} \times \sqrt{248} = \sqrt{15\,376} = 124$. O cosseno é
+$\frac{124}{124} = 1$, o máximo. Isso acontece porque um vetor é múltiplo do
+outro: no $t = \frac{1}{2}$, $\vec{p} - t\vec{g}$ é o vetor nulo.
 
-Nos dados de contagem, como filmes vistos, nenhuma coordenada é negativa. Por
-isso o produto escalar nunca é negativo, e o cosseno fica entre 0 e 1.
+</details>
 
-### 8.7 Normalizar: tirar o volume da comparação
+## Normalizar tira o volume da comparação
 
 Na lição de [módulo, direção e componentes](../geometria/modulo-direcao-e-componentes),
 normalizar era dividir um vetor pelo próprio módulo, para obter o vetor de
@@ -543,21 +704,30 @@ $$
 (O chapéu em $\hat{v}$ é um nome para “a versão normalizada de
 $\vec{v}$”.)
 
-Normalizar a linha de um cliente apaga **quanto** ele assiste e guarda só
-**como** ele divide o tempo entre os gêneros. Veja o que acontece com o Bruno.
-Como $\vec{b} = 2\vec{a}$ e $\lVert \vec{b} \rVert = 2\lVert \vec{a}
-\rVert$,
+Na planilha, normalizar apaga **quanto** o cliente assiste e guarda só
+**como** ele divide o tempo entre os gêneros. Veja nas barras: antes, as do
+Gustavo têm o dobro do comprimento das da Paula. Depois da divisão, as dos
+dois são iguais.
+
+<GenreBars
+  mode="normalize"
+  caption="Cada perfil é dividido pelo próprio módulo. Antes, as barras do Gustavo são o dobro das da Paula. Depois, os dois perfis têm módulo 1 e barras idênticas. A Carla, normalizada, continua com outro formato. Os números normalizados são menores que 1, por isso a figura os desenha numa escala maior."
+/>
+
+A conta mostra por que Paula e Gustavo terminam iguais. Como
+$\vec{g} = 2\vec{p}$ e $\lVert \vec{g} \rVert = 2\lVert \vec{p} \rVert$,
 
 $$
-\hat{b} = \frac{2\vec{a}}{2\lVert \vec{a} \rVert} = \frac{\vec{a}}{\lVert
-\vec{a} \rVert} = \hat{a}.
+\hat{g} = \frac{2\vec{p}}{2\lVert \vec{p} \rVert} = \frac{\vec{p}}{\lVert
+\vec{p} \rVert} = \hat{p}.
 $$
 
-O fator 2 aparece em cima e embaixo, e se cancela. Depois de normalizados, Ana
-e Bruno são **o mesmo vetor**.
+O fator 2 aparece em cima e embaixo, e se cancela. Depois de normalizados,
+Paula e Gustavo são **o mesmo vetor**.
 
-E o cosseno é o produto escalar dos dois vetores normalizados, porque cada
-módulo passa a dividir o seu próprio vetor:
+E o cosseno é o produto escalar dos dois vetores normalizados. Cada módulo do
+denominador passa a dividir o seu próprio vetor, pela regra
+$(k\vec{u}) \cdot \vec{v} = k(\vec{u} \cdot \vec{v})$:
 
 $$
 \cos\theta = \frac{\vec{u} \cdot \vec{v}}{\lVert \vec{u} \rVert \, \lVert
@@ -567,86 +737,85 @@ $$
 Resumo da diferença entre as duas medidas: **a distância compara os vetores
 como estão; o cosseno compara os vetores depois de normalizados.**
 
-## 9. Resolvendo o problema da Ana
+<details>
+<summary>Confira: normalize o vetor (0, 3, 0, 4, 0). Qual é o módulo do resultado?</summary>
+
+O módulo é $\sqrt{0 + 9 + 0 + 16 + 0} = \sqrt{25} = 5$. Dividindo cada
+coordenada por 5: $(0;\ 0{,}6;\ 0;\ 0{,}8;\ 0)$. O módulo do resultado é
+$\sqrt{0{,}36 + 0{,}64} = \sqrt{1} = 1$, como deve ser.
+
+</details>
+
+## Resolvendo o problema da Paula
 
 Agora as duas propostas da equipe podem ser calculadas lado a lado. Os
-vetores são $\vec{a} = (6,\ 1,\ 0,\ 4,\ 3)$, $\vec{b} = (12,\ 2,\ 0,\ 8,\ 6)$,
-$\vec{c} = (3,\ 3,\ 4,\ 1,\ 2)$ e $\vec{d} = (0,\ 5,\ 4,\ 0,\ 1)$.
+vetores são $\vec{p} = (6,\ 1,\ 0,\ 4,\ 3)$,
+$\vec{g} = (12,\ 2,\ 0,\ 8,\ 6)$, $\vec{c} = (3,\ 3,\ 4,\ 1,\ 2)$ e
+$\vec{d} = (0,\ 5,\ 4,\ 0,\ 1)$.
 
-Os módulos: $\lVert \vec{a} \rVert = \sqrt{62} \approx 7{,}87$;
-$\lVert \vec{b} \rVert = \sqrt{248} \approx 15{,}75$;
+Previsão antes das contas: o Gustavo deve ter o maior cosseno possível, 1,
+porque é o dobro da Paula. E deve estar longe dela, porque vê muito mais
+filmes. A Carla deve estar perto, porque vê mais ou menos a mesma quantidade
+que a Paula.
+
+Os módulos: $\lVert \vec{p} \rVert = \sqrt{62} \approx 7{,}87$;
+$\lVert \vec{g} \rVert = \sqrt{248} \approx 15{,}75$;
 $\lVert \vec{c} \rVert = \sqrt{39} \approx 6{,}24$;
 $\lVert \vec{d} \rVert = \sqrt{42} \approx 6{,}48$.
 
-**Distâncias até a Ana.**
+**Distâncias até a Paula.**
 
-- Bruno: $\vec{a} - \vec{b} = (-6,\ -1,\ 0,\ -4,\ -3)$, de módulo
+- Gustavo: $\vec{p} - \vec{g} = (-6,\ -1,\ 0,\ -4,\ -3)$, de módulo
   $\sqrt{36 + 1 + 0 + 16 + 9} = \sqrt{62} \approx 7{,}87$.
-- Carla: $\sqrt{39} \approx 6{,}24$, calculado na seção 8.4.
-- Davi: $\vec{a} - \vec{d} = (6,\ -4,\ -4,\ 4,\ 2)$, de módulo
+- Carla: $\sqrt{39} \approx 6{,}24$, calculado na seção da distância.
+- Davi: $\vec{p} - \vec{d} = (6,\ -4,\ -4,\ 4,\ 2)$, de módulo
   $\sqrt{36 + 16 + 16 + 16 + 4} = \sqrt{88} \approx 9{,}38$.
 
-**Cossenos com a Ana.**
+**Cossenos com a Paula.**
 
-- Bruno: $\vec{a} \cdot \vec{b} = 72 + 2 + 0 + 32 + 18 = 124$, e
+- Gustavo: $\vec{p} \cdot \vec{g} = 72 + 2 + 0 + 32 + 18 = 124$, e
   $\cos\theta = \frac{124}{\sqrt{62} \times \sqrt{248}} = \frac{124}{124} = 1$.
-  O produto dos módulos é $\sqrt{62 \times 248} = \sqrt{15376} = 124$.
-- Carla: $0{,}630$, calculado na seção 8.6.
-- Davi: $\vec{a} \cdot \vec{d} = 0 + 5 + 0 + 0 + 3 = 8$, e
+  O produto dos módulos é $\sqrt{62 \times 248} = \sqrt{15\,376} = 124$.
+- Carla: $0{,}630$, calculado na seção do cosseno.
+- Davi: $\vec{p} \cdot \vec{d} = 0 + 5 + 0 + 0 + 3 = 8$, e
   $\cos\theta = \frac{8}{\sqrt{62} \times \sqrt{42}} \approx
   \frac{8}{51{,}03} \approx 0{,}157$.
 
-| Cliente | Distância até a Ana | Cosseno com a Ana | Ângulo |
+A figura desenha a folha de cada par. Nela aparecem juntas as duas medidas:
+o ângulo na origem e a distância no tracejado entre as pontas.
+
+<PairSheet
+  pairs={[['Paula', 'Gustavo'], ['Paula', 'Carla'], ['Paula', 'Davi']]}
+  caption="A Paula deitada e cada outro cliente na sua folha, com os módulos e o ângulo das contas. Com o Gustavo, as duas setas ficam na mesma reta (ângulo zero), e a distância entre as pontas é o comprimento que sobra da seta dele."
+/>
+
+| Cliente | Distância até a Paula | Cosseno com a Paula | Ângulo |
 |---|---|---|---|
-| Bruno | 7,87 | 1,000 | $0^\circ$ |
+| Gustavo | 7,87 | **1,000** (o maior) | $0^\circ$ |
 | Carla | **6,24** (a menor) | 0,630 | $50{,}9^\circ$ |
 | Davi | 9,38 | 0,157 | $81{,}0^\circ$ |
 
 As duas medidas concordam sobre o Davi: ele é o menos parecido pelas duas.
-Mas discordam sobre quem é o mais parecido.
+Mas discordam sobre quem é o mais parecido, como a previsão dizia.
 
-**Por que a distância escolheu a Carla.** A diferença $\vec{a} - \vec{b}$ é
-$-\vec{a}$, então a distância entre Ana e Bruno é o módulo da própria Ana,
-7,87. Ela é grande só porque o Bruno assiste muito mais. A Carla assiste menos
-que o Bruno, e por isso a ponta da seta dela fica mais perto da ponta da seta
-da Ana, mesmo apontando para outro lado. A distância mistura duas
-informações: **o que** a pessoa vê e **quanto** ela vê.
+**Por que a distância escolheu a Carla.** A diferença $\vec{p} - \vec{g}$ é
+$-\vec{p}$, então a distância entre Paula e Gustavo é o módulo da própria
+Paula, 7,87. Ela é grande só porque o Gustavo assiste muito mais. A Carla
+assiste mais ou menos o mesmo que a Paula. Por isso a ponta da seta dela fica
+mais perto da ponta da seta da Paula, mesmo apontando para outro lado. A
+distância mistura duas informações: **o que** a pessoa vê e **quanto** ela
+vê.
 
-**Por que o cosseno escolheu o Bruno.** O cosseno é o produto escalar dos
-vetores normalizados, e normalizar apaga o “quanto”. Como $\hat{b} =
-\hat{a}$, o cosseno dá 1, o máximo possível.
-
-Dá para ver isso nos vetores normalizados. Com os dois gêneros da figura da
-seção 6, eles ficam todos na circunferência de raio 1:
-
-<CartesianPlane
-  xMin={-0.2} xMax={1.2} yMin={-0.2} yMax={1.2}
-  xUnit={220}
-  xStep={0.25} yStep={0.25}
-  xTicks={[{at: 0.5, label: '0{,}5'}]}
-  yTicks={[{at: 0.5, label: '0{,}5'}]}
-  circles={[{center: [0, 0], r: 1, tone: 0, dashed: true}]}
-  segments={[
-    {from: [0, 0], to: [0.986, 0.164], tone: 1, arrow: true},
-    {from: [0, 0], to: [0.707, 0.707], tone: 2, arrow: true},
-    {from: [0, 0], to: [0, 1], tone: 3, arrow: true},
-    {from: [0.986, 0.164], to: [0.707, 0.707], tone: 0},
-  ]}
-  labels={[
-    {at: [0.62, 0.103], math: '\\text{Ana} = \\text{Bruno}', tone: 1, dy: -26},
-    {at: [0.707, 0.707], math: '\\text{Carla}', tone: 2, dx: 12, dy: -16, anchor: 'start'},
-    {at: [0, 1], math: '\\text{Davi}', tone: 3, dx: 12, dy: -14, anchor: 'start'},
-  ]}
-  axisLabels={['\\text{ação}', '\\text{comédia}']}
-  caption="Os mesmos clientes, com ação e comédia, depois de normalizados: todas as pontas caem na circunferência de raio 1 (tracejada). Ana e Bruno viram a mesma seta. O segmento sem seta liga as pontas de Ana e Carla: agora, quanto menor o ângulo, menor a distância entre as pontas."
-/>
+**Por que o cosseno escolheu o Gustavo.** O cosseno é o produto escalar dos
+vetores normalizados, e normalizar apaga o “quanto”. Como
+$\hat{g} = \hat{p}$, o cosseno dá 1, o máximo possível.
 
 **Então quem tem razão?** Depende da pergunta, e é essa a lição do problema:
 
 - para **recomendar filmes por gosto**, a colega tem razão. O que importa é a
-  proporção entre os gêneros, e o cosseno mede exatamente isso. O Bruno é a
-  melhor fonte de sugestões para a Ana, e como ele vê o dobro de filmes, deve
-  ter muitos que ela ainda não viu;
+  proporção entre os gêneros, e o cosseno mede exatamente isso. O Gustavo é a
+  melhor fonte de sugestões para a Paula. E, como ele vê o dobro de filmes,
+  deve ter muitos que ela ainda não viu;
 - para uma pergunta de **volume**, como “quem usa o serviço de um jeito
   parecido, em gênero e em quantidade?”, a distância é a medida certa. Um
   cliente que assiste 30 filmes por mês e outro que assiste 3 usam o serviço
@@ -654,13 +823,16 @@ seção 6, eles ficam todos na circunferência de raio 1:
 
 A regra do analista não estava errada. Ela respondia outra pergunta.
 
-## 10. Exemplos resolvidos
+## Exemplos resolvidos
 
-### Exemplo 1: as contas em $\mathbb{R}^4$
+### Exemplo 1: as contas em quatro coordenadas
 
 Sejam $\vec{u} = (2,\ -1,\ 0,\ 3)$ e $\vec{v} = (1,\ 4,\ -2,\ 1)$. Calcule
 $\vec{u} + \vec{v}$, $3\vec{u}$, $\vec{u} - \vec{v}$,
 $\lVert \vec{u} \rVert$ e $\vec{u} \cdot \vec{v}$.
+
+Previsão: as três primeiras contas dão listas de quatro números; as duas
+últimas dão um número só cada uma.
 
 Cada conta é feita posição por posição.
 
@@ -672,19 +844,36 @@ Cada conta é feita posição por posição.
 - $\vec{u} \cdot \vec{v} = 2 \times 1 + (-1) \times 4 + 0 \times (-2) + 3
   \times 1 = 2 - 4 + 0 + 3 = 1$.
 
-### Exemplo 2: a distância entre Carla e Davi
+### Exemplo 2: o cosseno entre Gustavo e Carla
 
-Pause e tente antes de ler: qual é a distância entre $\vec{c} = (3,\ 3,\ 4,\
-1,\ 2)$ e $\vec{d} = (0,\ 5,\ 4,\ 0,\ 1)$?
+Pause e tente antes de ler: sem fazer a conta inteira, preveja o cosseno
+entre Gustavo e Carla. Depois confira.
 
-A diferença é $\vec{c} - \vec{d} = (3,\ -2,\ 0,\ 1,\ 1)$. O módulo dela é
-$\sqrt{9 + 4 + 0 + 1 + 1} = \sqrt{15} \approx 3{,}87$. Carla e Davi estão bem
-mais perto um do outro do que qualquer um dos dois está da Ana.
+Previsão: o Gustavo é a Paula esticada para o dobro, e esticar não muda a
+direção. Então o cosseno com a Carla deve ser o mesmo da Paula, $0{,}630$.
+
+Conta: $\vec{g} \cdot \vec{c} = 36 + 6 + 0 + 8 + 12 = 62$, que é o dobro de
+$\vec{p} \cdot \vec{c} = 31$. E $\lVert \vec{g} \rVert = 2\lVert \vec{p}
+\rVert$. Então
+
+$$
+\cos\theta = \frac{62}{\sqrt{248} \times \sqrt{39}} = \frac{2 \times
+31}{2\sqrt{62} \times \sqrt{39}} = \frac{31}{\sqrt{62} \times \sqrt{39}}
+\approx 0{,}630.
+$$
+
+O 2 se cancela, como na normalização. Já a distância muda: entre Gustavo e
+Carla ela dá $\sqrt{163} \approx 12{,}77$, bem mais que os 6,24 entre Paula e
+Carla. O cosseno não liga para o volume; a distância liga.
 
 ### Exemplo 3: a diagonal de um cubo em muitas dimensões
 
 Pause e tente: qual é o ângulo entre $\vec{u} = (1,\ 1,\ 1,\ 1)$ e
 $\vec{e}_1 = (1,\ 0,\ 0,\ 0)$?
+
+Previsão: no plano, a diagonal do quadrado faz $45^\circ$ com o eixo. Com
+mais coordenadas, a diagonal tem mais direções para dividir, e o ângulo com
+um eixo só deve crescer.
 
 O produto escalar é $1 \times 1 + 1 \times 0 + 1 \times 0 + 1 \times 0 = 1$.
 Os módulos são $\lVert \vec{u} \rVert = \sqrt{4} = 2$ e
@@ -693,9 +882,12 @@ $\theta = 60^\circ$.
 
 Com $n$ coordenadas, o mesmo raciocínio dá
 $\cos\theta = \frac{1}{\sqrt{n}}$, porque o vetor $(1,\ 1,\ \ldots,\ 1)$ tem
-módulo $\sqrt{n}$. No plano, $n = 2$ e o ângulo é $45^\circ$. Com
-$n = 100$, $\cos\theta = 0{,}1$ e o ângulo é de cerca de $84{,}3^\circ$. Em
-muitas dimensões, a diagonal fica quase perpendicular a cada eixo. É um
+módulo $\sqrt{n}$. Arraste o $n$:
+
+<DiagonalDims caption="A folha do eixo e da diagonal, com os dois normalizados. Com n = 2 é a diagonal do quadrado; quanto mais coordenadas, mais a diagonal se aproxima do tracejado de 90°." />
+
+Com $n = 100$, $\cos\theta = 0{,}1$ e o ângulo é de cerca de $84{,}3^\circ$.
+Em muitas dimensões, a diagonal fica quase perpendicular a cada eixo. É um
 exemplo de como a intuição do desenho pode falhar quando $n$ cresce, e de por
 que a conta é o guia mais seguro.
 
@@ -703,6 +895,9 @@ que a conta é o guia mais seguro.
 
 Pause e tente: num curso, quatro provas têm pesos $0{,}1$, $0{,}2$, $0{,}3$ e
 $0{,}4$, que somam 1. Uma aluna tirou 7, 8, 5 e 9. Qual é a média final?
+
+Previsão: o peso maior (0,4) está na nota 9, e o 5 tem peso médio. A média
+deve ficar acima da média simples, $\frac{29}{4} = 7{,}25$.
 
 A média ponderada multiplica cada nota pelo peso e soma. Essa é a conta do
 produto escalar entre o vetor das notas e o vetor dos pesos:
@@ -712,30 +907,38 @@ $$
 + 3{,}6 = 7{,}4.
 $$
 
-Um **neurônio artificial**, a peça básica das redes neurais, faz exatamente
-essa conta: recebe um vetor de entradas, multiplica pelo vetor de pesos e
-soma. O que ele faz depois com o número fica para mais adiante no curso.
+Deu 7,4, acima de 7,25, como previsto. Um **neurônio artificial**, a peça
+básica das redes neurais, faz exatamente essa conta: recebe um vetor de
+entradas, multiplica pelo vetor de pesos e soma. O que ele faz depois com o
+número fica para mais adiante no curso.
 
-### Exemplo 5: normalizar a Ana
+### Exemplo 5: normalizar a Paula
 
-Pause e tente: escreva $\hat{a}$ com três casas decimais e confira que o
+Pause e tente: escreva $\hat{p}$ com três casas decimais e confira que o
 módulo dele é 1.
+
+Previsão: como o módulo da Paula é cerca de 7,87, cada coordenada fica uns 8
+vezes menor. O 6 deve virar algo perto de 0,75.
 
 Dividimos cada coordenada por $\sqrt{62} \approx 7{,}874$:
 
 $$
-\hat{a} \approx (0{,}762;\ 0{,}127;\ 0;\ 0{,}508;\ 0{,}381).
+\hat{p} \approx (0{,}762;\ 0{,}127;\ 0;\ 0{,}508;\ 0{,}381).
 $$
 
 Conferência: $0{,}762^2 + 0{,}127^2 + 0 + 0{,}508^2 + 0{,}381^2 \approx
 0{,}581 + 0{,}016 + 0 + 0{,}258 + 0{,}145 = 1{,}000$. O módulo é 1, a menos
-do arredondamento. Pela seção 8.7, $\hat{b}$ tem exatamente as mesmas
-coordenadas.
+do arredondamento. Pela seção da normalização, $\hat{g}$ tem exatamente as
+mesmas coordenadas.
 
 ### Exemplo 6: completar um vetor perpendicular
 
 Pause e tente: para que valor de $k$ os vetores $(1,\ 2,\ k,\ -1)$ e
 $(3,\ 0,\ 1,\ 2)$ são perpendiculares?
+
+Previsão da forma: o $k$ só aparece numa parcela, multiplicado por 1. Então o
+produto escalar vai ser “um número mais $k$”, e o $k$ será o oposto desse
+número.
 
 Perpendiculares quer dizer produto escalar zero:
 
@@ -746,7 +949,7 @@ $$
 Igualando a zero, $k = -1$. Conferência:
 $(1,\ 2,\ -1,\ -1) \cdot (3,\ 0,\ 1,\ 2) = 3 + 0 - 1 - 2 = 0$.
 
-## 11. Erros comuns
+## Erros comuns
 
 > **Erro 1: somar ou multiplicar vetores de tamanhos diferentes.** Uma lista
 > de 5 números e uma de 4 não podem ser somadas, nem ter produto escalar.
@@ -756,22 +959,23 @@ $(1,\ 2,\ -1,\ -1) \cdot (3,\ 0,\ 1,\ 2) = 3 + 0 - 1 - 2 = 0$.
 > **Erro 2: comparar listas com as colunas em ordem diferente.** Se uma
 > planilha tem as colunas (ação, comédia, …) e outra tem (comédia, ação, …), o
 > produto escalar das linhas multiplica ação com comédia. A conta sai, mas
-> não significa nada. Teste com a Ana comparada com ela mesma, só com ação e
+> não significa nada. Teste com a Paula comparada com ela mesma, só com ação e
 > comédia: $(6,\ 1) \cdot (6,\ 1) = 37$, e o cosseno dá 1, como deve. Mas,
 > se a segunda planilha tem as colunas trocadas, a conta vira
 > $(6,\ 1) \cdot (1,\ 6) = 12$, e o cosseno cai para $\frac{12}{37} \approx
-> 0{,}32$: a Ana parece ter pouco a ver com ela mesma. Antes de qualquer
+> 0{,}32$: a Paula parece ter pouco a ver com ela mesma. Antes de qualquer
 > conta, confira se a posição $i$ quer dizer a mesma coisa nos dois vetores.
 
-> **Erro 3: achar que distância pequena significa gosto parecido.** Bruno é
-> $2\vec{a}$, tem exatamente o gosto da Ana e está mais longe dela que a
+> **Erro 3: achar que distância pequena significa gosto parecido.** O Gustavo
+> é $2\vec{p}$, tem exatamente o gosto da Paula e está mais longe dela que a
 > Carla. A distância cresce com o volume. Quando a pergunta é sobre
 > proporções, use o cosseno.
 
 > **Erro 4: usar a soma das coordenadas como módulo.** O módulo de
 > $(1,\ 1,\ 1,\ 1)$ não é 4: é $\sqrt{1 + 1 + 1 + 1} = 2$. A soma das
-> coordenadas é outra medida. O módulo é a raiz do produto escalar do vetor
-> com ele mesmo: $\sqrt{(1,\ 1,\ 1,\ 1) \cdot (1,\ 1,\ 1,\ 1)} = \sqrt{4} = 2$.
+> coordenadas é o comprimento das pernas em fila, e não o da hipotenusa. O
+> módulo é a raiz do produto escalar do vetor com ele mesmo:
+> $\sqrt{(1,\ 1,\ 1,\ 1) \cdot (1,\ 1,\ 1,\ 1)} = \sqrt{4} = 2$.
 
 > **Erro 5: achar que cosseno zero quer dizer “gostos opostos”.** Com dados
 > de contagem, cosseno zero quer dizer que os dois clientes não têm nenhum
@@ -782,10 +986,10 @@ $(1,\ 2,\ -1,\ -1) \cdot (3,\ 0,\ 1,\ 2) = 3 + 0 - 1 - 2 = 0$.
 
 > **Erro 6: calcular o cosseno com um vetor nulo.** Um cliente sem histórico
 > é $\vec{0}$, e a conta teria zero no denominador. Não é um cosseno igual a
-> zero: o cosseno não existe. Sistemas de recomendação tratam
-> esse caso à parte, por exemplo sugerindo os filmes mais vistos.
+> zero: o cosseno não existe. Sistemas de recomendação tratam esse caso à
+> parte, por exemplo sugerindo os filmes mais vistos.
 
-## 12. Perguntas de verificação
+## Perguntas de verificação
 
 1. Por que a ordem das coordenadas importa num vetor de $\mathbb{R}^5$?
 2. Por que a soma de vetores em $\mathbb{R}^n$ é feita coordenada a
@@ -793,7 +997,7 @@ $(1,\ 2,\ -1,\ -1) \cdot (3,\ 0,\ 1,\ 2) = 3 + 0 - 1 - 2 = 0$.
 3. O módulo em $\mathbb{R}^n$ é uma definição ou um teorema? E no plano?
 4. Por que a desigualdade de Cauchy-Schwarz era necessária para chamar a
    fórmula de “cosseno”?
-5. A distância entre Ana e Bruno é igual ao módulo da Ana. Por quê?
+5. A distância entre Paula e Gustavo é igual ao módulo da Paula. Por quê?
 6. Dois clientes têm cosseno 1. O que se pode afirmar sobre os vetores deles?
 7. Por que normalizar os vetores faz a distância e o cosseno concordarem?
 8. Por que, com dados de contagem, o cosseno nunca é negativo?
@@ -812,19 +1016,20 @@ $(1,\ 2,\ -1,\ -1) \cdot (3,\ 0,\ 1,\ 2) = 3 + 0 - 1 - 2 = 0$.
 3. No plano, a fórmula $\sqrt{a^2 + b^2}$ é um teorema: ela sai de Pitágoras
    aplicado à seta. Em $\mathbb{R}^n$, ela é uma definição, porque não há
    seta para medir. A definição foi escolhida para concordar com o teorema em
-   2 e 3 coordenadas.
+   2 e 3 coordenadas. Ela também é o que Pitágoras repetido daria, se cada
+   coordenada nova fosse uma direção em ângulo reto com as anteriores.
 4. Porque o cosseno de um ângulo fica sempre entre $-1$ e $1$. Se a fórmula
    pudesse dar 1,3, nenhum ângulo teria esse cosseno, e o nome seria
    enganoso. A desigualdade garante que o resultado fica na faixa certa.
-5. Porque $\vec{a} - \vec{b} = \vec{a} - 2\vec{a} = -\vec{a}$, e o oposto de
+5. Porque $\vec{p} - \vec{g} = \vec{p} - 2\vec{p} = -\vec{p}$, e o oposto de
    um vetor tem o mesmo módulo que ele.
 6. Que um é múltiplo positivo do outro: apontam para o mesmo lado, com as
    mesmas proporções entre as coordenadas. Depois de normalizados, são o
    mesmo vetor.
 7. Porque, depois de normalizar, todos os vetores têm módulo 1, e a única
-   diferença que sobra é a direção e o sentido. Para vetores de módulo 1, a distância
-   depende só do ângulo (o exercício 17 mostra a fórmula), e quanto menor o
-   ângulo, menor a distância.
+   diferença que sobra é a direção e o sentido. Para vetores de módulo 1, a
+   distância depende só do ângulo (o exercício 17 mostra a fórmula), e quanto
+   menor o ângulo, menor a distância.
 8. Porque todas as coordenadas são maiores ou iguais a zero. Cada parcela do
    produto escalar é um produto de dois números não negativos, e a soma de
    números não negativos não é negativa. Os módulos são positivos, então o
@@ -832,7 +1037,7 @@ $(1,\ 2,\ -1,\ -1) \cdot (3,\ 0,\ 1,\ 2) = 3 + 0 - 1 - 2 = 0$.
 
 </details>
 
-## 13. Exercícios
+## Exercícios
 
 ### 1. Reconhecimento
 
@@ -849,8 +1054,8 @@ $(1,\ 2,\ -1,\ -1) \cdot (3,\ 0,\ 1,\ 2) = 3 + 0 - 1 - 2 = 0$.
 
 ### 2. Explicação
 
-4. Explique, sem fórmulas, por que o cosseno entre Ana e Bruno dá 1 embora a
-   distância entre eles seja grande.
+4. Explique, sem fórmulas, por que o cosseno entre Paula e Gustavo dá 1
+   embora a distância entre eles seja grande.
 5. Um colega afirma que o módulo de $(1,\ 1,\ 1,\ 1)$ é 4. Explique o erro e
    dê o valor correto.
 6. Explique por que faz sentido falar em “ângulo” entre dois vetores de
@@ -886,25 +1091,26 @@ primeiro. Lembre que $\lvert k \rvert = 4$ tem duas soluções.
 ### 5. Problema misto
 
 12. Agora o serviço quer recomendar filmes para o Davi. Use os quatro
-    clientes da seção 9. Calcule a distância e o cosseno entre o Davi e cada
-    um dos outros três. As duas medidas escolhem o mesmo cliente? Por que,
-    neste caso, elas concordam?
+    clientes do problema motivador. Calcule a distância e o cosseno entre o
+    Davi e cada um dos outros três. As duas medidas escolhem o mesmo
+    cliente? Por que, neste caso, elas concordam?
 13. Num curso, as disciplinas valem créditos diferentes. Uma aluna tirou as
     notas $(8,\ 6,\ 9,\ 7,\ 5)$ em disciplinas de $(4,\ 2,\ 3,\ 3,\ 2)$
     créditos. A média ponderada pelos créditos é a soma de nota vezes crédito,
     dividida pelo total de créditos. Escreva o numerador como um produto
     escalar e calcule a média, com duas casas decimais.
 14. A Elisa acabou de assinar o serviço e ainda não viu nenhum filme. Qual é
-    o vetor dela? Calcule a distância entre ela e a Ana. Dá para calcular o
-    cosseno entre elas? O que o serviço pode fazer para recomendar algo à
+    o vetor dela? Calcule a distância entre ela e a Paula. Dá para calcular
+    o cosseno entre elas? O que o serviço pode fazer para recomendar algo à
     Elisa?
 
 <details>
 <summary>Dica para o 12</summary>
 
-Você já tem a distância e o produto escalar entre Davi e Ana, na seção 9, e a
-distância entre Davi e Carla, no exemplo 2. Para a resposta do “por que”,
-compare os módulos de Carla e Davi.
+Você já tem a distância e o produto escalar entre Davi e Paula, na seção
+“Resolvendo o problema da Paula”. A distância entre Davi e Carla está no
+“Confira” da seção da distância. Para a resposta do “por que”, compare os
+módulos de Carla e Davi.
 
 </details>
 
@@ -924,8 +1130,8 @@ compare os módulos de Carla e Davi.
 
 Escreva $\lVert \vec{u} - \vec{v} \rVert^2$ como
 $(\vec{u} - \vec{v}) \cdot (\vec{u} - \vec{v})$ e abra pela distributiva,
-como na demonstração da seção 8.6. Na segunda parte, use que, com módulos 1,
-o cosseno é o próprio produto escalar.
+como na demonstração da desigualdade de Cauchy-Schwarz. Na segunda parte, use
+que, com módulos 1, o cosseno é o próprio produto escalar.
 
 </details>
 
@@ -943,17 +1149,17 @@ o cosseno é o próprio produto escalar.
 3. a) definida: $(5,\ 7,\ 9)$ &nbsp; b) não definida, os tamanhos são
    diferentes &nbsp; c) definida: $(2,\ 4,\ 6)$ &nbsp; d) não definida &nbsp;
    e) definida: $0 + 0 + 0 + 0 = 0$. Os dois vetores são perpendiculares.
-4. O Bruno vê os mesmos gêneros que a Ana, na mesma proporção: em cada
+4. O Gustavo vê os mesmos gêneros que a Paula, na mesma proporção: em cada
    gênero, exatamente o dobro. O cosseno olha só para a proporção, isto é,
-   para a direção e o sentido da seta, e por isso dá o máximo, 1. A distância olha também
-   para o tamanho, e o Bruno vê muito mais filmes, então a ponta da seta dele
-   fica longe da ponta da seta da Ana.
-5. O colega somou as coordenadas. O módulo é a raiz da soma dos quadrados:
-   $\sqrt{1 + 1 + 1 + 1} = \sqrt{4} = 2$.
+   para a direção e o sentido da seta, e por isso dá o máximo, 1. A distância
+   olha também para o tamanho. Como o Gustavo vê muito mais filmes, a ponta
+   da seta dele fica longe da ponta da seta da Paula.
+5. O colega somou as coordenadas, isto é, pôs as pernas em fila. O módulo é
+   a raiz da soma dos quadrados: $\sqrt{1 + 1 + 1 + 1} = \sqrt{4} = 2$.
 6. Porque o “ângulo” em $\mathbb{R}^5$ é definido pela fórmula do cosseno,
    que concorda com o ângulo desenhado em 2 e 3 dimensões. A desigualdade de
    Cauchy-Schwarz garante que a fórmula sempre dá um número entre $-1$ e
-   $1$, então existe um ângulo entre $0^\circ$ e $180^\circ$ com esse
+   $1$. Então existe um ângulo entre $0^\circ$ e $180^\circ$ com esse
    cosseno.
 7. a) $(4,\ 2,\ 1,\ 1)$ &nbsp; b) $2\vec{u} = (6,\ 0,\ -2,\ 4)$, então
    $2\vec{u} - \vec{v} = (5,\ -2,\ -4,\ 5)$ &nbsp; c)
@@ -978,22 +1184,23 @@ o cosseno é o próprio produto escalar.
     são $(4,\ 8,\ 8)$ e $(-4,\ -8,\ -8)$. O primeiro tem cosseno 1 com
     $\vec{w}$ (mesmo sentido); o segundo tem cosseno $-1$ (sentido oposto,
     ângulo de $180^\circ$).
-12. Distâncias até o Davi: Ana $\sqrt{88} \approx 9{,}38$; Bruno: a
-    diferença $\vec{b} - \vec{d} = (12,\ -3,\ -4,\ 8,\ 5)$ tem módulo
+12. Distâncias até o Davi: Paula $\sqrt{88} \approx 9{,}38$; Gustavo: a
+    diferença $\vec{g} - \vec{d} = (12,\ -3,\ -4,\ 8,\ 5)$ tem módulo
     $\sqrt{144 + 9 + 16 + 64 + 25} = \sqrt{258} \approx 16{,}06$; Carla
-    $\sqrt{15} \approx 3{,}87$. Cossenos com o Davi: Ana $0{,}157$; Bruno
-    $\frac{16}{\sqrt{248} \times \sqrt{42}} \approx 0{,}157$, o mesmo da Ana,
-    porque $\vec{b} = 2\vec{a}$; Carla $\frac{33}{\sqrt{39} \times \sqrt{42}}
-    \approx 0{,}815$. As duas medidas escolhem a Carla. Elas concordam porque
-    Carla e Davi assistem quantidades parecidas (módulos 6,24 e 6,48): quando
-    o volume é parecido, quase toda a diferença que sobra é de gosto, e a
-    distância passa a medir o gosto também.
+    $\sqrt{15} \approx 3{,}87$. Cossenos com o Davi: Paula $0{,}157$; Gustavo
+    $\frac{16}{\sqrt{248} \times \sqrt{42}} \approx 0{,}157$, o mesmo da
+    Paula, porque $\vec{g} = 2\vec{p}$; Carla
+    $\frac{33}{\sqrt{39} \times \sqrt{42}} \approx 0{,}815$. As duas medidas
+    escolhem a Carla. Elas concordam porque Carla e Davi assistem quantidades
+    parecidas (módulos 6,24 e 6,48): quando o volume é parecido, quase toda a
+    diferença que sobra é de gosto, e a distância passa a medir o gosto
+    também.
 13. O numerador é $(8,\ 6,\ 9,\ 7,\ 5) \cdot (4,\ 2,\ 3,\ 3,\ 2) = 32 + 12 +
     27 + 21 + 10 = 102$. O total de créditos é $4 + 2 + 3 + 3 + 2 = 14$. A
     média é $\frac{102}{14} \approx 7{,}29$. Se você encontrou 7, fez a
     média simples das notas, $\frac{35}{5}$, ignorando os créditos.
-14. A Elisa é $\vec{0} = (0,\ 0,\ 0,\ 0,\ 0)$. A distância até a Ana é
-    $\lVert \vec{a} - \vec{0} \rVert = \lVert \vec{a} \rVert = \sqrt{62}
+14. A Elisa é $\vec{0} = (0,\ 0,\ 0,\ 0,\ 0)$. A distância até a Paula é
+    $\lVert \vec{p} - \vec{0} \rVert = \lVert \vec{p} \rVert = \sqrt{62}
     \approx 7{,}87$. O cosseno não existe, porque o módulo da Elisa é zero e
     ficaria no denominador. Sem histórico, não há gosto para comparar; o
     serviço precisa de outra regra, como sugerir os filmes mais vistos ou
@@ -1021,19 +1228,21 @@ o cosseno é o próprio produto escalar.
 
 </details>
 
-## 14. Revisão curta
+## Revisão curta
 
 - Um vetor de $\mathbb{R}^n$ é uma lista ordenada de $n$ números. A posição
   de cada número carrega o significado; trocar a ordem muda o vetor.
+- Duas colunas de cada vez cabem num desenho; as cinco juntas, não. Por isso
+  as contas passam a ser o guia.
 - Soma, multiplicação por número, módulo, distância e produto escalar são as
-  mesmas contas do plano e do espaço, com $n$ parcelas. Só vetores com o mesmo
-  número de coordenadas podem ser somados ou multiplicados escalarmente.
-- Em $\mathbb{R}^n$, módulo e ângulo são **definidos** pelas fórmulas que, em 2
-  e 3 dimensões, eram teoremas. A desigualdade de Cauchy-Schwarz garante que o
-  cosseno fica entre $-1$ e $1$.
+  mesmas contas do plano e do espaço, com $n$ parcelas. Só vetores com o
+  mesmo número de coordenadas podem ser somados ou ter produto escalar.
+- Em $\mathbb{R}^n$, módulo e ângulo são **definidos** pelas fórmulas que, em
+  2 e 3 dimensões, eram teoremas. O módulo é Pitágoras repetido, e a
+  desigualdade de Cauchy-Schwarz garante que o cosseno fica entre $-1$ e $1$.
 - A **distância** compara os vetores como estão, misturando “o que” e
-  “quanto”. A **similaridade do cosseno** compara só a direção e o sentido: é o produto
-  escalar dos vetores normalizados.
+  “quanto”. A **similaridade do cosseno** compara só a direção e o sentido: é
+  o produto escalar dos vetores normalizados.
 - Use o cosseno quando a pergunta for sobre proporções, como gosto; use a
   distância quando o tamanho também importar.
 

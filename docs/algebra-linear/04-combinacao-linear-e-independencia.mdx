@@ -2,12 +2,16 @@
 title: Combinação linear e independência
 ---
 
-import CartesianPlane from '@site/src/components/CartesianPlane';
-import Space3D from '@site/src/components/Space3D';
+import PaintMix from '@site/src/components/PaintMix';
+import PaintSwap from '@site/src/components/PaintSwap';
+import SpanCombo from '@site/src/components/SpanCombo';
+import SpanRowTest from '@site/src/components/SpanRowTest';
+import SpanSheet from '@site/src/components/SpanSheet';
+import PivotColumns from '@site/src/components/PivotColumns';
 
 # Combinação linear e independência: o que se alcança e o que sobra
 
-## 1. Problema motivador: a loja de tintas tem uma base sobrando?
+## Problema motivador: a loja de tintas tem uma base sobrando?
 
 Uma loja de tintas fabrica as cores na hora, misturando **bases**. Cada base é
 uma tinta pronta que leva três pigmentos (ciano, magenta e amarelo) em
@@ -33,54 +37,100 @@ precisa ter. Chegam três pedidos à loja:
    ela produz já poderia ser produzido pelas outras duas. Ele tem razão? Se
    tiver, qual base ele deveria comprar no lugar dela?
 
+Tente antes de qualquer conta. Na figura, cada barra é um pigmento, e cada
+barra empilha a parte que vem de cada base. Escolha o alvo nos botões e mexa
+nos litros até as três barras encostarem nos tracejados.
+
+<PaintMix
+  targets={[
+    {name: 'verde-musgo', at: [4, 5, 6]},
+    {name: 'laranja-queimado', at: [1, 0, 1]},
+  ]}
+  caption="Cada barra é um pigmento. O pedaço azul é o que vem da base P, o laranja o que vem de Q e o verde o que vem de R. Os tracejados marcam a fórmula do alvo, e o painel guarda as receitas que acertaram."
+/>
+
+Se você tentou, provavelmente achou mais de uma receita para o verde-musgo e
+nenhuma para o laranja-queimado. Só que “não achei” não é uma prova: talvez a
+receita certa esteja entre duas posições do controle. As perguntas da loja
+pedem um argumento.
+
 > Com três ingredientes, quais misturas são alcançáveis? E quando um
 > ingrediente não acrescenta nada que os outros já não deem?
 
 As duas perguntas têm nome em álgebra linear: **conjunto gerado** e
-**dependência linear**. As respostas para a loja estão na seção 9.
+**dependência linear**. A seção “Resolvendo o problema da loja” responde aos
+três pedidos com contas, sem depender de tentativas.
 
-## 2. Mapa das ideias
+## Roteiro da lição
 
-- **combinação linear** de vários vetores: uma “receita” que multiplica cada
-  vetor por um número e soma tudo, como $2\vec{p} + 3\vec{q}$;
-- **coeficientes**: os números da receita, que dizem quanto entra de cada
-  vetor;
-- **conjunto gerado** por alguns vetores: tudo o que se alcança com
-  combinações lineares deles;
-- **dependência linear**: pelo menos um dos vetores é combinação dos outros,
-  e por isso não acrescenta nada ao que já se alcançava;
-- **independência linear**: nenhum vetor sobra; a única receita que dá o
-  vetor nulo é a que usa zero de tudo;
-- **teste por escalonamento**: pôr os vetores como colunas de uma matriz e
-  escalonar; coluna sem pivô denuncia um vetor que sobra.
+1. Uma **combinação linear** é uma receita: cada vetor vezes um número, e os
+   resultados somados. É o que a loja faz quando mistura bases.
+2. No plano, dois vetores não nulos e não paralelos alcançam qualquer ponto: a malha
+   inclinada que eles formam cobre o plano inteiro.
+3. Dois vetores paralelos alcançam só uma reta, por mais que se mexa nos
+   números da receita.
+4. Perguntar se um alvo é alcançável é perguntar se um sistema tem solução. O
+   escalonamento responde, com os vetores como colunas.
+5. No espaço, três vetores deitados numa mesma folha plana não saem dela.
+6. Um vetor **sobra** quando é combinação dos outros: tirá-lo não muda o que
+   se alcança. Isso é a **dependência linear**.
+7. A **independência** se testa com uma pergunta só: alguma receita, além de
+   “zero de tudo”, volta à origem?
+8. O teste prático é escalonar a matriz dos vetores: coluna sem pivô é vetor
+   que sobra.
+9. Em $\mathbb{R}^n$ cabem no máximo $n$ vetores independentes, e menos de $n$
+   vetores nunca alcançam tudo.
 
-## 3. Para que serve
+## Para que isso serve?
 
-- **Planilhas com colunas repetidas disfarçadas.** Uma planilha de vendas tem
-  as colunas “loja física”, “online” e “total”. A coluna do total é a soma das
-  outras duas, então não traz informação nova. Detectar colunas assim é
-  detectar dependência linear.
-- **Aprendizado de máquina.** Um modelo que recebe duas colunas dependentes
-  (como a mesma medida em metros e em centímetros) não consegue decidir quanto
-  peso dar a cada uma. O nome técnico desse problema é **multicolinearidade**, e
-  ele é dependência linear.
-- **Sistemas lineares.** Saber se um sistema $A\vec{x} = \vec{b}$ tem solução
-  para **qualquer** $\vec{b}$ é perguntar se as colunas de $A$ geram tudo.
-- **Dentro da matemática.** As próximas lições usam estas duas ideias o tempo
-  todo. Uma **base**, em [Base, dimensão e posto](./base-dimensao-e-posto), é
-  um conjunto que gera tudo e não tem vetor sobrando. E o
+- **Planilhas com colunas repetidas disfarçadas.** Uma planilha de vendas tem,
+  para quatro clientes, as colunas “loja física” $(100,\ 50,\ 0,\ 80)$,
+  “online” $(20,\ 30,\ 60,\ 0)$ e “total” $(120,\ 80,\ 60,\ 80)$. Cliente a
+  cliente, o total é a soma das outras duas: $100 + 20 = 120$, $50 + 30 = 80$,
+  e assim por diante. A coluna do total não traz informação nova, e 8 números
+  guardam o que a planilha diz com 12. Achar colunas assim é achar dependência
+  linear.
+- **Aprendizado de máquina: pesos que o treino não consegue escolher.** Um
+  modelo prevê o peso de uma pessoa a partir de duas colunas: a altura em
+  metros e a mesma altura em centímetros. A previsão é
+  $w_1 \times (\text{altura em m}) + w_2 \times (\text{altura em cm})$. Para
+  uma pessoa de 1,80 m, os pesos $(50,\ 0)$ dão $50 \times 1{,}8 = 90$; os
+  pesos $(0;\ 0{,}5)$ dão $0{,}5 \times 180 = 90$; os pesos $(25;\ 0{,}25)$
+  dão $45 + 45 = 90$. Infinitas escolhas de pesos fazem as mesmas previsões,
+  e o treino não tem como preferir uma delas. Esse problema se chama
+  **multicolinearidade**, e ele é dependência linear entre as colunas.
+- **Redes neurais.** Uma camada recebe três entradas, e a terceira é sempre a
+  soma das duas primeiras. Um neurônio com pesos $(1,\ 1,\ 0)$ e outro com
+  pesos $(0,\ 0,\ 1)$ calculam a mesma coisa: com a entrada $(2,\ 5,\ 7)$, os
+  dois dão $7$. A terceira entrada ocupa memória e não acrescenta nada que a
+  camada já não tivesse.
+- **Cores na tela.** Cada pixel é uma combinação de três luzes: vermelho
+  $(1,\ 0,\ 0)$, verde $(0,\ 1,\ 0)$ e azul $(0,\ 0,\ 1)$, com intensidades de
+  0 a 255. Um laranja de tela é
+  $255 \times (1,\ 0,\ 0) + 128 \times (0,\ 1,\ 0) + 0 \times (0,\ 0,\ 1) =
+  (255,\ 128,\ 0)$. Nenhuma das três luzes se obtém das outras duas. Por isso
+  cada cor da tela tem uma única receita.
+- **Sistemas lineares.** O sistema $A\vec{x} = \vec{b}$ tem solução
+  exatamente quando $\vec{b}$ é alcançável misturando as colunas de $A$. Com
+  colunas $(1,\ 2)$ e $(3,\ 1)$, todo lado direito tem solução. Com colunas
+  $(1,\ 2)$ e $(3,\ 6)$, o lado direito $(7,\ -1)$ não tem.
+- **Dentro da matemática.** Uma **base**, na lição
+  [Base, dimensão e posto](./base-dimensao-e-posto), é um conjunto de vetores
+  que alcança tudo e não tem vetor sobrando. E o
   [determinante](./determinante) é uma conta que dá zero exatamente quando há
-  dependência.
+  um vetor sobrando: para as colunas $(2,\ 1)$ e $(4,\ 2)$, que estão na mesma
+  reta, ele dá $2 \times 2 - 4 \times 1 = 0$.
 
-## 4. Ideias anteriores que voltam aqui
+## Ideias anteriores que voltam aqui
 
 Esta lição junta duas linhas que vinham separadas: a receita da geometria e o
 escalonamento da álgebra linear. Reative cada peça antes de seguir.
 
-**1. Da [combinação linear](../geometria/soma-de-vetores), na geometria.** O
-robô do depósito tinha dois motores: um empurra na direção
+**1. Da [combinação linear e dos vetores paralelos](../geometria/soma-de-vetores).**
+O robô do depósito tinha dois motores: um empurra na direção
 $\vec{u} = (2,\ 1)$ e o outro na direção $\vec{v} = (1,\ 3)$. Onde o robô
-chega com 2 voltas do primeiro motor e 1 volta **para trás** do segundo?
+chega com 2 voltas do primeiro motor e 1 volta **para trás** do segundo? E o
+vetor $(6,\ 3)$ é paralelo a $(2,\ 1)$?
 
 <details>
 <summary>Conferir</summary>
@@ -93,36 +143,15 @@ $$
 
 O robô chega a $(3,\ -1)$.
 
-</details>
-
-**2. Achar a receita é resolver um sistema, na mesma lição.** Quantas voltas
-de cada motor levam o robô a $(4,\ 7)$?
-
-<details>
-<summary>Conferir</summary>
-
-Queremos $a(2,\ 1) + b(1,\ 3) = (4,\ 7)$. Comparando coordenada com
-coordenada, saem duas equações: $2a + b = 4$ e $a + 3b = 7$. Da primeira,
-$b = 4 - 2a$. Trocando o $b$ da segunda, $a + 12 - 6a = 7$, ou seja,
-$-5a = -5$ e $a = 1$. Então $b = 4 - 2 = 2$. Conferência:
-$(2,\ 1) + 2(1,\ 3) = (4,\ 7)$.
+Dois vetores não nulos são paralelos quando um é múltiplo do outro. Como
+$(6,\ 3) = 3(2,\ 1)$, os dois são paralelos. Já $(1,\ 3)$ não é múltiplo de
+$(2,\ 1)$: para a primeira coordenada passar de 2 para 1, o número teria de
+ser $\frac{1}{2}$, e aí a segunda coordenada seria $\frac{1}{2}$, e não 3. O
+vetor nulo fica fora da definição: ele não tem direção.
 
 </details>
 
-**3. Vetores paralelos, na mesma lição.** Os vetores $(2,\ 1)$ e $(6,\ 3)$ são
-paralelos? E $(2,\ 1)$ e $(1,\ 3)$?
-
-<details>
-<summary>Conferir</summary>
-
-Dois vetores não nulos são paralelos quando um é múltiplo do outro. $(6,\ 3) =
-3(2,\ 1)$, então os dois primeiros são paralelos. Já $(1,\ 3)$ não é múltiplo
-de $(2,\ 1)$: para a primeira coordenada passar de 2 para 1, o fator teria de
-ser $\frac{1}{2}$, e aí a segunda coordenada seria $\frac{1}{2}$, não 3.
-
-</details>
-
-**4. Da [leitura por colunas](./matrizes) de $A\vec{x}$.** Quanto vale
+**2. Da [leitura por colunas](./matrizes) de $A\vec{x}$.** Quanto vale
 $\begin{bmatrix} 2 & 1 \\ 1 & 3 \end{bmatrix}
 \begin{bmatrix} 3 \\ 1 \end{bmatrix}$, lido como combinação das colunas?
 
@@ -137,12 +166,13 @@ $$
 = \begin{bmatrix} 7 \\ 6 \end{bmatrix}.
 $$
 
-É o robô outra vez: as colunas da matriz são $\vec{u}$ e $\vec{v}$. Toda
-matriz vezes vetor é uma combinação linear das colunas.
+É o robô outra vez: as colunas da matriz são $\vec{u}$ e $\vec{v}$, e
+$\vec{x}$ diz quantas voltas dá cada motor. Toda matriz vezes vetor é uma
+combinação linear das colunas.
 
 </details>
 
-**5. Do [escalonamento](./sistemas-lineares-e-escalonamento).** Numa matriz
+**3. Do [escalonamento](./sistemas-lineares-e-escalonamento).** Numa matriz
 aumentada já escalonada, o que quer dizer uma linha $[\,0 \ \ 0 \ \ 0 \mid 5\,]$?
 E uma linha toda de zeros, $[\,0 \ \ 0 \ \ 0 \mid 0\,]$?
 
@@ -159,161 +189,36 @@ sem pivô, a incógnita dessa coluna é **livre**, e há **infinitas soluções*
 
 </details>
 
-Se alguma resposta não veio, releia a lição indicada. As perguntas 2, 4 e 5
-são o esqueleto desta página inteira.
+Se alguma resposta não veio, releia a lição indicada. As três perguntas são o
+esqueleto desta página inteira.
 
-## 5. Intuição: um ingrediente que não traz nada novo
+## Uma combinação linear é uma receita: cada vetor vezes um número, tudo somado
 
-Pense numa cozinha com dois ingredientes, farinha e açúcar. Com eles, você
-faz misturas em qualquer proporção. Agora alguém traz um terceiro pote, com
-um rótulo novo: “mistura doce”. Você abre o pote e descobre que ele tem
-exatamente uma parte de farinha para duas de açúcar.
+A loja já faz combinações lineares, só não usa esse nome. Para fabricar uma
+lata com 2 litros de P e 3 litros de Q, o pigmento sai assim:
 
-O terceiro pote **não amplia** o que a cozinha consegue fazer. Tudo o que ele
-dá, você já fazia com farinha e açúcar. Ele só oferece um atalho para uma
-mistura que já existia. Esse pote é **redundante**.
+1. multiplique a fórmula de P pelos litros de P: $2(2,\ 1,\ 0) = (4,\ 2,\ 0)$;
+2. multiplique a fórmula de Q pelos litros de Q: $3(0,\ 1,\ 2) = (0,\ 3,\ 6)$;
+3. some coordenada com coordenada, um pigmento de cada vez:
+   $(4 + 0,\ 2 + 3,\ 0 + 6) = (4,\ 5,\ 6)$.
 
-A loja de tintas tem a mesma suspeita sobre uma das bases. Repare num detalhe
-da tabela: em P, a quantidade de magenta é a **média** das quantidades de
-ciano e amarelo, $\frac{2 + 0}{2} = 1$. Em Q também, $\frac{0 + 2}{2} = 1$. E
-em R também, $\frac{2 + 4}{2} = 3$.
+A figura despeja essa receita litro a litro. Cada litro de P sobe um pedaço
+azul em cada barra, do tamanho do pigmento que um litro de P tem. Depois vêm
+os pedaços laranja de Q.
 
-Misturar tintas soma os pigmentos. Se em cada base o magenta é a média do
-ciano com o amarelo, toda mistura delas guarda essa mesma propriedade. Por
-isso, **nenhuma** mistura das três bases sai dessa regra. A fórmula
-$(1,\ 0,\ 1)$ do laranja-queimado quebra a regra: a média de 1 e 1 é 1, e
-não 0. A loja não consegue fazer essa cor, por mais que tente.
-
-Duas perguntas ficam no ar, e o resto da lição responde as duas com uma conta
-que não depende de enxergar um padrão na tabela:
-
-- quais fórmulas três bases conseguem alcançar?
-- quando uma das bases sobra?
-
-## 6. Modelo visual: setas, malhas e planos
-
-**No plano, um ingrediente alcança uma reta.** Com um vetor só, as receitas
-são os múltiplos dele: $a\vec{u}$. Todos esses múltiplos ficam sobre a mesma
-reta, que passa pela origem. Um segundo vetor **paralelo** ao primeiro não
-ajuda, porque também está nessa reta.
-
-<CartesianPlane
-  xMin={-5} xMax={5} yMin={-3} yMax={4}
-  xUnit={34}
-  lines={[{through: [[0, 0], [2, 1]], dashed: true, muted: true}]}
-  segments={[
-    {from: [0, 0], to: [2, 1], arrow: true, tone: 1},
-    {from: [0, 0], to: [-4, -2], arrow: true, tone: 2},
-  ]}
-  labels={[
-    {at: [2, 1], math: '\\vec{u} = (2,\\ 1)', tone: 1, dx: 50, dy: 16},
-    {at: [-4, -2], math: '\\vec{w} = (-4,\\ -2)', tone: 2, dx: 10, dy: 20},
-  ]}
-  points={[{at: [1, 3], label: '(1,\\ 3)', tone: 3, dx: 30, dy: -6}]}
-  caption="Os vetores u e w são paralelos: w = −2u. Toda combinação au + bw cai sobre a reta tracejada. O ponto (1, 3) está fora dela, e nenhuma receita com u e w chega até ele."
+<PaintMix
+  pour={[2, 3, 0]}
+  targets={[{name: 'verde-musgo', at: [4, 5, 6]}]}
+  caption="Os 2 litros de P põem 4 g de ciano, 2 g de magenta e nada de amarelo. Os 3 litros de Q põem 3 g de magenta e 6 g de amarelo. As barras terminam em 4, 5 e 6: a fórmula do verde-musgo."
 />
 
-**No plano, dois ingredientes não paralelos alcançam tudo.** As receitas
-$a\vec{u} + b\vec{v}$ com coeficientes inteiros formam uma malha de
-paralelogramos, como a do robô na geometria. Com coeficientes fracionários,
-os pontos entre as linhas da malha também são alcançados. E com coeficientes
-negativos, a malha continua para o outro lado da origem. Ela cobre o plano
-inteiro.
-
-<CartesianPlane
-  xMin={-5} xMax={5} yMin={-3} yMax={5}
-  xUnit={34}
-  lines={[
-    {through: [[-1, -3], [1, -2]], dashed: true, muted: true},
-    {through: [[0, 0], [2, 1]], dashed: true, muted: true},
-    {through: [[1, 3], [3, 4]], dashed: true, muted: true},
-    {through: [[-4, -2], [-3, 1]], dashed: true, muted: true},
-    {through: [[-2, -1], [-1, 2]], dashed: true, muted: true},
-    {through: [[0, 0], [1, 3]], dashed: true, muted: true},
-    {through: [[2, 1], [3, 4]], dashed: true, muted: true},
-    {through: [[4, 2], [5, 5]], dashed: true, muted: true},
-  ]}
-  segments={[
-    {from: [0, 0], to: [-4, -2], arrow: true, tone: 1},
-    {from: [-4, -2], to: [-3, 1], arrow: true, tone: 2},
-    {from: [0, 0], to: [-3, 1], arrow: true, tone: 3},
-  ]}
-  labels={[
-    {at: [-2, -1], math: '-2\\vec{u}', tone: 1, dx: 8, dy: 20},
-    {at: [-3.5, -0.5], math: '\\vec{v}', tone: 2, dx: -16, dy: 0},
-    {at: [-1.5, 0.5], math: '-2\\vec{u} + \\vec{v}', tone: 3, dx: 14, dy: -20},
-    {at: [-3, 1], math: '(-3,\\ 1)', tone: 3, dx: -30, dy: -16},
-  ]}
-  caption="A malha de u = (2, 1) e v = (1, 3) continua para o lado negativo. Para chegar a (−3, 1), a receita é −2u + v: andar duas vezes u para trás e uma vez v para a frente."
-/>
-
-**No espaço, três ingredientes podem alcançar só um plano.** Desenhe as três
-bases da loja como setas no espaço, com um eixo para cada pigmento. A seta de
-R não aponta para uma direção nova: ela termina exatamente onde se chega
-andando $\vec{p}$ uma vez e depois $\vec{q}$ duas vezes. Na figura, o eixo
-que sai do papel é o do magenta. Com o ciano saindo do papel, a folha das
-três setas seria vista quase de perfil, e as setas quase se sobreporiam no
-desenho.
-
-<Space3D
-  max={[3, 3, 4]}
-  unit={38}
-  ticks={false}
-  axisLabels={['\\text{magenta}', '\\text{ciano}', '\\text{amarelo}']}
-  vectors={[
-    {to: [1, 2, 0], tone: 1, label: '\\vec{p}'},
-    {to: [1, 0, 2], tone: 2, label: '\\vec{q}'},
-    {to: [3, 2, 4], tone: 3, label: '\\vec{r}'},
-  ]}
-  segments={[{from: [1, 2, 0], to: [3, 2, 4], tone: 2, dashed: true}]}
-  caption="As três bases como setas. O tracejado sai da ponta de p e anda 2q: chega à ponta de r. Então r = p + 2q, e as três setas estão numa mesma folha plana que passa pela origem."
-/>
-
-Pense numa folha de papel apoiada na origem. As setas $\vec{p}$ e $\vec{q}$
-estão deitadas nela. Qualquer combinação das duas também fica na folha, como
-as misturas que só usam farinha e açúcar. E $\vec{r}$, por ser uma dessas
-combinações, também está na folha. Com as três bases, a loja não sai da
-folha. A fórmula do laranja-queimado está fora dela.
-
-## 7. Ponte para a formalização: duas perguntas viram sistemas
-
-O desenho da folha convence, mas ele tem dois limites. Num desenho em
-perspectiva, uma seta pode parecer estar na folha sem estar. E, em
-$\mathbb{R}^5$, não há desenho nenhum. Precisamos de uma conta.
-
-A conta já existe, e vem de duas lições anteriores.
-
-**Pergunta 1: uma fórmula é alcançável?** A cor verde-musgo é alcançável se
-existem quantidades $a$, $b$ e $c$ de litros com
-
-$$
-a\vec{p} + b\vec{q} + c\vec{r} = (4,\ 5,\ 6).
-$$
-
-Pela leitura por colunas de [Matrizes](./matrizes), o lado esquerdo é a
-matriz com colunas $\vec{p}$, $\vec{q}$ e $\vec{r}$ multiplicada pelo vetor
-$(a,\ b,\ c)$. Então a pergunta é: **o sistema $A\vec{x} = \vec{b}$ tem
-solução?** E isso o escalonamento responde.
-
-**Pergunta 2: alguma base sobra?** A base R sobra quando é uma combinação das
-outras: $\vec{r} = \alpha\vec{p} + \beta\vec{q}$ para alguns números $\alpha$
-e $\beta$. Passando $\vec{r}$ para o outro lado, isso vira
-
-$$
-\alpha\vec{p} + \beta\vec{q} - \vec{r} = \vec{0}.
-$$
-
-Uma receita que dá o **vetor nulo** sem ser a receita “zero de tudo”. Então a
-pergunta 2 também é um sistema, $A\vec{x} = \vec{0}$, e a questão é se ele
-tem alguma solução além de $\vec{x} = \vec{0}$.
-
-O que muda é só a leitura. O desenho dizia “a seta está ou não está na
-folha”. O sistema diz “há ou não há solução”. A seção 8 escreve as definições
-de modo que essas duas leituras sejam a mesma coisa.
-
-## 8. Formalização
-
-### 8.1 Combinação linear de vários vetores
+Cada base é um vetor de $\mathbb{R}^3$, a lista dos seus três pigmentos:
+$\vec{p} = (2,\ 1,\ 0)$, $\vec{q} = (0,\ 1,\ 2)$ e $\vec{r} = (2,\ 3,\ 4)$.
+Os três passos acima são as duas operações que você já conhece da geometria:
+número vezes vetor (passos 1 e 2) e soma de vetores (passo 3). Na lição de
+[soma de vetores](../geometria/soma-de-vetores), a receita do robô usava dois
+vetores do plano. Aqui ela usa quantos vetores forem precisos, com quantas
+coordenadas forem precisas.
 
 > Uma **combinação linear** dos vetores $\vec{v}_1,\ \vec{v}_2,\ \ldots,\
 > \vec{v}_k$ de $\mathbb{R}^n$ é qualquer vetor da forma
@@ -322,58 +227,180 @@ de modo que essas duas leituras sejam a mesma coisa.
 >
 > em que $c_1,\ c_2,\ \ldots,\ c_k$ são números, os **coeficientes**.
 
-É a mesma receita da geometria, agora com quantos ingredientes forem
-precisos. Os ingredientes precisam ter o mesmo número de coordenadas, porque
-serão somados.
+Os índices só numeram os ingredientes: $\vec{v}_1$ é o primeiro vetor, e
+$c_1$ é quanto entra dele. Na lata acima, $\vec{v}_1 = \vec{p}$,
+$\vec{v}_2 = \vec{q}$, $c_1 = 2$ e $c_2 = 3$. Os vetores precisam ter o mesmo
+número de coordenadas, porque serão somados.
 
-**Exemplo.** $2\vec{p} + 3\vec{q} = 2(2,\ 1,\ 0) + 3(0,\ 1,\ 2) =
-(4,\ 2,\ 0) + (0,\ 3,\ 6) = (4,\ 5,\ 6)$. É uma combinação linear de
-$\vec{p}$ e $\vec{q}$ com coeficientes 2 e 3.
+Não confunda os dois papéis: **o coeficiente é um número, e o vetor é o
+ingrediente**. Em $2\vec{p}$, o 2 diz quanto, e $\vec{p}$ diz o quê.
 
-**Contraexemplo.** O produto escalar $\vec{p} \cdot \vec{q} = 0 + 1 + 0 = 1$
-**não** é uma combinação linear de $\vec{p}$ e $\vec{q}$: o resultado nem é
-um vetor. Numa combinação linear, cada vetor só é multiplicado por um número,
-e os resultados só são somados.
+**Exemplo.** $2\vec{p} + 3\vec{q} = (4,\ 5,\ 6)$ é uma combinação linear de
+$\vec{p}$ e $\vec{q}$, com coeficientes 2 e 3.
 
-### 8.2 Conjunto gerado
+**Contraexemplo.** O produto escalar $\vec{p} \cdot \vec{q} = 2 \times 0 + 1
+\times 1 + 0 \times 2 = 1$ **não** é uma combinação linear de $\vec{p}$ e
+$\vec{q}$: o resultado nem é um vetor. Numa combinação linear, cada vetor só
+é multiplicado por um número, e os resultados só são somados.
+
+<details>
+<summary>Confira: que fórmula sai de 1 litro de P, 1 de Q e 1 de R? Depois, confira na figura do problema motivador.</summary>
+
+Coordenada a coordenada: $(2,\ 1,\ 0) + (0,\ 1,\ 2) + (2,\ 3,\ 4) =
+(2 + 0 + 2,\ 1 + 1 + 3,\ 0 + 2 + 4) = (4,\ 5,\ 6)$. É o verde-musgo de novo,
+por outra receita. Duas receitas diferentes para a mesma lata são uma pista
+de que alguma base sobra. A seção “Um vetor sobra quando é combinação dos
+outros” volta a essa pista.
+
+</details>
+
+## Dois vetores não paralelos alcançam o plano inteiro
+
+Volte ao robô do depósito, com os motores $\vec{u} = (2,\ 1)$ e
+$\vec{v} = (1,\ 3)$. Com um número inteiro de voltas de cada motor, ele para
+nos cruzamentos de uma malha inclinada, como na lição de geometria. Agora
+deixe as voltas serem fracionárias, como 1,6 volta. O robô passa a parar
+**entre** os cruzamentos. E com voltas negativas a malha continua para o outro
+lado da origem.
+
+Ao entrar na tela, a figura testa sozinha uma grade de receitas, com $a$ e
+$b$ de $-2$ a $2$, de meio em meio. Cada receita deixa um ponto verde onde
+termina. Depois use os controles, que andam de 0,1 em 0,1, para levar a ponta
+até os três alvos.
+
+<SpanCombo
+  initial={[1, 1]}
+  targets={[
+    {name: 'A', at: [4, 4], label: 'A\\ (4,\\ 4)', dx: 12, dy: -14, anchor: 'start'},
+    {name: 'B', at: [-3, 1], label: 'B\\ (-3,\\ 1)', dx: -10, dy: -20},
+    {name: 'C', at: [3, -1], label: 'C\\ (3,\\ -1)', dx: 12, dy: 18, anchor: 'start'},
+  ]}
+  caption="A seta azul é a·u, a laranja é b·v a partir da ponta da azul, e a verde vai da origem até onde o robô parou. As linhas tracejadas são a malha das receitas inteiras. Os pontos verdes são as receitas testadas: eles enchem um paralelogramo inclinado, e coeficientes maiores aumentam esse paralelogramo em todas as direções."
+/>
+
+Os três alvos têm receita. O alvo A pede $a = 1{,}6$ e $b = 0{,}8$, que não
+são números inteiros: ele fica entre os cruzamentos. O alvo B pede
+$a = -2$, isto é, duas voltas do motor $\vec{u}$ para trás. E nenhum ponto
+da janela fica sem receita. Daqui a duas seções, uma conta vai mostrar que
+isso vale para **todo** ponto do plano, e não só para os da janela.
+
+O conjunto de tudo o que se alcança tem um nome.
 
 > O **conjunto gerado** pelos vetores $\vec{v}_1,\ \ldots,\ \vec{v}_k$ é o
 > conjunto de todas as combinações lineares deles, com todos os coeficientes
 > possíveis: positivos, negativos, zero e fracionários.
 
-Na loja, o conjunto gerado pelas bases é o “cardápio” de fórmulas que a
-matemática permite. Mais adiante, na seção 9, aparece uma restrição que a
-matemática não tem e a loja tem.
-
 **Exemplo.** O conjunto gerado por $\vec{e}_1 = (1,\ 0)$ e
 $\vec{e}_2 = (0,\ 1)$ é o plano inteiro. Para chegar a qualquer $(x,\ y)$, a
-receita é $x\vec{e}_1 + y\vec{e}_2$.
+receita é $x\vec{e}_1 + y\vec{e}_2$: ande $x$ na horizontal e $y$ na vertical.
 
-**Contraexemplo.** O conjunto gerado por $(2,\ 1)$ e $(-4,\ -2)$ **não** é o
-plano inteiro. Os dois vetores são paralelos, e o conjunto gerado é só a reta
-da primeira figura da seção 6. O ponto $(1,\ 3)$ fica de fora.
+**Contraexemplo.** Se só valessem coeficientes positivos ou zero, $\vec{u}$ e
+$\vec{v}$ alcançariam só a região do ângulo **entre** as duas setas, com
+vértice na origem. O alvo B ficaria de fora, porque precisa de
+$a = -2$. É por isso que a definição exige todos os sinais.
 
 Uma consequência que vale guardar: **todo conjunto gerado contém o vetor
 nulo**, porque a receita “zero de cada vetor” sempre dá $\vec{0}$. Por isso,
 uma reta que **não** passa pela origem, como $y = 2x + 1$, nunca é o conjunto
 gerado de vetor nenhum.
 
-### 8.3 Decidir se um vetor está no conjunto gerado
+<details>
+<summary>Confira: monte o sistema que dá a receita do alvo A = (4, 4). Por que essa receita não aparece entre os pontos testados na entrada?</summary>
 
-O vetor $\vec{b}$ está no conjunto gerado por $\vec{v}_1,\ \ldots,\ \vec{v}_k$
-exatamente quando o sistema
+$a(2,\ 1) + b(1,\ 3) = (2a + b,\ a + 3b) = (4,\ 4)$ dá $2a + b = 4$ e
+$a + 3b = 4$. Da primeira, $b = 4 - 2a$. Na segunda,
+$a + 12 - 6a = 4$, então $-5a = -8$ e $a = 1{,}6$. Daí
+$b = 4 - 3{,}2 = 0{,}8$. Conferência:
+$(3{,}2;\ 1{,}6) + (0{,}8;\ 2{,}4) = (4,\ 4)$. A grade da entrada só testou
+coeficientes de meio em meio ($-2$; $-1{,}5$; …; $1{,}5$; $2$), e nem 1,6 nem 0,8 estão
+nessa lista.
+
+</details>
+
+## Dois vetores paralelos alcançam só uma reta
+
+Agora troque o segundo motor por um que empurra na direção
+$\vec{w} = (-4,\ -2)$. Esse vetor é $-2\vec{u}$: aponta na mesma reta de
+$\vec{u}$, no sentido oposto. Os dois motores empurram o robô ao longo da
+mesma reta, e nenhum deles o tira dela.
+
+<SpanCombo
+  vectors={[
+    {v: [2, 1], name: '\\vec{u}'},
+    {v: [-4, -2], name: '\\vec{w}'},
+  ]}
+  ranges={[[-2, 2], [-1, 1]]}
+  initial={[1, -1]}
+  window={{xMin: -9, xMax: 9, yMin: -4.5, yMax: 4.5}}
+  unit={20}
+  targets={[
+    {name: 'D', at: [6, 3], label: 'D\\ (6,\\ 3)', dx: 0, dy: -18},
+    {name: 'E', at: [1, 3], label: 'E\\ (1,\\ 3)', dx: -12, dy: 0, anchor: 'end'},
+  ]}
+  caption="Os mesmos controles, agora com u = (2, 1) e w = (−4, −2). Todas as receitas testadas caem na faixa verde, que é a reta de u. O alvo D está nela; o alvo E, não, e nenhuma posição dos controles leva a ponta até ele."
+/>
+
+A conta mostra por quê. Como $\vec{w} = -2\vec{u}$, qualquer receita vira um
+múltiplo de $\vec{u}$:
 
 $$
-c_1\vec{v}_1 + \cdots + c_k\vec{v}_k = \vec{b}
+a\vec{u} + b\vec{w} = a\vec{u} + b(-2\vec{u}) = (a - 2b)\vec{u}.
 $$
 
-tem solução. Monte a matriz $A$ com os vetores **como colunas**, acrescente
-$\vec{b}$ como última coluna e escalone $[A \mid \vec{b}]$. Se aparecer uma
-linha do tipo $[\,0 \ \cdots \ 0 \mid \text{número diferente de zero}\,]$,
-$\vec{b}$ está fora. Se não aparecer, $\vec{b}$ está dentro, e a substituição
-de trás para a frente dá a receita.
+O primeiro sinal de igual troca $\vec{w}$ pelo que ele vale. O segundo junta
+os dois termos de $\vec{u}$, como se junta $3x - 2x$ numa expressão. E todo
+múltiplo de $\vec{u}$ fica na reta de $\vec{u}$, como a lição de soma de
+vetores mostrou. O alvo D $= (6,\ 3) = 3\vec{u}$ está nessa reta: as receitas
+com $a - 2b = 3$ chegam lá, como $a = 1$ e $b = -1$. O alvo E $= (1,\ 3)$ não
+é múltiplo de $(2,\ 1)$, e por isso nenhuma receita chega a ele.
+
+**Cuidado com o vetor nulo.** “Paralelos” só se define para vetores não nulos
+(lição [soma de vetores](../geometria/soma-de-vetores)). Mas o vetor nulo
+causa o mesmo problema, por outro motivo: ele não leva a lugar nenhum. Os
+vetores $(2,\ 1)$ e $(0,\ 0)$ alcançam só a reta de $(2,\ 1)$, porque
+$b(0,\ 0) = (0,\ 0)$ para todo $b$. E $(0,\ 0)$ com $(0,\ 0)$ alcança só a
+origem. Nos dois casos, um dos vetores é múltiplo do outro:
+$(0,\ 0) = 0 \times (2,\ 1)$.
+
+**Exemplo.** O conjunto gerado por $(2,\ 1)$ e $(-4,\ -2)$ é a reta
+$y = \frac{x}{2}$, que passa pela origem.
+
+**Contraexemplo.** O conjunto gerado por $(2,\ 1)$ e $(1,\ 3)$ **não** é uma
+reta: é o plano inteiro, como na figura da seção anterior.
+
+<details>
+<summary>Confira: os vetores (2, 1) e (−6, −3) alcançam o ponto (−1, 2)?</summary>
+
+Não. Como $(-6,\ -3) = -3(2,\ 1)$, toda receita é um múltiplo de $(2,\ 1)$,
+da forma $(2k,\ k)$: a segunda coordenada é sempre metade da primeira. Em
+$(-1,\ 2)$, a metade de $-1$ seria $-0{,}5$, e não 2. O ponto está fora da
+reta.
+
+</details>
+
+## Decidir se um alvo é alcançável é escalonar com os vetores como colunas
+
+As figuras convencem, mas têm dois limites. Uma figura mostra só uma janela
+do plano. E, em $\mathbb{R}^5$, não há figura nenhuma. Precisamos de uma
+conta, e ela já existe.
+
+Pela leitura por colunas da pergunta 2 de “Ideias anteriores”, a receita
+$c_1\vec{u} + c_2\vec{v}$ é a matriz com colunas $\vec{u}$ e $\vec{v}$ vezes
+o vetor $(c_1,\ c_2)$. Então “o alvo $\vec{b}$ é alcançável?” é a mesma
+pergunta que “o sistema $A\vec{c} = \vec{b}$ tem solução?”. E essa pergunta
+o escalonamento responde:
+
+1. ponha os vetores como **colunas** de uma matriz $A$;
+2. acrescente o alvo $\vec{b}$ como última coluna, formando $[A \mid \vec{b}]$;
+3. escalone;
+4. se aparecer uma linha $[\,0 \ \cdots \ 0 \mid \text{número diferente de zero}\,]$,
+   o alvo está **fora**. Se não aparecer, ele está **dentro**, e a
+   substituição de trás para a frente dá a receita.
 
 **Exemplo: $(7,\ -1)$ está no conjunto gerado por $(1,\ 2)$ e $(3,\ 1)$?**
+Previsão: os dois vetores não são múltiplos um do outro. Para a primeira
+coordenada passar de 1 para 3, o número teria de ser 3, e aí a segunda
+coordenada seria 6, e não 1. Pela seção anterior, a resposta deve ser sim.
 
 $$
 \left[\begin{array}{cc|c} 1 & 3 & 7 \\ 2 & 1 & -1 \end{array}\right]
@@ -383,12 +410,13 @@ $$
 
 A segunda linha diz $-5c_2 = -15$, então $c_2 = 3$. A primeira diz
 $c_1 + 3 \times 3 = 7$, então $c_1 = -2$. A receita é
-$-2(1,\ 2) + 3(3,\ 1) = (-2 + 9,\ -4 + 3) = (7,\ -1)$. Está dentro.
+$-2(1,\ 2) + 3(3,\ 1) = (-2 + 9,\ -4 + 3) = (7,\ -1)$. Está dentro, como a
+previsão dizia.
 
-### 8.4 No plano, dois vetores não paralelos geram tudo
-
-O exemplo anterior deu certo para $(7,\ -1)$. Daria certo para **qualquer**
-alvo? Troque o alvo por um $(x,\ y)$ qualquer e escalone do mesmo jeito:
+**E qualquer alvo?** Troque o alvo por um $(x,\ y)$ qualquer e faça a mesma
+operação. O canto de baixo da segunda coluna vira $1 - 2 \times 3 = -5$. Esse
+número só depende dos vetores, e não do alvo. Do lado direito fica
+$y - 2x$, que depende do alvo:
 
 $$
 \left[\begin{array}{cc|c} 1 & 3 & x \\ 2 & 1 & y \end{array}\right]
@@ -396,32 +424,110 @@ $$
 \left[\begin{array}{cc|c} 1 & 3 & x \\ 0 & -5 & y - 2x \end{array}\right]
 $$
 
-A operação foi a mesma, porque ela só depende das colunas dos vetores, e não
-do alvo. A segunda linha virou $-5c_2 = y - 2x$, que **sempre** tem solução,
-porque $-5$ não é zero: $c_2 = \frac{2x - y}{5}$. Com $c_2$ achado, a
-primeira linha dá $c_1$. As duas colunas têm pivô, e nenhum alvo produz a
-linha impossível.
+A segunda linha é $-5c_2 = y - 2x$. Ela **sempre** tem solução, porque $-5$
+não é zero: $c_2 = \frac{2x - y}{5}$. Com $c_2$ achado, a primeira linha dá
+$c_1$. Nenhum alvo produz a linha impossível.
 
-O que poderia dar errado? Se, depois da eliminação, o número que ficou no
-lugar do $-5$ fosse **zero**. Isso acontece exatamente quando a segunda
-coluna é múltiplo da primeira. Teste com $(1,\ 2)$ e $(3,\ 6)$: a operação
-$L_2 \leftarrow L_2 - 2L_1$ transforma a segunda coluna em $(3,\ 6 - 6) =
-(3,\ 0)$. A segunda linha vira $[\,0 \ \ 0 \mid y - 2x\,]$, e só os alvos com
-$y = 2x$ escapam da linha impossível. São os pontos da reta dos dois vetores
-paralelos.
+O que poderia dar errado? O canto de baixo dar **zero**. Isso acontece quando
+a segunda coluna é múltiplo da primeira. Com $(1,\ 2)$ e $(3,\ 6)$, a mesma
+operação deixa no canto $6 - 2 \times 3 = 0$, e a segunda linha vira
+$[\,0 \ \ 0 \mid y - 2x\,]$. Só os alvos com $y = 2x$ escapam da linha
+impossível: são os pontos da reta dos dois vetores.
+
+Mova o alvo na figura e troque o par de vetores nos botões. Repare em qual
+número do escalonamento muda com o alvo e qual não muda.
+
+<SpanRowTest
+  caption="O alvo se move com os dois controles. Com u = (1, 2) e v = (3, 6), a faixa verde é a reta y = 2x, e o alvo só fica verde quando está sobre ela. Com u = (1, 2) e v = (3, 1), todo alvo fica verde, e os tracejados mostram a receita até ele."
+/>
 
 > **No plano**, dois vetores geram o plano inteiro se, e somente se, nenhum
 > dos dois é múltiplo do outro: os dois são não nulos e não são paralelos.
 
-### 8.5 Dependência linear: um vetor que sobra
+**Contraexemplo da regra.** O mesmo alvo $(7,\ -1)$ com os vetores $(1,\ 2)$
+e $(3,\ 6)$: o lado direito dá $-1 - 2 \times 7 = -15$, e a segunda linha
+vira $0 = -15$. Fora.
 
-> Os vetores $\vec{v}_1,\ \ldots,\ \vec{v}_k$ são **linearmente dependentes**
-> quando pelo menos um deles é combinação linear dos outros.
+<details>
+<summary>Confira: com u = (1, 2) e v = (3, 6), o alvo (2, 4) é alcançável? E (2, 5)? Responda pela segunda linha e depois confira na figura.</summary>
 
-“Sobra” tem um sentido preciso: se um vetor é combinação dos outros,
-retirá-lo **não diminui** o conjunto gerado. Na loja, $\vec{r} = \vec{p} +
-2\vec{q}$. Uma receita que usa $c$ litros de R pode trocar cada litro de R
-por 1 litro de P e 2 litros de Q, e a lata sai idêntica:
+A segunda linha é $0 = y - 2x$. Para $(2,\ 4)$: $4 - 2 \times 2 = 0$, então
+ela diz $0 = 0$, e o alvo é alcançável (por exemplo, $2\vec{u} = (2,\ 4)$).
+Para $(2,\ 5)$: $5 - 4 = 1$, e a linha diz $0 = 1$, impossível. O alvo
+$(2,\ 5)$ está fora.
+
+</details>
+
+## No espaço, três vetores numa mesma folha não saem dela
+
+Volte à loja. Desenhe as bases como setas no espaço, com um eixo para cada
+pigmento: ciano, magenta e amarelo. As setas $\vec{p}$ e $\vec{q}$ não estão
+na mesma reta. Então, como o par $\vec{u}$ e $\vec{v}$ no plano, elas
+alcançam uma folha plana inteira. Só que agora a folha está dentro do espaço,
+e o espaço tem uma direção a mais, para fora da folha.
+
+A terceira seta é a que importa aqui. A seta $\vec{r} = (2,\ 3,\ 4)$ termina
+exatamente onde se chega andando $\vec{p}$ uma vez e $\vec{q}$ duas vezes:
+$(2,\ 1,\ 0) + 2(0,\ 1,\ 2) = (2,\ 3,\ 4)$. Ela está deitada na mesma folha.
+E andar ao longo de setas que estão na folha não tira ninguém da folha.
+
+Ao entrar na tela, a figura testa 125 receitas (cada base de 0 a 1 litro, de
+0,25 em 0,25) e marca a ponta de cada uma. Depois gira a cena até ver a folha
+de perfil, como uma folha de papel olhada pela borda, e volta.
+
+<SpanSheet
+  caption="O pedaço cinza é parte da folha plana de p e q, que passa pela origem. Cada ponto é a ponta de uma receita testada. Quando a cena gira e a folha fica de perfil, todos os pontos caem sobre a linha que a folha virou. O laranja-queimado fica fora dela, e o tracejado mostra a distância até a folha."
+/>
+
+Use os controles para mudar a receita e o giro da cena, e aperte “Ver a
+folha de perfil”. A ponta nunca sai da folha. Depois aperte “Trocar R por S”:
+a base nova $\vec{s} = (1,\ 0,\ 1)$ sai da folha, e as pontas se espalham.
+
+O painel da figura confere outra coisa, que dá para ver na tabela da loja:
+em cada base, o magenta é a **média** do ciano com o amarelo. Em P,
+$\frac{2 + 0}{2} = 1$. Em Q, $\frac{0 + 2}{2} = 1$. Em R,
+$\frac{2 + 4}{2} = 3$. Misturar soma os pigmentos, e a média de uma soma é a
+soma das médias. Por isso toda mistura de P, Q e R também tem o magenta igual
+à média do ciano com o amarelo. Essa regra é a descrição da folha por uma
+conta: ciano $+$ amarelo $= 2 \times$ magenta. O laranja-queimado
+$(1,\ 0,\ 1)$ quebra a regra, porque a média de 1 e 1 é 1, e não 0.
+
+**Exemplo.** Toda receita com P, Q e R fica na folha. O verde-musgo
+$(4,\ 5,\ 6)$ está nela: $\frac{4 + 6}{2} = 5$.
+
+**Contraexemplo.** Com $\vec{s}$ no lugar de $\vec{r}$, os três vetores
+**não** estão numa mesma folha, porque $\vec{s}$ quebra a regra da média.
+Por isso as misturas de $\vec{p}$, $\vec{q}$ e $\vec{s}$ saem da folha de P
+e Q. A seção “Resolvendo o problema da loja” mostra que eles alcançam o
+espaço inteiro.
+
+<details>
+<summary>Confira: a fórmula (6, 4, 2) está na folha de P e Q? E (1, 1, 2)? Para a que estiver, ache a receita com P e Q.</summary>
+
+Para $(6,\ 4,\ 2)$: a média do ciano com o amarelo é
+$\frac{6 + 2}{2} = 4$, igual ao magenta. Está na folha. A receita sai de
+$a\vec{p} + b\vec{q} = (2a,\ a + b,\ 2b) = (6,\ 4,\ 2)$: $a = 3$ e $b = 1$,
+e o magenta confere, $3 + 1 = 4$. Para $(1,\ 1,\ 2)$: a média é
+$\frac{1 + 2}{2} = 1{,}5$, mas o magenta é 1. Está fora.
+
+</details>
+
+## Um vetor sobra quando é combinação dos outros
+
+Pense numa cozinha com dois ingredientes, farinha e açúcar. Alguém traz um
+terceiro pote com o rótulo “mistura doce”, e você descobre que ele tem
+exatamente uma parte de farinha para duas de açúcar. Tudo o que esse pote dá,
+você já fazia com farinha e açúcar. Ele é um atalho, não um ingrediente novo.
+
+A base R é esse pote. Como $\vec{r} = \vec{p} + 2\vec{q}$, cada litro de R
+leva o mesmo pigmento que 1 litro de P mais 2 litros de Q. Então qualquer
+lata que usa R pode ser refeita sem R, trocando cada litro de R por 1 litro
+de P e 2 litros de Q. A figura faz essa troca na lata $\vec{p} + \vec{q} +
+\vec{r}$ do “Confira” da primeira seção.
+
+<PaintSwap />
+
+Em símbolos, para uma receita qualquer com $c$ litros de R:
 
 $$
 a\vec{p} + b\vec{q} + c\vec{r}
@@ -430,9 +536,15 @@ a\vec{p} + b\vec{q} + c\vec{r}
 $$
 
 O primeiro sinal de igual troca $\vec{r}$ pelo que ele vale. O segundo usa a
-distributiva e junta os termos de $\vec{p}$ e os de $\vec{q}$, como se junta
-$3x + 2x$ numa expressão algébrica. A lata é a mesma; só a lista de compras
-mudou.
+distributiva e junta os termos de $\vec{p}$ e os de $\vec{q}$. O que muda é a
+lista de compras; o que permanece é a lata. Com $a = b = c = 1$, a conta dá
+$2\vec{p} + 3\vec{q}$, a lata da direita da figura.
+
+Por isso tirar R não diminui o que a loja alcança: o conjunto gerado por P, Q
+e R é o mesmo gerado só por P e Q. É isso que quer dizer “sobrar”.
+
+> Os vetores $\vec{v}_1,\ \ldots,\ \vec{v}_k$ são **linearmente dependentes**
+> quando pelo menos um deles é combinação linear dos outros.
 
 **Exemplo.** $\vec{p}$, $\vec{q}$ e $\vec{r}$ são linearmente dependentes,
 porque $\vec{r} = \vec{p} + 2\vec{q}$.
@@ -441,11 +553,65 @@ porque $\vec{r} = \vec{p} + 2\vec{q}$.
 de $(1,\ 0)$ tem a segunda coordenada zero, então nunca é $(0,\ 1)$. E um
 múltiplo de $(0,\ 1)$ nunca é $(1,\ 0)$, pelo mesmo motivo.
 
-### 8.6 Independência linear: a definição que se testa com uma conta
+Um detalhe que confunde: a definição diz “pelo menos um”, e não “qualquer
+um”. Na loja, qualquer das três bases pode sair, porque a relação
+$\vec{r} = \vec{p} + 2\vec{q}$ também se lê como
+$\vec{p} = \vec{r} - 2\vec{q}$ ou $\vec{q} = \frac{1}{2}(\vec{r} - \vec{p})$.
+Confira a primeira: $(2,\ 3,\ 4) - (0,\ 2,\ 4) = (2,\ 1,\ 0)$. Mas nem sempre
+é assim. Em $(1,\ 0)$, $(2,\ 0)$ e $(0,\ 1)$, o vetor $(2,\ 0)$ sobra (é o
+dobro de $(1,\ 0)$), e o $(0,\ 1)$ **não** sobra: sem ele, só se alcança o
+eixo $x$.
 
-A definição de dependência tem um defeito prático: ela manda procurar **qual**
-dos vetores sobra. Com cinco vetores, seriam cinco perguntas. A definição de
-independência evita isso olhando para todos ao mesmo tempo.
+<details>
+<summary>Confira: reescreva a lata 2p + q + r sem a base R. As duas receitas dão a mesma fórmula?</summary>
+
+Trocando $\vec{r}$ por $\vec{p} + 2\vec{q}$: $2\vec{p} + \vec{q} +
+\vec{p} + 2\vec{q} = 3\vec{p} + 3\vec{q}$. Conferência:
+$2\vec{p} + \vec{q} + \vec{r} = (4,\ 2,\ 0) + (0,\ 1,\ 2) + (2,\ 3,\ 4) =
+(6,\ 6,\ 6)$, e $3\vec{p} + 3\vec{q} = (6,\ 3,\ 0) + (0,\ 3,\ 6) =
+(6,\ 6,\ 6)$. Mesma lata.
+
+</details>
+
+## Independência: só a receita de zero de tudo volta à origem
+
+A definição de dependência tem um defeito prático: ela manda procurar
+**qual** vetor sobra. Com cinco vetores, seriam cinco perguntas. Existe um
+jeito de olhar todos de uma vez.
+
+Leia a relação $\vec{r} = \vec{p} + 2\vec{q}$ como um passeio: ande
+$\vec{p}$, depois ande $\vec{q}$ duas vezes, e você está na ponta de
+$\vec{r}$. Agora ande $\vec{r}$ **para trás**. Você volta à origem. O
+passeio $\vec{p} + 2\vec{q} - \vec{r} = \vec{0}$ sai de casa e volta, com
+coeficientes que não são todos zero.
+
+A figura tem três motores no plano: $\vec{u} = (2,\ 1)$, $\vec{v} = (1,\ 3)$
+e $\vec{w} = (1,\ -2)$, desenhados em tom claro a partir da origem. Procure uma receita cujo caminho volte à origem sem
+ser a receita parada, com tudo zero. Depois aperte “Tirar o terceiro vetor” e
+tente de novo, só com $\vec{u}$ e $\vec{v}$.
+
+<SpanCombo
+  vectors={[
+    {v: [2, 1], name: '\\vec{u}'},
+    {v: [1, 3], name: '\\vec{v}'},
+    {v: [1, -2], name: '\\vec{w}'},
+  ]}
+  ranges={[[-1, 1], [-1, 1], [-1, 1]]}
+  step={0.5}
+  initial={[1, 0, 0]}
+  zeroHunt
+  removable={2}
+  sweep={false}
+  window={{xMin: -4.5, xMax: 4.5, yMin: -6.5, yMax: 6.5}}
+  unit={26}
+  caption="O caminho anda a·u (azul), depois b·v (laranja), depois c·w (verde). O círculo vazio é a origem: ele fica verde quando o caminho volta para casa com uma receita que não é zero de tudo."
+/>
+
+Com os três vetores, a receita $a = 1$, $b = -1$, $c = -1$ volta à origem:
+$(2,\ 1) - (1,\ 3) - (1,\ -2) = (0,\ 0)$. Sem $\vec{w}$, nenhuma receita
+volta, a não ser a parada. Os três vetores juntos são dependentes
+($\vec{w} = \vec{u} - \vec{v}$ sobra); $\vec{u}$ e $\vec{v}$ sozinhos não
+são.
 
 > Os vetores $\vec{v}_1,\ \ldots,\ \vec{v}_k$ são **linearmente
 > independentes** quando a única combinação linear que dá o vetor nulo é a
@@ -460,7 +626,7 @@ A receita “zero de tudo” sempre dá $\vec{0}$. Ela se chama **combinação
 trivial**. A definição pergunta se existe **alguma outra**.
 
 **Por que as duas definições dizem a mesma coisa.** Este é o passo mais
-abstrato da lição; vale ler devagar, com o exemplo da loja ao lado.
+abstrato da lição. Vale ler devagar, com o exemplo da loja ao lado.
 
 - **Se um vetor sobra, existe receita não trivial que dá zero.** Na loja,
   $\vec{r} = \vec{p} + 2\vec{q}$. Subtraia $\vec{r}$ dos dois lados:
@@ -492,17 +658,27 @@ Três casos especiais saem da definição, sem conta nenhuma:
   vez o $\vec{0}$ e zero de todos os outros” dá zero e não é trivial.
 - **Dois vetores são dependentes exatamente quando um é múltiplo do
   outro.** Se nenhum dos dois é nulo, isso quer dizer que são paralelos. É a
-  dependência que já se via no desenho.
+  dependência que já se via na figura da reta.
 - **Um único vetor não nulo é independente.** Se $c\vec{v} = \vec{0}$ e
   $\vec{v}$ tem alguma coordenada diferente de zero, essa coordenada vezes $c$
   dá zero, e por isso $c = 0$.
 
-### 8.7 O teste por escalonamento
+<details>
+<summary>Confira: na figura, por que nenhuma receita só com u = (2, 1) e v = (1, 3) volta à origem? Responda com um sistema.</summary>
 
-A definição de independência é um sistema: $c_1\vec{v}_1 + \cdots +
-c_k\vec{v}_k = \vec{0}$, ou $A\vec{c} = \vec{0}$, com os vetores como colunas
-de $A$. Esse sistema tem um nome: **sistema homogêneo**, aquele em que o lado
-direito é todo zero.
+Voltar à origem é $a(2,\ 1) + b(1,\ 3) = (0,\ 0)$, isto é, $2a + b = 0$ e
+$a + 3b = 0$. Da primeira, $b = -2a$. Na segunda, $a - 6a = 0$, então
+$-5a = 0$ e $a = 0$. Daí $b = 0$. A única receita que volta é a trivial:
+$\vec{u}$ e $\vec{v}$ são independentes.
+
+</details>
+
+## O teste: escalonar e procurar coluna sem pivô
+
+A definição de independência é um sistema:
+$c_1\vec{v}_1 + \cdots + c_k\vec{v}_k = \vec{0}$, ou $A\vec{c} = \vec{0}$,
+com os vetores como colunas de $A$. Um sistema cujo lado direito é todo zero
+se chama **sistema homogêneo**.
 
 Um sistema homogêneo **sempre tem solução**: a trivial, $\vec{c} = \vec{0}$.
 Dos três desfechos de [Sistemas lineares e
@@ -516,26 +692,46 @@ escalonamento](./sistemas-lineares-e-escalonamento), sobram dois:
 
 A coluna de zeros do lado direito nunca muda durante o escalonamento: cada
 operação combina zeros com zeros. Por isso, para testar independência,
-escalone a matriz $A$ sem a coluna aumentada: o resultado é o mesmo, com uma
+escalone a matriz $A$ sem a coluna aumentada. O resultado é o mesmo, com uma
 coluna a menos para carregar.
 
-**O teste com as bases da loja.** Ponha $\vec{p}$, $\vec{q}$ e $\vec{r}$ como
-colunas:
+**O teste com as bases da loja.** Previsão: já sabemos que
+$\vec{r} = \vec{p} + 2\vec{q}$, então a terceira coluna deve ficar sem pivô.
+A figura escalona uma operação por vez. O botão do outro caso troca R por
+$\vec{s} = (1,\ 0,\ 1)$.
 
-$$
-\begin{bmatrix} 2 & 0 & 2 \\ 1 & 1 & 3 \\ 0 & 2 & 4 \end{bmatrix}
-\xrightarrow{L_2 \leftarrow L_2 - \frac{1}{2}L_1}
-\begin{bmatrix} 2 & 0 & 2 \\ 0 & 1 & 2 \\ 0 & 2 & 4 \end{bmatrix}
-\xrightarrow{L_3 \leftarrow L_3 - 2L_2}
-\begin{bmatrix} 2 & 0 & 2 \\ 0 & 1 & 2 \\ 0 & 0 & 0 \end{bmatrix}
-$$
+<PivotColumns
+  cases={[
+    {
+      label: 'Bases P, Q e R',
+      names: ['\\vec{p}', '\\vec{q}', '\\vec{r}'],
+      start: [[2, 0, 2], [1, 1, 3], [0, 2, 4]],
+      steps: [
+        {op: 'L_2 \\leftarrow L_2 - \\tfrac{1}{2}L_1', row: 1, m: [[2, 0, 2], [0, 1, 2], [0, 2, 4]]},
+        {op: 'L_3 \\leftarrow L_3 - 2L_2', row: 2, m: [[2, 0, 2], [0, 1, 2], [0, 0, 0]]},
+      ],
+    },
+    {
+      label: 'Bases P, Q e S',
+      names: ['\\vec{p}', '\\vec{q}', '\\vec{s}'],
+      start: [[2, 0, 1], [1, 1, 0], [0, 2, 1]],
+      steps: [
+        {op: 'L_2 \\leftarrow L_2 - \\tfrac{1}{2}L_1', row: 1, m: [[2, 0, 1], [0, 1, -0.5], [0, 2, 1]]},
+        {op: 'L_3 \\leftarrow L_3 - 2L_2', row: 2, m: [[2, 0, 1], [0, 1, -0.5], [0, 0, 2]]},
+      ],
+    },
+  ]}
+  caption="As bases entram como colunas. A faixa azul marca a linha que a operação acabou de mudar. No fim, cada pivô ganha um círculo, e a coluna sem pivô fica sombreada."
+/>
 
-A terceira linha zerou inteira. A terceira coluna ficou **sem pivô**, então
-$c$ é variável livre: as bases são **dependentes**.
+Com P, Q e R, a terceira linha zera inteira. A terceira coluna fica **sem
+pivô**, então $c$ é variável livre: as bases são **dependentes**. Com P, Q e
+S, as três colunas têm pivô: **independentes**.
 
-E o escalonamento faz mais que dizer “dependente”: ele entrega a receita.
-Escolha $c = 1$. A segunda linha diz $b + 2c = 0$, então $b = -2$. A primeira
-diz $2a + 2c = 0$, então $a = -1$. A receita é
+O escalonamento faz mais que dizer “dependente”: ele entrega a receita.
+Na forma final de P, Q e R, escolha $c = 1$. A segunda linha diz
+$b + 2c = 0$, então $b = -2$. A primeira diz $2a + 2c = 0$, então $a = -1$. A
+receita é
 
 $$
 -\vec{p} - 2\vec{q} + \vec{r} = \vec{0}, \qquad \text{ou seja,} \qquad
@@ -543,9 +739,22 @@ $$
 $$
 
 Conferência coordenada a coordenada:
-$(2,\ 1,\ 0) + 2(0,\ 1,\ 2) = (2,\ 3,\ 4)$, que é $\vec{r}$.
+$(2,\ 1,\ 0) + 2(0,\ 1,\ 2) = (2,\ 3,\ 4)$, que é $\vec{r}$. A receita vale
+para os vetores originais, e não só para a matriz escalonada, porque as
+operações de linha não mudam as soluções do sistema.
 
-### 8.8 Quantos vetores cabem em $\mathbb{R}^n$
+<details>
+<summary>Confira: escalonada, a matriz de três vetores de ℝ³ ficou com as linhas (1, 0, 3), (0, 1, −1) e (0, 0, 0). Os vetores são independentes? Qual receita dá zero?</summary>
+
+A terceira coluna não tem pivô, então são **dependentes**. Escolha $c = 1$.
+A segunda linha diz $b - c = 0$, então $b = 1$. A primeira diz
+$a + 3c = 0$, então $a = -3$. A receita
+$-3\vec{v}_1 + \vec{v}_2 + \vec{v}_3 = \vec{0}$ dá zero, ou seja,
+$\vec{v}_3 = 3\vec{v}_1 - \vec{v}_2$.
+
+</details>
+
+## Em $\mathbb{R}^n$ cabem no máximo $n$ vetores independentes
 
 Esta seção é a mais difícil da lição, porque o argumento é sobre **quantos**
 pivôs podem existir, e não sobre uma conta específica. Se não fechar agora,
@@ -553,30 +762,68 @@ volte a ela depois dos exemplos.
 
 Cada pivô ocupa uma linha diferente da forma escalonada, e uma coluna
 diferente. Uma matriz com $n$ linhas tem, portanto, **no máximo $n$
-pivôs**. Duas consequências:
+pivôs**. A figura mostra as duas consequências com matrizes que não são
+quadradas.
+
+<PivotColumns
+  cases={[
+    {
+      label: 'Três vetores do plano',
+      names: ['\\vec{v}_1', '\\vec{v}_2', '\\vec{v}_3'],
+      start: [[1, 2, 4], [1, -1, 1]],
+      steps: [{op: 'L_2 \\leftarrow L_2 - L_1', row: 1, m: [[1, 2, 4], [0, -3, -3]]}],
+    },
+    {
+      label: 'Dois vetores do espaço',
+      names: ['\\vec{p}', '\\vec{q}'],
+      start: [[2, 0], [1, 1], [0, 2]],
+      steps: [
+        {op: 'L_2 \\leftarrow L_2 - \\tfrac{1}{2}L_1', row: 1, m: [[2, 0], [0, 1], [0, 2]]},
+        {op: 'L_3 \\leftarrow L_3 - 2L_2', row: 2, m: [[2, 0], [0, 1], [0, 0]]},
+      ],
+    },
+  ]}
+  caption="Três vetores do plano: 2 linhas, então no máximo 2 pivôs, e uma das 3 colunas fica sem pivô. Dois vetores do espaço: 3 linhas e só 2 colunas, então uma linha fica sem pivô."
+/>
 
 1. **Mais de $n$ vetores em $\mathbb{R}^n$ são sempre dependentes.** Com $k$
    vetores de $n$ coordenadas, a matriz tem $n$ linhas e $k$ colunas. Se
    $k > n$, há mais colunas que pivôs possíveis, e alguma coluna fica sem
-   pivô. Exemplo: três vetores quaisquer do plano são dependentes.
+   pivô. Na figura, os vetores $(1,\ 1)$, $(2,\ -1)$ e $(4,\ 1)$ do plano
+   deixam a terceira coluna sem pivô.
 2. **Menos de $n$ vetores nunca geram $\mathbb{R}^n$.** Com $k < n$ colunas,
    há no máximo $k$ pivôs, e alguma das $n$ linhas fica sem pivô: ela zera
    na forma escalonada. Do lado aumentado, essa linha recebe uma combinação
-   das coordenadas do alvo, como o $y - 2x$ da seção 8.4. Há alvos que deixam
-   esse número diferente de zero, e eles produzem a linha impossível. Exemplo:
-   dois vetores nunca geram o espaço; no máximo, geram um plano.
+   das coordenadas do alvo, como o $y - 2x$ da seção do escalonamento. Há
+   alvos que deixam esse número diferente de zero, e eles produzem a linha
+   impossível. Na figura, $\vec{p}$ e $\vec{q}$ deixam a terceira linha sem
+   pivô: dois vetores geram, no máximo, uma folha do espaço.
 
 E com **exatamente** $n$ vetores em $\mathbb{R}^n$, as duas perguntas da lição
 viram uma só. A matriz é quadrada. Se toda coluna tem pivô, então toda linha
 também tem, porque há tantas linhas quanto colunas: os vetores são
 independentes **e** geram tudo. Se alguma coluna fica sem pivô, alguma linha
-também fica: os vetores são dependentes **e** não geram tudo. As bases da
-loja são o segundo caso.
+também fica: os vetores são dependentes **e** não geram tudo. As bases P, Q e
+R da loja são o segundo caso; P, Q e S, o primeiro.
 
-## 9. Resolvendo o problema da loja
+<details>
+<summary>Confira: quatro vetores de ℝ³ podem ser independentes? Três vetores de ℝ⁴ podem gerar ℝ⁴?</summary>
 
-**Pedido 1: verde-musgo, $(4,\ 5,\ 6)$.** Escalone a matriz aumentada, com as
-mesmas operações da seção 8.7:
+Não e não. Quatro vetores de $\mathbb{R}^3$ formam uma matriz de 3 linhas e
+4 colunas: no máximo 3 pivôs, e uma coluna fica sem pivô. Três vetores de
+$\mathbb{R}^4$ formam uma matriz de 4 linhas e 3 colunas: no máximo 3 pivôs,
+e uma linha fica sem pivô, o que abre espaço para a linha impossível.
+
+</details>
+
+## Resolvendo o problema da loja
+
+Agora a loja tem as ferramentas. Os três pedidos usam a mesma matriz, com as
+bases como colunas, e as mesmas duas operações do teste.
+
+**Pedido 1: verde-musgo, $(4,\ 5,\ 6)$.** Previsão: $\frac{4 + 6}{2} = 5$,
+então a fórmula está na folha, e deve haver receita. Escalone a matriz
+aumentada:
 
 $$
 \left[\begin{array}{ccc|c} 2 & 0 & 2 & 4 \\ 1 & 1 & 3 & 5 \\ 0 & 2 & 4 & 6 \end{array}\right]
@@ -596,11 +843,12 @@ $b = 3 - 2c$; a primeira, $2a + 2c = 4$, dá $a = 2 - c$.
 | 1 | 1 | 1 | $\vec{p} + \vec{q} + \vec{r}$ |
 | 1,5 | 0,5 | 0 | $0{,}5\vec{p} + 1{,}5\vec{r}$ |
 
-Confira a segunda linha: $(2,\ 1,\ 0) + (0,\ 1,\ 2) + (2,\ 3,\ 4) =
-(4,\ 5,\ 6)$. Infinitas receitas para a mesma lata é o sinal de que uma base
-sobra.
+Estão entre as receitas que a figura do problema motivador guardava. Confira a
+segunda linha da tabela: $(2,\ 1,\ 0) + (0,\ 1,\ 2) + (2,\ 3,\ 4) =
+(4,\ 5,\ 6)$. Infinitas receitas para a mesma lata são o sinal de que uma
+base sobra.
 
-Aqui aparece a restrição que a loja tem e a matemática não: **litros não
+Aqui aparece uma restrição que a loja tem e a matemática não: **litros não
 podem ser negativos**. Para $c = 2$, a receita pediria $b = -1$, isto é,
 retirar um litro de Q da lata. Na loja, só valem as receitas com $a$, $b$ e
 $c$ maiores ou iguais a zero, o que acontece para $c$ entre 0 e 1,5. A
@@ -608,7 +856,9 @@ $c$ maiores ou iguais a zero, o que acontece para $c$ entre 0 e 1,5. A
 sinal”. A pergunta com sinal obrigatório é de outra área, a programação
 linear, que este curso não cobre.
 
-**Pedido 2: laranja-queimado, $(1,\ 0,\ 1)$.** As mesmas operações:
+**Pedido 2: laranja-queimado, $(1,\ 0,\ 1)$.** Previsão:
+$\frac{1 + 1}{2} = 1$, mas o magenta é 0, então a fórmula está fora da folha,
+e deve aparecer a linha impossível. As mesmas operações:
 
 $$
 \left[\begin{array}{ccc|c} 2 & 0 & 2 & 1 \\ 1 & 1 & 3 & 0 \\ 0 & 2 & 4 & 1 \end{array}\right]
@@ -631,19 +881,21 @@ $$
 
 A fórmula é alcançável exatamente quando esse número é zero, isto é, quando
 $x + z = 2y$. Dividindo por 2: **o magenta é a média do ciano e do amarelo**.
-É a regra que a seção 5 tinha visto na tabela, agora provada por conta. O
-verde-musgo cumpre: $4 + 6 = 10 = 2 \times 5$. O laranja não: $1 + 1 = 2$, e
-$2 \times 0 = 0$.
+É a regra da folha que a figura do espaço conferia, agora provada por conta.
+O verde-musgo cumpre: $4 + 6 = 10 = 2 \times 5$. O laranja não: $1 + 1 = 2$,
+e $2 \times 0 = 0$.
 
-**Pergunta 3: a base sobra?** Sobra. A seção 8.7 mostrou
+**Pergunta 3: a base sobra?** Sobra. O teste por escalonamento mostrou
 $\vec{r} = \vec{p} + 2\vec{q}$. Qualquer lata feita com R pode ser feita
 trocando cada litro de R por 1 litro de P e 2 litros de Q. O conjunto gerado
-pelas três bases é o mesmo que o gerado só por P e Q: a “folha” da seção 6.
+pelas três bases é o mesmo que o gerado só por P e Q: a folha
+$x + z = 2y$.
 
 **Que base comprar no lugar de R?** Uma que esteja **fora** da folha, ou
 seja, que quebre a regra $x + z = 2y$. A loja precisa do laranja-queimado,
-então a escolha natural é uma base S de fórmula $\vec{s} = (1,\ 0,\ 1)$.
-Teste de independência de $\vec{p}$, $\vec{q}$ e $\vec{s}$:
+então uma escolha que resolve o pedido 2 de uma vez é uma base S de fórmula
+$\vec{s} = (1,\ 0,\ 1)$. O teste por escalonamento, no botão “Bases P, Q e S”
+da figura da seção do teste, deu três pivôs:
 
 $$
 \begin{bmatrix} 2 & 0 & 1 \\ 1 & 1 & 0 \\ 0 & 2 & 1 \end{bmatrix}
@@ -653,23 +905,16 @@ $$
 \begin{bmatrix} 2 & 0 & 1 \\ 0 & 1 & -\frac{1}{2} \\ 0 & 0 & 2 \end{bmatrix}
 $$
 
-Três pivôs em três colunas: $\vec{p}$, $\vec{q}$ e $\vec{s}$ são
-independentes. Pela seção 8.8, três vetores independentes em $\mathbb{R}^3$
-geram o espaço inteiro. Com P, Q e S, toda fórmula de pigmentos tem uma
-receita, ainda que, para algumas, a receita peça litros negativos.
+Então $\vec{p}$, $\vec{q}$ e $\vec{s}$ são independentes. Pela seção
+anterior, três vetores independentes em $\mathbb{R}^3$ geram o espaço
+inteiro. Com P, Q e S, toda fórmula de pigmentos tem uma receita, ainda que,
+para algumas, a receita peça litros negativos.
 
-<Space3D
-  max={[2, 3, 3]}
-  unit={42}
-  ticks={false}
-  axisLabels={['\\text{magenta}', '\\text{ciano}', '\\text{amarelo}']}
-  vectors={[
-    {to: [1, 2, 0], tone: 1, label: '\\vec{p}'},
-    {to: [1, 0, 2], tone: 2, label: '\\vec{q}'},
-    {to: [0, 1, 1], tone: 3, label: '\\vec{s}'},
-  ]}
-  boxes={[[0, 1, 1]]}
-  caption="A base nova s = (1, 0, 1) não tem magenta: sua seta fica na parede do ciano com o amarelo, sem sair do papel na direção do magenta. Ela não está na folha de p e q, e com essa direção nova as três bases alcançam o espaço inteiro. Como na figura anterior, o eixo que sai do papel é o do magenta."
+<SpanSheet
+  initialBases="S"
+  initial={[0, 0, 1]}
+  profile
+  caption="Com a base S no lugar de R, a figura termina na vista de perfil da folha antiga de p e q, que aparece como uma linha. As pontas das receitas testadas saem dessa linha: com S, as misturas deixam a folha. A receita dos controles é 1 litro de S, que é a própria fórmula do laranja-queimado."
 />
 
 Um exemplo de lata nova com receita positiva: $2\vec{p} + \vec{q} + \vec{s}
@@ -677,19 +922,23 @@ Um exemplo de lata nova com receita positiva: $2\vec{p} + \vec{q} + \vec{s}
 a regra antiga, já que $5 + 3 = 8$ e $2 \times 3 = 6$. Com R, a loja não
 conseguia fazê-la.
 
-## 10. Exemplos resolvidos
+## Exemplos resolvidos
 
 ### Exemplo 1: achar a receita no plano
 
 Escreva $(5,\ 1)$ como combinação de $(1,\ -1)$ e $(2,\ 1)$.
+
+Previsão: os dois vetores não são múltiplos um do outro (um tem as
+coordenadas com sinais opostos, o outro com o mesmo sinal). Então existe
+receita, e ela é única.
 
 Queremos $a(1,\ -1) + b(2,\ 1) = (5,\ 1)$, que dá $a + 2b = 5$ e
 $-a + b = 1$. Somando as duas equações, o $a$ desaparece: $3b = 6$, então
 $b = 2$. Da segunda equação, $a = b - 1 = 1$. Conferência:
 $(1,\ -1) + 2(2,\ 1) = (1 + 4,\ -1 + 2) = (5,\ 1)$.
 
-Os dois vetores não são paralelos, então, pela seção 8.4, **qualquer** alvo
-do plano teria receita. Este é só um deles.
+Como os dois vetores não são paralelos, **qualquer** alvo do plano teria
+receita, pela regra da seção do escalonamento. Este é só um deles.
 
 ### Exemplo 2: dependência que se vê sem conta
 
@@ -697,10 +946,13 @@ Os vetores $(1,\ 2,\ 3)$ e $(2,\ 4,\ 6)$ são dependentes?
 
 *Pause e tente antes de ler.*
 
-São. O segundo é o dobro do primeiro, então a receita
+Previsão: compare as coordenadas. Cada uma do segundo é o dobro da do
+primeiro.
+
+São dependentes. Como o segundo é o dobro do primeiro, a receita
 $2(1,\ 2,\ 3) - (2,\ 4,\ 6) = (0,\ 0,\ 0)$ dá zero sem ser trivial. Com dois
-vetores não nulos, dependente quer dizer paralelo, e paralelismo se vê comparando as
-coordenadas.
+vetores não nulos, dependente quer dizer paralelo, e paralelismo se vê
+comparando as coordenadas.
 
 ### Exemplo 3: nenhum par é paralelo, e ainda assim há dependência
 
@@ -710,7 +962,8 @@ $\vec{w} = (1,\ 1,\ 2)$ são independentes?
 *Pause e tente antes de ler.*
 
 Olhando par a par, nenhum é múltiplo de outro. A tentação é concluir que são
-independentes. O escalonamento diz outra coisa:
+independentes. Mas some $\vec{u}$ com $\vec{v}$ antes de concluir. O
+escalonamento confirma o que essa soma sugere:
 
 $$
 \begin{bmatrix} 1 & 0 & 1 \\ 0 & 1 & 1 \\ 1 & 1 & 2 \end{bmatrix}
@@ -725,13 +978,17 @@ linha dá $b = -1$ e a primeira dá $a = -1$. Então
 $-\vec{u} - \vec{v} + \vec{w} = \vec{0}$, ou $\vec{w} = \vec{u} + \vec{v}$.
 Conferência: $(1,\ 0,\ 1) + (0,\ 1,\ 1) = (1,\ 1,\ 2)$.
 
-A redundância não estava em nenhum par. Ela estava nos três juntos.
+A redundância não estava em nenhum par. Ela estava nos três juntos, como as
+três bases da loja, que também não têm nenhum par paralelo.
 
 ### Exemplo 4: três vetores independentes
 
 Os vetores $(1,\ 1,\ 0)$, $(0,\ 1,\ 1)$ e $(1,\ 0,\ 1)$ são independentes?
 
 *Pause e tente antes de ler.*
+
+Previsão: some os dois primeiros, $(1,\ 2,\ 1)$, e compare com o terceiro.
+Não bate, mas isso testa só uma receita. O escalonamento testa todas:
 
 $$
 \begin{bmatrix} 1 & 0 & 1 \\ 1 & 1 & 0 \\ 0 & 1 & 1 \end{bmatrix}
@@ -757,15 +1014,19 @@ online e o total, em reais:
 | 3 | 0 | 60 | 60 |
 | 4 | 80 | 0 | 80 |
 
+*Pause e tente: alguma coluna sobra?*
+
 Cada coluna é um vetor de $\mathbb{R}^4$, com uma coordenada por cliente:
 $\vec{f} = (100,\ 50,\ 0,\ 80)$, $\vec{o} = (20,\ 30,\ 60,\ 0)$ e
 $\vec{t} = (120,\ 80,\ 60,\ 80)$. As três colunas são dependentes, porque
 $\vec{t} = \vec{f} + \vec{o}$, ou $\vec{f} + \vec{o} - \vec{t} = \vec{0}$.
 
 Apagar a coluna do total não perde nada: ela se refaz somando as outras duas.
-Já $\vec{f}$ e $\vec{o}$ são independentes: dois vetores só são dependentes
-se um for múltiplo do outro, e o cliente 3 tem 0 numa coluna e 60 na outra, enquanto
-o cliente 4 tem 80 numa e 0 na outra. Nenhum múltiplo faz isso.
+Já $\vec{f}$ e $\vec{o}$ são independentes. Dois vetores só são dependentes
+se um for múltiplo do outro. O cliente 3 tem 0 em $\vec{f}$ e 60 em
+$\vec{o}$, e nenhum número vezes 0 dá 60: $\vec{o}$ não é múltiplo de
+$\vec{f}$. Do mesmo jeito, o cliente 4 tem 80 em $\vec{f}$ e 0 em $\vec{o}$,
+então $\vec{f}$ não é múltiplo de $\vec{o}$.
 
 ### Exemplo 6: um parâmetro que decide
 
@@ -773,8 +1034,11 @@ Para que valores de $k$ os vetores $(1,\ k)$ e $(k,\ 4)$ são dependentes?
 
 *Pause e tente antes de ler.*
 
-Dois vetores são dependentes quando são paralelos. Escalone com os vetores
-como colunas:
+Previsão: se o segundo for múltiplo do primeiro, o fator que leva o 1 até o
+$k$ também precisa levar o $k$ até o 4. Então $k \times k = 4$, e devem sair
+dois valores, um positivo e um negativo.
+
+Escalone com os vetores como colunas:
 
 $$
 \begin{bmatrix} 1 & k \\ k & 4 \end{bmatrix}
@@ -787,7 +1051,7 @@ $k = -2$. Conferência para $k = 2$: os vetores são $(1,\ 2)$ e $(2,\ 4)$, e
 o segundo é o dobro do primeiro. Para $k = -2$: $(1,\ -2)$ e $(-2,\ 4)$, e o
 segundo é $-2$ vezes o primeiro.
 
-## 11. Erros comuns
+## Erros comuns
 
 > **Erro 1: achar que três vetores de $\mathbb{R}^3$ sempre geram o
 > espaço.** As bases P, Q e R da loja são três vetores de $\mathbb{R}^3$ e
@@ -802,8 +1066,9 @@ segundo é $-2$ vezes o primeiro.
 
 > **Erro 3: confundir independente com perpendicular.** $(1,\ 0)$ e
 > $(1,\ 1)$ são independentes (não são paralelos), mas não são
-> perpendiculares: o produto escalar é $1 + 0 = 1$, e não zero.
-> Perpendiculares não nulos são sempre independentes, mas a recíproca falha.
+> perpendiculares: o produto escalar é $1 \times 1 + 0 \times 1 = 1$, e não
+> zero. Perpendiculares não nulos são sempre independentes, mas a recíproca
+> falha.
 
 > **Erro 4: usar a combinação trivial como prova de dependência.** “Como
 > $0\vec{u} + 0\vec{v} + 0\vec{w} = \vec{0}$, os vetores são dependentes.”
@@ -824,7 +1089,7 @@ segundo é $-2$ vezes o primeiro.
 > de tintas, a restrição de sinal existe; na definição de conjunto gerado,
 > não.
 
-## 12. Perguntas de verificação
+## Perguntas de verificação
 
 1. Por que o vetor nulo está em todo conjunto gerado?
 2. Por que uma reta que não passa pela origem nunca é o conjunto gerado de
@@ -846,9 +1111,9 @@ segundo é $-2$ vezes o primeiro.
 2. Porque um conjunto gerado sempre contém o vetor nulo, que é a origem. Uma
    reta como $y = 2x + 1$ não passa por $(0,\ 0)$, então não pode ser um
    conjunto gerado.
-3. Porque as duas frases dizem a mesma coisa (seção 8.6), mas a da
-   combinação que dá zero não exige escolher **qual** vetor sobra. Ela vira
-   um único sistema homogêneo, que o escalonamento resolve de uma vez.
+3. Porque as duas frases dizem a mesma coisa (seção da independência), mas a
+   da combinação que dá zero não exige escolher **qual** vetor sobra. Ela
+   vira um único sistema homogêneo, que o escalonamento resolve de uma vez.
 4. Que a incógnita daquela coluna é livre: o sistema homogêneo tem infinitas
    soluções, e entre elas há uma não trivial. Os vetores são dependentes. E,
    escolhendo um valor para a variável livre, sai a receita que mostra qual
@@ -865,7 +1130,7 @@ segundo é $-2$ vezes o primeiro.
 
 </details>
 
-## 13. Exercícios
+## Exercícios
 
 ### 1. Reconhecimento
 
@@ -911,14 +1176,17 @@ segundo é $-2$ vezes o primeiro.
 11. Com as bases P e Q da loja, dá para fabricar a fórmula $(3,\ 3,\ 3)$? E
     $(2,\ 2,\ 3)$? Se der, ache a receita.
 12. Os vetores $(1,\ 1)$, $(2,\ -1)$ e $(4,\ 1)$ do plano são dependentes,
-    pela seção 8.8. Ache uma receita não trivial que dê $(0,\ 0)$.
+    pela seção “Em $\mathbb{R}^n$ cabem no máximo $n$ vetores
+    independentes”. Ache uma receita não trivial que dê $(0,\ 0)$.
 
 <details>
 <summary>Dica para o 10</summary>
 
 Ponha os vetores como colunas e escalone deixando o $k$ como letra. A
 primeira operação é $L_2 \leftarrow L_2 - 2L_1$, a segunda é
-$L_3 \leftarrow L_3 - kL_1$. Procure o valor de $k$ que zera a última linha.
+$L_3 \leftarrow L_3 - kL_1$. Depois delas, a matriz ainda não está em escada:
+falta zerar o 1 da segunda coluna na terceira linha. Só então procure o valor
+de $k$ que zera a última linha.
 
 </details>
 
@@ -1007,16 +1275,19 @@ $\vec{w}$.
 9. Matriz $\begin{bmatrix} 1 & 0 & 1 \\ 0 & 1 & 1 \\ 2 & 1 & 0
    \end{bmatrix}$. $L_3 \leftarrow L_3 - 2L_1$ dá $(0,\ 1,\ -2)$; depois
    $L_3 \leftarrow L_3 - L_2$ dá $(0,\ 0,\ -3)$. Três pivôs (1, 1 e $-3$):
-   **independentes**. Se você encontrou uma linha zerada, confira o sinal em
-   $0 - 2 \times 1 = -2$, na terceira coluna da primeira operação.
+   **independentes**. Se você encontrou uma linha zerada, refaça as contas da
+   terceira coluna: $0 - 2 \times 1 = -2$ na primeira operação e
+   $-2 - 1 = -3$ na segunda.
 10. Matriz $\begin{bmatrix} 1 & 0 & 2 \\ 2 & 1 & 5 \\ k & 1 & 4
     \end{bmatrix}$. $L_2 \leftarrow L_2 - 2L_1$ dá $(0,\ 1,\ 1)$;
     $L_3 \leftarrow L_3 - kL_1$ dá $(0,\ 1,\ 4 - 2k)$; e
     $L_3 \leftarrow L_3 - L_2$ dá $(0,\ 0,\ 3 - 2k)$. A terceira coluna fica
     sem pivô quando $3 - 2k = 0$, isto é, $k = \frac{3}{2}$. Nesse caso,
     $(2,\ 5,\ 4) = 2\left(1,\ 2,\ \tfrac{3}{2}\right) + (0,\ 1,\ 1)$.
-    Conferência: $(2,\ 4,\ 3) + (0,\ 1,\ 1) = (2,\ 5,\ 4)$.
-11. A regra da seção 9 é $x + z = 2y$. Para $(3,\ 3,\ 3)$: $3 + 3 = 6 =
+    Conferência: $(2,\ 4,\ 3) + (0,\ 1,\ 1) = (2,\ 5,\ 4)$. Se você
+    encontrou $k = 2$, provavelmente esqueceu a última operação,
+    $L_3 \leftarrow L_3 - L_2$, e igualou $4 - 2k$ a zero.
+11. A regra da folha é $x + z = 2y$. Para $(3,\ 3,\ 3)$: $3 + 3 = 6 =
     2 \times 3$, alcançável. A receita sai de $a\vec{p} + b\vec{q} =
     (2a,\ a + b,\ 2b) = (3,\ 3,\ 3)$: $a = 1{,}5$ e $b = 1{,}5$, e a
     coordenada do meio confere, $1{,}5 + 1{,}5 = 3$. Para $(2,\ 2,\ 3)$:
@@ -1032,8 +1303,7 @@ $\vec{w}$.
     independentes (não são paralelas), então não dá para apagar mais nada sem
     perder informação. Outra escolha também serve: apagar a loja física
     (que é total menos online) e o desconto. Se você achou que o desconto era
-    10% do total,
-    confira o cliente 3: o total é 60 e o desconto é 0.
+    10% do total, confira o cliente 3: o total é 60 e o desconto é 0.
 14. $\left[\begin{array}{ccc|c} 2 & 0 & 1 & 5 \\ 1 & 1 & 0 & 3 \\ 0 & 2 & 1 & 3
     \end{array}\right]$. Com $L_2 \leftarrow L_2 - \frac{1}{2}L_1$, a
     segunda linha vira $\left[\,0 \ \ 1 \ \ {-\tfrac{1}{2}} \mid \tfrac{1}{2}\,\right]$;
@@ -1063,17 +1333,20 @@ $\vec{w}$.
 
 </details>
 
-## 14. Revisão curta
+## Revisão curta
 
 - Uma **combinação linear** é uma receita: cada vetor vezes um número, tudo
   somado. O **conjunto gerado** é tudo o que as receitas alcançam, com
   coeficientes de qualquer sinal; ele sempre contém o vetor nulo.
+- No plano, dois vetores alcançam tudo quando nenhum é múltiplo do outro;
+  dois paralelos alcançam só a reta deles. No espaço, vetores deitados numa
+  mesma folha não saem dela.
 - Decidir se $\vec{b}$ é alcançável é decidir se $A\vec{x} = \vec{b}$ tem
   solução, com os vetores como colunas de $A$. Linha impossível na forma
   escalonada quer dizer “fora”.
-- Vetores são **dependentes** quando um deles sobra: é combinação dos outros
-  e não amplia o conjunto gerado. São **independentes** quando a única
-  receita que dá $\vec{0}$ é a trivial.
+- Vetores são **dependentes** quando um deles sobra: é combinação dos outros,
+  e tirá-lo não muda o conjunto gerado. São **independentes** quando a única
+  receita que volta à origem é a trivial.
 - O teste: escalonar a matriz com os vetores como colunas. Coluna sem pivô
   quer dizer dependência, e a variável livre entrega a receita que dá zero.
 - Em $\mathbb{R}^n$, mais de $n$ vetores são sempre dependentes, e menos de

@@ -2,14 +2,17 @@
 title: Produto de matrizes
 ---
 
-import LinearMap from '@site/src/components/LinearMap';
 import CartesianPlane from '@site/src/components/CartesianPlane';
+import ProductComposeGrid from '@site/src/components/ProductComposeGrid';
+import ProductRowColumn from '@site/src/components/ProductRowColumn';
+import ProductShapeFit from '@site/src/components/ProductShapeFit';
+import TwoLayersCollapse from '@site/src/components/TwoLayersCollapse';
 
-# Produto de matrizes
+# Produto de matrizes: dois comandos numa matriz só
 
-## 1. Problema motivador: girar e esticar, ou esticar e girar?
+## Problema motivador: girar e esticar, ou esticar e girar?
 
-Uma designer prepara o logotipo de uma marca no editor de imagens da lição
+Uma designer prepara um logotipo em forma de L no editor de imagens da lição
 anterior. Ela aplica dois comandos seguidos:
 
 1. **girar** o logotipo $90^\circ$ no sentido anti-horário;
@@ -17,10 +20,36 @@ anterior. Ela aplica dois comandos seguidos:
 
 Um colega recebe as mesmas instruções, mas lê a lista de baixo para cima:
 primeiro estica, depois gira. Os dois acompanham o mesmo ponto do desenho, a
-ponta de uma letra que está em $(2,\ 1)$.
+ponta do pé do L, que está em $(2,\ 1)$. A figura mostra os dois trabalhando
+ao mesmo tempo, um comando de cada vez.
 
-- A designer gira primeiro: $(2,\ 1)$ vai para $(-1,\ 2)$. Depois estica:
-  a coordenada horizontal dobra, e o ponto termina em $(-2,\ 2)$.
+<ProductComposeGrid
+  panels={[
+    {
+      title: '\\text{designer: girar, depois esticar}',
+      steps: [{name: 'R', text: 'girar 90°', rotation: 90}, {name: 'E', text: 'esticar 2 vezes', matrix: [[2, 0], [0, 1]]}],
+      points: [{at: [2, 1], offsets: [[8, -12, 'start'], [0, -16], [0, -16]]}],
+    },
+    {
+      title: '\\text{colega: esticar, depois girar}',
+      steps: [{name: 'E', text: 'esticar 2 vezes', matrix: [[2, 0], [0, 1]]}, {name: 'R', text: 'girar 90°', rotation: 90}],
+      points: [{at: [2, 1], offsets: [[8, -12, 'start'], [0, -16], [-8, -12, 'end']]}],
+    },
+  ]}
+  polygon={{points: [[0, 0], [2, 0], [2, 1], [1, 1], [1, 2], [0, 2]], tone: 3}}
+  basisLabels={false}
+  showSquare={false}
+  readout={false}
+  window={[-4.6, 4.6, -0.6, 4.6]}
+  unit={30}
+  label="O mesmo logotipo em L passando pelos mesmos dois comandos, em ordens diferentes"
+  caption="O logotipo (verde) e a ponta do pé do L, em (2, 1). No painel da designer, ela gira e depois estica: a ponta passa por (−1, 2) e termina em (−2, 2), e o L termina deitado, largo. No painel do colega, ele estica e depois gira: a ponta passa por (4, 1) e termina em (−1, 4), e o L termina em pé, alto. As setas azul e laranja são os lados do quadradinho da malha, e₁ e e₂."
+/>
+
+Confira as contas da figura, um comando de cada vez.
+
+- A designer gira primeiro: $(2,\ 1)$ vai para $(-1,\ 2)$. Depois estica: a
+  coordenada horizontal dobra, e o ponto termina em $(-2,\ 2)$.
 - O colega estica primeiro: $(2,\ 1)$ vai para $(4,\ 1)$. Depois gira: o
   ponto termina em $(-1,\ 4)$.
 
@@ -37,49 +66,62 @@ numa matriz só.
 >    estica 2 vezes na horizontal? E da que faz o contrário?
 
 Juntar duas matrizes numa só, na ordem certa, é o **produto de matrizes**. A
-seção 9 responde às duas perguntas.
+seção “Resolvendo o problema do logotipo” responde às duas perguntas.
 
-## 2. Mapa das ideias
+## Roteiro da lição
 
-- **composição de transformações**: aplicar uma transformação e, no
-  resultado, aplicar outra;
-- **produto de matrizes** $AB$: a matriz da composição “primeiro $B$, depois
-  $A$”. Ela leva cada vetor $\vec{v}$ ao mesmo lugar que $A(B\vec{v})$;
-- **regra linha por coluna**: a entrada da linha $i$ e da coluna $j$ de $AB$ é
-  o produto escalar da linha $i$ de $A$ com a coluna $j$ de $B$;
-- **dimensões compatíveis**: $A$ de dimensão $m \times n$ só multiplica $B$
-  quando $B$ tem $n$ linhas. O resultado é $m \times p$, se $B$ é $n \times p$;
-- **não comutatividade**: em geral, $AB$ e $BA$ são matrizes diferentes;
-- **associatividade**: $(AB)C = A(BC)$, e por isso se escreve $ABC$ sem
-  parênteses;
-- **matriz identidade** $I$: a matriz que não muda nada, com 1 na diagonal e
-  0 no resto;
-- **transposta do produto**: $(AB)^{\mathsf{T}} = B^{\mathsf{T}}A^{\mathsf{T}}$,
-  com a ordem trocada.
+1. Dois comandos lineares seguidos formam um comando só, e esse comando tem
+   uma matriz. As colunas dela são os lugares onde $\vec{e}_1$ e $\vec{e}_2$
+   terminam depois dos dois comandos.
+2. Essa matriz se chama **produto** e se escreve $AB$. Ela faz **primeiro
+   $B$, depois $A$**: a matriz que age primeiro fica à direita, encostada no
+   vetor. Cada coluna de $AB$ é $A$ vezes uma coluna de $B$.
+3. Escrevendo essas contas por extenso, sai a **regra linha por coluna**:
+   cada entrada de $AB$ é o produto escalar de uma linha de $A$ com uma
+   coluna de $B$.
+4. O produto só existe quando a saída de $B$ cabe na entrada de $A$: as
+   colunas de $A$ precisam ser tantas quanto as linhas de $B$.
+5. A ordem importa: em geral, $AB$ e $BA$ são matrizes diferentes.
+6. Os parênteses não importam: $(AB)C = A(BC)$.
+7. A **identidade** $I$ é o comando que não faz nada, o papel do número 1.
+8. Transpor um produto troca a ordem dos fatores:
+   $(AB)^{\mathsf{T}} = B^{\mathsf{T}}A^{\mathsf{T}}$.
+9. Em redes neurais, duas camadas do tipo $W\vec{x} + \vec{b}$ seguidas valem
+   por uma só. Uma função com dobra entre elas, a ReLU, impede essa junção.
 
-## 3. Para que serve
+## Para que isso serve?
 
-- **Computação gráfica.** Um jogo aplica a cada objeto uma sequência de
-  comandos: girar, esticar, inclinar, mudar a câmera. O programa multiplica as
-  matrizes de todos os comandos uma vez e aplica só a matriz final a cada
-  ponto.
-- **Planilhas encadeadas.** Uma planilha diz quanto cada loja compra de cada
-  produto. Outra diz quanto cada produto custa em cada fornecedor. O produto
-  das duas responde quanto cada loja gastaria em cada fornecedor. O Exemplo 3
-  faz essa conta.
-- **Trigonometria.** O produto de duas matrizes de rotação esconde as
-  fórmulas de $\cos(a + b)$ e $\sen(a + b)$. O Exemplo 4 as encontra de novo.
-- **Redes neurais.** Uma rede é uma sequência de camadas, e cada camada tem
-  uma matriz. O produto de matrizes explica por que as redes precisam de uma
-  função **não linear** entre uma camada e a seguinte. É o assunto da
-  seção 10.
+- **Computação gráfica.** Uma tela de 1920 por 1080 tem $2\,073\,600$
+  pixels. Aplicar dois comandos, um de cada vez, custa duas multiplicações de
+  matriz por vetor por pixel, ou seja, $8$ multiplicações de números por
+  pixel: $16\,588\,800$ no total. Juntando os comandos numa matriz só antes
+  de começar (8 multiplicações, uma vez), cada pixel custa 4:
+  $8\,294\,400$ no total. A conta caiu pela metade, e com dez comandos
+  seguidos ela cai para um décimo.
+- **Planilhas encadeadas.** As três lojas de [Matrizes](./matrizes) comparam
+  dois fornecedores. O produto da planilha de pedidos pela de preços dá, de
+  uma vez, a conta de cada loja em cada fornecedor. O Shopping pagaria
+  R\$ 73 no primeiro e R\$ 69 no segundo (Exemplo 3).
+- **Redes neurais.** Duas camadas $W\vec{x} + \vec{b}$ seguidas, sem nada
+  entre elas, fazem a mesma conta que uma camada só, com a matriz
+  $W_2W_1$. Na rede da seção das camadas, a entrada $(2,\ 1,\ 3)$ dá 23 nas
+  duas versões. É por isso que as redes põem uma função não linear, como a
+  ReLU, entre uma camada e a seguinte.
+- **Repetir um comando.** Aplicar o mesmo cisalhamento 10 vezes é a matriz
+  $C^{10} = \begin{bmatrix} 1 & 10 \\ 0 & 1 \end{bmatrix}$, que se acha sem
+  fazer dez contas (Exemplo 5). Potências de matrizes voltam em
+  [Autovalores e autovetores](./autovalores-e-autovetores).
+- **Trigonometria.** O produto de duas matrizes de rotação guarda as fórmulas
+  de $\cos(a + b)$ e $\sen(a + b)$: girar $30^\circ$ e depois $60^\circ$ dá a
+  matriz do giro de $90^\circ$ (Exemplo 4).
 - **Dentro da álgebra linear.** A [matriz inversa](./matriz-inversa) é
-  definida pelo produto ($AA^{-1} = I$), e o [determinante](./determinante)
-  de um produto é o produto dos determinantes.
+  definida pelo produto: $AA^{-1} = I$. E o [determinante](./determinante) de
+  um produto é o produto dos determinantes: o esticão do logotipo dobra a
+  área, o giro não muda a área, e a matriz única dobra a área.
 
-## 4. Ideias anteriores que voltam aqui
+## Ideias anteriores que voltam aqui
 
-Cinco peças antigas sustentam esta lição. Tente cada pergunta antes de abrir a
+Três peças antigas sustentam esta lição. Tente cada pergunta antes de abrir a
 resposta.
 
 **1. De [Composição de funções](../funcoes/composicao-de-funcoes).** Com
@@ -96,7 +138,9 @@ reaparecer na escrita $AB$.
 </details>
 
 **2. De [Transformações lineares](./transformacoes-lineares).** O que guardam
-as colunas da matriz de uma transformação linear do plano?
+as colunas da matriz de uma transformação linear do plano? Use a resposta para
+escrever a matriz que gira o plano $90^\circ$ no sentido anti-horário e a que
+estica 2 vezes na horizontal.
 
 <details>
 <summary>Conferir</summary>
@@ -105,11 +149,25 @@ A primeira coluna é o destino de $\vec{e}_1 = (1,\ 0)$, e a segunda é o
 destino de $\vec{e}_2 = (0,\ 1)$. Conhecendo esses dois destinos, conhece-se a
 transformação inteira, porque todo vetor é $x\vec{e}_1 + y\vec{e}_2$.
 
+Girar $90^\circ$ leva $\vec{e}_1$ a $(0,\ 1)$ e leva $\vec{e}_2$ a
+$(-1,\ 0)$. Esticar 2 vezes na horizontal leva $\vec{e}_1$ a $(2,\ 0)$ e
+deixa $\vec{e}_2$ onde está. Pondo os destinos como colunas:
+
+$$
+R = \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix},
+\qquad
+E = \begin{bmatrix} 2 & 0 \\ 0 & 1 \end{bmatrix}.
+$$
+
+Essas duas letras, $R$ de rotação e $E$ de esticar, acompanham a lição
+inteira.
+
 </details>
 
 **3. De [Matrizes](./matrizes).** Calcule
 $\begin{bmatrix} 2 & 0 \\ 0 & 1 \end{bmatrix}\begin{bmatrix} -1 \\ 2 \end{bmatrix}$
-pela leitura por linhas.
+pela leitura por linhas. E uma matriz $2 \times 3$ pode multiplicar um vetor
+de 2 coordenadas?
 
 <details>
 <summary>Conferir</summary>
@@ -119,171 +177,119 @@ primeira linha dá $2 \times (-1) + 0 \times 2 = -2$, e a segunda dá
 $0 \times (-1) + 1 \times 2 = 2$. O resultado é $(-2,\ 2)$. É o segundo passo
 da designer: esticar o ponto $(-1,\ 2)$.
 
-</details>
-
-**4. De [Transformações lineares](./transformacoes-lineares).** Qual é a
-matriz que gira o plano $90^\circ$ no sentido anti-horário? E a que estica 2
-vezes na horizontal?
-
-<details>
-<summary>Conferir</summary>
-
-Girar $90^\circ$ leva $\vec{e}_1 = (1,\ 0)$ a $(0,\ 1)$ e leva
-$\vec{e}_2 = (0,\ 1)$ a $(-1,\ 0)$. Pondo os destinos como colunas:
-
-$$
-R = \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix}.
-$$
-
-Esticar 2 vezes na horizontal leva $\vec{e}_1$ a $(2,\ 0)$ e deixa
-$\vec{e}_2$ onde está:
-
-$$
-E = \begin{bmatrix} 2 & 0 \\ 0 & 1 \end{bmatrix}.
-$$
-
-Essas duas letras, $R$ de rotação e $E$ de esticar, acompanham a lição
-inteira.
+A matriz $2 \times 3$ não pode multiplicar um vetor de 2 coordenadas. Cada
+linha dela tem 3 entradas, e o produto escalar de uma linha com o vetor
+precisa de 3 coordenadas do outro lado. A regra é: o número de **colunas** da
+matriz tem que ser igual ao número de coordenadas do vetor.
 
 </details>
 
-**5. De [Matrizes](./matrizes).** Uma matriz $2 \times 3$ pode multiplicar um
-vetor de 2 coordenadas?
-
-<details>
-<summary>Conferir</summary>
-
-Não. Cada linha da matriz tem 3 entradas, e o produto escalar de uma linha
-com o vetor precisa de 3 coordenadas do outro lado. A regra é: o número de
-**colunas** da matriz tem que ser igual ao número de coordenadas do vetor.
-
-</details>
-
-## 5. Intuição: duas máquinas numa máquina só
+## Dois comandos seguidos são uma transformação só
 
 Pense em cada matriz como uma máquina que recebe uma seta e devolve outra
-seta. A máquina $R$ gira. A máquina $E$ estica. Ligar as duas em série, a
-saída de $R$ entrando em $E$, forma uma máquina maior: entra uma seta, saem
-as duas operações feitas.
+seta. A máquina $R$ gira. A máquina $E$ estica. Ligue as duas em série: a
+saída de $R$ entra em $E$. O conjunto é uma máquina maior. Entra uma seta e
+saem as duas operações feitas.
 
-A lição anterior mostrou duas coisas sobre essa máquina maior, no Exemplo 7.
-Primeiro, ela também é linear. Cada máquina leva a malha quadriculada numa
-malha de paralelogramos; por isso, a segunda recebe uma malha organizada e
-entrega outra malha organizada. Segundo, por ser linear, a máquina maior tem
-uma matriz $2 \times 2$ própria. E as colunas dessa matriz são os destinos
-finais de $\vec{e}_1$ e $\vec{e}_2$, depois de passarem pelas duas máquinas.
+A lição anterior mostrou, no Exemplo 7, que essa máquina maior também é
+linear. Cada máquina leva a malha quadriculada numa malha de paralelogramos.
+Por isso a segunda máquina recebe uma malha organizada e entrega outra malha
+organizada. E toda transformação linear do plano tem uma matriz
+$2 \times 2$, cujas colunas são os destinos de $\vec{e}_1$ e $\vec{e}_2$.
 
-Então o plano de trabalho é este: acompanhar $\vec{e}_1$ e $\vec{e}_2$ pelas
-duas máquinas e anotar onde eles terminam. Esse trabalho, feito com letras
-em vez de números, vai virar uma regra de conta.
+Então o plano de trabalho é este:
 
-E a ordem? Na máquina em série, a ordem das peças importa, como no desconto
-e no imposto de [Composição de funções](../funcoes/composicao-de-funcoes).
-Girar uma seta já esticada não é o mesmo que esticar uma seta já girada,
-porque o esticão age **na horizontal**, e a horizontal de antes do giro não é
-a horizontal de depois.
+1. acompanhe $\vec{e}_1$ e $\vec{e}_2$ pelo primeiro comando;
+2. acompanhe o resultado pelo segundo comando;
+3. escreva os dois destinos finais como colunas.
 
-## 6. Modelo visual: as duas ordens, lado a lado
+A figura faz isso na ordem da designer. Ela para entre um comando e outro e
+escreve onde as duas setas estão. Arraste o deslizante para parar em qualquer
+instante.
 
-Acompanhe $\vec{e}_1$ e $\vec{e}_2$ nas duas ordens. Na ordem da designer,
-primeiro $R$, depois $E$:
+<ProductComposeGrid
+  steps={[{name: 'R', text: 'girar 90°', rotation: 90}, {name: 'E', text: 'esticar 2 vezes', matrix: [[2, 0], [0, 1]]}]}
+  cumNames={['R', '\\text{matriz única}']}
+  progress
+  window={[-2.8, 1.8, -1.2, 1.8]}
+  unit={62}
+  label="O plano girando 90 graus e depois esticando 2 vezes na horizontal"
+  caption="Primeiro o giro: e₁ (azul) vai para (0, 1) e e₂ (laranja) vai para (−1, 0). Depois o esticão: só a coordenada horizontal dobra, então e₁, que está em pé, fica em (0, 1), e e₂, que está deitado, vai para (−2, 0). O quadradinho verde vira um retângulo deitado, de largura 2."
+/>
+
+As paradas da figura, numa tabela:
 
 | Seta | depois de girar ($R$) | depois de esticar ($E$) |
 |---|---|---|
 | $\vec{e}_1 = (1,\ 0)$ | $(0,\ 1)$ | $(0,\ 1)$ |
 | $\vec{e}_2 = (0,\ 1)$ | $(-1,\ 0)$ | $(-2,\ 0)$ |
 
-Na ordem do colega, primeiro $E$, depois $R$:
+Pondo os destinos finais como colunas, a matriz única da designer é
+
+$$
+\begin{bmatrix} 0 & -2 \\ 1 & 0 \end{bmatrix}.
+$$
+
+Confira com o ponto do logotipo. Pela leitura por linhas,
+$0 \times 2 + (-2) \times 1 = -2$ e $1 \times 2 + 0 \times 1 = 2$. A matriz
+única leva $(2,\ 1)$ a $(-2,\ 2)$, o mesmo lugar dos dois comandos feitos um
+de cada vez.
+
+O que mudou e o que ficou igual: antes eram duas contas por ponto, uma por
+comando. Agora é uma conta só. O destino de cada ponto é o mesmo.
+
+<details>
+<summary>Confira: faça a tabela na ordem do colega (primeiro esticar, depois girar). Qual é a matriz única dele?</summary>
+
+O esticão leva $\vec{e}_1$ a $(2,\ 0)$ e deixa $\vec{e}_2$ em $(0,\ 1)$.
+Depois o giro leva $(2,\ 0)$ a $(0,\ 2)$ e leva $(0,\ 1)$ a $(-1,\ 0)$.
 
 | Seta | depois de esticar ($E$) | depois de girar ($R$) |
 |---|---|---|
 | $\vec{e}_1 = (1,\ 0)$ | $(2,\ 0)$ | $(0,\ 2)$ |
 | $\vec{e}_2 = (0,\ 1)$ | $(0,\ 1)$ | $(-1,\ 0)$ |
 
-Na primeira ordem, $\vec{e}_1$ terminou com tamanho 1 e $\vec{e}_2$ com
-tamanho 2. Na segunda, foi o contrário. A diferença tem uma causa visível:
-o esticão sempre age na horizontal. Na ordem da designer, quem está deitado
-na hora do esticão é o $\vec{e}_2$, que o giro acabou de deitar. Na ordem do
-colega, quem está deitado é o $\vec{e}_1$, que ainda não girou.
+A matriz única do colega é
+$\begin{bmatrix} 0 & -1 \\ 2 & 0 \end{bmatrix}$. Ela leva $(2,\ 1)$ a
+$(0 - 1,\ 4 + 0) = (-1,\ 4)$, como no problema.
 
-As duas figuras mostram o plano inteiro antes e depois de cada sequência. O
-quadrado verde é o quadrado de lado 1, e a seta verde é o ponto $(2,\ 1)$ do
-logotipo.
+</details>
 
-<LinearMap
-  matrix={[[0, -2], [1, 0]]}
-  vectors={[{v: [2, 1], label: '(2,\\ 1)', imageLabel: '(-2,\\ 2)'}]}
-  titles={['\\text{antes}', '\\text{girar, depois esticar}']}
-  window={[-3, 3, -1, 3]}
-  caption="Ordem da designer: primeiro girar 90°, depois esticar 2 vezes na horizontal. A seta e₁ termina em (0, 1), com tamanho 1; a seta e₂ termina em (−2, 0), com tamanho 2. O quadrado vira um retângulo deitado, e o ponto (2, 1) vai para (−2, 2)."
-/>
+## O produto AB faz primeiro B e depois A
 
-<LinearMap
-  matrix={[[0, -1], [2, 0]]}
-  vectors={[{v: [2, 1], label: '(2,\\ 1)', imageLabel: '(-1,\\ 4)'}]}
-  titles={['\\text{antes}', '\\text{esticar, depois girar}']}
-  basisLabels={{after: ['(0,\\ 2)', '(-1,\\ 0)', [30, 6]]}}
-  window={[-2, 3, -1, 5]}
-  caption="Ordem do colega: primeiro esticar 2 vezes na horizontal, depois girar 90°. A seta e₁ termina em (0, 2), com tamanho 2; a seta e₂ termina em (−1, 0), com tamanho 1. O quadrado vira um retângulo em pé, e o ponto (2, 1) vai para (−1, 4)."
-/>
-
-As duas sequências produzem retângulos de mesma área, 2, mas com orientações
-diferentes: um deitado, outro em pé. As matrizes finais, que vamos montar a
-seguir, também serão diferentes.
-
-## 7. Ponte para a formalização: de duas tabelas para uma regra
-
-As tabelas da seção 6 já contêm as duas matrizes únicas. Pondo os destinos
-finais de cada tabela como colunas, a ordem da designer dá:
-
-$$
-\begin{bmatrix} 0 & -2 \\ 1 & 0 \end{bmatrix}.
-$$
-
-Ordem do colega:
-
-$$
-\begin{bmatrix} 0 & -1 \\ 2 & 0 \end{bmatrix}.
-$$
-
-Esse método funciona, mas depende de acompanhar as setas passo a passo, com
-desenho ou tabela. O que queremos agora é uma regra que leve das matrizes
-$R$ e $E$ direto à matriz única, sem desenho. Três fatos já estudados
-permitem escrever essa regra:
-
-1. **as colunas de uma matriz são os destinos de $\vec{e}_1$ e
-   $\vec{e}_2$** (lição anterior);
-2. **multiplicar uma matriz por $\vec{e}_1$ devolve a primeira coluna dela**,
-   e por $\vec{e}_2$, a segunda ([Matrizes](./matrizes), Exemplo 3);
-3. **multiplicar uma matriz por um vetor é fazer um produto escalar de cada
-   linha com o vetor** ([Matrizes](./matrizes), leitura por linhas).
-
-O fato 2 diz onde $\vec{e}_1$ está depois da primeira máquina: está na
-primeira coluna dela. O fato 3 diz como calcular o que a segunda máquina faz
-com essa coluna. E o fato 1 diz que o resultado é a primeira coluna da
-matriz única. A seção 8 escreve esses três passos com letras.
-
-## 8. Formalização
-
-### 8.1 O produto como composição
+A tabela funciona, mas depende de acompanhar as setas passo a passo. O que
+queremos agora é uma regra que leve das duas matrizes direto à matriz única.
+Para isso, faça o mesmo trabalho com letras.
 
 Sejam $A$ e $B$ duas matrizes $2 \times 2$. Chame as colunas de $B$ de
-$\vec{b}_1$ e $\vec{b}_2$:
+$\vec{b}_1$ e $\vec{b}_2$. Queremos a matriz de “primeiro $B$, depois $A$”.
+Siga $\vec{e}_1$:
 
-$$
-B = \begin{bmatrix} | & | \\ \vec{b}_1 & \vec{b}_2 \\ | & | \end{bmatrix}.
-$$
+1. a máquina $B$ leva $\vec{e}_1$ à primeira coluna de $B$, que é
+   $\vec{b}_1$ (multiplicar uma matriz por $\vec{e}_1$ devolve a primeira
+   coluna dela, como em [Matrizes](./matrizes));
+2. a máquina $A$ recebe $\vec{b}_1$ e devolve $A\vec{b}_1$.
 
-Queremos a matriz que faz “primeiro $B$, depois $A$”. Pelo fato 1, a
-primeira coluna dela é o destino final de $\vec{e}_1$. Acompanhe $\vec{e}_1$:
+O mesmo caminho com $\vec{e}_2$ termina em $A\vec{b}_2$. Esses dois destinos
+finais são as colunas da matriz única.
 
-- a máquina $B$ leva $\vec{e}_1$ à primeira coluna de $B$, ou seja, a
-  $\vec{b}_1$ (fato 2);
-- a máquina $A$ leva $\vec{b}_1$ a $A\vec{b}_1$.
+A figura segue esses passos com o Exemplo 7 da lição anterior: primeiro o
+cisalhamento $C = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}$, depois o
+esticão $E$. Na parada do meio, as setas estão nas colunas de $C$. No fim,
+estão em $E$ vezes cada coluna de $C$.
 
-O mesmo raciocínio com $\vec{e}_2$ termina em $A\vec{b}_2$. Então a matriz
-única tem as colunas $A\vec{b}_1$ e $A\vec{b}_2$. Ela recebe um nome e uma
-escrita:
+<ProductComposeGrid
+  steps={[{name: 'C', text: 'cisalhar', matrix: [[1, 1], [0, 1]]}, {name: 'E', text: 'esticar 2 vezes', matrix: [[2, 0], [0, 1]]}]}
+  basisLabels={[['\\vec{b}_1 = (1,\\ 0)', '\\vec{b}_2 = (1,\\ 1)'], ['E\\vec{b}_1 = (2,\\ 0)', 'E\\vec{b}_2 = (2,\\ 1)']]}
+  basisOffsets={[[[8, 14, 'start'], [0, -16]], [[0, 18], [-10, -14, 'end']], [[0, 18], [8, -12, 'start']]]}
+  points={[{at: [1, 2], offsets: [[8, -12, 'start'], [8, -12, 'start'], [0, -16]]}]}
+  window={[-1.2, 6.8, -0.9, 2.8]}
+  unit={44}
+  label="O plano cisalhado e depois esticado; as setas param nas colunas de C e depois em E vezes essas colunas"
+  caption="Passo 1, o cisalhamento C: e₁ fica em b₁ = (1, 0) e e₂ escorrega para b₂ = (1, 1), as colunas de C. Passo 2, o esticão E age sobre essas setas: b₁ vai para (2, 0) e b₂ vai para (2, 1). O ponto verde sai de (1, 2), passa por (3, 2) e termina em (6, 2)."
+/>
+
+Isso vira uma definição.
 
 > **Definição.** O **produto** $AB$ é a matriz cujas colunas são $A$ vezes
 > cada coluna de $B$:
@@ -293,43 +299,75 @@ escrita:
 > Com essa definição, $(AB)\vec{v} = A(B\vec{v})$ para todo vetor $\vec{v}$:
 > multiplicar por $AB$ é aplicar primeiro $B$ e depois $A$.
 
-Repare na ordem. Em $AB$, a matriz escrita **à direita**, $B$, é a que age
-**primeiro**. É a mesma convenção de $f(g(x))$: quem está mais perto do vetor
-age antes. A escrita $(AB)\vec{v}$ deixa isso visível, porque o $B$ é a letra
-encostada no $\vec{v}$.
+Este é o ponto da lição que mais confunde: **em $AB$, a matriz escrita à
+direita, $B$, é a que age primeiro.** É a mesma convenção de $f(g(x))$, da
+pergunta 1 de “Ideias anteriores”: quem está mais perto do vetor age antes. A
+escrita $(AB)\vec{v}$ deixa isso visível, porque o $B$ é a letra encostada
+no $\vec{v}$.
 
-**Exemplo.** A matriz única da designer é “primeiro $R$, depois $E$”, ou
-seja, $ER$. As colunas de $R$ são $(0,\ 1)$ e $(-1,\ 0)$. Multiplique $E$ por
-cada uma:
+**Exemplo.** A figura fez “primeiro $C$, depois $E$”, então a matriz única é
+$EC$. As colunas de $C$ são $(1,\ 0)$ e $(1,\ 1)$. Multiplique $E$ por cada
+uma:
 
 $$
-E\begin{bmatrix} 0 \\ 1 \end{bmatrix} = \begin{bmatrix} 0 \\ 1 \end{bmatrix},
+E\begin{bmatrix} 1 \\ 0 \end{bmatrix} = \begin{bmatrix} 2 \\ 0 \end{bmatrix},
 \qquad
-E\begin{bmatrix} -1 \\ 0 \end{bmatrix} = \begin{bmatrix} -2 \\ 0 \end{bmatrix}.
+E\begin{bmatrix} 1 \\ 1 \end{bmatrix} = \begin{bmatrix} 2 \\ 1 \end{bmatrix},
+\qquad
+EC = \begin{bmatrix} 2 & 2 \\ 0 & 1 \end{bmatrix}.
 $$
 
-Logo $ER = \begin{bmatrix} 0 & -2 \\ 1 & 0 \end{bmatrix}$, a mesma matriz que
-a tabela da seção 6 deu.
+É a matriz que o Exemplo 7 da lição anterior achou pelo desenho. Ela leva
+$(1,\ 2)$ a $(2 + 4,\ 0 + 2) = (6,\ 2)$, o ponto final da figura.
 
-**Contraexemplo.** A matriz que se obtém multiplicando $R$ pelas colunas de
-$E$ é $RE$, e ela **não** é a da designer: $RE$ faz primeiro $E$ e depois
-$R$, que é a ordem do colega. Escrever as letras na ordem em que os comandos
-foram dados, $RE$ para “girar, depois esticar”, é o erro de leitura mais
-comum desta lição.
+**Contraexemplo.** Escrever as letras na ordem em que os comandos foram
+dados, $CE$ para “cisalhar, depois esticar”, dá outra matriz. $CE$ faz
+primeiro $E$ e depois $C$. A matriz da designer, “girar, depois esticar”, é
+$ER$, e não $RE$.
 
-### 8.2 A regra linha por coluna
+<details>
+<summary>Confira: calcule CE pela definição (C vezes cada coluna de E). Para onde CE leva o ponto (1, 2)?</summary>
+
+As colunas de $E$ são $(2,\ 0)$ e $(0,\ 1)$. Então
+$C(2,\ 0) = (2 + 0,\ 0) = (2,\ 0)$ e $C(0,\ 1) = (0 + 1,\ 1) = (1,\ 1)$, e
+$CE = \begin{bmatrix} 2 & 1 \\ 0 & 1 \end{bmatrix}$. Ela leva $(1,\ 2)$ a
+$(2 + 2,\ 0 + 2) = (4,\ 2)$, e não a $(6,\ 2)$. Esticar primeiro e cisalhar
+depois é outro comando.
+
+</details>
+
+## Cada entrada de AB é uma linha de A com uma coluna de B
 
 A definição manda calcular $A\vec{b}_1$ e $A\vec{b}_2$. Cada uma dessas
-contas é um produto de matriz por vetor, e a leitura por linhas de
-[Matrizes](./matrizes) diz como fazê-la: cada coordenada é o produto escalar
-de uma linha de $A$ com o vetor.
+contas é um produto de matriz por vetor. Pela leitura por linhas de
+[Matrizes](./matrizes), cada coordenada desse produto é o produto escalar de
+uma linha de $A$ com o vetor.
 
-Junte as duas informações. A entrada da linha $i$ e da coluna $j$ de $AB$ é a
-coordenada $i$ de $A\vec{b}_j$. E essa coordenada é o produto escalar da
-linha $i$ de $A$ com $\vec{b}_j$, que é a coluna $j$ de $B$:
+Junte as duas informações:
 
-> **Regra linha por coluna.** A entrada $(i,\ j)$ de $AB$ é o produto escalar
-> da **linha $i$ de $A$** com a **coluna $j$ de $B$**.
+1. a entrada da linha $i$ e da coluna $j$ de $AB$ é a coordenada $i$ da
+   coluna $A\vec{b}_j$;
+2. essa coordenada é o produto escalar da linha $i$ de $A$ com $\vec{b}_j$;
+3. e $\vec{b}_j$ é a coluna $j$ de $B$.
+
+> **Regra linha por coluna.** A entrada $(i,\ j)$ de $AB$ é o
+> [produto escalar](../geometria/produto-escalar) da **linha $i$ de $A$** com
+> a **coluna $j$ de $B$**: o primeiro número da linha vezes o primeiro da
+> coluna, mais o segundo vezes o segundo, e assim por diante.
+
+A figura calcula $ER$ entrada por entrada. Ela põe $R$ em cima, $E$ à
+esquerda e o produto embaixo à direita. Nesse arranjo, a linha $i$ de $E$ e a
+coluna $j$ de $R$ se cruzam exatamente na casa $(i,\ j)$ do produto.
+
+<ProductRowColumn
+  A={[[2, 0], [0, 1]]}
+  B={[[0, -1], [1, 0]]}
+  nameA="E"
+  nameB="R"
+  selected={[0, 1]}
+  label="O produto ER calculado entrada por entrada, linha de E com coluna de R"
+  caption="Cada casa do produto ER (verde) está no cruzamento de uma linha de E (azul) com uma coluna de R (laranja). Na animação, o par da vez fica verde: o 1º número da linha com o 1º da coluna, depois o 2º com o 2º. Depois da animação, clique numa casa do produto para ver a conta dela."
+/>
 
 Com letras, para duas matrizes $2 \times 2$:
 
@@ -340,11 +378,12 @@ $$
 \begin{bmatrix} ap + br & aq + bs \\ cp + dr & cq + ds \end{bmatrix}.
 $$
 
-Leia a entrada de cima à esquerda: linha 1 de $A$, que é $(a,\ b)$, com a
-coluna 1 de $B$, que é $(p,\ r)$. O produto escalar dá $ap + br$. As outras
-três entradas seguem o mesmo padrão.
+Leia a entrada de cima à esquerda: linha 1 da primeira matriz, que é
+$(a,\ b)$, com a coluna 1 da segunda, que é $(p,\ r)$. O produto escalar dá
+$ap + br$. As outras três entradas seguem o mesmo padrão.
 
-**Conferência com a designer.** Calcule $ER$ pela regra:
+**Exemplo.** Calcule $ER$ pela regra e compare com a tabela da seção
+anterior. A previsão: a tabela deu as colunas $(0,\ 1)$ e $(-2,\ 0)$.
 
 $$
 \begin{bmatrix} 2 & 0 \\ 0 & 1 \end{bmatrix}
@@ -358,32 +397,69 @@ $$
 \begin{bmatrix} 0 & -2 \\ 1 & 0 \end{bmatrix}.
 $$
 
-O resultado é o mesmo das duas contas anteriores. A regra não trouxe nada de
-novo: ela é a definição da seção 8.1 com as contas de $A\vec{b}_1$ e
-$A\vec{b}_2$ escritas por extenso, entrada por entrada.
+O resultado é o mesmo da tabela. A regra não trouxe nada de novo: ela é a
+definição da seção anterior com as contas de $A\vec{b}_1$ e $A\vec{b}_2$
+escritas por extenso, entrada por entrada.
 
-### 8.3 Dimensões compatíveis
+**Contraexemplo.** A conta “entrada com entrada”, que multiplica a casa
+$(1,\ 1)$ de uma pela casa $(1,\ 1)$ da outra, não é o produto. Ela é tentadora
+porque é assim que se somam matrizes. Mas com $E$ e $R$ ela dá
+$2 \times 0 = 0$, $0 \times (-1) = 0$, $0 \times 1 = 0$ e $1 \times 0 = 0$: a
+matriz toda de zeros, que leva o logotipo inteiro para a origem. Girar e
+esticar não faz o logotipo sumir num ponto.
+
+<details>
+<summary>Confira: calcule só a entrada da linha 2, coluna 1 de RE. Antes, diga qual linha e qual coluna entram na conta.</summary>
+
+Entram a linha 2 de $R$, que é $(1,\ 0)$, e a coluna 1 de $E$, que é
+$(2,\ 0)$. A conta é $1 \times 2 + 0 \times 0 = 2$. É a entrada da linha 2,
+coluna 1, da matriz única do colega, $\begin{bmatrix} 0 & -1 \\ 2 & 0 \end{bmatrix}$. Se você usou
+a linha 2 de $E$, trocou a ordem: em $RE$, as linhas vêm de $R$, a matriz da
+esquerda.
+
+</details>
+
+## Só se multiplica quando a saída de uma matriz cabe na entrada da outra
 
 A regra linha por coluna funciona para matrizes de qualquer tamanho, desde
-que cada produto escalar tenha pares para todas as coordenadas. Uma linha de
-$A$ tem tantas entradas quanto $A$ tem colunas. Uma coluna de $B$ tem tantas
-entradas quanto $B$ tem linhas. Os dois números precisam ser iguais.
+que cada produto escalar tenha pares para todos os números. Uma linha de $A$
+tem tantos números quanto $A$ tem colunas. Uma coluna de $B$ tem tantos
+números quanto $B$ tem linhas. Esses dois totais precisam ser iguais.
+
+Pense numa partida de dominó. Cada matriz é uma peça com dois números: o de
+linhas e o de colunas. Duas peças só se encostam pelo número igual. Há uma
+diferença do dominó de verdade: aqui não se pode virar a peça. Virar a peça
+troca linhas por colunas, e isso é transpor, que muda a matriz (a
+seção sobre a transposta volta a isso). Na figura, escolha um produto e veja
+se as peças encaixam.
+
+<ProductShapeFit
+  presets={[
+    {label: '(2 × 3) vezes (3 × 4)', tiles: [{name: 'A', dims: [2, 3]}, {name: 'B', dims: [3, 4]}]},
+    {label: '(2 × 3) vezes (2 × 3)', tiles: [{name: 'A', dims: [2, 3]}, {name: 'B', dims: [2, 3]}]},
+    {label: 'W₂ vezes W₁', tiles: [{name: 'W_2', dims: [1, 2]}, {name: 'W_1', dims: [2, 3]}], note: 'As duas matrizes de pesos da seção das camadas de rede neural.'},
+    {label: 'W₁ vezes W₂', tiles: [{name: 'W_1', dims: [2, 3]}, {name: 'W_2', dims: [1, 2]}], note: 'As mesmas duas matrizes, na outra ordem.'},
+  ]}
+  label="Duas peças de dominó com as dimensões das matrizes; encaixam quando os números de dentro são iguais"
+  caption="Cada peça tem as linhas à esquerda e as colunas à direita, e embaixo o formato da matriz em quadradinhos. As peças encaixam quando o número de colunas da primeira é igual ao de linhas da segunda (as metades verdes). Aí as metades de dentro se apagam e sobra a peça do resultado, com os números das pontas."
+/>
 
 > **Dimensões.** Se $A$ é $m \times n$ e $B$ é $n \times p$, o produto $AB$
-> existe e é $m \times p$. O $n$ do meio tem que ser o mesmo; os números das
-> pontas dão a dimensão do resultado.
+> existe e é $m \times p$. O $n$ do meio tem que ser o mesmo nas duas
+> matrizes. Os números das pontas dão a dimensão do resultado.
 
-Uma forma de lembrar: escreva as dimensões lado a lado, $(m \times n)(n \times
-p)$. Os dois números de dentro precisam coincidir e “se cancelam”; os dois de
-fora sobram.
+Uma forma de lembrar: escreva as dimensões lado a lado,
+$(m \times n)(n \times p)$. Os dois números de dentro precisam coincidir e se
+apagam; os dois de fora sobram. As linhas do resultado vêm de $A$, uma para
+cada linha de $A$. As colunas vêm de $B$, uma para cada coluna de $B$.
 
 **Exemplo.** $A$ de dimensão $2 \times 3$ vezes $B$ de dimensão $3 \times 4$:
 os números de dentro, 3 e 3, coincidem. O produto existe e é $2 \times 4$.
 
 **Contraexemplo.** $A$ de dimensão $2 \times 3$ vezes outra matriz
-$2 \times 3$: os números de dentro são 3 e 2. Cada linha de $A$ tem 3
-entradas, e cada coluna da segunda matriz tem só 2. O produto escalar ficaria
-com uma entrada sem par. O produto **não existe**.
+$2 \times 3$: os números de dentro são 3 e 2. Cada linha de $A$ tem 3 números,
+e cada coluna da segunda matriz tem só 2. O produto escalar ficaria com um
+número sem par. O produto **não existe**.
 
 O significado também confere. Se $B$ é $n \times p$, a máquina $B$ recebe
 vetores de $p$ coordenadas e devolve vetores de $n$ coordenadas. A máquina
@@ -391,9 +467,20 @@ $A$, de dimensão $m \times n$, precisa receber vetores de $n$ coordenadas,
 exatamente o que $B$ entrega. A exigência das dimensões diz que a saída da
 primeira máquina tem que caber na entrada da segunda.
 
-### 8.4 A ordem importa
+<details>
+<summary>Confira: A é 3 × 5. De que dimensão precisa ser B para que AB exista? E qual é a dimensão de AB?</summary>
 
-A seção 6 já mostrou um caso em que $ER$ e $RE$ são diferentes:
+$B$ precisa ter 5 linhas, o número de colunas de $A$. O número de colunas de
+$B$ pode ser qualquer um; chame de $p$. Então $B$ é $5 \times p$, e $AB$ é
+$3 \times p$. Em termos de máquinas: $B$ entrega vetores de 5 coordenadas, e
+$A$ recebe vetores de 5 coordenadas.
+
+</details>
+
+## A ordem importa: em geral, AB e BA são diferentes
+
+O problema motivador já mostrou duas ordens que dão lugares diferentes. Agora
+temos as duas matrizes:
 
 $$
 ER = \begin{bmatrix} 0 & -2 \\ 1 & 0 \end{bmatrix},
@@ -401,13 +488,69 @@ ER = \begin{bmatrix} 0 & -2 \\ 1 & 0 \end{bmatrix},
 RE = \begin{bmatrix} 0 & -1 \\ 2 & 0 \end{bmatrix}.
 $$
 
+A causa é visível na figura do problema. O esticão sempre age **na
+horizontal**. Na ordem da designer, quem está deitado na hora do esticão é o
+$\vec{e}_2$, que o giro acabou de deitar, e é ele que dobra. Na ordem do
+colega, quem está deitado é o $\vec{e}_1$, que ainda não girou. A horizontal
+de antes do giro não é a horizontal de depois.
+
+A figura compara as duas ordens para vários pares de comandos. Escolha o par
+nos botões.
+
+<ProductComposeGrid
+  presets={[
+    {
+      label: 'Girar e esticar',
+      window: [-3.4, 2.8, -0.6, 2.6],
+      unit: 44,
+      panels: [
+        {title: 'ER', steps: [{name: 'R', rotation: 90}, {name: 'E', matrix: [[2, 0], [0, 1]]}]},
+        {title: 'RE', steps: [{name: 'E', matrix: [[2, 0], [0, 1]]}, {name: 'R', rotation: 90}]},
+      ],
+      note: 'As matrizes finais são diferentes: ER deita o quadradinho, RE o deixa em pé.',
+    },
+    {
+      label: 'Cisalhar e esticar',
+      window: [-0.6, 4.8, -0.6, 1.8],
+      unit: 44,
+      panels: [
+        {title: 'EC', steps: [{name: 'C', matrix: [[1, 1], [0, 1]]}, {name: 'E', matrix: [[2, 0], [0, 1]]}]},
+        {title: 'CE', steps: [{name: 'E', matrix: [[2, 0], [0, 1]]}, {name: 'C', matrix: [[1, 1], [0, 1]]}]},
+      ],
+      note: 'As matrizes finais são diferentes: em EC, o esticão também dobra o escorregão; em CE, o escorregão vem depois e não é dobrado.',
+    },
+    {
+      label: 'Duas rotações',
+      window: [-2.2, 1.6, -1.3, 1.6],
+      unit: 52,
+      panels: [
+        {title: 'R_{60^\\circ}R_{30^\\circ}', steps: [{name: 'R_{30^\\circ}', rotation: 30}, {name: 'R_{60^\\circ}', rotation: 60}]},
+        {title: 'R_{30^\\circ}R_{60^\\circ}', steps: [{name: 'R_{60^\\circ}', rotation: 60}, {name: 'R_{30^\\circ}', rotation: 30}]},
+      ],
+      note: 'Os caminhos são diferentes, mas o fim é o mesmo: nas duas ordens, o giro total é de 90°.',
+    },
+    {
+      label: 'Esticar e espelhar',
+      window: [-0.6, 2.6, -1.6, 1.6],
+      unit: 52,
+      panels: [
+        {title: 'FE', steps: [{name: 'E', matrix: [[2, 0], [0, 1]]}, {name: 'F', matrix: [[1, 0], [0, -1]]}]},
+        {title: 'EF', steps: [{name: 'F', matrix: [[1, 0], [0, -1]]}, {name: 'E', matrix: [[2, 0], [0, 1]]}]},
+      ],
+      note: 'O fim é o mesmo: E só mexe na horizontal, e o espelho F só mexe na vertical. Um não atrapalha o outro.',
+    },
+  ]}
+  label="Duas ordens dos mesmos dois comandos, lado a lado"
+  caption="Cada painel mostra uma das duas ordens. Na parada do meio e no fim, as setas e₁ (azul) e e₂ (laranja) mostram as colunas da matriz até ali. Compare as matrizes finais embaixo de cada painel."
+/>
+
 > **O produto de matrizes não é comutativo:** em geral, $AB \neq BA$.
 
 “Em geral” quer dizer que existem pares que comutam, mas não se pode contar
-com isso. Exemplos de pares que comutam: duas rotações (girar $30^\circ$ e
-depois $60^\circ$ dá o mesmo que o contrário, o Exercício 16 mostra por quê),
-duas escalas que só esticam os eixos, e qualquer matriz com a identidade da
-seção 8.6.
+com isso. A figura mostra dois: duas rotações (o Exercício 16 mostra por quê)
+e duas escalas que só mexem nos eixos, como $E$ e o espelho
+$F = \begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix}$. Qualquer matriz também
+comuta com a identidade, que vem mais adiante.
 
 Com matrizes que não são quadradas, a diferença é ainda maior. Se $A$ é
 $2 \times 3$ e $B$ é $3 \times 2$, então $AB$ é $2 \times 2$ e $BA$ é
@@ -415,23 +558,59 @@ $3 \times 3$. As duas existem, mas nem têm o mesmo tamanho. E se $A$ é
 $2 \times 3$ e $B$ é $3 \times 4$, $AB$ existe e $BA$ nem existe: os números
 de dentro seriam 4 e 2.
 
-Isso muda um hábito que vem da aritmética. Com números, $3 \times 5 = 5 \times
-3$ sempre, e a ordem dos fatores nunca precisou de atenção. Com matrizes, a
-ordem é parte da informação: ela diz qual comando vem antes.
+Isso muda um hábito que vem da aritmética. Com números,
+$3 \times 5 = 5 \times 3$ sempre, e a ordem dos fatores nunca precisou de
+atenção. Com matrizes, a ordem é parte da informação: ela diz qual comando
+vem antes.
 
-### 8.5 Agrupar não importa
+<details>
+<summary>Confira: a matriz S, de linhas (3, 0) e (0, 3), amplia o plano inteiro 3 vezes. Calcule SR e RS. A ordem importa aqui?</summary>
 
-Três comandos em sequência: primeiro inclinar com o cisalhamento
-$C = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}$, depois girar com $R$,
-depois esticar com $E$. A matriz única é $ERC$. Mas $ERC$ pode ser calculada
-de dois jeitos:
+$SR = \begin{bmatrix} 3 \times 0 + 0 \times 1 & 3 \times (-1) + 0 \times 0 \\ 0 \times 0 + 3 \times 1 & 0 \times (-1) + 3 \times 0 \end{bmatrix} = \begin{bmatrix} 0 & -3 \\ 3 & 0 \end{bmatrix}$,
+e $RS = \begin{bmatrix} 0 \times 3 + (-1) \times 0 & 0 \times 0 + (-1) \times 3 \\ 1 \times 3 + 0 \times 0 & 1 \times 0 + 0 \times 3 \end{bmatrix} = \begin{bmatrix} 0 & -3 \\ 3 & 0 \end{bmatrix}$.
+São iguais. Ampliar tudo 3 vezes estica todas as direções igualmente, então
+não importa se o giro veio antes ou depois. Esse é um dos pares que comutam;
+$E$ e $R$ não são.
+
+</details>
+
+## Mudar os parênteses de lugar não muda o produto
+
+Três comandos em sequência: primeiro inclinar com o cisalhamento $C$, depois
+girar com $R$, depois esticar com $E$. A matriz única é $ERC$, escrita com o
+primeiro comando à direita. Mas ela pode ser calculada de dois jeitos:
 
 - $(ER)C$: primeiro junta girar e esticar numa matriz só, e depois junta o
   resultado com o cisalhamento;
 - $E(RC)$: primeiro junta inclinar e girar, e depois junta com o esticão.
 
-Os dois agrupamentos descrevem a mesma sequência de comandos, na mesma ordem:
-$C$, depois $R$, depois $E$. Por isso devem dar a mesma matriz. Conferindo:
+Os dois agrupamentos descrevem a mesma fila de comandos, na mesma ordem:
+$C$, depois $R$, depois $E$. A figura mostra os dois caminhos. Em cada
+painel, o par entre parênteses age como um movimento só.
+
+<ProductComposeGrid
+  presets={[
+    {
+      label: 'Comparar (ER)C com E(RC)',
+      panels: [
+        {title: '(ER)C', steps: [{name: 'C', matrix: [[1, 1], [0, 1]]}, {name: '(ER)', matrix: [[0, -2], [1, 0]]}]},
+        {title: 'E(RC)', steps: [{name: '(RC)', matrix: [[0, -1], [1, 1]]}, {name: 'E', matrix: [[2, 0], [0, 1]]}]},
+      ],
+      note: 'Os caminhos do meio são diferentes, e o fim é o mesmo.',
+    },
+    {
+      label: 'Um comando de cada vez',
+      panels: [{title: 'ERC', steps: [{name: 'C', matrix: [[1, 1], [0, 1]]}, {name: 'R', rotation: 90}, {name: 'E', matrix: [[2, 0], [0, 1]]}]}],
+      caption: 'Os três comandos, um de cada vez: C, depois R, depois E. O fim é o mesmo paralelogramo dos dois agrupamentos: e₁ em (0, 1) e e₂ em (−2, 1).',
+    },
+  ]}
+  window={[-2.8, 1.8, -0.8, 2.4]}
+  unit={46}
+  label="Os mesmos três comandos agrupados de dois jeitos"
+  caption="No painel (ER)C, primeiro C e depois a matriz já pronta de ER. No painel E(RC), primeiro a matriz já pronta de RC e depois E. No meio do caminho as malhas estão em lugares diferentes. No fim, as duas terminam no mesmo paralelogramo: e₁ em (0, 1) e e₂ em (−2, 1)."
+/>
+
+A conta confere:
 
 $$
 ER = \begin{bmatrix} 0 & -2 \\ 1 & 0 \end{bmatrix},
@@ -450,73 +629,145 @@ As duas contas dão a mesma matriz.
 > **O produto de matrizes é associativo:** $(AB)C = A(BC)$, sempre que os
 > produtos existirem. Por isso se escreve $ABC$ sem parênteses.
 
-A razão geral é a do exemplo. Aplicada a um vetor, $(AB)C$ e $A(BC)$ fazem a
+A razão geral é a da figura. Aplicada a um vetor, $(AB)C$ e $A(BC)$ fazem a
 mesma coisa: aplicam $C$, depois $B$, depois $A$. Os parênteses só dizem
-quais duas máquinas foram soldadas antes; a fila de máquinas é a mesma.
+quais duas máquinas foram juntadas numa só primeiro; a fila de máquinas é a
+mesma.
 
-Cuidado com a diferença entre as duas propriedades. **Agrupar** de outro jeito
-não muda nada: $(AB)C = A(BC)$. **Trocar a ordem** muda: $AB \neq BA$. Os
-parênteses podem mudar de lugar; as letras não.
+Não confunda as duas propriedades. **Agrupar** de outro
+jeito não muda nada: $(AB)C = A(BC)$. **Trocar a ordem** muda: $AB \neq BA$.
+Os parênteses podem mudar de lugar; as letras não.
 
-### 8.6 A matriz identidade
+<details>
+<summary>Confira: sem calcular ERC, diga a primeira coluna dela seguindo e₁ pelos três comandos. Confere com a matriz acima?</summary>
 
-Existe uma máquina que não faz nada: ela devolve cada seta como recebeu. Os
-destinos de $\vec{e}_1$ e $\vec{e}_2$ são eles mesmos, e as colunas dela são
-$(1,\ 0)$ e $(0,\ 1)$:
+O cisalhamento deixa $\vec{e}_1 = (1,\ 0)$ parado. O giro o leva a
+$(0,\ 1)$. O esticão só dobra a coordenada horizontal, que é 0, então ele
+fica em $(0,\ 1)$. A primeira coluna de $ERC$ é $(0,\ 1)$, e confere com
+$\begin{bmatrix} 0 & -2 \\ 1 & 1 \end{bmatrix}$.
+
+</details>
+
+## A identidade é o comando que não faz nada
+
+Existe uma máquina que devolve cada seta exatamente como recebeu. Ela deixa
+$\vec{e}_1$ e $\vec{e}_2$ onde estão, então as colunas dela são $(1,\ 0)$ e
+$(0,\ 1)$:
 
 > **Definição.** A **matriz identidade** $2 \times 2$ é
 > $I = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}$. Em qualquer tamanho
-> $n \times n$, ela tem 1 na diagonal (da entrada de cima à esquerda até a de
-> baixo à direita) e 0 em todas as outras entradas.
+> $n \times n$, ela tem 1 na diagonal e 0 em todas as outras entradas. A
+> diagonal vai da entrada de cima à esquerda até a de baixo à direita.
 
-Como não fazer nada antes ou depois de um comando não muda o comando,
-$AI = A$ e $IA = A$, com $I$ do mesmo tamanho que a matriz quadrada $A$. É o papel que o número 1 tem na multiplicação de
-números: $1 \times 7 = 7 \times 1 = 7$.
+Não fazer nada antes ou depois de um comando não muda o comando. Por isso
+$AI = A$ e $IA = A$, com $I$ do mesmo tamanho que a matriz quadrada $A$. É o
+papel que o número 1 tem na multiplicação de números:
+$1 \times 7 = 7 \times 1 = 7$.
 
-**Exemplo.** $\begin{bmatrix} 3 & -1 \\ 2 & 5 \end{bmatrix} I$: pela regra
-linha por coluna, a entrada $(1,\ 1)$ é $3 \times 1 + (-1) \times 0 = 3$, a
-$(1,\ 2)$ é $3 \times 0 + (-1) \times 1 = -1$, e assim por diante. O
-resultado é a própria matriz.
+A figura confere pela regra linha por coluna. Cada coluna de $I$ tem um único
+1, e esse 1 escolhe um número de cada linha de $A$.
+
+<ProductRowColumn
+  A={[[3, -1], [2, 5]]}
+  B={[[1, 0], [0, 1]]}
+  nameA="A"
+  nameB="I"
+  nameAB="AI"
+  selected={[1, 0]}
+  label="O produto de uma matriz pela identidade, entrada por entrada"
+  caption="Na coluna 1 de I, o 1 está em cima: cada conta pega o primeiro número da linha de A e zera o segundo. Na coluna 2, o 1 está embaixo: cada conta pega o segundo número. O produto AI sai igual a A."
+/>
+
+**Exemplo.** A entrada $(2,\ 1)$ de $AI$ é a linha 2 de $A$, $(2,\ 5)$, com a
+coluna 1 de $I$, $(1,\ 0)$: $2 \times 1 + 5 \times 0 = 2$. É a entrada
+$(2,\ 1)$ da própria $A$.
 
 **Contraexemplo.** A matriz $\begin{bmatrix} 1 & 1 \\ 1 & 1 \end{bmatrix}$,
 toda de uns, **não** é a identidade. Ela leva $\vec{e}_1$ a $(1,\ 1)$, e não a
 $\vec{e}_1$. O que define a identidade não é “ter uns”; é deixar
 $\vec{e}_1$ e $\vec{e}_2$ onde estão.
 
-### 8.7 A transposta de um produto
+<details>
+<summary>Confira: A é 2 × 3. Que identidade pode ficar à direita de A, e qual à esquerda?</summary>
+
+À direita, $AI$ precisa que $I$ tenha 3 linhas, então $I$ é $3 \times 3$. À
+esquerda, $IA$ precisa que $I$ tenha 2 colunas, então $I$ é $2 \times 2$. As
+duas contas devolvem $A$, mas com identidades de tamanhos diferentes. É por
+isso que a frase “$AI = IA = A$” vale com a mesma $I$ dos dois lados só
+quando $A$ é quadrada.
+
+</details>
+
+## Transpor um produto troca a ordem dos fatores
 
 Em [Matrizes](./matrizes), a transposta $A^{\mathsf{T}}$ trocou linhas por
-colunas. Transpor um produto troca também a ordem dos fatores:
+colunas. Na peça de dominó, transpor é virar a peça: $m \times n$ vira
+$n \times m$. Vire as duas peças de um produto e tente encaixá-las. Na mesma
+ordem, elas não encaixam. Na ordem trocada, encaixam. A figura usa as duas
+planilhas das lojas do Exemplo 3: pedidos $Q$, de dimensão $3 \times 4$, e
+preços $P$, de dimensão $4 \times 2$.
 
+<ProductShapeFit
+  presets={[
+    {label: 'QP', tiles: [{name: 'Q', dims: [3, 4]}, {name: 'P', dims: [4, 2]}]},
+    {label: 'Pᵀ vezes Qᵀ', tiles: [{name: 'P^{\\mathsf{T}}', dims: [2, 4]}, {name: 'Q^{\\mathsf{T}}', dims: [4, 3]}], note: 'O resultado é 2 × 3: a peça de QP virada.'},
+    {label: 'Qᵀ vezes Pᵀ', tiles: [{name: 'Q^{\\mathsf{T}}', dims: [4, 3]}, {name: 'P^{\\mathsf{T}}', dims: [2, 4]}]},
+  ]}
+  label="As peças das planilhas das lojas, viradas e encaixadas nas duas ordens"
+  caption="QP encaixa e dá 3 × 2. Viradas, as peças só encaixam na ordem trocada, Pᵀ e depois Qᵀ, e o resultado é 2 × 3, a peça de QP virada. Na mesma ordem, Qᵀ e depois Pᵀ, os números de dentro são 3 e 2."
+/>
+
+> **Transposta do produto:**
 > $$(AB)^{\mathsf{T}} = B^{\mathsf{T}} A^{\mathsf{T}}.$$
 
-As dimensões mostram que a ordem tem que trocar. Com $A$ de dimensão
-$2 \times 3$ e $B$ de dimensão $3 \times 2$, o produto $AB$ é $2 \times 2$, e
-a transposta dele também. Do outro lado, $B^{\mathsf{T}}$ é $2 \times 3$ e
-$A^{\mathsf{T}}$ é $3 \times 2$, e $B^{\mathsf{T}}A^{\mathsf{T}}$ é
-$2 \times 2$: confere. Já $A^{\mathsf{T}}B^{\mathsf{T}}$ seria
-$(3 \times 2)(2 \times 3)$, uma matriz $3 \times 3$. Nem o tamanho bate.
+A razão vem da regra linha por coluna. A entrada $(i,\ j)$ de
+$(AB)^{\mathsf{T}}$ é a entrada $(j,\ i)$ de $AB$: linha $j$ de $A$ com
+coluna $i$ de $B$. Do lado direito, a entrada $(i,\ j)$ de
+$B^{\mathsf{T}}A^{\mathsf{T}}$ é a linha $i$ de $B^{\mathsf{T}}$ com a coluna
+$j$ de $A^{\mathsf{T}}$. Mas a linha $i$ de $B^{\mathsf{T}}$ é a coluna $i$ de
+$B$, e a coluna $j$ de $A^{\mathsf{T}}$ é a linha $j$ de $A$. Os dois lados
+fazem o produto escalar dos mesmos dois vetores. O Exemplo 3 confere a
+igualdade com números.
 
-A razão vem da regra linha por coluna. A entrada $(i,\ j)$ de $(AB)^{\mathsf{T}}$
-é a entrada $(j,\ i)$ de $AB$: linha $j$ de $A$ com coluna $i$ de $B$. Do lado
-direito, a entrada $(i,\ j)$ de $B^{\mathsf{T}}A^{\mathsf{T}}$ é a linha $i$ de
-$B^{\mathsf{T}}$ com a coluna $j$ de $A^{\mathsf{T}}$. Mas a linha $i$ de
-$B^{\mathsf{T}}$ é a coluna $i$ de $B$, e a coluna $j$ de $A^{\mathsf{T}}$ é
-a linha $j$ de $A$. Os dois lados fazem o produto escalar dos mesmos dois
-vetores. O Exemplo 3 confere a igualdade com números.
+**Exemplo.** $(ER)^{\mathsf{T}}$ deve ser $R^{\mathsf{T}}E^{\mathsf{T}}$.
+Como $E$ é igual à própria transposta e
+$R^{\mathsf{T}} = \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix}$:
 
-## 9. Resolvendo o problema do logotipo
+$$
+R^{\mathsf{T}}E^{\mathsf{T}} = \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix}\begin{bmatrix} 2 & 0 \\ 0 & 1 \end{bmatrix} = \begin{bmatrix} 0 & 1 \\ -2 & 0 \end{bmatrix},
+$$
+
+que é $ER = \begin{bmatrix} 0 & -2 \\ 1 & 0 \end{bmatrix}$ com linhas e
+colunas trocadas.
+
+**Contraexemplo.** Na mesma ordem, a conta dá outra matriz:
+$E^{\mathsf{T}}R^{\mathsf{T}} = ER^{\mathsf{T}} = \begin{bmatrix} 0 & 2 \\ -1 & 0 \end{bmatrix}$,
+que não é a transposta de $ER$.
+
+<details>
+<summary>Confira: A é 2 × 3 e B é 3 × 4. Qual é a dimensão de (AB)ᵀ? E a de BᵀAᵀ?</summary>
+
+$AB$ é $2 \times 4$, então $(AB)^{\mathsf{T}}$ é $4 \times 2$. Já
+$B^{\mathsf{T}}$ é $4 \times 3$ e $A^{\mathsf{T}}$ é $3 \times 2$: as peças
+$(4 \times 3)(3 \times 2)$ encaixam e dão $4 \times 2$. As dimensões
+conferem.
+
+</details>
+
+## Resolvendo o problema do logotipo
 
 **Pergunta 1: por que a ordem mudou o resultado?** O esticão age na
 horizontal. Na ordem da designer, o giro vem antes, e quem está deitado na
 hora do esticão é o $\vec{e}_2$ girado: ele dobra de tamanho. Na ordem do
 colega, o esticão vem antes, e quem dobra é o $\vec{e}_1$, que ainda não
-girou. As tabelas da seção 6 mostram isso seta por seta. Em linguagem de
-matrizes: $ER \neq RE$, porque o produto de matrizes não é comutativo.
+girou. Em linguagem de matrizes: $ER \neq RE$, porque o produto de matrizes
+não é comutativo.
 
-**Pergunta 2: as matrizes únicas.** “Girar, depois esticar” é primeiro $R$ e
-depois $E$, e a matriz é $ER$ (a primeira a agir fica à direita). Pela regra
-linha por coluna:
+**Pergunta 2: as matrizes únicas.** Antes da conta, a previsão pela forma:
+na ordem da designer, o L termina deitado, então a matriz deve ter um 2
+mexendo na horizontal. “Girar, depois esticar” é primeiro $R$ e depois $E$,
+e a matriz é $ER$ (a primeira a agir fica à direita). Pela regra linha por
+coluna:
 
 $$
 ER = \begin{bmatrix} 2 & 0 \\ 0 & 1 \end{bmatrix}\begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix} = \begin{bmatrix} 0 & -2 \\ 1 & 0 \end{bmatrix}.
@@ -528,8 +779,8 @@ $$
 RE = \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix}\begin{bmatrix} 2 & 0 \\ 0 & 1 \end{bmatrix} = \begin{bmatrix} 0 \times 2 + (-1) \times 0 & 0 \times 0 + (-1) \times 1 \\ 1 \times 2 + 0 \times 0 & 1 \times 0 + 0 \times 1 \end{bmatrix} = \begin{bmatrix} 0 & -1 \\ 2 & 0 \end{bmatrix}.
 $$
 
-**Conferência com o ponto do logotipo.** A matriz única deve levar $(2,\ 1)$
-ao mesmo lugar que os dois comandos em sequência:
+**Conferência com o ponto do logotipo.** A matriz única deve levar
+$(2,\ 1)$ ao mesmo lugar que os dois comandos em sequência:
 
 $$
 ER\begin{bmatrix} 2 \\ 1 \end{bmatrix} = \begin{bmatrix} 0 \times 2 + (-2) \times 1 \\ 1 \times 2 + 0 \times 1 \end{bmatrix} = \begin{bmatrix} -2 \\ 2 \end{bmatrix},
@@ -537,15 +788,38 @@ ER\begin{bmatrix} 2 \\ 1 \end{bmatrix} = \begin{bmatrix} 0 \times 2 + (-2) \time
 RE\begin{bmatrix} 2 \\ 1 \end{bmatrix} = \begin{bmatrix} 0 \times 2 + (-1) \times 1 \\ 2 \times 2 + 0 \times 1 \end{bmatrix} = \begin{bmatrix} -1 \\ 4 \end{bmatrix}.
 $$
 
-São os pontos $(-2,\ 2)$ da designer e $(-1,\ 4)$ do colega, encontrados na
-seção 1 com um comando de cada vez.
+São os pontos $(-2,\ 2)$ da designer e $(-1,\ 4)$ do colega, encontrados no
+problema com um comando de cada vez. A figura compara os dois jeitos de fazer
+o trabalho da designer: dois comandos, ou a matriz única $ER$ de uma vez.
+
+<ProductComposeGrid
+  panels={[
+    {
+      title: '\\text{dois comandos: } R \\text{, depois } E',
+      steps: [{name: 'R', text: 'girar 90°', rotation: 90}, {name: 'E', text: 'esticar 2 vezes', matrix: [[2, 0], [0, 1]]}],
+      points: [{at: [2, 1], offsets: [[8, -12, 'start'], [0, -16], [0, -16]]}],
+    },
+    {
+      title: '\\text{uma matriz só: } ER',
+      steps: [{name: 'ER', text: 'a matriz única', matrix: [[0, -2], [1, 0]]}],
+      points: [{at: [2, 1], offsets: [[8, -12, 'start'], [0, -16]]}],
+    },
+  ]}
+  polygon={{points: [[0, 0], [2, 0], [2, 1], [1, 1], [1, 2], [0, 2]], tone: 3}}
+  basisLabels={false}
+  showSquare={false}
+  window={[-4.6, 2.8, -0.6, 2.8]}
+  unit={32}
+  label="O logotipo levado pelos dois comandos e pela matriz única ER"
+  caption="No primeiro painel, os dois comandos, um de cada vez. No segundo, a matriz única ER, num movimento só. O caminho do meio é diferente, mas o L termina no mesmo lugar, e a ponta (2, 1) termina em (−2, 2) nos dois painéis."
+/>
 
 O programa do editor agora aplica uma matriz por pixel em vez de duas. Ele
-multiplicou $E$ por $R$ uma única vez, antes de começar; para uma imagem de
-milhões de pixels, isso corta pela metade o número de multiplicações de matriz
-por vetor.
+multiplicou $E$ por $R$ uma única vez, antes de começar. Para uma imagem de
+milhões de pixels, isso corta pela metade o número de multiplicações de
+matriz por vetor.
 
-## 10. Duas camadas de rede neural
+## Duas camadas do tipo $W\vec{x} + \vec{b}$ valem por uma
 
 Em [Matrizes](./matrizes), uma camada de rede neural fez a conta
 $\vec{y} = W\vec{x} + \vec{b}$, com
@@ -569,8 +843,8 @@ $$
 A rede faz uma camada depois da outra. Para $\vec{x} = (2,\ 1,\ 3)$, a segunda
 camada recebe $(9,\ 2)$ e devolve $2 \times 9 + 1 \times 2 + 3 = 23$.
 
-**Duas camadas do tipo $W\vec{x} + \vec{b}$ valem por uma.** Escreva a rede inteira numa fórmula,
-pondo a primeira camada dentro da segunda:
+Escreva a rede inteira numa fórmula, pondo a primeira camada dentro da
+segunda:
 
 $$
 W_2\big(W_1\vec{x} + \vec{b}_1\big) + \vec{b}_2.
@@ -582,8 +856,8 @@ estudadas fazem isso. A primeira é a linearidade de
 [Transformações lineares](./transformacoes-lineares): toda matriz respeita
 somas, ou seja, multiplicar a soma dá o mesmo que somar os produtos. Ela abre
 o parêntese: $W_2(W_1\vec{x} + \vec{b}_1) = W_2(W_1\vec{x}) + W_2\vec{b}_1$. A
-segunda é a definição do produto, da seção 8.1, que junta
-$W_2(W_1\vec{x})$ em $(W_2W_1)\vec{x}$. O resultado é
+segunda é a definição do produto, que junta $W_2(W_1\vec{x})$ em
+$(W_2W_1)\vec{x}$. O resultado é
 
 $$
 W_2\big(W_1\vec{x} + \vec{b}_1\big) + \vec{b}_2 = (W_2W_1)\,\vec{x} + \big(W_2\vec{b}_1 + \vec{b}_2\big).
@@ -591,7 +865,9 @@ $$
 
 A escrita mudou; a conta que a rede faz, para cada entrada, continua a mesma.
 O lado direito é uma camada só, com a matriz $W_2W_1$ e o vetor
-$W_2\vec{b}_1 + \vec{b}_2$. Calculando as duas peças:
+$W_2\vec{b}_1 + \vec{b}_2$. Antes de calcular, preveja a forma: $W_2$ é
+$1 \times 2$ e $W_1$ é $2 \times 3$, então $W_2W_1$ é $1 \times 3$, uma
+linha com 3 números. Calculando as duas peças:
 
 $$
 W_2W_1 = \begin{bmatrix} 2 & 1 \end{bmatrix}\begin{bmatrix} 1 & 0 & 2 \\ -1 & 3 & 1 \end{bmatrix} = \begin{bmatrix} 2 - 1 & 0 + 3 & 4 + 1 \end{bmatrix} = \begin{bmatrix} 1 & 3 & 5 \end{bmatrix},
@@ -601,20 +877,40 @@ $$
 W_2\vec{b}_1 + \vec{b}_2 = 2 \times 1 + 1 \times (-2) + 3 = 3.
 $$
 
-As dimensões conferem: $W_2$ é $1 \times 2$ e $W_1$ é $2 \times 3$, então
-$W_2W_1$ é $1 \times 3$. Conferência com a entrada de antes:
+Conferência com a entrada de antes:
 $1 \times 2 + 3 \times 1 + 5 \times 3 + 3 = 2 + 3 + 15 + 3 = 23$. É o mesmo
 23 das duas camadas.
 
+A figura faz a mesma comparação para muitas entradas. A entrada anda pela
+reta $\vec{x} = (t,\ 0,\ 0)$, e o gráfico mostra a saída para cada $t$: a
+rede de duas camadas em laranja, a camada única tracejada em azul.
+
+<TwoLayersCollapse
+  toggle={false}
+  label="A rede de duas camadas sem nada entre elas e a camada única equivalente"
+  caption="No desenho da rede, os números da entrada atual: 3 entradas, 2 neurônios no meio (azul) e 1 saída (laranja). No gráfico, a saída de cada uma das duas versões quando a entrada é (t, 0, 0). A linha laranja da rede cai inteira em cima da reta tracejada da camada única: são a mesma conta."
+/>
+
 O que isso diz sobre redes: empilhar camadas que só multiplicam por matriz e
 somam um vetor não acrescenta poder nenhum. Dez camadas assim equivalem a uma
-só, porque o produto de dez matrizes é uma matriz. Uma rede com muitas camadas
-só pode aprender coisas que uma camada não aprende se houver, entre uma camada
-e a seguinte, uma função que **não** seja desse tipo.
+só, porque o produto de dez matrizes é uma matriz. Para que muitas camadas
+aprendam mais que uma, é preciso pôr, entre uma camada e a seguinte, uma
+função que **não** seja desse tipo.
 
-**A dobra entre as camadas.** A função mais usada para isso se chama
-**ReLU**. Ela troca cada número negativo por zero e deixa os outros como
-estão:
+<details>
+<summary>Confira: calcule a saída da rede para a entrada (1, 1, 1) pelas duas camadas e pela camada única.</summary>
+
+Primeira camada: $W_1(1,\ 1,\ 1) = (1 + 0 + 2,\ -1 + 3 + 1) = (3,\ 3)$, e com
+o viés, $(3 + 1,\ 3 - 2) = (4,\ 1)$. Segunda camada:
+$2 \times 4 + 1 \times 1 + 3 = 12$. Camada única:
+$1 \times 1 + 3 \times 1 + 5 \times 1 + 3 = 12$. As duas dão 12.
+
+</details>
+
+## A ReLU entre as camadas impede a junção
+
+A função mais usada entre as camadas se chama **ReLU**. Ela troca cada número
+negativo por zero e deixa os outros como estão:
 
 $$
 \operatorname{ReLU}(t) = \max(0,\ t) = \begin{cases} 0, & \text{se } t < 0, \\ t, & \text{se } t \ge 0. \end{cases}
@@ -645,9 +941,36 @@ primeira camada devolve o próprio viés, $\vec{b}_1 = (1,\ -2)$.
 
 A camada única dá 3 nessa entrada, e a rede com a ReLU dá 5. Então nenhuma
 camada única com $W_2W_1$ e $W_2\vec{b}_1 + \vec{b}_2$ reproduz a rede com a
-dobra. O produto de matrizes foi o que mostrou por que a dobra é necessária.
+dobra.
 
-## 11. Exemplos resolvidos
+Será que alguma **outra** camada única reproduziria? A figura responde que
+não. Ela põe a ReLU entre as camadas e traça de novo a saída ao longo da
+reta $\vec{x} = (t,\ 0,\ 0)$.
+
+<TwoLayersCollapse
+  relu
+  label="A rede com a ReLU entre as camadas e a camada única"
+  caption="Com a ReLU no meio, a saída da rede (laranja) desenha uma linha dobrada: desce até t = −2, fica em 3 até t = −1 e sobe depois. A camada única (tracejada) continua uma reta. Em t = 0, a rede dá 5 e a camada única dá 3. O botão tira a ReLU, e a linha laranja volta a cair em cima da reta."
+/>
+
+Por que nenhuma camada única serve: ao longo da reta $\vec{x} = (t,\ 0,\ 0)$,
+qualquer camada do tipo $W\vec{x} + \vec{b}$ dá uma saída da forma
+“número vezes $t$, mais um número”. O gráfico dela é sempre uma reta. A rede
+com a ReLU desenha uma linha com duas dobras, e nenhuma reta tem dobra. O
+produto de matrizes foi o que mostrou por que a dobra é necessária: sem ela,
+todas as camadas se juntam numa só.
+
+<details>
+<summary>Confira: com a ReLU no meio, quanto a rede dá para a entrada (2, 1, 3)? A ReLU mudou alguma coisa nessa entrada?</summary>
+
+A primeira camada dá $(9,\ 2)$, como antes. Os dois números são positivos, e
+a ReLU deixa positivos como estão. A segunda camada recebe $(9,\ 2)$ e devolve
+23, o mesmo valor de sem a ReLU. A ReLU só muda a conta quando a primeira
+camada produz algum número negativo.
+
+</details>
+
+## Exemplos resolvidos
 
 ### Exemplo 1: uma conta linha por coluna
 
@@ -658,6 +981,9 @@ A = \begin{bmatrix} 2 & 1 \\ 0 & 3 \end{bmatrix},
 \qquad
 B = \begin{bmatrix} 1 & -1 \\ 2 & 4 \end{bmatrix}.
 $$
+
+**Previsão.** As duas são $2 \times 2$, então os dois produtos existem e são
+$2 \times 2$. Não há motivo para serem iguais.
 
 **Solução.** Para $AB$, cada entrada é uma linha de $A$ com uma coluna de $B$:
 
@@ -692,7 +1018,20 @@ $PQS$?
 <details>
 <summary>Solução</summary>
 
-Compare os números de dentro em cada caso.
+Compare os números de dentro em cada caso. A figura mostra as peças de cada
+produto.
+
+<ProductShapeFit
+  presets={[
+    {label: 'PQ', tiles: [{name: 'P', dims: [2, 3]}, {name: 'Q', dims: [3, 3]}]},
+    {label: 'QP', tiles: [{name: 'Q', dims: [3, 3]}, {name: 'P', dims: [2, 3]}]},
+    {label: 'QS', tiles: [{name: 'Q', dims: [3, 3]}, {name: 'S', dims: [3, 1]}]},
+    {label: 'PS', tiles: [{name: 'P', dims: [2, 3]}, {name: 'S', dims: [3, 1]}]},
+    {label: 'PQS', tiles: [{name: 'P', dims: [2, 3]}, {name: 'Q', dims: [3, 3]}, {name: 'S', dims: [3, 1]}]},
+  ]}
+  label="As peças dos produtos do Exemplo 2"
+  caption="Escolha o produto nos botões. Com três peças, cada junção precisa encaixar."
+/>
 
 - $PQ$: $(2 \times 3)(3 \times 3)$. Os de dentro são 3 e 3. Existe, e é
   $2 \times 3$.
@@ -709,61 +1048,90 @@ Compare os números de dentro em cada caso.
 
 ### Exemplo 3: planilha vezes planilha
 
-Pause e tente. Duas lojas de [Matrizes](./matrizes), o Centro e o Bairro,
-compram café, queijo e pão. Elas comparam dois fornecedores:
+Pause e tente. As três lojas de [Matrizes](./matrizes), Centro, Bairro e
+Shopping, fizeram os pedidos de sempre. Agora elas comparam o fornecedor de
+sempre (Fornecedor 1) com um novo (Fornecedor 2):
 
-| Pedido | Café | Queijo | Pão |
-|---|---|---|---|
-| Centro | 3 | 2 | 5 |
-| Bairro | 10 | 0 | 20 |
+| Pedido | Café | Queijo | Pão | Leite |
+|---|---|---|---|---|
+| Centro | 3 | 2 | 5 | 4 |
+| Bairro | 10 | 0 | 20 | 6 |
+| Shopping | 1 | 5 | 2 | 3 |
 
 | Preço por unidade | Fornecedor 1 | Fornecedor 2 |
 |---|---|---|
 | Café | R\$ 4 | R\$ 5 |
 | Queijo | R\$ 10 | R\$ 8 |
 | Pão | R\$ 2 | R\$ 3 |
+| Leite | R\$ 5 | R\$ 6 |
 
-Quanto cada loja pagaria em cada fornecedor?
+Quanto cada loja pagaria em cada fornecedor? Qual loja deveria trocar de
+fornecedor?
 
 <details>
 <summary>Solução</summary>
 
-Chame a primeira planilha de $Q$ (quantidades, $2 \times 3$) e a segunda de
-$P$ (preços, $3 \times 2$). O gasto do Centro no Fornecedor 1 é a nota de
-compra de sempre: quantidades do Centro com os preços do Fornecedor 1. Isso é
-a linha 1 de $Q$ com a coluna 1 de $P$, exatamente uma entrada do produto
-$QP$. Então a resposta inteira é $QP$, de dimensão $2 \times 2$:
+Chame a primeira planilha de $Q$ (quantidades, $3 \times 4$) e a segunda de
+$P$ (preços, $4 \times 2$). O gasto do Centro no Fornecedor 1 é a nota de
+compra de sempre: as quantidades do Centro com os preços do Fornecedor 1. Isso
+é a linha 1 de $Q$ com a coluna 1 de $P$, exatamente uma entrada do produto
+$QP$. Então a resposta inteira é $QP$, de dimensão
+$(3 \times 4)(4 \times 2) = 3 \times 2$: uma linha por loja, uma coluna por
+fornecedor.
+
+Uma previsão antes da conta: a coluna 1 de $P$ são os preços de sempre, e
+$Q$ vezes essa coluna é a conta da lição [Matrizes](./matrizes). Então a
+primeira coluna de $QP$ deve ser $(62,\ 110,\ 73)$.
+
+<ProductRowColumn
+  A={[[3, 2, 5, 4], [10, 0, 20, 6], [1, 5, 2, 3]]}
+  B={[[4, 5], [10, 8], [2, 3], [5, 6]]}
+  nameA="Q"
+  nameB="P"
+  rowNames={['Centro', 'Bairro', 'Shopping']}
+  colNames={['Forn. 1', 'Forn. 2']}
+  innerNames={['café', 'queijo', 'pão', 'leite']}
+  order={[[0, 0], [2, 1]]}
+  selected={[2, 1]}
+  cell={40}
+  cellR={62}
+  pairDuration={0.45}
+  label="O produto da planilha de pedidos pela de preços"
+  caption="Cada casa de QP é uma loja (linha de Q) com um fornecedor (coluna de P). Os produtos, café, queijo, pão e leite, são os números de dentro: cada um aparece uma vez em cada conta e some na soma. A primeira coluna, (62, 110, 73), é a conta da lição Matrizes."
+/>
 
 $$
-QP = \begin{bmatrix} 3 & 2 & 5 \\ 10 & 0 & 20 \end{bmatrix}
-\begin{bmatrix} 4 & 5 \\ 10 & 8 \\ 2 & 3 \end{bmatrix}
+QP = \begin{bmatrix} 3 & 2 & 5 & 4 \\ 10 & 0 & 20 & 6 \\ 1 & 5 & 2 & 3 \end{bmatrix}
+\begin{bmatrix} 4 & 5 \\ 10 & 8 \\ 2 & 3 \\ 5 & 6 \end{bmatrix}
 =
 \begin{bmatrix}
-12 + 20 + 10 & 15 + 16 + 15 \\
-40 + 0 + 40 & 50 + 0 + 60
+12 + 20 + 10 + 20 & 15 + 16 + 15 + 24 \\
+40 + 0 + 40 + 30 & 50 + 0 + 60 + 36 \\
+4 + 50 + 4 + 15 & 5 + 40 + 6 + 18
 \end{bmatrix}
 =
-\begin{bmatrix} 42 & 46 \\ 80 & 110 \end{bmatrix}.
+\begin{bmatrix} 62 & 70 \\ 110 & 146 \\ 73 & 69 \end{bmatrix}.
 $$
 
-O Centro pagaria R\$ 42 no Fornecedor 1 e R\$ 46 no 2. O Bairro pagaria
-R\$ 80 e R\$ 110. As linhas do resultado são as lojas, como em $Q$; as
-colunas são os fornecedores, como em $P$. Os produtos, que eram o $n$ do meio,
-sumiram na soma.
+A previsão confere: a primeira coluna é $(62,\ 110,\ 73)$. O Centro pagaria
+R\$ 62 no Fornecedor 1 e R\$ 70 no 2; o Bairro, R\$ 110 e R\$ 146; o
+Shopping, R\$ 73 e R\$ 69. Só o Shopping economiza trocando de fornecedor:
+ele pede muito queijo, que é mais barato no Fornecedor 2.
 
-A outra ordem, $PQ$, existe ($3 \times 2$ vezes $2 \times 3$ dá $3 \times 3$),
-mas não responde a pergunta nenhuma desta loja: ela combinaria o preço de um
-produto com a quantidade de outro.
+As linhas do resultado são as lojas, como em $Q$; as colunas são os
+fornecedores, como em $P$. Os produtos, que eram o $n$ do meio, sumiram na
+soma. A outra ordem, $PQ$, nem existe: $(4 \times 2)(3 \times 4)$ tem os
+números de dentro 2 e 3.
 
-**Conferência da transposta.** Pela seção 8.7, $(QP)^{\mathsf{T}}$ deve ser
-igual a $P^{\mathsf{T}}Q^{\mathsf{T}}$:
+**Conferência da transposta.** Pela seção da transposta,
+$(QP)^{\mathsf{T}}$ deve ser igual a $P^{\mathsf{T}}Q^{\mathsf{T}}$:
 
 $$
 P^{\mathsf{T}}Q^{\mathsf{T}} =
-\begin{bmatrix} 4 & 10 & 2 \\ 5 & 8 & 3 \end{bmatrix}
-\begin{bmatrix} 3 & 10 \\ 2 & 0 \\ 5 & 20 \end{bmatrix}
+\begin{bmatrix} 4 & 10 & 2 & 5 \\ 5 & 8 & 3 & 6 \end{bmatrix}
+\begin{bmatrix} 3 & 10 & 1 \\ 2 & 0 & 5 \\ 5 & 20 & 2 \\ 4 & 6 & 3 \end{bmatrix}
 =
-\begin{bmatrix} 42 & 80 \\ 46 & 110 \end{bmatrix},
+\begin{bmatrix} 62 & 110 & 73 \\ 70 & 146 & 69 \end{bmatrix},
 $$
 
 que é $QP$ com linhas e colunas trocadas. Agora as linhas são os
@@ -802,15 +1170,17 @@ $$
 As duas expressões são as fórmulas de adição de
 [Soma, diferença e arco duplo](../geometria/soma-diferenca-e-arco-duplo):
 a de cima é $\cos(\alpha + \beta)$ e a de baixo é $\sen(\alpha + \beta)$. A
-segunda coluna sai do mesmo jeito, $(-\sen(\alpha + \beta),\ \cos(\alpha +
-\beta))$. Então $R_\beta R_\alpha = R_{\alpha + \beta}$: o produto de matrizes
-confirma que dois giros seguidos são um giro só, com os ângulos somados.
+segunda coluna sai do mesmo jeito,
+$(-\sen(\alpha + \beta),\ \cos(\alpha + \beta))$. Então
+$R_\beta R_\alpha = R_{\alpha + \beta}$: o produto de matrizes confirma que
+dois giros seguidos são um giro só, com os ângulos somados.
 
 Leitura ao contrário: quem esquecer as fórmulas de $\cos(a + b)$ e
 $\sen(a + b)$ pode recuperá-las multiplicando duas matrizes de rotação. Com
 $\alpha = 30^\circ$ e $\beta = 60^\circ$, a conta numérica dá a matriz
 $\begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix}$, que é a rotação de
-$90^\circ$.
+$90^\circ$. O botão “Duas rotações” da figura da seção sobre a ordem mostra
+esse giro nas duas ordens.
 
 </details>
 
@@ -830,13 +1200,31 @@ C^2 = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}\begin{bmatrix} 1 & 1 \\ 0 & 1
 $$
 
 Três vezes é $C^3 = C^2C = \begin{bmatrix} 1 & 3 \\ 0 & 1 \end{bmatrix}$. O
-número de cima à direita conta as aplicações. A leitura geométrica explica o
-padrão: cada cisalhamento faz o andar de altura 1 escorregar mais 1 casa para
-a direita, e os escorregões se acumulam.
+número de cima à direita conta as aplicações. A figura mostra a razão
+geométrica do padrão: cada cisalhamento faz o andar de altura 1 escorregar
+mais 1 casa para a direita, e os escorregões se acumulam.
+
+<ProductComposeGrid
+  steps={[
+    {name: 'C', text: 'cisalhar', matrix: [[1, 1], [0, 1]]},
+    {name: 'C', text: 'cisalhar de novo', matrix: [[1, 1], [0, 1]]},
+    {name: 'C', text: 'e mais uma vez', matrix: [[1, 1], [0, 1]]},
+  ]}
+  basisOffsets={[[], [[0, 18], [0, -16]], [[0, 18], [0, -16]], [[0, 18], [0, -16]]]}
+  stepDuration={1.2}
+  pause={0.6}
+  window={[-1.2, 4.2, -0.8, 1.8]}
+  unit={50}
+  label="O cisalhamento aplicado três vezes seguidas"
+  caption="A seta laranja, e₂, escorrega 1 casa a cada cisalhamento: (1, 1), depois (2, 1), depois (3, 1). A seta azul, e₁, fica parada no chão. Por isso as matrizes acumuladas são C, C² e C³, com 1, 2 e 3 em cima à direita."
+/>
+
+Com 10 aplicações, a seta $\vec{e}_2$ escorrega 10 casas, e
+$C^{10} = \begin{bmatrix} 1 & 10 \\ 0 & 1 \end{bmatrix}$.
 
 </details>
 
-## 12. Erros comuns
+## Erros comuns
 
 > **Erro 1: multiplicar entrada por entrada.** É tentador, porque é assim que
 > se somam matrizes. Mas o produto entrada por entrada de $E$ e $R$ daria
@@ -848,10 +1236,11 @@ a direita, e os escorregões se acumulam.
 > colunas.
 
 > **Erro 2: achar que $AB = BA$.** A multiplicação de números acostumou a
-> ignorar a ordem. Com matrizes, $ER = \begin{bmatrix} 0 & -2 \\ 1 & 0
-> \end{bmatrix}$ e $RE = \begin{bmatrix} 0 & -1 \\ 2 & 0 \end{bmatrix}$. Antes
-> de trocar duas matrizes de lugar numa conta, pergunte se os dois comandos
-> dão o mesmo resultado em qualquer ordem. Quase nunca dão.
+> ignorar a ordem. Com matrizes,
+> $ER = \begin{bmatrix} 0 & -2 \\ 1 & 0 \end{bmatrix}$ e
+> $RE = \begin{bmatrix} 0 & -1 \\ 2 & 0 \end{bmatrix}$. Antes de trocar duas
+> matrizes de lugar numa conta, pergunte se os dois comandos dão o mesmo
+> resultado em qualquer ordem. Quase nunca dão.
 
 > **Erro 3: escrever as letras na ordem em que os comandos acontecem.**
 > “Primeiro girar, depois esticar” tenta virar $RE$, porque se lê da esquerda
@@ -862,16 +1251,17 @@ a direita, e os escorregões se acumulam.
 
 > **Erro 4: multiplicar sem conferir as dimensões.** Uma matriz $2 \times 3$
 > vezes outra $2 \times 3$ não existe. Quem começa a conta sem conferir
-> acaba multiplicando uma linha de 3 entradas por uma coluna de 2 e
+> acaba multiplicando uma linha de 3 números por uma coluna de 2 e
 > “completando” com zero. Confira antes: os números de dentro têm que ser
 > iguais.
 
 > **Erro 5: transpor sem trocar a ordem.** $(QP)^{\mathsf{T}}$ não é
-> $Q^{\mathsf{T}}P^{\mathsf{T}}$. No Exemplo 3, $QP$ é $2 \times 2$, mas
-> $Q^{\mathsf{T}}P^{\mathsf{T}}$ é $(3 \times 2)(2 \times 3)$, uma matriz
-> $3 \times 3$. A ordem certa é $P^{\mathsf{T}}Q^{\mathsf{T}}$.
+> $Q^{\mathsf{T}}P^{\mathsf{T}}$. No Exemplo 3, $Q^{\mathsf{T}}$ é
+> $4 \times 3$ e $P^{\mathsf{T}}$ é $2 \times 4$, e o produto
+> $Q^{\mathsf{T}}P^{\mathsf{T}}$, $(4 \times 3)(2 \times 4)$, nem existe. A
+> ordem certa é $P^{\mathsf{T}}Q^{\mathsf{T}}$.
 
-## 13. Perguntas de verificação
+## Perguntas de verificação
 
 **1.** Por que, em $AB$, quem age primeiro é $B$, se $A$ aparece primeiro na
 escrita?
@@ -894,20 +1284,21 @@ $g$ age antes.
 Ela não foi escolhida por gosto. A coluna $j$ de $AB$ tem que ser o destino
 final de $\vec{e}_j$: primeiro $B$ o leva à coluna $j$ de $B$, depois $A$
 multiplica essa coluna. E multiplicar $A$ por um vetor é fazer o produto
-escalar de cada linha de $A$ com o vetor. Juntando: entrada $(i,\ j)$ é linha
-$i$ de $A$ com coluna $j$ de $B$.
+escalar de cada linha de $A$ com o vetor. Juntando: a entrada $(i,\ j)$ é a
+linha $i$ de $A$ com a coluna $j$ de $B$.
 
 </details>
 
-**3.** Se $A$ é $3 \times 5$, de que dimensão precisa ser $B$ para que $AB$
-exista? E qual é a dimensão de $AB$?
+**3.** Se $A$ é $4 \times 2$, que produtos com uma matriz $B$ de dimensão
+$2 \times 4$ existem, e com que dimensão?
 
 <details>
 <summary>Resposta</summary>
 
-$B$ precisa ter 5 linhas; o número de colunas de $B$ pode ser qualquer um,
-$p$. Então $B$ é $5 \times p$, e $AB$ é $3 \times p$. Em termos de máquinas:
-$B$ entrega vetores de 5 coordenadas, e $A$ recebe vetores de 5 coordenadas.
+Os dois. $AB$ é $(4 \times 2)(2 \times 4)$: os de dentro são 2 e 2, e o
+resultado é $4 \times 4$. $BA$ é $(2 \times 4)(4 \times 2)$: os de dentro são
+4 e 4, e o resultado é $2 \times 2$. Os dois existem, e nem o tamanho é o
+mesmo.
 
 </details>
 
@@ -917,19 +1308,20 @@ $B$ entrega vetores de 5 coordenadas, e $A$ recebe vetores de 5 coordenadas.
 <summary>Resposta</summary>
 
 Não. Associatividade é poder mudar os **parênteses** de lugar sem mudar a
-ordem das letras: $(AB)C = A(BC)$. Isso vale sempre. Comutatividade seria
-poder trocar a **ordem** das letras: $AB = BA$. Isso em geral não vale.
+ordem das letras: $(AB)C = A(BC)$. Isso vale sempre que os produtos
+existirem. Comutatividade seria poder trocar a **ordem** das letras:
+$AB = BA$. Isso em geral não vale.
 
 </details>
 
 **5.** Duas escalas, $\begin{bmatrix} 2 & 0 \\ 0 & 3 \end{bmatrix}$ e
 $\begin{bmatrix} 5 & 0 \\ 0 & -1 \end{bmatrix}$, comutam. Por que isso não
-contradiz a seção 8.4?
+contradiz a seção sobre a ordem?
 
 <details>
 <summary>Resposta</summary>
 
-A seção 8.4 diz que o produto não é comutativo **em geral**: existem pares que
+A seção diz que o produto não é comutativo **em geral**: existem pares que
 não comutam, como $E$ e $R$. Isso não impede que alguns pares comutem. As duas
 escalas agem cada uma em um eixo, sem misturar horizontal com vertical, e por
 isso a ordem não faz diferença: os dois produtos dão
@@ -944,14 +1336,14 @@ suficientes para fazer exatamente a mesma conta?
 <details>
 <summary>Resposta</summary>
 
-Uma. Cada camada nova se junta às anteriores pela conta da seção 10: a matriz
-da camada única é o produto das cinco matrizes, e o vetor é montado da mesma
-forma. Para que mais camadas aprendam algo que uma camada não aprende, é
-preciso uma função não linear, como a ReLU, entre elas.
+Uma. Cada camada nova se junta às anteriores pela conta da seção das duas
+camadas: a matriz da camada única é o produto das cinco matrizes, e o vetor é
+montado da mesma forma. Para que mais camadas aprendam algo que uma camada
+não aprende, é preciso uma função não linear, como a ReLU, entre elas.
 
 </details>
 
-## 14. Exercícios
+## Exercícios
 
 ### 1. Reconhecimento
 
@@ -1022,6 +1414,14 @@ preciso uma função não linear, como a ReLU, entre elas.
     $R_\alpha R_\beta = R_\beta R_\alpha$. Use o Exemplo 4.
 
 <details>
+<summary>Dica para o Exercício 9</summary>
+
+Siga $\vec{e}_1$ pelos dois comandos, na ordem certa: em $FR$, quem age
+primeiro é $R$, a letra da direita.
+
+</details>
+
+<details>
 <summary>Dica para o Exercício 12</summary>
 
 $QM$ tem uma linha por cliente e uma coluna por ingrediente. Já $M\vec{p}$
@@ -1056,8 +1456,8 @@ $\beta + \alpha$.
    $(3 \times 4)(2 \times 3)$, números de dentro 4 e 2, **não existe**. $AC$:
    $(2 \times 3)(4 \times 2)$, números de dentro 3 e 4, **não existe**.
    $ABC$: $AB$ é $2 \times 4$, e $(2 \times 4)(4 \times 2)$ dá $2 \times 2$.
-   Se você disse que $BA$ existe porque $AB$ existe, reveja a seção 8.4: a
-   ordem muda até a possibilidade de fazer a conta.
+   Se você disse que $BA$ existe porque $AB$ existe, reveja a seção sobre a
+   ordem: a ordem muda até a possibilidade de fazer a conta.
 2. A entrada 6 está na linha 2, coluna 1. Ela vem da linha 2 de $A$, que é
    $(0,\ 3)$, com a coluna 1 de $B$, que é $(1,\ 2)$:
    $0 \times 1 + 3 \times 2 = 6$.
@@ -1086,7 +1486,8 @@ $\beta + \alpha$.
    coluna de $FR$. $RF$ reflete primeiro: $\vec{e}_1$ fica em $(1,\ 0)$ e o
    giro o leva a $(0,\ 1)$, a primeira coluna de $RF$. Os destinos são
    opostos. ($RF$ é o espelho na reta $y = x$; $FR$, o espelho na reta
-   $y = -x$.)
+   $y = -x$.) Se você trocou as duas matrizes, aplicou primeiro a letra da
+   esquerda (Erro 3).
 10. As duas ordens dão $\begin{bmatrix} 10 & 0 \\ 0 & -3 \end{bmatrix}$. Cada
     escala age num eixo só, e os fatores de cada eixo se multiplicam:
     $2 \times 5 = 10$ na horizontal, $3 \times (-1) = -3$ na vertical.
@@ -1119,6 +1520,8 @@ $\beta + \alpha$.
     1. $W_2W_1 = \begin{bmatrix} 1 + 2 & -1 + 1 \\ -1 + 4 & 1 + 2 \end{bmatrix} = \begin{bmatrix} 3 & 0 \\ 3 & 3 \end{bmatrix}$
        e $W_2\vec{b}_1 = (0 - 3,\ 0 - 6) = (-3,\ -6)$. A camada única é
        $\vec{y} = \begin{bmatrix} 3 & 0 \\ 3 & 3 \end{bmatrix}\vec{x} + \begin{bmatrix} -3 \\ -6 \end{bmatrix}$.
+       Se você encontrou $\begin{bmatrix} 2 & -1 \\ 1 & 4 \end{bmatrix}$,
+       calculou $W_1W_2$: a primeira camada fica à direita.
     2. Com $\vec{x} = (0,\ 1)$, a primeira camada dá
        $W_1\vec{x} + \vec{b}_1 = (-1,\ 1) + (0,\ -3) = (-1,\ -2)$. Sem a
        ReLU, a segunda camada dá $W_2(-1,\ -2) = (-3,\ -3)$; a camada única
@@ -1148,7 +1551,7 @@ primeira matriz com uma coluna inteira da segunda, nunca entrada com entrada.
 
 </details>
 
-## 15. Revisão curta
+## Revisão curta
 
 - O **produto** $AB$ é a matriz de “primeiro $B$, depois $A$”:
   $(AB)\vec{v} = A(B\vec{v})$. A matriz que age primeiro fica **à direita**.
@@ -1156,13 +1559,17 @@ primeira matriz com uma coluna inteira da segunda, nunca entrada com entrada.
   por coluna**: a entrada $(i,\ j)$ é o produto escalar da linha $i$ de $A$
   com a coluna $j$ de $B$.
 - **Dimensões:** $(m \times n)(n \times p) = m \times p$. Os números de dentro
-  têm que coincidir.
+  têm que coincidir, como peças de dominó.
 - **A ordem importa:** em geral $AB \neq BA$. **O agrupamento não importa:**
   $(AB)C = A(BC)$.
-- A **identidade** $I$ não muda nada: $AI = IA = A$, para $A$ quadrada do mesmo tamanho.
+- A **identidade** $I$ não muda nada: $AI = IA = A$, quando $A$ é quadrada e
+  $I$ tem o mesmo tamanho que ela.
 - **Transposta:** $(AB)^{\mathsf{T}} = B^{\mathsf{T}}A^{\mathsf{T}}$.
 - Em redes neurais, duas camadas $W\vec{x} + \vec{b}$ seguidas valem por uma.
   Por isso as redes põem uma função com dobra, como a ReLU, entre as camadas.
+- Use o produto sempre que dois comandos, duas planilhas ou duas camadas
+  vierem em sequência: ele junta os dois numa matriz só, uma vez, e poupa a
+  conta dupla em cada vetor.
 
 Esta lição juntou dois comandos num só. A próxima,
 [Matriz inversa](./matriz-inversa), faz a pergunta contrária: dado um comando,

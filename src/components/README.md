@@ -182,6 +182,90 @@ import AreaModel from '@site/src/components/AreaModel';
 | o drone do depósito (motivador da 7.34 e a resolução) | `DroneFlight` |
 | matriz 2×2 como transformação: malha antes e depois, colunas = imagens de $\vec{e}_1$ e $\vec{e}_2$ | `LinearMap` |
 | ponto e vetor no espaço, eixos $x$, $y$, $z$, a “caixa” das coordenadas | `Space3D` |
+| linha de planilha como vetor de 5 coordenadas, em barras: os quatro clientes (`clients`), a linha que vira lista e a ordem trocada (`row`), soma/dobro/média/lista curta (`sum`), diferença gênero por gênero e distância (`diff`), perfis normalizados (`normalize`) | `GenreBars` (animado, com botões) |
+| recorte de duas colunas de uma tabela de 5: cada cliente vira uma seta do plano; o múltiplo fica na mesma reta em todo recorte | `GenrePlanePicker` (interativo, botões) |
+| módulo como Pitágoras repetido: cada coordenada é uma perna em ângulo reto com a hipotenusa anterior (espiral); pernas em fila contra o módulo | `CoordLengthSpiral` (animado, com botões) |
+| a folha plana de dois vetores de $\mathbb{R}^n$ desenhada com os módulos e o ângulo do cosseno; distância entre as pontas medida no desenho igual à conta | `PairSheet` (animado, com botões de par) |
+| Cauchy-Schwarz: a parábola $\lVert \vec{u} - t\vec{v} \rVert^2$ nunca desce abaixo do eixo; encosta nele quando um vetor é múltiplo do outro | `CauchyParabola` (deslizante) |
+| ângulo entre a diagonal $(1, \ldots, 1)$ e um eixo conforme $n$ cresce: $\cos\theta = 1/\sqrt{n}$ | `DiagonalDims` (deslizante) |
+| uma planilha lida por linhas (o total de cada linha) e por uma coluna (o que muda quando um preço muda) | `MatrixStoreQuestions` (animado) |
+| matriz como tabela: dimensão $m \times n$ com as linhas na frente, entrada $a_{ij}$ (linha primeiro, coluna depois) | `MatrixTable` (animado; interativo) |
+| vetor coluna: o mesmo vetor, deitado e em pé, com as mesmas coordenadas na mesma ordem | `MatrixColumnVector` (animado) |
+| matriz vezes vetor pelas duas leituras: por linhas (produto escalar de cada linha) e por colunas (mistura das colunas com os pesos do vetor), lado a lado; mudar um peso move o resultado pela coluna dele | `MatrixVectorReadings` (animado; interativo com `sliders`) |
+| leitura por colunas de uma matriz $2 \times 2$ no plano: as colunas como setas encadeadas; $A\vec{e}_j$ é a coluna $j$ | `MatrixColumnsPlane` (animado; interativo) |
+| dimensões compatíveis: a linha da matriz posta em pé ao lado do vetor, entrada com coordenada; casa sem par | `MatrixShapeCheck` (interativo, anima a cada mudança) |
+| soma de matrizes e número vezes matriz, casa por casa | `MatrixEntrywise` (animado) |
+| transposta como reflexo na diagonal, contra o giro de um quarto de volta | `MatrixTranspose` (animado, dois botões) |
+| camada de rede neural $W\vec{x} + \vec{b}$: cada linha de $W$ é um neurônio; cada coluna, o efeito de uma entrada | `NeuralLayerMatrix` (animado; interativo) |
+| busca com três deslizantes: porções de três alimentos contra três metas ao mesmo tempo, barras por nutriente e registro das tentativas | `SystemSnackPlan` (interativo, busca) |
+| cada equação ax + by = c é uma reta; um ponto, paralelas ou a mesma reta; deslizantes de uma equação, botões de sistemas prontos; com `echelon`, a matriz escalonada e a leitura da última linha; com três equações, ponto comum ou triângulo | `SystemLines` (interativo) |
+| do sistema com letras para a matriz aumentada: letras e sinais saem, os números deslizam para as colunas; o caminho de volta | `SystemAugmented` (animado) |
+| operações elementares com a matriz e as retas lado a lado: trocar, multiplicar por 3, somar múltiplo (a reta gira em volta do cruzamento), multiplicar por 0 (contraexemplo) e desfazer; `mode="slider"` com L2 ← L2 + kL1 | `SystemRowOps` (animado e interativo) |
+| escalonamento animado linha a linha: linha que muda pintada, linha que empresta contornada, operação escrita ao lado, troca de linhas com seta; no fim a escada e os pivôs; passo a passo | `SystemElimination` (animado, com botões) |
+| está na forma escalonada? primeiro número diferente de zero circulado, a escada tracejada, o degrau que volta ou a linha de zeros no meio em laranja | `SystemEchelon` (estático, com botões) |
+| substituição de trás para a frente: o valor sobe por uma seta até a equação de cima | `SystemBackSub` (animado) |
+| a variável livre como deslizante: as outras incógnitas calculadas de trás para a frente e conferidas nas equações originais | `SystemFreeVariable` (interativo, com passeio inicial do t) |
+| contar pivôs classifica o sistema: matriz e forma escalonada, pivôs em caixas, a linha 0 = c em laranja, posto, desfecho e solução | `SystemPivotCount` (interativo) |
+| combinação linear como mistura de tintas: uma barra por pigmento, empilhada por base; busca de receitas com alvos (`targets`) ou despejo animado de uma receita (`pour`) | `PaintMix` (interativo; animado com `pour`) |
+| a base que sobra: cada litro de R vira 1 litro de P e 2 de Q, e nenhuma altura muda (p + q + r = 2p + 3q) | `PaintSwap` (animado) |
+| a·u + b·v (+ c·w) com um deslizante por vetor, caminho ponta com cauda e rastro; não paralelos enchem o plano, paralelos ficam na reta; alvos com registro; `zeroHunt` procura receita não trivial que volta à origem | `SpanCombo` (interativo, com varredura animada) |
+| o alvo é alcançável? a matriz aumentada [u v \| alvo] depois de uma operação, com o alvo nos deslizantes; o canto zera para vetores paralelos | `SpanRowTest` (deslizante) |
+| três vetores numa mesma folha do espaço não saem dela: grade de receitas, giro da cena e vista de perfil; troca de R por S | `SpanSheet` (animado e interativo) |
+| teste por escalonamento: os vetores como colunas, uma operação por vez, pivôs circulados, coluna sem pivô sombreada, linha sem pivô anotada | `PivotColumns` (animado, com botões por caso) |
+| a malha do plano se deformando aos poucos da identidade até a matriz (rotação anima o ângulo; translação escorrega; matriz e translação juntas em duas etapas, camada W x + b; mapas que entortam com `warp`); botões de catálogo, deslizante de ângulo, de cisalhamento ou do progresso; logotipo, pontos com rastro, receita de passos de e1 e e2 | `LinearGridMorph` (animado e interativo) |
+| as colunas da matriz são os destinos de e1 e e2: o aluno arrasta as duas pontas, a malha e a matriz acompanham, e a receita de v é refeita na malha nova | `LinearColumnsDrag` (arrastável, com teclado e botões) |
+| as duas condições da linearidade no desenho: T(u + v) contra T(u) + T(v) (`mode="sum"`), T(kv) contra kT(v) com deslizante de k (`mode="scale"`); linear, translação e (x², y) nos botões | `LinearityCheck` (animado e interativo) |
+| produto de matrizes como comandos em sequência: a malha passa por um comando de cada vez, com pausa e rótulos entre eles; painéis lado a lado comparam AB com BA (o mesmo logotipo indo para lugares diferentes), (AB)C com A(BC), ou dois comandos contra a matriz única; potências C, C², C³ | `ProductComposeGrid` (animado; botões e deslizante de progresso) |
+| regra linha por coluna: B em cima, A à esquerda, AB embaixo à direita; cada casa no cruzamento de uma linha de A com uma coluna de B, o par da vez em verde; clique numa casa para ver a conta | `ProductRowColumn` (animado; interativo) |
+| dimensões compatíveis como peças de dominó: (m × n)(n × p) encaixa e sobra m × p; números de dentro diferentes não encaixam; cadeia de três peças; transposta como peça virada | `ProductShapeFit` (animado; botões ou deslizantes) |
+| duas camadas W x + b valem por uma; a ReLU no meio dobra o gráfico da saída e impede a junção | `TwoLayersCollapse` (animado; deslizante e botão) |
+| o código da filial: letras viram números, pares passam por uma matriz (`mode="encode"`, com os pares recebidos e “?” no lugar das letras); os pares recebidos descem pela inversa e viram a palavra (`mode="decode"`); duas palavras chegam ao mesmo par por uma matriz sem inversa (`mode="ambiguous"`) | `InverseCipher` (animado) |
+| a malha passando por transformações em sequência: ida e volta (A e depois A⁻¹), as duas ordens, a meia e o sapato com a volta certa e a errada; ponto com rastro e caminho escrito etapa por etapa | `InverseRoundTrip` (animado, com botões) |
+| decodificar é resolver um sistema com letras no lado direito: os passos da eliminação e os coeficientes de p e q voando para dentro da matriz inversa; botões com os pares recebidos | `InverseFromSystem` (animado e interativo) |
+| a fórmula 2 × 2 como receita: a e d trocam de lugar, b e c trocam de sinal, o fator 1/(ad − bc) vai para a frente; botões − e + nas quatro entradas, o paralelogramo das colunas achatando quando ad − bc = 0 | `InverseFormula2x2` (animado e interativo) |
+| sem inversa: a malha achata numa reta (ou num ponto) e dois pontos caem no mesmo lugar, a volta com “?”; com `slider`, o k de [[2, 4], [1, k]] e as imagens se aproximando até coincidir quando ad − bc = 0 | `InverseCollapse` (animado; deslizante com passeio inicial) |
+| Gauss-Jordan animado: [A ∣ I] até [I ∣ A⁻¹], caixas de I e de A⁻¹ no fim, ou a linha de zeros em laranja quando não há inversa | `InverseGaussJordan` (animado, com botões de passo) |
+| com a inversa, A x = b tem uma única solução: o aluno arrasta b e vê o único x; com a matriz sem inversa, nenhuma solução (b fora da reta alcançada) ou uma reta inteira de soluções | `InverseSolveDrag` (arrastável, com teclado) |
+| a malha se deformando com o determinante no painel: terreno de lotes com a área de cada lote (`lots`), região qualquer com a área antes e depois (`region`), achatamento (det zero), duas transformações em sequência com a cadeia de fatores 1 → ×det → ×det (`stages`, com rotação que não encolhe no meio), pontos com rastro; `hideNumbers` para o motivador | `DetGridMorph` (animado, com botões) |
+| o recorte que mede o paralelogramo das colunas: o retângulo que o envolve menos seis peças que saem aos pares; com `letters`, a mesma conta em letras até ad − bc | `DetCutout` (animado) |
+| o escorregão que não muda a área: o lado v anda na direção de u sobre a paralela tracejada até ficar em pé (0, 5/3), e o deslizante escolhe t em doze avos; o painel faz ad − bc com frações exatas | `DetShearSlide` (animado e interativo) |
+| área e sinal juntos: duas colunas arrastáveis, paralelogramo verde (hachurado quando o determinante é negativo), arco do giro da coluna azul para a laranja, reta numérica do determinante; `path` anima a coluna atravessando a reta da outra (det 5 → 0 → −5) | `DetColumnsDrag` (arrastável, animado) |
+| o cubo de aresta 1 virando a caixa das três colunas; botões de matrizes, volume no painel, caixa que achata (det zero); `floor` destaca o chão e a altura da matriz triangular; deslizante gira a cena | `DetBox3D` (animado, com botões e deslizante) |
+| o efeito de cada operação de linha: a matriz do loteamento passa por E (cisalhamento, troca, esticar por 2, multiplicar por −1), o paralelogramo das colunas vai junto com a malha, o painel compara os determinantes | `DetRowOps` (animado, com botões) |
+| escalonamento animado de matriz quadrada com o efeito de cada passo no determinante (não muda, troca de sinal, × k) e, no fim, o produto da diagonal corrigido pelas trocas | `DetElimination` (animado, passo a passo) |
+| a regra de Sarrus: as duas primeiras colunas copiadas, as seis diagonais acendendo (três somam, três subtraem), a soma montada no painel; com `letters`, aei + bfg + cdh − ceg − afh − bdi | `SarrusDiagonals` (animado) |
+| quantas colunas de uma planilha carregam informação: o aluno apaga colunas, a figura acha a conta que refaz cada uma (ou avisa que se perdeu) e anota as escolhas que não perdem nada | `RankColumnKeeper` (interativo, busca com registro) |
+| o mesmo ponto com dois endereços: a viagem pela malha da prefeitura e depois pelas ruas inclinadas de uma base, com o ponto parado | `BasisTwoGrids` (animado, botões de destino) |
+| numa base o endereço é único: ir por uma receita e voltar pela outra é uma volta fechada, que só existe quando as direções são dependentes | `BasisAddressLoop` (animado, dois modos) |
+| o teste do subespaço: origem, soma e múltiplo de vetores do conjunto, com bolinha cheia (dentro) ou vazada (escapou); reta pela origem, reta deslocada, os dois eixos | `SubspaceClosure` (deslizantes) |
+| dimensão como número de deslizantes: só a origem, reta, plano x + z = 2y e espaço, no 3D, com o endereço na base contra as três coordenadas | `DimensionSlots` (animado e interativo) |
+| escalonar uma planilha com colunas nomeadas, várias operações por passo, pivôs circulados, colunas "guardada" e "refeita", e as receitas das colunas sem pivô | `RankSheetEchelon` (animado, passo a passo) |
+| o escalonamento muda as colunas, mas não as relações: as colunas de [[1, 2], [2, 4]] descem até o eixo x e a reta delas gira | `EchelonColumnsShift` (animado e deslizante) |
+| o núcleo é o que a matriz manda para a origem: a malha se achata sobre y = 2x, a reta do núcleo encolhe até a origem e uma reta paralela encolhe até um ponto | `KernelCollapse` (animado e deslizante) |
+| teorema do posto como contagem: cada coluna da forma escalonada desce para a caixa "com pivô" (posto) ou "sem pivô" (núcleo) | `RankNullityTally` (animado, botões de matriz) |
+| quase toda seta sai da sua reta, e só algumas direções ficam: o aluno gira a seta v e vê Av; gráfico do desvio por ângulo; registro das direções encontradas (com ímã) e botão de varredura | `EigenDirectionSearch` (busca com registro) |
+| a malha se deformando da identidade até a matriz com as retas dos autovetores marcadas (as setas sobre elas só esticam); deslizante do autovalor de uma reta (estica, encolhe, vira, achata); pontos de uma reta indo à origem em A − λI; malha quadriculada contra malha dos autovetores (diagonalização) | `EigenGridMorph` (animado e interativo) |
+| os autovalores são os λ que fazem A − λI achatar: colunas e paralelogramo de A − λI ao lado da parábola det(A − λI), com registro dos λ que achatam | `EigenCharSlider` (deslizante com registro) |
+| rotação sem nenhuma direção que fica (deslizante do ângulo, com o discriminante) e cisalhamento com uma direção só (deslizante de k): doze setas e as suas imagens | `EigenRing` (animado e interativo) |
+| aplicar a matriz muitas vezes: a seta se alinha com a reta do maior autovalor, passo a passo, com as duas partes e a tabela dos números | `EigenPowerWalk` (animado e por passos) |
+| as potências λ⁰ a λ¹⁰ como barras: some, fica, cresce, alterna | `EigenPowerBars` (deslizante) |
+| a população entre cidade e campo, ano a ano (motivador com diagrama de fluxo; resolução com equilíbrio, plano (cidade, campo) e deslizante da população inicial) | `EigenPopulation` (animado e por passos) |
+| a primeira tentativa de ajuste: a reta por dois pontos cresce e erra os outros (bolinhas vazias e tracejados com o tamanho do erro) | `FitFirstTry` (animado) |
+| a reta y = mx + n pelos apartamentos da 11.12: erros como segmentos verticais com sinal e tabela (`residuals`); quadrados de verdade sobre cada erro e soma no painel (`squares`); busca com a menor soma já vista e tabela de tentativas (`search`); melhor reta e previsão por área, com aviso de extrapolação (`solved`); treino até a solução das equações normais, com a perda descendo (`train`) | `FitLineExplorer` (interativo; `train` animado) |
+| somar erros com sinal: as setas dos erros vão para uma coluna, encostadas ponta com ponta, e a fila termina na soma (zero para y = 350) | `FitErrorStack` (animado, com botões de reta) |
+| valor absoluto contra quadrado: dois erros que somam 40, um quadrado sobre cada, a barra da soma sem sinal parada e a dos quadrados mudando | `FitAbsVsSquare` (deslizante) |
+| a lista de previsões como combinação das colunas: barras m × área mais n, com o preço observado e o erro | `FitPredictionBars` (deslizantes) |
+| mínimos quadrados como projeção: o plano das colunas em três dimensões, b fora dele, A c no deslizante e o resto; vista de perfil com ângulo reto de verdade; Pitágoras com o pé H (`pythagoras`) | `FitProjection3D` (interativo e animado) |
+| as linhas de A transposta vezes o resto: produto escalar de cada coluna com o resto, coordenada por coordenada (equações normais) | `FitNormalRows` (animado, com botões) |
+| o círculo de raio 1 se deformando aos poucos até a imagem pela matriz: elipse, círculo, segmento ou ponto, com o painel dizendo os semieixos; setas singulares v → Av com ângulo reto marcado (`singular`); quarto de disco e arco de orientação, que vira no espelho (`orientation`) | `SvdCircleMorph` (animado, com botões de matriz) |
+| a busca da direção que mais e menos estica: seta v de comprimento 1 girada, seta Av, gráfico do comprimento (ou do quadrado, `squared`) contra o ângulo, registro do máximo e do mínimo | `SvdStretchSearch` (deslizante com registro e varredura) |
+| A = UΣVᵀ como girar, esticar e girar de novo: círculo, v₁, v₂ e malha passando por Vᵀ, Σ e U, com espelho animado como página virando e reta do espelho tracejada; botões de passo; matrizes escritas (`showMatrices`) | `SvdThreeSteps` (animado, passo a passo) |
+| a matriz muda de lado no produto escalar se for transposta: (Av)·w = v·(Aᵀw), e a conta errada sem transpor | `SvdTransposeCheck` (deslizantes) |
+| simetria e autovetores perpendiculares: a entrada de baixo, à esquerda, no deslizante; retas de autovetores e o ângulo entre elas, discriminante no painel | `SvdSymmetrySlider` (deslizante) |
+| o esticamento ao quadrado como média dos autovalores: v = a v₁ + b v₂, os pesos a² e b² e o ponto λ₁a² + λ₂b² preso entre λ₂ e λ₁ | `SvdWeightedMean` (deslizante) |
+| uma coluna vezes uma linha preenchendo a tabela linha a linha (camada de posto 1), em tons de cinza | `SvdOuterProduct` (animado) |
+| matriz ou imagem refeita com k camadas σuvᵀ: original, aproximação, erro com sinal e barras do erro por k; comparação com guardar os pixels mais claros (`naive`); foto 32 × 32 embutida (`image="foto"`) | `SvdImageLayers` (deslizante) |
+| a melhor camada de posto 1 como a reta pela origem mais perto das linhas da matriz (projeção de cada linha), com registro do menor erro; o mesmo para componentes principais (`mode="pca"`) | `SvdRowsLine` (deslizante com registro e varredura) |
 | tabela de padrão (entrada → saída, ciclos, crescimento) | tabela markdown |
 | passos alinhados de uma manipulação | `\begin{array}` em KaTeX |
 
@@ -2662,6 +2746,2057 @@ componente novo de vetor em vez de reescrever as contas e a formatação.
 | `mathviz/projection.js` | `dot`, `add`, `sub`, `times`, `norm`, `lerp`, `kOf` (fator da projeção), `rightAngle` (marca de ângulo reto), `clipLine` (reta cortada na janela), `num`/`par`/`pair` (números e pares formatados) |
 | `mathviz/lineParam.js` | `at(A, d, t)` (ponto da reta), `windowRange`, `rightAngleMark`, `signed`, e as mesmas `add`/`sub`/`dot`/`norm` |
 | `VectorSumKit/index.js` | `pairMath` (ponto e vírgula quando alguma coordenada tem vírgula), `signedMath`, `plainNumber` |
+
+## GenreBars
+
+Figuras da lição `algebra-linear/vetores-com-muitas-coordenadas`. Os dados
+(quatro clientes, cinco gêneros) e as contas ficam em
+`GenreBars/clientes.js`, compartilhado com `GenrePlanePicker`,
+`CoordLengthSpiral`, `PairSheet` e `CauchyParabola`: Paula
+$(6, 1, 0, 4, 3)$, Gustavo $(12, 2, 0, 8, 6)$, Carla $(3, 3, 4, 1, 2)$, Davi
+$(0, 5, 4, 0, 1)$. Paula e Gustavo dividem o tom 1 (mesmo gosto).
+
+```mdx
+<GenreBars mode="clients" caption="..." />
+<GenreBars mode="row" caption="..." />
+<GenreBars mode="sum" cases={['soma', 'dobro', 'media', 'falta']} initial="soma" caption="..." />
+<GenreBars mode="diff" pairs={[['Paula', 'Carla'], ['Paula', 'Gustavo']]} caption="..." />
+<GenreBars mode="normalize" clients={['Paula', 'Gustavo', 'Carla']} caption="..." />
+```
+
+| Prop | O que faz |
+|---|---|
+| `mode` | `'clients'`: quatro perfis de barras horizontais (2 × 2); uma cópia tracejada das barras da Paula estica para o dobro e cai sobre as do Gustavo. `'row'`: a linha da tabela desce e vira a lista $\vec{p} = (6, 1, 0, 4, 3)$ com índices $p_1 \ldots p_5$ e uma barra por posição; o botão troca as duas primeiras posições (sai outra cliente). `'sum'`: as barras do segundo vetor chegam pela direita e se encostam nas do primeiro, gênero por gênero; o número no fim é o total. `'diff'`: as barras de dois clientes em cada gênero (em cima e embaixo), o traço verde da diferença e a conta com sinal; o painel faz $\vec{u} - \vec{v}$ e a distância. `'normalize'`: cada perfil dividido pelo próprio módulo; Paula estica, Gustavo encolhe, e os dois terminam iguais |
+| `cases`, `initial` | só em `'sum'`: quais botões aparecem entre `'soma'` (Paula + Carla), `'dobro'` (Paula + cópia da Paula = Gustavo), `'media'` (soma que encolhe para a metade) e `'falta'` (lista de 4 números: o “?” sem par) |
+| `pairs` | só em `'diff'`: pares de nomes de clientes nos botões |
+| `clients` | só em `'normalize'`: os perfis lado a lado (padrão Paula, Gustavo, Carla) |
+| `caption` | legenda (texto simples) |
+
+## GenrePlanePicker
+
+O recorte de duas das cinco colunas: os quatro clientes como setas do plano
+(`CartesianPlane`), com o par de gêneros escolhido nos botões (ação e
+comédia, ação e terror, comédia e drama, terror e documentário, drama e
+documentário). A seta do Gustavo é tracejada e fica sob a da Paula, sempre na
+mesma reta. O painel dá as coordenadas do recorte e o ângulo entre Paula e
+Carla naquele recorte, que muda de um recorte para outro. No recorte de ação
+e terror o Davi é o vetor nulo (ponto na origem). Os deslocamentos dos
+rótulos estão acertados à mão em `CUTS`.
+
+```mdx
+<GenrePlanePicker />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | índice do recorte inicial (padrão 0, ação e comédia) |
+| `caption` | substitui a legenda padrão |
+
+## CoordLengthSpiral
+
+O módulo de um vetor de $n$ coordenadas como Pitágoras repetido. A primeira
+coordenada é uma perna deitada; cada coordenada seguinte é uma perna nova
+(laranja) em ângulo reto com a hipotenusa anterior, e a hipotenusa nova
+(azul) mede a raiz da soma dos quadrados até ali. As hipotenusas antigas
+ficam tracejadas; coordenada zero não acrescenta perna. A escala se ajusta a
+cada vetor. O botão “Comparar com as pernas em fila” põe as pernas uma depois
+da outra numa linha, contra o módulo (erro de somar as coordenadas).
+
+```mdx
+<CoordLengthSpiral />
+<CoordLengthSpiral presets={['paula', 'diferenca']} initial="diferenca" compare={false} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `presets` | botões entre `'plano'` (3, 4), `'espaco'` (3, 4, 12), `'paula'` (6, 1, 0, 4, 3), `'uns'` (1, 1, 1, 1) e `'diferenca'` (3, −2, −4, 3, 1); padrão os quatro primeiros |
+| `initial` | vetor inicial (padrão `'paula'`) |
+| `compare` | `false` esconde o botão das pernas em fila |
+| `caption` | legenda |
+
+## PairSheet
+
+A folha plana de dois vetores de cinco coordenadas, desenhada só com os dois
+módulos e o ângulo $\theta$ da fórmula do cosseno: o primeiro deitado, o
+segundo girado de $\theta$. A animação desenha as setas, o arco e o tracejado
+entre as pontas. O painel faz o produto escalar, os módulos, o cosseno e o
+ângulo, e compara a distância medida na folha com a da conta das cinco
+diferenças (iguais). Com ângulo zero (Paula e Gustavo), as setas ficam na
+mesma reta e a distância vira uma cota embaixo.
+
+```mdx
+<PairSheet pairs={[['Paula', 'Carla'], ['Carla', 'Davi']]} />
+<PairSheet pairs={[['Paula', 'Gustavo'], ['Paula', 'Carla'], ['Paula', 'Davi']]} initial={0} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `pairs` | pares de nomes de clientes (de `clientes.js`), um botão por par |
+| `initial` | índice do par inicial |
+| `caption` | legenda |
+
+## CauchyParabola
+
+A desigualdade de Cauchy-Schwarz como parábola: $f(t) = \lVert \vec{u} -
+t\vec{v} \rVert^2$ em `CartesianPlane`, com o deslizante de $t$ (de −0,5 a
+1,5). O painel mostra o vetor $\vec{u} - t\vec{v}$, a soma dos quadrados dele,
+a expressão $c + bt + at^2$ e o discriminante. Botões: Paula e Carla
+(discriminante −5828, a curva fica acima do eixo, mínimo ≈ 37,36) e Paula e
+Gustavo (discriminante 0, a curva encosta no eixo em $t = 1/2$: caso da
+igualdade).
+
+```mdx
+<CauchyParabola />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | 0 (Paula e Carla) ou 1 (Paula e Gustavo) |
+| `caption` | substitui a legenda padrão |
+
+## DiagonalDims
+
+O ângulo entre a diagonal $(1, 1, \ldots, 1)$ e o eixo $\vec{e}_1$ com $n$
+coordenadas, $\cos\theta = 1/\sqrt{n}$, desenhado na folha dos dois vetores
+normalizados, com o tracejado de 90°. O deslizante percorre n = 2, 3, 4, 5,
+10, 20, 50, 100, 1 000, 10 000 e 1 000 000.
+
+```mdx
+<DiagonalDims caption="..." />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | índice inicial na lista de n (padrão 0, n = 2) |
+| `caption` | legenda |
+
+## MatrixKit
+
+Auxiliares sem figura, importados pelos componentes `Matrix*` da lição 11.3.
+Use-os num componente novo de matriz em vez de reescrever as peças.
+
+| Exportação | O que faz |
+|---|---|
+| `Cell` | uma casa de tabela com número em KaTeX: `{x, y, w, h, math, tone, fill, strong, dashed, halo, solid, opacity, fontSize}`. `fill` pinta o fundo com o tom (claro); `strong` engrossa a borda; `halo` põe fundo no número (para uma linha que passa por cima); `solid` põe fundo opaco na casa inteira |
+| `WideMath` | fórmula longa numa linha só dentro do SVG, ancorada pela esquerda, com largura dada (`{x, y, math, width, fontSize, tone}`). O `SvgMath` limita a caixa a 260 px e quebrava contas compridas em duas linhas |
+| `Brackets` | colchetes de matriz em volta de um retângulo `{x0, y0, x1, y1, tone}` |
+| `num`, `factor`, `plain` | número em LaTeX com vírgula decimal; o mesmo entre parênteses quando negativo, para fator de multiplicação; o mesmo em texto comum, com sinal de menos tipográfico |
+| `pairTex`, `sumTex`, `dotTex` | vetor deitado na notação da casa, $(3,\ 4)$; soma de parcelas com sinais; a conta de um produto escalar por extenso |
+| `mix`, `toneVar` | interpolação linear; cor de um tom |
+
+## MatrixStoreQuestions
+
+Problema motivador da 11.3. A planilha de pedidos (lojas nas linhas, produtos
+nas colunas, preços em cima). A animação percorre as linhas, uma loja de cada
+vez, e põe um “?” na coluna de totais; depois acende a coluna de um produto,
+troca o preço dele (R\$ 10 vira R\$ 11) e põe um “?” na coluna de aumentos.
+
+```mdx
+<MatrixStoreQuestions caption="..." />
+```
+
+| Prop | O que faz |
+|---|---|
+| `matrix`, `rowNames`, `colNames`, `prices` | a planilha (padrão: as três lojas e os quatro produtos da 11.3) |
+| `changed` | índice (a partir de 0) da coluna cujo preço sobe 1 (padrão 1, o queijo) |
+| `caption` | legenda |
+
+## MatrixTable
+
+A matriz como tabela. Ao entrar na tela, conta as linhas (1, 2, 3) e depois as
+colunas (1, 2, 3, 4) e escreve “3 linhas × 4 colunas”. Depois, dois
+deslizantes escolhem a linha $i$ (azul) e a coluna $j$ (laranja); a casa do
+cruzamento (verde) é $a_{ij}$, e o painel a escreve com o nome da linha e da
+coluna. Os botões de atalho (padrão $a_{23}$ e $a_{32}$) mostram que a ordem
+do índice muda a casa.
+
+```mdx
+<MatrixTable
+  matrix={[[3, 2, 5, 4], [10, 0, 20, 6], [1, 5, 2, 3]]}
+  rowNames={['Centro', 'Bairro', 'Shopping']}
+  colNames={['café', 'queijo', 'pão', 'leite']}
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `matrix` | a matriz, por linhas |
+| `rowNames`, `colNames` | nomes opcionais das linhas e colunas (texto curto) |
+| `entry` | letra da entrada (padrão `'a'`) |
+| `initial`, `presets` | casa inicial `[i, j]` (a partir de 1) e botões de atalho |
+| `caption` | legenda |
+
+## MatrixColumnVector
+
+Um vetor deitado e o mesmo vetor em pé. Uma cópia de cada coordenada desce
+até uma faixa livre embaixo, anda para a direita e sobe até a sua casa na
+coluna, na mesma ordem (o caminho não passa por cima de nenhuma outra
+coordenada). O nome de cada coordenada aparece ao lado quando ela chega.
+Quadro final: as duas escritas com um sinal de igual.
+
+```mdx
+<MatrixColumnVector vector={[4, 10, 2, 5]} names={['café', 'queijo', 'pão', 'leite']} name="\vec{p}" />
+```
+
+| Prop | O que faz |
+|---|---|
+| `vector`, `names` | as coordenadas e o nome de cada uma |
+| `name` | nome do vetor em LaTeX (padrão $\vec{p}$) |
+| `caption` | legenda |
+
+## MatrixVectorReadings
+
+O produto de matriz por vetor pelas duas leituras.
+
+- **Por linhas**: a matriz, o vetor em pé e o resultado. Cada linha acende
+  (azul) com o vetor (laranja); na primeira linha os pares se encontram um de
+  cada vez. A conta de cada linha é escrita embaixo, e o número vai para a
+  coordenada da linha no resultado (verde).
+- **Por colunas**: cada coluna recebe o seu peso (laranja, em cima), é
+  multiplicada e desce para a segunda fileira; no fim, as colunas
+  multiplicadas são somadas (verde).
+
+No modo `'both'` os dois painéis ficam lado a lado (empilhados no celular),
+animam juntos e têm botões para rever só um deles. Com `sliders`, o aluno muda
+coordenadas do vetor e o painel escreve o resultado novo como o resultado
+inicial mais cada coluna cujo peso mudou, vezes a mudança.
+
+```mdx
+<MatrixVectorReadings mode="rows" matrix={[[2, 1], [1, 3]]} vector={[3, 1]} matrixName="B" />
+<MatrixVectorReadings mode="both" matrix={[[3, 2, 5, 4], [10, 0, 20, 6], [1, 5, 2, 3]]} vector={[4, 10, 2, 5]}
+  rowNames={['Centro', 'Bairro', 'Shopping']} colNames={['café', 'queijo', 'pão', 'leite']} vectorName="\vec{p}" unit="reais" />
+<MatrixVectorReadings mode="columns" matrix={...} vector={[4, 10, 2, 5]} sliders={[0, 1, 2, 3]} sliderRange={[0, 15]}
+  sliderNames={['Preço do café (R$)', 'Preço do queijo (R$)', 'Preço do pão (R$)', 'Preço do leite (R$)']} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `matrix`, `vector` | a matriz (por linhas) e o vetor; o número de colunas tem que ser o tamanho do vetor |
+| `mode` | `'rows'`, `'columns'` ou `'both'` (padrão) |
+| `rowNames`, `colNames` | nomes opcionais (as linhas só aparecem no painel por linhas; com nomes, as contas embaixo começam pelo nome) |
+| `matrixName`, `vectorName`, `resultName` | rótulos em LaTeX (padrão $A$, $\vec{x}$ e $A\vec{x}$) |
+| `sliders`, `sliderRange`, `sliderNames` | índices (a partir de 0) das coordenadas editáveis, alcance inteiro e rótulos dos controles |
+| `unit` | unidade citada no painel do modo `'both'` |
+| `caption` | legenda |
+
+Tamanho testado: até $3 \times 4$ com números de até dois algarismos. Matriz
+mais larga pede células menores (`CW` no código).
+
+## MatrixColumnsPlane
+
+A leitura por colunas de uma matriz $2 \times 2$ no plano. As colunas são duas
+setas; o vetor $\vec{x} = (a,\ b)$ diz quantas cópias de cada uma, encadeadas
+ponta com cauda (azul, depois laranja). A seta verde vai até $A\vec{x}$. O
+painel faz a conta pelas duas leituras. Botões com vetores prontos, incluindo
+$(1,\ 0)$ e $(0,\ 1)$, que devolvem uma coluna. Ao entrar na tela, monta o
+vetor inicial seta por seta.
+
+```mdx
+<MatrixColumnsPlane />
+```
+
+| Prop | O que faz |
+|---|---|
+| `matrix` | matriz $2 \times 2$ por linhas (padrão a do robô, `[[2, 1], [1, 3]]`) |
+| `name` | letra da matriz no rótulo (padrão `B`) |
+| `initial`, `range`, `presets` | vetor inicial, alcance inteiro dos pesos (a janela se ajusta a ele) e botões |
+| `intro` | `false` desliga a montagem animada |
+| `caption` | troca a legenda |
+
+## MatrixShapeCheck
+
+Dimensões compatíveis. Três deslizantes (linhas e colunas da matriz,
+coordenadas do vetor, de 1 a 4). A primeira linha da matriz (azul) se levanta
+e encosta no vetor (laranja), entrada com coordenada; o que sobra sem par fica
+tracejado, com “sem par”. Se tudo faz par, aparece o resultado (verde) com
+uma coordenada por linha. Anima a cada mudança.
+
+```mdx
+<MatrixShapeCheck />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | `[m, n, k]`: linhas, colunas, coordenadas do vetor (padrão `[2, 3, 2]`, o contraexemplo) |
+| `presets` | botões `[m, n, k]` |
+| `caption` | legenda |
+
+## MatrixEntrywise
+
+Duas fileiras: $A + B$ e $kA$, casa por casa. Uma casa de cada vez acende nas
+matrizes de entrada (azul e laranja) e o resultado aparece na mesma posição
+(verde).
+
+```mdx
+<MatrixEntrywise a={[[1, 4], [0, -2]]} b={[[3, 1], [5, 2]]} k={3} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `a`, `b` | as duas matrizes (mesmo tamanho) |
+| `k` | o número da segunda fileira |
+| `caption` | legenda |
+
+## MatrixTranspose
+
+À esquerda a matriz original, com cada linha numa cor (até três linhas
+distintas: a cor repete a partir da quarta) e a diagonal tracejada.
+“Transpor”: uma linha de cada vez acende na original, e os números dela
+aparecem como a coluna de mesmo número da tabela da direita (a linha 1 vira a
+coluna 1; os números da diagonal são os mesmos nas duas). As casas não voam
+de uma tabela à outra de propósito: os caminhos se cruzariam e um número
+passaria por cima de outro. “Girar um quarto de volta”: uma cópia gira
+inteira no sentido horário, como uma folha (a linha 1 vira a última coluna).
+Os dois resultados têm o mesmo formato e números em casas diferentes.
+
+```mdx
+<MatrixTranspose matrix={[[3, 2, 5, 4], [10, 0, 20, 6], [1, 5, 2, 3]]} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `matrix` | a matriz, por linhas |
+| `name` | letra no título (padrão `A`) |
+| `initialKind` | `'transpose'` (padrão) ou `'rotate'` |
+| `caption` | legenda |
+
+## NeuralLayerMatrix
+
+Uma camada $\vec{y} = W\vec{x} + \vec{b}$ desenhada como neurônios. Entradas
+à esquerda, neurônios à direita; as setas de cada neurônio têm a cor dele e
+trazem os pesos da sua linha de $W$ (peso 0 tracejado). Na animação, cada
+neurônio acende as suas setas, escreve a conta (produto escalar mais viés) e
+a saída. Deslizantes mudam as entradas; o painel escreve $W\vec{x} + \vec{b}$
+com matrizes e, quando uma entrada muda, a saída nova como a inicial mais a
+coluna daquela entrada vezes a mudança.
+
+```mdx
+<NeuralLayerMatrix />
+```
+
+| Prop | O que faz |
+|---|---|
+| `weights`, `bias`, `input` | $W$ (por linhas), $\vec{b}$ e a entrada inicial (padrão a camada da 11.3, saída $(9,\ 2)$) |
+| `range` | alcance inteiro dos deslizantes das entradas (padrão de $-2$ a $4$) |
+| `caption` | legenda |
+
+Desenho pensado para 3 entradas e 2 neurônios; com mais, os rótulos dos pesos
+podem se aproximar.
+
+## SystemSnackPlan
+
+O problema motivador da 11.4. Três deslizantes (porções de 0 a `max`) e uma
+barra por nutriente, com o traço da meta. A barra fica verde na meta, azul
+abaixo e laranja acima. O painel escreve a conta de cada nutriente e quantas
+metas foram atingidas; “Anotar esta tentativa” guarda até 8 tentativas numa
+tabela.
+
+```mdx
+<SystemSnackPlan caption="..." />
+<SystemSnackPlan initial={[2, 3, 2]} caption="..." />
+```
+
+| Prop | O que faz |
+|---|---|
+| `foods` | `[{name, per: [proteína, carboidrato, gordura]}]` (padrão: iogurte, granola, castanhas da 11.4) |
+| `nutrients`, `targets` | nomes e metas (padrão 45, 90, 55) |
+| `initial`, `max` | porções iniciais e máximo do deslizante |
+
+## SystemLines
+
+Duas ou três equações `[a, b, c]` (para ax + by = c) desenhadas no
+`CartesianPlane`, uma cor por equação, com o rótulo de cada reta posto
+automaticamente perto da borda (ajustável). Com duas equações, o painel diz
+se há um ponto comum (marcado em verde), se são paralelas ou se são a mesma
+reta (a segunda sai tracejada). Com três, diz se as três passam pelo mesmo
+ponto ou lista os três pontos de cada par (triângulo).
+
+```mdx
+<SystemLines
+  eqs={[[1, 1, 5], [2, -1, 1]]}
+  slider={{row: 2, a: [-3, 4, 1], c: [-8, 10, 1]}}
+  echelon
+  presets={[{label: 'Paralelas: −x − y = −2', eqs: [[1, 1, 5], [-1, -1, -2]]}]}
+  window={{xMin: -2, xMax: 7, yMin: -3, yMax: 7}}
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `eqs` | equações iniciais, coeficientes inteiros |
+| `slider` | `{row, a: [min, max, step], c: [...]}`: deslizantes do coeficiente do x e do número depois do igual da equação `row` |
+| `presets` | botões `{label, eqs}` que trocam o sistema inteiro |
+| `echelon` | (duas equações, primeiro coeficiente diferente de zero) a matriz aumentada antes e depois de zerar o número embaixo do primeiro pivô, e a leitura da última linha |
+| `labelPlaces` | por equação, `{f, side, dx, dy}`: fixa a fração do trecho visível (`f`) ou o lado (`side`, 1 ou −1). Sem isso, o componente testa posições ao longo da reta, dos dois lados, com âncoras e distâncias diferentes, e fica com a caixa mais longe das outras retas, dos eixos e dos números, dos pontos e dos rótulos já postos; caixa cruzada pela própria reta é descartada. O rótulo do ponto de encontro também escolhe entre seis posições |
+| `window`, `xUnit` | janela e escala |
+
+Exporta também `eqTex([a, b, c])`, a equação em LaTeX.
+
+## SystemAugmented
+
+As equações escritas por extenso (cada incógnita na sua coluna) viram a
+matriz aumentada: letras, sinais de mais e iguais se apagam, os números
+deslizam para as colunas, surgem os colchetes, a barra laranja e o nome das
+colunas. Coeficiente 0 (incógnita faltando) surge como 0. Botões “Guardar só
+os números” e “Voltar para as equações” (animação ao contrário).
+
+```mdx
+<SystemAugmented rows={[[10, 5, 5, 45], [10, 20, 5, 90], [5, 5, 15, 55]]} rowNames={['proteína', 'carboidrato', 'gordura']} />
+```
+
+Props: `rows` (inteiros), `vars` (padrão x, y, z), `rowNames`, `resultName`.
+
+## SystemRowOps
+
+Matriz aumentada 2 × 3 (cada linha na cor da sua reta, com a equação ao
+lado) e as duas retas no plano, lado a lado (empilhadas no celular).
+
+- `mode="ops"`: botões “Trocar as linhas”, “Multiplicar a linha 2 por 3”,
+  “Tirar da linha 2 duas vezes a linha 1”, “Multiplicar a linha 2 por 0” e
+  “Desfazer”. Cada operação parte do sistema original; as retas são
+  interpoladas pelos coeficientes, então a reta gira em volta do cruzamento.
+  Multiplicar por 0 apaga a reta, marca pontos da outra reta e o par (1, 4)
+  como solução criada, e não pode ser desfeita. Ao entrar na tela, faz a
+  terceira operação (quadro final: y = 3 com a reta antiga tracejada).
+- `mode="slider"`: L2 ← L2 + kL1 com k de −3 a 3; passeio inicial 0 → 1 → −2
+  (vertical x = 2, depois horizontal y = 3). O painel confere o ponto na
+  equação nova.
+
+Props: `eqs` (padrão x + y = 5 e 2x − y = 1), `point` (o cruzamento, padrão
+(2, 3)), `window`, `xUnit`, `caption`. Os textos dos botões e do painel do
+modo `ops` são os do sistema padrão.
+
+## SystemElimination
+
+O escalonamento de uma matriz aumentada animado passo a passo, com frações
+exatas (`./frac.js`). Em cada passo: a linha que muda pintada de laranja, a
+linha que empresta contornada de azul (tracejado), a operação escrita à
+direita, os números antigos dando lugar aos novos; numa troca, as linhas
+trocam de altura e uma seta dupla liga as duas. No fim, a escada tracejada
+verde passa embaixo dos pivôs (em caixas) e a região de zeros fica sombreada.
+Botões: “Ver tudo de novo”, “Voltar ao início” e “Próximo passo”. O painel
+mostra o texto e a conta de cada passo.
+
+```mdx
+<SystemElimination
+  start={[[1, 2, 1, 7], [2, 5, 1, 13], [-1, 0, 3, 3]]}
+  steps={[
+    {ops: [{op: 'add', row: 2, from: 1, k: -2}], text: '...', calc: '2 - 2 \\times 1 = 0'},
+    {ops: [{op: 'swap', rows: [1, 3]}], text: '...'},
+    {ops: [{op: 'scale', row: 1, k: [1, 5]}], text: '...'},
+  ]}
+  endText="..."
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `start` | linhas da matriz aumentada (inteiros) |
+| `steps` | `[{ops, text, calc}]`; um passo pode ter várias operações (ex.: zerar duas linhas), mas uma troca vai sozinha no passo |
+| `vars` | cabeçalho das colunas (padrão x, y, z e nada sobre a coluna depois da barra) |
+| `startText`, `endText` | painel antes do primeiro passo e depois do último |
+| `staircase` | `false` desliga a escada final |
+
+`SystemElimination/frac.js` (sem desenho): frações `fr`, `toFr`, `add`, `sub`,
+`mul`, `div`, `neg`, `texFr`, `plainFr`, `applyOp` (operação elementar),
+`opTex` (a operação em LaTeX, como `L_2 \leftarrow L_2 - 2L_1`) e `leadCol`
+(coluna do primeiro número diferente de zero). Usado também por
+`SystemEchelon`, `SystemLines` e `SystemPivotCount`.
+
+## SystemEchelon
+
+Confere se uma matriz está na forma escalonada: o primeiro número diferente
+de zero de cada linha circulado, o tracejado ligando esses números. Escada
+que desce sempre para a direita sai verde (“escalonada”); o degrau que volta
+para a esquerda, ou a linha de zeros acima de outra, sai em laranja, e o
+painel diz qual regra falhou.
+
+```mdx
+<SystemEchelon matrices={[{name: 'Escalonada', rows: [[1, 2, 1, 7], [0, 1, -1, -1], [0, 0, 6, 12]]}, {name: 'A escada volta', rows: [[1, 1, 1, 4], [0, 0, 1, 3], [0, 2, 1, 5]]}]} />
+```
+
+## SystemBackSub
+
+Substituição de trás para a frente em quadros: cada quadro troca uma linha
+(pintada), e uma seta verde sobe da linha de onde vêm os valores. O quadro
+final tem a conta inteira.
+
+```mdx
+<SystemBackSub frames={[
+  {lines: ['x + 2y + z = 7', '\\phantom{x + 2}y - z = -1', '\\phantom{x + 2y + {}}6z = 12'], note: '...'},
+  {lines: [..., '\\phantom{x + 2y + {}}6z = 12 \\quad\\text{então}\\quad z = 2'], hl: 2, note: '...'},
+  {lines: [...], hl: 1, from: [2], note: '...'},
+]} />
+```
+
+Use `\phantom{...}` no começo das linhas para alinhar a escada.
+
+## SystemFreeVariable
+
+O deslizante escolhe o valor t da variável livre; barras horizontais mostram
+x, y e z (com o zero no meio). O painel escreve as contas de trás para a
+frente e confere a lista em cada equação original. Passeio inicial do t
+(1 → −1 → 3 → 1).
+
+```mdx
+<SystemFreeVariable
+  rows={[[1, 2, 1, 4], [2, 5, 4, 11], [3, 7, 5, 15]]}
+  solution={[[-2, 3], [3, -2], [0, 1]]}
+  freeIndex={2}
+  steps={[{v: 'z', tex: 't'}, {v: 'y', tex: '3 - 2t'}, {v: 'x', tex: '-2 + 3t'}]}
+/>
+```
+
+`solution`: cada incógnita como `[c0, c1]`, isto é, c0 + c1 t. `tRange`
+(padrão −2 a 4, passo 0,5).
+
+## SystemPivotCount
+
+A matriz aumentada e a sua forma escalonada (eliminação automática, com
+frações exatas), pivôs em caixas verdes, a linha 0 = c marcada em laranja
+depois da barra. Um deslizante muda o número depois do igual de uma linha e
+botões alternam um coeficiente dessa linha. O painel lista as operações, o
+número de pivôs (o posto), o desfecho e a solução (única ou com parâmetro t;
+no máximo uma variável livre).
+
+```mdx
+<SystemPivotCount
+  rows={[[1, 2, 1, 4], [2, 5, 4, 11], [3, 7, 5, 15]]}
+  vary={{row: 3, col: 2, options: [5, 6], k: [10, 20, 1]}}
+/>
+```
+
+## PaintMix
+
+A loja de tintas da lição 11.5. Três barras, uma por pigmento (ciano, magenta,
+amarelo). Cada barra empilha a parte que vem de cada base (azul P, laranja Q,
+verde R), com altura “litros × gramas por litro”: a altura total é uma
+coordenada da combinação linear. Um deslizante por base (litros). Com
+`targets`, os tracejados marcam o alvo escolhido nos botões, o painel diz
+quantos gramas faltam ou sobram de cada pigmento e guarda as receitas que
+acertaram. Com `pour`, despeja a receita litro a litro ao entrar na tela.
+
+```mdx
+<PaintMix
+  targets={[
+    {name: 'verde-musgo', at: [4, 5, 6]},
+    {name: 'laranja-queimado', at: [1, 0, 1]},
+  ]}
+/>
+
+<PaintMix pour={[2, 3, 0]} targets={[{name: 'verde-musgo', at: [4, 5, 6]}]} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `names` | bases usadas, entre `P`, `Q`, `R` e `S` (padrão `['P', 'Q', 'R']`); as fórmulas estão em `PaintMix/bars.jsx` |
+| `max`, `step` | limite e passo dos deslizantes, em litros (padrão 3 e 0,5) |
+| `maxG` | altura do eixo, em gramas (padrão 20) |
+| `initial` | litros iniciais |
+| `pour` | receita despejada na entrada (também vira o estado inicial) |
+| `targets` | `[{name, at: [c, m, a]}]`; com mais de um, aparecem botões |
+| `caption` | troca a legenda |
+
+`PaintMix/bars.jsx` exporta `BASES`, `PIGMENTS`, `mix`, `GramAxis`,
+`StackBar` (barra empilhada; `y0` em cada pedaço força a altura de partida,
+para animações) e `TotalLabel`, usados também pelo `PaintSwap`.
+
+## PaintSwap
+
+A dependência como “uma base sobra”. À esquerda, a lata p + q + r, parada. À
+direita, a mesma lata, e a animação faz a troca em dois passos: o pedaço verde
+de cada barra (1 litro de R) se divide no pigmento de 1 litro de P e 2 de Q e
+muda de cor; depois os pedaços da mesma cor se juntam. Nenhuma altura muda em
+nenhum quadro; no fim, a direita é 2p + 3q, com 4, 5 e 6 g como a esquerda. O
+painel narra o passo e mostra a conta. Sem props além de `caption`.
+
+```mdx
+<PaintSwap />
+```
+
+## SpanCombo
+
+Combinação linear no plano com um deslizante por vetor (2 ou 3 vetores). A
+ponta é desenhada como caminho ponta com cauda (a·u em azul, b·v em laranja,
+c·w em verde) e a seta da origem até a ponta (verde com dois vetores,
+tracejada cinza com três; com três vetores, cada vetor aparece também em tom claro a partir da origem). Cada posição da ponta deixa um ponto de rastro. Com
+dois vetores, a figura testa ao entrar uma grade de receitas de meio em meio
+(`sweep`): não paralelos enchem um paralelogramo inclinado, com a malha das
+receitas inteiras tracejada; paralelos caem todos na faixa verde da reta.
+Desenha num plano próprio (`SpanCombo/plane.jsx`), que recorta setas e malhas
+pela janela.
+
+```mdx
+<SpanCombo
+  initial={[1, 1]}
+  targets={[{name: 'A', at: [4, 4], label: 'A\\ (4,\\ 4)', dx: 34, dy: -14}]}
+/>
+
+<SpanCombo
+  vectors={[{v: [2, 1], name: '\\vec{u}'}, {v: [1, 3], name: '\\vec{v}'}, {v: [1, -2], name: '\\vec{w}'}]}
+  ranges={[[-1, 1], [-1, 1], [-1, 1]]} step={0.5} initial={[1, 0, 0]}
+  zeroHunt removable={2} sweep={false}
+  window={{xMin: -4.5, xMax: 4.5, yMin: -6.5, yMax: 6.5}} unit={26}
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `vectors` | `[{v: [x, y], name}]`, 2 ou 3 vetores; `name` em LaTeX |
+| `ranges`, `step`, `initial` | limites de cada deslizante, passo (padrão 0,1) e receita inicial |
+| `targets` | `[{name, at, label, dx, dy, anchor}]`: alvos com registro das receitas que acertaram |
+| `zeroHunt` | o alvo é a origem, e só conta receita que não seja zero de tudo |
+| `removable` | índice do vetor que um botão tira e põe de volta |
+| `sweep`, `sweepStep` | varredura animada da grade de receitas (só com 2 vetores) |
+| `lattice` | malha das receitas inteiras (padrão `true`; some com vetores paralelos) |
+| `window`, `unit`, `ticksEvery` | janela, escala e numeração dos eixos |
+| `caption` | legenda |
+
+Cuidado: as setas são recortadas pela janela, então escolha `ranges` e
+`window` de modo que o caminho mais longo caiba (a ponta vai até a soma dos
+módulos dos coeficientes máximos vezes cada vetor).
+
+## SpanRowTest
+
+O alvo é alcançável por u e v? Plano com u e v saindo da origem e o alvo
+movido por dois deslizantes inteiros (−7 a 7). O painel mostra
+[u v | alvo] antes e depois de L2 ← L2 − m·L1 (m = u2/u1), separando o canto
+de baixo (que só depende dos vetores) do lado direito y − m·x (que depende do
+alvo). Com u = (1, 2) e v = (3, 1), todo alvo é alcançado e os tracejados
+desenham a receita; com u = (1, 2) e v = (3, 6), o canto é zero, a reta
+y = 2x aparece em faixa verde, e fora dela a segunda linha diz 0 = número.
+
+```mdx
+<SpanRowTest caption="..." />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initialPair` | 0 para (1, 2) e (3, 1); 1 para (1, 2) e (3, 6) |
+| `initialTarget` | alvo inicial (padrão (7, −1)) |
+| `caption` | legenda |
+
+## SpanSheet
+
+As bases da loja no espaço (x = ciano, y = magenta, z = amarelo), sobre o
+`SpaceScene`. O pedaço cinza é parte da folha de p e q. A mistura
+a·p + b·q + c·r (ou c·s) é desenhada como caminho, com a seta tracejada da
+origem até a ponta. Ao entrar, testa as 125 receitas de 0 a 1 litro (de 0,25
+em 0,25), marca as pontas e gira a cena até a vista de perfil da folha
+(θ = arcsen(−0,1) ≈ −5,74°, em que a folha vira uma linha) e volta. Controles
+para os litros e para o giro; botões para a vista de perfil, para trocar R por
+S = (1, 0, 1) e para apagar o rastro. O painel confere a regra da folha
+(magenta = média do ciano com o amarelo). O laranja-queimado (1, 0, 1) tem um
+tracejado até o pé na folha, (2/3, 2/3, 2/3).
+
+```mdx
+<SpanSheet />
+<SpanSheet initialBases="S" initial={[0, 0, 1]} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initialBases` | `'R'` (padrão) ou `'S'` |
+| `initial` | litros iniciais de p, q e da terceira base |
+| `caption` | legenda |
+
+## PivotColumns
+
+Teste por escalonamento animado. Os vetores entram como colunas (nomes em
+cima); cada operação aparece escrita no alto, a linha trocada ganha uma faixa
+azul e os números novos aparecem no lugar dos velhos. No fim, cada pivô ganha
+um círculo verde, a coluna sem pivô fica sombreada (“sem pivô”) e a linha de
+zeros é anotada (“linha sem pivô”). O painel tira as conclusões: coluna sem
+pivô = dependentes; linha sem pivô = há alvos fora do alcance. Frações saem
+como `\tfrac`.
+
+```mdx
+<PivotColumns
+  cases={[
+    {
+      label: 'Bases P, Q e R',
+      names: ['\\vec{p}', '\\vec{q}', '\\vec{r}'],
+      start: [[2, 0, 2], [1, 1, 3], [0, 2, 4]],
+      steps: [
+        {op: 'L_2 \\leftarrow L_2 - \\tfrac{1}{2}L_1', row: 1, m: [[2, 0, 2], [0, 1, 2], [0, 2, 4]]},
+        {op: 'L_3 \\leftarrow L_3 - 2L_2', row: 2, m: [[2, 0, 2], [0, 1, 2], [0, 0, 0]]},
+      ],
+    },
+  ]}
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `cases` | `[{label, names, start, steps: [{op, row, m}]}]`: matriz inicial e, para cada operação, o texto (LaTeX), a linha trocada (a partir de 0) e a matriz depois dela |
+| `initial` | caso mostrado primeiro |
+| `caption` | legenda |
+
+## LinearGridMorph
+
+A malha do plano se deformando aos poucos, do plano original até a
+transformação (lição 11.6). A malha clara ao fundo é o plano antes; a malha
+cinza é o plano no instante atual; e1 (tom 1), e2 (tom 2) e o quadrado de lado 1
+(tom 3) acompanham. Os rótulos só aparecem com a figura parada, para nenhum
+quadro do meio ter rótulo atravessando o desenho. O painel escreve a matriz do
+instante e as duas colunas, cada uma na cor da sua seta.
+
+O caminho do movimento depende do tipo:
+
+- `matrix`: a matriz do meio do caminho é (1 − s)I + sA, e cada ponto anda em
+  linha reta. Na reflexão, o plano fica “de lado” no meio, como uma página
+  virando;
+- `rotation` (graus): o ângulo cresce de 0 até θ e a malha gira sem se
+  deformar (a mistura de I com a matriz encolheria a malha no meio);
+- `shift`: a malha escorrega. Com `matrix` e `shift` juntos, primeiro age a
+  matriz (a origem fica parada) e depois tudo escorrega: é a camada afim;
+- `warp`: `'parabola'` é (x, y + x²/4) e `'square'` é (x², y), com as linhas
+  amostradas, que saem curvas.
+
+```mdx
+<LinearGridMorph matrix={[[2, -1], [1, 1]]} />
+
+<LinearGridMorph
+  slider={{kind: 'rotation', label: 'Ângulo θ', min: 0, max: 360, step: 15, initial: 30, unit: '°', digits: 0}}
+  showCircle showAngle window={[-2, 2, -2, 2]} unit={72}
+/>
+
+<LinearGridMorph
+  presets={[
+    {label: 'Escala', matrix: [[2, 0], [0, 1]]},
+    {label: 'Rotação de 30°', rotation: 30},
+    {label: 'Malha escorregada', shift: [3, 1], formula: 'T(\\vec{v}) = \\vec{v} + (3,\\ 1)'},
+  ]}
+  showOrigin
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `matrix`, `rotation`, `shift`, `warp` | a transformação (ver acima); `matrix` por linhas, como no papel |
+| `presets` | botões `[{label, matrix?, rotation?, shift?, warp?, formula?, note?, vectors?, points?, polygon?, labels?, basisLabels?, basisOffsets?}]`; cada clique anima de novo a partir do plano original |
+| `slider` | `{kind, label, min, max, step, initial, unit, digits}`; `kind` é `'rotation'` (graus), `'shear'` (o k de [[1, k], [0, 1]]), `'scaleX'`, `'uniform'` ou `'progress'` (quanto da transformação já aconteceu, de 0 a 100%) |
+| `formula`, `note` | troca a matriz do painel por uma fórmula (translação, mapa que entorta) e acrescenta uma frase |
+| `vectors` | `[{v, label, imageLabel, tone, offset, imageOffset, steps}]`; `imageLabel: 'auto'` escreve as coordenadas do destino; `steps` desenha a receita de v como passos de e1 (faixa azul) e de e2 (faixa laranja) na malha do instante |
+| `points` | `[{at, label, imageLabel, tone, trail, offset, imageOffset}]`; `trail` liga o ponto ao lugar de onde saiu (bolinha vazada) |
+| `dots`, `dotTrails` | `[x0, x1, y0, y1]`: rede de pontos inteiros que viajam juntos, com rastro opcional |
+| `polygon` | `{points, tone, labels: [{at, label, imageLabel, offset, imageOffset}]}`; o contorno de antes fica tracejado |
+| `trace` | `{at, label, tone, offset}`: o caminho de um ponto (arco, na rotação) e o rótulo do destino (como o “?” do motivador) |
+| `labels` | rótulos fixos `[{at, math, tone, dx, dy, anchor}]`, que não se movem |
+| `showGrid`, `ghost`, `showBasis`, `showSquare`, `showCircle`, `showAngle`, `showOrigin`, `readout` | liga e desliga as peças; `showOrigin` marca a origem que sai do lugar e `T(\vec{0})` |
+| `basisLabels`, `basisOffsets` | rótulos do fim para e1 e e2 (padrão: as coordenadas das colunas; `false` esconde) e deslocamentos `[dx, dy, anchor]` |
+| `window`, `unit`, `extent`, `duration` | janela `[xMin, xMax, yMin, yMax]`, pixels por unidade, alcance da malha, duração |
+| `caption`, `label`, `replayLabel` | legenda, texto acessível e o botão de ver de novo |
+
+## LinearColumnsDrag
+
+As colunas da matriz são os destinos de e1 e e2 (lição 11.6). O aluno arrasta
+as pontas redondas, azul (destino de e1) e laranja (destino de e2), de meia em
+meia casa; a malha inteira acompanha, e o painel escreve a matriz com essas
+setas como colunas. O vetor v é refeito na malha nova como x passos azuis e y
+passos laranja, e a conta pelas colunas sai embaixo. Quando as duas colunas
+caem na mesma reta, o painel avisa que a malha achatou. As pontas também
+andam pelas setas do teclado. Ao entrar na tela, as pontas saem de e1 e e2 e
+caminham até a matriz inicial.
+
+```mdx
+<LinearColumnsDrag />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | as duas colunas iniciais, `[[a, c], [b, d]]` (padrão (2, 1) e (−1, 1)) |
+| `v` | o vetor da receita (padrão (1, 2); o texto do painel supõe a primeira coordenada 1) |
+| `presets` | botões `[{label, cols}]` (padrão: começo, identidade, esticar, girar 90°, cisalhar, achatar) |
+| `window`, `unit`, `snap` | janela, escala e passo do arrasto |
+| `caption` | troca a legenda |
+
+## LinearityCheck
+
+As duas condições da linearidade vistas no desenho (lição 11.6). Dois painéis,
+antes e depois; o de depois mostra a malha se transformando aos poucos.
+
+- `mode="sum"`: antes, u (azul), v (laranja) e a diagonal u + v (verde) do
+  paralelogramo; depois, T(u), T(v), o canto T(u) + T(v) do paralelogramo novo
+  (bolinha vazada) e a seta verde T(u + v). A condição vale quando a ponta
+  verde cai na bolinha.
+- `mode="scale"`: antes, v e k·v na reta pela origem; depois, T(v), k·T(v)
+  (bolinha vazada) e T(kv). Deslizante de k de −1 a 2.
+
+Os botões trocam a transformação: a linear T(x, y) = (2x, x + y), a translação
+v + (3, 1) e T(x, y) = (x², y). O painel faz as duas contas com números.
+
+```mdx
+<LinearityCheck mode="sum" />
+<LinearityCheck mode="scale" />
+```
+
+| Prop | O que faz |
+|---|---|
+| `mode` | `'sum'` ou `'scale'` |
+| `maps`, `initialMap` | quais transformações aparecem nos botões (`'matrix'`, `'translation'`, `'square'`) e a inicial |
+| `u`, `v`, `k` | vetores e número (padrão u = (1, 1), v = (1, 0) na soma e v = (1, 1) no múltiplo, k = 2); as janelas são fixas para esses valores |
+| `caption` | troca a legenda |
+
+As três figuras da lição 11.6 dividem as peças de desenho de
+`src/components/LinearGridMorph/plane.jsx` (setas, malha fixa e transformada,
+polígono, rótulos) e o CSS de `LinearGridMorph/styles.module.css`.
+
+## ProductComposeGrid
+
+Produto de matrizes como comandos em sequência (lição 11.7). A malha do plano
+passa por uma transformação de cada vez: o passo 1 inteiro, uma pausa, o passo
+2 a partir de onde o passo 1 deixou, e assim por diante. Na pausa, e₁ (tom 1),
+e₂ (tom 2) e os pontos ganham rótulo com o lugar onde estão; durante o
+movimento, nenhum rótulo aparece. Acima de cada painel, uma fila de etiquetas
+(“1. R: girar 90°”, “2. E: esticar”) acende o passo da vez. Embaixo, o painel
+escreve a matriz acumulada depois de cada passo, com o nome do produto montado
+da direita para a esquerda (`ER`, `EC`, e potências quando a letra se repete:
+`C^2`, `C^3`).
+
+Vários painéis (`panels`) animam ao mesmo tempo: é assim que a figura compara
+ER com RE, (ER)C com E(RC) (um passo pode ser um produto já pronto, com nome
+`(ER)`), ou dois comandos com a matriz única. Caminho de cada passo: rotação
+(`rotation`, graus) gira sem deformar; matriz qualquer anda em linha reta,
+(1 − s)I + sA, aplicada sobre o que os passos anteriores já fizeram.
+
+O logotipo (`polygon`) fica no tom 3 com o contorno original tracejado; cada
+ponto (`points`) deixa um rastro tracejado com bolinhas vazadas nas paradas.
+
+```mdx
+<ProductComposeGrid
+  steps={[{name: 'R', text: 'girar 90°', rotation: 90}, {name: 'E', text: 'esticar 2 vezes', matrix: [[2, 0], [0, 1]]}]}
+  progress
+  window={[-2.8, 1.8, -1.2, 1.8]}
+  unit={62}
+/>
+
+<ProductComposeGrid
+  panels={[
+    {title: 'ER', steps: [{name: 'R', rotation: 90}, {name: 'E', matrix: [[2, 0], [0, 1]]}]},
+    {title: 'RE', steps: [{name: 'E', matrix: [[2, 0], [0, 1]]}, {name: 'R', rotation: 90}]},
+  ]}
+  polygon={{points: [[0, 0], [2, 0], [2, 1], [1, 1], [1, 2], [0, 2]], tone: 3}}
+  showSquare={false}
+  window={[-4.6, 4.6, -0.6, 4.6]}
+  unit={30}
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `steps` | um painel só: `[{name, text?, matrix? \| rotation?}]`, na ordem em que agem (o primeiro age primeiro); `matrix` por linhas |
+| `panels` | vários painéis: `[{title, steps, points?, polygon?, basisLabels?, basisOffsets?, cumNames?, note?, window?, unit?}]`; `title` em LaTeX |
+| `presets` | botões `[{label, steps? \| panels?, window?, unit?, note?, caption?, polygon?, points?}]`; cada clique anima de novo |
+| `initialPreset` | botão escolhido no começo (padrão 0) |
+| `polygon` | `{points, tone}`: o logotipo levado pelos comandos |
+| `points` | `[{at, labels?, offsets?, tone?, trail?}]`; sem `labels`, o rótulo de cada parada são as coordenadas; `offsets[k]` é `[dx, dy, anchor]` da parada k (0 = começo) |
+| `basisLabels` | `false` esconde os rótulos de e₁ e e₂ (o começo também); uma lista `[[l1, l2], ...]` dá os rótulos de cada parada depois do começo; sem a prop, as coordenadas |
+| `basisOffsets` | `[[off1, off2], ...]` por parada, começando pelo começo |
+| `cumNames` | troca o nome do produto acumulado de cada passo no painel (por exemplo, para não escrever `ER` antes de a lição definir a notação) |
+| `progress` | deslizante de quanto dos comandos já aconteceu (0 a 100%) |
+| `showGrid`, `showBasis`, `showSquare`, `readout` | liga e desliga as peças |
+| `window`, `unit`, `extent`, `stepDuration`, `pause` | janela, escala, alcance da malha, duração de cada passo e da pausa |
+| `caption`, `label`, `replayLabel` | legenda, texto acessível, botão de ver de novo |
+
+Usa as peças de desenho de `src/components/LinearGridMorph/plane.jsx` e o CSS
+de `LinearGridMorph/styles.module.css`.
+
+## ProductRowColumn
+
+A regra linha por coluna, entrada por entrada (lição 11.7). Arranjo clássico:
+B em cima, A à esquerda, o produto AB embaixo à direita. A linha i de A fica na
+altura da linha i do produto, e a coluna j de B no prumo da coluna j: a casa
+(i, j) está no cruzamento das duas faixas. Na animação, cada entrada de
+`order` acende a linha de A (tom 1) e a coluna de B (tom 2), pinta de verde o
+par da vez (1º com 1º, 2º com 2º), escreve a conta no
+painel e põe o resultado na casa (tom 3). As entradas fora de `order`
+aparecem juntas no fim. Parada, a figura aceita clique (ou Enter) numa casa
+do produto e mostra a conta dela.
+
+```mdx
+<ProductRowColumn A={[[2, 0], [0, 1]]} B={[[0, -1], [1, 0]]} nameA="E" nameB="R" selected={[0, 1]} />
+
+<ProductRowColumn
+  A={[[3, 2, 5, 4], [10, 0, 20, 6], [1, 5, 2, 3]]}
+  B={[[4, 5], [10, 8], [2, 3], [5, 6]]}
+  nameA="Q" nameB="P"
+  rowNames={['Centro', 'Bairro', 'Shopping']}
+  colNames={['Forn. 1', 'Forn. 2']}
+  innerNames={['café', 'queijo', 'pão', 'leite']}
+  order={[[0, 0], [2, 1]]}
+  cell={40}
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `A`, `B` | as matrizes, por linhas |
+| `nameA`, `nameB`, `nameAB` | nomes em LaTeX (padrão `A`, `B` e o produto dos dois) |
+| `rowNames`, `colNames`, `innerNames` | nomes das linhas de A, das colunas de B e do índice do meio (colunas de A e linhas de B); texto comum |
+| `order` | entradas animadas, `[[i, j], ...]` contando do 0 (padrão: todas, linha por linha) |
+| `selected` | casa em destaque quando a figura está parada (o quadro final e a captura) |
+| `cell`, `cellR`, `cellH`, `pairDuration` | largura das casas de A, largura das casas de B e do produto (padrão o maior entre `cell` e 50), altura, tempo de cada par |
+| `caption`, `label`, `replayLabel` | legenda, texto acessível, botão |
+
+Usa `Cell`, `Brackets`, `num` e `dotTex` de `MatrixKit`.
+
+## ProductShapeFit
+
+Dimensões compatíveis como peças de dominó (lição 11.7). Cada matriz é uma
+peça com dois números, linhas | colunas, e embaixo o formato da matriz em
+quadradinhos. As peças deslizam uma em direção à outra. Quando os números que
+se encostam são iguais, as metades de dentro ficam verdes (tom 3), se apagam,
+e aparece a peça do resultado com os números das pontas. Quando são
+diferentes, as metades ficam tracejadas em laranja (tom 2), as peças param
+separadas por “≠” e o resultado “não existe”. Aceita cadeias de três peças
+(cada junção é conferida). O painel explica o veredito e, com duas peças, a
+leitura de máquinas (o que B entrega e o que A recebe). A transposta entra
+como peça virada: Pᵀ é a peça de P com os números trocados.
+
+```mdx
+<ProductShapeFit
+  presets={[
+    {label: '(2 × 3) vezes (3 × 4)', tiles: [{name: 'A', dims: [2, 3]}, {name: 'B', dims: [3, 4]}]},
+    {label: 'PQS', tiles: [{name: 'P', dims: [2, 3]}, {name: 'Q', dims: [3, 3]}, {name: 'S', dims: [3, 1]}]},
+  ]}
+/>
+
+<ProductShapeFit free />
+```
+
+| Prop | O que faz |
+|---|---|
+| `presets` | botões `[{label, tiles: [{name, dims: [linhas, colunas]}], note?}]`; `name` em LaTeX |
+| `initialPreset` | botão escolhido no começo (padrão 0) |
+| `free` | troca os botões por quatro deslizantes (linhas e colunas de A e de B, de 1 a 4); anima a cada mudança |
+| `caption`, `label`, `replayLabel` | legenda, texto acessível, botão |
+
+## TwoLayersCollapse
+
+Duas camadas do tipo W x + b valem por uma; a ReLU entre elas quebra isso
+(lição 11.7). À esquerda, a rede pequena (3 entradas, 2 neurônios no meio no
+tom 1, 1 saída no tom 2) com os números da entrada atual; com a ReLU, o
+neurônio que recebeu um negativo mostra 0 e “era −2”. À direita, o gráfico da
+saída quando a entrada anda pela reta x = (t, 0, 0): a camada única
+equivalente (tom 1, tracejada) é sempre uma reta; a rede (tom 2) cai em cima
+dela sem a ReLU e vira uma linha dobrada com a ReLU. Na animação, t vai de
+−4 a 2 traçando a curva da rede; depois, o deslizante move t. O painel faz as
+duas contas e diz se as saídas são iguais.
+
+```mdx
+<TwoLayersCollapse toggle={false} />
+<TwoLayersCollapse relu />
+```
+
+| Prop | O que faz |
+|---|---|
+| `W1`, `b1`, `W2`, `b2` | as camadas (padrão: a camada da 11.3 e a segunda camada da 11.7; saída 23 em (2, 1, 3)); o desenho supõe 3 entradas, 2 neurônios e 1 saída |
+| `relu` | começa com a ReLU entre as camadas |
+| `toggle` | mostra o botão que põe e tira a ReLU |
+| `tRange`, `yRange`, `initialT` | alcance de t e da saída no gráfico, t inicial do deslizante |
+| `caption`, `label` | legenda, texto acessível |
+
+## InverseCipher
+
+O código da filial da lição 11.8 (cifra de Hill pequena). Letras viram números
+pela posição no alfabeto (A = 1), os números andam em pares, e cada par passa
+pela matriz. Cada coluna da figura é um par. Os painéis são SVGs separados que
+quebram linha no celular.
+
+- `mode="encode"`: painel 1, a palavra `word` codificada coluna por coluna
+  (letras, números, seta com o nome da matriz, par codificado); painel 2, os
+  pares `received` com setas tracejadas para cima e “?” no lugar das letras.
+- `mode="decode"`: os pares `received` descem pela inversa (seta azul com
+  `inverseLabel`), viram números e letras; no fim, a palavra numa caixa verde.
+- `mode="ambiguous"`: as duas palavras de `words` passam pela matriz e
+  convergem para o mesmo par; setas tracejadas de volta com “?”.
+
+```mdx
+<InverseCipher mode="encode" word="PAGO" received={[[49, 27], [32, 18], [31, 26]]} />
+<InverseCipher mode="decode" received={[[49, 27], [32, 18], [31, 26]]} />
+<InverseCipher mode="ambiguous" matrix={[[2, 4], [1, 2]]} words={['AB', 'CA']} matrixLabel="B" />
+```
+
+| Prop | O que faz |
+|---|---|
+| `mode` | `'encode'`, `'decode'` ou `'ambiguous'` |
+| `word`, `words` | palavra de exemplo (número par de letras) e as duas palavras do modo ambíguo |
+| `matrix`, `inverse` | a matriz do código (padrão [[2, 1], [1, 1]]) e a inversa usada para decodificar (padrão [[1, −1], [−1, 2]]) |
+| `received` | pares recebidos |
+| `matrixLabel`, `inverseLabel` | nomes nas setas (padrão `A` e `A^{-1}`) |
+| `exampleTitle`, `receivedTitle`, `caption`, `replayLabel` | textos |
+
+## InverseRoundTrip
+
+A malha do plano passando por uma sequência de transformações, uma depois da
+outra. Durante a etapa k, a matriz do instante é S_k(s) vezes o acumulado das
+etapas anteriores, com S_k(s) indo da identidade até a matriz da etapa (em
+linha reta, ou girando, numa rotação). Há uma pausa entre as etapas; com tudo
+parado, os pontos mostram as coordenadas. Os pontos deixam um rastro
+tracejado pelas paradas; se o ponto não volta ao começo, a partida fica
+marcada com uma bolinha vazada. Embaixo, uma etiqueta por etapa (acende na
+etapa atual) e o caminho de cada ponto escrito com setas.
+
+```mdx
+<InverseRoundTrip
+  presets={[
+    {label: 'Código da filial', stages: [{matrix: [[2, 1], [1, 1]], tex: 'A'}, {matrix: [[1, -1], [-1, 2]], tex: 'A^{-1}'}], points: [{at: [1, 2]}], note: '...'},
+    {label: 'Girar 30°', stages: [{rotation: 30, tex: '...'}, {rotation: -30, tex: '...'}], points: [{at: [2, 0]}]},
+  ]}
+  window={[-2, 5, -2, 4]}
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `presets` | botões `[{label, stages, points, note}]`; sem `presets`, use `stages`, `points` e `note` direto |
+| `stages` | `[{matrix}` ou `{rotation}` (graus), `tex` (nome da etapa em LaTeX), `text` (palavra antes do nome, como “meia”)`]` |
+| `points` | `[{at, tone, offset, offsets}]`; `offsets[i]` é o deslocamento do rótulo depois de i etapas, `[dx, dy, anchor]` |
+| `showBasis`, `showSquare` | setas de e1 e e2 (sem rótulo) e o quadrado de lado 1 |
+| `window`, `unit`, `extent`, `digits` | janela, escala, alcance da malha, casas decimais |
+| `caption`, `label`, `replayLabel` | textos |
+
+## InverseFromSystem
+
+O sistema 2x + y = p, x + y = q resolvido com letras no lado direito (lição
+11.8). A animação tem três passos, cada um com as linhas envolvidas pintadas e
+o nome do passo à direita: subtrair as equações (sai x = p − q), trocar o x na
+segunda (sai y = −p + 2q) e escrever os coeficientes à vista. Os quatro
+coeficientes voam para dentro de uma matriz: os de p formam a primeira coluna
+(tom 1), os de q, a segunda (tom 2). Os botões trocam (p, q) pelos pares
+recebidos e o painel faz a conta e diz as letras. Os textos são os da matriz
+[[2, 1], [1, 1]].
+
+```mdx
+<InverseFromSystem caption="..." />
+```
+
+Props: `pairs` (padrão os três pares da mensagem), `caption`.
+
+## InverseFormula2x2
+
+A fórmula da inversa 2 × 2 como receita animada. Em cima, A; embaixo, os
+números descem: a e d (tom 1, a diagonal) fazem arcos e trocam de lugar, b e c
+(tom 2) descem retos e ganham o sinal de menos (com um círculo piscando), o
+fator 1/(ad − bc) aparece na frente e, por fim, a matriz já dividida, com
+frações exatas (`SystemElimination/frac.js`). Com ad − bc = 0, o resultado é
+“divisão por zero”. Ao lado, um plano pequeno com as colunas de A como setas
+neutras, a malha transformada e o quadrado verde, que achata quando
+ad − bc = 0. Botões − e + nas quatro entradas (de −5 a 5) e matrizes prontas
+(que repetem a animação); o painel calcula ad − bc e confere A A⁻¹ = I.
+
+```mdx
+<InverseFormula2x2 caption="..." />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | matriz inicial (padrão [[2, 1], [1, 1]]) |
+| `presets` | botões `[{label, m}]` (padrão: A do código, [[3, 5], [1, 2]], [[4, 2], [3, 2]], B da colega) |
+| `caption` | legenda |
+
+## InverseCollapse
+
+Uma matriz sem inversa achata o plano, e dois pontos diferentes (azul e
+laranja, partida vazada) caem no mesmo lugar. Depois do achatamento, duas
+setas tracejadas saem da chegada para as duas partidas, com um “?”. O painel
+escreve a matriz, ad − bc e as duas imagens.
+
+Com `slider`, a matriz é `base` com a entrada de baixo, à direita, trocada
+pelo k do deslizante; sem animação da malha, e ao entrar na tela o k caminha
+de `tourFrom` até `initial`. Quando ad − bc = 0 as imagens coincidem.
+
+```mdx
+<InverseCollapse
+  presets={[
+    {label: 'B, da colega', matrix: [[2, 4], [1, 2]], imageOffset: [-12, 20, 'end'], questionOffset: [0, -14]},
+    {label: 'Matriz nula', matrix: [[0, 0], [0, 0]]},
+  ]}
+/>
+<InverseCollapse slider={{base: [[2, 4], [1, 2]], min: 0, max: 4, step: 0.25, initial: 2, tourFrom: 0, label: 'Entrada k'}} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `presets` | botões `[{label, matrix, points, labelOffsets, imageOffset, questionOffset}]` |
+| `matrix`, `points` | sem botões; `points` são os dois pontos (padrão (1, −1) e (−3, 1)) |
+| `slider` | `{base, min, max, step, initial, tourFrom, label}` |
+| `window`, `unit`, `extent`, `imageOffset` | janela, escala, alcance da malha, rótulo da chegada comum |
+| `caption`, `label`, `replayLabel` | textos |
+
+## InverseGaussJordan
+
+O método de Gauss-Jordan animado, na linguagem visual do `SystemElimination`
+(linha que muda em laranja, linha que empresta contornada de azul, números
+antigos dando lugar aos novos, troca de linhas com seta dupla). A diferença: a
+barra fica no meio, com a identidade acrescentada à direita, e a operação do
+passo é escrita embaixo da matriz (cabe no celular). Os nomes dos blocos ficam
+em cima: `A` e `I` no começo, `I` (verde) e `A^{-1}` (azul) no fim, com
+caixas nas duas metades. Se a esquerda termina com uma linha de zeros, ela fica
+marcada em laranja. Botões “Ver tudo de novo”, “Voltar ao início” e “Próximo
+passo”; o painel mostra o texto e a conta de cada passo.
+
+```mdx
+<InverseGaussJordan
+  start={[[2, 1], [1, 1]]}
+  steps={[
+    {ops: [{op: 'swap', rows: [1, 2]}], text: '...'},
+    {ops: [{op: 'add', row: 2, from: 1, k: -2}], text: '...', calc: '...'},
+    {ops: [{op: 'scale', row: 2, k: -1}], text: '...'},
+    {ops: [{op: 'add', row: 1, from: 2, k: -1}], text: '...'},
+  ]}
+  endText="..."
+/>
+```
+
+Props: `start` (linhas de A, inteiros; a identidade é acrescentada), `steps`
+(como no `SystemElimination`), `name` (padrão `'A'`), `startText`, `endText`,
+`caption`. Usa `SystemElimination/frac.js`.
+
+## InverseSolveDrag
+
+Com a inversa, A x = b tem uma única solução. O aluno arrasta o ponto b
+(laranja, de meia em meia casa, dentro do quadrado tracejado de −2 a 2), ou o
+move pelas setas do teclado. Com a matriz A = [[2, 1], [1, 1]] do código,
+aparece o único x = A⁻¹b (azul) e uma seta tracejada de x até b com o nome A.
+Com a matriz B = [[2, 4], [1, 2]], a reta que B alcança aparece tracejada em
+laranja: b fora dela, nenhuma solução; b nela, a reta inteira de soluções
+x + 2y = b₂ em azul. Ao entrar na tela, o b faz um pequeno passeio. As duas
+matrizes estão fixas no componente.
+
+```mdx
+<InverseSolveDrag caption="..." />
+```
+
+Props: `window`, `unit`, `box` (região do arrasto), `snap`, `caption`.
+
+## DetGridMorph
+
+A malha do plano se deformando, com o determinante acompanhando (lição
+11.9). Uma ou mais etapas aplicadas em sequência; cada etapa é uma matriz (a
+matriz do instante é (1 − s)I + sM, cada ponto anda em linha reta) ou uma
+rotação (o ângulo cresce, sem encolher a malha no meio). O painel mostra o
+determinante da transformação do instante; com mais de uma etapa, a cadeia
+“área do quadrado de lado 1: 1 → ×det₁ → ×det₂”, só com as etapas já
+concluídas. As peças de área ficam no tom 3; e1 e e2 nos tons 1 e 2. Rótulos
+só com a figura parada. Quando o determinante final é negativo ou zero, o
+painel diz que o plano foi virado ou achatado.
+
+```mdx
+<DetGridMorph hideNumbers lots={[4, 3]} unit={26}
+  presets={[
+    {label: 'Matriz A', name: 'A', matrix: [[3, 1], [1, 2]], window: [-1, 16, -1, 11]},
+    {label: 'Matriz B', name: 'B', matrix: [[2, -2], [1, -1]], window: [-7, 9, -4, 5]},
+  ]}
+/>
+
+<DetGridMorph matrix={[[2, 1], [1, 2]]} window={[-1, 6, -1, 5.5]}
+  presets={[{label: 'Praça em L', region: {points: [[0, 0], [2, 0], [2, 1], [1, 1], [1, 2], [0, 2]]}}]}
+/>
+
+<DetGridMorph
+  presets={[{label: 'ER', stages: [{rotation: 90, name: 'R'}, {matrix: [[2, 0], [0, 1]], name: 'E'}],
+    points: [{at: [2, 1], label: '(2,\\ 1)', imageLabel: '(-2,\\ 2)'}]}]}
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `matrix`, `rotation`, `stages` | a transformação: uma matriz (por linhas), uma rotação em graus ou uma lista de etapas `[{matrix} ou {rotation}, name]` aplicadas em sequência; `name` (LaTeX) aparece na cadeia de fatores |
+| `presets` | botões; cada um pode trazer qualquer prop de configuração (`matrix`, `stages`, `lots`, `region`, `points`, `labels`, `window`, `name`, `note`, `caption`, `showBasis`, `basisOffsets`, `lotLabelOffset`); cada clique anima de novo |
+| `lots` | `[w, h]`: terreno de w × h lotes de lado 1 (o do canto mais escuro, com a área escrita nele); o painel dá a área de cada lote e do terreno |
+| `region` | `{points, label, offset}`: região com contorno tracejado antes e verde depois; o painel dá as duas áreas e a razão |
+| `points` | `[{at, label, imageLabel, tone, offset, imageOffset}]`: bolinha vazada no lugar de antes, cheia no destino, rastro tracejado |
+| `labels` | rótulos fixos `[{at, math, tone, dx, dy, anchor}]` |
+| `hideNumbers` | o painel mostra só a matriz, e o lote do canto ganha “?” (problema motivador) |
+| `showBasis`, `showSquare`, `basisOffsets` | setas de e1 e e2 e o quadrado de lado 1 (este some com `lots` ou `region`); deslocamentos `[dx, dy, anchor]` dos rótulos |
+| `window`, `unit`, `extent`, `stageDuration` | janela `[xMin, xMax, yMin, yMax]`, escala, alcance da malha, duração de cada etapa |
+| `name`, `note`, `caption`, `label`, `replayLabel` | nome da matriz no modo `hideNumbers`, frase extra no painel, legenda, texto acessível, botão de ver de novo |
+
+`DetGridMorph/det.js` (sem desenho) tem as contas 2 × 2 usadas pelas figuras
+da 11.9: `det2`, `mul2`, `apply2`, `mix2`, `rot2`, `stageMatrix`,
+`signedArea` (fórmula do cadarço) e `clean`.
+
+## DetCutout
+
+O recorte que mede a área do paralelogramo das colunas (a, c) e (b, d)
+(lição 11.9). O paralelogramo (tom 1) fica dentro do retângulo tracejado de
+(a + b) por (c + d). As seis peças de fora, quatro triângulos (tom 2) e dois
+retângulos dos cantos (tom 3), saem aos pares e ficam afastadas no quadro
+final, cada uma com a área escrita. Cotas embaixo e à esquerda. O painel
+subtrai as áreas, uma parcela por par, até o resultado.
+
+```mdx
+<DetCutout />
+<DetCutout letters />
+```
+
+| Prop | O que faz |
+|---|---|
+| `cols` | as duas colunas `[[a, c], [b, d]]` (padrão (3, 1) e (1, 2), o loteamento); o desenho supõe o formato do loteamento (entradas positivas, primeira coluna mais deitada) |
+| `letters` | escreve as medidas e as áreas em letras, e a conta termina em ad − bc |
+| `unit`, `caption` | escala e legenda |
+
+## DetShearSlide
+
+O escorregão que não muda a área (lição 11.9). O lado u = (3, 1) fica
+parado; o lado v = (1, 2) escorrega na direção de u (v − t·u), com a ponta
+andando sobre a reta tracejada paralela a u. O contorno tracejado é o
+paralelogramo de antes; a altura aparece pontilhada. A animação para em
+t = 1/3, com o lado em pé em (0, 5/3) e a cota 3 embaixo (área 3 × 5/3). O
+deslizante escolhe t de −4/12 a 8/12; o painel faz v − t·u e o determinante
+com frações exatas (`SystemElimination/frac.js`). Só `unit` e `caption`.
+
+## DetColumnsDrag
+
+Área e sinal do determinante juntos (lição 11.9). Duas pontas arrastáveis
+(também pelo teclado, de meia em meia casa): a coluna azul (destino de e1) e
+a laranja (destino de e2). A malha cinza acompanha. O paralelogramo das
+colunas é verde; quando o determinante é negativo, fica hachurado (o verso
+da folha). Um arco com seta mostra o giro mais curto da coluna azul até a
+laranja. Embaixo, uma reta numérica de −12 a 12 marca o determinante, com a
+faixa verde do zero até ele. O painel faz ad − bc, dá a área e diz se o
+giro é anti-horário (não virou) ou horário (virou).
+
+```mdx
+<DetColumnsDrag path={{to: [2, -1]}} window={[-3, 5.5, -2.5, 4]} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | colunas iniciais `[[a, c], [b, d]]` (padrão (3, 1) e (1, 2)) |
+| `path` | `{to}`: a animação leva a coluna laranja de `initial[1]` até `to` em linha reta (sem `path`, as pontas saem de e1 e e2) |
+| `presets` | botões `[{label, cols}]` (padrão: loteamento, colunas trocadas, reflexão no eixo y, colunas na mesma reta) |
+| `window`, `unit`, `snap`, `caption` | janela, escala, passo do arrasto, legenda |
+
+## DetBox3D
+
+O cubo de aresta 1 virando a caixa inclinada das três colunas (lição 11.9),
+desenhado com o `SpaceScene`. As duas primeiras colunas em azul, a terceira
+em laranja, a caixa em verde (chão mais forte, teto claro, arestas
+laterais). O painel dá o determinante 3 × 3 do instante e o volume; quando
+o volume é zero, diz que a caixa achatou. O deslizante gira a cena em torno
+de z (−40° a 40°); o enquadramento é fixo para todas as matrizes e vistas.
+
+```mdx
+<DetBox3D
+  axesMax={[4, 5, 6]}
+  presets={[
+    {label: 'Bases P, Q e S', cols: [[2, 1, 0], [0, 1, 2], [1, 0, 1]], note: '...'},
+    {label: 'Matriz T', cols: [[2, 0, 0], [1, 2, 0], [1, 1, 2]], floor: true, heightLabel: '\\text{altura } 2'},
+  ]}
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `presets` | `[{label, cols, floor, heightLabel, note, caption, offsets}]`; `cols` são as **colunas** (não as linhas); `floor` destaca o chão e desenha a altura da terceira coluna até o chão; `offsets` são três `{dx, dy, anchor}` dos rótulos das colunas |
+| `axesMax` | até onde vão os eixos |
+| `initial`, `unit`, `caption` | botão inicial, escala, legenda |
+
+## DetRowOps
+
+O efeito de cada operação de linha no determinante (lição 11.9). Começa na
+matriz do loteamento [[3, 1], [1, 2]], com o paralelogramo das colunas em
+contorno tracejado. Cada botão faz uma operação, que é multiplicar pela
+esquerda por E; as colunas novas são E vezes as antigas, então a malha
+cinza (o plano passando por E) e o paralelogramo verde se movem juntos.
+Botões: L2 ← L2 − ⅓L1 (cisalhamento, det continua 5, a matriz fica
+triangular), L1 ↔ L2 (espelho em y = x, −5), L2 ← 2L2 (10), L2 ← −1·L2
+(espelho no eixo x, −5). O painel escreve a matriz antes e depois (frações
+exatas), os dois determinantes e o efeito. Só `unit` e `caption`.
+
+## DetElimination
+
+Cópia enxuta do `SystemElimination` (11.4) para matriz quadrada, sem a barra
+da aumentada, com o determinante acompanhando (lição 11.9). Em cada passo, a
+linha que muda fica laranja, a que empresta contornada de azul, e à direita
+aparecem a operação e o efeito dela (“det não muda”, “det troca de sinal”,
+“det × k”); na troca, seta dupla à esquerda. No fim, caixas verdes na
+diagonal, zeros embaixo dela sombreados, e o painel multiplica a diagonal e
+corrige pelas trocas. Botões: ver tudo de novo, voltar ao início, próximo
+passo.
+
+```mdx
+<DetElimination
+  start={[[0, 2, 1], [1, 1, 2], [2, 4, 1]]}
+  steps={[
+    {ops: [{op: 'swap', rows: [1, 2]}], text: '...'},
+    {ops: [{op: 'add', row: 3, from: 1, k: -2}], text: '...'},
+    {ops: [{op: 'add', row: 3, from: 2, k: -1}], text: '...'},
+  ]}
+  startText="..."
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `start` | linhas da matriz quadrada (inteiros) |
+| `steps` | `[{ops, text}]`, operações como em `SystemElimination/frac.js` |
+| `startText`, `caption` | painel antes do primeiro passo e legenda |
+
+## SarrusDiagonals
+
+A regra de Sarrus animada (lição 11.9). A matriz 3 × 3 com as duas primeiras
+colunas copiadas à direita (mais claras, depois de uma linha tracejada). As
+seis diagonais acendem uma de cada vez: as três que descem em azul (produto
+somado), as três que sobem em laranja (produto subtraído). Cada produto
+entra numa lista à direita (somados numa coluna, subtraídos na outra), e o
+painel monta a soma até o resultado.
+
+```mdx
+<SarrusDiagonals letters />
+<SarrusDiagonals matrix={[[1, 2, 3], [2, 5, 7], [1, 3, 5]]} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `matrix` | a matriz 3 × 3 por linhas (padrão a matriz M da 11.9) |
+| `letters` | troca os números pelas letras a até i |
+| `caption` | legenda |
+
+## RankColumnKeeper
+
+O problema motivador da lição 11.10. Uma tabela HTML com a planilha; o
+cabeçalho de cada coluna é um botão que apaga a coluna (ou a traz de volta).
+Para cada coluna apagada, a figura procura, com conta exata, uma receita que a
+refaça com as colunas guardadas: a última linha da tabela diz “sim” (verde) ou
+“não” (laranja), e o painel escreve a receita, como t = f + o. Cada escolha de
+colunas guardadas que refaz tudo vai para o registro, com o número de colunas;
+o painel mostra o menor número que já funcionou. Sem props, usa a planilha da
+loja (cinco colunas, posto 3).
+
+```mdx
+<RankColumnKeeper caption="..." />
+
+<RankColumnKeeper
+  columns={[{name: '\\vec{f}', header: 'Loja física'}, {name: '\\vec{o}', header: 'Online'}, {name: '\\vec{t}', header: 'Total'}]}
+  rows={[[100, 20, 120], [50, 30, 80], [0, 60, 60], [80, 0, 80]]}
+  initialDeleted={[]}
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `columns` | `[{name, header}]`: nome em LaTeX (aparece nas receitas) e título da coluna |
+| `rows` | a planilha, linha a linha (inteiros ou frações `[n, d]`) |
+| `rowHeader` | título da coluna das linhas (padrão “Cliente”) |
+| `initialDeleted` | índices das colunas que começam apagadas (padrão `[2]`, o total) |
+| `caption` | legenda |
+
+`RankColumnKeeper/exact.js` (sem desenho), com frações exatas do
+`SystemElimination/frac.js`: `rref(rows)` (forma escalonada reduzida e colunas
+dos pivôs), `rank`, `nullBasis(rows)` (um vetor do núcleo por coluna livre),
+`recipe(rows, kept, target)` (coeficientes que refazem uma coluna, ou `null`) e
+`comboTex(coef, names)` (a combinação em LaTeX, como `2\vec{f} + \vec{o}`).
+Usado também por `RankSheetEchelon` e `RankNullityTally`.
+
+## BasisTwoGrids
+
+Um ponto, dois endereços. O entregador vai da origem até o destino pelo mapa
+da prefeitura (x para leste, y para norte, em cinza, com rótulos
+`x\vec{e}_1` e `y\vec{e}_2`); a malha quadriculada apaga, entram as ruas da
+base (direção de b1 tracejada no tom 1, de b2 no tom 2) e ele refaz a viagem:
+a·b1 (tom 1) e depois b·b2 (tom 2). No fim, a seta verde da origem ao ponto.
+Rótulos de trecho só aparecem quando o trecho termina. O painel escreve os dois
+endereços; coordenadas fracionárias saem como `\tfrac` (meio quarteirão), e o
+painel avisa quando há meio quarteirão ou número negativo. Desenha no plano do
+`SpanCombo/plane.jsx`.
+
+```mdx
+<BasisTwoGrids caption="..." />
+```
+
+| Prop | O que faz |
+|---|---|
+| `basis`, `names` | os dois vetores da base (padrão (1, 1) e (1, −1)) e seus nomes em LaTeX |
+| `presets`, `initial` | destinos dos botões (padrão (5, 1), (2, 2), (7, 3), (1, 5), (3, 0)) e o primeiro |
+| `window`, `unit` | janela `{xMin, xMax, yMin, yMax}` e escala |
+| `caption` | legenda |
+
+## BasisAddressLoop
+
+Duas receitas para (5, 1) com as direções b1 = (1, 1), b2 = (1, −1) e
+e1 = (1, 0): receita 1 (azul) 3b1 + 2b2, receita 2 (laranja) 4e1 + b1. Depois,
+a volta fechada (verde) “ir pela 1 e voltar pela 2” é percorrida e pintada, e
+o painel escreve a conta da diferença, (3 − 1)b1 + (2 − 0)b2 + (0 − 4)e1 = 0.
+O botão “Só avenidas e travessas” deixa só a receita 1 e explica por que não
+há volta fechada com uma base. Números fixos.
+
+```mdx
+<BasisAddressLoop caption="..." />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initialMode` | `'three'` (padrão, três direções) ou `'base'` |
+| `caption` | legenda |
+
+## SubspaceClosure
+
+O teste do subespaço no plano. O conjunto candidato é uma faixa azul; dois
+deslizantes escolhem vetores u e v dele (laranja) e um terceiro o número k. A
+soma u + v (seta verde, com o paralelogramo tracejado) e o múltiplo k·u (seta
+verde tracejada) ganham bolinha cheia quando caem no conjunto e vazada quando
+escapam; a origem também. O painel responde às três condições da definição,
+com a conta de cada teste. Botões: reta y = 2x (subespaço), reta y = 2x + 2
+(começa em u = (1, 4), v = (−1, 0), soma (0, 4) fora) e os dois eixos juntos
+(começa em u = (2, 0), v = (0, 3), soma fora).
+
+```mdx
+<SubspaceClosure caption="..." />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | candidato inicial (0, 1 ou 2) |
+| `caption` | legenda |
+
+## DimensionSlots
+
+Dimensão como “quantos números”: quatro subespaços de R³ sobre o `SpaceScene`.
+Só a origem (nenhum deslizante), a reta gerada por p = (2, 1, 0), o plano
+x + z = 2y com a base p, q = (0, 1, 2) (começa em 0,5 e 0,5, o ponto
+(1, 1, 1)) e o espaço com a base canônica (com a caixa do ponto). As setas da
+base saem da origem nos tons 1, 2 e 3, e o ponto é montado como caminho, um
+trecho por vetor, animado a cada troca de botão. O painel compara o endereço
+na base com as três coordenadas comuns.
+
+```mdx
+<DimensionSlots caption="..." />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | caso inicial: 0 origem, 1 reta, 2 plano (padrão), 3 espaço |
+| `caption` | legenda |
+
+## RankSheetEchelon
+
+Escalonamento de uma planilha com colunas nomeadas, sem coluna de resultados.
+Cada passo aplica uma ou mais operações L_i ← L_i + k·L_j: as linhas que mudam
+ganham faixa azul, a operação curta (como −2L₁) aparece à direita de cada uma
+e os números novos aparecem no lugar dos velhos. No fim, pivôs circulados em
+verde, cada coluna marcada “guardada” (tom 1) ou “refeita” (sombreada, tom 2),
+“sem pivô” à direita das linhas de zeros, e o painel escreve o posto e a
+receita de cada coluna sem pivô em termos das colunas originais com pivô
+(lida da forma reduzida, conta exata). Botões: “Ver tudo de novo”, “Voltar ao
+início”, “Próximo passo”.
+
+```mdx
+<RankSheetEchelon
+  names={['\\vec{f}', '\\vec{o}', '\\vec{t}']}
+  headers={['Loja física', 'Online', 'Total']}
+  start={[[100, 20, 120], [50, 30, 80], [0, 60, 60], [80, 0, 80]]}
+  steps={[
+    {ops: [{row: 2, from: 1, k: [-1, 2]}, {row: 4, from: 1, k: [-4, 5]}], text: '...'},
+    {ops: [{row: 3, from: 2, k: -3}, {row: 4, from: 2, k: [4, 5]}], text: '...'},
+  ]}
+  caption="..."
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `names`, `headers` | nomes das colunas em LaTeX e títulos curtos (texto) acima deles |
+| `start` | a matriz, linha a linha |
+| `steps` | `[{ops: [{row, from, k}], text}]`; linhas contadas a partir de 1; `k` inteiro ou `[n, d]`; `text` aceita `$...$` |
+| `startText` | painel antes do primeiro passo |
+| `caption` | legenda |
+
+## EchelonColumnsShift
+
+As colunas de [[1, 2], [2, 4]] como setas, (1, 2) no tom 1 e (2, 4) no tom 2,
+sobre a faixa verde y = 2x (o espaço coluna). A operação L2 ← L2 − 2L1 desce
+as duas setas até o eixo x; a faixa gira junto, e a reta e as setas de antes
+ficam tracejadas. O deslizante refaz a operação aos poucos (0 a 100%), e o
+painel confere que a segunda coluna é o dobro da primeira em todo instante.
+Rótulos só com a figura parada. Números fixos.
+
+```mdx
+<EchelonColumnsShift caption="..." />
+```
+
+## KernelCollapse
+
+O núcleo de A = [[1, 2], [2, 4]] no desenho. A malha se deforma da identidade
+até A (matriz do meio do caminho (1 − s)I + sA, inversível para s menor que
+1), sobre a malha original clara. A faixa laranja (múltiplos de (−2, 1)) e a
+seta (−2, 1) encolhem até a origem; a reta azul tracejada pelos pontos (1, 0),
+(−1, 1) e (3, −1) encolhe até o ponto (1, 2); no fim aparece a faixa verde
+y = 2x, o espaço coluna. Deslizante do progresso; o painel do fim lê as duas
+conclusões e a conta 2 = 1 + 1. Números fixos.
+
+```mdx
+<KernelCollapse caption="..." />
+```
+
+## RankNullityTally
+
+O teorema do posto como contagem. A forma escalonada no alto, com os pivôs
+circulados; cada coluna vira um cartão que desce, uma de cada vez, para a
+caixa “com pivô: guardadas” (tom 1) ou “sem pivô: refeitas” (tom 2), com a
+contagem embaixo de cada caixa; no fim, a linha
+“colunas = posto + dimensão do núcleo”. O painel escreve, para cada coluna sem
+pivô, o vetor do núcleo (conta exata) e a relação que ele diz. Até 4 cartões
+por caixa.
+
+```mdx
+<RankNullityTally
+  initial={2}
+  cases={[
+    {label: 'Colunas (1, 2) e (2, 4)', names: ['\\vec{a}_1', '\\vec{a}_2'], echelon: [[1, 2], [0, 0]]},
+    {label: 'A matriz B', names: ['\\vec{a}_1', '\\vec{a}_2', '\\vec{a}_3', '\\vec{a}_4'], echelon: [[1, 2, 0, 1], [0, 0, 1, 3]]},
+  ]}
+  caption="..."
+/>
+```
+
+| Prop | O que faz |
+|---|---|
+| `cases` | `[{label, names, echelon}]`: a forma escalonada (o núcleo é o mesmo da matriz original) |
+| `initial` | caso mostrado primeiro |
+| `caption` | legenda |
+
+## EigenDirectionSearch
+
+A busca das direções especiais de uma matriz 2 × 2 (lição 11.11). O aluno gira
+a seta v, de comprimento 1, com um deslizante de ângulo (0° a 179°, de grau em
+grau). A figura mostra a reta de v (tracejada, tom 1), a seta Av (tom 2 quando
+muda de reta, tom 3 quando fica nela), o círculo de raio 1 e a elipse para onde
+vão todas as setas de comprimento 1. Embaixo, o gráfico do desvio: o ângulo
+entre a reta de v e Av, para cada ângulo de v, com o ângulo atual marcado e os
+zeros já encontrados em verde.
+
+Uma direção especial que não cai num grau inteiro (como a de (1, −2), em
+116,57°) puxa a seta quando o deslizante passa a menos de 1° dela (ímã). Ao
+encaixar, a direção vai para o registro com o fator λ e o representante
+inteiro (como (1, −2)). O botão “Varrer todas as direções” gira a seta de 0° a
+180° e registra tudo; “Limpar o registro” recomeça.
+
+```mdx
+<EigenDirectionSearch />
+<EigenDirectionSearch matrix={[[2, 1], [1, 2]]} name="S" />
+```
+
+| Prop | O que faz |
+|---|---|
+| `matrix`, `name` | a matriz, por linhas (padrão [[4, 1], [2, 3]]), e o nome no painel (padrão `B`) |
+| `initial` | ângulo inicial em graus (padrão 0) |
+| `window`, `unit` | janela e escala (padrão [−5,5; 5,5] nos dois eixos, 32 px) |
+| `caption` | legenda |
+
+## EigenGridMorph
+
+A malha do plano se deformando da identidade até a matriz, com as retas dos
+autovetores marcadas (lição 11.11). A matriz do meio do caminho é
+(1 − s)I + sA, que tem os mesmos autovetores de A com autovalor 1 − s + sλ:
+por isso as setas sobre as retas tracejadas só esticam (ou encolhem, ou viram)
+durante todo o movimento, e a seta fora delas gira. A seta clara marca onde
+cada seta estava. O painel escreve a matriz do instante e, para cada reta, o
+que acontece com as setas dela (“ficam 3 vezes maiores”, “viram para o lado
+oposto”, “são achatadas até a origem”). Rótulos só com a figura parada.
+Desenho em `src/components/LinearGridMorph/plane.jsx`; contas 2 × 2 em
+`EigenGridMorph/eigen.js` (usadas pelas outras figuras da lição).
+
+Três usos:
+
+```mdx
+<EigenGridMorph
+  presets={[
+    {label: 'Matriz S', name: 'S', matrix: [[2, 1], [1, 2]], window: [-2.5, 4.5, -2.5, 4.5],
+     lines: [{dir: [1, 1], lambda: 3, tone: 1}, {dir: [1, -1], lambda: 1, tone: 2}],
+     vectors: [{v: [1, 1], tone: 1, label: '\\vec{v}_1', imageLabel: 'S\\vec{v}_1 = 3\\vec{v}_1'}]},
+  ]}
+/>
+
+<EigenGridMorph lambdaSlider={{dirs: [[1, 1], [1, -1]], mu: 1, min: -2, max: 3, step: 0.5, initial: 3}} />
+
+<EigenGridMorph
+  presets={[{label: 'S − 3I', name: 'S - 3I', matrix: [[-1, 1], [1, -1]],
+    lines: [{dir: [1, 1], lambda: 0, tone: 1}],
+    lineDots: [{dir: [1, 1], from: -2.5, to: 2.5, step: 0.5, tone: 1}]}]}
+/>
+
+<EigenGridMorph gridToggle presets={[{label: 'Matriz B', name: 'B', matrix: [[4, 1], [2, 3]],
+  lines: [{dir: [1, 1], lambda: 5, tone: 1}, {dir: [1, -2], lambda: 2, tone: 2}],
+  vectors: [{v: [2, -1], tone: 3, ghost: false, label: '\\vec{x}', imageLabel: 'B\\vec{x}'}],
+  recipe: {v: [2, -1], coords: [1, 1], eigenText: '...', squareText: '...'}}]} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `presets` | botões `[{label, name, matrix, window, unit, lines, vectors, lineDots, labels, note, recipe, digits}]`; cada clique anima de novo. `lines`: `[{dir, lambda, tone, label}]`, o autovalor é usado no painel; `vectors`: `[{v, tone, label, imageLabel, offset, imageOffset, ghost}]`; `lineDots`: pontos de `from` a `to` (passo `step`) ao longo de `dir`, que viajam com rastro (para ver uma reta inteira ir à origem em A − λI) |
+| `lambdaSlider` | `{dirs: [d1, d2], mu, min, max, step, initial, label, vectors}`: a matriz é P·diag(λ, mu)·P⁻¹ com P = [d1 d2], e o deslizante escolhe λ |
+| `gridToggle` | botões “Malha quadriculada” e “Malha dos autovetores” (linhas paralelas a `lines[0].dir`, tom 1, e a `lines[1].dir`, tom 2). Com `recipe: {v, coords, eigenText, squareText}`, desenha a receita do vetor como passos na malha escolhida e mostra o texto correspondente |
+| `name` | nome da matriz no painel quando o preset não tem `name` |
+| `window`, `unit`, `extent`, `duration`, `showSquare` | janela padrão, escala, alcance da malha, duração, quadrado de lado 1 |
+| `caption`, `label` | legenda e texto acessível |
+
+## EigenCharSlider
+
+Os autovalores são os λ que fazem A − λI achatar o plano (lição 11.11). O
+deslizante escolhe λ de décimo em décimo. À esquerda, as colunas de A − λI
+(tons 1 e 2) e o paralelogramo (tom 3) que elas formam, cuja área com sinal é
+det(A − λI). À direita, a parábola det(A − λI) para todos os λ, com o ponto
+atual. Quando o paralelogramo achata, o painel diz que λ é autovalor, a reta
+para onde o plano foi achatado aparece tracejada, e o vetor que vai para a
+origem (o autovetor, com representante inteiro) é desenhado em cinza. Os λ
+encontrados ficam no registro e marcados no eixo da parábola. Botão de varrer.
+
+```mdx
+<EigenCharSlider />
+```
+
+| Prop | O que faz |
+|---|---|
+| `matrix`, `name` | padrão [[4, 1], [2, 3]] e `B` |
+| `min`, `max`, `initial` | faixa e valor inicial de λ (padrão −1 a 7, começando em 0) |
+| `window`, `unit`, `graphY` | janela do plano, escala, faixa vertical do gráfico |
+| `caption` | legenda |
+
+## EigenRing
+
+Dez setas (claras) e as suas imagens (lição 11.11). Cada imagem sai laranja
+quando mudou de reta e verde quando ficou na reta da sua seta. O painel
+escreve a matriz, o traço, o determinante e o discriminante Δ da equação
+característica, e uma frase sobre quantas setas ficaram. Ao entrar na tela, o
+parâmetro anda de 0 até o valor inicial.
+
+- `kind="rotation"`: rotação de θ (deslizante de 0° a 180°, de 5 em 5; padrão
+  90°). Nenhuma seta fica entre 0° e 180°; em 0° e 180° todas ficam.
+- `kind="shear"`: cisalhamento [[1, k], [0, 1]] (deslizante de −2 a 2, de 0,25
+  em 0,25; padrão 1). Só as setas do eixo x ficam.
+
+```mdx
+<EigenRing kind="rotation" />
+<EigenRing kind="shear" />
+```
+
+| Prop | O que faz |
+|---|---|
+| `kind` | `'rotation'` ou `'shear'` |
+| `initial` | valor inicial do parâmetro |
+| `caption` | legenda |
+
+## EigenPowerWalk
+
+Aplicar a mesma matriz muitas vezes (lição 11.11). B = [[4, 1], [2, 3]] e
+x = (2, −1) = (1, 1) + (1, −2), então Bⁿx = 5ⁿ(1, 1) + 2ⁿ(1, −2). Como os
+números explodem, o desenho mostra só a direção: cada Bⁿx é encolhida até o
+mesmo comprimento, com as duas partes (tom 1 ao longo de (1, 1), tom 2 ao longo
+de (1, −2)), e as direções anteriores ficam como pontos no círculo. A tabela
+traz os números verdadeiros de cada passo: Bⁿx, 5ⁿ, 2ⁿ, a razão (2/5)ⁿ e o
+ângulo até a reta de (1, 1). Anima de n = 0 a 6 ao entrar na tela; botões
+“Aplicar B mais uma vez” (até n = 8), “Voltar para x” e “Ver de novo”.
+
+```mdx
+<EigenPowerWalk />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | o n do quadro final (padrão 6) |
+| `caption` | legenda |
+
+## EigenPowerBars
+
+As potências λ⁰ a λ¹⁰ como barras (lição 11.11): o fator acumulado da parte
+de um vetor que está na reta de um autovetor de autovalor λ. Barras positivas
+para cima (tom 1), negativas para baixo (tom 2); a escala se ajusta à maior
+barra. Deslizante de −1,5 a 1,5 e botões com os casos da lição (0,7; 1; 1,1;
+−0,5; −1; −1,2). O painel dá λ¹⁰ e a frase do caso (some, fica, cresce,
+alterna).
+
+```mdx
+<EigenPowerBars />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | λ inicial (padrão 0,7) |
+| `caption` | legenda |
+
+## EigenPopulation
+
+A população entre a cidade e o campo (lição 11.11): 10% da cidade vai para o
+campo e 20% do campo vai para a cidade a cada ano, total de 900 mil.
+
+- `mode="problem"`: diagrama das duas regiões (caixas com o nível da
+  população e as setas com as mudanças do ano) e gráfico ano a ano. Anima os
+  anos 0 a 4; “Mais um ano” avança até o ano 30 (o eixo passa a ir até 30
+  depois do ano 10). O painel faz a conta do ano.
+- `mode="solved"`: gráfico com o equilíbrio tracejado (600 e 300 mil) e, ao
+  lado, cada ano como um ponto (cidade, campo) em centenas de milhares, na reta
+  do total 9, indo até (6, 3) na reta de (2, 1). Deslizante da população
+  inicial da cidade (0 a 900, de 50 em 50); o painel escreve a fórmula
+  600 ± (c − 600) × 0,7ᵏ.
+
+```mdx
+<EigenPopulation />
+<EigenPopulation mode="solved" />
+```
+
+| Prop | O que faz |
+|---|---|
+| `mode` | `'problem'` ou `'solved'` |
+| `caption` | legenda |
+
+## FitFirstTry
+
+O problema motivador da 11.12. Os cinco apartamentos (área em m², preço em
+R\$ mil). A reta y = 8x − 80, que passa pelos apartamentos 1 e 2, cresce da
+esquerda para a direita; em 60, 70 e 80 m² aparece o preço que ela prevê
+(bolinha vazia), e um tracejado verde desce até o preço de verdade com o
+rótulo “erra 70”, “erra 60” e “erra 120”. Botão “Ver de novo”.
+
+```mdx
+<FitFirstTry />
+```
+
+| Prop | O que faz |
+|---|---|
+| `caption` | troca a legenda |
+
+## FitLineExplorer
+
+Os apartamentos da 11.12 no `CartesianPlane` (x de 30 a 100 m², y de 160 a
+520 mil) e a reta y = mx + n, com deslizantes de m (0 a 10, de 0,5 em 0,5) e
+n (−250 a 400, de 5 em 5). O erro de cada apartamento é o segmento vertical
+verde do ponto até a reta (recortado na janela). O número de cada apartamento
+fica à esquerda do ponto nos modos com quadrados (eles crescem para a direita)
+e à direita nos outros, longe da reta. Os dados e as contas moram em
+`FitLineExplorer/apartamentos.js` (`AREAS`, `PRICES`, `BEST`, `errorsOf`,
+`sqeOf`, `tnum`/`pnum` com espaço nos milhares, `lineTex`/`lineText`).
+
+```mdx
+<FitLineExplorer mode="residuals" initial={[5, 50]} presets={[{m: 5, n: 50}, {m: 8, n: -80, label: '...'}]} />
+<FitLineExplorer mode="squares" initial={[0, 350]} sliders={false} presets={[{m: 0, n: 350}, {m: 5, n: 50}]} />
+<FitLineExplorer mode="search" initial={[8, -80]} />
+<FitLineExplorer mode="solved" initialArea={65} />
+<FitLineExplorer mode="train" initial={[8, -80]} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `mode` | `'residuals'`: rótulo com sinal junto de cada ponto (acima dele quando o ponto está acima da reta) e tabela apartamento, área, preço, previsão, erro. `'squares'`: sobre cada erro, um quadrado de lado igual ao erro, quadrado de verdade na tela (largura em m² = erro × yUnit ÷ xUnit), e o SQE por extenso. `'search'` (padrão): os quadrados, o SQE, “menor soma que você já viu” (atualiza sozinha) e os botões “Registrar esta tentativa” e “Limpar a tabela”, com a tabela de tentativas (menor em negrito) e o aviso de que ela não cobre o que fica entre dois testes. `'solved'`: a reta y = 5x + 50 fixa, os erros e o deslizante da área (30 a 100, de 5 em 5); a bolinha vazia é a previsão, e fora de 40 a 80 m² o painel avisa que é extrapolação. `'train'`: os quadrados, os pesos e a perda SQE ÷ 5; o botão “Treinar” anima a reta da posição atual até (5, 50), e a perda desce até 280 |
+| `initial` | `[m, n]` inicial (padrão `[8, -80]`) |
+| `presets` | botões `{m, n, label?}` (sem `label`, o botão escreve a reta) |
+| `sliders` | `false` esconde os deslizantes de m e n (a figura fica só com os botões) |
+| `initialArea` | área inicial do modo `'solved'` (padrão 65) |
+| `caption` | troca a legenda |
+
+## FitErrorStack
+
+Somar os erros com sinal. Cada erro é uma seta verde vertical, da reta até o
+ponto (para cima quando o erro é positivo). A animação leva as cinco setas, uma
+de cada vez, para uma coluna à direita (“fila dos erros”), encostando cada uma
+na ponta da anterior a partir do traço do zero; um tracejado fica no lugar de
+onde a seta saiu. No fim, “soma = …” junto do fim da fila. O painel escreve a
+soma por extenso. Botões trocam a reta e repetem a animação.
+
+```mdx
+<FitErrorStack />
+```
+
+| Prop | O que faz |
+|---|---|
+| `lines` | retas `{m, n}` dos botões (padrão y = 350, y = 10x − 250, y = 5x + 50 e y = 5x + 40; as três primeiras somam zero) |
+| `initial` | índice da reta inicial |
+| `caption` | troca a legenda |
+
+## FitAbsVsSquare
+
+Dois apartamentos dividem 40 mil de erro: o A erra a (deslizante de 0 a 40,
+de 5 em 5) e o B erra 40 − a. Em cima, um quadrado sobre cada erro (verde e
+azul), com a área escrita dentro. Embaixo, a barra da soma sem sinal (sempre
+40) e a barra da soma dos quadrados, com tracejados em 800 (o menor, em
+a = 20) e 1 600 (o maior).
+
+```mdx
+<FitAbsVsSquare />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | erro inicial do A (padrão 0) |
+| `caption` | troca a legenda |
+
+## FitPredictionBars
+
+A lista de previsões A c = m a + n 1 dos apartamentos como barras, uma por
+apartamento: a parte escura (laranja) tem altura m × área; a parte clara, de
+borda tracejada, tem altura n (com n negativo, ela é o trecho descontado no
+alto da barra, sem preenchimento). O traço laranja no topo é a previsão; o
+azul, o preço observado; o segmento verde, o erro. Deslizantes de m e n (as
+mesmas faixas do `FitLineExplorer`). O painel escreve m (40, …, 80) + n (1, …,
+1) = previsões, o vetor b e o resto, como colunas.
+
+```mdx
+<FitPredictionBars />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | `[m, n]` inicial (padrão `[5, 50]`) |
+| `caption` | troca a legenda |
+
+## FitProjection3D
+
+Mínimos quadrados como projeção, em três dimensões, com os pontos (0, 2),
+(1, 1) e (2, 3): cada eixo (“ponto 1”, “ponto 2”, “ponto 3”) guarda o valor de
+um ponto. O pedaço de plano laranja (com malha) é o conjunto gerado pelas
+colunas a = (0, 1, 2) e 1 = (1, 1, 1), desenhadas como setas laranja; a seta
+azul é b = (2, 1, 3). A c (ponto laranja) anda pelo plano com os deslizantes
+de m (−0,5 a 1,5) e n (0 a 2,5), de 0,25 em 0,25; o segmento verde vai de A c
+até b, tracejado enquanto não é perpendicular. O painel faz A c, o resto, o
+SQE e os produtos escalares do resto com as duas colunas. No pé da
+perpendicular (m = 0,5, n = 1,5, resto (0,5; −1; 0,5), SQE 1,5) o segmento
+fica cheio e ganha a marca de ângulo reto.
+
+A cena usa **projeção ortogonal** própria (azimute φ no deslizante, de −80° a
+60°, elevação fixa de 25°), e não a perspectiva oblíqua do `SpaceScene`: assim,
+na vista de perfil (φ ≈ 38,6°, em que a direção do olhar fica dentro do plano)
+o plano vira uma reta e o ângulo reto aparece reto na tela. Na vista inicial
+(φ = 15°), b fica do lado de quem olha, e A c, b e as pontas das colunas ficam separados na tela; o rótulo de a fica no meio da seta. A caixa da figura é calculada sobre
+todas as vistas, e o tamanho não muda ao girar.
+
+Botões: “Levar A c ao pé da perpendicular” (anima A c até o pé), “Ver o plano
+de perfil” e “Vista inicial” (animam o giro).
+
+```mdx
+<FitProjection3D />
+<FitProjection3D pythagoras initial={[1, 1]} caption="..." />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | `[m, n]` inicial (padrão `[1, 0.5]`) |
+| `pythagoras` | marca o pé H (verde), o triângulo b, H, A c com o ângulo reto em H, o trecho H até A c (laranja tracejado) e escreve SQE = 1,5 + ‖A c − H‖² |
+| `caption` | troca a legenda |
+
+## FitNormalRows
+
+As equações normais como contas. Para cada linha de A transposta (a coluna das
+áreas deitada, depois a coluna de uns), a figura escreve as cinco entradas
+(laranja), embaixo as cinco coordenadas do resto (verde) e, uma de cada vez,
+os produtos; depois a soma. No fim, A transposta vezes o resto como vetor,
+igual ou diferente do vetor nulo. Botões trocam a reta: y = 5x + 50 (somas 0 e
+0) e y = 5x + 40 (somas 3 000 e 50).
+
+```mdx
+<FitNormalRows />
+```
+
+| Prop | O que faz |
+|---|---|
+| `initial` | 0 (y = 5x + 50, padrão) ou 1 (y = 5x + 40) |
+| `caption` | troca a legenda |
+
+## SvdCircleMorph
+
+O círculo de raio 1 (tracejado) virando a sua imagem por uma matriz 2 × 2. A
+matriz do instante anda em linha reta da identidade até a matriz,
+(1 − s)I + sA; com `rotation` (em graus), o giro é animado pelo ângulo, sem
+encolher. Oito pontos do círculo viajam junto. O painel escreve a matriz e,
+com a figura parada, o que o círculo virou: elipse (semieixos σ₁ e σ₂),
+círculo, segmento (meio comprimento σ₁) ou ponto. As contas moram em
+`SvdCircleMorph/svd.js` (`svd2` com dica de sinal para v₁, `orthoKind` que diz
+se uma ortogonal é rotação ou espelho e a reta do espelho, `svdN` pelo método
+de Jacobi para matrizes m × n, `layersSum`).
+
+```mdx
+<SvdCircleMorph
+  window={[-7, 7, -7, 7]}
+  unit={28}
+  presets={[
+    {label: 'A', matrix: [[3, 0], [4, 5]]},
+    {label: 'rotação de 30°', name: 'R', rotation: 30, matrixTex: '...'},
+  ]}
+/>
+<SvdCircleMorph matrix={[[3, 0], [4, 5]]} v1={[1, 1]} singular window={[-7.5, 7.5, -7.5, 7.5]} unit={26} />
+<SvdCircleMorph name="Q" orientation arrowLabels={{v1: '\\vec{e}_1', Av1: 'Q\\vec{e}_1'}} presets={[...]} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `matrix` / `rotation` | a matriz (por linhas) ou um giro em graus |
+| `presets` | botões `{label, matrix ou rotation, name?, matrixTex?, window?, unit?, v1?, ...}`; cada botão troca a matriz e repete a animação |
+| `name` | letra da matriz no painel e nos rótulos (padrão `A`) |
+| `matrixTex` | escreve a matriz em LaTeX exato no painel |
+| `singular` | setas v₁ e v₂ viajando até Av₁ e Av₂; no fim, as de partida ficam claras e os dois ângulos retos aparecem |
+| `v1` | dica de sinal para v₁ (a figura usa o sinal que o texto usa) |
+| `orientation` | quarto de disco entre as setas de partida e arco de v₁ para v₂: depois de um espelho, o arco anda no sentido horário |
+| `arrowLabels`, `offsets` | rótulos `{v1, v2, Av1, Av2}` e deslocamentos `[dx, dy, anchor]` |
+| `dots` | liga ou desliga os oito pontos (padrão: ligados sem `singular`) |
+| `note` | frase extra no painel, com a figura parada |
+| `window`, `unit`, `duration`, `caption` | janela, escala, duração e legenda |
+
+## SvdStretchSearch
+
+A seta v (tom 1) de comprimento 1 no círculo, a seta Av (tom 2) terminando
+na elipse tracejada, e embaixo o gráfico do comprimento de Av para cada
+ângulo de 0° a 180°. O deslizante anda de grau em grau; a menos de 1° de um
+extremo, um ímã puxa a seta para ele. O registro guarda o maior e o menor
+comprimento vistos; quando são os de verdade, as direções ficam marcadas em
+verde (σ₁ e σ₂ escritos) e o registro diz que as de partida estão a 90° e as
+de chegada são perpendiculares. “Varrer todas as direções” gira a seta de 0° a
+180° e registra tudo (com menos movimento, registra tudo de uma vez).
+
+```mdx
+<SvdStretchSearch />
+<SvdStretchSearch squared />
+```
+
+| Prop | O que faz |
+|---|---|
+| `matrix`, `name`, `v1Hint` | a matriz (padrão `[[3, 0], [4, 5]]`), a letra e a dica de sinal de v₁ |
+| `squared` | gráfico do comprimento ao quadrado, e o painel escreve ‖Av‖² = λ₁a² + λ₂b² |
+| `initial` | ângulo inicial (padrão 0) |
+| `window`, `unit`, `caption` | janela, escala e legenda |
+
+## SvdThreeSteps
+
+A = UΣVᵀ em três passos. O círculo de raio 1, as setas v₁ (tom 1) e v₂ (tom
+2), o quarto de disco entre elas com o arco de orientação e a malha do plano
+passam por Vᵀ, depois por Σ, depois por U. Um giro anima o ângulo; um espelho
+anima o plano virando como uma página, com a reta do espelho tracejada. O
+painel descreve cada passo (giro de quantos graus e em que sentido, espelho
+em que reta, quanto estica cada eixo). Botões “Ver os três passos”, “Próximo
+passo”, “Voltar ao começo” e os das matrizes.
+
+```mdx
+<SvdThreeSteps presets={[{label: 'A', matrix: [[3, 0], [4, 5]], v1: [1, 1]}]} />
+<SvdThreeSteps showMatrices presets={[{label: 'A', matrix: [[3, 0], [4, 5]], v1: [1, 1], tex: {Vt: '...', Sigma: '...', U: '...'}}]} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `presets` | botões `{label, matrix, v1?, matrixTex?, tex?, window?, unit?, offsets?, note?}` |
+| `showMatrices` | escreve A = U Σ Vᵀ no painel (exatas quando o preset traz `tex`) |
+| `offsets` | por estado (0 a 3), deslocamentos dos rótulos das duas setas |
+| `window`, `unit`, `caption` | janela, escala e legenda |
+
+## SvdTransposeCheck
+
+Quatro deslizantes (coordenadas inteiras de v e w, de −3 a 3) e o painel com
+(Av)·w, v·(Aᵀw) por extenso e a conta errada v·(Aw), sem transpor.
+
+```mdx
+<SvdTransposeCheck />
+```
+
+| Prop | O que faz |
+|---|---|
+| `matrix` | a matriz (padrão `[[3, 0], [4, 5]]`) |
+| `initialV`, `initialW` | vetores iniciais |
+
+## SvdSymmetrySlider
+
+A matriz `base` com o deslizante mudando só a entrada de baixo, à esquerda
+(c). As retas de autovetores tracejadas (tom 1 para o maior autovalor, tom 2
+para o menor), com o autovalor escrito, e o arco verde do ângulo entre elas.
+O painel escreve Δ = (a − d)² + 4bc e diz se a matriz é simétrica (90°), se
+não há autovalor real (nenhuma reta) ou se há uma reta só.
+
+```mdx
+<SvdSymmetrySlider />
+```
+
+| Prop | O que faz |
+|---|---|
+| `base` | matriz inicial (padrão `[[4, 1], [2, 3]]`, a da lição de autovalores) |
+| `min`, `max`, `step` | faixa do deslizante de c (padrão −1 a 3, de 0,25 em 0,25) |
+| `window`, `unit`, `caption` | janela, escala e legenda |
+
+## SvdWeightedMean
+
+À esquerda, o círculo de raio 1, as retas de v₁ (tom 1) e v₂ (tom 2) e a seta
+v (tom 3) decomposta em a v₁ + b v₂ (setas tracejadas formando um retângulo).
+À direita, a barra dos pesos a² e b² (juntos medem 1) e a régua de 0 a λ₁
+com a faixa clara entre λ₂ e λ₁ e o ponto λ₁a² + λ₂b². Deslizante do ângulo
+de v, de grau em grau.
+
+```mdx
+<SvdWeightedMean />
+```
+
+| Prop | O que faz |
+|---|---|
+| `l1`, `l2` | os dois autovalores (padrão 45 e 5) |
+| `v1Angle` | ângulo de v₁ em graus (padrão 45) |
+| `name`, `initial`, `caption` | letra da matriz, ângulo inicial e legenda |
+
+## SvdOuterProduct
+
+Uma coluna (tom 2, à esquerda) vezes uma linha (tom 1, em cima). A tabela se
+preenche uma linha por vez, cada casa pintada pelo brilho (0 preto,
+`maxValue` branco) e com o número escrito; a casa da coluna que está sendo
+usada acende. No fim, o painel conta: m + n números refazem m × n casas.
+Botão “Ver de novo”.
+
+```mdx
+<SvdOuterProduct col={[1, 2, 3, 3, 2, 1]} row={[1, 1, 3, 3, 1, 1]} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `col`, `row` | as duas listas |
+| `maxValue` | brilho do branco (padrão 9) |
+| `caption` | legenda |
+
+## SvdImageLayers
+
+Três quadros: a original, a soma das k primeiras camadas σuvᵀ e o erro (tom 2
+onde a original é mais clara, tom 1 onde é mais escura). Deslizante de k (0
+até o posto). Embaixo, barras da soma dos quadrados do erro para cada k (a de
+k = 0 é cortada com seta quando passa do topo). O painel conta os números
+guardados, k × (1 + m + n), contra os m × n da imagem, e a porcentagem da
+soma dos quadrados guardada. A SVD é calculada no navegador (`svdN`).
+
+```mdx
+<SvdImageLayers image={miniatura} only="original" showValues highlight={[[0, 0], [0, 1]]} />
+<SvdImageLayers image={[[3, 0], [4, 5]]} showValues maxValue={5} matrixWords />
+<SvdImageLayers image={miniatura} showValues naive={13} />
+<SvdImageLayers image="foto" initialK={4} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `image` | matriz de brilhos, ou `"foto"` (32 × 32, céu, sol, montanha, casa e chão, em `foto.json`) |
+| `showValues` | escreve o número em cada casa (casas de 40 px; sem números, 7 px) |
+| `maxValue` | brilho do branco (padrão 9) |
+| `initialK` | camadas no começo (padrão 1) |
+| `only="original"` | mostra só a imagem, com as casas de `highlight` contornadas em verde |
+| `naive` | botão que compara com guardar os `naive` pixels mais claros e zerar os outros |
+| `matrixWords` | fala em “entradas” em vez de “pixels” e esconde a conta dos números guardados |
+| `cell`, `caption` | tamanho da casa e legenda |
+
+## SvdRowsLine
+
+Cada linha da matriz é um ponto (tom 2). Uma reta pela origem, na direção da
+seta x de comprimento 1 (tom 1), gira com o deslizante; cada ponto é
+projetado na reta (bolinha vazia), e o segmento verde é a distância. A soma
+dos quadrados das distâncias é o erro da camada de posto 1 (Ax)xᵀ. Embaixo, o
+gráfico do erro para todas as direções, com o mínimo (σ₂² ou, em geral, o
+total menos σ₁²) marcado. Registro do menor erro visto; na direção de v₁ (ímã
+de 1°), a reta fica verde. Botões “Varrer todas as direções” e “Limpar o
+registro”.
+
+```mdx
+<SvdRowsLine rows={[[3, 0], [4, 5]]} pointLabels={[{math: '(3,\\ 0)'}, {math: '(4,\\ 5)'}]} />
+<SvdRowsLine mode="pca" rows={[[-3, -2], [-2, -1], [-1, -1], [1, 1], [2, 2], [3, 1]]} window={[-4, 4, -3, 3]} unit={48} initial={90} />
+```
+
+| Prop | O que faz |
+|---|---|
+| `rows` | as linhas da matriz (pontos do plano) |
+| `mode` | `'layer'` (padrão): o painel escreve x e a camada (Ax)xᵀ e o erro como total menos ‖Ax‖². `'pca'`: o painel fala em quanto da variação a reta guarda |
+| `name` | letra da matriz (padrão `A`) |
+| `pointLabels` | rótulos `{math, dx?, dy?, anchor?}` para os pontos |
+| `initial` | ângulo inicial da reta |
+| `window`, `unit`, `caption` | janela, escala e legenda |
 
 ## useAnimation
 

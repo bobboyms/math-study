@@ -3,10 +3,18 @@ title: Mínimos quadrados
 ---
 
 import CartesianPlane from '@site/src/components/CartesianPlane';
+import SystemLines from '@site/src/components/SystemLines';
+import FitFirstTry from '@site/src/components/FitFirstTry';
+import FitLineExplorer from '@site/src/components/FitLineExplorer';
+import FitErrorStack from '@site/src/components/FitErrorStack';
+import FitAbsVsSquare from '@site/src/components/FitAbsVsSquare';
+import FitPredictionBars from '@site/src/components/FitPredictionBars';
+import FitProjection3D from '@site/src/components/FitProjection3D';
+import FitNormalRows from '@site/src/components/FitNormalRows';
 
 # Mínimos quadrados
 
-## 1. Problema motivador: o preço justo de um apartamento
+## Problema motivador: o preço justo de um apartamento
 
 Uma corretora quer uma regra simples para avaliar apartamentos num bairro.
 Ela separou cinco vendas recentes, todas de imóveis parecidos (mesmo prédio
@@ -29,7 +37,10 @@ O problema aparece logo na primeira tentativa. A reta que passa pelos
 apartamentos 1 e 2 sobe de 240 para 320 quando a área vai de 40 para 50:
 são 80 mil a cada 10 m², ou seja, $m = 8$. Seguindo essa reta, um apartamento
 de 60 m² custaria $320 + 80 = 400$ mil. Mas o apartamento 3 foi vendido por
-330 mil. A reta dos dois primeiros não serve para o terceiro.
+330 mil. A reta dos dois primeiros não serve para o terceiro, e a figura
+mostra que ela também erra os outros dois.
+
+<FitFirstTry />
 
 Os preços reais têm pequenas variações: um andar mais alto, uma reforma, uma
 negociação mais dura. Por isso, **nenhuma reta passa pelos cinco pontos**. A
@@ -40,53 +51,72 @@ corretora não quer desistir da reta. Ela quer a reta que **erra menos**.
 > 2. Qual reta erra menos com estes cinco dados? Que preço ela sugere para um
 >    apartamento de 65 m² no mesmo prédio?
 
-A seção 10 responde às duas perguntas. A resposta usa uma ideia que você já
-conhece do plano: o ponto de uma reta mais perto de um ponto dado é o pé da
-perpendicular. Aqui, a mesma ideia acontece num espaço de cinco dimensões.
+A seção “Resolvendo o problema dos apartamentos” responde às duas perguntas. A
+resposta usa uma ideia que você já conhece do plano: o ponto de uma reta mais
+perto de um ponto dado é o pé da perpendicular. Aqui, a mesma ideia acontece
+num espaço de cinco dimensões.
 
-## 2. Mapa das ideias
+## Roteiro da lição
 
-- **sistema sobredeterminado**: um sistema com mais equações que incógnitas,
-  que em geral não tem solução exata;
-- **erro** (ou **resíduo**) de um ponto: o valor observado menos o valor que a
-  reta prevê para ele;
-- **soma dos quadrados dos erros**: o número que mede quanto uma reta erra no
-  total. É a medida que este método minimiza, e daí o nome **mínimos
-  quadrados**;
-- **conjunto gerado pelas colunas** de $A$: todas as listas de previsões que
-  alguma escolha de $m$ e $n$ consegue produzir;
-- **projeção sobre o conjunto gerado**: a lista de previsões mais perto da
-  lista de valores observados;
-- **equações normais**: $A^{\mathsf{T}}A\vec{c} = A^{\mathsf{T}}\vec{b}$, o
-  sistema que dá os coeficientes da melhor reta;
-- **regressão linear**: o nome que a estatística e o aprendizado de máquina
-  dão a todo esse procedimento.
+1. O **erro** de cada apartamento é o segmento vertical do ponto até a reta:
+   preço observado menos preço previsto.
+2. Somar os erros com sinal não mede nada: os de cima e os de baixo se
+   **cancelam**, e uma reta ruim pode somar zero.
+3. Somar os **quadrados** dos erros dá um placar que não se cancela: a soma
+   dos quadrados dos erros, o **SQE**.
+4. O quadrado pesa mais o erro grande. O valor absoluto não faz essa
+   diferença, e não vira a distância de Pitágoras.
+5. Procurar a reta de menor SQE à mão chega perto, mas não garante que achou
+   a melhor.
+6. Pedir uma reta pelos cinco pontos é um sistema com **mais equações que
+   incógnitas**, sem solução.
+7. As previsões de uma reta formam um **vetor**, combinação das colunas de uma
+   matriz: $A\vec{c} = m\vec{a} + n\vec{1}$.
+8. O SQE é o quadrado da **distância** entre o vetor dos preços e o vetor das
+   previsões. O mais perto é a **projeção**: o resto fica perpendicular ao
+   plano das colunas.
+9. Perpendicular a cada coluna é suficiente. Escrita com a transposta, essa
+   condição vira as **equações normais**,
+   $A^{\mathsf{T}}A\vec{c} = A^{\mathsf{T}}\vec{b}$.
+10. **Pitágoras** garante que nenhuma outra reta tem SQE menor.
+11. Ajustar os números de uma regra para errar menos é **treinar** um modelo:
+    é a regressão linear, o primeiro modelo do aprendizado de máquina.
 
-## 3. Para que serve
+## Para que isso serve?
 
-- **Avaliar e prever.** Preço de imóvel pela área, consumo de energia pela
-  temperatura, vendas pelo investimento em anúncio. Sempre que se quer uma
-  regra simples a partir de dados que não obedecem exatamente a nenhuma regra.
+- **Avaliar e prever.** A corretora deste problema vai sair da lição com a
+  regra $y = 5x + 50$ e com um preço sugerido de R\$ 375 mil para um
+  apartamento de 65 m².
 - **Calibrar instrumentos.** Uma balança de fábrica é testada com pesos
-  conhecidos. As leituras nunca batem exatamente, e a reta de mínimos
-  quadrados diz qual correção aplicar.
-- **Localização por GPS.** O receptor recebe sinais de mais satélites do que
-  precisaria. Cada satélite dá uma equação, as medidas têm pequenos erros, e
-  o sistema não tem solução exata. O receptor calcula a posição que melhor
-  concorda com todas as equações.
+  conhecidos de 0, 10, 20 e 30 kg, e marca 0,4; 10,3; 20,4 e 30,7 kg. Nenhuma
+  reta passa pelos quatro pontos. A reta de mínimos quadrados é
+  $\text{leitura} = 1{,}01 \times \text{peso} + 0{,}3$: com o prato vazio a
+  balança marca 0,3 kg, e cada kg de verdade aparece como 1,01 kg. A
+  correção é desfazer essa conta. Uma leitura de 50,8 kg corresponde a
+  $(50{,}8 - 0{,}3) \div 1{,}01 = 50$ kg.
+- **Localização por GPS.** Cada satélite visível dá uma equação para a
+  posição do receptor. As incógnitas são quatro: as três coordenadas e o
+  atraso do relógio do receptor. Um celular que enxerga 8 satélites tem 8
+  equações para 4 incógnitas, e as medidas têm pequenos erros. Esse sistema
+  não tem solução exata, e o receptor calcula a posição que melhor concorda
+  com as oito equações.
 - **Aprendizado de máquina.** A regressão linear é o primeiro modelo que um
-  curso de aprendizado de máquina ensina. “Treinar” o modelo é exatamente o
-  que esta lição faz: achar os números $m$ e $n$ a partir dos dados. A seção 12
-  conta como isso se liga ao deep learning.
+  curso de aprendizado de máquina ensina. Um modelo que estima o preço de um
+  imóvel pela área, pelo número de quartos e pelo andar tem 4 números para
+  ajustar (um para cada variável e um que não depende de nenhuma). Com 1 000
+  vendas, a matriz $A$ desta lição terá 1 000 linhas e 4 colunas, e o
+  sistema que dá os quatro números terá só 4 equações. A seção final da lição
+  liga isso ao deep learning.
 
-## 4. Ideias anteriores que voltam aqui
+## Ideias anteriores que voltam aqui
 
-Cinco peças antigas sustentam esta lição. Tente cada pergunta antes de abrir a
-resposta.
+Três peças antigas sustentam esta lição. Tente cada pergunta antes de abrir a
+resposta. Se travar em alguma, vale reler a página indicada antes de seguir.
 
 **1. De [Projeção ortogonal](../geometria/projecao-ortogonal).** Uma reta passa
 pela origem e segue a direção de $\vec{u} = (4,\ 3)$. Qual ponto dessa reta
-fica mais perto da ponta de $\vec{v} = (2,\ 9)$? E a que distância?
+fica mais perto da ponta de $\vec{v} = (2,\ 9)$? A que distância? E por que o
+pé da perpendicular é o ponto **mais perto**, e não só um ponto qualquer?
 
 <details>
 <summary>Conferir</summary>
@@ -101,38 +131,16 @@ O resto é $\vec{r} = (2,\ 9) - (5{,}6;\ 4{,}2) = (-3{,}6;\ 4{,}8)$, e a distân
 é o tamanho dele: $\sqrt{12{,}96 + 23{,}04} = \sqrt{36} = 6$. É o galpão da
 lição de projeção.
 
-</details>
-
-**2. Ainda da projeção.** Por que o pé da perpendicular é o ponto **mais
-perto**, e não só um ponto qualquer?
-
-<details>
-<summary>Conferir</summary>
-
-Pegue outro ponto $Q$ da reta. O caminho de $Q$ até a ponta de $\vec{v}$ se
-divide em dois trechos: um ao longo da reta (de $Q$ até o pé $H$) e o resto,
-perpendicular à reta. Os dois trechos formam um ângulo reto. Por Pitágoras, o
-quadrado da distância de $Q$ é a soma dos quadrados dos dois trechos. Essa
-soma é maior que o quadrado do resto sozinho, sempre que $Q$ é diferente de
-$H$.
+Por que é o mais perto: pegue outro ponto $Q$ da reta. O caminho de $Q$ até a
+ponta de $\vec{v}$ forma, com o pé $H$, um triângulo retângulo. Um cateto é o
+trecho de $Q$ até $H$, ao longo da reta. O outro é o resto, perpendicular à
+reta. Por Pitágoras, o quadrado da distância de $Q$ é a soma dos quadrados dos
+dois catetos. Essa soma é maior que o quadrado do resto sozinho sempre que $Q$
+é diferente de $H$.
 
 </details>
 
-**3. De [Vetores com muitas coordenadas](./vetores-com-muitas-coordenadas).**
-Os vetores $(1,\ 1,\ 1,\ 1,\ 1)$ e $(-10,\ 20,\ -20,\ 20,\ -10)$ são
-perpendiculares?
-
-<details>
-<summary>Conferir</summary>
-
-São. O produto escalar é a soma dos produtos coordenada a coordenada:
-$-10 + 20 - 20 + 20 - 10 = 0$. Produto escalar zero é a definição de
-perpendicular em qualquer número de coordenadas. (Esse segundo vetor vai
-reaparecer: são os erros da melhor reta dos apartamentos.)
-
-</details>
-
-**4. De [Matrizes](./matrizes).** Leia o produto
+**2. De [Matrizes](./matrizes).** Leia o produto
 $\begin{bmatrix} 40 & 1 \\ 50 & 1 \\ 60 & 1 \end{bmatrix}\begin{bmatrix} 5 \\ 50 \end{bmatrix}$
 pelas colunas. E escreva a transposta da matriz.
 
@@ -152,7 +160,7 @@ $\begin{bmatrix} 40 & 50 & 60 \\ 1 & 1 & 1 \end{bmatrix}$.
 
 </details>
 
-**5. De [Sistemas lineares e escalonamento](./sistemas-lineares-e-escalonamento).**
+**3. De [Sistemas lineares e escalonamento](./sistemas-lineares-e-escalonamento).**
 O sistema $x + y = 5$, $2x - y = 1$, $x + 2y = 9$ tem solução?
 
 <details>
@@ -166,104 +174,71 @@ aproximação nesse caso. Esta lição responde, no Exemplo 4.
 
 </details>
 
-## 5. Intuição: errar um pouco em todos os pontos
+## O erro de cada apartamento é um segmento vertical
 
 Pense nos cinco apartamentos como cinco pessoas que você quer agradar com uma
 regra só. Uma regra que agrada perfeitamente os apartamentos 1 e 2 (a reta de
 $m = 8$) erra 70 mil no apartamento 3, 60 mil no 4 e 120 mil no 5. É a
-regra que atende muito bem dois e muito mal três.
+regra que atende muito bem dois e muito mal três. A regra que a corretora
+procura faz o contrário: não acerta nenhum apartamento em cheio, mas erra
+pouco em todos.
 
-A regra que a corretora procura faz o contrário: não acerta nenhum
-apartamento em cheio, mas erra pouco em todos. Para escolher essa regra, ela
-precisa de duas coisas:
+Antes de comparar retas, é preciso dizer o que é o erro de uma reta num
+apartamento. A reta dá um preço para cada área: é a **previsão**. O
+apartamento tem o preço pelo qual foi vendido: é o **valor observado**.
 
-1. **um placar**: um número que diga quanto uma reta erra no total. Com o
-   placar, duas retas quaisquer podem ser comparadas;
-2. **um jeito de achar a reta com o menor placar**, sem testar infinitas
-   retas uma a uma.
+> O **erro** (ou **resíduo**) de um apartamento é o valor observado menos o
+> valor que a reta prevê para a mesma área:
+> $$\text{erro} = \text{observado} - \text{previsto}.$$
 
-O placar escolhido é a soma dos quadrados dos erros. A seção 7 explica por
-que quadrados. O jeito de achar a melhor reta é a projeção. A seção 8 mostra
-por que uma pergunta sobre retas no gráfico vira uma pergunta sobre vetores
-de cinco coordenadas, onde a projeção já sabe responder.
+No gráfico, o erro é o segmento **vertical** que liga o ponto à reta. Na
+figura, mude $m$ e $n$ e acompanhe a tabela: cada erro muda junto com a reta.
 
-## 6. Modelo visual: os erros como segmentos verticais
-
-Primeiro, os dados. Cada apartamento é um ponto: a área no eixo horizontal e
-o preço no vertical.
-
-<CartesianPlane
-  xMin={30} xMax={90} yMin={200} yMax={480}
-  xUnit={7} yUnit={1.4}
-  xStep={10} yStep={40}
-  points={[
-    {at: [40, 240], tone: 1},
-    {at: [50, 320], tone: 1},
-    {at: [60, 330], tone: 1},
-    {at: [70, 420], tone: 1},
-    {at: [80, 440], tone: 1},
-    {at: [60, 400], tone: 2, open: true},
+<FitLineExplorer
+  mode="residuals"
+  initial={[5, 50]}
+  presets={[
+    {m: 5, n: 50},
+    {m: 8, n: -80, label: 'y = 8x − 80 (pelos apartamentos 1 e 2)'},
   ]}
-  lines={[{through: [[40, 240], [50, 320]], dashed: true, tone: 2}]}
-  segments={[{from: [60, 400], to: [60, 330], muted: true, dashed: true}]}
-  labels={[
-    {at: [60, 400], math: '400', tone: 2, dx: 14, dy: 0, anchor: 'start'},
-    {at: [60, 330], math: '330', tone: 1, dx: 14, dy: 0, anchor: 'start'},
-  ]}
-  caption="Os cinco apartamentos (área em m² na horizontal, preço em R$ mil na vertical). A reta tracejada passa pelos apartamentos 1 e 2: em 60 m² ela prevê 400 mil, mas o apartamento 3 custou 330 mil."
 />
 
-Agora uma reta candidata, $y = 5x + 50$, desenhada sobre os mesmos pontos. O
-**erro** de cada apartamento é a diferença entre o preço observado e o preço
-que a reta prevê na mesma área. No desenho, ele é o segmento **vertical** que
-liga o ponto à reta.
+**Exemplo.** Com a reta $y = 5x + 50$, o apartamento 2 está 20 mil **acima**
+da reta: custou 320, e a reta previa $5 \times 50 + 50 = 300$. O erro dele é
+$320 - 300 = +20$. O apartamento 3 está 20 mil **abaixo**: custou 330, e a
+reta previa $5 \times 60 + 50 = 350$. O erro é $330 - 350 = -20$. O sinal diz
+o lado: positivo, o ponto está acima da reta (o apartamento custou mais do que
+a reta prevê); negativo, abaixo.
 
-<CartesianPlane
-  xMin={30} xMax={90} yMin={200} yMax={480}
-  xUnit={7} yUnit={1.4}
-  xStep={10} yStep={40}
-  lines={[{m: 5, n: 50, tone: 2}]}
-  segments={[
-    {from: [40, 240], to: [40, 250], tone: 3, dashed: true},
-    {from: [50, 320], to: [50, 300], tone: 3, dashed: true},
-    {from: [60, 330], to: [60, 350], tone: 3, dashed: true},
-    {from: [70, 420], to: [70, 400], tone: 3, dashed: true},
-    {from: [80, 440], to: [80, 450], tone: 3, dashed: true},
-  ]}
-  points={[
-    {at: [40, 240], tone: 1},
-    {at: [50, 320], tone: 1},
-    {at: [60, 330], tone: 1},
-    {at: [70, 420], tone: 1},
-    {at: [80, 440], tone: 1},
-  ]}
-  labels={[
-    {at: [40, 240], math: '-10', tone: 3, dx: 0, dy: 18},
-    {at: [50, 320], math: '+20', tone: 3, dx: -22, dy: -6},
-    {at: [60, 330], math: '-20', tone: 3, dx: 22, dy: 6},
-    {at: [70, 420], math: '+20', tone: 3, dx: -22, dy: -6},
-    {at: [80, 440], math: '-10', tone: 3, dx: 22, dy: 10},
-  ]}
-  caption="A reta y = 5x + 50 e os cinco erros (tracejados verticais). Acima da reta, o erro é positivo: o apartamento custou mais do que a reta prevê. Abaixo, é negativo."
-/>
+**Contraexemplo: o erro não é a distância perpendicular até a reta.** A lição
+de projeção mediu distâncias na perpendicular, e é tentador fazer o mesmo
+aqui. A distância perpendicular do ponto $(50,\ 320)$ até a reta
+$y = 5x + 50$ dá cerca de $3{,}92$. Mas esse número mistura m² com milhares
+de reais e não responde a nenhuma pergunta da corretora. A área de cada
+apartamento é um dado certo, e o que a reta tenta acertar é o preço naquela
+área. Por isso o erro é uma diferença de preços, medida na direção do eixo
+dos preços: $+20$ mil.
 
-Leia o desenho de baixo para cima. O apartamento 2 está 20 mil **acima** da
-reta: custou 320, e a reta previa $5 \times 50 + 50 = 300$. Por isso o erro
-dele é $+20$. O apartamento 3 está 20 mil **abaixo**: custou 330, e a reta
-previa $5 \times 60 + 50 = 350$. O erro é $-20$.
+> **Confira.** Com a reta $y = 6x - 10$, qual é o erro do apartamento 2? E o
+> do apartamento 3?
 
-Os erros são medidos na vertical, e não na perpendicular à reta, por um
-motivo prático: a pergunta é sobre **preço**. A área de cada apartamento é um
-dado certo, e o que a reta tenta acertar é o preço naquela área. Por isso o
-erro é uma diferença de preços, medida na direção do eixo dos preços.
+<details>
+<summary>Resposta</summary>
 
-## 7. Medir o erro: por que somar os quadrados
+A reta prevê $6 \times 50 - 10 = 290$ para o apartamento 2, que custou 320: o
+erro é $320 - 290 = +30$. Para o apartamento 3, prevê
+$6 \times 60 - 10 = 350$, e ele custou 330: o erro é $330 - 350 = -20$.
 
-Para comparar duas retas, cada uma precisa de um placar. A primeira ideia é
-somar os erros. Ela falha, e o motivo é instrutivo.
+</details>
 
-**Tentativa 1: somar os erros com sinal.** Pegue a reta horizontal $y = 350$,
-que dá o mesmo preço para todo apartamento, não importa a área. Os erros são:
+## Somar os erros com sinal não serve: os de cima e os de baixo se cancelam
+
+Para comparar duas retas, cada uma precisa de um **placar**: um número que
+diga quanto ela erra no total. A primeira ideia é somar os cinco erros. Ela
+falha, e o motivo ensina muito.
+
+Pegue a reta horizontal $y = 350$, que dá o mesmo preço para todo
+apartamento, não importa a área. Os erros são:
 
 | Área | Preço | Previsão | Erro |
 |---|---|---|---|
@@ -273,38 +248,66 @@ que dá o mesmo preço para todo apartamento, não importa a área. Os erros sã
 | 70 | 420 | 350 | $+70$ |
 | 80 | 440 | 350 | $+90$ |
 
-A soma é $-110 - 30 - 20 + 70 + 90 = 0$. Pelo placar “soma dos erros”, essa
-reta seria perfeita. Mas ela ignora a área por completo e erra 110 mil num
+A figura transforma cada erro numa seta, da reta até o ponto, e encosta as
+setas uma na ponta da outra numa fila. Somar números com sinal é exatamente
+isso: andar para cima com os positivos e para baixo com os negativos.
+
+<FitErrorStack />
+
+A fila da reta $y = 350$ desce 160 e sobe 160, e termina no zero:
+$-110 - 30 - 20 + 70 + 90 = 0$. Pelo placar “soma dos erros”, essa reta
+seria perfeita. Mas ela ignora a área por completo e erra 110 mil num
 apartamento. Os erros positivos e negativos se cancelaram. É o mesmo que dizer
 que um vendedor que errou o troco em $+5$ reais com um cliente e em $-5$ com
 outro não errou nada.
 
-<CartesianPlane
-  xMin={30} xMax={90} yMin={200} yMax={480}
-  xUnit={7} yUnit={1.4}
-  xStep={10} yStep={40}
-  lines={[{m: 0, n: 350, tone: 2}]}
-  segments={[
-    {from: [40, 240], to: [40, 350], tone: 3, dashed: true},
-    {from: [50, 320], to: [50, 350], tone: 3, dashed: true},
-    {from: [60, 330], to: [60, 350], tone: 3, dashed: true},
-    {from: [70, 420], to: [70, 350], tone: 3, dashed: true},
-    {from: [80, 440], to: [80, 350], tone: 3, dashed: true},
+**Exemplo.** A reta $y = 5x + 40$ tem erros $0$, $30$, $-10$, $30$ e $0$, e
+soma $50$: a fila termina 50 acima do zero.
+
+**Contraexemplo.** Aperte o botão da reta $y = 10x - 250$. Ela sobe duas vezes
+mais rápido que os dados, e erra 90 mil no primeiro apartamento e 110 no
+último. A soma dos erros dela também é zero. Duas retas péssimas, com
+inclinações bem diferentes, empatam com a soma zero. Esse placar não separa
+reta boa de reta ruim.
+
+> **Confira.** Por que as retas $y = 350$ e $y = 10x - 250$ têm soma de erros
+> zero? Dica: calcule quanto as duas preveem para 60 m².
+
+<details>
+<summary>Resposta</summary>
+
+As duas preveem 350 para 60 m²: $350$ e $10 \times 60 - 250 = 350$. A soma dos
+preços é $1\,750$, e a soma das previsões de uma reta $y = mx + n$ é
+$m(40 + 50 + 60 + 70 + 80) + 5n = 300m + 5n = 5(60m + n)$. A soma dos erros é
+a diferença, $1\,750 - 5(60m + n) = 5\,[\,350 - (60m + n)\,]$. Ela é zero
+sempre que a reta vale 350 em $x = 60$, isto é, para **toda** reta que passa
+pelo ponto $(60,\ 350)$, por mais torta que seja.
+
+</details>
+
+## Somar os quadrados dos erros dá um placar que não se cancela
+
+O quadrado de um número nunca é negativo, e só é zero quando o número é zero.
+Então, se o placar somar os **quadrados** dos erros, nenhum erro consegue mais
+cancelar outro: cada apartamento só aumenta o placar.
+
+O quadrado tem também um desenho. O erro $e$ é um segmento vertical; o
+quadrado $e^2$ é a área de um quadrado com esse segmento como lado. Na figura,
+cada erro ganha o seu quadrado, e o placar é a soma das áreas dos cinco
+quadrados (onde dois se sobrepõem, cada um conta inteiro).
+
+<FitLineExplorer
+  mode="squares"
+  initial={[0, 350]}
+  sliders={false}
+  presets={[
+    {m: 0, n: 350},
+    {m: 10, n: -250},
+    {m: 5, n: 50},
   ]}
-  points={[
-    {at: [40, 240], tone: 1},
-    {at: [50, 320], tone: 1},
-    {at: [60, 330], tone: 1},
-    {at: [70, 420], tone: 1},
-    {at: [80, 440], tone: 1},
-  ]}
-  caption="A reta horizontal y = 350. Os erros somam zero, porque os de baixo e os de cima se cancelam, e mesmo assim a reta é ruim."
 />
 
-**Tentativa 2: somar os quadrados dos erros.** O quadrado de um número
-nunca é negativo, e só é zero quando o número é zero. Então os erros não
-podem mais se cancelar: cada apartamento só aumenta o placar. Para a reta
-horizontal,
+Para a reta horizontal,
 
 $$
 110^2 + 30^2 + 20^2 + 70^2 + 90^2 = 12\,100 + 900 + 400 + 4\,900 + 8\,100 = 26\,400.
@@ -316,32 +319,190 @@ $$
 10^2 + 20^2 + 20^2 + 20^2 + 10^2 = 100 + 400 + 400 + 400 + 100 = 1\,400.
 $$
 
-Agora o placar separa a reta ruim da boa: 26 400 contra 1 400.
+Agora o placar separa a reta ruim da boa: 26 400 contra 1 400. E a reta
+$y = 10x - 250$, que também somava zero, marca 26 400.
 
 > A **soma dos quadrados dos erros** de uma reta é o placar do método:
+>
 > $$\text{SQE} = (\text{erro}_1)^2 + (\text{erro}_2)^2 + \ldots + (\text{erro}_N)^2.$$
+>
 > A melhor reta, no sentido dos **mínimos quadrados**, é a que tem o menor
-> SQE possível.
+> SQE possível. O nome do método diz o que ele faz: procura o **mínimo** da
+> soma dos **quadrados**.
 
-**E por que não o valor absoluto?** Somar $\lvert \text{erro} \rvert$ também
-impede o cancelamento, e é uma escolha que existe na prática. O quadrado foi
-escolhido por dois motivos, e é honesto dizer quais.
+**Exemplo.** A reta $y = 5x + 40$ tem erros $0$, $30$, $-10$, $30$ e $0$. O
+SQE é $0 + 900 + 100 + 900 + 0 = 1\,900$.
 
-- **O quadrado pesa mais o erro grande.** Um erro de 20 conta $400$, e um de
-  10 conta $100$: dobrar o erro quadruplica a punição. Isso combina com o que
-  a corretora quer. Errar 40 mil num apartamento só é pior que errar 20 mil
-  em dois.
-- **O quadrado leva a uma conta que a álgebra linear resolve.** A soma dos
-  quadrados de uma lista é o quadrado do **módulo** do vetor formado por ela.
-  E o módulo é a distância das lições de vetores. Com o valor absoluto, a
-  conta não vira distância de Pitágoras, e o problema precisa de outros
-  métodos. Com o quadrado, a melhor reta sai de uma projeção, como mostram as
-  próximas seções.
+**Contraexemplo.** Um SQE pequeno não quer dizer que a reta acerta algum
+ponto. A reta $y = 5x + 50$ não acerta nenhum dos cinco e tem o SQE menor das
+três retas da figura. O placar mede o erro total, e não conta acertos.
 
-O segundo motivo é o principal. O nome do método diz exatamente o que ele
-faz: procura o **mínimo** da soma dos **quadrados**.
+> **Confira.** Calcule o SQE da reta $y = 6x - 10$. Os erros dela são $10$,
+> $30$, $-20$, $10$ e $-30$.
 
-## 8. Ponte para a formalização: a lista de previsões é uma combinação das colunas
+<details>
+<summary>Resposta</summary>
+
+$100 + 900 + 400 + 100 + 900 = 2\,400$. É pior que os 1 400 de $y = 5x + 50$,
+mesmo com a soma dos erros com sinal valendo zero nas duas.
+
+</details>
+
+## O quadrado pesa mais o erro grande, e o valor absoluto não
+
+Existe outro jeito de impedir o cancelamento: somar os erros **sem sinal**, o
+valor absoluto $\lvert \text{erro} \rvert$. É uma escolha que existe na
+prática. O quadrado foi escolhido por dois motivos, e é honesto dizer quais.
+
+**Primeiro motivo: o quadrado pesa mais o erro grande.** Um erro de 20 conta
+$400$, e um de 10 conta $100$: dobrar o erro quadruplica a punição. Na figura,
+dois apartamentos dividem 40 mil de erro. Arraste o deslizante e compare as
+duas barras de baixo.
+
+<FitAbsVsSquare />
+
+Pelo valor absoluto, errar 40 mil num apartamento só e errar 20 mil em cada um
+dos dois empatam: $40 + 0 = 20 + 20 = 40$. Pelos quadrados, não:
+$40^2 + 0^2 = 1\,600$, contra $20^2 + 20^2 = 800$. O quadrado prefere os erros
+espalhados, e isso combina com o que a corretora quer: uma regra que não deixa
+nenhum apartamento muito mal avaliado.
+
+O mesmo cuidado tem um custo. Um dado com erro grande de digitação (um preço
+de 4 400 mil no lugar de 440) gera um quadrado enorme e puxa a reta para
+perto dele. Quem usa mínimos quadrados confere os dados antes.
+
+**Segundo motivo: o quadrado vira uma distância.** A soma dos quadrados de uma
+lista de números é o quadrado do **módulo** do vetor formado por ela, e o
+módulo é a distância das lições de vetores, calculada por Pitágoras. Com o
+valor absoluto, a conta não vira essa distância, e o problema precisa de outros
+métodos. Com o quadrado, a melhor reta sai de uma projeção, como mostram as
+próximas seções. Esse é o motivo principal.
+
+**Exemplo.** Os erros $(10,\ 10,\ 10)$ e $(20,\ 5,\ 5)$ somam 30 sem sinal.
+Os quadrados dão $300$ e $400 + 25 + 25 = 450$.
+
+**Contraexemplo.** Quando todos os erros têm o mesmo tamanho, os dois placares
+ordenam as retas do mesmo jeito: erros $(5,\ 5)$ contra $(10,\ 10)$ dão 10
+contra 20 sem sinal e 50 contra 200 nos quadrados. A diferença entre os dois
+placares aparece quando um erro é muito maior que os outros.
+
+> **Confira.** Uma reta erra $(30,\ 0,\ 0)$ em três apartamentos, e outra erra
+> $(10,\ 10,\ 10)$. Qual delas o valor absoluto prefere? E o quadrado?
+
+<details>
+<summary>Resposta</summary>
+
+Sem sinal, as duas somam 30: empate. Com os quadrados, a primeira marca
+$900$ e a segunda $300$: o quadrado prefere a segunda, que espalha o erro.
+
+</details>
+
+## Procurar a melhor reta à mão chega perto, mas não garante nada
+
+Agora existe um placar, e a pergunta da corretora tem sentido: qual reta tem o
+menor SQE? Antes de qualquer fórmula, tente. A figura começa na reta dos
+apartamentos 1 e 2, com SQE de 22 900. Mude $m$ e $n$, observe a área verde e
+registre as tentativas.
+
+<FitLineExplorer mode="search" initial={[8, -80]} />
+
+Duas dicas para a busca. Primeiro, acerte a inclinação: os preços sobem uns
+200 mil de 40 a 80 m², ou seja, cerca de 5 mil por m². Depois, ajuste o $n$
+com o $m$ parado. Atenção a um detalhe: ao mudar o $m$, a reta gira em torno
+do ponto $(0,\ n)$, que fica fora da figura, à esquerda. Por isso uma mudança
+pequena no $m$ levanta ou abaixa a reta inteira na região dos dados, e o $n$
+precisa ser corrigido depois.
+
+Com paciência, a busca chega a $y = 5x + 50$, com SQE de 1 400. Mas a tabela
+só compara as retas testadas. Ela não garante que, entre duas tentativas, não
+exista uma reta com SQE menor. E há infinitas retas: testar uma por uma nunca
+termina.
+
+> Qual reta tem o menor SQE de todas, e como achá-la direto, sem tentativa?
+
+O resto da lição responde com álgebra linear. O caminho é trocar a pergunta
+sobre retas no gráfico por uma pergunta sobre vetores, em que a projeção já
+sabe responder.
+
+> **Confira.** Você registrou $y = 5x + 40$ com 1 900, $y = 5x + 70$ com
+> 3 400 e $y = 5x + 50$ com 1 400. Isso prova que $y = 5x + 50$ é a melhor de
+> todas?
+
+<details>
+<summary>Resposta</summary>
+
+Não. Prova só que ela é a melhor **entre as três testadas**. Uma reta com
+outro $m$, ou com um $n$ entre 40 e 70 que ninguém testou, poderia ter SQE
+menor. A garantia vem do argumento de Pitágoras, mais adiante.
+
+</details>
+
+## Pedir a reta exata é resolver um sistema sem solução
+
+Pedir uma reta que passe pelos cinco pontos é pedir $m$ e $n$ com
+
+$$
+\begin{cases}
+40m + n = 240 \\
+50m + n = 320 \\
+60m + n = 330 \\
+70m + n = 420 \\
+80m + n = 440
+\end{cases}
+$$
+
+São cinco equações e duas incógnitas. As duas primeiras sozinhas já decidem
+tudo. Subtraindo a primeira da segunda, $10m = 80$, logo $m = 8$. Voltando à
+primeira, $320 + n = 240$, logo $n = -80$. A terceira equação pede
+$60 \times 8 - 80 = 330$, mas $480 - 80 = 400$. A contradição mostra que o
+sistema é **impossível**: é a reta da primeira figura da lição.
+
+A figura abaixo mostra a mesma situação num sistema menor, o do Exemplo 6 da
+lição de escalonamento: três equações em $x$ e $y$, cada uma desenhada como uma
+reta. Troque a terceira equação.
+
+<SystemLines
+  eqs={[[1, 1, 5], [2, -1, 1], [1, 2, 9]]}
+  presets={[
+    {label: 'Terceira equação: x + 2y = 8', eqs: [[1, 1, 5], [2, -1, 1], [1, 2, 8]]},
+    {label: 'Terceira equação: x + 2y = 9', eqs: [[1, 1, 5], [2, -1, 1], [1, 2, 9]]},
+  ]}
+  window={{xMin: -1, xMax: 6, yMin: -1, yMax: 6}}
+  xUnit={46}
+  caption="Com x + 2y = 9, cada par de retas se cruza num ponto diferente, e os três pontos formam um triângulo: nenhum ponto está nas três retas. Com x + 2y = 8, as três passam por (2, 3)."
+/>
+
+> Um **sistema sobredeterminado** tem mais equações que incógnitas. Quando
+> as equações vêm de medidas reais, ele quase nunca tem solução, porque cada
+> medida traz um pequeno erro diferente.
+
+**Exemplo.** O sistema dos apartamentos: cinco equações, duas incógnitas,
+nenhuma solução. E o sistema da figura com $x + 2y = 9$: três equações, duas
+incógnitas, nenhuma solução.
+
+**Contraexemplo: mais equações não obriga a não ter solução.** No sistema
+$x + y = 5$, $2x - y = 1$, $x + 2y = 8$, há três equações e duas incógnitas, e
+$(2,\ 3)$ satisfaz as três. As três retas passam pelo mesmo ponto. O que torna
+um sistema impossível não é o número de equações, e sim uma equação contradizer
+as outras.
+
+Quando não existe solução exata, a pergunta muda: qual escolha de incógnitas
+erra menos? Para os apartamentos, “errar menos” já tem sentido: menor SQE.
+
+> **Confira.** Os pontos $(1,\ 2)$, $(2,\ 4)$ e $(3,\ 6)$ devem ser ajustados
+> por uma reta $y = mx + n$. O sistema tem mais equações que incógnitas. Ele
+> tem solução?
+
+<details>
+<summary>Resposta</summary>
+
+Tem. As equações são $m + n = 2$, $2m + n = 4$ e $3m + n = 6$. As duas
+primeiras dão $m = 2$ e $n = 0$, e na terceira $3 \times 2 + 0 = 6$ confere.
+Os três pontos estão sobre a reta $y = 2x$.
+
+</details>
+
+## As previsões de uma reta formam um vetor: uma combinação das colunas
 
 Até aqui, cada reta foi um desenho no gráfico. Para usar a projeção, é preciso
 trocar de ponto de vista e olhar para **listas de cinco números**.
@@ -354,11 +515,20 @@ $$
 $$
 
 É um vetor de $\mathbb{R}^5$, como os vetores de cinco gêneros de filmes da
-lição sobre vetores com muitas coordenadas.
+lição sobre vetores com muitas coordenadas. Lá, cada cliente era uma lista de
+cinco contagens de filmes; aqui, a corretora tem uma lista de cinco preços.
 
 **As previsões de uma reta também formam um vetor.** A reta $y = mx + n$
 prevê $40m + n$ para o primeiro apartamento, $50m + n$ para o segundo, e assim
-por diante. Separando o que multiplica $m$ do que multiplica $n$:
+por diante. Cada previsão tem duas parcelas: uma com $m$, que depende da área,
+e uma com $n$, igual em todos. A figura desenha cada previsão como uma barra
+feita dessas duas parcelas.
+
+<FitPredictionBars />
+
+As partes escuras crescem com a área: são $m$ vezes 40, 50, 60, 70 e 80. As
+partes claras são todas iguais a $n$. Juntando as parcelas de mesmo tipo num
+vetor só:
 
 $$
 \begin{bmatrix} 40m + n \\ 50m + n \\ 60m + n \\ 70m + n \\ 80m + n \end{bmatrix}
@@ -366,10 +536,9 @@ $$
 = \begin{bmatrix} 40 & 1 \\ 50 & 1 \\ 60 & 1 \\ 70 & 1 \\ 80 & 1 \end{bmatrix}\begin{bmatrix} m \\ n \end{bmatrix}.
 $$
 
-O primeiro passo separou cada coordenada em duas parcelas, uma com $m$ e uma
-com $n$, e juntou as parcelas de mesmo tipo num vetor só. O segundo passo é a
-leitura do produto de matriz por vetor pelas colunas, da lição de matrizes:
-pesos $m$ e $n$ multiplicando as colunas.
+O primeiro passo separou cada coordenada nas duas parcelas, as duas partes de
+cada barra. O segundo passo é a leitura do produto de matriz por vetor pelas
+colunas, da lição de matrizes: pesos $m$ e $n$ multiplicando as colunas.
 
 Vamos dar nomes. A coluna das áreas é $\vec{a} = (40,\ 50,\ 60,\ 70,\ 80)$. A
 coluna de uns é $\vec{1} = (1,\ 1,\ 1,\ 1,\ 1)$: o número 1 com a seta lembra
@@ -382,23 +551,48 @@ A\vec{c} = m\vec{a} + n\vec{1}.
 $$
 
 **Os erros também formam um vetor.** É a diferença entre os observados e os
-previstos, coordenada a coordenada:
+previstos, coordenada a coordenada: os segmentos verdes da figura.
 
 $$
 \vec{r} = \vec{b} - A\vec{c}.
 $$
 
-E o placar da seção 7 é a soma dos quadrados das coordenadas de $\vec{r}$, que
-é o quadrado do módulo de $\vec{r}$:
+E o placar SQE é a soma dos quadrados das coordenadas de $\vec{r}$, que é o
+quadrado do módulo de $\vec{r}$:
 
 $$
 \text{SQE} = \lVert \vec{r} \rVert^2 = \lVert \vec{b} - A\vec{c} \rVert^2.
 $$
 
-Leia essa igualdade com calma, porque ela é a ponte da lição inteira.
-$\lVert \vec{b} - A\vec{c} \rVert$ é a **distância** entre a ponta do vetor
-$\vec{b}$ (os preços reais) e a ponta do vetor $A\vec{c}$ (os preços que a
-reta prevê). Então:
+Com isso, pedir a reta exata é pedir $A\vec{c} = \vec{b}$: o sistema de cinco
+equações da seção anterior, agora numa linha.
+
+**Exemplo.** Com $m = 5$ e $n = 50$, a lista de previsões é
+$5\vec{a} + 50\vec{1} = (250,\ 300,\ 350,\ 400,\ 450)$, e o resto é
+$\vec{r} = (-10,\ 20,\ -20,\ 20,\ -10)$.
+
+**Contraexemplo.** Nem toda lista de cinco números é a lista de previsões de
+uma reta. A lista $\vec{b}$ dos preços, por exemplo, não é: se fosse,
+existiriam $m$ e $n$ com $A\vec{c} = \vec{b}$, e a seção anterior mostrou que
+não existem. As listas de previsões têm um formato especial: mudam sempre o
+mesmo tanto de um apartamento para o seguinte (o $10m$ de cada 10 m²).
+
+> **Confira.** Com $m = 4$ e $n = 100$, qual é a lista de previsões? E o resto?
+
+<details>
+<summary>Resposta</summary>
+
+$4\vec{a} + 100\vec{1} = (160 + 100,\ 200 + 100,\ 240 + 100,\ 280 + 100,\ 320 + 100) = (260,\ 300,\ 340,\ 380,\ 420)$.
+O resto é $\vec{b}$ menos isso: $(-20,\ 20,\ -10,\ 40,\ 20)$.
+
+</details>
+
+## O placar é uma distância, e o mais perto é o pé da perpendicular
+
+Leia a igualdade $\text{SQE} = \lVert \vec{b} - A\vec{c} \rVert^2$ com calma,
+porque ela liga a pergunta sobre retas à pergunta sobre vetores. $\lVert \vec{b} - A\vec{c} \rVert$ é a
+**distância** entre a ponta do vetor $\vec{b}$ (os preços reais) e a ponta do
+vetor $A\vec{c}$ (os preços que a reta prevê). Então:
 
 > Escolher a reta com o menor SQE é escolher, entre todos os vetores da forma
 > $m\vec{a} + n\vec{1}$, o que fica **mais perto** de $\vec{b}$.
@@ -407,95 +601,78 @@ Os vetores da forma $m\vec{a} + n\vec{1}$ são as combinações lineares das
 duas colunas: o **conjunto gerado** pelas colunas de $A$, da lição de
 combinação linear. Como $\vec{a}$ e $\vec{1}$ não são paralelos, esse
 conjunto é um **plano** que passa pela origem, só que dentro de
-$\mathbb{R}^5$.
+$\mathbb{R}^5$. A busca com os deslizantes era um passeio de $A\vec{c}$ por
+esse plano.
 
-A pergunta virou esta: qual é o ponto de um plano mais perto de um ponto
-dado? A resposta, pela lição de projeção, é o pé da perpendicular. Este é o
-trecho mais difícil da lição. Se ele não fechar na primeira leitura, isso é
-esperado. Releia depois da seção 10, quando os números estiverem na mesa.
+Ninguém consegue desenhar $\mathbb{R}^5$. Mas, com três pontos de dados em vez
+de cinco, as listas têm três números, e o desenho cabe no espaço. A figura usa
+os pontos $(0,\ 2)$, $(1,\ 1)$ e $(2,\ 3)$. Cada eixo guarda o valor de um
+ponto. As colunas são $\vec{a} = (0,\ 1,\ 2)$, os três valores de $x$, e
+$\vec{1} = (1,\ 1,\ 1)$. Os valores observados formam $\vec{b} = (2,\ 1,\ 3)$.
+Mova $A\vec{c}$ pelo plano com os deslizantes e procure o ponto mais perto de
+$\vec{b}$. Depois gire a cena até ver o plano de perfil.
 
-**Onde a analogia com o desenho funciona e onde ela para.** A figura abaixo é
-a lição de projeção outra vez: uma reta que passa pela origem, um vetor fora
-dela, o pé da perpendicular e o resto em ângulo reto. Aqui, a reta faz o
-papel do plano gerado pelas colunas, e o vetor $(2,\ 9)$ faz o papel de
-$\vec{b}$.
+<FitProjection3D />
 
-<CartesianPlane
-  xMin={-1} xMax={10} yMin={-1} yMax={10}
-  xUnit={30}
-  lines={[{m: 0.75, n: 0, tone: 2}]}
-  segments={[
-    {from: [0, 0], to: [2, 9], tone: 1, arrow: true, label: '\\vec{b}', dx: -16, dy: 0},
-    {from: [0, 0], to: [5.6, 4.2], tone: 2, arrow: true},
-    {from: [5.6, 4.2], to: [2, 9], tone: 3, dashed: true, label: '\\vec{r}', dx: 14, dy: 4},
-    {from: [8, 6], to: [2, 9], muted: true, dashed: true},
-    {from: [5.24, 4.68], to: [5.72, 5.04], tone: 0},
-    {from: [5.72, 5.04], to: [6.08, 4.56], tone: 0},
-  ]}
-  points={[
-    {at: [5.6, 4.2], tone: 2, label: 'A\\vec{c}', dx: 18, dy: 16},
-    {at: [8, 6], tone: 0, label: '\\text{outro}', dx: 16, dy: 18},
-  ]}
-  caption="A projeção da lição anterior, como analogia: o vetor b, a reta que faz o papel do conjunto gerado pelas colunas, o ponto mais perto (Ac) e o resto r perpendicular. Qualquer outro ponto da reta fica mais longe de b (tracejado cinza)."
-/>
+O ponto mais perto é $A\vec{c} = (1{,}5;\ 2;\ 2{,}5)$, com $m = 0{,}5$ e
+$n = 1{,}5$. O resto é $(0{,}5;\ -1;\ 0{,}5)$, e o SQE é
+$0{,}25 + 1 + 0{,}25 = 1{,}5$. Na vista de perfil, o plano vira uma reta, e o
+segmento verde chega a ela em ângulo reto. A reta que melhor se ajusta aos três
+pontos é $y = 0{,}5x + 1{,}5$.
 
-A analogia vale para as ideias: o mais perto é o pé da perpendicular, o resto
-é perpendicular, e Pitágoras prova que nenhum outro ponto é melhor. Ela deixa
-de valer no tamanho: o conjunto gerado pelas colunas é um plano, e não uma
-reta, e ele mora em $\mathbb{R}^5$, que ninguém consegue desenhar. É por isso
-que a próxima seção faz tudo com produtos escalares, que funcionam em qualquer
-número de coordenadas.
+É a projeção da lição de geometria, com o mesmo argumento. Lá, o galpão
+$(2,\ 9)$ estava fora da estrada, o ponto da estrada mais perto dele era o pé
+da perpendicular, e Pitágoras mostrava que qualquer outro ponto ficava mais
+longe. Aqui, $\vec{b}$ faz o papel do galpão, e o plano das colunas faz o papel
+da estrada.
+
+> A melhor lista de previsões é a **projeção** de $\vec{b}$ sobre o conjunto
+> gerado pelas colunas de $A$: o ponto desse conjunto em que o resto
+> $\vec{b} - A\vec{c}$ fica perpendicular a ele.
+
+**Onde a analogia funciona e onde ela para.** A analogia vale para as ideias:
+o mais perto é o pé da perpendicular, o resto é perpendicular, e Pitágoras
+prova que nenhum outro ponto é melhor. Ela deixa de valer no tamanho: com os
+apartamentos, o conjunto gerado pelas colunas é um plano dentro de
+$\mathbb{R}^5$, que nenhuma figura mostra. É por isso que a próxima seção faz
+tudo com produtos escalares, que funcionam em qualquer número de coordenadas.
 
 **Cuidado com uma confusão.** Esta perpendicular **não** aparece no gráfico
 dos apartamentos. No gráfico, os erros continuam sendo segmentos verticais. A
 perpendicular acontece entre vetores de cinco coordenadas, num espaço onde
 cada apartamento é um eixo.
 
-## 9. Formalização
+**Exemplo.** No desenho, o pé da perpendicular tem resto
+$(0{,}5;\ -1;\ 0{,}5)$. O produto escalar com $\vec{a}$ é
+$0 - 1 + 1 = 0$, e com $\vec{1}$ é $0{,}5 - 1 + 0{,}5 = 0$: o resto é
+perpendicular às duas colunas.
 
-### 9.1 O sistema sem solução
+**Contraexemplo.** Com $m = 1$ e $n = 0{,}5$, a lista de previsões é
+$(0{,}5;\ 1{,}5;\ 2{,}5)$ e o resto é $(1{,}5;\ -0{,}5;\ 0{,}5)$. O produto
+com $\vec{a}$ dá $0 - 0{,}5 + 1 = 0{,}5$, que não é zero: o resto não é
+perpendicular ao plano, e o SQE, $2{,}25 + 0{,}25 + 0{,}25 = 2{,}75$, é maior
+que 1,5.
 
-Pedir uma reta que passe pelos cinco pontos é pedir $m$ e $n$ com
+> **Confira.** O resto da reta $y = 5x + 50$ é
+> $\vec{r} = (-10,\ 20,\ -20,\ 20,\ -10)$. Ele é perpendicular ao vetor de uns,
+> $(1,\ 1,\ 1,\ 1,\ 1)$?
 
-$$
-\begin{cases}
-40m + n = 240 \\
-50m + n = 320 \\
-60m + n = 330 \\
-70m + n = 420 \\
-80m + n = 440
-\end{cases}
-\qquad\text{ou seja,}\qquad A\vec{c} = \vec{b}.
-$$
+<details>
+<summary>Resposta</summary>
 
-São cinco equações e duas incógnitas. As duas primeiras sozinhas já decidem
-tudo. Subtraindo a primeira da segunda, $10m = 80$, logo $m = 8$. Voltando à
-primeira, $320 + n = 240$, logo $n = -80$. A terceira equação pede
-$60 \times 8 - 80 = 330$, mas $480 - 80 = 400$. A contradição mostra que o
-sistema é **impossível**.
+É. O produto escalar é a soma dos produtos coordenada a coordenada:
+$-10 + 20 - 20 + 20 - 10 = 0$. Produto escalar zero é a definição de
+perpendicular em qualquer número de coordenadas. A próxima seção mostra que
+ele também é perpendicular à coluna das áreas.
 
-> Um **sistema sobredeterminado** tem mais equações que incógnitas. Quando
-> as equações vêm de medidas reais, ele quase nunca tem solução, porque cada
-> medida traz um pequeno erro diferente.
+</details>
 
-**Exemplo.** O sistema dos apartamentos: cinco equações, duas incógnitas,
-nenhuma solução.
-
-**Contraexemplo: mais equações não obriga a não ter solução.** No sistema
-$x + y = 5$, $2x - y = 1$, $x + 2y = 8$, da lição de escalonamento, há três
-equações e duas incógnitas, e $(2,\ 3)$ satisfaz as três. As três retas passam
-pelo mesmo ponto. O que torna um sistema impossível não é o número de
-equações, e sim uma equação contradizer as outras.
-
-### 9.2 O critério: o resto perpendicular a cada coluna
+## Resto perpendicular a cada coluna: as equações normais
 
 Quando $A\vec{c} = \vec{b}$ não tem solução, procuramos o $\vec{c}$ que deixa
-$A\vec{c}$ o mais perto possível de $\vec{b}$. Pela seção 8, isso acontece
-quando o resto $\vec{r} = \vec{b} - A\vec{c}$ é perpendicular ao conjunto
-gerado pelas colunas.
-
-“Perpendicular a um plano inteiro” parece pedir infinitas contas, uma para
-cada vetor do plano. Não pede. É suficiente conferir que o resto é
+o resto $\vec{r} = \vec{b} - A\vec{c}$ perpendicular ao conjunto gerado pelas
+colunas. “Perpendicular a um plano inteiro” parece pedir infinitas contas, uma
+para cada vetor do plano. Não pede. É suficiente conferir que o resto é
 perpendicular a cada uma das **colunas**, e o motivo vem a seguir.
 
 **Por que as colunas são suficientes.** Suponha $\vec{r} \cdot \vec{a} = 0$ e
@@ -514,38 +691,15 @@ argumento vale com qualquer número de colunas.
 > deixa o resto $\vec{r} = \vec{b} - A\vec{c}$ perpendicular a cada coluna de
 > $A$.
 
-**Exemplo.** Com a reta $y = 5x + 50$, o resto é
-$\vec{r} = (-10,\ 20,\ -20,\ 20,\ -10)$. Com a coluna de uns,
-$\vec{r} \cdot \vec{1} = -10 + 20 - 20 + 20 - 10 = 0$. Com a coluna das
-áreas,
+**A transposta faz as duas contas de uma vez.** As linhas de $A^{\mathsf{T}}$
+são as colunas de $A$ deitadas. Multiplicar $A^{\mathsf{T}}$ por um vetor, pela
+leitura das linhas, é fazer o produto escalar de cada linha com esse vetor, ou
+seja, de cada **coluna de $A$** com ele. A figura faz essas contas para o
+resto da reta $y = 5x + 50$, coordenada por coordenada.
 
-$$
-\vec{r} \cdot \vec{a} = -10 \times 40 + 20 \times 50 - 20 \times 60 + 20 \times 70 - 10 \times 80 = -400 + 1\,000 - 1\,200 + 1\,400 - 800 = 0.
-$$
+<FitNormalRows />
 
-As duas condições valem. A reta $y = 5x + 50$ é a melhor, e a seção 10 vai
-chegar a ela sem precisar adivinhá-la.
-
-**Contraexemplo.** Com a reta $y = 5x + 40$, os erros são
-$(0,\ 30,\ -10,\ 30,\ 0)$. O produto com a coluna de uns dá
-$0 + 30 - 10 + 30 + 0 = 50$, que não é zero. Esse resto não é perpendicular,
-e a reta não é a melhor.
-
-### 9.3 As equações normais
-
-As condições da seção 9.2 são uma equação por coluna. Com duas colunas,
-
-$$
-\vec{a} \cdot (\vec{b} - A\vec{c}) = 0
-\qquad\text{e}\qquad
-\vec{1} \cdot (\vec{b} - A\vec{c}) = 0.
-$$
-
-Agora uma observação sobre a transposta. As linhas de $A^{\mathsf{T}}$ são as
-colunas de $A$ deitadas. Multiplicar $A^{\mathsf{T}}$ por um vetor, pela
-leitura das linhas, é fazer o produto escalar de cada coluna de $A$ com esse
-vetor. Então as duas condições acima, empilhadas, são uma só equação de
-matrizes:
+As duas condições, empilhadas, são uma só equação de matrizes:
 
 $$
 A^{\mathsf{T}}(\vec{b} - A\vec{c}) = \begin{bmatrix} \vec{a} \cdot (\vec{b} - A\vec{c}) \\ \vec{1} \cdot (\vec{b} - A\vec{c}) \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix}.
@@ -556,11 +710,14 @@ $A^{\mathsf{T}}\vec{b} - A^{\mathsf{T}}A\vec{c} = \vec{0}$. Somando
 $A^{\mathsf{T}}A\vec{c}$ aos dois lados, como numa equação do 1º grau:
 
 > As **equações normais** do sistema $A\vec{c} = \vec{b}$ são
+>
 > $$A^{\mathsf{T}}A\,\vec{c} = A^{\mathsf{T}}\vec{b}.$$
-> Quando as colunas de $A$ são independentes, elas têm uma única solução, e
-> essa solução dá o $A\vec{c}$ mais perto de $\vec{b}$.
+>
+> Quando as colunas de $A$ são independentes, as equações normais têm uma
+> única solução, e essa solução dá o $A\vec{c}$ mais perto de $\vec{b}$.
 
-O nome “normal” vem do sentido antigo da palavra: **perpendicular**. As
+O nome “normal” vem do sentido que a palavra tem na geometria:
+**perpendicular**. As
 equações normais são as equações do resto perpendicular.
 
 Repare no tamanho das coisas. $A$ é $5 \times 2$, e $A^{\mathsf{T}}$ é
@@ -572,7 +729,14 @@ mesma equação aparece como $A^{\mathsf{T}}A\vec{x} = A^{\mathsf{T}}\vec{b}$,
 com a letra $\vec{x}$ no lugar de $\vec{c}$. Aqui usamos $\vec{c}$ para não
 confundir com a área $x$.
 
-**Exemplo.** Os apartamentos levam ao sistema $2 \times 2$ da seção 10.
+**Exemplo.** Os três pontos da figura em três dimensões. Cada entrada de
+$A^{\mathsf{T}}A$ é o produto escalar de duas colunas: $\vec{a} \cdot \vec{a} = 0 + 1 + 4 = 5$,
+$\vec{a} \cdot \vec{1} = 0 + 1 + 2 = 3$ e $\vec{1} \cdot \vec{1} = 3$. As de
+$A^{\mathsf{T}}\vec{b}$: $\vec{a} \cdot \vec{b} = 0 + 1 + 6 = 7$ e
+$\vec{1} \cdot \vec{b} = 2 + 1 + 3 = 6$. O sistema é $5m + 3n = 7$ e
+$3m + 3n = 6$. Subtraindo a segunda da primeira, $2m = 1$, então $m = 0{,}5$;
+e $3n = 6 - 1{,}5 = 4{,}5$, então $n = 1{,}5$. É o pé da perpendicular que a
+figura mostrou.
 
 **Contraexemplo: quando as colunas não são independentes.** Se os cinco
 apartamentos tivessem a mesma área, digamos 60 m², a coluna das áreas seria
@@ -583,11 +747,31 @@ informação dos dados diz quanto o preço muda com a área. As equações norma
 teriam infinitas soluções, como os sistemas com variável livre da lição de
 escalonamento.
 
-### 9.4 Por que é a menor de todas
+> **Confira.** A corretora passa a usar área, número de quartos e andar, com
+> 200 vendas. Com a coluna de uns, que dimensão tem $A$? E $A^{\mathsf{T}}A$?
 
-A seção 9.2 escolheu o $\vec{c}$ pela perpendicular. Falta provar que nenhum
-outro $\vec{c}$ faz melhor. É o argumento de Pitágoras da projeção, agora em
-$\mathbb{R}^5$.
+<details>
+<summary>Resposta</summary>
+
+$A$ tem uma linha por venda e uma coluna por variável, mais a de uns:
+$200 \times 4$. Então $A^{\mathsf{T}}A$ é $(4 \times 200)(200 \times 4)$, uma
+matriz $4 \times 4$: as equações normais são 4 equações com 4 incógnitas,
+qualquer que seja o número de vendas.
+
+</details>
+
+## Pitágoras garante que nenhuma outra reta erra menos
+
+A seção anterior escolheu o $\vec{c}$ pela perpendicular. Falta provar que
+nenhum outro $\vec{c}$ faz melhor. É o argumento de Pitágoras da projeção,
+agora com vetores. A figura mostra o caso dos três pontos: $H$ é o pé da
+perpendicular, e $A\vec{c}$ é outro ponto qualquer do plano.
+
+<FitProjection3D
+  pythagoras
+  initial={[1, 1]}
+  caption="H é o pé da perpendicular de b sobre o plano. Com A c em outro ponto do plano, b, H e A c formam um triângulo retângulo, com o ângulo reto em H. O painel escreve a soma dos quadrados de A c como 1,5 (o resto de H, ao quadrado) mais o quadrado da distância de A c até H."
+/>
 
 **Pitágoras com vetores.** Se $\vec{u} \cdot \vec{w} = 0$, então
 
@@ -618,16 +802,43 @@ $$
 
 O lado esquerdo é o SQE da outra reta. O primeiro termo da direita é o SQE da
 melhor reta. Como $\lVert \vec{w} \rVert^2$ nunca é negativo, **o SQE de
-qualquer outra reta é o da melhor mais alguma coisa**.
+qualquer outra reta é o da melhor mais alguma coisa**. Essa coisa só é zero
+quando $\vec{w}$ é o vetor nulo, isto é, quando a outra reta faz as mesmas
+previsões.
 
-**Conferindo com números.** A reta $y = 5x + 40$ tem $\vec{c}\,' = (5,\ 40)$,
-e a melhor tem $\vec{c} = (5,\ 50)$. Então
-$\vec{c} - \vec{c}\,' = (0,\ 10)$, e $\vec{w} = 0\vec{a} + 10\vec{1} =
-(10,\ 10,\ 10,\ 10,\ 10)$, com $\lVert \vec{w} \rVert^2 = 5 \times 100 = 500$.
-A fórmula prevê $\text{SQE} = 1\,400 + 500 = 1\,900$. Direto dos erros
+**Exemplo, com os apartamentos.** A reta $y = 5x + 40$ tem
+$\vec{c}\,' = (5,\ 40)$, e a melhor tem $\vec{c} = (5,\ 50)$, como a próxima
+seção vai calcular. Então $\vec{c} - \vec{c}\,' = (0,\ 10)$, e
+$\vec{w} = 0\vec{a} + 10\vec{1} = (10,\ 10,\ 10,\ 10,\ 10)$, com
+$\lVert \vec{w} \rVert^2 = 5 \times 100 = 500$. A fórmula prevê
+$\text{SQE} = 1\,400 + 500 = 1\,900$. Direto dos erros
 $(0,\ 30,\ -10,\ 30,\ 0)$: $0 + 900 + 100 + 900 + 0 = 1\,900$. Confere.
 
-## 10. Resolvendo o problema dos apartamentos
+**Contraexemplo.** A soma de quadrados só se separa assim porque $\vec{w}$ é
+perpendicular a $\vec{r}$. Com um resto que não é perpendicular às colunas, a
+conta falha. Partindo de $y = 5x + 40$ como se fosse a melhor, a reta
+$y = 5x + 50$ teria $\vec{w} = (-10,\ -10,\ -10,\ -10,\ -10)$, e a “fórmula”
+daria $1\,900 + 500 = 2\,400$. Mas o SQE de $y = 5x + 50$ é 1 400. O termo do
+meio, $2\,(\vec{u} \cdot \vec{w})$, não sumiu.
+
+> **Confira.** Sem calcular os erros, use Pitágoras para achar o SQE da reta
+> $y = 5x + 60$.
+
+<details>
+<summary>Resposta</summary>
+
+$\vec{c} - \vec{c}\,' = (5,\ 50) - (5,\ 60) = (0,\ -10)$, então
+$\vec{w} = -10\,\vec{1}$ e $\lVert \vec{w} \rVert^2 = 5 \times 100 = 500$. O
+SQE é $1\,400 + 500 = 1\,900$. Conferindo pelos erros
+$(-20,\ 10,\ -30,\ 10,\ -20)$: $400 + 100 + 900 + 100 + 400 = 1\,900$.
+
+</details>
+
+## Resolvendo o problema dos apartamentos
+
+Previsão antes da conta: a busca com os deslizantes chegou perto de $m = 5$ e
+$n = 50$. Se a teoria estiver certa, as equações normais devem dar exatamente
+um par perto desse.
 
 **Passo 1: montar $A$ e $\vec{b}$.**
 
@@ -686,15 +897,16 @@ $5n = 250$ e $n = 50$.
 
 **Passo 5: conferir.** O resto é
 $\vec{r} = \vec{b} - A\vec{c} = (240 - 250,\ 320 - 300,\ 330 - 350,\ 420 - 400,\ 440 - 450)
-= (-10,\ 20,\ -20,\ 20,\ -10)$. A seção 9.2 já mostrou que ele é
-perpendicular às duas colunas. O SQE é 1 400.
+= (-10,\ 20,\ -20,\ 20,\ -10)$. A figura das linhas de $A^{\mathsf{T}}$ já
+mostrou que ele é perpendicular às duas colunas. O SQE é 1 400. A previsão
+estava certa: a busca tinha chegado à melhor reta, só não tinha como saber.
 
 **Respondendo às perguntas da abertura.**
 
 1. “Errar menos” quer dizer ter a menor soma dos quadrados dos erros. Com
    esse placar, a reta $y = 5x + 50$ é a melhor: SQE de 1 400. Qualquer
-   outra reta tem SQE maior, pela seção 9.4. A tabela compara com três
-   retas que alguém poderia tentar a olho:
+   outra reta tem SQE maior, pelo argumento de Pitágoras. A tabela compara
+   com três retas que alguém poderia tentar a olho:
 
    | Reta | Como foi escolhida | Erros | SQE |
    |---|---|---|---|
@@ -711,37 +923,85 @@ perpendicular às duas colunas. O SQE é 1 400.
    leitura direta: nesse prédio, cada m² a mais acrescenta, em média, R\$ 5
    mil ao preço.
 
-<CartesianPlane
-  xMin={30} xMax={90} yMin={200} yMax={480}
-  xUnit={7} yUnit={1.4}
-  xStep={10} yStep={40}
-  lines={[{m: 5, n: 50, tone: 2}, {m: 5, n: 40, tone: 3, dashed: true}]}
-  points={[
-    {at: [40, 240], tone: 1},
-    {at: [50, 320], tone: 1},
-    {at: [60, 330], tone: 1},
-    {at: [70, 420], tone: 1},
-    {at: [80, 440], tone: 1},
-    {at: [65, 375], tone: 2, open: true, label: '(65,\\ 375)', dx: -38, dy: -12},
-  ]}
-  labels={[
-    {at: [86, 480], math: 'y = 5x + 50', tone: 2, dx: -22, dy: 16, anchor: 'end'},
-    {at: [88, 400], math: 'y = 5x + 40', tone: 3, anchor: 'end'},
-  ]}
-  caption="A melhor reta (contínua) e a reta pelos apartamentos 1 e 5 (tracejada). A bolinha vazia é a previsão para 65 m²: R$ 375 mil."
-/>
+Na figura, o deslizante escolhe a área de um apartamento novo, e a bolinha
+vazia sobre a reta é a previsão. Leve o deslizante para fora da faixa de 40 a
+80 m² e leia o aviso.
+
+<FitLineExplorer mode="solved" initialArea={65} />
 
 **Um aviso sobre a previsão.** Os dados vão de 40 a 80 m². Dentro dessa faixa,
 a reta é uma boa regra. Fora dela, ninguém garante. A reta diria que um
 apartamento de 0 m² custa R\$ 50 mil, o que não faz sentido. Prever fora da
-faixa dos dados se chama **extrapolar**, e é o erro 4 da seção 13.
+faixa dos dados se chama **extrapolar**, e é o Erro 4 da seção de erros
+comuns.
 
-## 11. Exemplos resolvidos
+## Ajustar pesos para errar menos: o primeiro modelo de aprendizado de máquina
+
+O que esta lição fez tem nome em outras áreas.
+
+- Na estatística, achar a reta de mínimos quadrados é a **regressão linear**.
+- No aprendizado de máquina, a regra $y = mx + n$ é um **modelo**. Os números
+  $m$ e $n$ são os **parâmetros** (ou **pesos**) do modelo. Achar os pesos a
+  partir dos dados é **treinar** o modelo. O SQE, dividido pelo número de
+  dados, é a **função de perda** chamada erro quadrático médio. Usar o modelo
+  num apartamento novo é fazer uma **previsão**.
+
+Com os apartamentos, a perda da melhor reta é $1\,400 \div 5 = 280$. Na
+figura, os pesos começam na reta dos apartamentos 1 e 2, com perda
+$22\,900 \div 5 = 4\,580$. O botão treina o modelo: resolve as equações
+normais e leva a reta até a resposta, e a perda desce até 280.
+
+<FitLineExplorer mode="train" initial={[8, -80]} />
+
+Com muitas variáveis de entrada, nada muda na conta. Se a corretora usar área,
+número de quartos e andar, a matriz $A$ ganha uma coluna para cada variável, e
+$\vec{c}$ ganha um coeficiente para cada coluna. As equações normais continuam
+$A^{\mathsf{T}}A\vec{c} = A^{\mathsf{T}}\vec{b}$, agora com um sistema maior.
+É a camada $W\vec{x} + \vec{b}$ da lição de matrizes, com uma saída só (lá,
+$\vec{b}$ é o número somado no fim, o papel do $n$ aqui, e não o vetor dos
+preços).
+
+**Onde o deep learning é diferente.** Uma rede neural profunda também tem
+pesos e também é treinada para diminuir uma função de perda, muitas vezes o
+mesmo erro quadrático médio. Mas a rede tem funções com dobra entre as
+camadas, como a ReLU da lição de produto de matrizes. Por causa delas, as
+previsões deixam de ser combinações lineares das colunas, o conjunto de
+previsões possíveis deixa de ser um plano, e não existe uma projeção que dê a
+resposta numa conta só. O treino passa a andar aos poucos, ajustando os
+pesos na direção em que a perda diminui. Essa direção se calcula com
+derivadas de funções de várias variáveis (o gradiente), assunto que este
+curso ainda não cobre. A regressão linear é o caso em que a resposta sai
+exata, de uma vez, e é por isso que ela vem primeiro.
+
+**Exemplo.** O modelo $y = 5x + 40$ tem perda $1\,900 \div 5 = 380$, maior que
+os 280 do modelo treinado.
+
+**Contraexemplo.** Perda zero nem sempre é sinal de um bom modelo. Treinado
+só com os apartamentos 1 e 2, o modelo seria a reta que passa pelos dois, com
+perda zero nesses dois dados. É a reta $y = 8x - 80$ da abertura, que errou
+120 mil no apartamento 5. Uma perda pequena nos dados
+de treino não garante previsões boas em dados novos. É por isso que, em
+aprendizado de máquina, o modelo é testado com dados que ele não viu.
+
+> **Confira.** A perda (erro quadrático médio) da reta $y = 350$ é quanto?
+
+<details>
+<summary>Resposta</summary>
+
+O SQE dela é 26 400, e a perda é $26\,400 \div 5 = 5\,280$, quase 19 vezes a
+perda do modelo treinado.
+
+</details>
+
+## Exemplos resolvidos
 
 ### Exemplo 1: o placar de uma reta
 
 Calcule o SQE da reta $y = 2x + 1$ para os pontos $(0,\ 2)$, $(1,\ 2)$ e
 $(2,\ 6)$.
+
+Previsão: as previsões são 1, 3 e 5, todas a uma unidade dos valores
+observados. Espere um SQE pequeno, perto de 3.
 
 <details>
 <summary>Solução</summary>
@@ -757,7 +1017,8 @@ $2 - 3 = -1$ e $6 - 5 = 1$. O SQE é $1^2 + (-1)^2 + 1^2 = 3$.
 Ache a reta de mínimos quadrados para $(0,\ 2)$, $(2,\ 3)$ e $(4,\ 7)$.
 
 Pause e tente: monte $A$, calcule $A^{\mathsf{T}}A$ e $A^{\mathsf{T}}\vec{b}$,
-e resolva.
+e resolva. Previsão: de $(0,\ 2)$ a $(4,\ 7)$, o $y$ sobe 5 em 4 unidades de
+$x$. Espere $m$ perto de 1,25.
 
 <details>
 <summary>Solução</summary>
@@ -794,7 +1055,8 @@ $0 \times 0{,}5 + 2 \times (-1) + 4 \times 0{,}5 = 0$. O resto é perpendicular
 Se o modelo for só $y = n$ (um preço único, sem levar a área em conta), qual é
 o melhor $n$ para os apartamentos?
 
-Pause e tente: a matriz $A$ agora tem uma coluna só.
+Pause e tente: a matriz $A$ agora tem uma coluna só. Previsão: um preço único
+deve ficar no meio dos preços, perto de 350.
 
 <details>
 <summary>Solução</summary>
@@ -808,9 +1070,9 @@ O melhor preço único é a **média** dos preços:
 $\frac{1\,750}{5} = 350$. Isso vale sempre: a equação normal com a coluna de
 uns é $N \times n = \text{soma dos valores}$, e $n$ sai a soma dividida pela
 quantidade. A média é o valor que minimiza a soma dos quadrados dos desvios.
-É a reta horizontal da seção 7, que ali perdia para $y = 5x + 50$. Ela é a
-melhor **entre as horizontais**, mas a área carrega informação, e o modelo
-com $m$ aproveita essa informação.
+É a reta horizontal das figuras do placar, que ali perdia para $y = 5x + 50$.
+Ela é a melhor **entre as horizontais**, mas a área carrega informação, e o
+modelo com $m$ aproveita essa informação.
 
 </details>
 
@@ -819,8 +1081,9 @@ com $m$ aproveita essa informação.
 O sistema $x + y = 5$, $2x - y = 1$, $x + 2y = 9$ não tem solução. Ache a
 melhor aproximação no sentido dos mínimos quadrados.
 
-Pause e tente. Aqui as incógnitas são $x$ e $y$, e não há reta nenhuma: o
-método funciona para qualquer sistema.
+Pause e tente. Aqui as incógnitas são $x$ e $y$, e não há reta nenhuma para
+ajustar: o método funciona para qualquer sistema. Previsão: a resposta deve
+ficar perto dos três cruzamentos, $(2,\ 3)$, $(1,\ 4)$ e $(2{,}2;\ 3{,}4)$.
 
 <details>
 <summary>Solução</summary>
@@ -854,6 +1117,29 @@ Com a primeira coluna: $\frac{-15 + 6 + 9}{35} = 0$. Com a segunda:
 $\frac{-15 - 3 + 18}{35} = 0$. O SQE é
 $\frac{225 + 9 + 81}{1\,225} = \frac{315}{1\,225} = \frac{9}{35} \approx 0{,}26$.
 
+<CartesianPlane
+  xMin={0.5} xMax={3} yMin={2.5} yMax={4.5}
+  xUnit={130}
+  xStep={0.5} yStep={0.5}
+  lines={[
+    {m: -1, n: 5, tone: 1},
+    {m: 2, n: -1, tone: 0},
+    {m: -0.5, n: 4.5, tone: 3},
+  ]}
+  points={[
+    {at: [2, 3], tone: 0, open: true, r: 4},
+    {at: [1, 4], tone: 0, open: true, r: 4},
+    {at: [2.2, 3.4], tone: 0, open: true, r: 4},
+    {at: [74 / 35, 116 / 35], tone: 2, r: 6},
+  ]}
+  labels={[
+    {at: [1.45, 3.55], math: 'x + y = 5', tone: 1, dx: -10, dy: 12, anchor: 'end'},
+    {at: [1.85, 2.7], math: '2x - y = 1', tone: 0, dx: -8, anchor: 'end'},
+    {at: [2.95, 3.025], math: 'x + 2y = 9', tone: 3, dy: 16, anchor: 'end'},
+  ]}
+  caption="As três retas do sistema (x + y = 5 em azul, 2x − y = 1 em cinza, x + 2y = 9 em verde) formam um triângulo pequeno, com os cruzamentos marcados por bolinhas vazias. O ponto laranja é a solução de mínimos quadrados, (74/35, 116/35), perto de (2,11; 3,31): fica dentro do triângulo, sem estar em nenhuma das três retas."
+/>
+
 Compare com o ponto $(2,\ 3)$, que resolve as duas primeiras equações e erra
 a terceira por 1: o SQE dele é $0 + 0 + 1 = 1$. A solução de mínimos
 quadrados erra um pouco nas três equações e fica com um placar quase quatro
@@ -866,7 +1152,9 @@ vezes menor.
 Um analista propõe $y = mx$, sem o $n$, “porque um apartamento sem área não
 vale nada”. Qual é o melhor $m$, e quanto esse modelo erra?
 
-Pause e tente.
+Pause e tente. Previsão: sem o $n$, a reta precisa compensar com mais
+inclinação para alcançar os preços. Espere $m$ maior que 5 e SQE maior que
+1 400.
 
 <details>
 <summary>Solução</summary>
@@ -885,38 +1173,7 @@ descreve melhor os preços.
 
 </details>
 
-## 12. Do ajuste de retas ao aprendizado de máquina
-
-O que esta lição fez tem nome em outras áreas.
-
-- Na estatística, achar a reta de mínimos quadrados é a **regressão linear**.
-- No aprendizado de máquina, a regra $y = mx + n$ é um **modelo**. Os números
-  $m$ e $n$ são os **parâmetros** do modelo. Achar os parâmetros a partir dos
-  dados é **treinar** o modelo. O SQE, dividido pelo número de dados, é a
-  **função de perda** chamada erro quadrático médio. Usar o modelo num
-  apartamento novo é fazer uma **previsão**.
-
-Com muitas variáveis de entrada, nada muda na conta. Se a corretora usar área,
-número de quartos e andar, a matriz $A$ ganha uma coluna para cada variável, e
-$\vec{c}$ ganha um coeficiente para cada coluna. As equações normais continuam
-$A^{\mathsf{T}}A\vec{c} = A^{\mathsf{T}}\vec{b}$, agora com um sistema maior.
-É a camada $W\vec{x} + \vec{b}$ da lição de matrizes, com uma saída só (lá,
-$\vec{b}$ é o número somado no fim, o papel do $n$ aqui, e não o vetor dos
-preços).
-
-**Onde o deep learning é diferente.** Uma rede neural profunda também tem
-parâmetros e também é treinada para diminuir uma função de perda, muitas vezes
-o mesmo erro quadrático médio. Mas a rede tem funções com dobra entre as
-camadas, como a ReLU da lição de produto de matrizes. Por causa delas, as
-previsões deixam de ser combinações lineares das colunas, o conjunto de
-previsões possíveis deixa de ser um plano, e não existe uma projeção que dê a
-resposta numa conta só. O treino passa a andar aos poucos, ajustando os
-parâmetros na direção em que a perda diminui. Essa direção se calcula com
-derivadas de funções de várias variáveis (o gradiente), assunto que este
-curso ainda não cobre. A regressão linear é o caso em que a resposta sai
-exata, de uma vez, e é por isso que ela vem primeiro.
-
-## 13. Erros comuns
+## Erros comuns
 
 > **Erro 1: medir o placar pela soma dos erros com sinal.** É tentador porque
 > parece o jeito direto de somar quanto se errou. Mas os erros positivos e
@@ -949,7 +1206,7 @@ exata, de uma vez, e é por isso que ela vem primeiro.
 > $2 \times 2$, uma linha e uma coluna por coeficiente. Confira as dimensões
 > antes de começar.
 
-## 14. Perguntas de verificação
+## Perguntas de verificação
 
 **1.** Por que o placar dos mínimos quadrados usa o quadrado dos erros, e não
 os erros como estão?
@@ -1017,7 +1274,7 @@ $y = mx + n$, aí sim ela acerta todos, porque o SQE zero é o menor possível.
 
 </details>
 
-**6.** Na seção 9.4, por que o vetor $\vec{w} = A(\vec{c} - \vec{c}\,')$ é
+**6.** No argumento de Pitágoras, por que o vetor $\vec{w} = A(\vec{c} - \vec{c}\,')$ é
 perpendicular a $\vec{r}$?
 
 <details>
@@ -1043,7 +1300,7 @@ treino é feito aos poucos, com gradiente.
 
 </details>
 
-## 15. Exercícios
+## Exercícios
 
 ### 1. Reconhecimento
 
@@ -1051,8 +1308,9 @@ treino é feito aos poucos, com gradiente.
    por uma reta $y = mx + n$. Escreva a matriz $A$, o vetor $\vec{b}$ e o vetor
    $\vec{c}$ do sistema $A\vec{c} = \vec{b}$. Qual é a dimensão de $A$, de
    $A^{\mathsf{T}}A$ e de $A^{\mathsf{T}}\vec{b}$?
-2. Para os cinco apartamentos, qual destes vetores pode ser o resto de alguma
-   reta de mínimos quadrados?
+2. Imagine cinco apartamentos com as mesmas áreas (40, 50, 60, 70 e 80 m²),
+   mas com outros preços. Qual destes vetores pode ser o resto da reta de
+   mínimos quadrados desses dados?
    (a) $(5,\ -5,\ 0,\ 5,\ -5)$; (b) $(10,\ 0,\ -10,\ 0,\ 10)$;
    (c) $(-20,\ 10,\ 20,\ 10,\ -20)$.
 
@@ -1076,8 +1334,9 @@ treino é feito aos poucos, com gradiente.
    Compare o SQE dele com o da reta do Exercício 6.
 8. Os pontos $(0,\ 1)$, $(1,\ 3)$ e $(2,\ 5)$ estão todos sobre uma reta. O
    que as equações normais devolvem? Qual é o SQE?
-9. Na reta dos apartamentos, use a seção 9.4 para calcular, sem refazer os
-   erros, o SQE da reta $y = 5x + 70$. Confira com a tabela da seção 10.
+9. Na reta dos apartamentos, use o argumento de Pitágoras para calcular, sem
+   refazer os erros, o SQE da reta $y = 5x + 70$. Confira com a tabela da
+   resolução.
 
 ### 5. Problema misto
 
@@ -1100,17 +1359,25 @@ treino é feito aos poucos, com gradiente.
 11. Ache a melhor aproximação, no sentido dos mínimos quadrados, para o
     sistema $x + y = 4$, $x - y = 0$, $x = 3$. Confira que o resto é
     perpendicular às duas colunas.
+12. A lição de [matriz inversa](./matriz-inversa) ajustou uma reta aos pontos
+    $(0,\ 1)$, $(1,\ 2)$ e $(2,\ 4)$ com a matriz
+    $\begin{bmatrix} 3 & 3 \\ 3 & 5 \end{bmatrix}$ e o lado direito
+    $(7,\ 10)$, e chegou a $y = \frac{5}{6} + \frac{3}{2}x$. Monte as equações
+    normais do jeito desta lição (coluna dos $x$ primeiro, coluna de uns
+    depois), explique por que a matriz sai diferente, resolva e confira a
+    reta. Qual é o SQE?
 
 ### 6. Justificativa
 
-12. Mostre, usando a equação normal da coluna de uns, que a reta de mínimos
+13. Mostre, usando a equação normal da coluna de uns, que a reta de mínimos
     quadrados $y = mx + n$ sempre passa pelo ponto
     $(\bar{x},\ \bar{y})$, em que $\bar{x}$ é a média dos $x$ e $\bar{y}$ é a
     média dos $y$. Confira com os apartamentos.
-13. Explique por que, num modelo com coluna de uns, a soma dos erros da reta
+14. Explique por que, num modelo com coluna de uns, a soma dos erros da reta
     de mínimos quadrados é sempre zero. Por que isso não contradiz o Erro 1?
-14. Use a seção 9.4 para explicar por que a reta do Exemplo 5, forçada a
-    passar pela origem, não pode ter SQE menor que a reta $y = 5x + 50$.
+15. Use o argumento de Pitágoras para explicar por que a reta do Exemplo 5,
+    forçada a passar pela origem, não pode ter SQE menor que a reta
+    $y = 5x + 50$.
 
 <details>
 <summary>Dica para o Exercício 2</summary>
@@ -1131,6 +1398,14 @@ Compare $\vec{c}\,' = (5,\ 70)$ com $\vec{c} = (5,\ 50)$. O vetor $\vec{w}$
 
 <details>
 <summary>Dica para o Exercício 12</summary>
+
+As entradas de $A^{\mathsf{T}}A$ são os produtos escalares das colunas. Troque
+a ordem das colunas e veja o que acontece com essas entradas.
+
+</details>
+
+<details>
+<summary>Dica para o Exercício 13</summary>
 
 A segunda equação normal é $(\vec{1} \cdot \vec{a})\,m + (\vec{1} \cdot \vec{1})\,n = \vec{1} \cdot \vec{b}$.
 Escreva cada produto escalar como uma soma e divida a equação inteira pelo
@@ -1168,7 +1443,7 @@ número de pontos.
    SQE é a menor distância de $\vec{b}$ ao plano.
 5. As previsões são $245$, $295$, $345$, $395$ e $445$. Os erros são $-5$,
    $25$, $-15$, $25$ e $-5$. O SQE é $25 + 625 + 225 + 625 + 25 = 1\,525$.
-   Conferência pela seção 9.4: $\vec{c} - \vec{c}\,' = (0,\ 5)$, então
+   Conferência por Pitágoras: $\vec{c} - \vec{c}\,' = (0,\ 5)$, então
    $\lVert \vec{w} \rVert^2 = 5 \times 25 = 125$, e $1\,400 + 125 = 1\,525$.
 6. $A^{\mathsf{T}}A = \begin{bmatrix} 30 & 10 \\ 10 & 4 \end{bmatrix}$ (de
    $1 + 4 + 9 + 16$, $1 + 2 + 3 + 4$ e $4$) e
@@ -1210,20 +1485,36 @@ número de pontos.
     Com a primeira coluna: $-\frac{1}{3} - \frac{1}{3} + \frac{2}{3} = 0$.
     Com a segunda: $-\frac{1}{3} + \frac{1}{3} + 0 = 0$. O SQE é
     $\frac{1 + 1 + 4}{9} = \frac{2}{3}$.
-12. Com $N$ pontos, a segunda equação normal é
+12. Com as colunas na ordem desta lição, $\vec{a} = (0,\ 1,\ 2)$ e
+    $\vec{1} = (1,\ 1,\ 1)$:
+    $A^{\mathsf{T}}A = \begin{bmatrix} 5 & 3 \\ 3 & 3 \end{bmatrix}$ (de
+    $0 + 1 + 4$, $0 + 1 + 2$ e $1 + 1 + 1$) e
+    $A^{\mathsf{T}}\vec{b} = (10,\ 7)$ (de $0 + 2 + 8$ e $1 + 2 + 4$). A
+    lição da inversa pôs a coluna de uns primeiro, então as incógnitas vêm na
+    ordem $(n,\ m)$: as linhas e as colunas de $A^{\mathsf{T}}A$ trocam de
+    lugar, e as coordenadas de $A^{\mathsf{T}}\vec{b}$ também. As contas são as
+    mesmas. Resolvendo $5m + 3n = 10$ e $3m + 3n = 7$: subtraindo, $2m = 3$,
+    $m = \frac{3}{2}$; então $3n = 7 - \frac{9}{2} = \frac{5}{2}$, e
+    $n = \frac{5}{6}$. É a reta $y = \frac{5}{6} + \frac{3}{2}x$. As previsões
+    são $\frac{5}{6}$, $\frac{7}{3}$ e $\frac{23}{6}$; os erros,
+    $\frac{1}{6}$, $-\frac{1}{3}$ e $\frac{1}{6}$; e o SQE é
+    $\frac{1 + 4 + 1}{36} = \frac{1}{6}$. Se a sua matriz saiu
+    $\begin{bmatrix} 3 & 3 \\ 3 & 5 \end{bmatrix}$, você pôs a coluna de uns
+    primeiro: não é erro, desde que o vetor de incógnitas seja $(n,\ m)$.
+13. Com $N$ pontos, a segunda equação normal é
     $(x_1 + \ldots + x_N)\,m + N\,n = y_1 + \ldots + y_N$. Dividindo por $N$:
     $\bar{x}\,m + n = \bar{y}$. Isso diz que, em $x = \bar{x}$, a reta vale
     $\bar{y}$: ela passa por $(\bar{x},\ \bar{y})$. Nos apartamentos,
     $\bar{x} = 60$ e $\bar{y} = 350$, e $5 \times 60 + 50 = 350$.
-13. A equação normal da coluna de uns diz $\vec{1} \cdot \vec{r} = 0$, e
+14. A equação normal da coluna de uns diz $\vec{1} \cdot \vec{r} = 0$, e
     $\vec{1} \cdot \vec{r}$ é a soma das coordenadas de $\vec{r}$, ou seja, a
     soma dos erros. Não contradiz o Erro 1: lá, o problema era usar a soma
     dos erros como **placar**, porque uma reta ruim também pode ter soma
     zero. Aqui, a soma zero é uma **consequência** de a reta ser a melhor
     pelo placar dos quadrados, e não o critério da escolha.
-14. A reta $y = mx$ é uma reta $y = mx + n$ com $n = 0$, então ela
+15. A reta $y = mx$ é uma reta $y = mx + n$ com $n = 0$, então ela
     corresponde a um vetor $\vec{c}\,' = \left(\frac{110}{19},\ 0\right)$.
-    Pela seção 9.4, o SQE de **qualquer** $\vec{c}\,'$ é
+    Pelo argumento de Pitágoras, o SQE de **qualquer** $\vec{c}\,'$ é
     $1\,400 + \lVert \vec{w} \rVert^2$, que é pelo menos 1 400. O SQE dela,
     cerca de 2 057,9, confirma.
 
@@ -1235,10 +1526,10 @@ erro de conta antes.
 
 </details>
 
-## 16. Revisão curta
+## Revisão curta
 
 - Dados reais quase nunca cabem numa reta: o sistema $A\vec{c} = \vec{b}$,
-  com mais equações que incógnitas, não tem solução.
+  com mais equações que incógnitas, em geral não tem solução.
 - “Errar menos” quer dizer ter a menor **soma dos quadrados dos erros**. Os
   quadrados não deixam erros se cancelarem e transformam o placar no
   quadrado de uma distância: $\text{SQE} = \lVert \vec{b} - A\vec{c} \rVert^2$.

@@ -2,12 +2,13 @@
 title: Transformações lineares
 ---
 
-import CartesianPlane from '@site/src/components/CartesianPlane';
-import LinearMap from '@site/src/components/LinearMap';
+import LinearGridMorph from '@site/src/components/LinearGridMorph';
+import LinearColumnsDrag from '@site/src/components/LinearColumnsDrag';
+import LinearityCheck from '@site/src/components/LinearityCheck';
 
 # Transformações lineares: quatro números que movem o plano inteiro
 
-## 1. Problema motivador: girar um logotipo sem fazer trigonometria em cada pixel
+## Problema motivador: girar um logotipo sem fazer trigonometria em cada pixel
 
 Num editor de imagens, você seleciona um logotipo e escolhe “girar 30°”. Em
 seguida, “esticar 2 vezes na horizontal”. Depois, “inclinar”. Cada comando
@@ -16,20 +17,24 @@ foto comum tem alguns milhões de pixels.
 
 Para deixar o problema pequeno, pense no logotipo como um retângulo de 4 de
 largura por 2 de altura, com um canto na origem. Os quatro cantos são
-$(0,\ 0)$, $(4,\ 0)$, $(4,\ 2)$ e $(0,\ 2)$.
+$(0,\ 0)$, $(4,\ 0)$, $(4,\ 2)$ e $(0,\ 2)$. A figura mostra o primeiro
+comando acontecendo.
 
-<CartesianPlane
-  xMin={-2} xMax={5} yMin={-1} yMax={5}
-  xUnit={46}
-  polygons={[
-    {points: [[0, 0], [4, 0], [4, 2], [0, 2]], tone: 1},
-    {points: [[0, 0], [3.464, 2], [2.464, 3.732], [-1, 1.732]], tone: 2},
-  ]}
-  points={[
-    {at: [4, 2], label: '(4,\\ 2)', tone: 1, dx: 26, dy: 14},
-    {at: [2.464, 3.732], label: '?', tone: 2, dx: 0, dy: -18},
-  ]}
-  caption="O logotipo (azul) e o mesmo logotipo girado 30° em torno da origem (laranja). Para onde foi o canto (4, 2)? E cada um dos milhões de pontos de dentro?"
+<LinearGridMorph
+  rotation={30}
+  showGrid={false}
+  showBasis={false}
+  showSquare={false}
+  readout={false}
+  polygon={{points: [[0, 0], [4, 0], [4, 2], [0, 2]], tone: 1}}
+  labels={[{at: [4, 2], math: '(4,\\ 2)', tone: 1, dx: 8, dy: 14, anchor: 'start'}]}
+  trace={{at: [4, 2], label: '?', tone: 2, offset: [0, -18]}}
+  window={[-2, 5, -1, 5]}
+  unit={46}
+  duration={3}
+  replayLabel="Ver o giro de novo"
+  label="Logotipo retangular girando 30 graus em torno da origem"
+  caption="O logotipo (azul) gira 30° em torno da origem. O contorno tracejado é onde ele estava. O canto (4, 2) percorre o arco tracejado laranja e para no ponto marcado com “?”. Para onde ele foi? E cada um dos milhões de pontos de dentro?"
 />
 
 Com o que o curso já ensinou, dá para girar um ponto de cada vez. Você
@@ -43,38 +48,57 @@ pixel**, milhões de vezes.
 
 A resposta vai ser surpreendente: para cada um desses comandos, o programa
 guarda **quatro números**. Com eles, cada pixel custa quatro multiplicações e
-duas somas. A seção 9 encontra os quatro números do giro de 30° e leva cada
-canto do logotipo ao seu lugar.
+duas somas. A seção “Resolvendo o problema do logotipo” encontra os quatro
+números do giro de 30° e leva cada canto do logotipo ao seu lugar.
 
-## 2. Mapa das ideias
+## Roteiro da lição
 
-- **transformação do plano**: uma função que recebe um vetor do plano e
-  devolve outro vetor do plano, escrita $T(\vec{v})$;
-- **transformação linear**: uma transformação que respeita soma e
-  multiplicação por número, $T(\vec{u} + \vec{v}) = T(\vec{u}) + T(\vec{v})$ e
-  $T(k\vec{v}) = kT(\vec{v})$;
-- **o que isso quer dizer no desenho**: a malha quadriculada vira uma malha de
-  paralelogramos, com linhas retas, paralelas e igualmente espaçadas (ou,
-  num caso extremo como a projeção, é achatada numa reta ou num ponto), e a
-  origem fica parada;
-- **matriz da transformação**: a matriz $2 \times 2$ cujas **colunas** são
-  $T(\vec{e}_1)$ e $T(\vec{e}_2)$, os destinos dos dois vetores da base;
-- **catálogo**: escala, reflexão, rotação, cisalhamento e projeção, cada um
-  com a sua matriz.
+1. Uma **transformação** é uma função que recebe uma seta do plano e devolve
+   outra seta. Ela move todos os pontos do plano ao mesmo tempo.
+2. Numa transformação **linear**, a malha quadriculada continua uma malha:
+   linhas retas, paralelas e igualmente espaçadas. E a origem fica parada.
+3. Em símbolos, a malha organizada vira duas condições. A primeira:
+   transformar uma soma dá o mesmo que somar as setas transformadas.
+4. A segunda: transformar um múltiplo de uma seta dá o mesmo que multiplicar a
+   seta transformada.
+5. Com o número zero, a segunda condição prende a origem no lugar. Por isso
+   deslocar o plano inteiro não é linear.
+6. “Linear” é a mesma palavra da lição de função afim: $f(x) = ax$ é linear,
+   e $ax + b$ não é. Uma camada de rede neural $W\vec{x} + \vec{b}$ é **afim**.
+7. Numa transformação linear, cada seta ocupa na malha nova a mesma posição
+   que ocupava na antiga.
+8. Por isso toda transformação linear do plano é uma matriz $2 \times 2$, e as
+   **colunas** dessa matriz são os destinos de $\vec{e}_1$ e $\vec{e}_2$.
+9. Escala e reflexão multiplicam cada eixo por um número.
+10. A rotação tem como colunas dois pontos do ciclo trigonométrico.
+11. O cisalhamento escorrega cada andar na proporção da altura.
+12. A projeção achata o plano numa reta e não pode ser desfeita.
+13. Para escrever a matriz de qualquer movimento, pergunte para onde vão
+    $\vec{e}_1$ e $\vec{e}_2$.
 
-## 3. Para que serve
+## Para que isso serve?
 
 - **Computação gráfica.** Jogos, programas de desenho e editores de vídeo
-  giram, esticam e espelham objetos com matrizes. A placa de vídeo de um
-  computador é, em boa parte, uma máquina de multiplicar matriz por vetor muito
-  depressa.
-- **Robótica e navegação.** Um braço robótico que gira uma junta, ou um
-  drone que muda de direção, precisa reescrever as coordenadas de cada peça
-  depois do giro. É uma rotação.
+  giram, esticam e espelham objetos com matrizes. Uma tela de 1920 por 1080
+  pixels tem $1920 \times 1080 = 2\,073\,600$ pixels. Girar todos com uma
+  matriz custa $4 \times 2\,073\,600 = 8\,294\,400$ multiplicações, sem nenhum
+  seno calculado pixel a pixel. A placa de vídeo de um computador é, em boa
+  parte, uma máquina de multiplicar matriz por vetor muito depressa.
+- **Robótica e navegação.** Um drone que gira $90^\circ$ no sentido
+  anti-horário precisa reescrever as coordenadas do que o sensor vê. Um
+  obstáculo que estava em $(3,\ 1)$ passa a ser visto em $(-1,\ 3)$, pela
+  matriz da rotação de $90^\circ$ (o Exemplo 4 faz essa conta).
+- **Aprendizado de máquina: aumentar os dados.** Para um modelo reconhecer
+  fotos espelhadas, o treino mostra cada foto também espelhada. O espelho é a
+  matriz $\begin{bmatrix} -1 & 0 \\ 0 & 1 \end{bmatrix}$: o pixel em
+  $(120,\ 40)$, medido a partir do centro da foto, vai para $(-120,\ 40)$.
 - **Redes neurais.** Uma camada de rede neural calcula $W\vec{x} + \vec{b}$,
-  como você viu em [Matrizes](./matrizes). A parte $W\vec{x}$ é uma
-  transformação linear. Esta lição vai mostrar que a soma de $\vec{b}$ é outra
-  coisa, um deslocamento, e por que essa diferença importa.
+  como você viu em [Matrizes](./matrizes). Com
+  $W = \begin{bmatrix} 2 & 0 \\ 1 & 1 \end{bmatrix}$, a entrada $(3,\ 4)$ vira
+  $W\vec{x} = (6,\ 7)$. A parte $W\vec{x}$ é uma transformação linear. Esta
+  lição mostra que a soma de $\vec{b}$ é outra coisa, um deslocamento: com
+  $\vec{b} = (1,\ 2)$, a camada leva a entrada $(0,\ 0)$ a $(1,\ 2)$, e
+  nenhuma transformação linear faz isso.
 - **Dentro da matemática.** As próximas lições do capítulo estudam
   transformações lineares por perguntas diferentes: o que acontece ao fazer
   duas seguidas ([Produto de matrizes](./produto-de-matrizes)), como desfazer
@@ -82,24 +106,11 @@ canto do logotipo ao seu lugar.
   ([Determinante](./determinante)) e que direções ela não entorta
   ([Autovalores e autovetores](./autovalores-e-autovetores)).
 
-## 4. Ideias anteriores que voltam aqui
+## Ideias anteriores que voltam aqui
 
-Seis peças antigas sustentam esta lição. Responda cada pergunta antes de abrir
-a resposta.
+Responda cada pergunta antes de abrir a resposta.
 
-**1. De [Funções](../funcoes/funcoes).** O que uma regra precisa cumprir para
-ser uma função?
-
-<details>
-<summary>Conferir</summary>
-
-Para cada entrada aceita, ela devolve **exatamente uma** saída. Nunca duas,
-nunca nenhuma. A imagem daquela lição é a de uma máquina: entra um número, a
-máquina faz sempre o mesmo processamento, sai um número.
-
-</details>
-
-**2. De [Função afim](../funcoes/funcao-afim).** Qual é a diferença entre
+**1. De [Função afim](../funcoes/funcao-afim).** Qual é a diferença entre
 $f(x) = 4x$ e $g(x) = 4x + 6$? Qual das duas a lição chamou de **linear**?
 
 <details>
@@ -112,54 +123,30 @@ lição é a mesma ideia, levada para vetores.
 
 </details>
 
-**3. De [Composição de funções](../funcoes/composicao-de-funcoes).** Se
-$f(x) = 2x$ e $g(x) = x + 3$, quanto vale $g(f(5))$? E $f(g(5))$?
-
-<details>
-<summary>Conferir</summary>
-
-$g(f(5)) = g(10) = 13$: primeiro $f$, depois $g$. E $f(g(5)) = f(8) = 16$.
-Os resultados são diferentes, porque a ordem das máquinas importa. A
-composição volta no fim desta lição, quando aplicarmos duas transformações
-seguidas.
-
-</details>
-
-**4. De [Soma de vetores e multiplicação por número](../geometria/soma-de-vetores).**
-Escreva $(3,\ -2)$ como combinação linear de $\vec{e}_1 = (1,\ 0)$ e
-$\vec{e}_2 = (0,\ 1)$.
+**2. De [Soma de vetores](../geometria/soma-de-vetores) e de
+[Matrizes](./matrizes).** Escreva $(3,\ -2)$ como combinação de
+$\vec{e}_1 = (1,\ 0)$ e $\vec{e}_2 = (0,\ 1)$. Depois calcule
+$\begin{bmatrix} 2 & -1 \\ 1 & 1 \end{bmatrix} \begin{bmatrix} 1 \\ 2 \end{bmatrix}$
+pela leitura das colunas.
 
 <details>
 <summary>Conferir</summary>
 
 $(3,\ -2) = 3(1,\ 0) + (-2)(0,\ 1)$. A primeira coordenada diz quantas vezes
 usar $\vec{e}_1$, e a segunda diz quantas vezes usar $\vec{e}_2$. Isso vale
-para qualquer vetor: $(x,\ y) = x\vec{e}_1 + y\vec{e}_2$. Essa igualdade é a
-peça principal da demonstração da seção 8.3.
+para qualquer vetor: $(x,\ y) = x\vec{e}_1 + y\vec{e}_2$.
+
+No produto, o vetor $(1,\ 2)$ manda usar 1 vez a primeira coluna e 2 vezes a
+segunda: $1(2,\ 1) + 2(-1,\ 1) = (2 - 2,\ 1 + 2) = (0,\ 3)$. Pelas linhas dá
+o mesmo: $2 \times 1 + (-1) \times 2 = 0$ e $1 \times 1 + 1 \times 2 = 3$.
+As duas igualdades desta resposta são as peças principais da lição.
 
 </details>
 
-**5. De [Matrizes](./matrizes).** Calcule
-$\begin{bmatrix} 2 & -1 \\ 1 & 1 \end{bmatrix} \begin{bmatrix} 1 \\ 2 \end{bmatrix}$
-pelas duas leituras: linhas com o vetor, e combinação das colunas.
-
-<details>
-<summary>Conferir</summary>
-
-Pelas linhas: a primeira linha faz $2 \times 1 + (-1) \times 2 = 0$, e a
-segunda faz $1 \times 1 + 1 \times 2 = 3$. O resultado é $(0,\ 3)$.
-
-Pelas colunas: o vetor manda usar 1 vez a primeira coluna e 2 vezes a
-segunda, $1(2,\ 1) + 2(-1,\ 1) = (2 - 2,\ 1 + 2) = (0,\ 3)$. As duas leituras
-dão o mesmo resultado, porque somam os mesmos produtos em outra ordem. Esta
-lição vai usar muito a **leitura pelas colunas**.
-
-</details>
-
-**6. De [Módulo, direção e componentes](../geometria/modulo-direcao-e-componentes)
+**3. De [Módulo, direção e componentes](../geometria/modulo-direcao-e-componentes)
 e de [Soma, diferença e arco duplo](../geometria/soma-diferenca-e-arco-duplo).**
-Que vetor tem tamanho 1 e faz $30^\circ$ com o eixo $x$? E quanto vale
-$\cos(a + b)$?
+Que vetor tem tamanho 1 e faz $30^\circ$ com o eixo $x$? E quanto valem
+$\cos(a + b)$ e $\sen(a + b)$?
 
 <details>
 <summary>Conferir</summary>
@@ -168,13 +155,13 @@ O vetor é $(\cos 30^\circ,\ \sen 30^\circ) \approx (0{,}866;\ 0{,}5)$: o
 ponto do ciclo trigonométrico no ângulo $30^\circ$. Um vetor de tamanho $r$
 na mesma direção é $r(\cos 30^\circ,\ \sen 30^\circ)$.
 
-E $\cos(a + b) = \cos a \cos b - \sen a \sen b$, com **menos**. A fórmula do
-seno é $\sen(a + b) = \sen a \cos b + \cos a \sen b$. As duas fórmulas
-voltam na seção 8.5, para descobrir a matriz de uma rotação.
+E $\cos(a + b) = \cos a \cos b - \sen a \sen b$, com **menos**. Já
+$\sen(a + b) = \sen a \cos b + \cos a \sen b$, com mais. As duas fórmulas
+voltam na seção da rotação, para descobrir a matriz de um giro.
 
 </details>
 
-## 5. Intuição: uma função que move o plano inteiro de uma vez
+## Uma transformação recebe uma seta e devolve outra seta
 
 Até aqui, as funções do curso recebiam um número e devolviam um número. Uma
 **transformação** faz a mesma coisa com vetores: recebe uma seta do plano e
@@ -182,115 +169,26 @@ devolve outra seta do plano. “Girar 30°” é uma transformação: entra a se
 que aponta para um pixel, sai a seta que aponta para onde esse pixel vai
 parar.
 
-Pense na transformação agindo sobre todos os pontos ao mesmo tempo. Imagine o
-plano coberto por uma malha quadriculada, como papel milimetrado. Depois de
-transformado, o papel pode ter mudado de muitos jeitos.
+Como cada ponto do plano é a ponta de uma seta que sai da origem, uma
+transformação diz para onde vai **cada ponto**. Ela move o plano inteiro de
+uma vez. A figura mostra a regra $T(x,\ y) = (2x,\ x + y)$ agindo sobre nove
+pontos: cada um viaja em linha reta até o seu destino.
 
-Em algumas transformações, a malha continua organizada. As linhas continuam
-retas. Linhas que eram paralelas continuam paralelas. E linhas que estavam
-igualmente espaçadas continuam igualmente espaçadas. Os quadradinhos viram
-paralelogramos, todos iguais entre si. Além disso, a origem não sai do lugar.
-É isso que acontece num giro em torno da origem, num esticão uniforme ou numa
-inclinação do tipo que transforma letra normal em itálico. Num caso extremo,
-que aparece na seção 8.5, os paralelogramos ficam achatados, sem área, e a
-malha inteira cai numa reta ou num ponto.
-
-Em outras transformações, a malha se desorganiza ou sai do lugar. Uma linha reta pode virar
-uma curva. Quadradinhos vizinhos podem ficar de tamanhos diferentes. Ou o
-plano inteiro pode escorregar para o lado, tirando a origem do lugar.
-
-As transformações do primeiro tipo são as **lineares**, e elas têm uma
-vantagem enorme. Como os quadradinhos da malha nova são todos iguais, saber o
-que aconteceu com **um** quadradinho é saber o que aconteceu com todos. E um quadradinho é definido por dois lados: a seta $\vec{e}_1 = (1,\ 0)$
-e a seta $\vec{e}_2 = (0,\ 1)$. Dois destinos, cada um com duas coordenadas:
-quatro números.
-
-## 6. Modelo visual: a malha antes e depois
-
-O desenho abaixo mostra uma transformação linear. No painel “antes” está o
-plano original, com $\vec{e}_1$ (azul), $\vec{e}_2$ (laranja), o quadrado de lado 1
-que os dois formam e um vetor $\vec{v} = (1,\ 2)$ (verde). No painel
-“depois”, o mesmo plano depois da transformação. Cada quadradinho da malha virou um
-paralelogramo.
-
-<LinearMap
-  matrix={[[2, -1], [1, 1]]}
-  vectors={[{v: [1, 2], label: '\\vec{v} = (1,\\ 2)', imageLabel: 'T(\\vec{v}) = (0,\\ 3)'}]}
-  window={[-4, 4, -1, 4]}
-  caption="Antes, o plano original. Depois, o plano transformado: e₁ foi parar em (2, 1), e₂ foi parar em (−1, 1), e o quadrado de lado 1 virou o paralelogramo verde-claro. O vetor v = (1, 2) foi parar em (0, 3)."
+<LinearGridMorph
+  matrix={[[2, 0], [1, 1]]}
+  showGrid={false}
+  showBasis={false}
+  showSquare={false}
+  dots={[0, 2, 0, 2]}
+  dotTrails
+  vectors={[{v: [1, 2], label: '\\vec{v} = (1,\\ 2)', imageLabel: 'T(\\vec{v}) = (2,\\ 3)', imageOffset: [-8, -6, 'end']}]}
+  formula="T(x,\ y) = (2x,\ x + y)"
+  note="Cada ponto (x, y) vai para (2x, x + y). O ponto (1, 2) vai para (2, 3), e o ponto (2, 2) vai para (4, 4)."
+  window={[-1, 5, -1, 5]}
+  unit={44}
+  label="Nove pontos do plano viajando até os seus destinos"
+  caption="Os nove pontos de coordenadas 0, 1 e 2 se movem juntos. O tracejado liga cada ponto ao lugar em que ele estava. A seta verde acompanha o ponto (1, 2), que termina em (2, 3)."
 />
-
-Leia o desenho em três passos.
-
-**Primeiro passo: para onde foram os dois lados do quadradinho.** A seta azul
-$\vec{e}_1$ foi parar em $(2,\ 1)$. A seta laranja $\vec{e}_2$ foi parar em
-$(-1,\ 1)$.
-
-**Segundo passo: como se lê $\vec{v}$ na malha original.** O vetor
-$\vec{v} = (1,\ 2)$ quer dizer “1 passo de $\vec{e}_1$ e 2 passos de
-$\vec{e}_2$”. Na malha do “antes”, isso é andar uma casa para a direita e
-duas para cima.
-
-**Terceiro passo: a mesma receita na malha nova.** Na malha do “depois”, os
-passos mudaram de forma, mas a receita é a mesma: 1 passo do novo
-$\vec{e}_1$ e 2 passos do novo $\vec{e}_2$. Fazendo a conta:
-
-$$
-1(2,\ 1) + 2(-1,\ 1) = (2 - 2,\ 1 + 2) = (0,\ 3).
-$$
-
-É exatamente onde a seta verde do “depois” termina. A transformação não
-precisou de nenhuma regra especial para $\vec{v}$. Ela levou a malha, e
-$\vec{v}$ foi junto, ocupando na malha nova a mesma posição que ocupava na
-antiga: “uma casa num sentido, duas no outro”.
-
-Compare a conta acima com a pergunta 5 da seção 4. É a leitura pelas colunas
-do produto
-$\begin{bmatrix} 2 & -1 \\ 1 & 1 \end{bmatrix} \begin{bmatrix} 1 \\ 2 \end{bmatrix}$.
-A matriz que tem $(2,\ 1)$ e $(-1,\ 1)$ como colunas faz exatamente o que o
-desenho faz. Essa coincidência é a ideia principal da lição, e a seção 8.3
-mostra que ela não é coincidência.
-
-## 7. Ponte para a formalização: como dizer “respeita a malha” com símbolos
-
-“A malha continua organizada” é uma frase sobre um desenho. Para trabalhar
-com ela e para usá-la em $\mathbb{R}^5$, onde não há desenho, precisamos
-escrevê-la como contas. As contas que constroem a malha são exatamente duas:
-somar vetores e multiplicar vetor por número. Então a exigência vira esta:
-**transformar depois de fazer essas contas tem que dar o mesmo que fazer as
-contas depois de transformar.**
-
-**A soma.** Na malha original, somar $\vec{u}$ e $\vec{v}$ é encadear as duas
-setas, ponta com cauda, e os dois caminhos formam um paralelogramo. Se a
-transformação leva paralelogramos em paralelogramos, então o paralelogramo
-formado por $\vec{u}$ e $\vec{v}$ vira o paralelogramo formado por
-$T(\vec{u})$ e $T(\vec{v})$. A diagonal de um vai para a diagonal do outro.
-Em símbolos:
-
-$$
-T(\vec{u} + \vec{v}) = T(\vec{u}) + T(\vec{v}).
-$$
-
-**A multiplicação por número.** Na malha original, os pontos $\vec{v}$,
-$2\vec{v}$ e $3\vec{v}$ estão sobre uma reta pela origem, igualmente
-espaçados. Se a transformação mantém retas retas e espaçamentos iguais, esses
-pontos continuam igualmente espaçados depois de transformados. Então, contando
-a partir da origem, o destino de $2\vec{v}$ fica a dois passos iguais a
-$T(\vec{v})$, e o de $3\vec{v}$, a três passos. Em símbolos:
-
-$$
-T(k\vec{v}) = kT(\vec{v}).
-$$
-
-**Uma consequência que vem das contas, sem nenhuma exigência nova.** Escolha
-$k = 0$ na segunda igualdade. Do lado esquerdo, $0\vec{v} = \vec{0}$, então
-fica $T(\vec{0})$. Do lado direito, $0T(\vec{v}) = \vec{0}$. Portanto
-$T(\vec{0}) = \vec{0}$: **a origem fica parada.** Repare que ninguém exigiu
-isso. Essa conclusão já estava dentro da segunda exigência.
-
-## 8. Formalização
-
-### 8.1 Transformação
 
 > Uma **transformação do plano** é uma função $T$ que associa a cada vetor
 > $\vec{v}$ de $\mathbb{R}^2$ **exatamente um** vetor $T(\vec{v})$ de
@@ -299,33 +197,173 @@ isso. Essa conclusão já estava dentro da segunda exigência.
 A notação é a mesma de [Funções](../funcoes/funcoes): $T(\vec{v})$ se lê “$T$
 de $\vec{v}$”, e quer dizer “o vetor que $T$ devolve quando recebe
 $\vec{v}$”. Muitos livros usam $T$ de “transformação” no lugar do $f$, mas é a
-mesma ideia de máquina.
+mesma ideia de máquina: entra um vetor, a máquina faz sempre a mesma conta,
+sai um vetor.
 
-**Exemplo.** $T(x,\ y) = (2x,\ x + y)$. Para cada entrada há uma saída só:
+**Exemplo.** $T(x,\ y) = (2x,\ x + y)$, a regra da figura. Para cada entrada
+há uma saída só: $T(1,\ 2) = (2,\ 1 + 2) = (2,\ 3)$, e
 $T(3,\ 4) = (6,\ 7)$.
 
 **Contraexemplo.** A regra “para cada vetor, devolva uma seta de tamanho 1
 perpendicular a ele” **não** é uma transformação. Para $\vec{v} = (1,\ 0)$,
 tanto $(0,\ 1)$ quanto $(0,\ -1)$ servem: são duas saídas para a mesma
-entrada. A máquina hesitaria, e uma função não pode hesitar.
+entrada. A máquina não saberia qual das duas devolver, e uma função precisa
+devolver uma resposta só.
 
-### 8.2 Transformação linear
+<details>
+<summary>Confira: para a regra T(x, y) = (2x, x + y), para onde vai o ponto (−1, 2)?</summary>
+
+A primeira coordenada é $2 \times (-1) = -2$. A segunda é $-1 + 2 = 1$.
+Então $T(-1,\ 2) = (-2,\ 1)$. A regra é a mesma para todos os pontos; só os
+números de entrada mudam.
+
+</details>
+
+## Numa transformação linear, a malha continua malha e a origem fica parada
+
+Imagine o plano coberto por uma malha quadriculada, como papel milimetrado.
+Depois de transformado, o papel pode ter mudado de muitos jeitos. A figura
+mostra três transformações. Escolha cada uma nos botões e olhe a malha se
+mover.
+
+<LinearGridMorph
+  presets={[
+    {label: 'Malha organizada', matrix: [[2, -1], [1, 1]], note: 'As linhas continuam retas, paralelas e igualmente espaçadas. A origem não saiu do lugar. Os quadradinhos viraram paralelogramos iguais.'},
+    {label: 'Malha entortada', warp: 'parabola', formula: 'T(x,\\ y) = \\left(x,\\ y + \\tfrac{x^2}{4}\\right)', note: 'As linhas horizontais viraram curvas, e os quadradinhos ficaram tortos, cada um de um jeito. A origem ficou parada, e mesmo assim a malha se desorganizou.'},
+    {label: 'Malha escorregada', shift: [3, 1], formula: 'T(\\vec{v}) = \\vec{v} + (3,\\ 1)', note: 'A malha continua organizada, mas escorregou inteira: a origem foi para (3, 1).'},
+  ]}
+  showOrigin
+  window={[-4, 5, -3, 4]}
+  unit={34}
+  label="Malha do plano transformada de três jeitos"
+  caption="A malha clara ao fundo é o plano antes; a malha cinza é o plano depois. O quadrado verde de lado 1 e as setas azul e laranja acompanham o movimento. A bolinha laranja vazada marca a origem de antes, quando ela sai do lugar."
+/>
+
+**Na primeira, a malha continua organizada.** As linhas continuam retas.
+Linhas que eram paralelas continuam paralelas. Linhas que estavam igualmente
+espaçadas continuam igualmente espaçadas. Os quadradinhos viram
+paralelogramos, todos iguais entre si. Além disso, a origem não sai do lugar.
+É isso que acontece num giro em torno da origem, num esticão uniforme ou numa
+inclinação do tipo que transforma letra normal em itálico. Num caso extremo,
+que aparece na seção da projeção, os paralelogramos ficam achatados, sem
+área, e a malha inteira cai numa reta ou num ponto.
+
+**Na segunda, a malha se desorganiza.** As linhas horizontais viram curvas, e
+quadradinhos vizinhos ficam de formas diferentes. **Na terceira, a malha
+escorrega.** Ela continua organizada, mas a origem sai do lugar.
+
+As transformações do primeiro tipo são as **lineares**, e elas têm uma
+vantagem enorme. Como os quadradinhos da malha nova são todos iguais, saber o
+que aconteceu com **um** quadradinho é saber o que aconteceu com todos. E um
+quadradinho é definido por dois lados: a seta $\vec{e}_1 = (1,\ 0)$ e a seta
+$\vec{e}_2 = (0,\ 1)$. Dois destinos, cada um com duas coordenadas: quatro
+números. As próximas seções transformam essa observação do desenho em contas,
+e as contas confirmam os quatro números.
+
+<details>
+<summary>Confira: a regra T(x, y) = (x + 1, 2y) estica o plano na vertical e empurra tudo 1 casa para a direita. A malha continua organizada? A origem fica parada?</summary>
+
+A malha continua organizada: as linhas verticais só andam 1 casa para a
+direita, e as horizontais se afastam igualmente, porque a altura dobra. Mas a
+origem vai para $T(0,\ 0) = (0 + 1,\ 2 \times 0) = (1,\ 0)$. Ela saiu do
+lugar, então a regra não é do primeiro tipo. É como a malha escorregada da
+figura, com um esticão junto.
+
+</details>
+
+## Transformar a soma dá o mesmo que somar as transformadas
+
+“A malha continua organizada” é uma frase sobre um desenho. Para trabalhar
+com ela, e para usá-la em $\mathbb{R}^5$, onde não há desenho, precisamos
+escrevê-la como contas. As contas que constroem a malha são exatamente duas:
+somar vetores e multiplicar vetor por número. Então a exigência vira esta:
+**transformar depois de fazer essas contas tem que dar o mesmo que fazer as
+contas depois de transformar.** Esta seção cuida da soma; a próxima, da
+multiplicação.
+
+Na malha original, somar $\vec{u}$ e $\vec{v}$ é encadear as duas setas,
+ponta com cauda. Os dois caminhos formam um paralelogramo, e $\vec{u} +
+\vec{v}$ é a diagonal dele. Uma transformação que leva paralelogramos em
+paralelogramos leva esse paralelogramo no paralelogramo formado por
+$T(\vec{u})$ e $T(\vec{v})$. Então a diagonal de um vai para a diagonal do
+outro.
+
+A figura faz esse teste com $\vec{u} = (1,\ 1)$ e $\vec{v} = (1,\ 0)$. No
+painel da direita, a bolinha vazada é o canto $T(\vec{u}) + T(\vec{v})$ do
+paralelogramo novo. A seta verde é $T(\vec{u} + \vec{v})$: a diagonal antiga,
+transformada. Troque a transformação nos botões.
+
+<LinearityCheck mode="sum" />
+
+| Transformação | $T(\vec{u} + \vec{v}) = T(2,\ 1)$ | $T(\vec{u}) + T(\vec{v})$ | Caem no mesmo ponto? |
+|---|---|---|---|
+| $T(x,\ y) = (2x,\ x + y)$ | $(4,\ 3)$ | $(2,\ 2) + (2,\ 1) = (4,\ 3)$ | sim |
+| translação $\vec{v} + (3,\ 1)$ | $(5,\ 2)$ | $(4,\ 2) + (4,\ 1) = (8,\ 3)$ | não |
+| $T(x,\ y) = (x^2,\ y)$ | $(4,\ 1)$ | $(1,\ 1) + (1,\ 0) = (2,\ 1)$ | não |
+
+Só a primeira cumpre a exigência neste caso. Na translação, cada seta
+transformada carrega um $(3,\ 1)$ a mais. Por isso a soma das duas carrega
+dois, e a transformada da soma carrega um só. No quadrado, $2^2 = 4$ é mais
+que $1^2 + 1^2 = 2$. Em símbolos, a exigência da soma é:
+
+$$
+T(\vec{u} + \vec{v}) = T(\vec{u}) + T(\vec{v}).
+$$
+
+<details>
+<summary>Confira: com T(x, y) = (2x, x + y), u = (1, 2) e v = (3, 0), calcule os dois lados da igualdade.</summary>
+
+Do lado esquerdo, $\vec{u} + \vec{v} = (4,\ 2)$ e
+$T(4,\ 2) = (8,\ 4 + 2) = (8,\ 6)$. Do lado direito,
+$T(1,\ 2) = (2,\ 3)$ e $T(3,\ 0) = (6,\ 3)$, e a soma é $(8,\ 6)$. Os dois
+lados dão $(8,\ 6)$.
+
+</details>
+
+## Transformar um múltiplo dá o mesmo que multiplicar a transformada
+
+Na malha original, os pontos $\vec{v}$, $2\vec{v}$ e $3\vec{v}$ estão sobre
+uma reta pela origem, igualmente espaçados. Se a transformação mantém retas
+retas e espaçamentos iguais, esses pontos continuam igualmente espaçados
+depois de transformados. Então, contando a partir da origem, o destino de
+$2\vec{v}$ fica a dois passos iguais a $T(\vec{v})$, e o de $3\vec{v}$, a três
+passos.
+
+Na figura, $\vec{v} = (1,\ 1)$, e o deslizante escolhe o número $k$. A
+bolinha vazada é $k$ vezes $T(\vec{v})$. A seta verde é $T(k\vec{v})$.
+
+<LinearityCheck mode="scale" />
+
+Com $k = 2$, os números da figura são estes:
+
+| Transformação | $T(2\vec{v}) = T(2,\ 2)$ | $2T(\vec{v})$ | Iguais? |
+|---|---|---|---|
+| $T(x,\ y) = (2x,\ x + y)$ | $(4,\ 4)$ | $2(2,\ 2) = (4,\ 4)$ | sim |
+| translação $\vec{v} + (3,\ 1)$ | $(5,\ 3)$ | $2(4,\ 2) = (8,\ 4)$ | não |
+| $T(x,\ y) = (x^2,\ y)$ | $(4,\ 2)$ | $2(1,\ 1) = (2,\ 2)$ | não |
+
+Em símbolos, a exigência da multiplicação é:
+
+$$
+T(k\vec{v}) = kT(\vec{v}).
+$$
+
+As duas exigências juntas são a definição.
 
 > Uma transformação $T$ é **linear** quando, para quaisquer vetores
 > $\vec{u}$ e $\vec{v}$ e qualquer número $k$:
 >
 > 1. $T(\vec{u} + \vec{v}) = T(\vec{u}) + T(\vec{v})$;
 > 2. $T(k\vec{v}) = kT(\vec{v})$.
->
-> Consequência: $T(\vec{0}) = \vec{0}$.
 
 As duas condições valem para **quaisquer** vetores e números. Conferir num
 caso só não prova que uma transformação é linear. Mas **um único caso em que
 falha prova que ela não é**. Esse é o jeito usual de descartar uma
-candidata.
+candidata, e foi o que as duas tabelas fizeram com a translação e o quadrado.
 
-**Exemplo.** $T(x,\ y) = (2x,\ x + y)$ é linear. Confira a primeira condição
-com letras. Para $\vec{u} = (u_1,\ u_2)$ e $\vec{v} = (v_1,\ v_2)$:
+**Exemplo: $T(x,\ y) = (2x,\ x + y)$ é linear.** Para provar, a conferência
+precisa ser feita com letras, que valem para todos os vetores ao mesmo tempo.
+Para $\vec{u} = (u_1,\ u_2)$ e $\vec{v} = (v_1,\ v_2)$:
 
 $$
 T(\vec{u} + \vec{v}) = T(u_1 + v_1,\ u_2 + v_2) = \big(2u_1 + 2v_1,\ u_1 + v_1 + u_2 + v_2\big).
@@ -341,44 +379,196 @@ São iguais, coordenada por coordenada: só a ordem das parcelas mudou, e a
 ordem das parcelas não muda uma soma. A segunda condição sai do mesmo jeito:
 $T(kx,\ ky) = (2kx,\ kx + ky) = k(2x,\ x + y)$, pondo $k$ em evidência.
 
-**Primeiro contraexemplo: a translação.** Deslocar todo o plano 3 unidades
-para a direita e 1 para cima é a transformação $T(\vec{v}) = \vec{v} + (3,\ 1)$.
-O desenho dela parece bem-comportado: a malha só escorrega para o lado, sem
-entortar. Mas a origem sai do lugar, porque $T(\vec{0}) = (3,\ 1)$. Isso já
-é suficiente para concluir que ela não é linear, pela consequência acima. Veja também
-a segunda condição falhar com $\vec{u} = (1,\ 1)$ e $k = 2$:
+**Contraexemplo: $T(x,\ y) = (x^2,\ y)$ não é linear.** A primeira tabela já
+mostrou um caso de falha. Outro, ainda mais simples: com
+$\vec{u} = \vec{v} = (1,\ 0)$, temos $T(\vec{u} + \vec{v}) = T(2,\ 0) =
+(4,\ 0)$, enquanto $T(\vec{u}) + T(\vec{v}) = (1,\ 0) + (1,\ 0) = (2,\ 0)$.
 
-- $T(2\vec{u}) = T(2,\ 2) = (5,\ 3)$;
-- $2T(\vec{u}) = 2(4,\ 2) = (8,\ 4)$.
+<details>
+<summary>Confira: com T(x, y) = (x², y), v = (2, 0) e k = −1, a segunda condição vale?</summary>
 
-<CartesianPlane
-  xMin={-1} xMax={9} yMin={-1} yMax={5}
-  xUnit={40}
-  segments={[
-    {from: [0, 0], to: [8, 4], arrow: true, tone: 2, dashed: true, label: '2T(\\vec{u})', dx: 30, dy: 0},
-    {from: [0, 0], to: [1, 1], arrow: true, tone: 3, label: '\\vec{u}', dx: -14, dy: -10},
-    {from: [0, 0], to: [4, 2], arrow: true, tone: 1, label: 'T(\\vec{u})', dx: 0, dy: 18},
-    {from: [0, 0], to: [5, 3], arrow: true, tone: 3, label: 'T(2\\vec{u})', dx: -26, dy: -12},
-  ]}
-  points={[
-    {at: [3, 1], label: 'T(\\vec{0}) = (3,\\ 1)', tone: 1, dx: 66, dy: 4},
-  ]}
-  caption="A translação v ↦ v + (3, 1) não é linear. A origem vai para (3, 1). E T(2u) = (5, 3), em verde, não é o dobro de T(u) = (4, 2), que seria (8, 4), tracejado."
+Do lado esquerdo, $T(-2,\ 0) = \big((-2)^2,\ 0\big) = (4,\ 0)$. Do lado
+direito, $-T(2,\ 0) = -(4,\ 0) = (-4,\ 0)$. Os resultados são diferentes. O
+quadrado apaga o sinal de menos, e por isso não acompanha a multiplicação
+por $-1$.
+
+</details>
+
+## A origem fica parada, e por isso deslocar o plano não é linear
+
+Escolha $k = 0$ na segunda condição. Do lado esquerdo, $0\vec{v} = \vec{0}$,
+então fica $T(\vec{0})$. Do lado direito, $0T(\vec{v}) = \vec{0}$. Portanto
+
+$$
+T(\vec{0}) = \vec{0}.
+$$
+
+**Toda transformação linear deixa a origem parada.** Repare que ninguém
+exigiu isso. Essa conclusão já estava dentro da segunda condição.
+
+Agora olhe a transformação que parece a mais simples de todas: deslocar o
+plano inteiro 3 unidades para a direita e 1 para cima,
+$T(\vec{v}) = \vec{v} + (3,\ 1)$. A figura mostra o deslocamento.
+
+<LinearGridMorph
+  shift={[3, 1]}
+  showBasis={false}
+  showOrigin
+  vectors={[{v: [1, 1], label: '\\vec{v} = (1,\\ 1)', imageLabel: 'T(\\vec{v}) = (4,\\ 2)', imageOffset: [-4, -18, 'end']}]}
+  formula="T(\vec{v}) = \vec{v} + (3,\ 1)"
+  note="A malha não entorta: só escorrega. Mas a origem vai para (3, 1), e uma transformação linear nunca tira a origem do lugar."
+  window={[-2, 6, -2, 4]}
+  unit={36}
+  label="Translação do plano por (3, 1)"
+  caption="A translação por (3, 1). A malha escorrega inteira, sem entortar, e o quadrado verde vai junto. A bolinha laranja cheia é o destino da origem, T(0) = (3, 1); a vazada marca onde a origem estava."
 />
 
-**Segundo contraexemplo: uma conta que entorta.**
-$T(x,\ y) = (x^2,\ y)$ deixa a origem no lugar, porque $T(0,\ 0) = (0,\ 0)$.
-Mas a primeira condição falha. Com $\vec{u} = \vec{v} = (1,\ 0)$, temos
-$T(\vec{u} + \vec{v}) = T(2,\ 0) = (4,\ 0)$, enquanto
-$T(\vec{u}) + T(\vec{v}) = (1,\ 0) + (1,\ 0) = (2,\ 0)$. Origem parada é uma
-condição **necessária**, mas não é suficiente.
+O desenho parece bem-comportado: a malha só escorrega para o lado. Mas a
+origem sai do lugar, porque $T(\vec{0}) = (3,\ 1)$. Isso já é suficiente para
+concluir que a translação não é linear: se fosse, ela teria de deixar a origem
+parada. A segunda tabela da seção anterior mostrou a mesma falha por outro
+caminho: $T(2\vec{v}) = (5,\ 3)$, e $2T(\vec{v}) = (8,\ 4)$.
 
-### 8.3 Toda transformação linear do plano é uma matriz
+**O contrário não vale.** A transformação $T(x,\ y) = (x^2,\ y)$ deixa a
+origem no lugar, porque $T(0,\ 0) = (0,\ 0)$, e mesmo assim não é linear,
+como a seção anterior mostrou. A malha entortada da segunda figura da lição
+também deixa a origem parada. Origem parada é uma condição **necessária**,
+mas não é suficiente.
 
-Esta é a afirmação que resolve o problema do editor.
+<details>
+<summary>Confira: T(x, y) = (x + y, x − y + 2) é linear? E se a origem tivesse ficado parada, isso provaria que é?</summary>
+
+Não é linear: $T(0,\ 0) = (0,\ 2)$, e uma transformação linear leva a origem
+na origem. Se a origem tivesse ficado parada, isso não provaria nada: a regra
+$(x^2,\ y)$ deixa a origem parada e falha nas duas condições. Para provar que
+é linear, a conferência das duas condições é feita com letras.
+
+</details>
+
+## Linear e afim: a mesma diferença da função afim
+
+A palavra “linear” já tinha aparecido no curso, e o sentido é o mesmo.
+
+Em uma dimensão, um “vetor” é um número só, e uma matriz $1 \times 1$ é um
+número só, $[a]$. A transformação linear de uma dimensão é $f(x) = ax$:
+exatamente a função **linear** da lição de [função afim](../funcoes/funcao-afim),
+que passa pela origem. Ela cumpre as duas condições: $a(x + y) = ax + ay$ e
+$a(kx) = k(ax)$.
+
+Já a função afim $g(x) = ax + b$, com $b$ diferente de zero, é a versão de
+uma dimensão da translação: ela multiplica e depois **desloca**. Por isso não
+é linear neste sentido, mesmo tendo o gráfico reto. Teste com
+$g(x) = 2x + 3$: $g(1 + 1) = g(2) = 7$, mas $g(1) + g(1) = 5 + 5 = 10$.
+
+O mesmo vale para a camada de rede neural $W\vec{x} + \vec{b}$ de
+[Matrizes](./matrizes). A figura mostra a camada com
+$W = \begin{bmatrix} 2 & 0 \\ 1 & 1 \end{bmatrix}$ e $\vec{b} = (1,\ 2)$, em
+duas etapas.
+
+<LinearGridMorph
+  matrix={[[2, 0], [1, 1]]}
+  shift={[1, 2]}
+  showOrigin
+  duration={4}
+  note="Primeira etapa: a matriz W deforma a malha, e a origem fica parada. Segunda etapa: a malha inteira anda b = (1, 2), e a origem vai para (1, 2)."
+  window={[-3, 5, -2, 5]}
+  unit={34}
+  label="Camada afim: primeiro a matriz W, depois a translação por b"
+  caption="A camada W x + b em duas etapas. Primeiro a matriz W leva a malha numa malha de paralelogramos, sem mexer na origem. Depois tudo escorrega b = (1, 2). O quadrado verde termina com os cantos em (1, 2), (3, 3), (3, 4) e (1, 3)."
+/>
+
+A parte $W\vec{x}$ é linear. A soma de $\vec{b}$ desloca tudo, como o $+b$ da
+função afim. Por isso a camada inteira se chama **afim**: uma transformação
+linear seguida de uma translação.
+
+Separe os dois nomes de frente: **linear** é “multiplica e pronto”, e a
+origem fica parada; **afim** é “multiplica e depois desloca”, e a origem anda
+o deslocamento.
+
+<details>
+<summary>Confira: a função h(x) = 5x − 1 é linear no sentido desta lição? E uma camada W x + b com b = (0, 0)?</summary>
+
+$h$ não é linear: $h(0) = -1$, e uma função linear leva 0 em 0. Ela é afim.
+Já a camada com $\vec{b} = (0,\ 0)$ calcula só $W\vec{x}$, que é linear: sem
+deslocamento, a origem fica parada.
+
+</details>
+
+## Um vetor ocupa na malha nova a mesma posição que ocupava na antiga
+
+Volte à transformação linear da primeira figura com malha, a da malha
+organizada. Ela leva $\vec{e}_1$ para $(2,\ 1)$ e $\vec{e}_2$ para
+$(-1,\ 1)$. Para onde ela leva o vetor $\vec{v} = (1,\ 2)$?
+
+Faça a previsão antes de olhar a figura. O vetor $(1,\ 2)$ quer dizer “1
+passo de $\vec{e}_1$ e 2 passos de $\vec{e}_2$”. Na malha original, isso é
+andar uma casa para a direita e duas para cima. A figura deforma a malha aos
+poucos e mostra a mesma receita sendo seguida na malha que se deforma: a
+faixa azul é o passo de $\vec{e}_1$, e a faixa laranja são os dois passos de
+$\vec{e}_2$. Arraste o deslizante para parar em qualquer instante.
+
+<LinearGridMorph
+  matrix={[[2, -1], [1, 1]]}
+  vectors={[{v: [1, 2], steps: true, label: '\\vec{v} = (1,\\ 2)', imageLabel: 'T(\\vec{v}) = (0,\\ 3)', offset: [10, -4, 'start'], imageOffset: [10, -4, 'start']}]}
+  slider={{kind: 'progress', label: 'Quanto da transformação já aconteceu'}}
+  window={[-3, 4, -1, 4]}
+  unit={44}
+  label="O vetor (1, 2) refeito como 1 passo de e1 e 2 passos de e2 na malha que se deforma"
+  caption="Em qualquer instante, a ponta verde é 1 passo azul mais 2 passos laranja na malha daquele instante. No fim, e₁ está em (2, 1), e₂ está em (−1, 1), e a receita termina em (0, 3)."
+/>
+
+Leia o desenho em três passos.
+
+1. **Para onde foram os dois lados do quadradinho.** A seta azul
+   $\vec{e}_1$ foi parar em $(2,\ 1)$. A seta laranja $\vec{e}_2$ foi parar
+   em $(-1,\ 1)$.
+2. **Como se lê $\vec{v}$ na malha original.** $\vec{v} = (1,\ 2)$ é 1 passo
+   de $\vec{e}_1$ e 2 passos de $\vec{e}_2$.
+3. **A mesma receita na malha nova.** Os passos mudaram de forma, mas a
+   receita é a mesma: 1 passo do novo $\vec{e}_1$ e 2 passos do novo
+   $\vec{e}_2$.
+
+Fazendo a conta do passo 3:
+
+$$
+1(2,\ 1) + 2(-1,\ 1) = (2 - 2,\ 1 + 2) = (0,\ 3).
+$$
+
+É exatamente onde a seta verde termina. A transformação não precisou de
+nenhuma regra especial para $\vec{v}$. Ela levou a malha, e $\vec{v}$ foi
+junto, ocupando na malha nova a mesma posição que ocupava na antiga: “uma casa
+num sentido, duas no outro”.
+
+Compare a conta acima com a pergunta 2 de “Ideias anteriores”. É a leitura
+pelas colunas do produto
+$\begin{bmatrix} 2 & -1 \\ 1 & 1 \end{bmatrix} \begin{bmatrix} 1 \\ 2 \end{bmatrix}$.
+A matriz que tem $(2,\ 1)$ e $(-1,\ 1)$ como colunas faz exatamente o que o
+desenho faz. Essa coincidência é a ideia principal da lição, e a próxima seção
+mostra que ela não é coincidência.
+
+<details>
+<summary>Confira: na mesma transformação, para onde vai o vetor (2, 1)? Pense em passos antes de fazer a conta.</summary>
+
+$(2,\ 1)$ é 2 passos de $\vec{e}_1$ e 1 passo de $\vec{e}_2$. Na malha nova,
+isso é $2(2,\ 1) + 1(-1,\ 1) = (4 - 1,\ 2 + 1) = (3,\ 3)$.
+
+</details>
+
+## As colunas da matriz são os destinos de e₁ e e₂
+
+A seção anterior seguiu um vetor só. O mesmo raciocínio vale para todos, e
+ele mostra que **toda transformação linear do plano é uma matriz**. Antes da
+prova, experimente: arraste as duas pontas redondas da figura e veja a matriz
+e a malha mudarem juntas.
+
+<LinearColumnsDrag />
 
 > Se $T$ é linear, então
-> $$T(\vec{v}) = A\vec{v}, \qquad \text{onde } A = \begin{bmatrix} | & | \\ T(\vec{e}_1) & T(\vec{e}_2) \\ | & | \end{bmatrix}.$$
+>
+> $$
+> T(\vec{v}) = A\vec{v}, \qquad \text{onde } A = \begin{bmatrix} | & | \\ T(\vec{e}_1) & T(\vec{e}_2) \\ | & | \end{bmatrix}.
+> $$
+>
 > A **primeira coluna** de $A$ é o destino de $\vec{e}_1$, e a **segunda
 > coluna** é o destino de $\vec{e}_2$. Essa é a **matriz da transformação**.
 
@@ -386,8 +576,8 @@ Os tracinhos verticais na matriz acima são só um desenho: dizem “aqui vai um
 coluna inteira”.
 
 **Por que é verdade.** Pegue um vetor qualquer, $\vec{v} = (x,\ y)$. A
-pergunta 4 da seção 4 mostrou que ele é uma combinação de $\vec{e}_1$ e
-$\vec{e}_2$:
+pergunta 2 de “Ideias anteriores” lembrou que ele é uma combinação de
+$\vec{e}_1$ e $\vec{e}_2$:
 
 $$
 \vec{v} = x\vec{e}_1 + y\vec{e}_2.
@@ -404,11 +594,12 @@ $$
 O lado direito é uma combinação das colunas $T(\vec{e}_1)$ e $T(\vec{e}_2)$,
 com os pesos $x$ e $y$. Pela leitura pelas colunas de [Matrizes](./matrizes),
 essa combinação é exatamente o produto da matriz $A$ pelo vetor $(x,\ y)$.
-Portanto $T(\vec{v}) = A\vec{v}$.
+Portanto $T(\vec{v}) = A\vec{v}$. É a conta que a figura escreve embaixo,
+para o vetor $(1,\ 2)$.
 
 O que mudou e o que ficou igual: a escrita mudou, de “a regra $T$” para “a
 matriz $A$ vezes o vetor”. A transformação não mudou. Ela leva cada vetor
-exatamente ao mesmo destino de antes. A matriz é só a forma de guardar a
+exatamente ao mesmo destino de antes. A matriz é uma forma de guardar a
 regra com quatro números.
 
 **A volta também vale: toda matriz dá uma transformação linear.** Use outra
@@ -440,31 +631,39 @@ matriz. Se tivesse, a origem iria para $A\vec{0}$, que é sempre $\vec{0}$,
 pois todas as parcelas do produto seriam multiplicadas por zero. Mas a
 translação leva a origem a $(3,\ 1)$. Nenhuma matriz faz isso.
 
-### 8.4 A mesma palavra em [Função afim](../funcoes/funcao-afim)
+Este é o ponto da lição que mais confunde: **colunas, e não linhas.** O
+destino de $\vec{e}_1$ vai em pé, na primeira coluna. O motivo: multiplicar
+a matriz por $(1,\ 0)$ manda usar 1 vez a primeira coluna e 0 vezes a segunda.
+Sobra a primeira coluna.
 
-A palavra “linear” já tinha aparecido no curso, e o sentido é o mesmo.
+<details>
+<summary>Confira: a matriz tem linhas (3, 0) e (−1, 2). Para onde vão e₁ e e₂? E o vetor (1, 1)?</summary>
 
-Em uma dimensão, um “vetor” é um número só, e uma matriz $1 \times 1$ é um
-número só, $[a]$. A transformação linear de uma dimensão é $f(x) = ax$:
-exatamente a função **linear** da lição de função afim, que passa pela
-origem. Ela cumpre as duas condições: $a(x + y) = ax + ay$ e
-$a(kx) = k(ax)$.
+A matriz é $\begin{bmatrix} 3 & 0 \\ -1 & 2 \end{bmatrix}$. As colunas são
+os destinos: $\vec{e}_1$ vai para $(3,\ -1)$ e $\vec{e}_2$ vai para
+$(0,\ 2)$. O vetor $(1,\ 1)$ é um passo de cada:
+$(3,\ -1) + (0,\ 2) = (3,\ 1)$. Se você respondeu $(3,\ 0)$ para
+$\vec{e}_1$, leu a primeira linha em vez da primeira coluna.
 
-Já a função afim $g(x) = ax + b$, com $b$ diferente de zero, é a versão de
-uma dimensão da translação: ela multiplica e depois **desloca**. Por isso não
-é linear neste sentido, mesmo tendo o gráfico reto. Teste com
-$g(x) = 2x + 3$: $g(1 + 1) = g(2) = 7$, mas $g(1) + g(1) = 5 + 5 = 10$.
+</details>
 
-O mesmo vale para a camada de rede neural $W\vec{x} + \vec{b}$ de
-[Matrizes](./matrizes). A parte $W\vec{x}$ é linear. A soma de $\vec{b}$
-desloca tudo, como o $+b$ da função afim. Por isso a camada inteira se chama
-**afim**: uma transformação linear seguida de uma translação.
+## Escala e reflexão: cada eixo é multiplicado por um número
 
-### 8.5 Catálogo das transformações do plano
+Daqui em diante, cada movimento do editor segue o mesmo método. Primeiro
+descobrimos, pelo desenho ou pela definição, para onde vão $\vec{e}_1$ e
+$\vec{e}_2$. Depois escrevemos esses destinos como colunas. Escolha o
+movimento nos botões.
 
-Cada item abaixo segue o mesmo método. Primeiro descobrimos, pelo desenho ou
-pela definição, para onde vão $\vec{e}_1$ e $\vec{e}_2$. Depois escrevemos
-esses destinos como colunas.
+<LinearGridMorph
+  presets={[
+    {label: 'Escala: esticar 2 vezes na horizontal', matrix: [[2, 0], [0, 1]], vectors: [{v: [1, 2], label: '(1,\\ 2)', imageLabel: '(2,\\ 2)'}], note: 'O vetor (1, 2) vai para (2, 2): a coordenada horizontal dobrou, a vertical ficou.'},
+    {label: 'Reflexão no eixo y', matrix: [[-1, 0], [0, 1]], vectors: [{v: [2, 1], label: '(2,\\ 1)', imageLabel: '(-2,\\ 1)'}], note: 'O vetor (2, 1) vai para (−2, 1), do outro lado do espelho. No meio do movimento, o plano fica achatado sobre o eixo y, como uma página que está sendo virada, vista de lado.'},
+  ]}
+  window={[-3, 3, -1, 3]}
+  unit={48}
+  label="Escala e reflexão aplicadas à malha"
+  caption="Escala: a seta e₁ dobra de tamanho, e₂ fica como está, e o quadrado vira um retângulo. Reflexão no eixo y: a seta e₁ passa a apontar para a esquerda, e₂ não muda, e o quadrado vira o seu espelho."
+/>
 
 **Escala.** Esticar o plano 2 vezes na horizontal e deixar a vertical como
 está. A seta $\vec{e}_1 = (1,\ 0)$ vira $(2,\ 0)$, e $\vec{e}_2 = (0,\ 1)$ não
@@ -475,16 +674,8 @@ $$
 $$
 
 estica $a$ vezes na horizontal e $d$ vezes na vertical, com $a$ e $d$
-positivos. Com $a = d$, o esticão
-é igual nas duas direções, e a figura só muda de tamanho, sem mudar de forma:
-é a ampliação de uma foto.
-
-<LinearMap
-  matrix={[[2, 0], [0, 1]]}
-  vectors={[{v: [1, 2], label: '(1,\\ 2)', imageLabel: '(2,\\ 2)'}]}
-  window={[-1, 3, -1, 3]}
-  caption="Escala: esticar 2 vezes na horizontal. A seta e₁ dobra de tamanho, e₂ fica como está. O vetor (1, 2) vai para (2, 2): a coordenada horizontal dobrou, a vertical ficou."
-/>
+positivos. Com $a = d$, o esticão é igual nas duas direções, e a figura só
+muda de tamanho, sem mudar de forma: é a ampliação de uma foto.
 
 **Reflexão.** Espelhar a imagem na horizontal, como o comando “espelhar” de
 um editor, é refletir no eixo $y$. Cada ponto troca de lado: $(x,\ y)$ vai
@@ -495,16 +686,38 @@ $$
 \begin{bmatrix} -1 & 0 \\ 0 & 1 \end{bmatrix}.
 $$
 
-<LinearMap
-  matrix={[[-1, 0], [0, 1]]}
-  vectors={[{v: [2, 1], label: '(2,\\ 1)', imageLabel: '(-2,\\ 1)'}]}
-  window={[-3, 3, -1, 2]}
-  caption="Reflexão no eixo y. A seta e₁ passa a apontar para a esquerda; e₂ não muda. O vetor (2, 1) vai para (−2, 1), do outro lado do espelho."
+Repare que a reflexão é uma “escala” com um número negativo: o eixo
+horizontal foi multiplicado por $-1$. Por isso a escala acima pede $a$ e $d$
+positivos: com um deles negativo, além de esticar, a matriz espelha.
+
+<details>
+<summary>Confira: qual é a matriz que estica 3 vezes na vertical e deixa a horizontal como está? Para onde ela leva (2, 1)?</summary>
+
+$\vec{e}_1$ fica em $(1,\ 0)$ e $\vec{e}_2$ vai para $(0,\ 3)$, então a
+matriz é $\begin{bmatrix} 1 & 0 \\ 0 & 3 \end{bmatrix}$. O vetor $(2,\ 1)$
+vai para $(2,\ 3)$: a altura triplicou, a largura ficou.
+
+</details>
+
+## A rotação tem como colunas dois pontos do ciclo trigonométrico
+
+Girar o plano um ângulo $\theta$ em torno da origem, no sentido
+anti-horário, o mesmo sentido do ciclo trigonométrico. A figura gira a malha
+inteira; o círculo tracejado tem raio 1. Mude o ângulo no deslizante e
+acompanhe as pontas das duas setas.
+
+<LinearGridMorph
+  slider={{kind: 'rotation', label: 'Ângulo θ', min: 0, max: 360, step: 15, initial: 30, unit: '°', digits: 0}}
+  showCircle
+  showAngle
+  window={[-2.5, 2.5, -2, 2]}
+  unit={66}
+  label="Rotação da malha em torno da origem"
+  caption="Rotação no sentido anti-horário. A malha gira inteira, sem se deformar: os quadradinhos continuam quadrados, do mesmo tamanho. As pontas de e₁ e e₂ andam sobre o círculo de raio 1. Com 30°, e₁ vai para (cos 30°, sen 30°) ≈ (0,866; 0,5) e e₂ vai para (−sen 30°, cos 30°) ≈ (−0,5; 0,866)."
 />
 
-**Rotação.** Girar o plano um ângulo $\theta$ em torno da origem, no sentido
-anti-horário, o mesmo sentido do ciclo trigonométrico. Aqui o desenho sozinho
-não dá as coordenadas exatas, e precisamos das peças da pergunta 6 da seção 4.
+Aqui o desenho sozinho não dá as coordenadas exatas, e precisamos das peças
+da pergunta 3 de “Ideias anteriores”.
 
 A seta $\vec{e}_1 = (1,\ 0)$ é o ponto do ciclo no ângulo $0^\circ$. Girar
 $\theta$ a leva ao ponto do ciclo no ângulo $\theta$:
@@ -531,11 +744,14 @@ $$
 Então $T(\vec{e}_2) = (-\sen\theta,\ \cos\theta)$. Pondo os dois destinos
 como colunas:
 
-> $$R_\theta = \begin{bmatrix} \cos\theta & -\sen\theta \\ \sen\theta & \cos\theta \end{bmatrix}.$$
+> $$
+> R_\theta = \begin{bmatrix} \cos\theta & -\sen\theta \\ \sen\theta & \cos\theta \end{bmatrix}.
+> $$
 
 O sinal de menos fica na **primeira linha, segunda coluna**. Ele vem de
 $\vec{e}_2$, que aponta para cima e, ao girar no sentido anti-horário,
-inclina-se para a esquerda, onde a coordenada $x$ é negativa.
+inclina-se para a esquerda, onde a coordenada $x$ é negativa. Na figura, com
+$30^\circ$, a ponta laranja está à esquerda do eixo vertical.
 
 **Conferência por outro caminho.** Na lição de componentes, um vetor de
 tamanho $r$ e ângulo $\alpha$ é $r(\cos\alpha,\ \sen\alpha)$. Girar esse vetor
@@ -550,59 +766,132 @@ $\cos(\alpha + \theta)$ e $\sen(\alpha + \theta)$. O resultado tem tamanho $r$
 e ângulo $\alpha + \theta$: é mesmo o vetor girado. O tamanho não mudou, e o
 ângulo aumentou exatamente $\theta$.
 
-<LinearMap
-  matrix={[[0.866, -0.5], [0.5, 0.866]]}
-  vectors={[{v: [2, 1], label: '(2,\\ 1)', imageLabel: 'R_{30^\\circ}(2,\\ 1)'}]}
-  basisLabels={{after: ['T(\\vec{e}_1)', 'T(\\vec{e}_2)']}}
-  window={[-2, 3, -1, 3]}
-  caption="Rotação de 30° no sentido anti-horário. A malha gira inteira, sem se deformar: os quadradinhos continuam quadrados, do mesmo tamanho. T(e₁) = (cos 30°, sen 30°) e T(e₂) = (−sen 30°, cos 30°)."
+<details>
+<summary>Confira: escreva R para θ = 180° e gire o vetor (3, 1). Confira no deslizante.</summary>
+
+Com $\cos 180^\circ = -1$ e $\sen 180^\circ = 0$, a matriz é
+$\begin{bmatrix} -1 & 0 \\ 0 & -1 \end{bmatrix}$. O vetor $(3,\ 1)$ vai para
+$(-3,\ -1)$: meia volta troca o sinal das duas coordenadas. No deslizante, em
+$180^\circ$, a seta azul aponta para a esquerda e a laranja para baixo.
+
+</details>
+
+## O cisalhamento escorrega cada andar na proporção da altura
+
+O cisalhamento é a inclinação que transforma letra normal em itálico. Pense
+numa pilha de folhas empurrada pelo lado: o chão fica parado, e cada andar
+acima escorrega para o lado, mais quanto mais alto ele está. O deslizante
+escolhe quanto escorrega o andar de altura 1.
+
+<LinearGridMorph
+  slider={{kind: 'shear', label: 'Quanto escorrega o andar de altura 1 (k)', min: -2, max: 2, step: 0.5, initial: 1}}
+  vectors={[{v: [1, 2], label: '(1,\\ 2)', imageLabel: 'auto'}]}
+  basisOffsets={[undefined, [-8, -8, 'end']]}
+  window={[-5, 7, -1, 3]}
+  unit={34}
+  label="Cisalhamento da malha"
+  caption="Cisalhamento com k = 1. O eixo horizontal fica parado; e₂ escorrega para (1, 1). O vetor (1, 2), de altura 2, escorrega 2 casas e vai para (3, 2). O quadrado vira um paralelogramo de mesma base e mesma altura. Mude o k e veja o andar de altura 2 escorregar o dobro do andar de altura 1."
 />
 
-**Cisalhamento.** É a inclinação que transforma letra normal em itálico. O
-chão fica parado, e cada andar acima escorrega para o lado, mais quanto mais
-alto ele está. A seta $\vec{e}_1$ está no chão e não se move. A seta
-$\vec{e}_2$, de altura 1, escorrega $k$ para a direita e vira $(k,\ 1)$:
+A seta $\vec{e}_1$ está no chão e não se move. A seta $\vec{e}_2$, de altura
+1, escorrega $k$ para a direita e vira $(k,\ 1)$:
 
 $$
 \begin{bmatrix} 1 & k \\ 0 & 1 \end{bmatrix}.
 $$
 
-<LinearMap
-  matrix={[[1, 1], [0, 1]]}
-  vectors={[{v: [1, 2], label: '(1,\\ 2)', imageLabel: '(3,\\ 2)'}]}
-  basisLabels={{after: ['(1,\\ 0)', '(1,\\ 1)', undefined, [-30, -12]]}}
-  window={[-1, 4, -1, 3]}
-  caption="Cisalhamento com k = 1. O eixo horizontal fica parado; e₂ escorrega para (1, 1). O vetor (1, 2), de altura 2, escorrega 2 casas e vai para (3, 2). O quadrado vira um paralelogramo de mesma base e mesma altura."
-/>
+Um ponto de altura $y$ escorrega $ky$: o vetor $(1,\ 2)$ da figura, de altura
+2, escorrega $2k$ casas. Com $k = 1$, ele vai para $(1 + 2,\ 2) = (3,\ 2)$.
 
 Repare na legenda: o quadrado e o paralelogramo têm a mesma base e a mesma
 altura, então têm a mesma área. Em [Áreas de polígonos](../geometria/areas-de-poligonos)
 essa era a razão de a área do paralelogramo ser base vezes altura. Quanto uma
 transformação muda as áreas é o assunto de [Determinante](./determinante).
 
-**Projeção sobre um eixo.** Projetar no eixo $x$ é trocar cada ponto pela
-sua sombra no eixo, $(x,\ y) \mapsto (x,\ 0)$. A seta $\vec{e}_1$ já está no
-eixo e fica onde está. A seta $\vec{e}_2$ é vertical, e a sombra dela é só o
-ponto $\vec{0}$:
+<details>
+<summary>Confira: com k = −1, para onde vai o vetor (2, 3)? O quadrado muda de área?</summary>
+
+A matriz é $\begin{bmatrix} 1 & -1 \\ 0 & 1 \end{bmatrix}$. O ponto, de
+altura 3, escorrega 3 casas para a **esquerda**: $(2 - 3,\ 3) = (-1,\ 3)$. O
+quadrado continua com base 1 no chão e altura 1, então a área continua 1.
+
+</details>
+
+## A projeção achata o plano numa reta e não pode ser desfeita
+
+Projetar no eixo $x$ é trocar cada ponto pela sua sombra no eixo, com a luz
+vindo de cima: $(x,\ y) \mapsto (x,\ 0)$, que se lê “$(x,\ y)$ vai para
+$(x,\ 0)$”. A figura acompanha três pontos
+descendo até as suas sombras.
+
+<LinearGridMorph
+  matrix={[[1, 0], [0, 0]]}
+  points={[
+    {at: [2, 3], trail: true, tone: 3, imageLabel: '(2,\\ 0)', imageOffset: [8, 16, 'start']},
+    {at: [2, -3], trail: true, tone: 3},
+    {at: [-2, 3], trail: true, tone: 3},
+  ]}
+  vectors={[{v: [-2, 3], label: '(-2,\\ 3)', imageLabel: '(-2,\\ 0)', imageOffset: [0, 22]}]}
+  basisOffsets={[[-6, -16]]}
+  labels={[
+    {at: [-2, 3], math: '(-2,\\ 3)', tone: 3, dx: -10, dy: -2, anchor: 'end'},
+    {at: [2, 3], math: '(2,\\ 3)', tone: 3, dx: 10, dy: -2, anchor: 'start'},
+    {at: [2, -3], math: '(2,\\ -3)', tone: 3, dx: 10, dy: 2, anchor: 'start'},
+  ]}
+  basisLabels={['(1,\\ 0)', '']}
+  window={[-3, 4, -3.5, 3.5]}
+  unit={40}
+  label="Projeção do plano sobre o eixo x"
+  caption="Projeção sobre o eixo x. O plano inteiro é achatado sobre o eixo horizontal: e₂ vira o vetor nulo e o quadrado vira um segmento. Os pontos (2, 3) e (2, −3) descem pelo tracejado e caem no mesmo lugar, (2, 0). O vetor (−2, 3) vai para a sua sombra, (−2, 0)."
+/>
+
+A seta $\vec{e}_1$ já está no eixo e fica onde está. A seta $\vec{e}_2$ é
+vertical, e a sombra dela é o ponto $\vec{0}$:
 
 $$
 \begin{bmatrix} 1 & 0 \\ 0 & 0 \end{bmatrix}.
 $$
 
-<LinearMap
-  matrix={[[1, 0], [0, 0]]}
-  vectors={[{v: [-2, 3], label: '(-2,\\ 3)', imageLabel: '(-2,\\ 0)', imageOffset: [0, 22]}]}
-  basisLabels={{after: ['(1,\\ 0)', '', [0, 20]]}}
-  window={[-3, 2, -1, 4]}
-  caption="Projeção sobre o eixo x. O plano inteiro é achatado sobre o eixo horizontal: e₂ vira o vetor nulo e o quadrado vira um segmento. O vetor (−2, 3) vai para a sua sombra, (−2, 0)."
-/>
+A segunda coluna é a coluna de zeros: é o destino de $\vec{e}_2$, que virou a
+origem.
 
-A projeção é diferente das outras quatro num ponto importante. Ela achata o
-plano numa reta, e pontos diferentes vão para o mesmo lugar: $(2,\ 3)$ e
-$(2,\ -5)$ têm a mesma sombra $(2,\ 0)$. Olhando só a sombra, ninguém sabe de
-qual ponto ela veio. Por isso a projeção não pode ser desfeita, e as outras
-quatro podem. A lição [Matriz inversa](./matriz-inversa) estuda essa
-diferença.
+A projeção é diferente das outras transformações do catálogo num ponto
+importante. Ela achata o plano numa reta, e pontos diferentes vão para o
+mesmo lugar: $(2,\ 3)$ e $(2,\ -3)$ da figura, e também $(2,\ -5)$, têm a
+mesma sombra $(2,\ 0)$. Olhando só a sombra, ninguém sabe de qual ponto ela
+veio. Por isso a projeção não pode ser desfeita, e a escala (com $a$ e $d$
+positivos), a reflexão, a rotação e o cisalhamento podem. A lição
+[Matriz inversa](./matriz-inversa) estuda essa diferença.
+
+<details>
+<summary>Confira: qual é a matriz da projeção sobre o eixo y? Que pontos ela leva a (0, 4)?</summary>
+
+Agora a sombra cai no eixo vertical: $(x,\ y) \mapsto (0,\ y)$. A seta
+$\vec{e}_1$ vira $\vec{0}$ e $\vec{e}_2$ fica, então a matriz é
+$\begin{bmatrix} 0 & 0 \\ 0 & 1 \end{bmatrix}$. Ela leva a $(0,\ 4)$ todo
+ponto $(x,\ 4)$, qualquer que seja $x$: a reta horizontal inteira de altura 4.
+
+</details>
+
+## O catálogo: para escrever qualquer matriz, pergunte para onde vão e₁ e e₂
+
+As cinco transformações lado a lado. Cada botão anima o movimento a partir do
+plano original; o painel escreve a matriz com os destinos de $\vec{e}_1$ e
+$\vec{e}_2$ como colunas.
+
+<LinearGridMorph
+  presets={[
+    {label: 'Escala', matrix: [[2, 0], [0, 1]]},
+    {label: 'Reflexão', matrix: [[-1, 0], [0, 1]]},
+    {label: 'Rotação de 30°', rotation: 30},
+    {label: 'Cisalhamento', matrix: [[1, 1], [0, 1]]},
+    {label: 'Projeção', matrix: [[1, 0], [0, 0]], basisLabels: ['(1,\\ 0)', '']},
+  ]}
+  window={[-3, 3, -2, 3]}
+  unit={44}
+  label="Catálogo das transformações do plano"
+  caption="O catálogo. Cada botão leva a malha do plano original até a transformação escolhida. O quadrado verde mostra o que acontece com o quadradinho de lado 1."
+/>
 
 | Transformação | Destino de $\vec{e}_1$ | Destino de $\vec{e}_2$ | O que acontece com o quadradinho |
 |---|---|---|---|
@@ -612,10 +901,19 @@ diferença.
 | cisalhamento | $(1,\ 0)$ | $(k,\ 1)$ | vira paralelogramo de mesma área |
 | projeção no eixo $x$ | $(1,\ 0)$ | $(0,\ 0)$ | é achatado num segmento |
 
-## 9. Resolvendo o problema do logotipo
+<details>
+<summary>Confira: olhando só as colunas da tabela, qual das cinco transformações achata o plano? Que coluna denuncia isso?</summary>
+
+A projeção. A segunda coluna é $(0,\ 0)$: o lado $\vec{e}_2$ do quadradinho
+some, e o quadradinho fica sem altura. Nas outras quatro, as duas colunas
+apontam para direções diferentes e formam um paralelogramo de verdade.
+
+</details>
+
+## Resolvendo o problema do logotipo
 
 Agora o editor tem como girar o logotipo. A rotação de $30^\circ$ tem a
-matriz da seção 8.5 com $\theta = 30^\circ$. Pela lição
+matriz $R_\theta$ com $\theta = 30^\circ$. Pela lição
 [Ângulos notáveis](../geometria/angulos-notaveis),
 $\cos 30^\circ = \frac{\sqrt{3}}{2} \approx 0{,}866$ e
 $\sen 30^\circ = \frac{1}{2} = 0{,}5$:
@@ -628,6 +926,11 @@ Esses são os **quatro números** que o editor guarda. Para cada pixel, ele
 multiplica a matriz pelo vetor do pixel: quatro multiplicações e duas somas,
 sem nenhum seno, cosseno ou raiz na hora.
 
+Antes da conta, uma previsão para o canto $(4,\ 2)$. Ele está a uns
+$27^\circ$ do eixo $x$, porque sobe 2 enquanto anda 4. Girando mais
+$30^\circ$, ele passa a ficar a uns $57^\circ$, mais alto do que largo. Então
+a segunda coordenada deve sair maior que a primeira, e as duas positivas.
+
 Os cantos do logotipo, um por um. Cada coordenada nova é uma linha da matriz
 fazendo produto escalar com o canto:
 
@@ -639,8 +942,39 @@ fazendo produto escalar com o canto:
 | $(0,\ 2)$ | $0{,}866 \times 0 - 0{,}5 \times 2 = -1$ | $0{,}5 \times 0 + 0{,}866 \times 2 = 1{,}732$ | $(-1;\ 1{,}732)$ |
 
 O canto $(4,\ 2)$ da figura do problema foi parar em
-$(2{,}464;\ 3{,}732)$. Um pixel qualquer do interior, como $(100,\ 50)$ numa
-imagem grande, vai para $(61{,}6;\ 93{,}3)$ com a mesma conta.
+$(2{,}464;\ 3{,}732)$, como a previsão dizia: mais alto do que largo. Um
+pixel qualquer do interior, como $(100,\ 50)$ numa imagem grande, vai para
+$(61{,}6;\ 93{,}3)$ com a mesma conta.
+
+A figura abaixo aplica os três comandos do editor ao logotipo, agora com a
+malha junto. Em cada botão, as setas azul e laranja mostram os quatro números
+do comando.
+
+<LinearGridMorph
+  presets={[
+    {
+      label: 'Girar 30°',
+      rotation: 30,
+      polygon: {points: [[0, 0], [4, 0], [4, 2], [0, 2]], tone: 1, labels: [{at: [4, 2], imageLabel: '(2{,}464;\\ 3{,}732)', imageOffset: [10, -6, 'start']}, {at: [4, 0], imageLabel: '(3{,}464;\\ 2)', imageOffset: [10, 8, 'start']}, {at: [0, 2], imageLabel: '(-1;\\ 1{,}732)', imageOffset: [-8, -10, 'end']}]},
+    },
+    {
+      label: 'Esticar 2 vezes na horizontal',
+      matrix: [[2, 0], [0, 1]],
+      polygon: {points: [[0, 0], [4, 0], [4, 2], [0, 2]], tone: 1, labels: [{at: [4, 2], imageLabel: '(8,\\ 2)', imageOffset: [0, -14]}]},
+    },
+    {
+      label: 'Inclinar meia casa por andar',
+      matrix: [[1, 0.5], [0, 1]],
+      polygon: {points: [[0, 0], [4, 0], [4, 2], [0, 2]], tone: 1, labels: [{at: [4, 2], imageLabel: '(5,\\ 2)', imageOffset: [10, -6, 'start']}, {at: [0, 2], imageLabel: '(1,\\ 2)', imageOffset: [0, -14]}]},
+    },
+  ]}
+  showSquare={false}
+  basisLabels={false}
+  window={[-3.5, 9, -1, 5]}
+  unit={38}
+  label="Os três comandos do editor aplicados ao logotipo"
+  caption="O logotipo (azul) com a malha. Girar 30°: os cantos vão para os pontos da tabela. Esticar 2 vezes na horizontal: o canto (4, 2) vai para (8, 2). Inclinar meia casa por andar: os cantos de altura 2 escorregam 1 casa, e (4, 2) vai para (5, 2)."
+/>
 
 **Conferência: o retângulo girado ainda é o mesmo retângulo?** O lado que ia
 de $(0,\ 0)$ a $(4,\ 0)$ tinha 4 de comprimento. Depois do giro, ele vai de
@@ -662,15 +996,17 @@ sem conta nenhuma, só lendo para onde vão $\vec{e}_1$ e $\vec{e}_2$:
 
 A pergunta do problema está respondida. Cada comando linear do editor é uma
 matriz $2 \times 2$, e as colunas dela são os destinos de $\vec{e}_1$ e
-$\vec{e}_2$. O que sobra é a pergunta natural seguinte: o que acontece quando
-o usuário aplica dois comandos seguidos? A seção 10 começa a resposta, no
-Exemplo 7.
+$\vec{e}_2$. Fica uma pergunta para depois: o que acontece quando o usuário
+aplica dois comandos seguidos? O Exemplo 7 começa a resposta.
 
-## 10. Exemplos resolvidos
+## Exemplos resolvidos
 
 ### Exemplo 1: da fórmula para a matriz
 
 Encontre a matriz de $T(x,\ y) = (x + 3y,\ 2x - y)$.
+
+Previsão da forma: a matriz terá os coeficientes de $x$ e de $y$ da
+fórmula, e o desafio é colocá-los nas posições certas.
 
 Os destinos dos vetores da base são $T(1,\ 0) = (1,\ 2)$ e
 $T(0,\ 1) = (3,\ -1)$. Eles são as colunas:
@@ -693,6 +1029,10 @@ $\vec{e}_2$ em $(-2,\ 4)$. Para onde ela leva $(5,\ -1)$?
 <details>
 <summary>Solução</summary>
 
+Previsão: são 5 passos do novo $\vec{e}_1$, que é grande e aponta para a
+direita, e 1 passo para trás do novo $\vec{e}_2$. O resultado deve ficar bem à
+direita.
+
 O vetor $(5,\ -1)$ é $5\vec{e}_1 - \vec{e}_2$. Pela linearidade, o destino
 é a mesma receita com os destinos:
 
@@ -713,15 +1053,18 @@ Pause e tente: $T(x,\ y) = (x + y,\ xy)$ é linear?
 <details>
 <summary>Solução</summary>
 
+Previsão: o produto $xy$ é suspeito, porque dobrar $x$ e $y$ quadruplica o
+produto.
+
 A origem não denuncia nada, porque $T(0,\ 0) = (0,\ 0)$. Então teste a
 segunda condição com $\vec{v} = (1,\ 1)$ e $k = 2$:
 
 - $T(2\vec{v}) = T(2,\ 2) = (4,\ 4)$;
 - $2T(\vec{v}) = 2(2,\ 1) = (4,\ 2)$.
 
-As segundas coordenadas são diferentes. Um único caso de falha é suficiente: $T$ **não** é
-linear. O culpado é o produto $xy$. Quando $x$ e $y$ dobram, o produto
-quadruplica em vez de dobrar.
+As segundas coordenadas são diferentes. Um único caso de falha é suficiente:
+$T$ **não** é linear. O culpado é o produto $xy$, como a previsão dizia:
+quando $x$ e $y$ dobram, o produto quadruplica em vez de dobrar.
 
 </details>
 
@@ -733,6 +1076,9 @@ $(3,\ 1)$.
 <details>
 <summary>Solução</summary>
 
+Previsão: $(3,\ 1)$ aponta para a direita e um pouco para cima. Um quarto de
+volta anti-horário deve fazê-lo apontar para cima e um pouco para a esquerda.
+
 Com $\cos 90^\circ = 0$ e $\sen 90^\circ = 1$, a matriz é
 
 $$
@@ -743,9 +1089,10 @@ Também dá para ler direto do desenho: girando $90^\circ$, a seta $\vec{e}_1$
 passa a apontar para cima, $(0,\ 1)$, e $\vec{e}_2$ passa a apontar para a
 esquerda, $(-1,\ 0)$. Essas são as colunas.
 
-O destino de $(3,\ 1)$ é $3(0,\ 1) + 1(-1,\ 0) = (-1,\ 3)$. Conferência pelo
-produto escalar: $(3,\ 1) \cdot (-1,\ 3) = -3 + 3 = 0$, então os dois vetores
-são perpendiculares, como um giro de $90^\circ$ exige. E os dois têm módulo
+O destino de $(3,\ 1)$ é $3(0,\ 1) + 1(-1,\ 0) = (-1,\ 3)$: para cima e um
+pouco para a esquerda. Conferência pelo produto escalar:
+$(3,\ 1) \cdot (-1,\ 3) = -3 + 3 = 0$, então os dois vetores são
+perpendiculares, como um giro de $90^\circ$ exige. E os dois têm módulo
 $\sqrt{10}$.
 
 </details>
@@ -760,7 +1107,7 @@ $(1,\ -1)$ em $(1,\ -1)$. Encontre a matriz.
 
 Precisamos dos destinos de $\vec{e}_1$ e $\vec{e}_2$, e só conhecemos os de
 outros dois vetores. Então escrevemos $\vec{e}_1$ e $\vec{e}_2$ como
-combinação deles. Somando $(1,\ 1) + (1,\ -1) = (2,\ 0)$, que é
+combinação deles. Somando, $(1,\ 1) + (1,\ -1) = (2,\ 0)$, que é
 $2\vec{e}_1$. Subtraindo, $(1,\ 1) - (1,\ -1) = (0,\ 2)$, que é
 $2\vec{e}_2$. Portanto:
 
@@ -816,11 +1163,12 @@ Um comando de cada vez. O cisalhamento leva $(1,\ 2)$ em
 $(1 + 2,\ 2) = (3,\ 2)$. A escala leva $(3,\ 2)$ em $(6,\ 2)$.
 
 Fazer os dois em sequência é a **composição** das duas transformações, como
-em [Composição de funções](../funcoes/composicao-de-funcoes). Cada uma
-respeita a malha. Então a sequência também respeita: se a primeira entrega
-uma malha organizada, a segunda recebe uma malha organizada e entrega outra.
-Portanto a composição é linear e tem uma matriz. As colunas dela são os
-destinos finais de $\vec{e}_1$ e $\vec{e}_2$:
+em [Composição de funções](../funcoes/composicao-de-funcoes): a saída da
+primeira máquina entra na segunda. Cada uma respeita a malha. Então a
+sequência também respeita: se a primeira entrega uma malha organizada, a
+segunda recebe uma malha organizada e entrega outra. Portanto a composição é
+linear e tem uma matriz. As colunas dela são os destinos finais de
+$\vec{e}_1$ e $\vec{e}_2$:
 
 - $\vec{e}_1$: o cisalhamento deixa $(1,\ 0)$ parado, e a escala o leva a
   $(2,\ 0)$;
@@ -836,7 +1184,7 @@ Encontrar essa matriz a partir de $C$ e $E$, sem passar pelos desenhos, é o
 
 </details>
 
-## 11. Erros comuns
+## Erros comuns
 
 > **Erro 1: escrever os destinos como linhas.** O cisalhamento leva
 > $\vec{e}_1$ em $(1,\ 0)$ e $\vec{e}_2$ em $(1,\ 1)$. Quem escreve esses
@@ -848,10 +1196,10 @@ Encontrar essa matriz a partir de $C$ e $E$, sem passar pelos desenhos, é o
 > $(1,\ 0)$ devolve exatamente a primeira coluna.
 
 > **Erro 2: achar que deslocar é uma transformação linear.** Mover a imagem 3
-> casas para a direita parece a mais simples das transformações, mas ela tira
+> casas para a direita parece a mais simples das transformações. Mas ela tira
 > a origem do lugar, e toda transformação linear deixa a origem parada. Teste:
-> se o deslocamento tivesse matriz $A$, a origem iria para $A\vec{0} =
-> \vec{0}$, e não para $(3,\ 0)$.
+> se o deslocamento tivesse matriz $A$, a origem iria para
+> $A\vec{0} = \vec{0}$, e não para $(3,\ 0)$.
 
 > **Erro 3: chamar de linear tudo que tem gráfico reto.** A função
 > $g(x) = 2x + 3$ tem gráfico reto, mas não é linear no sentido desta lição.
@@ -874,7 +1222,7 @@ Encontrar essa matriz a partir de $C$ e $E$, sem passar pelos desenhos, é o
 > precisam valer para todos os vetores, e por isso a verificação é feita com
 > letras.
 
-## 12. Perguntas de verificação
+## Perguntas de verificação
 
 1. Por que conhecer $T(\vec{e}_1)$ e $T(\vec{e}_2)$ é suficiente para conhecer
    $T(\vec{v})$ para todo $\vec{v}$, se a transformação for linear?
@@ -885,7 +1233,8 @@ Encontrar essa matriz a partir de $C$ e $E$, sem passar pelos desenhos, é o
    ela não é linear?
 5. Por que a função afim $g(x) = 2x + 3$ não é linear, se a função
    $f(x) = 2x$ é?
-6. Por que a rotação não muda o comprimento dos vetores, e a projeção muda?
+6. Por que a rotação não muda o comprimento dos vetores, e a projeção pode
+   mudar?
 7. Por que a projeção sobre o eixo $x$ não pode ser desfeita?
 
 <details>
@@ -907,14 +1256,15 @@ Encontrar essa matriz a partir de $C$ e $E$, sem passar pelos desenhos, é o
    origem parada: $T(\vec{0}) = T(0\vec{v}) = 0T(\vec{v}) = \vec{0}$. No
    desenho, as linhas continuam retas e igualmente espaçadas, mas a malha
    inteira escorregou. A condição $T(k\vec{v}) = kT(\vec{v})$ percebe esse
-   escorregão: $T(2\vec{u})$ não é $2T(\vec{u})$.
+   escorregão: $T(2\vec{v})$ não é $2T(\vec{v})$.
 5. Porque o $+3$ desloca todos os resultados, como uma translação de uma
    dimensão. Em $g$, $g(0) = 3$, e não 0. Já $f(x) = 2x$ é uma matriz
    $1 \times 1$, o número 2, e cumpre as duas condições.
 6. A rotação leva o quadradinho num quadradinho igual, só girado: as colunas
    $(\cos\theta,\ \sen\theta)$ e $(-\sen\theta,\ \cos\theta)$ têm tamanho 1
-   e são perpendiculares. A seção 8.5 mostrou que $r(\cos\alpha,\ \sen\alpha)$
-   vira $r(\cos(\alpha + \theta),\ \sen(\alpha + \theta))$, com o mesmo $r$. A
+   e são perpendiculares. A seção da rotação mostrou que
+   $r(\cos\alpha,\ \sen\alpha)$ vira
+   $r(\cos(\alpha + \theta),\ \sen(\alpha + \theta))$, com o mesmo $r$. A
    projeção achata: $\vec{e}_2$ vira $\vec{0}$, e $(2,\ 3)$, de módulo
    $\sqrt{13}$, vira $(2,\ 0)$, de módulo 2.
 7. Porque pontos diferentes vão para o mesmo lugar: $(2,\ 3)$ e $(2,\ -5)$
@@ -924,7 +1274,7 @@ Encontrar essa matriz a partir de $C$ e $E$, sem passar pelos desenhos, é o
 
 </details>
 
-## 13. Exercícios
+## Exercícios
 
 ### 1. Reconhecimento
 
@@ -1004,8 +1354,8 @@ continua no chão e qual é a altura da figura nova.
 16. Mostre que, para qualquer matriz $A$ de tamanho $2 \times 2$, a
     transformação $T(\vec{v}) = A\vec{v}$ cumpre a condição
     $T(k\vec{v}) = kT(\vec{v})$. Use a leitura pelas colunas.
-17. Mostre que, se $T$ é linear, então $T(\vec{u} - \vec{v}) =
-    T(\vec{u}) - T(\vec{v})$.
+17. Mostre que, se $T$ é linear, então
+    $T(\vec{u} - \vec{v}) = T(\vec{u}) - T(\vec{v})$.
 18. Mostre, com $\vec{v} = (x,\ y)$, que a rotação não muda o comprimento:
     $\lVert R_\theta \vec{v} \rVert = \lVert \vec{v} \rVert$.
 
@@ -1092,9 +1442,10 @@ $\sen^2\theta + \cos^2\theta = 1$.
     módulo $2\sqrt{2}$, igual ao de $(2,\ 2)$, que é $\sqrt{8} = 2\sqrt{2}$.
     Faz sentido: $(2,\ 2)$ estava a $45^\circ$, e girar mais $45^\circ$ o
     leva ao eixo $y$.
-15. $f(\vec{0}) = \vec{0} + (1,\ 1) = (1,\ 1)$. $f(1,\ 1) = (1 + 2,\ -1) +
-    (1,\ 1) = (4,\ 0)$. $f(2,\ 2) = (6,\ -2) + (1,\ 1) = (7,\ -1)$. A função
-    não é linear: leva a origem a $(1,\ 1)$, e $f(2,\ 2) = (7,\ -1)$ não é
+15. $f(\vec{0}) = \vec{0} + (1,\ 1) = (1,\ 1)$.
+    $f(1,\ 1) = (1 + 2,\ -1) + (1,\ 1) = (4,\ 0)$.
+    $f(2,\ 2) = (6,\ -2) + (1,\ 1) = (7,\ -1)$. A função não é linear: leva a
+    origem a $(1,\ 1)$, e $f(2,\ 2) = (7,\ -1)$ não é
     $2f(1,\ 1) = (8,\ 0)$. A parte $W\vec{x}$ é linear; a soma de $\vec{b}$
     é uma translação. A camada é **afim**.
 16. Com as colunas $\vec{a}_1$ e $\vec{a}_2$ de $A$ e
@@ -1117,19 +1468,20 @@ $\sen^2\theta + \cos^2\theta = 1$.
 
 </details>
 
-## 14. Revisão curta
+## Revisão curta
 
 - Uma **transformação** é uma função que recebe um vetor e devolve um vetor.
   Ela é **linear** quando respeita soma e multiplicação por número:
   $T(\vec{u} + \vec{v}) = T(\vec{u}) + T(\vec{v})$ e
   $T(k\vec{v}) = kT(\vec{v})$.
-- No desenho, linear quer dizer: a malha quadriculada vira uma malha de
-  paralelogramos iguais, com linhas retas, paralelas e igualmente espaçadas
-  (ou é achatada numa reta ou num ponto, como na projeção), e a origem fica
-  parada.
+- No desenho, linear quer dizer: a origem fica parada, e a malha
+  quadriculada vira uma malha de paralelogramos iguais, com linhas retas,
+  paralelas e igualmente espaçadas. No caso extremo, como na projeção, a malha
+  é achatada numa reta ou num ponto.
 - Toda transformação linear do plano é uma matriz $2 \times 2$, e toda matriz
   é uma transformação linear. As **colunas** da matriz são os destinos de
-  $\vec{e}_1$ e $\vec{e}_2$.
+  $\vec{e}_1$ e $\vec{e}_2$, e cada vetor ocupa na malha nova a mesma
+  posição que ocupava na antiga.
 - Translação não é linear: tira a origem do lugar. Por isso uma camada de
   rede neural, $W\vec{x} + \vec{b}$, é **afim**: linear mais translação.
 - Catálogo: escala $\begin{bmatrix} a & 0 \\ 0 & d \end{bmatrix}$, rotação
